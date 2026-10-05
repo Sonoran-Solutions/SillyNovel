@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "op": "setCharacter",
+      "characterId": "char_rowan",
+      "expressionId": "joy",
+      "evidence": {
+        "sourceMessageKey": "message_demo_001",
+        "excerpt": "Rowan smiles."
+      }
+    }
+  ]
+}
