@@ -1,14 +1,14 @@
 # Project status
 
-**Documentation baseline:** 2026-10-04.
+**Documentation baseline:** 2026-10-05.
 
 ## Current state
 
-This starter package contains proposed product and technical documentation. The GitHub repository was inspected during drafting and reported empty. This package does not itself create a GitHub commit, branch, pull request, or release.
+The product and technical documentation baseline is committed to the repository's default `main` branch. The repository currently contains design/specification material only; no SillyTavern runtime extension, release, or completed playtest exists yet.
 
 | Area | State |
 | --- | --- |
-| Product and technical baseline | DRAFTED / PROPOSED |
+| Product and technical baseline | COMMITTED / PROPOSED |
 | M0 — compatibility and reversible shell | NOT_STARTED |
 | M1 — manual scene reader | NOT_STARTED |
 | Gate A — reader feel | NOT_RUN |
@@ -24,13 +24,13 @@ This starter package contains proposed product and technical documentation. The 
 
 ## Verified during documentation preparation
 
-The repository identity and empty starting state were checked through the connected GitHub integration. Official SillyTavern and provider documentation was read to establish the limited external facts in [REFERENCES.md](REFERENCES.md).
+The repository identity and empty starting state were checked through the connected GitHub integration before this baseline was uploaded. Official SillyTavern and provider documentation was read to establish the limited external facts in [REFERENCES.md](REFERENCES.md).
 
-Package integrity checks: **PASS** — 15 files, 40 relative links, one JSON file, one JSON code block, and consistency between the two copies of the director example were checked. These checks are not evidence that an extension works or that a provider connection is available to the owner.
+The source documentation package passed integrity checks before upload: **15 files, 40 relative links, one JSON file, one JSON code block, and consistency between the two copies of the director example**. These checks are not evidence that an extension works or that a provider connection is available to the owner.
 
 ## Next action
 
-Add this documentation to the repository and begin the bounded [M0 task](prompts/FIRST_TASK.md). Record actual starting/final SHAs, executed checks, and untested surfaces in the first implementation PR.
+Begin the bounded [M0 task](prompts/FIRST_TASK.md). Record actual starting/final SHAs, executed checks, tested SillyTavern version, and untested surfaces in the first implementation PR.
 
 ## Status discipline
 
