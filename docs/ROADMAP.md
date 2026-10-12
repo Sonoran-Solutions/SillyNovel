@@ -1,6 +1,6 @@
 # Staged implementation roadmap
 
-**Status:** proposed sequence. M0 has a bounded shell implementation and an isolated host smoke check, but its live generation lifecycle checks remain **NOT_TESTED**. M1–M4 are **NOT_STARTED**; Gates A/B/C remain **NOT_RUN**. This document contains targets, not owner acceptance.
+**Status:** proposed sequence. M0 has a bounded shell implementation and partial live lifecycle validation on pinned SillyTavern 1.19.0; see [M0 compatibility](M0_COMPATIBILITY.md) and the [lifecycle report](M0_LIFECYCLE_VALIDATION.md) for tested paths and remaining gaps. M1–M4 are **NOT_STARTED**; Gates A/B/C remain **NOT_RUN**. This document contains targets, not owner acceptance.
 
 ## Delivery rule
 
@@ -20,7 +20,7 @@ Resolve or explicitly block the host chat identity, card identity, metadata save
 
 **Exit criteria:** enable/disable cycles preserve ordinary chat and the draft; the adapter can identify a selected message without guessing; failures leave native chat usable; known limitations are documented. A failure in basic reversibility blocks M1.
 
-**Implementation record:** the reversible placeholder shell is implemented and passed a limited isolated-host load/toggle/draft smoke check. Event payload normalization passes synthetic tests against pinned source signatures. Real generation lifecycle ordering, group replies, and live chat operations remain **NOT_TESTED**, so M0 is not reported as fully passed. Gate A remains **NOT_RUN**; M1 is not authorized by this result.
+**Implementation record:** the reversible placeholder shell is implemented. The pinned isolated host verified normal, streaming, stopped, continued, swipe, edit/delete, chat-switch, toggle, and disable-during-generation paths using a deterministic loopback endpoint. Empty-chat switch/generation and group cases remain **NOT_TESTED**, so M0 is not reported as fully passed. Gate A remains **NOT_RUN**; M1 is not authorized by this result.
 
 ## M1 — Manual visual-novel reader
 

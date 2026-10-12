@@ -97,6 +97,44 @@ test('chat switch to an empty chat is retained across source-less generation sta
     dispose();
 });
 
+test('populated A to B to empty B to refreshed A always reads the active chat', () => {
+    const context = createFixtureContext();
+    context.chatId = 'chat-a.jsonl';
+    context.groupId = undefined;
+    const adapter = createHostAdapter(() => context);
+    const tracker = createSourceTracker(adapter.readCurrentSource());
+    const sources = [];
+    const dispose = adapter.subscribe((observation) => sources.push(tracker.observe(observation)));
+
+    context.chatId = 'chat-b.jsonl';
+    context.chat = [
+        { name: 'Reader', is_user: true, mes: 'B user message.' },
+        { name: 'Nia', mes: 'B latest reply.' },
+    ];
+    context.eventSource.emit(eventTypes.CHAT_CHANGED, context.chatId);
+    assert.equal(sources.at(-1).text, 'B latest reply.');
+    assert.equal(sources.at(-1).identity.chatId, 'chat-b.jsonl');
+    assert.equal(sources.at(-1).index, 1);
+
+    context.chatId = 'empty-b.jsonl';
+    context.chat = [];
+    context.eventSource.emit(eventTypes.CHAT_CHANGED, context.chatId);
+    context.eventSource.emit(eventTypes.GENERATION_STARTED, 'normal', {}, false);
+    assert.equal(sources.at(-2), null);
+    assert.equal(sources.at(-1), null);
+
+    context.chatId = 'chat-a.jsonl';
+    context.chat = [
+        { name: 'Reader', is_user: true, mes: 'A user message.' },
+        { name: 'Mira', mes: 'A refreshed reply.' },
+    ];
+    context.eventSource.emit(eventTypes.CHAT_CHANGED, context.chatId);
+    assert.equal(sources.at(-1).text, 'A refreshed reply.');
+    assert.equal(sources.at(-1).identity.chatId, 'chat-a.jsonl');
+
+    dispose();
+});
+
 test('observes normal and streaming lifecycle events without forwarding token text', () => {
     const context = createFixtureContext();
     const adapter = createHostAdapter(() => context);
@@ -173,6 +211,7 @@ test('observes normal and streaming lifecycle events without forwarding token te
 
 test('activation and repeated disposal own exactly one stage and one listener set', () => {
     const context = createFixtureContext();
+    const originalChat = structuredClone(context.chat);
     const adapter = createHostAdapter(() => context);
     let mountCount = 0;
     let disposeCount = 0;
@@ -193,18 +232,22 @@ test('activation and repeated disposal own exactly one stage and one listener se
     assert.equal(mountCount, 1);
     assert.equal(context.eventSource.count(), 10);
     context.eventSource.emit(eventTypes.MESSAGE_RECEIVED, 1, 'normal');
-    assert.equal(updates.length, 1);
+    context.eventSource.emit(eventTypes.GENERATION_STARTED, 'normal', {}, false);
+    assert.equal(updates.length, 2);
     assert.equal(controller.disable(), true);
     assert.equal(controller.disable(), false);
     assert.equal(disposeCount, 1);
     assert.equal(context.eventSource.count(), 0);
+    context.eventSource.emit(eventTypes.STREAM_TOKEN_RECEIVED, 'late synthetic token');
+    context.eventSource.emit(eventTypes.GENERATION_ENDED, context.chat.length);
+    assert.equal(updates.length, 2, 'events during and after a disabled generation are ignored');
 
     controller.enable();
     controller.disable();
     assert.equal(mountCount, 2);
     assert.equal(disposeCount, 2);
     assert.equal(context.eventSource.count(), 0);
-    assert.equal(context.chat[1].mes, 'The selected swipe.');
+    assert.deepEqual(context.chat, originalChat, 'enable and disable leave canonical chat messages unchanged');
 });
 
 test('invalid indices on indexed events never fall back to the last message', () => {

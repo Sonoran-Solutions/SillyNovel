@@ -1,6 +1,6 @@
 # M0 compatibility and evidence
 
-**Checked:** 2026-10-11. **M0 result:** partial; shell smoke passed, live message lifecycle remains untested.
+**Checked:** 2026-10-11 (America/Phoenix). **M0 result:** partial / revise; core supported message lifecycle paths passed on the pinned local host, while switching into an empty chat and generating there, group, and missing-capability host cases remain untested. Deletion to an empty view was exercised. See [the lifecycle report](M0_LIFECYCLE_VALIDATION.md).
 
 ## Pinned SillyTavern target
 
@@ -9,18 +9,18 @@
 | Release tag | `1.19.0` |
 | Full source SHA | `7e8663cd9c184a550b37238218bdd32c6efc68e9` |
 | Source | [SillyTavern at the pinned commit](https://github.com/SillyTavern/SillyTavern/tree/7e8663cd9c184a550b37238218bdd32c6efc68e9) |
-| Environment | Linux; Node.js `v26.8.1`; Codex in-app browser; isolated local SillyTavern server on loopback |
-| Data | Temporary data root `/tmp/sillynovel-st-test-data`; no private chats imported |
-| Provider | None configured; no paid or external model call |
+| Environment | Ubuntu 24.04; kernel `7.0.0-34-generic`; Node.js `v26.8.1`; Brave Browser `154.1.96.61` (browser engine version not exposed); isolated SillyTavern server on loopback |
+| Data | Temporary data root `/tmp/sillynovel-m0lifecycle-data`; synthetic characters/chats only; no private chats imported |
+| Provider | Disposable OpenAI-compatible endpoint at `127.0.0.1:8123`, model `sn-local-test`; no paid or external model call. This tests SillyTavern's request/event path, not model/provider behavior. |
 
-The host source was cloned at the `1.19.0` tag and run with:
+The host source was checked out at the exact pinned commit and run with:
 
 ```sh
 npm ci --no-audit --no-fund
-node server.js --port 8011 --whitelist false --dataRoot /tmp/sillynovel-st-test-data
+node server.js --port 8012 --whitelist false --dataRoot /tmp/sillynovel-m0lifecycle-data
 ```
 
-SillyTavern populated that temporary data root with its own shipped sample content. The smoke check did not open or import a user chat or card. The browser engine's exact version was not exposed by the in-app browser, so no browser-version claim is made.
+The deterministic endpoint returned `The lantern flickers as the door opens, revealing a quiet room.` and streamed it in fixed chunks. The browser engine version was not exposed by Brave's browser tab, so no engine-version claim is made. The test extension set was SillyNovel plus a temporary sanitized `M0LifecycleObserver`; other shipped host extensions remained at their defaults. The observer recorded event names, safe scalar arguments, identities, message counts/indices, source lengths/hashes, and stage/listener counts; it did not record message bodies.
 
 ## Source-verified host seams
 
@@ -72,21 +72,20 @@ The adapter's `chatId`, `groupId`, and `characterId` observation is marked `dura
 
 | Check | Result | Evidence boundary |
 | --- | --- | --- |
-| Extension manifest discovery and module load | HOST_TESTED — PASS | Control appeared in the 1.19.0 Extensions settings panel |
-| Default disabled state | HOST_TESTED — PASS | Fresh isolated profile showed unchecked control and “Off by default” status |
-| Repeated enable/disable | HOST_TESTED — PASS | Two full cycles in the initial shell smoke, plus one full cycle after the review fixes; each activation showed one stage and each disable removed it |
-| Draft preservation | HOST_TESTED — PASS | `Synthetic draft: keep this exact text.` remained unchanged through the initial cycles and the post-fix mount/dispose cycle |
-| Original chat/composer remains | HOST_TESTED — PASS | Accessibility tree retained SillyTavern's chat surface and textarea while stage mounted |
-| Adapter/source observation and disposal | SIMULATED — PASS | `node --test tests/m0.test.mjs`; public-safe fixture only |
-| Chat A → empty chat B → generation start | SIMULATED — PASS | Renderer source tracker keeps B empty instead of resurrecting A |
-| Malformed or out-of-range indexed events | SIMULATED — PASS | Indexed events resolve to `null`; index-free stream observation still samples the latest message |
-| Missing capability and partial listener setup failure | SIMULATED — PASS | Activation refuses or rolls back without listeners/stage |
-| Normal, streaming, stopped, continued, regenerated reply | SIMULATED + SOURCE_INSPECTED; HOST_LIFECYCLE_NOT_TESTED | No provider was configured |
-| Swipe, message edit/delete, chat switch | SIMULATED + SOURCE_INSPECTED; HOST_LIFECYCLE_NOT_TESTED | No real chat was opened |
-| Group author identification | SIMULATED + SOURCE_INSPECTED; HOST_LIFECYCLE_NOT_TESTED | Fixture reads the host `name` field; no group chat was opened |
-| Provider behavior, other browsers/devices/extensions | NOT_TESTED | No such compatibility claim is made |
+| Extension manifest discovery and module load | HOST_TESTED — PASS | Control appeared in pinned 1.19.0 Extensions settings. |
+| Default disabled state; mount/dispose; draft preservation | HOST_TESTED — PASS | Opt-in control; stage mounted once, was removed on disable, and exact draft survived toggles. |
+| Normal, streaming, stopped, continued, regenerated replies | HOST_TESTED — PASS | Deterministic loopback endpoint; real host generation and user stop. This is not model/provider validation. |
+| Swipe selection; edit; first/middle/last deletion including deletion to empty | HOST_TESTED — PASS | Synthetic chat; selected message/source and post-delete count observed. Deleting B's final welcome message produced count 0, no selected source, and an empty SillyNovel stage. |
+| A → populated B → A and A → B → A | HOST_TESTED — PASS | Host chat identity and latest source followed each selected chat; no stale cross-chat source observed. |
+| Switch A → empty B → generation start | NOT_TESTED on host; SIMULATED — PASS | Last-message deletion showed an empty B view, but reopening that chat restored its welcome message; the full switch-and-generate sequence was not completed. Regression test covers source clearing and no A resurrection. |
+| Disable during streaming | HOST_TESTED — PASS | Stage removed and ten listeners removed while host stream completed with normal final message events. |
+| Group authors; duplicate display names | NOT_TESTED on host; SIMULATED — PASS | No group chat was created; host-provided author labels are not promoted to stable card identities. |
+| Missing host capability | NOT_TESTED on host; SIMULATED — PASS | The real host exposes the required capabilities; test double verifies activation refusal/rollback. |
+| Malformed/out-of-range indices; missing source | SIMULATED — PASS | Invalid indexed events resolve to `null`, never the last message. |
+| Canonical chat mutation by enable/disable | HOST_TESTED — PASS; SIMULATED — PASS | Synthetic canonical chat snapshot unchanged through toggles; real generation/edit/delete changed only through native host actions. |
+| Other browsers, devices, ST versions, provider/model behavior | NOT_TESTED | No cross-environment or model claim is made. |
 
-The real-host check was a shell smoke test, not a full compatibility pass. Gate A remains NOT_RUN; M0's live lifecycle portion is incomplete. The synthetic harness intentionally dispatches source-shaped arguments itself and cannot verify how a real generation run orders or omits events.
+This evidence completes several live lifecycle checks but is not a full compatibility pass. Exact per-scenario outcomes, event traces, and commands are in [the M0 lifecycle report](M0_LIFECYCLE_VALIDATION.md). Gate A remains NOT_RUN. M1 remains NOT_AUTHORIZED. The synthetic harness intentionally dispatches source-shaped arguments itself and is kept separate from host lifecycle evidence.
 
 ## Open integration seams
 
@@ -97,19 +96,19 @@ The real-host check was a shell smoke test, not a full compatibility pass. Gate 
 | Metadata save | `context.chatMetadata`, `saveMetadata()`, `saveMetadataDebounced()`, and `updateChatMetadata()` | `saveMetadata()` saves the currently active chat. The inspected debounced helper captures group/character IDs and checks those again before saving, but does not compare `chatId`; cross-chat targeting and serialization need a dedicated race test before use. M0 writes no chat metadata. |
 | Asset storage | The host background import flow (`POST /api/backgrounds/upload`) and asset manager routes (`POST /api/assets/get`, `/download`, `/delete`) are candidate seams. See the pinned [background routes](https://github.com/SillyTavern/SillyTavern/blob/7e8663cd9c184a550b37238218bdd32c6efc68e9/src/endpoints/backgrounds.js), [asset routes](https://github.com/SillyTavern/SillyTavern/blob/7e8663cd9c184a550b37238218bdd32c6efc68e9/src/endpoints/assets.js), and [asset manager UI](https://github.com/SillyTavern/SillyTavern/blob/7e8663cd9c184a550b37238218bdd32c6efc68e9/public/scripts/extensions/assets/index.js). | These are host-managed flows, not a verified extension-owned storage contract. Ownership, permissions, cleanup, and a SillyNovel namespace remain open. M0 writes no assets; do not choose a directory or endpoint by guesswork. |
 
-Before using any of these seams, verify identity changes and save ordering on the pinned host, including A → B and A → B → A, and verify the actual storage permissions/ownership. Until then the capabilities remain open.
+Before using any of these seams, verify identity changes and save ordering on the pinned host, including group membership changes and delayed writes, and verify actual storage permissions/ownership. A → B and A → B → A were observed for the current shell only; this does not establish a durable identity or persistence contract.
 
 ## Manual compatibility checklist for follow-up
 
-On the same identified SillyTavern release, record browser/device and enabled extensions, then exercise a synthetic/public-safe test chat. Do not use a live paid service. Mark each row HOST_TESTED only after a real host action; event-emitter calls from a console or Node fixture count as simulated.
+Follow-up host checks should use the same identified SillyTavern release and a synthetic/public-safe chat. Do not use a live paid service. Mark each row HOST_TESTED only after a real host action; event-emitter calls from a console or Node fixture count as simulated.
 
-- [ ] Send a normal reply, including a non-streaming reply if available.
-- [ ] Receive a streaming reply and observe whether token, message, and render events fire and in what order.
-- [ ] Stop mid-stream; distinguish partial content from completed message events.
-- [ ] Continue a response and record the generation type and emitted source index.
-- [ ] Regenerate and select both an old and new swipe.
-- [ ] Edit and delete a message, including the first and last message.
-- [ ] Switch chats A → B; verify identity and message source update.
-- [ ] In a group, verify the host author label for each member and do not infer a card ID from a name.
-- [ ] Remove one required event/context capability in a test double and verify activation refuses cleanly.
-- [ ] Repeat toggling with a draft already in the composer; compare the exact draft and original chat before/after.
+- [x] Send a normal non-streaming reply.
+- [x] Receive a streaming reply and observe token/message/render order.
+- [x] Stop mid-stream and compare partial content with final-message events.
+- [x] Continue a response and record the generation type and source index.
+- [x] Regenerate and select old and new swipes.
+- [x] Edit and delete first, middle, and last messages, including deletion to an empty view.
+- [x] Switch A → populated B → A and A → B → A; switch into empty B → generation start remains untested on host.
+- [ ] In a group, verify host author labels for multiple members and duplicate display names.
+- [x] Test missing required capabilities in a test double; host UI removal remains untested.
+- [x] Repeat toggling with a draft and compare the exact draft; disable during streaming and verify native completion.

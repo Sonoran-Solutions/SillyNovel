@@ -1,6 +1,6 @@
 # Verification and acceptance
 
-**Status:** M0 has a passing synthetic harness and a limited isolated-host smoke check. Live generation/provider tests and human playtests have not been executed. See [M0 compatibility](M0_COMPATIBILITY.md) for the pinned environment and exact evidence split.
+**Status:** M0 has a passing synthetic harness and real-host lifecycle evidence on an isolated SillyTavern 1.19.0 instance using a deterministic localhost endpoint. This does not validate model/provider behavior. Switching into an empty chat and generating there, group identity cases, and host capability removal remain untested. Deletion to an empty view was exercised. See [M0 compatibility](M0_COMPATIBILITY.md) and the [lifecycle report](M0_LIFECYCLE_VALIDATION.md) for the evidence split.
 
 ## 1. Evidence levels
 
@@ -10,24 +10,25 @@ Every report records the full candidate SHA, host version/commit, browser/device
 
 ## 1.1 M0 execution record
 
-The M0 candidate is tested against SillyTavern 1.19.0, full source SHA `7e8663cd9c184a550b37238218bdd32c6efc68e9`, in an isolated local instance and the Codex in-app browser. No model/provider was configured and no private chat data was imported.
+The tested M0 production shell matches SillyNovel source commit `b34ec1e0c0dbd3c74376b5ef9d1e901de8579f10`; this validation branch adds tests and documentation only. Host: SillyTavern `1.19.0`, full SHA `7e8663cd9c184a550b37238218bdd32c6efc68e9`; Ubuntu 24.04, kernel `7.0.0-34-generic`; Node.js `v26.8.1`; Brave Browser `154.1.96.61` (exact engine version unavailable). The host used a temporary isolated data root, synthetic chats, and a deterministic OpenAI-compatible endpoint bound to `127.0.0.1:8123`. No paid service, credentials, or private chat data were used. See [M0 lifecycle validation](M0_LIFECYCLE_VALIDATION.md) for full outcomes and trace details.
 
 | Scenario | Synthetic harness | Real-host result |
 | --- | --- | --- |
-| Repeated enable/disable | PASS | PASS — two initial cycles plus one post-review-fix cycle; stage appeared once and was removed on disable |
-| Draft entered before toggle | Not represented in Node harness | PASS — exact text survived all tested transitions, including one after the review fixes |
-| Missing required event capability | PASS — activation refused before mount | NOT_RUN in host UI |
-| Normal completed reply | PASS — event observation sequence | NOT_TESTED — no provider |
-| Streaming reply and stop | PASS — stream token, stop, and end observations | NOT_TESTED — no provider |
-| Continuation | PASS — `continue` generation type observed | NOT_TESTED — no provider |
-| Regeneration and swipe selection | PASS — `regenerate` type and selected-message index observed | NOT_TESTED — no provider |
-| Message edit and delete | PASS — source index and post-delete count normalized | NOT_TESTED — no real chat |
-| Chat switch | PASS — identity snapshot changes with context | NOT_TESTED — no real chat |
-| Chat A → empty chat B → generation start | PASS — retained source clears and stays empty | NOT_TESTED — no real chat |
-| Malformed/out-of-range message index | PASS — indexed event has null source; index-free event samples latest | NOT_TESTED — synthetic event only |
-| Group author label | PASS — synthetic group message uses its host `name` field | NOT_TESTED — no group chat |
+| Enable/disable/re-enable; one stage and listener set | PASS | PASS — one stage while enabled; owned listeners removed while disabled |
+| Draft entered before toggle | Not represented in Node harness | PASS — exact draft survived off/on cycle; native composer remained available |
+| Disable during generation | PASS — late events ignored after disposal | PASS — stage/listeners removed while host stream continued to final events |
+| Missing required event capability | PASS — activation refused before mount | NOT_TESTED — pinned host exposes required capabilities |
+| Normal non-streaming reply | PASS — synthetic event observation | PASS — real host request/event path via local deterministic endpoint |
+| Streaming reply and stop | PASS — synthetic event observation | PASS — token ordering and user stop observed; stop was not treated as successful completion |
+| Continuation | PASS — `continue` type and indexed source | PASS — existing message index updated and finalized with `continue` type |
+| Regeneration and swipe selection | PASS | PASS — swipe generation and old/new selection resolved selected source |
+| Message edit and first/middle/last delete, including final deletion to empty | PASS | PASS — edit source and post-delete counts observed; final deletion cleared the selected source and stage |
+| Chat A → populated B → A; A → B → A | PASS | PASS — source followed active chat identity and returned to current A state |
+| Switch A → empty B → generation start | PASS — source clears and stays empty | NOT_TESTED on host; reopening B restored its welcome message |
+| Malformed/out-of-range index and missing source | PASS — no fallback to last source | NOT_TESTED on host |
+| Group authors; duplicate display names | PASS for fixture author label only | NOT_TESTED on host |
 
-Harness assertions model official source signatures and do not prove runtime ordering. In the inspected 1.19.0 streaming path, `STREAM_TOKEN_RECEIVED` fires before `onProgressStreaming()` updates the message object, so a sample taken at token-event time may lag by one token. M1 must verify its streaming source contract before using those samples for display. The pinned source inspection, tested UI surface, and remaining gaps are recorded in [M0 compatibility](M0_COMPATIBILITY.md). The real-host smoke is not an owner experience test and does not pass Gate A.
+Harness assertions model event shapes and do not prove host ordering. In the live pinned-host stream, `STREAM_TOKEN_RECEIVED` fired before the corresponding message object update: a sample saw length 3 on the first token and still length 3 on the next token, then length 11 after the host progress update. Final host events observed were `GENERATION_ENDED(chat.length)`, then `MESSAGE_RECEIVED(index, type)`, then `CHARACTER_MESSAGE_RENDERED(index, type)`. A stopped generation also emitted `GENERATION_STOPPED` and then `GENERATION_ENDED`; these signals do not establish successful completion. Error and aborted-network paths remain untested. The real-host work is not an owner experience test and does not pass Gate A.
 
 ## 2. Core regression matrix
 
