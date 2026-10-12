@@ -175,3 +175,32 @@ git diff --check
 ```
 
 Result: 25 tests passed; all four syntax checks passed; `git diff --check` passed. Coverage includes head/cursor navigation, edits and same-length revisions, insert/delete/replacement invalidation, repeated text, swipe/group-author changes, empty history, generation-state conservatism, normal generation remaining unbound without a new assistant source, A → B → A, eventless DOM refresh, selected-index-only token sampling, a one-message middle insertion while pinned, selection change plus same-length edit during a queued frame, and disposal. The Node harness does not replace host evidence. Browser engine/version, real provider behavior, and Gate A remain NOT_TESTED/NOT_RUN.
+
+## DYL-17 senior re-review addendum (2026-10-12)
+
+Code candidate `3d871679ca216eec1210f3bec5845299a672af92` addresses the two new P2 findings and the P3 cleanup. A zero-to-one sampled append is accepted only with a present, unique source key; nonempty incremental appends still require the verified previous tail. Follow-latest recovers to a replaced canonical head, while a pinned replaced source remains invalidated. Invalid/null history records are omitted from the prior-source lookup.
+
+| Check | Result |
+| --- | --- |
+| DOM-only zero-to-one adapter/model regression | PASS — first source selected as head and cursor without a lifecycle event |
+| DOM-only latest-object replacement regression | PASS — followLatest selects the new source without a lifecycle event |
+| Refresh after ambiguous/null history regression | PASS — ordinary full refresh does not throw and restores the unique source |
+| Node regression suites | PASS — 27 tests |
+| Syntax checks and `git diff --check` | PASS — commands below |
+| Pinned SillyTavern smoke | PASS for candidate load and current synthetic-source observation after reload; host UI started its Temporary Chat with a system welcome source, so zero-message arrival was NOT_TESTED on host. No UI action replaces the latest message object without also raising a lifecycle event, so the requested eventless replacement remains NOT_TESTED on host. |
+| Provider, browser-engine version, Gate A | NOT_TESTED / NOT_RUN |
+
+The host candidate was served from this isolated worktree on SillyTavern 1.19.0 (`7e8663cd9c184a550b37238218bdd32c6efc68e9`), Node.js `v26.8.1`, with synthetic data under `/tmp/SillyTavern-dyl17-final-data`. Brave was used; the browser engine/version was not reported. The deterministic endpoint was available at `127.0.0.1:8123`, but no generation request was submitted for this smoke. The visible stage showed the current synthetic chat source and `chatViewChanged` after reload. The specific two P2 host scenarios were unreachable through the pinned UI and remain covered by the synthetic adapter/model regressions only.
+
+Commands actually run on the candidate:
+
+```sh
+node --test tests/m0.test.mjs tests/m1-reader-source.test.mjs
+node --check src/host-adapter.mjs
+node --check src/reader-source-model.mjs
+node --check src/shell.mjs
+node --check tests/fixtures/m0-openai-endpoint.mjs
+git diff --check
+```
+
+The DYL-18 and DYL-19 scope remains unchanged. The Node harness and host smoke are implementation evidence, not an owner verdict or Gate A pass.
