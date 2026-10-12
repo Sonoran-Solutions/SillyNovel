@@ -308,6 +308,7 @@ export function createHostAdapter(getContext) {
         const matches = readHistory().filter((item) => item?.sourceKey === selected.sourceKey);
         if (matches.length !== 1 || !sameSource(matches[0], selected)) return false;
         const chat = globalThis.document?.getElementById('chat');
+        if (typeof chat?.scrollTo !== 'function') return false;
         // ponytail: exact handoff covers rendered messages only; widen with a verified
         // read-only history-loading seam. Native backlog remains available otherwise.
         const elements = chat?.querySelectorAll(':scope > .mes[mesid="' + matches[0].index + '"]');

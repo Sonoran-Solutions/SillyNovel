@@ -197,6 +197,8 @@ test('format exception releases stage/listeners, restores native feed and keeps 
 test('A to B to A discards queued old-epoch reads and starts each visit at latest', async t => {
     const page = await fixture(t);
     await button(page,'Previous').click();
+    await page.evaluate(() => { navigator.clipboard.writeText = () => new Promise(resolve => {window.finishCopy = resolve;}); });
+    await button(page,'Copy message').click();
     await page.evaluate(() => {
         const originalRAF=requestAnimationFrame;
         const frames=[];
@@ -209,6 +211,8 @@ test('A to B to A discards queued old-epoch reads and starts each visit at lates
     });
     assert.equal(await message(page).innerText(),'A latest');
     assert.equal(await page.locator('.sillynovel-reader__unread').innerText(),'');
+    await page.evaluate(async () => {finishCopy(); await Promise.resolve();});
+    assert.notEqual(await page.locator('.sillynovel-reader__status').innerText(),'Message copied.');
 });
 
 test('IME and editable-field key events remain unconsumed', async t => {

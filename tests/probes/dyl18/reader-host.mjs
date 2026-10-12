@@ -119,7 +119,10 @@ try {
     pass('normal send and streaming reply');
 
     await send(page,'Show a reply I can stop.');
-    await page.waitForFunction(()=>SillyTavern.getContext().chat.at(-1).mes.length>15);
+    await page.waitForFunction(()=>{
+        const last=SillyTavern.getContext().chat.at(-1);
+        return !last.is_user && last.mes.length>15 && document.querySelector('.sillynovel-reader__status').textContent.includes('streaming');
+    });
     await page.locator('#mes_stop').click();
     await page.waitForFunction(()=>document.querySelector('.sillynovel-reader__status').textContent.includes('partial'));
     const stopped=await page.evaluate(()=>SillyTavern.getContext().chat.at(-1).mes);

@@ -124,11 +124,17 @@ export function mountReader({ document, snapshot, formatMessage, actions }) {
     const copy = button('Copy message', async () => {
         const copiedSnapshot = actions.getSnapshot();
         if (!copiedSnapshot.cursor) return;
+        function stillSelected() {
+            const current = actions.getSnapshot();
+            return !disposed && current.sessionEpoch === copiedSnapshot.sessionEpoch
+                && current.cursor?.sourceKey === copiedSnapshot.cursor.sourceKey
+                && current.cursor?.revision === copiedSnapshot.cursor.revision;
+        }
         try {
             await globalThis.navigator.clipboard.writeText(copiedSnapshot.cursor.text);
-            if (!disposed && actions.getSnapshot().sessionEpoch === copiedSnapshot.sessionEpoch) status.textContent = 'Message copied.';
+            if (stillSelected()) status.textContent = 'Message copied.';
         } catch {
-            if (!disposed) status.textContent = 'Copy unavailable. Select the message text to copy, or open the original.';
+            if (stillSelected()) status.textContent = 'Copy unavailable. Select the message text to copy, or open the original.';
         }
     });
     header.append(author, position, button('Back to Chat', () => showChat('Standard chat. Return to Reader keeps your selection.')));
@@ -224,11 +230,13 @@ export function mountReader({ document, snapshot, formatMessage, actions }) {
             : generation.sourceKey === source?.sourceKey && generation.status === 'stopped-partial' ? 'Stopped · partial reply'
             : generation.status === 'streaming' ? 'A new reply is being generated…'
             : source ? 'Completion status unknown' : '';
-        status.textContent = (fallback ? 'Plain text for unsupported or unsafe content. Use Backlog to open the original message. ' : '') + readingStatus;
+        const statusText = (fallback ? 'Plain text for unsupported or unsafe content. Use Backlog to open the original message. ' : '') + readingStatus;
+        if (status.textContent !== statusText) status.textContent = statusText;
         previous.disabled = !source || source.index === 0;
         next.disabled = !source || source.index >= (reader.head?.index ?? 0);
         copy.disabled = !source;
-        unread.textContent = reader.newMessageIndicator ? reader.newMessageIndicator + ' new' : '';
+        const unreadText = reader.newMessageIndicator ? reader.newMessageIndicator + ' new' : '';
+        if (unread.textContent !== unreadText) unread.textContent = unreadText;
         latest.disabled = reader.selectionMode === 'followLatest' && !reader.newMessageCount;
         follow.hidden = !source || atBottom();
         if (changedSelection && stage.hidden) handoffStatus.textContent = 'Conversation or selection changed. Return to Reader opens the current selection.';
