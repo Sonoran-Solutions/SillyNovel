@@ -1,6 +1,6 @@
 # Staged implementation roadmap
 
-**Status:** proposed sequence. Every implementation milestone is currently **NOT_STARTED** and every human gate is **NOT_RUN**. This document contains targets, not completion evidence.
+**Status:** proposed sequence. M0 has a bounded shell implementation and an isolated host smoke check, but its live generation lifecycle checks remain **NOT_TESTED**. M1–M4 are **NOT_STARTED**; Gates A/B/C remain **NOT_RUN**. This document contains targets, not owner acceptance.
 
 ## Delivery rule
 
@@ -12,13 +12,15 @@ The project has three human gates: **A — reader feel**, **B — automatic dire
 
 **Question:** Can the extension safely coexist with the actual SillyTavern setup?
 
-Pin a real target release/commit and document the browser and enabled extensions. Inspect source and test event behavior for completed/streaming/stopped/continued messages, group replies, swipes, edits, deletions, and chat switches.
+Pin a real target release/commit and document the browser and enabled extensions. Inspect source and test event behavior for completed/streaming/stopped/continued messages, group replies, swipes, edits, deletions, and chat switches. The pinned source and exact 1.19.0 smoke results are recorded in [M0 compatibility](M0_COMPATIBILITY.md).
 
 Implement only a minimal manifest/entry point, a scoped settings control, reversible empty stage, and the host adapter surface required to read the selected message. Default the extension to disabled. Add activation/disposal tests where practical, and a manual compatibility record.
 
 Resolve or explicitly block the host chat identity, card identity, metadata save, and asset-storage seams. No provider calls, paid services, full director, image-generation queue, or private user fixtures.
 
 **Exit criteria:** enable/disable cycles preserve ordinary chat and the draft; the adapter can identify a selected message without guessing; failures leave native chat usable; known limitations are documented. A failure in basic reversibility blocks M1.
+
+**Implementation record:** the reversible placeholder shell is implemented and passed a limited isolated-host load/toggle/draft smoke check. Event payload normalization passes synthetic tests against pinned source signatures. Real generation lifecycle ordering, group replies, and live chat operations remain **NOT_TESTED**, so M0 is not reported as fully passed. Gate A remains **NOT_RUN**; M1 is not authorized by this result.
 
 ## M1 — Manual visual-novel reader
 
