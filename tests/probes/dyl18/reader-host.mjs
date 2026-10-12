@@ -134,6 +134,9 @@ try {
     await createCharacter(page,'Mira Reader A',greetingA);
     await createCharacter(page,'Mira Reader B',greetingB);
     await selectCharacter(page,'Mira Reader A');await connected(page);
+    // Native prompt-preview initialization creates this metadata even on a dry run
+    // (world-info.js WorldInfoTimedEffects). Compare after that host-owned work.
+    await page.waitForFunction(()=>SillyTavern.getContext().chatMetadata?.timedWorldInfo?.sticky && SillyTavern.getContext().chatMetadata?.timedWorldInfo?.cooldown);
     const beforeEnable=await canonical(page);
     await setEnabled(page,true);
     assert.equal(await page.locator('#chat').isVisible(),false);
