@@ -1,12 +1,12 @@
 # M0.1 real-host lifecycle validation
 
-**Run date:** 2026-10-11, America/Phoenix (event observer timestamps were UTC 2026-10-12).
+**Run date:** 2026-10-11 and 2026-10-12, America/Phoenix. L02 and L03 were rerun on 2026-10-12 with the committed endpoint and observer fixtures.
 **Recommended M0 verdict:** PARTIAL / REVISE.
 **Gate A:** NOT_RUN. **M1:** NOT_AUTHORIZED.
 
 ## Candidate and environment
 
-The tested SillyNovel production shell is unchanged from candidate commit `b34ec1e0c0dbd3c74376b5ef9d1e901de8579f10`; this branch adds a regression test and evidence documentation. Starting `main` was at that same full SHA. The validation work is on `test/m0-real-host-lifecycle`.
+The review follow-up started from PR head `c197217c2d387f2963fb9b91cfd592608dcd2d63`. The tested SillyNovel production shell is unchanged from candidate commit `b34ec1e0c0dbd3c74376b5ef9d1e901de8579f10`; this branch adds a regression test, test fixtures, and evidence documentation. Starting `main` was at that same full SHA. The validation work is on `test/m0-real-host-lifecycle`.
 
 | Item | Value |
 | --- | --- |
@@ -16,47 +16,72 @@ The tested SillyNovel production shell is unchanged from candidate commit `b34ec
 | Runtime | Node.js `v26.8.1` |
 | Host data | Isolated temporary root `/tmp/sillynovel-m0lifecycle-data`; synthetic characters and conversations only |
 | Extensions | SillyNovel and temporary sanitized `M0LifecycleObserver`; stock host extensions otherwise left at defaults |
-| Generation endpoint | Disposable OpenAI-compatible endpoint on `127.0.0.1:8123`, model `sn-local-test` |
+| Generation endpoint | Committed `tests/fixtures/m0-openai-endpoint.mjs`, SHA-256 `9f0eeb33246ed0a65e5dc78d1709ace20eea988c2129cf9228c925cf0c478ef8`, loopback `127.0.0.1:8123`, model `sn-local-test` |
+| Event observer | Committed `tests/fixtures/m0-lifecycle-observer.js`, SHA-256 `5c1a1b12ead40ce3a0cb31a5e865a36979cad4d3e8e2348a94763483792a9305` |
 | Provider/model boundary | Endpoint returned a fixed response and fixed stream chunks. This exercises SillyTavern's request and event paths, not model inference or provider behavior. No paid API, credentials, or external service was used. |
 
-PR #1 was merged before this work. No SillyTavern source was changed. The host observer recorded event sequence/name, safe scalar payloads, active chat identity, message count/index, author, source length and bounded hash, swipe ID, and stage/listener counts. It did not retain message bodies. The endpoint response was synthetic test text.
+PR #1 was merged before this work. No SillyTavern source was changed. The checked-in debug observer recorded event sequence/name, safe scalar payloads, hashed chat identity, message count/index, optional allowlisted synthetic author label, source length and bounded FNV-1a diagnostic hash, swipe ID, and stage/listener deltas. Stream token text and message bodies were never retained. Its panel shows at most the latest 60 records; the in-memory ring is capped at 2,000. This is a diagnostic fixture, not an anonymizer; run it only against synthetic chats. The endpoint response was synthetic test text.
 
 ## Reproduction
 
-Use a clean checkout of the pinned SillyTavern SHA and an empty temporary data root. Install its existing dependencies, then start the host and the deterministic endpoint on loopback:
+Use a clean checkout of the pinned SillyTavern SHA and an empty temporary data root. Install its existing dependencies, then start the host and the committed deterministic endpoint on loopback:
 
 ```sh
 # In the pinned SillyTavern checkout
 npm ci --no-audit --no-fund
 setsid -f node server.js --port 8012 --whitelist false --dataRoot /tmp/sillynovel-m0lifecycle-data >/tmp/sillynovel-m0-host.log 2>&1 </dev/null
 
-# In the SillyNovel checkout; the checked-in helper is safe to bind to loopback only
+# In the SillyNovel checkout
 setsid -f node tests/fixtures/m0-openai-endpoint.mjs
 
 # In the SillyNovel checkout, run the deterministic regression suite
 node --test tests/m0.test.mjs
 ```
 
-In the isolated host UI, enable the SillyNovel extension from its local checkout, configure the supported Custom OpenAI-compatible connection to `http://127.0.0.1:8123/v1`, select model `sn-local-test`, leave the API key empty, and use a synthetic character/chat. Turn streaming off for L01 and on for the streaming scenarios. Use the observer described above to capture safe event records while performing the table scenarios. Do not replay the chats from another environment.
+In the isolated host UI, enable the SillyNovel extension from its local checkout, configure the supported Custom OpenAI-compatible connection to `http://127.0.0.1:8123/v1`, select model `sn-local-test`, leave the API key empty, and use a synthetic character/chat. Turn streaming off for L01 and on for the streaming scenarios.
 
-Commands actually run for this validation included:
+After SillyTavern has loaded, open DevTools on its page and load the checked-in observer from the local fixture endpoint:
+
+```js
+const observerScript = document.createElement('script');
+observerScript.src = 'http://127.0.0.1:8123/m0-lifecycle-observer.js';
+document.head.append(observerScript);
+```
+
+The temporary sanitized trace panel appears in the page. Clear it before each scenario; the `postTokenSample` row is taken 100 ms after its linked `STREAM_TOKEN_RECEIVED` callback and is explicitly a delayed host-state sample, not another host event. The observer records token lengths but not token text, and message text is represented only by a bounded FNV-1a diagnostic hash and length. It omits author labels by default. On synthetic data only, a caller may set `window.M0_LIFECYCLE_SYNTHETIC_LABELS` to an exact allowlist before loading the script. Remove it with the panel's **Remove observer** button; this detaches listeners, removes the panel, and clears the observer globals. Do not replay chats from another environment.
+
+The initial 2026-10-11 report used `/tmp/sillynovel-m0lifecycle-endpoint.mjs`; no exact-equivalence claim is made for that file. On 2026-10-12, L02 and L03 were repeated with the committed endpoint above. The running process logged two `streaming, model=sn-local-test` requests: one complete stream and one user-stopped stream. The endpoint file's SHA-256 was recorded before and after the run as `9f0eeb33246ed0a65e5dc78d1709ace20eea988c2129cf9228c925cf0c478ef8`. For this rerun, the checked-in observer was copied into the temporary host's existing `M0LifecycleObserver` extension directory; its SHA matched `tests/fixtures/m0-lifecycle-observer.js` exactly (`5c1a1b12ead40ce3a0cb31a5e865a36979cad4d3e8e2348a94763483792a9305`). The DevTools script-tag instructions above reproduce the same fixture without changing the pinned host checkout.
+
+Commands actually run across the original validation and the corrective rerun included:
 
 ```sh
 git rev-parse HEAD
 # b34ec1e0c0dbd3c74376b5ef9d1e901de8579f10
+git rev-parse HEAD
+# c197217c2d387f2963fb9b91cfd592608dcd2d63 (review follow-up starting head)
 
 npm ci --no-audit --no-fund
 setsid -f node server.js --port 8012 --whitelist false --dataRoot /tmp/sillynovel-m0lifecycle-data >/tmp/sillynovel-m0-host.log 2>&1 </dev/null
+# Original 2026-10-11 endpoint (not used for the corrective rerun)
 setsid -f node /tmp/sillynovel-m0lifecycle-endpoint.mjs
+# Corrective 2026-10-12 rerun used the committed fixture
+setsid -f node tests/fixtures/m0-openai-endpoint.mjs
 brave-browser --version
 # Brave 154.1.96.61
 
 node --test tests/m0.test.mjs
 git diff --check
 node --check tests/fixtures/m0-openai-endpoint.mjs
+node --check tests/fixtures/m0-lifecycle-observer.js
+sha256sum tests/fixtures/m0-openai-endpoint.mjs tests/fixtures/m0-lifecycle-observer.js
+curl -fsS -H 'Origin: http://127.0.0.1:8012' http://127.0.0.1:8123/m0-lifecycle-observer.js -o /tmp/m0-observer-served.js
+sha256sum tests/fixtures/m0-lifecycle-observer.js /tmp/m0-observer-served.js
+curl -sS -D - -o /dev/null -H 'Origin: http://127.0.0.1:8012' http://127.0.0.1:8123/v1/models
+curl -sS -D - -o /dev/null -H 'Origin: http://example.invalid' http://127.0.0.1:8123/v1/models
+head -c 1048577 /dev/zero | curl -sS -D - -o /dev/null -H 'Content-Type: application/json' --data-binary @- http://127.0.0.1:8123/v1/chat/completions
 ```
 
-The live endpoint used for the run was a temporary file at `/tmp/sillynovel-m0lifecycle-endpoint.mjs`; the checked-in fixture contains the same deterministic response and request behavior for later reproduction. `npm ci` was run in the temporary SillyTavern checkout, not in this repository. No repository dependencies were installed.
+The pinned SillyTavern install and `npm ci` were run in the temporary SillyTavern checkout, not in this repository. No repository dependencies were installed. The rerun verified the endpoint's allowlisted origin with HTTP 200, rejected `http://example.invalid` with HTTP 403, and rejected a request body over 1 MiB with HTTP 413.
 
 ## Real-host scenario results
 
@@ -65,8 +90,8 @@ The live endpoint used for the run was a temporary file at `/tmp/sillynovel-m0li
 | ID | Result | Evidence |
 | --- | --- | --- |
 | L01 Normal non-streaming reply | PASS | Non-streaming generation resolved the completed source at message index 4, author A, length 63. No stream-token event was recorded. |
-| L02 Streaming reply | PASS | Token events preceded chat-message updates; details below. Final source resolved at its selected message index. |
-| L03 Stop mid-stream | PASS | A user stop left partial source length 51. `GENERATION_STOPPED` was observed; later end/receive/render events did not turn that partial response into a successful completion. |
+| L02 Streaming reply | PASS | Repeated with the committed endpoint. The token callback saw the prior source length (3); its linked 100 ms sample later saw length 11. The normal stream then ended at length 63. Raw observer fields are below. |
+| L03 Stop mid-stream | PASS | Repeated with the committed endpoint. User stop left partial source length 20; `GENERATION_STOPPED` preceded `GENERATION_ENDED`, `MESSAGE_RECEIVED`, and `CHARACTER_MESSAGE_RENDERED`, all while that source remained length 20. |
 | L04 Continue a response | PASS | Generation type was `continue`; the existing assistant message at index 13 grew from length 63 to 127 and message count stayed 14. Final receive/render events referenced index 13. Per-token lag during continuation was not separately measured; see streaming contract below. |
 | L05 Regenerate a reply | PASS | Swipe generation used type `swipe`; `MESSAGE_SWIPED` preceded generation start, and the selected source ended on swipe ID 1 of 2. |
 | L06 Select old and new swipes | PASS | Selecting swipe ID 0 resolved its length-127 source; selecting ID 1 resolved its length-63 source. |
@@ -85,23 +110,115 @@ The extension did not initiate canonical chat changes during mount, disable, or 
 
 ## Sanitized event traces and integration contract
 
-These traces omit message text. Counts and indices are the host values observed for the synthetic chat; event ordering is the order in which the observer saw callbacks.
+These traces omit message text. Counts and indices are the host values observed for the synthetic chat; event ordering is the order in which the observer saw callbacks. The following fields are copied from the new fixture's raw sanitized records; repeated `listenerDeltasFromInstall` maps are omitted here for readability.
+
+```json
+[
+  {
+    "sequence": 4,
+    "elapsedMs": 125407,
+    "kind": "hostEvent",
+    "event": "STREAM_TOKEN_RECEIVED",
+    "triggerSequence": null,
+    "args": { "tokenLength": 12, "tokenText": "[redacted]" },
+    "chat": { "scope": "character", "chatIdHash": "765b88da", "groupId": null, "characterId": null },
+    "messageCount": 17,
+    "source": { "index": 16, "resolution": "resolved", "kind": "character", "authorLabel": null, "authorLabelHash": "a03e356a", "textLength": 3, "textHashPrefix": "0ac31c19", "swipeId": 0 },
+    "generationActive": true,
+    "stopSeenInGeneration": false,
+    "stageCount": 1
+  },
+  {
+    "sequence": 5,
+    "elapsedMs": 125516,
+    "kind": "postTokenSample",
+    "event": "STREAM_TOKEN_RECEIVED",
+    "triggerSequence": 4,
+    "args": { "tokenLength": null, "tokenText": "[redacted]" },
+    "chat": { "scope": "character", "chatIdHash": "765b88da", "groupId": null, "characterId": null },
+    "messageCount": 17,
+    "source": { "index": 16, "resolution": "resolved", "kind": "character", "authorLabel": null, "authorLabelHash": "a03e356a", "textLength": 11, "textHashPrefix": "4ee182ec", "swipeId": 0 },
+    "generationActive": true,
+    "stopSeenInGeneration": false,
+    "stageCount": 1
+  },
+  {
+    "sequence": 8,
+    "elapsedMs": 127179,
+    "kind": "hostEvent",
+    "event": "GENERATION_STOPPED",
+    "triggerSequence": null,
+    "args": {},
+    "chat": { "scope": "character", "chatIdHash": "765b88da", "groupId": null, "characterId": null },
+    "messageCount": 17,
+    "source": { "index": 16, "resolution": "resolved", "kind": "character", "authorLabel": null, "authorLabelHash": "a03e356a", "textLength": 20, "textHashPrefix": "0b941281", "swipeId": 0 },
+    "generationActive": true,
+    "stopSeenInGeneration": true,
+    "stageCount": 1
+  },
+  {
+    "sequence": 9,
+    "elapsedMs": 127179,
+    "kind": "hostEvent",
+    "event": "GENERATION_ENDED",
+    "triggerSequence": null,
+    "args": { "hostCount": 17 },
+    "chat": { "scope": "character", "chatIdHash": "765b88da", "groupId": null, "characterId": null },
+    "messageCount": 17,
+    "source": { "index": 16, "resolution": "resolved", "kind": "character", "authorLabel": null, "authorLabelHash": "a03e356a", "textLength": 20, "textHashPrefix": "0b941281", "swipeId": 0 },
+    "generationActive": false,
+    "stopSeenInGeneration": true,
+    "stageCount": 1
+  },
+  {
+    "sequence": 10,
+    "elapsedMs": 127214,
+    "kind": "hostEvent",
+    "event": "MESSAGE_RECEIVED",
+    "triggerSequence": null,
+    "args": { "index": 16, "generationType": "normal" },
+    "chat": { "scope": "character", "chatIdHash": "765b88da", "groupId": null, "characterId": null },
+    "messageCount": 17,
+    "source": { "index": 16, "resolution": "resolved", "kind": "character", "authorLabel": null, "authorLabelHash": "a03e356a", "textLength": 20, "textHashPrefix": "0b941281", "swipeId": 0 },
+    "generationActive": false,
+    "stopSeenInGeneration": true,
+    "stageCount": 1
+  },
+  {
+    "sequence": 11,
+    "elapsedMs": 127214,
+    "kind": "hostEvent",
+    "event": "CHARACTER_MESSAGE_RENDERED",
+    "triggerSequence": null,
+    "args": { "index": 16, "generationType": "normal" },
+    "chat": { "scope": "character", "chatIdHash": "765b88da", "groupId": null, "characterId": null },
+    "messageCount": 17,
+    "source": { "index": 16, "resolution": "resolved", "kind": "character", "authorLabel": null, "authorLabelHash": "a03e356a", "textLength": 20, "textHashPrefix": "0b941281", "swipeId": 0 },
+    "generationActive": false,
+    "stopSeenInGeneration": true,
+    "stageCount": 1
+  }
+]
+```
+
+The normal complete rerun used the same committed fixture and finished at source length 63. The observer recorded `GENERATION_ENDED` → `MESSAGE_RECEIVED` → `CHARACTER_MESSAGE_RENDERED`. A later `GENERATION_STARTED(dryRun=true)` was observed separately and did not change the finalized reply.
 
 ```text
 Streaming normal reply:
   STREAM_TOKEN_RECEIVED       source length 3
+  postTokenSample (+100 ms)    source length 3
   STREAM_TOKEN_RECEIVED       source length 3
-  host onProgressStreaming   source length becomes 11
+  postTokenSample (+100 ms)    source length becomes 11
   ...
   GENERATION_ENDED            argument = chat.length
   MESSAGE_RECEIVED            index = 4, type = normal
   CHARACTER_MESSAGE_RENDERED  index = 4, type = normal
 
 User stop mid-stream:
-  GENERATION_STOPPED           no payload; current source length = 51
-  GENERATION_ENDED             argument = chat.length (12)
-  MESSAGE_RECEIVED             index = 11, type = normal
-  CHARACTER_MESSAGE_RENDERED   index = 11, type = normal
+  GENERATION_STOPPED           no payload; current source length = 20
+  GENERATION_ENDED             argument = chat.length (17); source remains length 20
+  MESSAGE_RECEIVED             index = 16, type = normal; source remains length 20
+  CHARACTER_MESSAGE_RENDERED   index = 16, type = normal; source remains length 20
 
 Continuation:
   GENERATION_STARTED           type = continue
@@ -140,7 +257,7 @@ Disable while streaming:
 
 ### Streaming ordering
 
-The live normal stream confirmed the pinned-source ordering: `STREAM_TOKEN_RECEIVED` arrives before SillyTavern applies that iteration to the message object. At token-event time the observer could see the prior partial source; after the host progress update the source length increased. There is no dedicated post-write event for every token in this surface. A sample taken from `context.chat` inside the token event is therefore behind the in-flight update and must not be presented as if it includes that token.
+The committed-fixture rerun confirmed the pinned-source ordering: `STREAM_TOKEN_RECEIVED` arrives before SillyTavern applies that iteration to the message object. In the stop run, the second callback saw source length 3, and its linked 100 ms sample saw length 11; the following callback then saw length 11. There is no dedicated post-write event for every token in this surface. A sample taken from `context.chat` inside the token event is therefore behind the in-flight update and must not be presented as if it includes that token.
 
 Continuation used the existing selected assistant message (index 13); its source grew from 63 to 127, and its final event type was `continue`. This run did not retain a separate per-token continuation timing trace, so whether the one-update lag differs for continuation remains unverified. M1 should validate its chosen update seam for both normal and continue paths before relying on streaming text.
 
