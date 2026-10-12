@@ -58,6 +58,7 @@ The image plan therefore includes manual prompt/reference export and result impo
 | [State and director contract](docs/STATE_AND_DIRECTOR.md) | Identity, snapshots, invalidation, automation, and manual authority |
 | [Assets and providers](docs/ASSETS_AND_PROVIDERS.md) | Asset library, generation queue, billing boundaries, and privacy |
 | [Roadmap](docs/ROADMAP.md) | Small implementation slices and human acceptance gates |
+| [M1 reader plan](docs/M1_PLAN.md) | DYL-15 interaction designs, component contracts, dependencies, and pending owner decisions |
 | [Testing](docs/TESTING.md) | Regression matrix and evidence requirements |
 | [M0 compatibility](docs/M0_COMPATIBILITY.md) | Pinned host source, smoke results, lifecycle limits, and open integration seams |
 | [Decisions](docs/DECISIONS.md) | User-stated scope, proposed defaults, and unresolved decisions |

@@ -1,6 +1,6 @@
 # Decision register
 
-**Status:** initial register. User-stated scope is distinguished from recommendations. A proposed default is not a recorded owner approval.
+**Status:** user-stated scope is distinguished from recommendations. A proposed default is not a recorded owner approval. The dated M1 planning entry below records recommendations without settling owner or technical gates.
 
 ## Confirmed user-stated scope
 
@@ -49,6 +49,14 @@ Location, presence, and outfit overrides remain locked until released. Manual ex
 | O07 | Is plan-backed ChatGPT text access worth a separate integration spike? | Optional; not a reader or image milestone prerequisite |
 
 These questions do not block documentation or the manual compatibility shell. Do not answer them by silently treating an example configuration as a user decision.
+
+## M1 planning entry — 2026-10-12, DYL-15
+
+[M1_PLAN.md](M1_PLAN.md) narrows the existing UX/state/asset baseline into reviewable contracts. Its decision table distinguishes requirements, proposed defaults, owner decisions in DYL-16, and technical proofs in DYL-19. **Approving person: none; owner review pending.** It does not authorize M1 runtime work, accept M0, or approve the L10 waiver. Gate A remains NOT_RUN.
+
+Recommended defaults include a complete-message scene above the native composer with reversible native-feed hiding after mount; explicit Previous/Next pinning and native backlog handoff; neutral unresolved identity; a small raster library with stated limits; forward background/presence/outfit locks, message-only expressions and locked chat-level slots; and one visual writer with a read-only second tab. These favor stable scenes and reuse of native chat controls. Exact layout, visibility, lock behavior, rich-content limitations and any local-only storage fallback need owner review. DYL-19 must prove durable identities, asset ownership, metadata save targeting/completion and writer exclusion; failed proofs block dependent features.
+
+Affected documents: [roadmap](ROADMAP.md), [status](STATUS.md), and the new [reader plan](M1_PLAN.md), which refines [UX](UX_SPEC.md), [architecture](ARCHITECTURE.md), [state](STATE_AND_DIRECTOR.md) and [assets](ASSETS_AND_PROVIDERS.md) without rewriting historical evidence. No existing owner approval is superseded. DYL-16 must record the owner's actual statement/date/scope before approved defaults or implementation authorization are added here.
 
 ## Changing decisions
 
