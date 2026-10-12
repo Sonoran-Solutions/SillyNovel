@@ -151,7 +151,7 @@ test('backlog re-resolves reordered objects, returns pinned selection and report
     const page = await fixture(t);
     await button(page,'Previous').click();
     await page.evaluate(() => {fixture.context.chat.unshift({name:'Mira',mes:'inserted'});fixture.renderNative();});
-    await button(page,'Open Original Message').click();
+    await button(page,'Backlog').click();
     assert.equal(await page.locator('#chat').isVisible(),true);
     assert.match(await page.locator('.sillynovel-native-bar__status').innerText(),/Original message located/);
     await button(page,'Return to Reader').click();

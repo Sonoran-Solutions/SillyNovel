@@ -119,7 +119,8 @@ export function mountReader({ document, snapshot, formatMessage, actions }) {
         actions.setTextScrollMode('followBottom');
         follow.hidden = true;
     });
-    const original = button('Open Original Message', openBacklog);
+    const backlog = button('Backlog', openBacklog);
+    backlog.title = 'Open Original Message in native chat';
     const copy = button('Copy message', async () => {
         const copiedSnapshot = actions.getSnapshot();
         if (!copiedSnapshot.cursor) return;
@@ -131,7 +132,7 @@ export function mountReader({ document, snapshot, formatMessage, actions }) {
         }
     });
     header.append(author, position, button('Back to Chat', () => showChat('Standard chat. Return to Reader keeps your selection.')));
-    navigation.append(previous, next, button('Backlog', openBacklog), latest, unread, follow, original, copy);
+    navigation.append(previous, next, backlog, latest, unread, follow, copy);
     stage.append(header, status, dialogue, navigation);
     const nativeBar = make('div', 'sillynovel-native-bar');
     nativeBar.hidden = true;
@@ -223,10 +224,10 @@ export function mountReader({ document, snapshot, formatMessage, actions }) {
             : generation.sourceKey === source?.sourceKey && generation.status === 'stopped-partial' ? 'Stopped · partial reply'
             : generation.status === 'streaming' ? 'A new reply is being generated…'
             : source ? 'Completion status unknown' : '';
-        status.textContent = (fallback ? 'Plain text for unsupported or unsafe content. Open Original Message for the native view. ' : '') + readingStatus;
+        status.textContent = (fallback ? 'Plain text for unsupported or unsafe content. Use Backlog to open the original message. ' : '') + readingStatus;
         previous.disabled = !source || source.index === 0;
         next.disabled = !source || source.index >= (reader.head?.index ?? 0);
-        original.disabled = copy.disabled = !source;
+        copy.disabled = !source;
         unread.textContent = reader.newMessageIndicator ? reader.newMessageIndicator + ' new' : '';
         latest.disabled = reader.selectionMode === 'followLatest' && !reader.newMessageCount;
         follow.hidden = !source || atBottom();
