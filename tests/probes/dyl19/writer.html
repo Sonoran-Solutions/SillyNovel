@@ -35,16 +35,21 @@ document.querySelector('#release').addEventListener('click', () => release());
 if (!navigator.locks?.request) {
     show('UNSUPPORTED: Web Locks API is unavailable.');
 } else if (role === 'A') {
-    localStorage.setItem(stateKey, JSON.stringify({ revision: 1, writer: 'A', value: 'record-A' }));
     void navigator.locks.request(lockName, { mode: 'exclusive' }, async () => {
-        show('LOCKED: A is sole writer.', JSON.parse(localStorage.getItem(stateKey)));
+        const current = JSON.parse(localStorage.getItem(stateKey) || 'null');
+        if (current !== null) {
+            show('FAIL: A acquired the lock without the expected empty initial state.', current);
+            return;
+        }
+        const next = { revision: 1, writer: 'A', value: 'record-A' };
+        localStorage.setItem(stateKey, JSON.stringify(next));
+        show('LOCKED: A validated empty state and wrote revision 1 while holding the lock.', next);
         if (mode === 'release') await held;
         else await new Promise(() => {});
         show(mode === 'release' ? 'RELEASED: A gave up the lock.' : 'LOCKED: close this tab to simulate owner loss.');
     });
 } else {
-    const before = JSON.parse(localStorage.getItem(stateKey) || 'null');
-    show('QUEUED: B is waiting for the writer lock.', before);
+    show('QUEUED: B is waiting for the writer lock.');
     void navigator.locks.request(lockName, { mode: 'exclusive' }, async () => {
         const current = JSON.parse(localStorage.getItem(stateKey) || 'null');
         const valid = current?.revision === 1 && current?.writer === 'A' && current?.value === 'record-A';

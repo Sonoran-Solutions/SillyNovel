@@ -13,8 +13,11 @@ const messages = [
 
 test('fixed field order gives a deterministic SHA-256 prefix', () => {
     const input = { owner, scope, messages, selectedIndex: 1 };
-    assert.equal(serializeSourcePrefix(input), serializeSourcePrefix(input));
-    assert.match(fingerprintSourcePrefix(input), /^[a-f0-9]{64}$/);
+    assert.equal(
+        serializeSourcePrefix(input),
+        '["sn-source-v1","synthetic-user-store","character","synthetic-card-mira-a",[["user",["resolved","synthetic-user"],"A repeated line.",null],["assistant",["resolved","synthetic-card-mira-a"],"A repeated line.",null]]]',
+    );
+    assert.equal(fingerprintSourcePrefix(input), '494964a82108011a8de580c883c4f11286730c8ddb1ef34d1c52131b8c5dd5ff');
 });
 
 test('repeated identical messages remain position-sensitive through ordered history', () => {
