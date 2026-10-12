@@ -16,7 +16,7 @@ The repository now contains the M0 compatibility shell. This is not a visual-nov
 | L10 persistent empty-chat workflow | UNSUPPORTED / WAIVED; supported host UI restores the welcome message on reopen |
 | Missing-capability behavior | INSTRUMENTED_HOST_PASS; capability omission was injected, not a natural host failure |
 | M0 overall | OWNER APPROVED PASS for the explicitly documented scope and evidence limits; L10 is UNSUPPORTED / WAIVED |
-| M1 runtime | NOT_STARTED; DYL-17 and DYL-19 explicitly authorized, DYL-18 and later tickets remain blocked pending prerequisites and separate authorization |
+| M1 runtime | IN_PROGRESS on DYL-17 source model; DYL-19 is separately authorized work, DYL-18 and later tickets remain blocked pending prerequisites and separate authorization |
 | Gate A — reader feel | NOT_RUN |
 | M2 — automatic direction | NOT_STARTED |
 | Gate B — direction quality | NOT_RUN |
@@ -90,3 +90,9 @@ Verification for this planning PR: relative Markdown file/anchor and fenced-bloc
 The owner accepted L10 as **UNSUPPORTED / WAIVED** for the tested persistent-chat workflow on the pinned host, retaining synthetic empty-source coverage and requesting reconsideration if a supported reachable workflow is later demonstrated. The owner approved M0 **PASS for its documented scope and evidence limits**. A short smoke check against the current SillyNovel main head is included in DYL-17's host-validation scope; M0 is not reopened.
 
 The owner approved M1 defaults A–G with the clarifications in [DECISIONS](DECISIONS.md#owner-decision--2026-10-12-dyl-16) and [M1_PLAN](M1_PLAN.md#owner-approved-defaults--2026-10-12-dyl-16). DYL-17 (source model) and DYL-19 (identity/storage proof) are authorized in parallel as separate branches and separate open PRs with coordinated file ownership. DYL-19 does not authorize asset-library or persistence implementation. DYL-18 and later implementation remain blocked pending prerequisites and separate authorization. Gate A is **NOT_RUN** and M2 is **NOT_AUTHORIZED**.
+
+## DYL-17 implementation handoff — 2026-10-12
+
+DYL-17 adds the internal in-memory reader source model and connects it to the host adapter and shell. The source model keeps head and cursor separate, tracks immutable revisions, uses transient host-object locators, invalidates deleted/replaced selections, and reports conservative generation states. Token notifications now trigger a coalesced canonical sample of only the latest and consumer-tracked message indices; lifecycle changes and nontrivial history shape changes reconcile full history. The stage UI remains the M0 placeholder.
+
+Contract and limits: [M1 reader source model](M1_READER_SOURCE.md). Verification and host evidence for this candidate are recorded in [TESTING](TESTING.md). DYL-18 was not started; DYL-19 remains separate. Gate A remains **NOT_RUN**.

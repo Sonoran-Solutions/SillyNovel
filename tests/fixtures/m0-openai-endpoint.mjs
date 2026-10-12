@@ -41,6 +41,11 @@ const server = createServer(async (req, res) => {
     let payload;
     try { payload = JSON.parse(raw); } catch { res.writeHead(400).end('invalid json'); return; }
     const streaming = payload.stream === true;
+    if (JSON.stringify(payload.messages ?? []).includes('[DYL17_CONTROLLED_FAILURE]')) {
+        console.log('request: controlled failure, model=' + String(payload.model || 'unknown'));
+        res.writeHead(503, { 'content-type': 'application/json' }).end(JSON.stringify({ error: { message: 'DYL17 controlled local endpoint failure' } }));
+        return;
+    }
     console.log('request: ' + (streaming ? 'streaming' : 'non-streaming') + ', model=' + String(payload.model || 'unknown'));
     const id = 'chatcmpl-sillynovel-local';
     const created = Math.floor(Date.now() / 1000);

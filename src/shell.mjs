@@ -1,3 +1,5 @@
+import { createReaderSourceModel } from './reader-source-model.mjs';
+
 export function createSourceTracker(initialSource) {
     let currentSource = initialSource ?? null;
 
@@ -15,6 +17,7 @@ export function createShellController(host, view) {
     let active = false;
     let stage = null;
     let unsubscribe = null;
+    const reader = createReaderSourceModel();
 
     function disable() {
         const wasActive = active || stage !== null || unsubscribe !== null;
@@ -40,7 +43,9 @@ export function createShellController(host, view) {
             throw new Error('Missing SillyTavern capabilities: ' + capabilities.missing.join(', ') + '. The original chat remains available.');
         }
 
-        const mountedStage = view.mountStage(host.readCurrentSource());
+        const history = host.readHistory?.() ?? [host.readCurrentSource()].filter(Boolean);
+        const initialReader = reader.activate(history, host.readChatIdentity?.() ?? history[0]?.identity ?? null);
+        const mountedStage = view.mountStage(initialReader.cursor, initialReader);
         if (!mountedStage || typeof mountedStage.update !== 'function' || typeof mountedStage.dispose !== 'function') {
             try { mountedStage?.dispose?.(); } catch { /* cleanup after invalid mount */ }
             throw new Error('SillyNovel could not mount its placeholder stage. The original chat remains available.');
@@ -52,10 +57,12 @@ export function createShellController(host, view) {
             unsubscribe = host.subscribe((observation) => {
                 if (!active) return;
                 try {
-                    stage?.update(observation);
+                    stage?.update({ ...observation, reader: reader.apply(observation) });
                 } catch (error) {
                     fail(error);
                 }
+            }, {
+                getTrackedIndices: reader.getTrackedIndices,
             });
             if (typeof unsubscribe !== 'function') throw new Error('SillyTavern event listeners could not be registered.');
         } catch (error) {
@@ -65,5 +72,5 @@ export function createShellController(host, view) {
         return true;
     }
 
-    return { enable, disable, isActive: () => active };
+    return { enable, disable, isActive: () => active, getReaderSnapshot: reader.getSnapshot };
 }

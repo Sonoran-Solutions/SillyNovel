@@ -238,6 +238,7 @@ test('observes normal and streaming lifecycle events without forwarding token te
     assert.equal(observations[1].generationType, 'normal');
     assert.equal(observations[4].generationType, 'normal');
     assert.equal(observations[5].token, undefined);
+    assert.equal(observations[5].source, undefined, 'stream token payloads only mark canonical state dirty');
     assert.equal(observations[5].generationType, undefined);
     assert.equal(observations[6].generationType, 'normal');
     assert.equal(observations[6].source.text, 'The selected swipe.');
@@ -310,7 +311,7 @@ test('invalid indices on indexed events never fall back to the last message', ()
     context.eventSource.emit(eventTypes.STREAM_TOKEN_RECEIVED, 'ignored synthetic token');
 
     assert.deepEqual(observations.slice(0, 3).map((observation) => observation.source), [null, null, null]);
-    assert.equal(observations[3].source.text, 'The selected swipe.', 'index-free token event samples the current latest message');
+    assert.equal(observations[3].source, undefined, 'index-free token event does not claim text before the host write');
     dispose();
 });
 
