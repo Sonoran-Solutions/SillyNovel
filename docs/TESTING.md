@@ -116,3 +116,28 @@ Only the owner supplies the human verdict. Agents can recommend readiness for ev
 Before merging documentation, validate relative links, JSON example syntax, consistent milestone/status names, and separation of planned versus implemented behavior. Check that external facts cite primary sources and that provider limits/pricing have not been invented.
 
 These checks validate the documentation package only. They do not count as M0 completion or extension compatibility evidence.
+
+## M0.2 final host validation addendum (2026-10-12)
+
+Candidate `de25366aeaa5e1cbd10e9bc40861e8ae91339aee` was tested on pinned SillyTavern 1.19.0 (`7e8663cd9c184a550b37238218bdd32c6efc68e9`) using Ubuntu 24.04, Node `v26.8.1`, Brave `154.1.96.61`, isolated synthetic host data, and the deterministic local endpoint. The lifecycle report contains exact setup and fixture hashes.
+
+| Check | Result | Evidence level |
+| --- | --- | --- |
+| L10 empty B across chat switch and generation | UNSUPPORTED / WAIVER REQUESTED | Host UI creates a welcome message and restores it on reopen; synthetic empty-source regression remains PASS. |
+| Eventless Temporary Chat transition | PASS after targeted fix | Host UI reproduced stale stage on prior candidate; candidate DOM observer refreshed source; observer disposal is covered synthetically. Temporary Chat is not L10. |
+| L12 group authors and switching | HOST PASS | Synthetic 3-member group, host regeneration, group/individual switch, and disable/re-enable. |
+| L13 duplicate display names | HOST PASS for label-only behavior | Two distinct Mira cards share the host label; differing avatar fields are observed but not used as durable identity. |
+| L16 missing `MESSAGE_SWIPED` capability | INSTRUMENTED_HOST_PASS | Reversible browser-local override; refusal before mount/listeners, chat/composer usable, normal activation after restore. |
+| Node regression harness | PASS — 13 tests | `node --test tests/m0.test.mjs` |
+| Fixture and adapter syntax | PASS | `node --check tests/fixtures/m0-openai-endpoint.mjs`; `node --check tests/fixtures/m0-lifecycle-observer.js`; `node --check src/host-adapter.mjs` |
+| JSON examples | PASS | Node `JSON.parse` on each `docs/examples/*.json`; command shown below. |
+| Relative Markdown links | PASS — 15 Markdown files checked | One-off Node path-existence check; external links are excluded. |
+| Git whitespace | PASS | `git diff --check` |
+
+The JSON validation command used was:
+
+```sh
+node --input-type=module -e 'import {readdirSync,readFileSync} from "node:fs"; const files=readdirSync("docs/examples").filter(f=>f.endsWith(".json")); for (const f of files) JSON.parse(readFileSync(`docs/examples/${f}`,"utf8")); console.log(`JSON OK: ${files.join(", ")}`)'
+```
+
+This evidence recommends **M0 PASS subject to the owner accepting the L10 waiver**. No owner verdict is recorded. Gate A remains NOT_RUN; M1 remains NOT_AUTHORIZED. The host run does not validate real model/provider behavior, error/abort paths, other browser engines, or other SillyTavern releases.

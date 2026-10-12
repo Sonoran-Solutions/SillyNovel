@@ -1,6 +1,6 @@
 # Project status
 
-**Updated:** 2026-10-11.
+**Updated:** 2026-10-12. The status snapshot below preserves the M0.1 record from 2026-10-11; the current M0.2 result is appended at the end.
 
 ## Current state
 
@@ -52,3 +52,22 @@ Complete the remaining real-host empty-chat switch/generation and group scenario
 ## Status discipline
 
 Keep implementation, simulated checks, real-host checks, provider checks, and owner verdicts separate. Do not promote M0 to fully passed until the outstanding host scenarios in the compatibility record have been exercised and the owner has reviewed the evidence.
+
+## M0.2 current status (2026-10-12)
+
+| Area | Current result |
+| --- | --- |
+| Validated SillyNovel candidate | `de25366aeaa5e1cbd10e9bc40861e8ae91339aee` |
+| Pinned host | SillyTavern 1.19.0 / `7e8663cd9c184a550b37238218bdd32c6efc68e9` |
+| Synthetic regression suite | PASS — 13 tests |
+| L10: revisitable empty B and generation | UNSUPPORTED / WAIVER REQUESTED; supported UI restores the welcome message after switching away and reopening |
+| L12: group author labels and switching | HOST PASS |
+| L13: duplicate-name labels | HOST PASS for M0 label-only behavior; stable identity remains an M1 contract requirement |
+| L16: missing capability in browser | INSTRUMENTED_HOST_PASS; no stage/partial activation, native chat usable, normal activation recovered after restoring context |
+| Confirmed production defect | Eventless Temporary Chat transition kept stale stage content on previous candidate; fixed and host-rechecked on the validated candidate |
+| M0 recommendation | PASS recommended subject to owner acceptance of L10 waiver; owner verdict pending |
+| Gate A | NOT_RUN |
+| M1 | NOT_AUTHORIZED |
+| Real model/provider, other host releases, browsers, and error/abort paths | NOT_TESTED |
+
+The validated candidate changes `src/host-adapter.mjs` with a coalesced, disposal-owned observer on `#chat`; it does not change canonical chat content or host source. The observer and deterministic endpoint fixtures are synthetic/test-only. Full evidence and exact commands are in [M0 lifecycle validation](M0_LIFECYCLE_VALIDATION.md), [M0 compatibility](M0_COMPATIBILITY.md), and [testing](TESTING.md). The L10 waiver is a request for owner review, not an approval.
