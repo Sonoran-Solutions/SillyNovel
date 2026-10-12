@@ -150,9 +150,9 @@ The bounded contract and consumer notes are in [M1 reader source model](M1_READE
 | Evidence item | Result |
 | --- | --- |
 | Starting main | `4e72a3cda0393ca1e2a11155491ef10f0ab759bc` |
-| Final code candidate tested on host | `fa18bd2e29ea4b40dfa3e90a71008fb8fce68d4c` |
+| Final code candidate tested on host | `dfbb6dffa88f4aaeda097fb880e54d6c7d956867` |
 | Pinned host | SillyTavern 1.19.0 / `7e8663cd9c184a550b37238218bdd32c6efc68e9` |
-| Host runtime | Ubuntu 24.04, Node.js `v26.8.1`; host PID `2633579`, fixture PID `2638322` |
+| Host runtime | Ubuntu 24.04, Node.js `v26.8.1`; host PID `2713766`, fixture PID `2713768` |
 | Browser | Codex In-app Browser on this host; browser engine/version NOT_REPORTED |
 | Isolated host data | `/tmp/SillyTavern-dyl17-final-data`; synthetic chat only |
 | Local endpoint | `127.0.0.1:8123`, allowed origin `http://127.0.0.1:8012`; 1 MiB request limit |
@@ -161,7 +161,7 @@ The bounded contract and consumer notes are in [M1 reader source model](M1_READE
 
 The before-change smoke used a clean worktree at starting main `4e72a3cda0393ca1e2a11155491ef10f0ab759bc`, pinned SillyTavern, and its own temporary data root. It verified extension off/on with exact draft preservation and a reachable Temporary Chat source. The requested same-length native edit was NOT_TESTED on this baseline candidate.
 
-The final code candidate `fa18bd2` was reloaded from the isolated worktree into the final host check. Toggling off/on kept the exact draft `DYL-17 final draft preservation smoke.` and restored exactly one stage. A local normal request streamed to the canonical 63-character fixture response; live host observations showed its message length grow from 11 through 63 characters. A second request was stopped at 39 characters and left readable partial text. A controlled `[DYL17_CONTROLLED_FAILURE]` request returned the fixture's 503; the host showed its error toast, did not append an assistant response, and retained readable history. An earlier tested code candidate `5a4f38413859eb119c4a6e531bc55cc383add729` also observed a same-length native edit and continuation, but those two host scenarios were NOT_RETESTED on `fa18bd2`. Continuation is therefore NOT_TESTED for the final code candidate. No real provider was used, and SillyNovel did not submit generation requests.
+The review-fix candidate `dfbb6dffa88f4aaeda097fb880e54d6c7d956867` was loaded from the isolated worktree into SillyTavern 1.19.0 for the requested final-candidate checks. On the synthetic chat, a native edit changed the assistant source from the 127-character text ending in `quiet room.` to a different 127-character text ending in `peace room.`; the stage reported `messageEdited` and the new canonical text. The built-in **Continue** action then extended that same assistant message from 127 to 191 characters; the stage reported `streamReconciled` during growth and `characterMessageRendered` when complete. The browser UI showed one assistant message updated in place, not a second assistant message. These checks used the deterministic local endpoint; no real provider was used and SillyNovel did not submit generation requests. The final rerun did not repeat the earlier toggle/draft-preservation, stopped-stream, or controlled-failure smoke, which remain tied to `fa18bd2`. The in-app browser engine/version was not reported. The observer fixture was not injected in this rerun, so raw `GENERATION_STARTED` type arguments were not recorded; the host action itself was the UI's **Continue** command.
 
 The local runtime checks run against the final source content were:
 
@@ -174,4 +174,4 @@ node --check tests/fixtures/m0-openai-endpoint.mjs
 git diff --check
 ```
 
-Result: 23 tests passed; all four syntax checks passed; `git diff --check` passed. Coverage includes head/cursor navigation, edits and same-length revisions, insert/delete/replacement invalidation, repeated text, swipe/group-author changes, empty history, generation-state conservatism, A → B → A, eventless DOM refresh, selected-index-only token sampling, changed-selection/epoch refresh rejection, and disposal. The Node harness does not replace host evidence. Browser engine/version, final-candidate continuation, final-candidate same-length native edit, real provider behavior, and Gate A remain NOT_TESTED/NOT_RUN.
+Result: 25 tests passed; all four syntax checks passed; `git diff --check` passed. Coverage includes head/cursor navigation, edits and same-length revisions, insert/delete/replacement invalidation, repeated text, swipe/group-author changes, empty history, generation-state conservatism, normal generation remaining unbound without a new assistant source, A → B → A, eventless DOM refresh, selected-index-only token sampling, a one-message middle insertion while pinned, selection change plus same-length edit during a queued frame, and disposal. The Node harness does not replace host evidence. Browser engine/version, real provider behavior, and Gate A remain NOT_TESTED/NOT_RUN.
