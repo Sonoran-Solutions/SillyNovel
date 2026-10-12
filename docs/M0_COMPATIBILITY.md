@@ -68,7 +68,7 @@ These facts are source inspection, not observations from a live model run. Error
 
 The adapter's `chatId`, `groupId`, and `characterId` observation is marked `durable: false` and is used only in memory. It does not claim a persistent chat/card key.
 
-## Test and manual evidence
+## Initial M0.1 test and manual evidence — historical
 
 | Check | Result | Evidence boundary |
 | --- | --- | --- |

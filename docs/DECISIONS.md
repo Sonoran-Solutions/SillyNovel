@@ -30,7 +30,9 @@ No private character canon, relationship details, or unrelated game-art constrai
 | P11 | No required server plugin in the core | Keep the manual experience usable with a UI extension alone |
 | P12 | Provider capabilities verified independently | Text compatibility does not prove image, transparency, or billing support |
 
-## Proposed defaults
+## Proposed defaults before DYL-16
+
+The current owner-approved defaults and clarifications are recorded in the DYL-16 entry below.
 
 The extension starts disabled. Enabling it activates manual presentation only. Director and image generation are separately off. Automatic retries and automatic CG creation are off. Typewriter animation is off. Standard chat and the existing composer remain available.
 
