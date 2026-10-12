@@ -112,3 +112,20 @@ Follow-up host checks should use the same identified SillyTavern release and a s
 - [ ] In a group, verify host author labels for multiple members and duplicate display names.
 - [x] Test missing required capabilities in a test double; host UI removal remains untested.
 - [x] Repeat toggling with a draft and compare the exact draft; disable during streaming and verify native completion.
+
+## M0.2 final host compatibility addendum (2026-10-12)
+
+This addendum records validation on SillyNovel candidate `de25366aeaa5e1cbd10e9bc40861e8ae91339aee` against SillyTavern 1.19.0 commit `7e8663cd9c184a550b37238218bdd32c6efc68e9`. It supplements, rather than rewrites, the M0.1 evidence above. The earlier statement that M0 created no observer describes the M0.1 candidate; M0.2 adds one narrowly owned `MutationObserver` on `#chat` to cover host transitions that emit no event. Mutations are microtask-coalesced, current source is sampled only after a source-signature change, and the observer disconnects with the active shell. No chat body is logged.
+
+The review follow-up code commit `831714e9343b51682d643efb2eaa419ef9ab5145` also closes a same-length content-revision gap: after identity, index, author, swipe, and length match, the fallback compares exact source text. This comparison neither logs nor hashes message bodies; normal appends with a changed length skip it. A synthetic regression covers same-length replacement, one-time observation, deduplication, and disposal. The pinned-host results below remain evidence for `de25366`; no new host run is claimed for this narrow follow-up.
+
+| Scenario | M0.2 result | Boundary |
+| --- | --- | --- |
+| L10: populated A → revisitable empty B → generation | **UNSUPPORTED / WAIVER REQUESTED** | Supported “Start new chat” creates B with its normal greeting; switching away and reopening restores it. Deleting the greeting gives an empty view but does not persist across reopening. The synthetic empty-source regression passes. |
+| Temporary Chat transition | **HOST PASS on candidate** | Separate ephemeral flow, not L10. The prior candidate kept stale stage content; M0.2 DOM fallback refreshed it with the eventless temporary source. |
+| L12: group authors, regeneration, switching, disable/re-enable | **HOST PASS** | Three distinct synthetic characters; stage follows host labels and selected indices through group/individual switching and toggles. Group/chat hashes and sanitized index/label records are in the [M0.2 lifecycle report](M0_LIFECYCLE_VALIDATION.md). |
+| L13: duplicate display names | **HOST PASS for label-only behavior** | Both cards display as Mira and share the same label hash. Current message avatar fields differ in this run, but are not a durable identity contract; M0 does not map them to cards. |
+| L16: required event capability missing | **INSTRUMENTED_HOST_PASS** | Browser-local context wrapper omitted `MESSAGE_SWIPED`; activation refused before stage mount, native composer remained usable, and ordinary activation worked after restoration. Not a natural host failure. |
+| Eventless Temporary Chat source refresh defect | **FIXED and HOST_RECHECKED** | Production candidate owns a coalesced observer only on `#chat`; disposal is covered by the synthetic tests. |
+
+The browser evidence used synthetic isolated data, a deterministic loopback endpoint, and the removable observer fixture. It establishes no real model/provider behavior and no compatibility claim for other browsers or host releases. Exact observer and endpoint hashes, sanitized observations, and command results are in the [dated M0.2 report](M0_LIFECYCLE_VALIDATION.md). Recommended M0 status is **PASS subject to owner acceptance of the L10 waiver**; no owner approval is recorded. Gate A remains NOT_RUN and M1 remains NOT_AUTHORIZED.

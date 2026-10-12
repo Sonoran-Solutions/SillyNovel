@@ -38,22 +38,33 @@
         return value;
     }
 
+    function safeIdentity(value) {
+        if (value === undefined || value === null) return { status: 'missing', type: null, hash: null };
+        if (Number.isSafeInteger(value)) return { status: 'valid', type: 'integer', hash: hash('integer:' + value) };
+        if (typeof value === 'string') {
+            return value.trim()
+                ? { status: 'valid', type: 'string', hash: hash('string:' + value) }
+                : { status: 'invalid', type: 'string', hash: null };
+        }
+        return { status: 'invalid', type: typeof value, hash: null };
+    }
+
     function identity(ctx) {
         const rawChatId = typeof ctx.getCurrentChatId === 'function' ? ctx.getCurrentChatId() : ctx.chatId;
         const groupId = ctx.groupId;
         const characterId = ctx.characterId;
         return {
             scope: groupId !== undefined && groupId !== null ? 'group' : characterId !== undefined && characterId !== null ? 'character' : 'unknown',
-            chatIdHash: rawChatId === undefined || rawChatId === null ? null : hash(rawChatId),
-            groupId: Number.isSafeInteger(groupId) ? groupId : null,
-            characterId: Number.isSafeInteger(characterId) ? characterId : null,
+            chatId: safeIdentity(rawChatId),
+            groupId: safeIdentity(groupId),
+            characterId: safeIdentity(characterId),
         };
     }
 
     function listenerCounts(ctx) {
         return Object.fromEntries(eventKeys.map((keyName) => {
             const eventName = ctx.eventTypes[keyName];
-            const listeners = ctx.eventSource.events?.[eventName];
+            const listeners = typeof eventName === 'string' ? ctx.eventSource.events?.[eventName] : null;
             return [keyName, Array.isArray(listeners) ? listeners.length : null];
         }));
     }
@@ -71,12 +82,14 @@
             const source = ctx.eventSource;
             const types = ctx.eventTypes;
             const baseline = listenerCounts(ctx);
+            const missingEventTypes = eventKeys.filter((keyName) => typeof types[keyName] !== 'string');
             const labels = new Set(syntheticLabels.map((label) => label.slice(0, 80)));
             const startedAt = performance.now();
             const records = [];
             const bindings = [];
             let sequence = 0;
             let installed = true;
+            let originalGetContext = null;
             let generationActive = false;
             let stopSeenInGeneration = false;
             let panel = null;
@@ -86,6 +99,8 @@
                 if (!output) return;
                 output.textContent = JSON.stringify({
                     note: 'Debug-only sanitized trace. Message bodies and stream tokens are not stored.',
+                    missingEventTypes,
+                    missingCapabilityOverrideActive: originalGetContext !== null,
                     recordCount: records.length,
                     records: records.slice(-60),
                 }, null, 1);
@@ -109,6 +124,9 @@
                     kind: message.is_user === true ? 'user' : message.is_system === true ? 'system' : 'character',
                     authorLabel: labels.has(label) ? label : null,
                     authorLabelHash: label ? hash(label) : null,
+                    messageFields: Object.keys(message).sort().slice(0, 40),
+                    originalAvatar: safeIdentity(message.original_avatar),
+                    forcedAvatar: safeIdentity(message.force_avatar),
                     textLength: text.length,
                     textHashPrefix: hash(text),
                     swipeId: Number.isSafeInteger(message.swipe_id) ? message.swipe_id : null,
@@ -118,7 +136,7 @@
             function safeArgs(keyName, args) {
                 switch (keyName) {
                     case 'CHAT_CHANGED':
-                        return { chatIdHash: args[0] === undefined ? null : hash(args[0]) };
+                        return { chatId: safeIdentity(args[0]) };
                     case 'GENERATION_STARTED':
                         return { generationType: typeof args[0] === 'string' ? args[0].slice(0, 40) : null, dryRun: args[2] === true };
                     case 'STREAM_TOKEN_RECEIVED':
@@ -180,7 +198,7 @@
             try {
                 for (const keyName of eventKeys) {
                     const eventName = types[keyName];
-                    if (typeof eventName !== 'string') throw new Error('Pinned host lacks event type ' + keyName + '.');
+                    if (typeof eventName !== 'string') continue;
                     const listener = (...args) => {
                         const index = ['MESSAGE_RECEIVED', 'CHARACTER_MESSAGE_RENDERED', 'MESSAGE_SWIPED', 'MESSAGE_EDITED'].includes(keyName)
                             ? args[0]
@@ -207,6 +225,23 @@
             const clearButton = document.createElement('button');
             clearButton.textContent = 'Clear trace';
             clearButton.addEventListener('click', () => { records.length = 0; sequence = 0; renderPanel(); });
+            const capabilityButton = document.createElement('button');
+            capabilityButton.textContent = 'Toggle missing MESSAGE_SWIPED';
+            capabilityButton.addEventListener('click', () => {
+                const api = root.SillyTavern;
+                if (originalGetContext) {
+                    api.getContext = originalGetContext;
+                    originalGetContext = null;
+                } else if (typeof api?.getContext === 'function') {
+                    originalGetContext = api.getContext;
+                    api.getContext = function () {
+                        const current = originalGetContext.call(this);
+                        if (!current || typeof current !== 'object') return current;
+                        return { ...current, eventTypes: { ...current.eventTypes, MESSAGE_SWIPED: undefined } };
+                    };
+                }
+                renderPanel();
+            });
             const removeButton = document.createElement('button');
             removeButton.textContent = 'Remove observer';
             removeButton.addEventListener('click', () => {
@@ -218,17 +253,22 @@
                 delete root[key];
             });
             const output = document.createElement('pre');
-            panel.append(heading, clearButton, removeButton, output);
+            panel.append(heading, clearButton, capabilityButton, removeButton, output);
             document.body.append(panel);
 
             // ponytail: listener counts use the pinned 1.19.0 EventEmitter.events array; recheck this if the host changes emitter.
             const handle = {
+                missingEventTypes: missingEventTypes.slice(),
                 records: () => records.slice(),
                 dump: () => JSON.stringify(records, null, 2),
                 clear: () => { records.length = 0; sequence = 0; renderPanel(); },
                 uninstall() {
                     if (!installed) return false;
                     installed = false;
+                    if (originalGetContext && root.SillyTavern?.getContext !== originalGetContext) {
+                        root.SillyTavern.getContext = originalGetContext;
+                        originalGetContext = null;
+                    }
                     for (const [eventName, listener] of bindings) source.removeListener(eventName, listener);
                     bindings.length = 0;
                     panel?.remove();

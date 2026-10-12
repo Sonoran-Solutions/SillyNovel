@@ -1,6 +1,6 @@
 # Project status
 
-**Updated:** 2026-10-11.
+**Updated:** 2026-10-12. The status snapshot below preserves the M0.1 record from 2026-10-11; the current M0.2 result is appended at the end.
 
 ## Current state
 
@@ -52,3 +52,24 @@ Complete the remaining real-host empty-chat switch/generation and group scenario
 ## Status discipline
 
 Keep implementation, simulated checks, real-host checks, provider checks, and owner verdicts separate. Do not promote M0 to fully passed until the outstanding host scenarios in the compatibility record have been exercised and the owner has reviewed the evidence.
+
+## M0.2 current status (2026-10-12)
+
+| Area | Current result |
+| --- | --- |
+| Host-validated SillyNovel candidate | `de25366aeaa5e1cbd10e9bc40861e8ae91339aee` |
+| PR review fix candidate | `831714e9343b51682d643efb2eaa419ef9ab5145` |
+| Pinned host | SillyTavern 1.19.0 / `7e8663cd9c184a550b37238218bdd32c6efc68e9` |
+| Synthetic regression suite | PASS — 13 tests |
+| L10: revisitable empty B and generation | UNSUPPORTED / WAIVER REQUESTED; supported UI restores the welcome message after switching away and reopening |
+| L12: group author labels and switching | HOST PASS |
+| L13: duplicate-name labels | HOST PASS for M0 label-only behavior; stable identity remains an M1 contract requirement |
+| L16: missing capability in browser | INSTRUMENTED_HOST_PASS; no stage/partial activation, native chat usable, normal activation recovered after restoring context |
+| Same-length eventless content update | SYNTHETIC PASS; one refresh, unchanged-source deduplication, and disposal verified; browser host not rerun for this edge case |
+| Confirmed production defect | Eventless Temporary Chat transition kept stale stage content on previous candidate; fixed and host-rechecked on the validated candidate |
+| M0 recommendation | PASS recommended subject to owner acceptance of L10 waiver; owner verdict pending |
+| Gate A | NOT_RUN |
+| M1 | NOT_AUTHORIZED |
+| Real model/provider, other host releases, browsers, and error/abort paths | NOT_TESTED |
+
+The host-validated candidate uses a coalesced, disposal-owned observer on `#chat`; the PR review fix additionally compares exact text when the other source fields and length match. It does not change canonical chat content or host source, and message bodies are neither logged nor hashed. The review fix was tested synthetically; host evidence remains tied to `de25366`. Full evidence and exact commands are in [M0 lifecycle validation](M0_LIFECYCLE_VALIDATION.md), [M0 compatibility](M0_COMPATIBILITY.md), and [testing](TESTING.md). The L10 waiver is a request for owner review, not an approval.

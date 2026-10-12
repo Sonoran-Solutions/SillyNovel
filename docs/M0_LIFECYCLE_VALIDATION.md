@@ -281,3 +281,57 @@ Added one synthetic regression for populated A → populated B → empty B → s
 ## Verdict and next step
 
 Recommend **M0 PARTIAL / REVISE**. The local deterministic host verifies core normal, streaming, stop, continuation, swipe, edit/delete, chat-switch, toggle, and disable-during-generation behavior, including deletion to an empty view. L10, L12, L13, and L16 remain unverified against the host. Provider/model behavior and failed-generation paths are also outside the evidence. Run those bounded host scenarios on the pinned build or document why the host cannot support them, then request the owner's M0 review. Gate A remains NOT_RUN; M1 remains NOT_AUTHORIZED.
+
+## M0.2 — Final Host Compatibility Validation (2026-10-12)
+
+This is a separate follow-up to the M0.1 record above; the earlier results and verdict remain historical. Validation candidate: SillyNovel `de25366aeaa5e1cbd10e9bc40861e8ae91339aee`. Pinned host: SillyTavern 1.19.0, `7e8663cd9c184a550b37238218bdd32c6efc68e9`. Environment: Ubuntu 24.04, kernel `7.0.0-34-generic`, Node `v26.8.1`, Brave `154.1.96.61` (engine version unavailable). Host data was isolated under `/tmp/sillynovel-m0lifecycle-data`; all cards, chats, and group members were synthetic. Generation used the committed deterministic OpenAI-compatible endpoint at `127.0.0.1:8123`, model `sn-local-test`; no paid provider or private data was used.
+
+Fixture versions at the candidate:
+
+- `tests/fixtures/m0-lifecycle-observer.js` SHA-256 `74a114b65a6f64dadf111b8274a255b093b1e0b3c798733e761cfbfbdf7d64ac`.
+- `tests/fixtures/m0-openai-endpoint.mjs` SHA-256 `9f0eeb33246ed0a65e5dc78d1709ace20eea988c2129cf9228c925cf0c478ef8`.
+
+### L10 — Switch into empty B and generate
+
+**Result: UNSUPPORTED / WAIVER REQUESTED.** In the host UI, “Start new chat” from populated synthetic A created persistent B with its normal first-message greeting, which SillyNovel observed as message 1 (`first_message`, author `M0 Test Speaker A`, 16 characters). After switching away and reopening B, the greeting was restored. Deleting the final message does produce an empty view, but reopening restores the welcome message. The supported UI therefore did not provide a revisitable empty B on which to exercise the requested generation sequence. No host source or welcome behavior was changed to manufacture that state. The synthetic A → empty B → generated B → A test continues to cover the source-clearing contract; it is not host evidence for generation from an empty chat.
+
+The separate host Temporary Chat flow is ephemeral and does not satisfy L10. It emitted no observer lifecycle events, but the candidate's DOM fallback changed the displayed source to the current temporary message (`SillyTavern System`, 782 characters; `chatViewChanged`). On the earlier candidate `4bf71aef34c43bf6961f1cfcaa633a725eafa768`, the stage remained stale. This exposed and fixed a reachable eventless temporary-chat refresh defect, but does not turn L10 into a pass.
+
+### L12 — Real group conversation
+
+**Result: HOST PASS.** A synthetic three-member group (Mira, Rowan, Nia) used list order with the deterministic local endpoint. Regeneration through the host UI removed and recreated the replies; the stage followed each host-provided author and selected the final Mira reply. On the exact candidate, the group produced four replies after a duplicate-name card was added: duplicate Mira at index 8, Nia at index 9, Rowan at index 10, and original Mira at index 11. The selected final source was index 11, label Mira, length 63. Sanitized observer group/chat correlation hashes were `groupId=0bc651df`, `chatId=00de6398`; these are diagnostic hashes, not durable keys.
+
+Switching group → individual chat → group refreshed the selected source and returned to the latest group reply. Disabling SillyNovel removed its stage while the native four-member chat/composer remained available; re-enabling mounted the stage on message 12 by Mira. No stale cross-chat source or prior-member label was observed. M0 reports host labels only and makes no member identity claim.
+
+### L13 — Duplicate display names
+
+**Result: HOST PASS for label-only behavior; stable identity remains open.** Two separate synthetic cards were both shown in the group as Mira. Both messages had `name` label Mira and the same sanitized `authorLabelHash=c173d986`, so `name` alone did not distinguish them. The inspected host message representation included `original_avatar` and `force_avatar`; their values differed between the two cards and the hashes matched the corresponding persisted synthetic chat records:
+
+| Reply | Index | Label | Original-avatar hash | Forced-avatar hash | Character-index hash |
+| --- | ---: | --- | --- | --- | --- |
+| Mira Copy | 8 | Mira | `9c7ffdaf` | `7242b13d` | `ec79457c` |
+| Original Mira | 11 | Mira | `fb5ee6d8` | `a073dc79` | `ed79470f` |
+
+The host `characterId` was a string-typed current array index. Raw avatar filenames and message bodies were not recorded. These host fields distinguished the two synthetic replies in this run, but avatar fields and array indices are not established as durable identity across rename, import, replacement, or migration. SillyNovel continues to display the authoritative label without assigning either message to a card. M1 sprite assignment must define a stable identity contract or show an unresolved state.
+
+### L16 — Missing required capability
+
+**Result: INSTRUMENTED_HOST_PASS.** A removable test-only observer control wrapped `SillyTavern.getContext()` to omit `eventTypes.MESSAGE_SWIPED` before the user enabled the browser-loaded SillyNovel extension. Activation displayed: `Missing SillyTavern capabilities: eventTypes.MESSAGE_SWIPED. The original chat remains available.` The checkbox reset to off, no `#sillynovel-stage` remained, and the native chat/composer accepted a draft. This is injected-host evidence, not a naturally missing host capability.
+
+To check for partial listener registration, an observer-only baseline after reload was compared on group `CHAT_CHANGED`. After failed activation and subsequent chat switches, counts stayed at `CHAT_CHANGED` 9, `MESSAGE_RECEIVED` 2, `CHARACTER_MESSAGE_RENDERED` 1, `GENERATION_ENDED` 1, `MESSAGE_EDITED` 2, and `MESSAGE_DELETED` 2; `MESSAGE_SWIPED` was unavailable under the override (its baseline count before omission was 2). After restoring the context and enabling SillyNovel, numeric counts rose by one each: `CHAT_CHANGED` 10, `MESSAGE_RECEIVED` 3, `CHARACTER_MESSAGE_RENDERED` and `GENERATION_ENDED` 2, and `MESSAGE_SWIPED`, `MESSAGE_EDITED`, and `MESSAGE_DELETED` 3. The stage mounted. The observer could not count `STREAM_TOKEN_RECEIVED` or `GENERATION_STOPPED` because those emitter internals were not exposed as arrays, so no count claim is made for them. The temporary capability override was removed.
+
+### Corrective regression and verification
+
+The eventless Temporary Chat transition reproduced a stale-stage bug on the preceding candidate. Candidate `de25366` adds an owned `MutationObserver` limited to `#chat`, coalesces DOM mutations with `queueMicrotask`, samples current host state only when the source signature changes, and disconnects it on disposal. The observer fixture also records sanitized avatar-field hashes, tolerates absent event types, and includes a removable control for the browser-local capability override. No host source, canonical chat, or production settings were modified. The synthetic regression suite now has 13 tests, including mutation fallback deduplication/disposal and avatar/event-field cases.
+
+Commands run after the code candidate was finalized: `node --test tests/m0.test.mjs` (13/13 pass); `node --check tests/fixtures/m0-openai-endpoint.mjs`; `node --check tests/fixtures/m0-lifecycle-observer.js`; `node --check src/host-adapter.mjs`; `git diff --check`. Documentation validation is recorded in the M0.2 testing addendum below after the docs update. Other browsers, SillyTavern releases, real model/provider behavior, and failed-generation paths remain NOT_TESTED.
+
+### M0.2 recommendation
+
+Recommend **M0 PASS, subject to the owner's L10 waiver decision**: the reachable group, duplicate-label, injected-capability, lifecycle, and reversibility paths passed on the pinned host, and the reproduced eventless-transition defect is fixed on the validated candidate. L10 remains **UNSUPPORTED / WAIVER REQUESTED**, not passed. This is an agent recommendation only: owner waiver/acceptance is pending. Gate A remains NOT_RUN; M1 remains NOT_AUTHORIZED.
+
+### PR review follow-up — same-length eventless source revisions
+
+The PR review identified that the first DOM fallback signature compared message length but not content, so an eventless replacement such as `alpha` → `bravo` could be missed. Code/test commit `831714e9343b51682d643efb2eaa419ef9ab5145` replaces the signature with an equality check that compares chat identity, index, author, swipe ID, and text length first, then exact text when those values match. It does not hash or log message bodies. Normal content appends with a changed length short-circuit before the full text comparison.
+
+The regression replaces `Synthetic temporary reply.` with the same-length `Synthetic temporary story.` and verifies the new source is observed exactly once. A repeated unchanged mutation remains deduplicated, and the existing post-disposal assertion still passes. `node --test tests/m0.test.mjs` passes 13/13 on this fix. No browser host rerun was performed for this narrow equality correction; the L10/L12/L13/L16 host evidence above remains tied to candidate `de25366aeaa5e1cbd10e9bc40861e8ae91339aee`.

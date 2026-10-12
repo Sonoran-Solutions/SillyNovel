@@ -29,6 +29,19 @@ function safeCount(value) {
     return Number.isSafeInteger(value) && value >= 0 ? value : null;
 }
 
+function sameSource(left, right) {
+    if (!left || !right) return left === right;
+    return left.identity?.chatId === right.identity?.chatId
+        && left.identity?.groupId === right.identity?.groupId
+        && left.identity?.characterId === right.identity?.characterId
+        && left.index === right.index
+        && left.author?.kind === right.author?.kind
+        && left.author?.label === right.author?.label
+        && left.swipeId === right.swipeId
+        && left.text.length === right.text.length
+        && left.text === right.text;
+}
+
 export function createHostAdapter(getContext) {
     function contextOrNull() {
         try {
@@ -117,8 +130,15 @@ export function createHostAdapter(getContext) {
         const source = context.eventSource;
         const types = context.eventTypes;
         const bindings = [];
+        let disposed = false;
+        let mutationObserver = null;
+        let pendingViewRead = false;
+        let lastObservedSource = readCurrentSource();
 
         function emit(type, details = {}) {
+            if (Object.prototype.hasOwnProperty.call(details, 'source')) {
+                lastObservedSource = details.source;
+            }
             onObservation({ type, ...details });
         }
 
@@ -145,18 +165,37 @@ export function createHostAdapter(getContext) {
                 source.on(eventName, listener);
                 bindings.push([eventName, listener]);
             }
+
+            const chatElement = globalThis.document?.getElementById?.('chat');
+            const Observer = globalThis.MutationObserver;
+            if (chatElement && typeof Observer === 'function') {
+                mutationObserver = new Observer(() => {
+                    if (pendingViewRead || disposed) return;
+                    pendingViewRead = true;
+                    queueMicrotask(() => {
+                        pendingViewRead = false;
+                        if (disposed) return;
+                        const currentSource = readCurrentSource();
+                        if (sameSource(currentSource, lastObservedSource)) return;
+                        emit('chatViewChanged', { source: currentSource });
+                    });
+                });
+                mutationObserver.observe(chatElement, { childList: true, subtree: true, characterData: true });
+            }
         } catch (error) {
+            try { mutationObserver?.disconnect(); } catch { /* continue releasing owned listeners */ }
             for (const [eventName, listener] of bindings) {
                 try { source.removeListener(eventName, listener); } catch { /* continue releasing owned listeners */ }
             }
             throw error;
         }
 
-        let disposed = false;
         return () => {
             if (disposed) return;
             disposed = true;
             let firstError = null;
+            try { mutationObserver?.disconnect(); } catch (error) { firstError ||= error; }
+            mutationObserver = null;
             for (const [eventName, listener] of bindings) {
                 try { source.removeListener(eventName, listener); } catch (error) { firstError ||= error; }
             }
