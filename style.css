@@ -1,0 +1,43 @@
+.sillynovel-settings {
+    margin-block: 0.5rem;
+}
+
+.sillynovel-settings__toggle {
+    align-items: center;
+}
+
+.sillynovel-settings__status {
+    margin: 0.25rem 0 0 1.8rem;
+    opacity: 0.8;
+}
+
+.sillynovel-stage {
+    box-sizing: border-box;
+    flex: 0 0 auto;
+    margin: 0.5rem 0;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--SmartThemeBorderColor, #888);
+    border-radius: 0.5rem;
+    color: var(--SmartThemeBodyColor, inherit);
+    background: var(--SmartThemeBlurTintColor, rgba(32, 32, 32, 0.94));
+}
+
+.sillynovel-stage h2,
+.sillynovel-stage p {
+    margin: 0;
+}
+
+.sillynovel-stage h2 {
+    font-size: 1rem;
+}
+
+.sillynovel-stage__description {
+    margin-top: 0.25rem !important;
+    opacity: 0.8;
+}
+
+.sillynovel-stage__source,
+.sillynovel-stage__observation {
+    margin-top: 0.25rem !important;
+    font-size: 0.9em;
+}

@@ -1,12 +1,31 @@
 # Verification and acceptance
 
-**Status:** test plan only. No runtime tests, provider calls, or human playtests have been executed for this documentation starter.
+**Status:** M0 has a passing synthetic harness and a limited isolated-host smoke check. Live generation/provider tests and human playtests have not been executed. See [M0 compatibility](M0_COMPATIBILITY.md) for the pinned environment and exact evidence split.
 
 ## 1. Evidence levels
 
 Distinguish unit tests, simulated integration tests, real-host testing, real-provider testing, and owner playtesting. Passing one level does not imply another.
 
 Every report records the full candidate SHA, host version/commit, browser/device, relevant configuration, commands actually run, outcome, and known gaps. A screenshot without a source build and scenario is illustrative, not a complete test record.
+
+## 1.1 M0 execution record
+
+The M0 candidate is tested against SillyTavern 1.19.0, full source SHA `7e8663cd9c184a550b37238218bdd32c6efc68e9`, in an isolated local instance and the Codex in-app browser. No model/provider was configured and no private chat data was imported.
+
+| Scenario | Synthetic harness | Real-host result |
+| --- | --- | --- |
+| Repeated enable/disable | PASS | PASS — two full cycles; stage appeared once and was removed on disable |
+| Draft entered before toggle | Not represented in Node harness | PASS — exact text survived both transitions |
+| Missing required event capability | PASS — activation refused before mount | NOT_RUN in host UI |
+| Normal completed reply | PASS — event observation sequence | NOT_TESTED — no provider |
+| Streaming reply and stop | PASS — stream token, stop, and end observations | NOT_TESTED — no provider |
+| Continuation | PASS — `continue` generation type observed | NOT_TESTED — no provider |
+| Regeneration and swipe selection | PASS — `regenerate` type and selected-message index observed | NOT_TESTED — no provider |
+| Message edit and delete | PASS — source index and post-delete count normalized | NOT_TESTED — no real chat |
+| Chat switch | PASS — identity snapshot changes with context | NOT_TESTED — no real chat |
+| Group author label | PASS — synthetic group message uses its host `name` field | NOT_TESTED — no group chat |
+
+Harness assertions model official source signatures and do not prove runtime ordering. The pinned source inspection, tested UI surface, and remaining gaps are recorded in [M0 compatibility](M0_COMPATIBILITY.md). The real-host smoke is not an owner experience test and does not pass Gate A.
 
 ## 2. Core regression matrix
 

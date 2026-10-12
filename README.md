@@ -4,7 +4,7 @@
 
 SillyNovel is a planned SillyTavern extension that presents ordinary roleplay chats with scene backgrounds, character sprites, a dialogue box, and restrained visual direction. Keep the characters, lorebooks, personas, model connections, and conversations you already use. Change how the story feels on screen—not who is writing it.
 
-> **Status: design documentation only.** This repository starter contains specifications and a staged implementation plan, not a working extension. There is no installable release, runtime entry point, compatibility claim, or completed playtest yet. Features below are planned unless [STATUS.md](docs/STATUS.md) says otherwise.
+> **Status: M0 shell implemented; reader not implemented.** The extension has a disabled-by-default settings control, a reversible placeholder stage, and a narrow SillyTavern adapter. It does not yet display a visual-novel reader. See [project status](docs/STATUS.md) and the pinned [M0 compatibility record](docs/M0_COMPATIBILITY.md) for tested scope and gaps.
 
 ## The experience
 
@@ -59,15 +59,33 @@ The image plan therefore includes manual prompt/reference export and result impo
 | [Assets and providers](docs/ASSETS_AND_PROVIDERS.md) | Asset library, generation queue, billing boundaries, and privacy |
 | [Roadmap](docs/ROADMAP.md) | Small implementation slices and human acceptance gates |
 | [Testing](docs/TESTING.md) | Regression matrix and evidence requirements |
+| [M0 compatibility](docs/M0_COMPATIBILITY.md) | Pinned host source, smoke results, lifecycle limits, and open integration seams |
 | [Decisions](docs/DECISIONS.md) | User-stated scope, proposed defaults, and unresolved decisions |
 | [Status](docs/STATUS.md) | Honest implementation and verification state |
 | [References](docs/REFERENCES.md) | Verified upstream facts and integration limitations |
 | [First implementation task](docs/prompts/FIRST_TASK.md) | A bounded M0 prompt for a coding agent |
 | [Agent guidance](AGENTS.md) | Repository working rules for implementation and review |
 
-## Start development
+## Install and develop
 
-Read the vision and decisions, then execute **M0: compatibility and reversible extension shell**. Do not skip straight to a multi-provider image pipeline. Installation and development commands must be added when actual code and a tested build procedure exist.
+SillyNovel is a browser-side SillyTavern extension. It has no build step and no extension dependencies. The current implementation was inspected and smoke-tested against SillyTavern 1.19.0 at the exact commit recorded in [M0 compatibility](docs/M0_COMPATIBILITY.md); other releases and browsers are unverified.
+
+Clone the extension into the SillyTavern third-party extension directory:
+
+```sh
+git clone --branch codex/m0-shell --single-branch https://github.com/Sonoran-Solutions/SillyNovel.git \
+  /path/to/SillyTavern/public/scripts/extensions/third-party/SillyNovel
+```
+
+This installs the open M0 review branch. After it is merged, omit `--branch codex/m0-shell` to install the default branch. Reload SillyTavern, open **Extensions**, and leave **Enable SillyNovel placeholder stage** unchecked unless you want to inspect the shell. The feature itself starts off. To develop, edit the cloned extension in place and reload the SillyTavern page; no `npm install` is needed for SillyNovel.
+
+Run the synthetic adapter/controller harness from the extension checkout:
+
+```sh
+node --test tests/m0.test.mjs
+```
+
+The harness does not replace the real-host checklist. Current host evidence and untested scenarios are in [M0 compatibility](docs/M0_COMPATIBILITY.md).
 
 ## License and attribution
 

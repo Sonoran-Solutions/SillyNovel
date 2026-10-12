@@ -1,6 +1,6 @@
 # Architecture
 
-**Status:** proposed architecture. All named SillyNovel modules and interfaces below are design names, not existing SillyTavern APIs.
+**Status:** proposed architecture. M0 now implements only the manifest, browser entry, settings control, placeholder stage, and narrow host adapter. All other named SillyNovel modules and interfaces below are design names, not existing SillyTavern APIs. Exact M0 host references are in [M0 compatibility](M0_COMPATIBILITY.md).
 
 ## 1. Integration strategy
 
@@ -25,7 +25,7 @@ No SillyTavern fork or required server plugin is part of the baseline. A future 
 
 ## 3. Proposed layout
 
-The following runtime files are planned; they are intentionally absent from this documentation-only starter.
+The following is a longer-term proposed layout. M0 has created only `manifest.json`, `index.js`, `style.css`, `src/host-adapter.mjs`, `src/shell.mjs`, and `tests/m0.test.mjs`; the future module directories remain absent.
 
 ```text
 manifest.json
@@ -64,6 +64,8 @@ Upstream exposes `extensionSettings` with `saveSettingsDebounced()`, and `chatMe
 
 Use these documented event families as investigation inputs, not as an assumed complete implementation recipe: `MESSAGE_RECEIVED`, `CHARACTER_MESSAGE_RENDERED`, `MESSAGE_EDITED`, `MESSAGE_DELETED`, `MESSAGE_SWIPED`, `CHAT_CHANGED`, and generation lifecycle events. [S1](REFERENCES.md#s1)
 
+M0's exact pinned 1.19.0 event payload inspection and the distinction between simulated and real-host observations are recorded in [M0 compatibility](M0_COMPATIBILITY.md).
+
 The host adapter must prove event ordering for a completed reply, streaming, stop, continue, swipe selection, regeneration, and group replies on the pinned target. A generation-ended event alone is not proof of a newly completed roleplay message; background classifier calls and errors must not feed back into the director.
 
 Keep host event handlers short. Capture bounded immutable input, schedule extension work, and return. Do not hold the host event chain open while a cloud model or image service responds.
@@ -86,7 +88,7 @@ Multiple tabs require ownership coordination or explicit single-writer mode. M1 
 
 ## 8. Failure and shutdown
 
-On enable, probe required capabilities before hiding any host content. Keep the original interface available until the stage is successfully mounted.
+On enable, probe required capabilities before hiding any host content. Keep the original interface available until the stage is successfully mounted. M0 does not hide or move host content; its placeholder is inserted before `#chat` and leaves the composer untouched.
 
 On disable or chat change, cancel owned jobs where possible, invalidate their epoch regardless of cancellation success, remove owned listeners/observers/timers, release object URLs, and remove scoped DOM/styles. Restore only the host UI changes this extension owns; do not overwrite another extension's newer settings.
 
