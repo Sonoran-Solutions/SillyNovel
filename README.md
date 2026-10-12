@@ -4,7 +4,7 @@
 
 SillyNovel is a planned SillyTavern extension that presents ordinary roleplay chats with scene backgrounds, character sprites, a dialogue box, and restrained visual direction. Keep the characters, lorebooks, personas, model connections, and conversations you already use. Change how the story feels on screen—not who is writing it.
 
-> **Status: M0 shell implemented; reader not implemented.** The extension has a disabled-by-default settings control, a reversible placeholder stage, and a narrow SillyTavern adapter. It does not yet display a visual-novel reader. See [project status](docs/STATUS.md) and the pinned [M0 compatibility record](docs/M0_COMPATIBILITY.md) for tested scope and gaps.
+> **Status: DYL-18 text-reader review candidate.** Complete formatted messages, Previous/Next/Latest navigation, a new-message indicator, native backlog handoff, and reversible chat/reader controls are implemented. The original composer handles replies. Art and persistence are not implemented; Gate A remains NOT_RUN. See [project status](docs/STATUS.md) and [reader contract](docs/M1_READER_SOURCE.md) for evidence and limits.
 
 ## The experience
 
@@ -78,15 +78,15 @@ git clone https://github.com/Sonoran-Solutions/SillyNovel.git \
   /path/to/SillyTavern/public/scripts/extensions/third-party/SillyNovel
 ```
 
-This installs the default `main` branch, including the merged M0 compatibility corrections. Reload SillyTavern, open **Extensions**, and leave **Enable SillyNovel placeholder stage** unchecked unless you want to inspect the shell. The feature itself starts off. To develop, edit the cloned extension in place and reload the SillyTavern page; no `npm install` is needed for SillyNovel.
+This installs the default `main` branch, including the merged M0 compatibility corrections. For this open review candidate, check out `codex/dyl-18-text-reader` in the extension clone; `main` retains the prior source-model shell until the PR is reviewed and merged. Reload SillyTavern, open **Extensions**, and select **Enable SillyNovel reader** to read the current conversation. The feature starts off by default. Backlog opens the original native message when it can be precisely located; Back to Chat and Return to Reader preserve a valid selection. To develop, edit the cloned extension in place and reload the SillyTavern page; no `npm install` is needed for SillyNovel.
 
 Run the synthetic adapter/controller harness from the extension checkout:
 
 ```sh
-node --test tests/m0.test.mjs
+node --test tests/m0.test.mjs tests/m1-reader-source.test.mjs
 ```
 
-The harness does not replace the real-host checklist. Current host evidence and untested scenarios are in [M0 compatibility](docs/M0_COMPATIBILITY.md).
+The behavioral browser check runs the actual entry and renderer. Its external Playwright/host-library setup, isolated pinned-host runner, and screenshots are documented in [testing](docs/TESTING.md#dyl-18-text-reader--2026-10-12). The harness does not replace the real-host checklist. Current host evidence and untested scenarios are in [M0 compatibility](docs/M0_COMPATIBILITY.md).
 
 ## License and attribution
 

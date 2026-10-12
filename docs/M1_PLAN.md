@@ -2,11 +2,13 @@
 
 **Ticket:** [DYL-15](https://linear.app/devils17/issue/DYL-15/sillynovel-m10-a-write-the-reader-plan-and-bounded-ux-contracts). **Project:** [SillyNovel](https://linear.app/devils17/project/sillynovel-3833ac2248e8). **Phase label:** M1. **Date:** 2026-10-12, America/Phoenix.
 
-**Authority:** planning and documentation. Owner decision recorded 2026-10-12 in DYL-16: M0 PASS for its explicitly documented scope and limits; L10 UNSUPPORTED / WAIVED; M1 defaults A–G approved with the clarifications below. Only DYL-17 and DYL-19 are authorized, in parallel as separate branches/PRs with coordinated file ownership. DYL-19 is a bounded proof only. DYL-18 and later implementation remain blocked pending prerequisites and separate authorization. Gate A is NOT_RUN; M2 is not authorized.
+**Historical DYL-16 authority:** planning and documentation. Owner decision recorded 2026-10-12 in DYL-16: M0 PASS for its explicitly documented scope and limits; L10 UNSUPPORTED / WAIVED; M1 defaults A–G approved with the clarifications below. Only DYL-17 and DYL-19 are authorized, in parallel as separate branches/PRs with coordinated file ownership. DYL-19 is a bounded proof only. DYL-18 and later implementation remain blocked pending prerequisites and separate authorization. Gate A is NOT_RUN; M2 is not authorized.
 
 ## Baseline and evidence
 
 The initial checkout was clean on `test/m0-final-compatibility` at `6eedb720e699b1194db41371975ddd07b4db46c6`. Fetched `main` was `a7f1a4a6299a459adce1e24ea7b1b3f4405d02b5`, the merge commit for [PR #3](https://github.com/Sonoran-Solutions/SillyNovel/pull/3). This docs branch starts at that main SHA. Linear was reviewed on 2026-10-12: DYL-15–DYL-19 are the five existing issues in this project, all labeled M1 and in Backlog at inspection. Later ticket titles in this plan are proposals, not created issues.
+
+Current assignment: the owner separately assigned DYL-18 on 2026-10-12 after DYL-17/19 merged. The [reader contract](M1_READER_SOURCE.md#dyl-18-reader-ui-contract) records this text-only implementation; later scope and Gates A/B/C remain gated. Earlier authorization states below are historical planning checkpoints.
 
 Read alongside [UX](UX_SPEC.md), [architecture](ARCHITECTURE.md), [state](STATE_AND_DIRECTOR.md), [assets](ASSETS_AND_PROVIDERS.md), [decisions](DECISIONS.md), [status](STATUS.md), [roadmap](ROADMAP.md), and [testing](TESTING.md). This plan narrows those designs for M1; owner-approved defaults and open technical proofs are identified separately.
 

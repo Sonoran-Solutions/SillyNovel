@@ -97,3 +97,10 @@ Add a new entry with status, date, rationale, affected documents, and approving 
 - Record DYL-16's decisions and links before closing the owner gate. DYL-17 and DYL-19 are authorized but remain unstarted until their own work begins.
 
 Affected documents: [status](STATUS.md), [M1 reader plan](M1_PLAN.md), and [roadmap](ROADMAP.md). Affected issues: [DYL-16](https://linear.app/devils17/issue/DYL-16/sillynovel-m10-b-owner-decision-on-m0l10-and-m1-implementation-scope), [DYL-17](https://linear.app/devils17/issue/DYL-17/sillynovel-m11-a-build-the-reader-source-model-and-streaming-safe), [DYL-18](https://linear.app/devils17/issue/DYL-18/sillynovel-m11-b-ship-the-text-reader-backlog-handoff-and-composer), and [DYL-19](https://linear.app/devils17/issue/DYL-19/sillynovel-m12-a-prove-chatcard-identity-and-assetmetadata-storage).
+
+
+## Owner assignment — 2026-10-12, DYL-18
+
+The repository owner explicitly assigned the pasted “SillyNovel DYL-18: Implement the First Usable Text Reader” prompt in Codex on 2026-10-12 (America/Phoenix). The assignment authorizes DYL-18 only, after PR #6 / DYL-19 and PR #7 / DYL-17 merged. [Linear assignment record](https://linear.app/devils17/issue/DYL-18/sillynovel-m11-b-ship-the-text-reader-backlog-handoff-and-composer). Deliver one focused open/unmerged PR and leave the issue In Review. This supersedes the earlier DYL-18 authorization hold, not the DYL-19 storage findings or any human gate.
+
+The implementation reuses the existing source model and installed host Markdown/sanitizer libraries. Backlog also serves as Open Original Message; duplicate controls were removed to prioritize dialogue on narrow screens. Exact native handoff is limited to rendered messages with verified current source/DOM correspondence; unrendered history uses an explicit native fallback. These are bounded engineering choices documented in the [reader contract](M1_READER_SOURCE.md#dyl-18-reader-ui-contract), not new owner approvals. No persistence, art, later milestone work, merge authorization or Gate A verdict is inferred.

@@ -1,6 +1,6 @@
 # Staged implementation roadmap
 
-**Status:** proposed sequence with an owner-approved M0 verdict and limited M1 authorization. M0 is **PASS for the explicitly documented scope and evidence limits**; L10 is **UNSUPPORTED / WAIVED** for the tested persistent-chat workflow. See [M0 compatibility](M0_COMPATIBILITY.md) and [lifecycle report](M0_LIFECYCLE_VALIDATION.md). M1 defaults A–G are approved with clarifications recorded in [DYL-16](DECISIONS.md#owner-decision--2026-10-12-dyl-16) and [M1 reader plan](M1_PLAN.md#owner-approved-defaults--2026-10-12-dyl-16). M1 runtime remains **NOT_STARTED**: DYL-17 and DYL-19 are authorized in parallel; DYL-18 and later implementation remain blocked pending prerequisites and separate authorization. M2–M4 are **NOT_STARTED**, and Gates A/B/C are **NOT_RUN**. This document's targets do not authorize work beyond those named tickets.
+**Status:** proposed sequence with an owner-approved M0 verdict and limited M1 authorization. M0 is **PASS for the explicitly documented scope and evidence limits**; L10 is **UNSUPPORTED / WAIVED** for the tested persistent-chat workflow. See [M0 compatibility](M0_COMPATIBILITY.md) and [lifecycle report](M0_LIFECYCLE_VALIDATION.md). M1 defaults A–G are approved with clarifications recorded in [DYL-16](DECISIONS.md#owner-decision--2026-10-12-dyl-16) and [M1 reader plan](M1_PLAN.md#owner-approved-defaults--2026-10-12-dyl-16). DYL-17 and DYL-19 are merged; the owner separately assigned **DYL-18**, whose text-reader candidate is implemented for review. DYL-19 persistence/assets remain PARTIAL/BLOCKED and later implementation remains unauthorized. M2–M4 are **NOT_STARTED**, and Gates A/B/C are **NOT_RUN**. This document's targets do not authorize work beyond those named tickets.
 
 ## Delivery rule
 
@@ -44,12 +44,12 @@ The [implementation-ready plan](M1_PLAN.md) supplies the interaction sketches, s
 | Roadmap slice | Existing issues / proposed follow-up |
 | --- | --- |
 | M1.0 prerequisite | DYL-15 docs-only plan → DYL-16 owner decisions (recorded; defaults A–G approved) |
-| M1.1 | Authorized DYL-17 source model/streaming proof → DYL-18 usable text reader (blocked pending DYL-17 review and separate authorization) |
+| M1.1 | Merged DYL-17 source model/streaming proof → owner-assigned DYL-18 usable text-reader review candidate |
 | M1.2 | Authorized DYL-19 identity/storage proof runs alongside DYL-17; proposed B pure reducer and C raster registry → D manual stage/controls remain unauthorized |
 | M1.3 | Proposed E source-history invalidation → F safe saves/restore/single writer; F also depends on manual stage and successful DYL-19 proofs |
 | M1.4 | Proposed G responsive/accessibility/recovery → H frozen candidate validation → I owner Gate A verdict |
 
-B–I are local proposal keys in the plan, not created Linear issues. Pull the pure manual reducer into M1.2 before visual controls; M1.3 completes lifecycle invalidation and persistence. A failed DYL-19 proof blocks affected bindings/storage/saves, not DYL-17's text-source lane. DYL-16 authorizes only DYL-17 and DYL-19 at this checkpoint; later tickets require separate authorization. Proposed titles, exact dependencies, TESTING rows and one-PR boundaries are in the plan.
+B–I are local proposal keys in the plan, not created Linear issues. Pull the pure manual reducer into M1.2 before visual controls; M1.3 completes lifecycle invalidation and persistence. A failed DYL-19 proof blocks affected bindings/storage/saves, not DYL-17's text-source lane. DYL-16 originally authorized only DYL-17 and DYL-19; the later [DYL-18 assignment](DECISIONS.md#owner-assignment--2026-10-12-dyl-18) authorizes the text reader only. Other later tickets still require separate authorization. Proposed titles, exact dependencies, TESTING rows and one-PR boundaries are in the plan.
 
 ### Gate A — Reader feel
 

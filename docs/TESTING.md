@@ -1,6 +1,8 @@
 # Verification and acceptance
 
-**Status:** M0 has a passing synthetic harness and real-host lifecycle evidence on an isolated SillyTavern 1.19.0 instance using a deterministic localhost endpoint. This does not validate model/provider behavior. Switching into an empty chat and generating there, group identity cases, and host capability removal remain untested. Deletion to an empty view was exercised. See [M0 compatibility](M0_COMPATIBILITY.md) and the [lifecycle report](M0_LIFECYCLE_VALIDATION.md) for the evidence split.
+**Current DYL-18 evidence:** the [text-reader record below](#dyl-18-text-reader--2026-10-12) adds actual-entry browser behavior and isolated pinned-host reader checks. Gates A/B/C remain NOT_RUN.
+
+**Historical M0 status:** M0 has a passing synthetic harness and real-host lifecycle evidence on an isolated SillyTavern 1.19.0 instance using a deterministic localhost endpoint. This does not validate model/provider behavior. Switching into an empty chat and generating there, group identity cases, and host capability removal remain untested. Deletion to an empty view was exercised. See [M0 compatibility](M0_COMPATIBILITY.md) and the [lifecycle report](M0_LIFECYCLE_VALIDATION.md) for the evidence split.
 
 The corrective streaming and stop rerun used the committed [local endpoint fixture](../tests/fixtures/m0-openai-endpoint.mjs) and [sanitized observer fixture](../tests/fixtures/m0-lifecycle-observer.js); the lifecycle report records their hashes, observer installation/removal steps, and raw sanitized event fields.
 
@@ -204,3 +206,83 @@ git diff --check
 ```
 
 The DYL-18 and DYL-19 scope remains unchanged. The Node harness and host smoke are implementation evidence, not an owner verdict or Gate A pass.
+
+
+## DYL-18 text reader — 2026-10-12
+
+The owner assigned DYL-18 in Codex on 2026-10-12 (America/Phoenix), recorded in Linear before implementation. Initial clean checkout: `98ee37d7464063d607b0a0c892cd2259d4ed75ae`. Fetched starting main: `aa43f4d938c6eafae296cda63a5b4f11111fbd95`. Branch: `codex/dyl-18-text-reader`. The final host-tested SHA, runtime/fixture hashes, browser metrics and complete scenario results are in [results.json](evidence/dyl18/results.json); the pushed review head is recorded in the PR/Linear handoff rather than a self-referential commit here. Runtime files were committed and unchanged during that host run. Later documentation/evidence commits do not change those runtime bytes.
+
+### Commands actually run and results
+
+The dedicated host was cloned locally from the existing inspected pinned checkout; its installed dependencies were reused with a symlink, not reinstalled or added to SillyNovel:
+
+```sh
+git fetch origin main
+git rev-parse origin/main
+git switch -c codex/dyl-18-text-reader origin/main
+git clone --shared /tmp/sillynovel-m0lifecycle-st /tmp/SillyTavern-dyl18
+git -C /tmp/SillyTavern-dyl18 checkout 7e8663cd9c184a550b37238218bdd32c6efc68e9
+ln -s /tmp/sillynovel-m0lifecycle-st/node_modules /tmp/SillyTavern-dyl18/node_modules
+mkdir -p /tmp/SillyTavern-dyl18/public/scripts/extensions/third-party
+ln -s /home/dq/Projects/SillyNovel /tmp/SillyTavern-dyl18/public/scripts/extensions/third-party/SillyNovel
+
+node --test tests/m0.test.mjs tests/m1-reader-source.test.mjs tests/probes/dyl19/*.test.mjs
+SN_PLAYWRIGHT_MODULE=/home/dq/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs SILLYTAVERN_ROOT=/tmp/SillyTavern-dyl18 node --test tests/m1-reader-browser.test.mjs
+SN_PLAYWRIGHT_MODULE=/home/dq/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs node tests/probes/dyl18/reader-host.mjs /tmp/SillyTavern-dyl18 /tmp/sillynovel-dyl18-final-evidence
+
+node --check index.js
+node --check src/shell.mjs
+node --check src/host-adapter.mjs
+node --check src/reader-source-model.mjs
+node --check src/reader-view.mjs
+node --check tests/fixtures/dyl18-openai-endpoint.mjs
+node --check tests/probes/dyl18/reader-host.mjs
+git diff --check
+```
+
+Final results: **37/37 Node tests PASS** (13 M0, 15 source-model, 9 existing DYL-19 helper/probe regressions); **14/14 behavioral Chromium tests PASS**; **12/12 isolated pinned-host scenario checks PASS**. Syntax checks and `git diff --check` passed. An ad hoc standard-library Python check validated 117 relative Markdown file links, fenced blocks, all 12 host results and eight fixture/runtime hashes; `sha256sum -c SHA256SUMS` passed for all nine screenshot/result artifacts in the evidence directory. No SillyNovel dependency, application framework, build migration or CI job was added. The DYL-19 host-storage probe was not rerun; its historical results and blocked contracts are unchanged.
+
+The browser suite serves the actual `index.js`, controller, source model, adapter and renderer. A synthetic host context drives real DOM controls and lifecycle observations. Its `/lib.js` shim exposes the actual installed host Showdown/DOMPurify libraries; it does not mock the renderer. It verifies mount/update/dispose; complete long Markdown and exact clipboard copying; malicious HTML and encoded/unsafe protocols; navigation/pinning/unread; independent text following and text selection through closing Markdown; deleted/replaced sources; current-index re-resolution and failed locator fallback; exact draft/caret/focus; toggles; missing capability and mount/render failure; queued A → B → A reads and delayed copy feedback; IME/editable-field key isolation; empty/unresolved authors and reduced-height layout.
+
+Development failures were retained as failures, not relabeled PASS: early browser passes had 7/14, 12/14 and 10/14 outcomes while correcting sanitizer wrapper handling, discarded head-only script content, and generated heading IDs. Targeted closing-Markdown selection and unobserved-chat-switch handoff checks failed before range restoration and intended-source guards were added; both now pass within the 14-test suite. Manual host automation initially sampled scrolling too near the bottom; the corrected check scrolls up only after at least 500px of overflow and verifies the exact 100px offset through the rest of the stream. Early full host-run attempts stopped on hidden-settings selection, premature Stop/continuation sampling, native initialization/data-comparison races, and chat/drawer frame transitions. The final probe waits for native state and observer frames instead of assigning success from those failed attempts. Source inspection traced the metadata race to host `WorldInfoTimedEffects` creating `timedWorldInfo` even in a dry run; the before/after comparison waits for that initialization and compares canonical card content while omitting derived character-list metadata and duplicate card serialization.
+
+### Host, browser and fixture isolation
+
+Host: **SillyTavern 1.19.0**, `7e8663cd9c184a550b37238218bdd32c6efc68e9`. Browser: **Chromium 151.0.7922.34**, headful Playwright browser, Ubuntu 24.04.5 LTS, Node v26.8.1. Desktop viewport: 1440×1000; narrow: 390×800; keyboard-height approximation: 390×500 with composer focused. This is viewport simulation, **not physical-device or real virtual-keyboard evidence**.
+
+[The host probe](../tests/probes/dyl18/reader-host.mjs) refuses an unpinned host or a different mounted extension. It creates a fresh `mkdtemp` data root, seeds only its own local-endpoint settings, and starts its own loopback host and deterministic endpoint processes on ports 8018/8128. It verifies both its exact data-root announcement and listener before connecting, so an occupied port cannot redirect it to another host. Character Management creates two invented cards, Mira Reader A/B, through native UI. All sends, stop/continue, edits, swipes and switches use native controls. It saves screenshots/results to the explicit output directory, closes its browsers, stops only its children and removes its own data root even on a failed check. Fixed ports are a documented concurrency ceiling; run one such probe at a time.
+
+The endpoint returns a synthetic short Markdown reply or the complete 9,951-character chapter when the latest user message contains `[LONG]`. No credentials or real provider were used. Reproduce with a dedicated pinned host checkout and its declared installed dependencies; the extension symlink must point to the review checkout. Provide `SN_PLAYWRIGHT_MODULE` for an external installed Playwright module, or use an already installed `playwright` package. A display is required for the headful host/actual browser-zoom check. The browser-only synthetic suite runs headless.
+
+Actual 200% **browser zoom** used a temporary test-only Chrome extension with `chrome.tabs.setZoom(2)`/`getZoom`; it did not inject page code. Metrics in results prove CSS viewport width/height halved while `visualViewport.scale` remained 1. This was not CSS zoom, pinch zoom or device scaling. The test extension/profile were removed with the owned root. At 200%, reader navigation and the native composer remained reachable.
+
+### Result matrix and screenshots
+
+| Scenario | Evidence/result |
+| --- | --- |
+| Enable after successful mount; native chat/data preserved | HOST PASS; one stage, feed mounted/hidden by owned class, native data comparison unchanged |
+| Normal native send and streamed formatted reply | HOST PASS; reader updates real selected host text |
+| Stop and native Continue | HOST PASS; readable stopped partial state; existing source grows on continuation |
+| Backlog/original locator, edit, new swipe and earlier swipe | HOST PASS; verified native handoff, native text edit reflected, native swipe state respected on return |
+| Three reader/chat transitions with draft, caret and focus | HOST PASS; exact `Exact draft 日本語 with selection`, backward selection 2–8, same active native textarea |
+| Older pinned source while user/assistant replies arrive | HOST PASS; original dialogue retained, `2 new`, explicit Latest restores following |
+| Long full formatted/copyable source; independent scrolling | HOST PASS; all 9,951 source characters copied exactly; 65 chapter paragraphs and final marker; scrollTop remains 100 while stream grows |
+| Narrow and composer-focused reduced height | HOST PASS as viewport simulation; composer/send visible, dialogue scrollable; dimensions in results |
+| Native A → B → A | HOST PASS; each activation selects its own current latest source; no old text carried into B |
+| Disable/re-enable during and after generation | HOST PASS; native reply continues, one stage restored, full source remains readable |
+| Deliberate renderer exception | INSTRUMENTED_HOST_PASS; an extension-owned text node was made to throw, native edit triggered update, native feed/draft/caret restored and clean re-enable succeeded |
+| Actual 200% browser zoom | HOST PASS; navigation and native composer remain reachable |
+| Exact re-resolution after insert/reorder, missing/ambiguous/unrendered locator fallback | SYNTHETIC browser PASS; native paginated/deep-history fallback NOT_TESTED |
+| Initial mount failure, capability omission, deleted/replaced/empty sources, queued old reads, delayed clipboard feedback and IME/editable-key exclusion | SYNTHETIC browser PASS; natural host failures/physical IME NOT_TESTED |
+
+Representative verified screenshots (all synthetic, on the SHA in results): [desktop](evidence/dyl18/desktop-reader.png), [long scrollable reply](evidence/dyl18/long-scrollable-reply.png), [pinned older source](evidence/dyl18/pinned-older-message.png), [narrow](evidence/dyl18/narrow-reader.png), [keyboard-height simulation](evidence/dyl18/keyboard-viewport-simulation.png), [native backlog](evidence/dyl18/native-backlog.png), [render-failure recovery](evidence/dyl18/render-failure-native-recovery.png), [200% browser zoom](evidence/dyl18/browser-zoom-200-percent.png). Fixture/runtime SHA-256 hashes are in results; screenshot SHA-256 hashes are in [SHA256SUMS](evidence/dyl18/SHA256SUMS).
+
+### Security coverage, limits and next work
+
+Ordinary paragraph/line-break, emphasis/strong/nested emphasis, lists, inline/fenced code, heading and safe-link rendering passes. Long text is never truncated and Copy preserves exact raw source. Malicious `<script>`, event-handler image, SVG/iframe/srcdoc, encoded `java&#x73;cript:`, percent-encoded scheme, `javascript:` and `data:` links, malformed HTML and unmatched/nested Markdown pass the actual entry/render path checks. Unsafe/unsupported source remains complete readable plain text with a native Backlog route. No model HTML, styles, images/media, host-facing classes/actions, executable URLs or slash commands are installed by the reader. The final allowlist/protocol validation is separate from sanitizer-removal fidelity detection.
+
+Known UX limits: complete messages only; existing history and uncorrelated completion retain “Completion status unknown”; re-enable mid-generation cannot reconstruct lifecycle events missed while disabled. Unsupported rich content is shown literally. Exact original-message handoff covers already-rendered native messages; earlier paginated messages require native history loading and may use explicit unresolved fallback. There is no keyboard shortcut layer, replacement composer, art, scene state or persistence.
+
+NOT_TESTED on this final reader UI: physical touch/IME/virtual keyboard; other browser engines, devices, themes, extension combinations or host versions; real model/provider inference; natural missing-capability/mount failure; final-host native deletion-to-empty/replaced-object/eventless Temporary Chat and group-reader edge cases; actual native pagination/deep-history fallback; generation network failure/abort beyond explicit Stop; separate persisted lorebook/persona-store hash comparison. Those paths retain synthetic coverage or their previous dated evidence; no earlier host evidence is silently promoted to this SHA. L10 stays UNSUPPORTED / WAIVED. DYL-19 PARTIAL/BLOCKED storage findings are untouched.
+
+Recommendation: review and manually try this bounded DYL-18 reader candidate. Keep the PR OPEN/UNMERGED and issue In Review until the owner decides. A separate, explicitly authorized read-only host history-loader proof is the bounded follow-up if exact deep-backlog handoff is required. Gate A is NOT_RUN; this technical evidence does not start later milestones or supply a human verdict.
