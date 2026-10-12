@@ -35,8 +35,8 @@ function start(command,args,cwd,ready) {
     });
 }
 const pass=(name,details={})=>{results.push({name,result:'PASS',...details});console.log('PASS '+name);};
-async function screenshot(page,name) {
-    await page.screenshot({path:resolve(output,name+'.png'),scale:'css'});evidence.screenshots.push(name+'.png');
+async function screenshot(page,name,scale='css') {
+    await page.screenshot({path:resolve(output,name+'.png'),scale});evidence.screenshots.push(name+'.png');
 }
 const button=(page,name)=>page.getByRole('button',{name,exact:true});
 async function setEnabled(page,enabled) {
@@ -235,6 +235,8 @@ try {
     assert.equal(await page.locator('#sillynovel-stage').count(),0);assert.equal(await page.locator('#chat').isVisible(),true);
     const afterFailure=await composerState(page);assert.deepEqual(afterFailure.slice(0,4),failureDraft.slice(0,4));
     await page.locator('.drawer-icon[title="Extensions"]').click();
+    await page.locator('#sillynovel-settings-status').waitFor({state:'visible'});
+    await page.locator('#sillynovel-settings-status').scrollIntoViewIfNeeded();
     assert.match(await page.locator('#sillynovel-settings-status').innerText(),/induced reader render failure/);
     await screenshot(page,'render-failure-native-recovery');
     await page.locator('.drawer-icon[title="Extensions"]').click();
@@ -256,7 +258,7 @@ try {
     const zoomMetrics=await zoomPage.evaluate(()=>({innerWidth,innerHeight,dpr:devicePixelRatio,scale:visualViewport.scale}));
     const zoomComposer=await zoomPage.locator('#send_textarea').boundingBox();assert.ok(zoomComposer.y+zoomComposer.height<=zoomMetrics.innerHeight);
     await button(zoomPage,'Previous').click();await button(zoomPage,'Jump to Latest').click();
-    await screenshot(zoomPage,'browser-zoom-200-percent');
+    await screenshot(zoomPage,'browser-zoom-200-percent','device');
     pass('actual 200 percent browser zoom; navigation and composer remain reachable',{zoom,beforeZoom,zoomMetrics});
     await zoomContext.close();zoomContext=null;
 
