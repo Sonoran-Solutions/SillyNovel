@@ -1,3 +1,16 @@
+export function createSourceTracker(initialSource) {
+    let currentSource = initialSource ?? null;
+
+    return {
+        observe(observation) {
+            if (observation && Object.prototype.hasOwnProperty.call(observation, 'source')) {
+                currentSource = observation.source ?? null;
+            }
+            return currentSource;
+        },
+    };
+}
+
 export function createShellController(host, view) {
     let active = false;
     let stage = null;

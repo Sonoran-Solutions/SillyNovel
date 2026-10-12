@@ -9,7 +9,7 @@ The repository now contains the M0 compatibility shell. This is not a visual-nov
 | Area | State |
 | --- | --- |
 | M0 shell code | IMPLEMENTED |
-| Synthetic adapter/controller harness | PASS — 5 tests |
+| Synthetic adapter/controller/source harness | PASS — 7 tests |
 | SillyTavern 1.19.0 source inspection | COMPLETE — commit `7e8663cd9c184a550b37238218bdd32c6efc68e9` |
 | Isolated real-host shell smoke check | PASS — extension load, default-off control, repeated mount/dispose, draft retained |
 | Live host generation lifecycle checks | NOT_TESTED — no provider configured |
@@ -40,15 +40,15 @@ The implementation persists only the user's `extensionSettings.sillynovel.enable
 
 ## Verification record
 
-The simulated harness passed 5 tests, including generated-message observations, streaming token observation, stop, continuation, regeneration, swipe, edit/delete, chat switching, group author labels, missing capabilities, and listener cleanup. These are synthetic observations, not proof that a live host run emits every event in the same order.
+The simulated harness passed 7 tests, including generated-message observations, streaming token observation, stop, continuation, regeneration, swipe, edit/delete, chat switching, group author labels, missing capabilities, listener cleanup, empty-chat source retention, and malformed indices. These are synthetic observations, not proof that a live host run emits every event in the same order. In the pinned source, `STREAM_TOKEN_RECEIVED` is emitted before `onProgressStreaming()` updates the corresponding chat message; M1 must not treat a sampled `context.chat` value at that event as current token content.
 
-On a clean SillyTavern 1.19.0 checkout in an isolated temporary data root, the extension loaded and its checkbox began unchecked. Two enable/disable cycles preserved the exact synthetic draft `Synthetic draft: keep this exact text.` and left SillyTavern's chat surface in place. No provider was configured, so live normal/streaming replies, stop, continuation, regeneration, and group replies were not exercised.
+On a clean SillyTavern 1.19.0 checkout in an isolated temporary data root, the extension loaded and its checkbox began unchecked. The initial shell smoke completed two enable/disable cycles; after the review fixes, the current code was reloaded and completed one more cycle. Each preserved the exact synthetic draft `Synthetic draft: keep this exact text.` and left SillyTavern's chat surface in place. No provider was configured, so live normal/streaming replies, stop, continuation, regeneration, and group replies were not exercised.
 
 The tested browser was the Codex in-app browser. No compatibility claim is made for other browsers, devices, themes, or extension combinations. See the [M0 compatibility checklist](M0_COMPATIBILITY.md).
 
 ## Next action
 
-Review the M0 PR and, if the owner accepts the shell and its limits, plan M1 as a separate authorized task. Gate A remains NOT_RUN. Completing M0 does not authorize M1.
+Complete the M0 lifecycle checklist on the pinned host with a synthetic chat and a non-paid local test setup. Gate A remains NOT_RUN. M1 remains NOT_AUTHORIZED.
 
 ## Status discipline
 

@@ -124,8 +124,7 @@ export function createHostAdapter(getContext) {
 
         function messageSource(index) {
             const current = contextOrNull();
-            const resolved = Number.isSafeInteger(index) ? readMessageAt(index, current) : readCurrentSource();
-            return resolved;
+            return readMessageAt(index, current);
         }
 
         const listeners = [

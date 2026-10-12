@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { createHostAdapter } from '../src/host-adapter.mjs';
-import { createShellController } from '../src/shell.mjs';
+import { createShellController, createSourceTracker } from '../src/shell.mjs';
 
 const eventTypes = Object.fromEntries([
     'CHAT_CHANGED',
@@ -76,6 +76,25 @@ test('reads the active message and host author without inventing a durable ident
     });
     assert.equal(adapter.readMessageAt(99), null);
     assert.equal(adapter.inspectCapabilities().ok, true);
+});
+
+test('chat switch to an empty chat is retained across source-less generation start', () => {
+    const context = createFixtureContext();
+    context.chatId = 'chat-a.jsonl';
+    const adapter = createHostAdapter(() => context);
+    const tracker = createSourceTracker(adapter.readCurrentSource());
+    const renderedSources = [];
+    const dispose = adapter.subscribe((observation) => renderedSources.push(tracker.observe(observation)));
+
+    context.chat = [];
+    context.chatId = 'chat-b.jsonl';
+    context.eventSource.emit(eventTypes.CHAT_CHANGED, context.chatId);
+    context.eventSource.emit(eventTypes.GENERATION_STARTED, 'normal');
+
+    assert.equal(renderedSources.length, 2);
+    assert.equal(renderedSources[0], null, 'empty chat switch explicitly clears the previous source');
+    assert.equal(renderedSources[1], null, 'source-less generation start retains the empty chat state');
+    dispose();
 });
 
 test('observes normal and streaming lifecycle events without forwarding token text', () => {
@@ -186,6 +205,22 @@ test('activation and repeated disposal own exactly one stage and one listener se
     assert.equal(disposeCount, 2);
     assert.equal(context.eventSource.count(), 0);
     assert.equal(context.chat[1].mes, 'The selected swipe.');
+});
+
+test('invalid indices on indexed events never fall back to the last message', () => {
+    const context = createFixtureContext();
+    const adapter = createHostAdapter(() => context);
+    const observations = [];
+    const dispose = adapter.subscribe((observation) => observations.push(observation));
+
+    context.eventSource.emit(eventTypes.MESSAGE_RECEIVED, Number.NaN, 'normal');
+    context.eventSource.emit(eventTypes.MESSAGE_SWIPED, '1');
+    context.eventSource.emit(eventTypes.MESSAGE_EDITED, 99);
+    context.eventSource.emit(eventTypes.STREAM_TOKEN_RECEIVED, 'ignored synthetic token');
+
+    assert.deepEqual(observations.slice(0, 3).map((observation) => observation.source), [null, null, null]);
+    assert.equal(observations[3].source.text, 'The selected swipe.', 'index-free token event samples the current latest message');
+    dispose();
 });
 
 test('missing required capability prevents mount and leaves host state untouched', () => {

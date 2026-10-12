@@ -14,8 +14,8 @@ The M0 candidate is tested against SillyTavern 1.19.0, full source SHA `7e8663cd
 
 | Scenario | Synthetic harness | Real-host result |
 | --- | --- | --- |
-| Repeated enable/disable | PASS | PASS — two full cycles; stage appeared once and was removed on disable |
-| Draft entered before toggle | Not represented in Node harness | PASS — exact text survived both transitions |
+| Repeated enable/disable | PASS | PASS — two initial cycles plus one post-review-fix cycle; stage appeared once and was removed on disable |
+| Draft entered before toggle | Not represented in Node harness | PASS — exact text survived all tested transitions, including one after the review fixes |
 | Missing required event capability | PASS — activation refused before mount | NOT_RUN in host UI |
 | Normal completed reply | PASS — event observation sequence | NOT_TESTED — no provider |
 | Streaming reply and stop | PASS — stream token, stop, and end observations | NOT_TESTED — no provider |
@@ -23,9 +23,11 @@ The M0 candidate is tested against SillyTavern 1.19.0, full source SHA `7e8663cd
 | Regeneration and swipe selection | PASS — `regenerate` type and selected-message index observed | NOT_TESTED — no provider |
 | Message edit and delete | PASS — source index and post-delete count normalized | NOT_TESTED — no real chat |
 | Chat switch | PASS — identity snapshot changes with context | NOT_TESTED — no real chat |
+| Chat A → empty chat B → generation start | PASS — retained source clears and stays empty | NOT_TESTED — no real chat |
+| Malformed/out-of-range message index | PASS — indexed event has null source; index-free event samples latest | NOT_TESTED — synthetic event only |
 | Group author label | PASS — synthetic group message uses its host `name` field | NOT_TESTED — no group chat |
 
-Harness assertions model official source signatures and do not prove runtime ordering. The pinned source inspection, tested UI surface, and remaining gaps are recorded in [M0 compatibility](M0_COMPATIBILITY.md). The real-host smoke is not an owner experience test and does not pass Gate A.
+Harness assertions model official source signatures and do not prove runtime ordering. In the inspected 1.19.0 streaming path, `STREAM_TOKEN_RECEIVED` fires before `onProgressStreaming()` updates the message object, so a sample taken at token-event time may lag by one token. M1 must verify its streaming source contract before using those samples for display. The pinned source inspection, tested UI surface, and remaining gaps are recorded in [M0 compatibility](M0_COMPATIBILITY.md). The real-host smoke is not an owner experience test and does not pass Gate A.
 
 ## 2. Core regression matrix
 

@@ -1,5 +1,5 @@
 import { createHostAdapter } from './src/host-adapter.mjs';
-import { createShellController } from './src/shell.mjs';
+import { createShellController, createSourceTracker } from './src/shell.mjs';
 
 function install() {
     const document = globalThis.document;
@@ -95,11 +95,10 @@ function install() {
         const observationStatus = document.createElement('p');
         observationStatus.className = 'sillynovel-stage__observation';
         stage.append(heading, description, sourceStatus, observationStatus);
+        const sourceTracker = createSourceTracker(initialSource);
 
         function render(observation) {
-            const source = observation && Object.prototype.hasOwnProperty.call(observation, 'source')
-                ? observation.source
-                : initialSource;
+            const source = sourceTracker.observe(observation);
             if (source?.index === null || source?.index === undefined) {
                 sourceStatus.textContent = 'No current message is available.';
             } else {

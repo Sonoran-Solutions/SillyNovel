@@ -39,7 +39,7 @@ The extension uses the public context object rather than importing SillyTavern i
 | --- | --- | --- |
 | `CHAT_CHANGED` | Current chat ID | Refresh current host identity and latest source |
 | `GENERATION_STARTED` | Generation type, options object, dry-run flag | Keep only a bounded type string and boolean; discard options |
-| `STREAM_TOKEN_RECEIVED` | Text for the stream iteration | Ignore the event text; sample the current message object |
+| `STREAM_TOKEN_RECEIVED` | Text for the stream iteration | Ignore the event text; sampling the current message object may lag by this token |
 | `MESSAGE_RECEIVED` | Message index and generation type | Read that message index from the current `chat` array |
 | `CHARACTER_MESSAGE_RENDERED` | Message index and generation type | Read that message index from the current `chat` array |
 | `GENERATION_ENDED` | `chat.length` from `hideStopButton()` | Keep as a count; never treat it as a message index or proof of success |
@@ -47,6 +47,8 @@ The extension uses the public context object rather than importing SillyTavern i
 | `MESSAGE_SWIPED` | Message index, after the swipe view is updated | Read the selected message at that index; its active `mes` and `swipe_id` are host fields |
 | `MESSAGE_EDITED` | Edited message index | Read that message index |
 | `MESSAGE_DELETED` | In the inspected delete paths, the post-delete `chat.length` | Keep as a count and read the current latest source |
+
+In the inspected [streaming path](https://github.com/SillyTavern/SillyTavern/blob/7e8663cd9c184a550b37238218bdd32c6efc68e9/public/script.js#L3895-L3896), SillyTavern emits `STREAM_TOKEN_RECEIVED` before it calls `onProgressStreaming()` to update the corresponding chat message. Sampling `context.chat` in response to that event can therefore return the previous streaming state. M0 ignores the event text and does not use the sampled object as canonical or final content. M1 must validate this ordering on the pinned host and choose an update seam that provides the content it needs.
 
 The source emits `MESSAGE_RECEIVED` before `CHARACTER_MESSAGE_RENDERED` in streaming finalization. Ordinary generation uses the type `normal`; continuation uses `continue`; regeneration uses `regenerate`; swipe generation uses `swipe`. `MESSAGE_SWIPED` can be emitted before a swipe generation starts. A stop path can emit `GENERATION_ENDED` while hiding the stop button before it emits `GENERATION_STOPPED`. A generation-ended event is therefore not a completion signal.
 
@@ -60,6 +62,7 @@ These facts are source inspection, not observations from a live model run. Error
 - Stage text is created with DOM `textContent`. It shows the host author label and message length, not the message body. The adapter reads the active `message.mes` and `swipe_id` in memory and does not save or transmit them.
 - Character identity is not resolved. A message author is the host message's `name` label; it is not treated as a stable card ID.
 - Enabling requires the context, chat array, settings save seam, event emitter API, and ten named events. If a required capability is absent, activation stops before stage mount. If mount or listener registration fails, SillyNovel disposes what it created and leaves normal chat available.
+- The renderer retains the latest observed source; a source-less event does not fall back to the source captured at mount. A chat switch with no messages explicitly clears the source. Indexed message events with invalid or out-of-range indices resolve to `null`; they never fall back to the last message.
 - The active shell owns ten host event listeners and one stage node. Disable removes both. The persistent settings checkbox keeps one change listener so the user can re-enable the stage; the settings control is mounted once per module load. M0 creates no timer, observer, object URL, chat presentation override, or host chat mutation.
 - If initialization fails after the settings control is mounted, the control remains available with an error and the native chat remains usable. SillyTavern does not expose an unload hook in the M0 surface used here; reloading the page disposes the module and its control.
 
@@ -71,10 +74,12 @@ The adapter's `chatId`, `groupId`, and `characterId` observation is marked `dura
 | --- | --- | --- |
 | Extension manifest discovery and module load | HOST_TESTED — PASS | Control appeared in the 1.19.0 Extensions settings panel |
 | Default disabled state | HOST_TESTED — PASS | Fresh isolated profile showed unchecked control and “Off by default” status |
-| Repeated enable/disable | HOST_TESTED — PASS | Two full cycles; each activation showed one stage; each disable removed it |
-| Draft preservation | HOST_TESTED — PASS | `Synthetic draft: keep this exact text.` was present before toggling and unchanged after each transition |
+| Repeated enable/disable | HOST_TESTED — PASS | Two full cycles in the initial shell smoke, plus one full cycle after the review fixes; each activation showed one stage and each disable removed it |
+| Draft preservation | HOST_TESTED — PASS | `Synthetic draft: keep this exact text.` remained unchanged through the initial cycles and the post-fix mount/dispose cycle |
 | Original chat/composer remains | HOST_TESTED — PASS | Accessibility tree retained SillyTavern's chat surface and textarea while stage mounted |
 | Adapter/source observation and disposal | SIMULATED — PASS | `node --test tests/m0.test.mjs`; public-safe fixture only |
+| Chat A → empty chat B → generation start | SIMULATED — PASS | Renderer source tracker keeps B empty instead of resurrecting A |
+| Malformed or out-of-range indexed events | SIMULATED — PASS | Indexed events resolve to `null`; index-free stream observation still samples the latest message |
 | Missing capability and partial listener setup failure | SIMULATED — PASS | Activation refuses or rolls back without listeners/stage |
 | Normal, streaming, stopped, continued, regenerated reply | SIMULATED + SOURCE_INSPECTED; HOST_LIFECYCLE_NOT_TESTED | No provider was configured |
 | Swipe, message edit/delete, chat switch | SIMULATED + SOURCE_INSPECTED; HOST_LIFECYCLE_NOT_TESTED | No real chat was opened |
