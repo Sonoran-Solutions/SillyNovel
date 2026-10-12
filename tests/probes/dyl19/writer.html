@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DYL-19 Web Locks probe</title>
+<style>
+  body { font: 16px system-ui, sans-serif; max-width: 44rem; margin: 3rem auto; padding: 0 1rem; }
+  code, pre { background: #eee; padding: .5rem; white-space: pre-wrap; }
+  button { font: inherit; padding: .6rem 1rem; }
+</style>
+<h1>DYL-19 same-origin writer probe</h1>
+<p>Role: <strong id="role"></strong> · mode: <strong id="mode"></strong></p>
+<p id="status" role="status">starting</p>
+<pre id="record"></pre>
+<button id="release" type="button">Release held writer</button>
+<script type="module">
+const query = new URLSearchParams(location.search);
+const role = query.get('role') || 'A';
+const mode = query.get('mode') || 'release';
+const run = query.get('run') || 'default';
+const lockName = `sillynovel:dyl19:${run}`;
+const stateKey = `sillynovel:dyl19:${run}:state`;
+const status = document.querySelector('#status');
+const record = document.querySelector('#record');
+document.querySelector('#role').textContent = role;
+document.querySelector('#mode').textContent = mode;
+const show = (message, value = null) => {
+    status.textContent = message;
+    record.textContent = value == null ? '' : JSON.stringify(value, null, 2);
+};
+let release;
+const held = new Promise(resolve => { release = resolve; });
+document.querySelector('#release').addEventListener('click', () => release());
+
+if (!navigator.locks?.request) {
+    show('UNSUPPORTED: Web Locks API is unavailable.');
+} else if (role === 'A') {
+    void navigator.locks.request(lockName, { mode: 'exclusive' }, async () => {
+        const current = JSON.parse(localStorage.getItem(stateKey) || 'null');
+        if (current !== null) {
+            show('FAIL: A acquired the lock without the expected empty initial state.', current);
+            return;
+        }
+        const next = { revision: 1, writer: 'A', value: 'record-A' };
+        localStorage.setItem(stateKey, JSON.stringify(next));
+        show('LOCKED: A validated empty state and wrote revision 1 while holding the lock.', next);
+        if (mode === 'release') await held;
+        else await new Promise(() => {});
+        show(mode === 'release' ? 'RELEASED: A gave up the lock.' : 'LOCKED: close this tab to simulate owner loss.');
+    });
+} else {
+    show('QUEUED: B is waiting for the writer lock.');
+    void navigator.locks.request(lockName, { mode: 'exclusive' }, async () => {
+        const current = JSON.parse(localStorage.getItem(stateKey) || 'null');
+        const valid = current?.revision === 1 && current?.writer === 'A' && current?.value === 'record-A';
+        if (!valid) {
+            show('FAIL: B acquired the lock without the expected reread state.', current);
+            return;
+        }
+        const next = { revision: 2, writer: 'B', reread: current };
+        localStorage.setItem(stateKey, JSON.stringify(next));
+        show(mode === 'release' ? 'PASS: B acquired after release and reread A state.' : 'PASS: B recovered after A tab closed and reread A state.', next);
+        if (mode === 'release') await held;
+    });
+}
+</script>
+</html>
