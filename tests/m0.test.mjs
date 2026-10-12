@@ -60,7 +60,7 @@ function createFixtureContext() {
     };
 }
 
-function loadObserverFixture(context) {
+function loadObserverFixture(context, { syntheticLabels = [] } = {}) {
     const eventSource = context.eventSource;
     eventSource.events = Object.create(null);
     eventSource.on = (name, listener) => {
@@ -83,6 +83,7 @@ function loadObserverFixture(context) {
     });
     const sandbox = {
         SillyTavern: { getContext: () => context },
+        M0_LIFECYCLE_SYNTHETIC_LABELS: syntheticLabels,
         document: { createElement: makeElement, body: { append() {} }, querySelectorAll: () => [] },
         performance: { now: () => 0 },
         setTimeout() {},
@@ -335,6 +336,88 @@ test('group author labels follow the host message, while duplicate-name card ide
     assert.equal('characterId' in cardB, false);
 });
 
+test('host chat DOM changes clear stale sources when no lifecycle event fires and dispose cleanly', async () => {
+    const previousDocument = Object.getOwnPropertyDescriptor(globalThis, 'document');
+    const previousObserver = Object.getOwnPropertyDescriptor(globalThis, 'MutationObserver');
+    const chatElement = {};
+    let callback;
+    let observedTarget;
+    let observedOptions;
+    let disconnectCount = 0;
+    class TestMutationObserver {
+        constructor(listener) { callback = listener; }
+        observe(target, options) { observedTarget = target; observedOptions = options; }
+        disconnect() { disconnectCount++; }
+        trigger() { callback([], this); }
+    }
+
+    Object.defineProperty(globalThis, 'document', { configurable: true, value: { getElementById: (id) => id === 'chat' ? chatElement : null } });
+    Object.defineProperty(globalThis, 'MutationObserver', { configurable: true, value: TestMutationObserver });
+    try {
+        const context = createFixtureContext();
+        const adapter = createHostAdapter(() => context);
+        const observations = [];
+        const dispose = adapter.subscribe((observation) => observations.push(observation));
+
+        assert.equal(observedTarget, chatElement);
+        assert.deepEqual(observedOptions, { childList: true, subtree: true, characterData: true });
+        context.chat = [];
+        context.chatId = 'ephemeral-chat';
+        callback([], null);
+        await Promise.resolve();
+        assert.deepEqual(observations.map((observation) => observation.type), ['chatViewChanged']);
+        assert.equal(observations[0].source, null, 'a host-only chat transition clears the old source');
+
+        context.chat = [
+            { name: 'Reader', is_user: true, mes: 'Synthetic temporary prompt.' },
+            { name: 'Assistant', mes: 'Synthetic temporary reply.' },
+        ];
+        callback([], null);
+        await Promise.resolve();
+        assert.equal(observations.at(-1).source.text, 'Synthetic temporary reply.');
+
+        context.eventSource.emit(eventTypes.MESSAGE_RECEIVED, 1, 'normal');
+        callback([], null);
+        await Promise.resolve();
+        assert.equal(observations.length, 3, 'the DOM fallback does not duplicate a lifecycle event');
+
+        dispose();
+        assert.equal(disconnectCount, 1);
+        callback([], null);
+        await Promise.resolve();
+        assert.equal(observations.length, 3, 'disposed observers ignore already queued changes');
+    } finally {
+        if (previousDocument) Object.defineProperty(globalThis, 'document', previousDocument);
+        else delete globalThis.document;
+        if (previousObserver) Object.defineProperty(globalThis, 'MutationObserver', previousObserver);
+        else delete globalThis.MutationObserver;
+    }
+});
+
+test('debug observer hashes host avatar fields without confusing duplicate labels', () => {
+    const context = createFixtureContext();
+    context.chat = [
+        { name: 'Mira', mes: 'Synthetic card A reply.', original_avatar: 'Mira.png', force_avatar: '/thumbnail?file=Mira.png' },
+        { name: 'Mira', mes: 'Synthetic card B reply.', original_avatar: 'Mira Copy.png', force_avatar: '/thumbnail?file=Mira%20Copy.png' },
+    ];
+    const observer = loadObserverFixture(context, { syntheticLabels: ['Mira'] });
+    observer.emit(eventTypes.CHAT_CHANGED, context.chatId);
+    observer.emit(eventTypes.MESSAGE_RECEIVED, 0, 'normal');
+    const cardA = observer.observer.records().at(-1).source;
+    observer.emit(eventTypes.MESSAGE_RECEIVED, 1, 'normal');
+    const cardB = observer.observer.records().at(-1).source;
+
+    assert.equal(cardA.authorLabel, 'Mira');
+    assert.equal(cardB.authorLabel, 'Mira');
+    assert.equal(cardA.originalAvatar.status, 'valid');
+    assert.equal(cardB.originalAvatar.status, 'valid');
+    assert.notEqual(cardA.originalAvatar.hash, cardB.originalAvatar.hash);
+    assert.notEqual(cardA.forcedAvatar.hash, cardB.forcedAvatar.hash);
+    assert.ok(cardB.messageFields.includes('original_avatar'));
+    assert.ok(cardB.messageFields.includes('force_avatar'));
+    assert.doesNotMatch(observer.observer.dump(), /Mira Copy\.png|thumbnail\?file/);
+});
+
 test('missing required capability prevents mount and leaves host state untouched', () => {
     const context = createFixtureContext();
     delete context.eventTypes.MESSAGE_SWIPED;
@@ -415,4 +498,18 @@ test('observer distinguishes sanitized integer, string, missing, and invalid ide
     assert.equal(missing.groupId.status, 'missing');
     assert.equal(missing.characterId.status, 'missing');
     assert.doesNotMatch(JSON.stringify(observer.observer.records()), /synthetic-(?:group|character)-card-id/);
+});
+
+test('debug observer remains removable when the instrumented host lacks one event type', () => {
+    const context = createFixtureContext();
+    delete context.eventTypes.MESSAGE_SWIPED;
+    const observer = loadObserverFixture(context);
+
+    assert.deepEqual(JSON.parse(JSON.stringify(observer.observer.missingEventTypes)), ['MESSAGE_SWIPED']);
+    assert.equal(context.eventSource.events.message_swiped, undefined);
+    observer.emit(eventTypes.MESSAGE_RECEIVED, 1, 'normal');
+    assert.equal(observer.observer.records().at(-1).event, 'MESSAGE_RECEIVED');
+    assert.equal(observer.observer.uninstall(), true);
+    assert.equal(observer.observer.uninstall(), false);
+    assert.equal(Object.values(context.eventSource.events).flat().length, 0);
 });

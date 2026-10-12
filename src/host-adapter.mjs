@@ -29,6 +29,20 @@ function safeCount(value) {
     return Number.isSafeInteger(value) && value >= 0 ? value : null;
 }
 
+function sourceSignature(source) {
+    if (!source) return null;
+    return JSON.stringify([
+        source.identity?.chatId,
+        source.identity?.groupId,
+        source.identity?.characterId,
+        source.index,
+        source.author?.kind,
+        source.author?.label,
+        source.swipeId,
+        source.text.length,
+    ]);
+}
+
 export function createHostAdapter(getContext) {
     function contextOrNull() {
         try {
@@ -117,8 +131,15 @@ export function createHostAdapter(getContext) {
         const source = context.eventSource;
         const types = context.eventTypes;
         const bindings = [];
+        let disposed = false;
+        let mutationObserver = null;
+        let pendingViewRead = false;
+        let lastSourceSignature = sourceSignature(readCurrentSource());
 
         function emit(type, details = {}) {
+            if (Object.prototype.hasOwnProperty.call(details, 'source')) {
+                lastSourceSignature = sourceSignature(details.source);
+            }
             onObservation({ type, ...details });
         }
 
@@ -145,18 +166,38 @@ export function createHostAdapter(getContext) {
                 source.on(eventName, listener);
                 bindings.push([eventName, listener]);
             }
+
+            const chatElement = globalThis.document?.getElementById?.('chat');
+            const Observer = globalThis.MutationObserver;
+            if (chatElement && typeof Observer === 'function') {
+                mutationObserver = new Observer(() => {
+                    if (pendingViewRead || disposed) return;
+                    pendingViewRead = true;
+                    queueMicrotask(() => {
+                        pendingViewRead = false;
+                        if (disposed) return;
+                        const currentSource = readCurrentSource();
+                        const signature = sourceSignature(currentSource);
+                        if (signature === lastSourceSignature) return;
+                        emit('chatViewChanged', { source: currentSource });
+                    });
+                });
+                mutationObserver.observe(chatElement, { childList: true, subtree: true, characterData: true });
+            }
         } catch (error) {
+            try { mutationObserver?.disconnect(); } catch { /* continue releasing owned listeners */ }
             for (const [eventName, listener] of bindings) {
                 try { source.removeListener(eventName, listener); } catch { /* continue releasing owned listeners */ }
             }
             throw error;
         }
 
-        let disposed = false;
         return () => {
             if (disposed) return;
             disposed = true;
             let firstError = null;
+            try { mutationObserver?.disconnect(); } catch (error) { firstError ||= error; }
+            mutationObserver = null;
             for (const [eventName, listener] of bindings) {
                 try { source.removeListener(eventName, listener); } catch (error) { firstError ||= error; }
             }
