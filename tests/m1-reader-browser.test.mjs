@@ -118,6 +118,15 @@ test('streaming follows text bottom independently; scrolling up and selecting te
     assert.equal(await page.evaluate(() => document.querySelector('.sillynovel-dialogue').scrollTop),100);
     assert.equal(await page.evaluate(() => getSelection().toString()),selected);
     assert.equal(await button(page,'Follow text').isVisible(),true);
+    await text(page, 'Before *closing emphasis');
+    await page.evaluate(() => {
+        const n=document.querySelector('.sillynovel-dialogue p').firstChild;
+        const range=document.createRange();range.setStart(n,8);range.setEnd(n,15);
+        getSelection().removeAllRanges();getSelection().addRange(range);
+    });
+    const closingSelection=await page.evaluate(() => getSelection().toString());
+    await text(page, 'Before *closing emphasis*');
+    assert.equal(await page.evaluate(() => getSelection().toString()),closingSelection);
 });
 
 test('stop and continuation stay readable; disable does not stop generation', async t => {

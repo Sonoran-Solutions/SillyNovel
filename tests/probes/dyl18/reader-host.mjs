@@ -76,7 +76,10 @@ async function send(page,text) {
     await page.locator('#send_textarea').fill(text);await page.locator('#send_but').click();
     await page.waitForFunction(()=>document.querySelector('.sillynovel-reader__status')?.textContent.match(/streaming|being generated/));
 }
-async function settled(page) { await page.locator('#send_but').waitFor({state:'visible'}); }
+async function settled(page) {
+    await page.waitForFunction(()=>!document.querySelector('.sillynovel-reader__status')?.textContent.match(/streaming|being generated/));
+    await page.locator('#send_but').waitFor({state:'visible'});
+}
 async function composerState(page) {
     return page.evaluate(()=>{const d=document.getElementById('send_textarea');return[d.value,d.selectionStart,d.selectionEnd,d.selectionDirection,document.activeElement===d];});
 }

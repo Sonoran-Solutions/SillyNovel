@@ -66,6 +66,16 @@ function updateContent(target, source) {
     while (target.childNodes.length > desired.length) target.lastChild.remove();
 }
 
+function textPoint(element, offset) {
+    const walker = element.ownerDocument.createTreeWalker(element, 4); // SHOW_TEXT
+    let node;
+    while ((node = walker.nextNode())) {
+        if (offset <= node.length) return [node, offset];
+        offset -= node.length;
+    }
+    return [element, element.childNodes.length];
+}
+
 export function mountReader({ document, snapshot, formatMessage, actions }) {
     const shell = document.getElementById('sheld');
     const chat = document.getElementById('chat');
@@ -204,7 +214,33 @@ export function mountReader({ document, snapshot, formatMessage, actions }) {
                 fallback = result.fallback;
                 const container = document.createElement('div');
                 container.append(result.content);
+                const selection = document.getSelection();
+                const range = selection?.rangeCount ? selection.getRangeAt(0) : null;
+                const selectedText = !changedSelection && range && message.contains(range.startContainer)
+                    && message.contains(range.endContainer) ? selection.toString() : '';
+                let selectedOffset = 0;
+                const backward = range && selection.anchorNode === range.endContainer && selection.anchorOffset === range.endOffset;
+                if (selectedText) {
+                    const prefix = range.cloneRange();
+                    prefix.selectNodeContents(message);
+                    prefix.setEnd(range.startContainer, range.startOffset);
+                    selectedOffset = prefix.toString().length;
+                }
                 updateContent(message, container);
+                // Closing Markdown can change element structure. Re-anchor a still-present
+                // selection within this same source, never use text as message identity.
+                if (selectedText) {
+                    const text = message.textContent;
+                    let closest = -1;
+                    for (let index = text.indexOf(selectedText); index !== -1; index = text.indexOf(selectedText, index + 1)) {
+                        if (closest === -1 || Math.abs(index - selectedOffset) < Math.abs(closest - selectedOffset)) closest = index;
+                    }
+                    if (closest !== -1) {
+                        const start = textPoint(message, closest);
+                        const end = textPoint(message, closest + selectedText.length);
+                        selection.setBaseAndExtent(...(backward ? end : start), ...(backward ? start : end));
+                    }
+                }
             } else {
                 message.textContent = reader.selectionState === 'deleted' ? 'This selected message was deleted. Jump to Latest to continue reading.'
                     : reader.selectionState === 'invalidated' ? 'This selection is unavailable because its source changed. Jump to Latest to continue reading.'
