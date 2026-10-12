@@ -141,4 +141,4 @@ The JSON validation command used was:
 node --input-type=module -e 'import {readdirSync,readFileSync} from "node:fs"; const files=readdirSync("docs/examples").filter(f=>f.endsWith(".json")); for (const f of files) JSON.parse(readFileSync(`docs/examples/${f}`,"utf8")); console.log(`JSON OK: ${files.join(", ")}`)'
 ```
 
-This evidence recommends **M0 PASS subject to the owner accepting the L10 waiver**. No owner verdict is recorded. Gate A remains NOT_RUN; M1 remains NOT_AUTHORIZED. The host run does not validate real model/provider behavior, error/abort paths, other browser engines, or other SillyTavern releases.
+At the time of this evidence record, the recommendation was **M0 PASS subject to owner acceptance of the L10 waiver**. The owner later approved M0 PASS for this documented scope and accepted L10 as **UNSUPPORTED / WAIVED**; see the [DYL-16 decision](DECISIONS.md#owner-decision--2026-10-12-dyl-16). Gate A remains NOT_RUN. The host run does not validate real model/provider behavior, error/abort paths, other browser engines, or other SillyTavern releases.

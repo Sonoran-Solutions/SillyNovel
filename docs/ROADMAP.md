@@ -1,6 +1,6 @@
 # Staged implementation roadmap
 
-**Status:** proposed sequence. The current M0.2 recommendation is PASS subject to the owner's pending L10 waiver/acceptance, on pinned SillyTavern 1.19.0; see [M0 compatibility](M0_COMPATIBILITY.md) and the [lifecycle report](M0_LIFECYCLE_VALIDATION.md) for exact-candidate evidence and historical M0.1 gaps. M1 planning is documented in [M1 reader plan](M1_PLAN.md); M1 runtime remains **NOT_STARTED / NOT_AUTHORIZED**, M2–M4 **NOT_STARTED**, and Gates A/B/C **NOT_RUN**. This document contains targets, not owner acceptance.
+**Status:** proposed sequence with an owner-approved M0 verdict and limited M1 authorization. M0 is **PASS for the explicitly documented scope and evidence limits**; L10 is **UNSUPPORTED / WAIVED** for the tested persistent-chat workflow. See [M0 compatibility](M0_COMPATIBILITY.md) and [lifecycle report](M0_LIFECYCLE_VALIDATION.md). M1 defaults A–G are approved with clarifications recorded in [DYL-16](DECISIONS.md#owner-decision--2026-10-12-dyl-16) and [M1 reader plan](M1_PLAN.md#owner-approved-defaults--2026-10-12-dyl-16). M1 runtime remains **NOT_STARTED**: DYL-17 and DYL-19 are authorized in parallel; DYL-18 and later implementation remain blocked pending prerequisites and separate authorization. M2–M4 are **NOT_STARTED**, and Gates A/B/C are **NOT_RUN**. This document's targets do not authorize work beyond those named tickets.
 
 ## Delivery rule
 
@@ -20,7 +20,7 @@ Resolve or explicitly block the host chat identity, card identity, metadata save
 
 **Exit criteria:** enable/disable cycles preserve ordinary chat and the draft; the adapter can identify a selected message without guessing; failures leave native chat usable; known limitations are documented. A failure in basic reversibility blocks M1.
 
-**Historical M0.1 implementation record:** the reversible placeholder shell is implemented. The pinned isolated host verified normal, streaming, stopped, continued, swipe, edit/delete, chat-switch, toggle, and disable-during-generation paths using a deterministic loopback endpoint. Empty-chat switch/generation and group cases remained **NOT_TESTED** at that point, so M0.1 was not reported as fully passed. The later M0.2 addenda record group/duplicate-label HOST PASS, missing-capability INSTRUMENTED_HOST_PASS, and L10 UNSUPPORTED / WAIVER REQUESTED. The same-length eventless correction has synthetic evidence only. Gate A remains **NOT_RUN**; owner M0 acceptance and M1 implementation authorization remain pending.
+**Historical M0.1 implementation record:** the reversible placeholder shell is implemented. The pinned isolated host verified normal, streaming, stopped, continued, swipe, edit/delete, chat-switch, toggle, and disable-during-generation paths using a deterministic loopback endpoint. Empty-chat switch/generation and group cases remained **NOT_TESTED** at that point, so M0.1 was not reported as fully passed. The later M0.2 addenda record group/duplicate-label HOST PASS, missing-capability INSTRUMENTED_HOST_PASS, and L10 UNSUPPORTED / WAIVER REQUESTED. The same-length eventless correction has synthetic evidence only. Gate A remains **NOT_RUN**. Owner approval and exact M1 authorization are now recorded in DYL-16 and [DECISIONS](DECISIONS.md).
 
 ## M1 — Manual visual-novel reader
 
@@ -43,13 +43,13 @@ The [implementation-ready plan](M1_PLAN.md) supplies the interaction sketches, s
 
 | Roadmap slice | Existing issues / proposed follow-up |
 | --- | --- |
-| M1.0 prerequisite | DYL-15 docs-only plan → DYL-16 actual owner M0/L10 and M1 scope decisions |
-| M1.1 | DYL-17 source model/streaming proof → DYL-18 usable text reader; neither depends on art or persistence |
-| M1.2 | DYL-19 identity/storage proof may run alongside DYL-17 after authorization; proposed B pure reducer and C raster registry → D manual stage/controls |
+| M1.0 prerequisite | DYL-15 docs-only plan → DYL-16 owner decisions (recorded; defaults A–G approved) |
+| M1.1 | Authorized DYL-17 source model/streaming proof → DYL-18 usable text reader (blocked pending DYL-17 review and separate authorization) |
+| M1.2 | Authorized DYL-19 identity/storage proof runs alongside DYL-17; proposed B pure reducer and C raster registry → D manual stage/controls remain unauthorized |
 | M1.3 | Proposed E source-history invalidation → F safe saves/restore/single writer; F also depends on manual stage and successful DYL-19 proofs |
 | M1.4 | Proposed G responsive/accessibility/recovery → H frozen candidate validation → I owner Gate A verdict |
 
-B–I are local proposal keys in the plan, not created Linear issues. Pull the pure manual reducer into M1.2 before visual controls; M1.3 completes lifecycle invalidation and persistence. A failed DYL-19 proof blocks affected bindings/storage/saves, not the authorized text-reader lane. No agent starts runtime work from this map alone; DYL-16 must record which tickets are explicitly authorized. Proposed titles, exact dependencies, TESTING rows and one-PR boundaries are in the plan.
+B–I are local proposal keys in the plan, not created Linear issues. Pull the pure manual reducer into M1.2 before visual controls; M1.3 completes lifecycle invalidation and persistence. A failed DYL-19 proof blocks affected bindings/storage/saves, not DYL-17's text-source lane. DYL-16 authorizes only DYL-17 and DYL-19 at this checkpoint; later tickets require separate authorization. Proposed titles, exact dependencies, TESTING rows and one-PR boundaries are in the plan.
 
 ### Gate A — Reader feel
 
