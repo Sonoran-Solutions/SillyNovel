@@ -207,7 +207,7 @@ export function mountReader({ document, snapshot, formatMessage, actions }) {
         const scrollTop = dialogue.scrollTop;
         const bottom = !changedSelection && reader.textScroll.mode === 'followBottom';
         author.textContent = source ? source.author.label + ' · ' + ({ user: 'You', system: 'System', character: 'Character' }[source.author.kind] ?? 'Unknown author') : 'No selected message';
-        position.textContent = source ? 'Message ' + (source.index + 1) + ' of ' + (reader.head?.index + 1) : '';
+        position.textContent = source ? 'Message ' + (source.index + 1) + (reader.head ? ' of ' + (reader.head.index + 1) : ' · latest unavailable') : '';
         if (changedSelection || renderedSource?.revision !== source?.revision) {
             if (source) {
                 const result = formatMessage(source.text);
@@ -268,8 +268,8 @@ export function mountReader({ document, snapshot, formatMessage, actions }) {
             : source ? 'Completion status unknown' : '';
         const statusText = (fallback ? 'Plain text for unsupported or unsafe content. Use Backlog to open the original message. ' : '') + readingStatus;
         if (status.textContent !== statusText) status.textContent = statusText;
-        previous.disabled = !source || source.index === 0;
-        next.disabled = !source || source.index >= (reader.head?.index ?? 0);
+        previous.disabled = !reader.navigation.previous;
+        next.disabled = !reader.navigation.next;
         copy.disabled = !source;
         const unreadText = reader.newMessageIndicator ? reader.newMessageIndicator + ' new' : '';
         if (unread.textContent !== unreadText) unread.textContent = unreadText;

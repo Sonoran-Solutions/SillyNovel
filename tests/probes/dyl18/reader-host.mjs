@@ -48,18 +48,19 @@ async function setEnabled(page,enabled) {
 }
 async function selectCharacter(page,name) {
     const icon=page.locator('#rightNavDrawerIcon');
-    if (!(await page.locator('#rm_button_characters').isVisible())) await icon.click();
+    if ((await icon.getAttribute('class')).includes('closedIcon')) await icon.click();
+    await page.locator('#right-nav-panel.openDrawer').waitFor({state:'visible'});
     if (!(await page.locator('#rm_button_create').isVisible())) await page.locator('#rm_button_characters').click();
     await page.locator('#rm_print_characters_block').getByText(name,{exact:true}).click();
     await page.waitForFunction(name=>SillyTavern.getContext().chat[0]?.name===name,name);
     await icon.click();
-    await page.locator('#character_name_pole').waitFor({state:'hidden'});
+    await page.locator('#right-nav-panel').waitFor({state:'hidden'});
     if(await page.locator('#sillynovel-stage').count()) {
         await page.waitForFunction(name=>document.querySelector('.sillynovel-reader__author')?.textContent.startsWith(name+' · '),name);
     }
 }
 async function createCharacter(page,name,greeting) {
-    if (!(await page.locator('#rm_button_create').isVisible())) await page.locator('#rightNavDrawerIcon').click();
+    if ((await page.locator('#rightNavDrawerIcon').getAttribute('class')).includes('closedIcon')) await page.locator('#rightNavDrawerIcon').click();
     await page.locator('#rm_button_create').click();
     await page.locator('#character_name_pole').fill(name);
     await page.locator('#description_textarea').fill('Synthetic DYL-18 reader fixture. No private character data.');
