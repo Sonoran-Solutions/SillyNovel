@@ -168,6 +168,14 @@ test('backlog re-resolves reordered objects, returns pinned selection and report
     await page.evaluate(() => document.querySelector('#chat .mes[mesid="1"]').remove());
     await button(page,'Backlog').click();
     assert.match(await page.locator('.sillynovel-native-bar__status').innerText(),/Exact source could not be located/);
+    await button(page,'Return to Reader').click();
+    await page.evaluate(() => {
+        // Canonical ownership changed before its event/observer reaches the reader.
+        fixture.context.chatId='synthetic-B';
+        fixture.context.chat=[{name:'B',mes:'B only'}];fixture.renderNative();
+        [...document.querySelectorAll('#sillynovel-stage button')].find(button=>button.textContent==='Backlog').click();
+    });
+    assert.match(await page.locator('.sillynovel-native-bar__status').innerText(),/Exact source could not be located/);
 });
 
 test('draft, caret, native composer node and focus survive repeated view transitions', async t => {

@@ -102,8 +102,12 @@ export function createShellController(host, view) {
     function openOriginal() {
         if (!active) return false;
         try {
+            const intended = reader.getSnapshot();
             const snapshot = refresh();
             stage.update({ reader: snapshot });
+            if (snapshot.sessionEpoch !== intended.sessionEpoch
+                || snapshot.cursor?.sourceKey !== intended.cursor?.sourceKey
+                || snapshot.cursor?.revision !== intended.cursor?.revision) return false;
             return host.openOriginalMessage(snapshot.cursor);
         } catch (error) { fail(error); return false; }
     }
