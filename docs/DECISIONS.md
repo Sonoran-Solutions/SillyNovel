@@ -36,11 +36,18 @@ The extension starts disabled. Enabling it activates manual presentation only. D
 
 Location, presence, and outfit overrides remain locked until released. Manual expressions affect the selected message only. A later change to these defaults must update the UX, state, tests, and migration notes together.
 
+## Technically resolved questions
+
+| ID | Question | Verified finding and evidence |
+| --- | --- | --- |
+| O01 | Which actual SillyTavern release/commit and browser form the first tested baseline? | TECHNICALLY RESOLVED — SillyTavern 1.19.0 at `7e8663cd9c184a550b37238218bdd32c6efc68e9`, Brave `154.1.96.61` on Ubuntu 24.04. See [pinned target](M0_COMPATIBILITY.md#pinned-sillytavern-target) and [M0.2 host validation](M0_LIFECYCLE_VALIDATION.md#m02--final-host-compatibility-validation-2026-10-12), recorded 2026-10-12. |
+
+O01 records the tested environment, not owner approval of a product compatibility policy. Evidence remains tied to the documented candidates; other hosts/browsers remain unverified. Owner M0 acceptance, the L10 waiver and M1 implementation authorization remain pending in DYL-16.
+
 ## Decisions still needed
 
 | ID | Question | When it must be resolved |
 | --- | --- | --- |
-| O01 | Which actual SillyTavern release/commit and browser form the first tested baseline? | M0, before compatibility claims |
 | O02 | Which host-supported storage/asset routes meet user scoping and save-safety needs? | M0/M1, before persistence is advertised |
 | O03 | Which source license should the repository use? | Before an installable public release |
 | O04 | Which one text-director transport should be exercised first? | M2 planning; never required for M1 |

@@ -74,11 +74,11 @@ SillyNovel is a browser-side SillyTavern extension. It has no build step and no 
 Clone the extension into the SillyTavern third-party extension directory:
 
 ```sh
-git clone --branch codex/m0-shell --single-branch https://github.com/Sonoran-Solutions/SillyNovel.git \
+git clone https://github.com/Sonoran-Solutions/SillyNovel.git \
   /path/to/SillyTavern/public/scripts/extensions/third-party/SillyNovel
 ```
 
-This installs the open M0 review branch. After it is merged, omit `--branch codex/m0-shell` to install the default branch. Reload SillyTavern, open **Extensions**, and leave **Enable SillyNovel placeholder stage** unchecked unless you want to inspect the shell. The feature itself starts off. To develop, edit the cloned extension in place and reload the SillyTavern page; no `npm install` is needed for SillyNovel.
+This installs the default `main` branch, including the merged M0 compatibility corrections. Reload SillyTavern, open **Extensions**, and leave **Enable SillyNovel placeholder stage** unchecked unless you want to inspect the shell. The feature itself starts off. To develop, edit the cloned extension in place and reload the SillyTavern page; no `npm install` is needed for SillyNovel.
 
 Run the synthetic adapter/controller harness from the extension checkout:
 
