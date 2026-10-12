@@ -73,3 +73,13 @@ Keep implementation, simulated checks, real-host checks, provider checks, and ow
 | Real model/provider, other host releases, browsers, and error/abort paths | NOT_TESTED |
 
 The host-validated candidate uses a coalesced, disposal-owned observer on `#chat`; the PR review fix additionally compares exact text when the other source fields and length match. It does not change canonical chat content or host source, and message bodies are neither logged nor hashed. The review fix was tested synthetically; host evidence remains tied to `de25366`. Full evidence and exact commands are in [M0 lifecycle validation](M0_LIFECYCLE_VALIDATION.md), [M0 compatibility](M0_COMPATIBILITY.md), and [testing](TESTING.md). The L10 waiver is a request for owner review, not an approval.
+
+## M1 planning handoff — 2026-10-12, DYL-15
+
+[M1 reader plan](M1_PLAN.md) supplies complete-message desktop/narrow/keyboard layouts, streaming and older-cursor rules, manual cast/asset/lock contracts, source-anchored state/save failure boundaries, component interfaces and a frozen owner Gate A session. Documentation only: M1 runtime is **NOT_STARTED / NOT_AUTHORIZED**. Owner M0/L10 acceptance remains pending; Gate A is **NOT_RUN**.
+
+Initial clean checkout: `6eedb720e699b1194db41371975ddd07b4db46c6`. Fetched main and this focused branch's base: `a7f1a4a6299a459adce1e24ea7b1b3f4405d02b5` (merged PR #3). Branch: `codex/dyl-15-m1-reader-plan`. Final pushed head and PR are recorded in the GitHub/Linear handoff rather than inventing a self-referential SHA in this file.
+
+The Linear project and DYL-15–DYL-19 were read directly; those five existing M1 issues form plan → owner decisions → source model → text reader, plus identity/storage proof alongside source work after authorization. Eight later bounded ticket titles/dependencies are proposed in the plan; no issues were created or implementation started. DYL-19 failures block the affected persistence/binding/storage work. Next action: review DYL-15, then record actual owner decisions in DYL-16. DYL-17 is the recommended first implementation ticket only after explicit authorization.
+
+Verification for this planning PR: relative Markdown file/anchor and fenced-block checks, `git diff --check`, and docs-only path/runtime comparison, with exact results in the PR/Linear handoff. No new runtime tests, host/browser/provider/device run, or owner playtest is claimed. Existing M0 evidence retains its original candidate and limitations.

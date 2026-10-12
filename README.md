@@ -58,6 +58,7 @@ The image plan therefore includes manual prompt/reference export and result impo
 | [State and director contract](docs/STATE_AND_DIRECTOR.md) | Identity, snapshots, invalidation, automation, and manual authority |
 | [Assets and providers](docs/ASSETS_AND_PROVIDERS.md) | Asset library, generation queue, billing boundaries, and privacy |
 | [Roadmap](docs/ROADMAP.md) | Small implementation slices and human acceptance gates |
+| [M1 reader plan](docs/M1_PLAN.md) | DYL-15 interaction designs, component contracts, dependencies, and pending owner decisions |
 | [Testing](docs/TESTING.md) | Regression matrix and evidence requirements |
 | [M0 compatibility](docs/M0_COMPATIBILITY.md) | Pinned host source, smoke results, lifecycle limits, and open integration seams |
 | [Decisions](docs/DECISIONS.md) | User-stated scope, proposed defaults, and unresolved decisions |
@@ -73,11 +74,11 @@ SillyNovel is a browser-side SillyTavern extension. It has no build step and no 
 Clone the extension into the SillyTavern third-party extension directory:
 
 ```sh
-git clone --branch codex/m0-shell --single-branch https://github.com/Sonoran-Solutions/SillyNovel.git \
+git clone https://github.com/Sonoran-Solutions/SillyNovel.git \
   /path/to/SillyTavern/public/scripts/extensions/third-party/SillyNovel
 ```
 
-This installs the open M0 review branch. After it is merged, omit `--branch codex/m0-shell` to install the default branch. Reload SillyTavern, open **Extensions**, and leave **Enable SillyNovel placeholder stage** unchecked unless you want to inspect the shell. The feature itself starts off. To develop, edit the cloned extension in place and reload the SillyTavern page; no `npm install` is needed for SillyNovel.
+This installs the default `main` branch, including the merged M0 compatibility corrections. Reload SillyTavern, open **Extensions**, and leave **Enable SillyNovel placeholder stage** unchecked unless you want to inspect the shell. The feature itself starts off. To develop, edit the cloned extension in place and reload the SillyTavern page; no `npm install` is needed for SillyNovel.
 
 Run the synthetic adapter/controller harness from the extension checkout:
 
