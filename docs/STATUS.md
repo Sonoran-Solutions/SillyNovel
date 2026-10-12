@@ -9,11 +9,12 @@ The repository now contains the M0 compatibility shell. This is not a visual-nov
 | Area | State |
 | --- | --- |
 | M0 shell code | IMPLEMENTED |
-| Synthetic adapter/controller/source harness | PASS — 7 tests |
+| Synthetic adapter/controller/source harness | PASS — 8 tests |
 | SillyTavern 1.19.0 source inspection | COMPLETE — commit `7e8663cd9c184a550b37238218bdd32c6efc68e9` |
-| Isolated real-host shell smoke check | PASS — extension load, default-off control, repeated mount/dispose, draft retained |
-| Live host generation lifecycle checks | NOT_TESTED — no provider configured |
-| M0 overall | PARTIAL — live reply lifecycle remains unverified |
+| Isolated real-host lifecycle checks | PARTIAL PASS — normal, streaming, stop, continuation, swipe, edit/delete, chat switching, toggles, and disable-during-stream verified with deterministic local endpoint |
+| Live model/provider behavior | NOT_TESTED — endpoint was deterministic and local |
+| Switch into empty B and generate; group/duplicate-name cases; capability removal in host UI | NOT_TESTED (deletion to an empty view was separately exercised) |
+| M0 overall | PARTIAL / REVISE — supported lifecycle paths passed; listed host gaps remain |
 | M1 — manual visual-novel reader | NOT_STARTED / NOT_AUTHORIZED |
 | Gate A — reader feel | NOT_RUN |
 | M2 — automatic direction | NOT_STARTED |
@@ -21,7 +22,7 @@ The repository now contains the M0 compatibility shell. This is not a visual-nov
 | M3 — optional asset generation | NOT_STARTED |
 | Gate C — image workflow | NOT_RUN |
 | Tested SillyTavern release and full SHA | 1.19.0 / `7e8663cd9c184a550b37238218bdd32c6efc68e9` |
-| Provider tests | NOT_TESTED; no provider call was made |
+| Provider tests | Deterministic localhost OpenAI-compatible endpoint tested; real model/provider behavior NOT_TESTED |
 | License choice | OPEN |
 
 ## Starting repository state
@@ -40,16 +41,14 @@ The implementation persists only the user's `extensionSettings.sillynovel.enable
 
 ## Verification record
 
-The simulated harness passed 7 tests, including generated-message observations, streaming token observation, stop, continuation, regeneration, swipe, edit/delete, chat switching, group author labels, missing capabilities, listener cleanup, empty-chat source retention, and malformed indices. These are synthetic observations, not proof that a live host run emits every event in the same order. In the pinned source, `STREAM_TOKEN_RECEIVED` is emitted before `onProgressStreaming()` updates the corresponding chat message; M1 must not treat a sampled `context.chat` value at that event as current token content.
+The synthetic harness passed 8 tests, including source clearing across empty-chat transitions, A → B → A refresh, malformed indices, missing capabilities, listener cleanup, and canonical chat immutability through enable/disable. The real-host checks used pinned SillyTavern 1.19.0 and a deterministic localhost endpoint. Normal, streaming, stopped, continued, regenerated, swipe-selected, edited, deleted, and chat-switch flows were exercised. Disabling SillyNovel during a stream removed its stage/listeners without stopping the host reply. The streamed message object lagged the `STREAM_TOKEN_RECEIVED` event until SillyTavern's progress update; M1 must not treat a token-event-time sample as current text.
 
-On a clean SillyTavern 1.19.0 checkout in an isolated temporary data root, the extension loaded and its checkbox began unchecked. The initial shell smoke completed two enable/disable cycles; after the review fixes, the current code was reloaded and completed one more cycle. Each preserved the exact synthetic draft `Synthetic draft: keep this exact text.` and left SillyTavern's chat surface in place. No provider was configured, so live normal/streaming replies, stop, continuation, regeneration, and group replies were not exercised.
-
-The tested browser was the Codex in-app browser. No compatibility claim is made for other browsers, devices, themes, or extension combinations. See the [M0 compatibility checklist](M0_COMPATIBILITY.md).
+Deletion to an empty view was exercised, but the host switch into an empty B chat and generation-start sequence remains untested: reopening B after switching away restored its welcome message. Group author mapping (including duplicate names) and missing-capability removal were not exercised in the UI. Error/aborted network behavior and actual model/provider behavior are also unverified. Browser: Brave `154.1.96.61`; exact engine version unavailable. No compatibility claim is made for other browsers, devices, themes, extension combinations, SillyTavern versions, or models. See [M0 compatibility](M0_COMPATIBILITY.md) and the [dated lifecycle report](M0_LIFECYCLE_VALIDATION.md).
 
 ## Next action
 
-Complete the M0 lifecycle checklist on the pinned host with a synthetic chat and a non-paid local test setup. Gate A remains NOT_RUN. M1 remains NOT_AUTHORIZED.
+Complete the remaining real-host empty-chat switch/generation and group scenarios on the pinned host, then request owner review of the evidence. Gate A remains NOT_RUN. M1 remains NOT_AUTHORIZED.
 
 ## Status discipline
 
-Keep implementation, simulated checks, real-host checks, provider checks, and owner verdicts separate. Do not promote M0 to fully passed until the live lifecycle scenarios in the compatibility record have been exercised on an identified host environment.
+Keep implementation, simulated checks, real-host checks, provider checks, and owner verdicts separate. Do not promote M0 to fully passed until the outstanding host scenarios in the compatibility record have been exercised and the owner has reviewed the evidence.
