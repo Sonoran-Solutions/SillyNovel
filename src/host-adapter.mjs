@@ -29,18 +29,17 @@ function safeCount(value) {
     return Number.isSafeInteger(value) && value >= 0 ? value : null;
 }
 
-function sourceSignature(source) {
-    if (!source) return null;
-    return JSON.stringify([
-        source.identity?.chatId,
-        source.identity?.groupId,
-        source.identity?.characterId,
-        source.index,
-        source.author?.kind,
-        source.author?.label,
-        source.swipeId,
-        source.text.length,
-    ]);
+function sameSource(left, right) {
+    if (!left || !right) return left === right;
+    return left.identity?.chatId === right.identity?.chatId
+        && left.identity?.groupId === right.identity?.groupId
+        && left.identity?.characterId === right.identity?.characterId
+        && left.index === right.index
+        && left.author?.kind === right.author?.kind
+        && left.author?.label === right.author?.label
+        && left.swipeId === right.swipeId
+        && left.text.length === right.text.length
+        && left.text === right.text;
 }
 
 export function createHostAdapter(getContext) {
@@ -134,11 +133,11 @@ export function createHostAdapter(getContext) {
         let disposed = false;
         let mutationObserver = null;
         let pendingViewRead = false;
-        let lastSourceSignature = sourceSignature(readCurrentSource());
+        let lastObservedSource = readCurrentSource();
 
         function emit(type, details = {}) {
             if (Object.prototype.hasOwnProperty.call(details, 'source')) {
-                lastSourceSignature = sourceSignature(details.source);
+                lastObservedSource = details.source;
             }
             onObservation({ type, ...details });
         }
@@ -177,8 +176,7 @@ export function createHostAdapter(getContext) {
                         pendingViewRead = false;
                         if (disposed) return;
                         const currentSource = readCurrentSource();
-                        const signature = sourceSignature(currentSource);
-                        if (signature === lastSourceSignature) return;
+                        if (sameSource(currentSource, lastObservedSource)) return;
                         emit('chatViewChanged', { source: currentSource });
                     });
                 });

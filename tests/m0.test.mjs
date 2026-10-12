@@ -381,11 +381,20 @@ test('host chat DOM changes clear stale sources when no lifecycle event fires an
         await Promise.resolve();
         assert.equal(observations.length, 3, 'the DOM fallback does not duplicate a lifecycle event');
 
+        context.chat[1].mes = 'Synthetic temporary story.';
+        callback([], null);
+        await Promise.resolve();
+        assert.equal(observations.length, 4, 'same-length content revisions are observed');
+        assert.equal(observations[3].source.text, 'Synthetic temporary story.');
+        callback([], null);
+        await Promise.resolve();
+        assert.equal(observations.length, 4, 'an unchanged source is still deduplicated');
+
         dispose();
         assert.equal(disconnectCount, 1);
         callback([], null);
         await Promise.resolve();
-        assert.equal(observations.length, 3, 'disposed observers ignore already queued changes');
+        assert.equal(observations.length, 4, 'disposed observers ignore already queued changes');
     } finally {
         if (previousDocument) Object.defineProperty(globalThis, 'document', previousDocument);
         else delete globalThis.document;
