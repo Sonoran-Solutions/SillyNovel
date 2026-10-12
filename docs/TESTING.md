@@ -142,3 +142,65 @@ node --input-type=module -e 'import {readdirSync,readFileSync} from "node:fs"; c
 ```
 
 At the time of this evidence record, the recommendation was **M0 PASS subject to owner acceptance of the L10 waiver**. The owner later approved M0 PASS for this documented scope and accepted L10 as **UNSUPPORTED / WAIVED**; see the [DYL-16 decision](DECISIONS.md#owner-decision--2026-10-12-dyl-16). Gate A remains NOT_RUN. The host run does not validate real model/provider behavior, error/abort paths, other browser engines, or other SillyTavern releases.
+
+## DYL-17 source-model candidate (2026-10-12)
+
+The bounded contract and consumer notes are in [M1 reader source model](M1_READER_SOURCE.md). The implementation remains a source/navigation model behind the M0 placeholder; it does not pass Gate A or start DYL-18.
+
+| Evidence item | Result |
+| --- | --- |
+| Starting main | `4e72a3cda0393ca1e2a11155491ef10f0ab759bc` |
+| Final code candidate tested on host | `dfbb6dffa88f4aaeda097fb880e54d6c7d956867` |
+| Pinned host | SillyTavern 1.19.0 / `7e8663cd9c184a550b37238218bdd32c6efc68e9` |
+| Host runtime | Ubuntu 24.04, Node.js `v26.8.1`; host PID `2713766`, fixture PID `2713768` |
+| Browser | Codex In-app Browser on this host; browser engine/version NOT_REPORTED |
+| Isolated host data | `/tmp/SillyTavern-dyl17-final-data`; synthetic chat only |
+| Local endpoint | `127.0.0.1:8123`, allowed origin `http://127.0.0.1:8012`; 1 MiB request limit |
+| Endpoint fixture SHA-256 | `c62ae622241627553b1652d042250bb1686b9a329bd06b4552affc5517e271ef` |
+| Sanitized observer fixture SHA-256 | `74a114b65a6f64dadf111b8274a255b093b1e0b3c798733e761cfbfbdf7d64ac` |
+
+The before-change smoke used a clean worktree at starting main `4e72a3cda0393ca1e2a11155491ef10f0ab759bc`, pinned SillyTavern, and its own temporary data root. It verified extension off/on with exact draft preservation and a reachable Temporary Chat source. The requested same-length native edit was NOT_TESTED on this baseline candidate.
+
+The review-fix candidate `dfbb6dffa88f4aaeda097fb880e54d6c7d956867` was loaded from the isolated worktree into SillyTavern 1.19.0 for the requested final-candidate checks. On the synthetic chat, a native edit changed the assistant source from the 127-character text ending in `quiet room.` to a different 127-character text ending in `peace room.`; the stage reported `messageEdited` and the new canonical text. The built-in **Continue** action then extended that same assistant message from 127 to 191 characters; the stage reported `streamReconciled` during growth and `characterMessageRendered` when complete. The browser UI showed one assistant message updated in place, not a second assistant message. These checks used the deterministic local endpoint; no real provider was used and SillyNovel did not submit generation requests. The final rerun did not repeat the earlier toggle/draft-preservation, stopped-stream, or controlled-failure smoke, which remain tied to `fa18bd2`. The in-app browser engine/version was not reported. The observer fixture was not injected in this rerun, so raw `GENERATION_STARTED` type arguments were not recorded; the host action itself was the UI's **Continue** command.
+
+The local runtime checks run against the final source content were:
+
+```sh
+node --test tests/m0.test.mjs tests/m1-reader-source.test.mjs
+node --check src/host-adapter.mjs
+node --check src/reader-source-model.mjs
+node --check src/shell.mjs
+node --check tests/fixtures/m0-openai-endpoint.mjs
+git diff --check
+```
+
+Result: 25 tests passed; all four syntax checks passed; `git diff --check` passed. Coverage includes head/cursor navigation, edits and same-length revisions, insert/delete/replacement invalidation, repeated text, swipe/group-author changes, empty history, generation-state conservatism, normal generation remaining unbound without a new assistant source, A → B → A, eventless DOM refresh, selected-index-only token sampling, a one-message middle insertion while pinned, selection change plus same-length edit during a queued frame, and disposal. The Node harness does not replace host evidence. Browser engine/version, real provider behavior, and Gate A remain NOT_TESTED/NOT_RUN.
+
+## DYL-17 senior re-review addendum (2026-10-12)
+
+Code candidate `3d871679ca216eec1210f3bec5845299a672af92` addresses the two new P2 findings and the P3 cleanup. A zero-to-one sampled append is accepted only with a present, unique source key; nonempty incremental appends still require the verified previous tail. Follow-latest recovers to a replaced canonical head, while a pinned replaced source remains invalidated. Invalid/null history records are omitted from the prior-source lookup.
+
+| Check | Result |
+| --- | --- |
+| DOM-only zero-to-one adapter/model regression | PASS — first source selected as head and cursor without a lifecycle event |
+| DOM-only latest-object replacement regression | PASS — followLatest selects the new source without a lifecycle event |
+| Refresh after ambiguous/null history regression | PASS — ordinary full refresh does not throw and restores the unique source |
+| Node regression suites | PASS — 27 tests |
+| Syntax checks and `git diff --check` | PASS — commands below |
+| Pinned SillyTavern smoke | PASS for candidate load and current synthetic-source observation after reload; host UI started its Temporary Chat with a system welcome source, so zero-message arrival was NOT_TESTED on host. No UI action replaces the latest message object without also raising a lifecycle event, so the requested eventless replacement remains NOT_TESTED on host. |
+| Provider, browser-engine version, Gate A | NOT_TESTED / NOT_RUN |
+
+The host candidate was served from this isolated worktree on SillyTavern 1.19.0 (`7e8663cd9c184a550b37238218bdd32c6efc68e9`), Node.js `v26.8.1`, with synthetic data under `/tmp/SillyTavern-dyl17-final-data`. Brave was used; the browser engine/version was not reported. The deterministic endpoint was available at `127.0.0.1:8123`, but no generation request was submitted for this smoke. The visible stage showed the current synthetic chat source and `chatViewChanged` after reload. The specific two P2 host scenarios were unreachable through the pinned UI and remain covered by the synthetic adapter/model regressions only.
+
+Commands actually run on the candidate:
+
+```sh
+node --test tests/m0.test.mjs tests/m1-reader-source.test.mjs
+node --check src/host-adapter.mjs
+node --check src/reader-source-model.mjs
+node --check src/shell.mjs
+node --check tests/fixtures/m0-openai-endpoint.mjs
+git diff --check
+```
+
+The DYL-18 and DYL-19 scope remains unchanged. The Node harness and host smoke are implementation evidence, not an owner verdict or Gate A pass.

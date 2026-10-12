@@ -18,7 +18,14 @@ function safeId(value) {
 }
 
 function safeLabel(value, fallback) {
-    return typeof value === 'string' && value.trim() ? value.slice(0, 120) : fallback;
+    return typeof value === 'string' && value.trim() ? value : fallback;
+}
+
+function freeze(value) {
+    for (const child of Object.values(value)) {
+        if (child && typeof child === 'object' && !Object.isFrozen(child)) freeze(child);
+    }
+    return Object.freeze(value);
 }
 
 function safeGenerationType(value) {
@@ -31,7 +38,8 @@ function safeCount(value) {
 
 function sameSource(left, right) {
     if (!left || !right) return left === right;
-    return left.identity?.chatId === right.identity?.chatId
+    return left.sourceKey === right.sourceKey
+        && left.identity?.chatId === right.identity?.chatId
         && left.identity?.groupId === right.identity?.groupId
         && left.identity?.characterId === right.identity?.characterId
         && left.index === right.index
@@ -43,6 +51,9 @@ function sameSource(left, right) {
 }
 
 export function createHostAdapter(getContext) {
+    const sourceKeys = new WeakMap();
+    let nextSourceKey = 0;
+
     function contextOrNull() {
         try {
             const context = getContext?.();
@@ -106,14 +117,27 @@ export function createHostAdapter(getContext) {
         const text = typeof message.mes === 'string' ? message.mes : '';
         const swipeId = Number.isSafeInteger(message.swipe_id) && message.swipe_id >= 0 ? message.swipe_id : null;
 
-        return {
+        let sourceKey = sourceKeys.get(message);
+        if (!sourceKey) {
+            sourceKey = 'session-source-' + (++nextSourceKey);
+            sourceKeys.set(message, sourceKey);
+        }
+
+        return freeze({
+            sourceKey,
             identity: readChatIdentity(context),
             index,
             messageCount,
             author,
             text,
             swipeId,
-        };
+        });
+    }
+
+    function readHistory() {
+        const context = contextOrNull();
+        if (!context || !Array.isArray(context.chat)) return [];
+        return freeze(context.chat.map((_message, index) => readMessageAt(index, context)));
     }
 
     function readCurrentSource() {
@@ -122,7 +146,7 @@ export function createHostAdapter(getContext) {
         return readMessageAt(context.chat.length - 1, context);
     }
 
-    function subscribe(onObservation) {
+    function subscribe(onObservation, { getTrackedIndices = () => [], getScheduleState = () => null } = {}) {
         if (typeof onObservation !== 'function') throw new TypeError('An observation callback is required.');
         const capabilities = inspectCapabilities();
         if (!capabilities.ok) throw new Error('Missing SillyTavern capabilities: ' + capabilities.missing.join(', '));
@@ -132,14 +156,89 @@ export function createHostAdapter(getContext) {
         const bindings = [];
         let disposed = false;
         let mutationObserver = null;
-        let pendingViewRead = false;
+        let pendingRefresh = false;
+        let pendingFrame = null;
         let lastObservedSource = readCurrentSource();
+        let lastObservedHistory = [...readHistory()];
+        let observedSourceKeys = new Set(lastObservedHistory.map((item) => item?.sourceKey).filter(Boolean));
+        let lastObservedOwner = currentOwner();
 
         function emit(type, details = {}) {
             if (Object.prototype.hasOwnProperty.call(details, 'source')) {
                 lastObservedSource = details.source;
             }
+            if (Array.isArray(details.history)) {
+                lastObservedHistory = [...details.history];
+                observedSourceKeys = new Set(lastObservedHistory.map((item) => item?.sourceKey).filter(Boolean));
+            }
+            if (details.owner) lastObservedOwner = details.owner;
             onObservation({ type, ...details });
+        }
+
+        function currentOwner() {
+            return readChatIdentity(contextOrNull());
+        }
+
+        function scheduleReconciliation(type) {
+            if (pendingRefresh || disposed) return;
+            pendingRefresh = true;
+            const scheduledOwner = currentOwner();
+            const scheduledIndices = getTrackedIndices();
+            const scheduleState = getScheduleState();
+            const scheduledState = scheduleState && { ...scheduleState };
+            const reconcile = () => {
+                pendingRefresh = false;
+                pendingFrame = null;
+                if (disposed) return;
+                const current = contextOrNull();
+                if (!current || !Array.isArray(current.chat)) return;
+                const messageCount = current.chat.length;
+                const owner = currentOwner();
+                if (JSON.stringify(owner) !== JSON.stringify(lastObservedOwner)
+                    || JSON.stringify(owner) !== JSON.stringify(scheduledOwner)) {
+                    const history = readHistory();
+                    emit(type, { history, source: history.at(-1) ?? null, owner });
+                    return;
+                }
+                const currentState = getScheduleState();
+                if (scheduledState?.sessionEpoch !== undefined
+                    && currentState?.sessionEpoch !== scheduledState.sessionEpoch) return;
+                const selectionChanged = scheduledState?.viewRevision !== undefined
+                    && currentState?.viewRevision !== scheduledState.viewRevision;
+                const countDelta = messageCount - lastObservedHistory.length;
+                if (countDelta < 0 || countDelta > 1) {
+                    const history = readHistory();
+                    const changed = history.length !== lastObservedHistory.length
+                        || history.some((item, index) => !sameSource(item, lastObservedHistory[index]));
+                    if (changed) emit(type, { history, source: history.at(-1) ?? null, owner });
+                    return;
+                }
+                const trackedIndices = selectionChanged ? getTrackedIndices() : scheduledIndices;
+                const indices = new Set([messageCount - 1, ...(countDelta === 1 ? [messageCount - 2] : []), ...trackedIndices]);
+                const sources = [...indices]
+                    .filter((index) => Number.isSafeInteger(index) && index >= 0 && index < messageCount)
+                    .map((index) => readMessageAt(index, current));
+                const changed = countDelta !== 0 || sources.some((item) => !sameSource(item, lastObservedHistory[item.index]));
+                if (!changed) return;
+                if (countDelta === 1) {
+                    const previousTail = sources.find((item) => item.index === messageCount - 2);
+                    const incoming = sources.find((item) => item.index === messageCount - 1);
+                    if (!sameSource(previousTail, lastObservedHistory.at(-1)) || !incoming || observedSourceKeys.has(incoming.sourceKey)) {
+                        const history = readHistory();
+                        emit(type, { history, source: history.at(-1) ?? null, owner });
+                        return;
+                    }
+                    lastObservedHistory = [...lastObservedHistory, incoming];
+                    observedSourceKeys.add(incoming.sourceKey);
+                }
+                for (const item of sources) lastObservedHistory[item.index] = item;
+                emit(type, { sources, messageCount, source: sources.find((item) => item.index === messageCount - 1) ?? null, owner });
+            };
+            if (typeof globalThis.requestAnimationFrame === 'function') {
+                pendingFrame = globalThis.requestAnimationFrame(reconcile);
+            } else {
+                queueMicrotask(reconcile);
+            }
         }
 
         function messageSource(index) {
@@ -148,16 +247,20 @@ export function createHostAdapter(getContext) {
         }
 
         const listeners = [
-            [types.CHAT_CHANGED, (chatId) => emit('chatChanged', { hostChatId: safeId(chatId), source: readCurrentSource() })],
-            [types.MESSAGE_RECEIVED, (index, generationType) => emit('messageReceived', { source: messageSource(index), generationType: safeGenerationType(generationType) })],
-            [types.CHARACTER_MESSAGE_RENDERED, (index, generationType) => emit('characterMessageRendered', { source: messageSource(index), generationType: safeGenerationType(generationType) })],
-            [types.STREAM_TOKEN_RECEIVED, () => emit('streamToken', { source: readCurrentSource() })],
+            [types.CHAT_CHANGED, (chatId) => {
+                const history = readHistory();
+                emit('chatChanged', { hostChatId: safeId(chatId), history, source: history.at(-1) ?? null, owner: currentOwner() });
+            }],
+            [types.MESSAGE_RECEIVED, (index, generationType) => emit('messageReceived', { source: messageSource(index), history: readHistory(), generationType: safeGenerationType(generationType) })],
+            [types.CHARACTER_MESSAGE_RENDERED, (index, generationType) => emit('characterMessageRendered', { source: messageSource(index), history: readHistory(), generationType: safeGenerationType(generationType) })],
+            // Token payloads run ahead of canonical host writes. Reconcile the current host state once per paint.
+            [types.STREAM_TOKEN_RECEIVED, () => { emit('streamToken'); scheduleReconciliation('streamReconciled'); }],
             [types.GENERATION_STARTED, (generationType, _options, dryRun) => emit('generationStarted', { generationType: safeGenerationType(generationType), dryRun: dryRun === true })],
-            [types.GENERATION_STOPPED, () => emit('generationStopped', { source: readCurrentSource() })],
-            [types.GENERATION_ENDED, (messageCount) => emit('generationEnded', { hostMessageCount: safeCount(messageCount), source: readCurrentSource() })],
-            [types.MESSAGE_SWIPED, (index) => emit('messageSwiped', { source: messageSource(index) })],
-            [types.MESSAGE_EDITED, (index) => emit('messageEdited', { source: messageSource(index) })],
-            [types.MESSAGE_DELETED, (messageCount) => emit('messageDeleted', { hostMessageCount: safeCount(messageCount), source: readCurrentSource() })],
+            [types.GENERATION_STOPPED, () => emit('generationStopped', { history: readHistory(), source: readCurrentSource() })],
+            [types.GENERATION_ENDED, (messageCount) => emit('generationEnded', { hostMessageCount: safeCount(messageCount), history: readHistory(), source: readCurrentSource() })],
+            [types.MESSAGE_SWIPED, (index) => emit('messageSwiped', { source: messageSource(index), history: readHistory() })],
+            [types.MESSAGE_EDITED, (index) => emit('messageEdited', { source: messageSource(index), history: readHistory() })],
+            [types.MESSAGE_DELETED, (messageCount) => emit('messageDeleted', { hostMessageCount: safeCount(messageCount), history: readHistory(), source: readCurrentSource() })],
         ];
 
         try {
@@ -170,15 +273,7 @@ export function createHostAdapter(getContext) {
             const Observer = globalThis.MutationObserver;
             if (chatElement && typeof Observer === 'function') {
                 mutationObserver = new Observer(() => {
-                    if (pendingViewRead || disposed) return;
-                    pendingViewRead = true;
-                    queueMicrotask(() => {
-                        pendingViewRead = false;
-                        if (disposed) return;
-                        const currentSource = readCurrentSource();
-                        if (sameSource(currentSource, lastObservedSource)) return;
-                        emit('chatViewChanged', { source: currentSource });
-                    });
+                    scheduleReconciliation('chatViewChanged');
                 });
                 mutationObserver.observe(chatElement, { childList: true, subtree: true, characterData: true });
             }
@@ -196,6 +291,9 @@ export function createHostAdapter(getContext) {
             let firstError = null;
             try { mutationObserver?.disconnect(); } catch (error) { firstError ||= error; }
             mutationObserver = null;
+            if (pendingFrame !== null) globalThis.cancelAnimationFrame?.(pendingFrame);
+            pendingFrame = null;
+            pendingRefresh = false;
             for (const [eventName, listener] of bindings) {
                 try { source.removeListener(eventName, listener); } catch (error) { firstError ||= error; }
             }
@@ -204,5 +302,5 @@ export function createHostAdapter(getContext) {
         };
     }
 
-    return { inspectCapabilities, readChatIdentity, readMessageAt, readCurrentSource, subscribe };
+    return { inspectCapabilities, readChatIdentity, readMessageAt, readCurrentSource, readHistory, subscribe };
 }
