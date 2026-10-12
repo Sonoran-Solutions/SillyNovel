@@ -131,6 +131,29 @@ test('generation status ignores dry runs, preserves stop, and never infers succe
     assert.notEqual(model.getSnapshot().generation.status, 'complete');
 });
 
+test('normal generation stays unbound until a new assistant source appears', () => {
+    const model = modelWith(message('user', 'prompt', 0, { kind: 'user' }));
+    model.apply({ type: 'generationStarted', generationType: 'normal', dryRun: false });
+    assert.equal(model.getSnapshot().generation.sourceKey, null);
+    model.apply({ type: 'generationStopped' });
+    model.apply({ type: 'generationEnded' });
+    assert.equal(model.getSnapshot().generation.status, 'stopped-partial');
+    assert.equal(model.getSnapshot().generation.sourceKey, null, 'a failed or stopped request without an assistant message has no source');
+
+    const live = modelWith(message('prompt', 'prompt', 0, { kind: 'user' }));
+    live.apply({ type: 'generationStarted', generationType: 'normal', dryRun: false });
+    live.apply({
+        type: 'streamReconciled',
+        messageCount: 2,
+        sources: [message('prompt', 'prompt', 0, { kind: 'user' }), message('assistant', 'answer', 1)],
+    });
+    assert.equal(live.getSnapshot().generation.sourceKey, 'assistant', 'normal generation binds only after a new assistant source is observed');
+
+    const continuing = modelWith(message('reply', 'partial', 0));
+    continuing.apply({ type: 'generationStarted', generationType: 'continue', dryRun: false });
+    assert.equal(continuing.getSnapshot().generation.sourceKey, 'reply', 'continuation can bind its verified existing assistant source');
+});
+
 test('chat reactivation increments the epoch for A to B to A and starts each visit at latest', () => {
     const model = modelWith(message('a1', 'A old', 0));
     const epochA = model.getSnapshot().sessionEpoch;
@@ -176,6 +199,7 @@ test('adapter snapshots keep full labels and token signals coalesce into fresh c
         chat: [
             { is_user: true, name: 'Reader', mes: 'hello' },
             { name: 'Host', mes: 'before' },
+            { name: 'Host', mes: 'latest' },
         ],
         chatId: 'fixture',
         eventSource: {
@@ -196,11 +220,13 @@ test('adapter snapshots keep full labels and token signals coalesce into fresh c
         assert.ok(Object.isFrozen(initial[1].author));
 
         const observations = [];
-        let trackedIndices = [0];
-        const scheduleState = { sessionEpoch: 1, viewRevision: 0 };
+        const reader = createReaderSourceModel();
+        reader.activate(initial, initial[0].identity);
+        reader.navigate(-1);
+        reader.navigate(-1);
         const dispose = adapter.subscribe((observation) => observations.push(observation), {
-            getTrackedIndices: () => trackedIndices,
-            getScheduleState: () => scheduleState,
+            getTrackedIndices: () => reader.getTrackedIndices(),
+            getScheduleState: () => reader.getSnapshot(),
         });
         let indexedReads = 0;
         context.chat = new Proxy(context.chat, {
@@ -211,10 +237,9 @@ test('adapter snapshots keep full labels and token signals coalesce into fresh c
         });
         listeners.get('STREAM_TOKEN_RECEIVED')('must not be copied');
         listeners.get('STREAM_TOKEN_RECEIVED')('must not be copied either');
-        context.chat[1].mes = 'after';
+        context.chat[1].mes = 'after!';
         indexedReads = 0;
-        trackedIndices = [1];
-        scheduleState.viewRevision++;
+        reader.navigate(1);
         assert.equal(callbacks.size, 1, 'one canonical reconciliation is queued for the frame');
         const [id, callback] = callbacks.entries().next().value;
         callbacks.delete(id);
@@ -222,20 +247,76 @@ test('adapter snapshots keep full labels and token signals coalesce into fresh c
         await Promise.resolve();
         assert.equal(observations.filter(item => item.type === 'streamToken').length, 2);
         const reconciled = observations.find(item => item.type === 'streamReconciled');
-        assert.equal(reconciled.sources.find(item => item.index === 1).text, 'after');
-        assert.deepEqual(reconciled.sources.map(item => item.index), [1], 'a selection change drops the queued old-cursor sample and reads the current head');
-        assert.equal(reconciled.messageCount, 2);
-        assert.ok(indexedReads <= 2, 'token reconciliation reads only selected and latest host entries');
+        assert.equal(reconciled.sources.find(item => item.index === 1).text, 'after!');
+        assert.deepEqual(reconciled.sources.map(item => item.index), [2, 1], 'the queued frame samples the latest source and the newly selected source');
+        assert.equal(reconciled.messageCount, 3);
+        reader.apply(reconciled);
+        assert.equal(reader.getSnapshot().cursor.text, 'after!', 'the newly selected same-length edit is applied without a later host event');
+        assert.ok(indexedReads <= 3, 'token reconciliation reads only selected, latest, and append-tail entries');
         assert.equal(observations[0].source, undefined, 'token event has no text authority');
 
         listeners.get('STREAM_TOKEN_RECEIVED')();
         const stale = callbacks.entries().next().value;
-        scheduleState.sessionEpoch++;
         dispose();
         callbacks.delete(stale[0]);
         stale[1]();
         await Promise.resolve();
         assert.equal(observations.filter(item => item.type === 'streamReconciled').length, 1, 'queued reconciliation is ignored after disposal');
+    } finally {
+        if (oldRaf) globalThis.requestAnimationFrame = oldRaf;
+        else delete globalThis.requestAnimationFrame;
+        if (oldCancel) globalThis.cancelAnimationFrame = oldCancel;
+        else delete globalThis.cancelAnimationFrame;
+    }
+});
+
+test('one-message middle insertion falls back to full history and preserves the pinned source', async () => {
+    const oldRaf = globalThis.requestAnimationFrame;
+    const oldCancel = globalThis.cancelAnimationFrame;
+    const callbacks = new Map();
+    let callbackId = 0;
+    globalThis.requestAnimationFrame = (callback) => { const id = ++callbackId; callbacks.set(id, callback); return id; };
+    globalThis.cancelAnimationFrame = (id) => callbacks.delete(id);
+    const listeners = new Map();
+    const context = {
+        chat: [
+            { is_user: true, name: 'Reader', mes: 'hello' },
+            { name: 'Host', mes: 'selected' },
+            { name: 'Host', mes: 'tail' },
+        ],
+        chatId: 'fixture',
+        eventSource: { on(name, listener) { listeners.set(name, listener); }, removeListener(name) { listeners.delete(name); } },
+        eventTypes: Object.fromEntries(['CHAT_CHANGED','MESSAGE_RECEIVED','CHARACTER_MESSAGE_RENDERED','STREAM_TOKEN_RECEIVED','GENERATION_STARTED','GENERATION_STOPPED','GENERATION_ENDED','MESSAGE_SWIPED','MESSAGE_EDITED','MESSAGE_DELETED'].map(name => [name,name])),
+        extensionSettings: {},
+        saveSettingsDebounced() {},
+    };
+    try {
+        const adapter = createHostAdapter(() => context);
+        const initial = adapter.readHistory();
+        const reader = createReaderSourceModel();
+        reader.activate(initial, initial[0].identity);
+        reader.navigate(-1);
+        const selectedKey = reader.getSnapshot().cursor.sourceKey;
+        const observations = [];
+        const dispose = adapter.subscribe((observation) => {
+            observations.push(observation);
+            if (observation.type === 'streamReconciled') reader.apply(observation);
+        }, { getTrackedIndices: () => reader.getTrackedIndices(), getScheduleState: () => reader.getSnapshot() });
+
+        listeners.get('STREAM_TOKEN_RECEIVED')();
+        context.chat.splice(1, 0, { name: 'Host', mes: 'inserted in the middle' });
+        const [id, callback] = callbacks.entries().next().value;
+        callbacks.delete(id);
+        callback();
+        await Promise.resolve();
+
+        const reconciled = observations.find(item => item.type === 'streamReconciled');
+        assert.ok(Array.isArray(reconciled.history), 'tail movement triggers full-history reconciliation');
+        assert.equal(reader.getSnapshot().cursor.sourceKey, selectedKey);
+        assert.equal(reader.getSnapshot().cursor.index, 2);
+        assert.equal(reader.getSnapshot().head.index, 3);
+        assert.equal(new Set(reconciled.history.map(item => item.sourceKey)).size, 4, 'the middle insertion does not duplicate a source locator');
+        dispose();
     } finally {
         if (oldRaf) globalThis.requestAnimationFrame = oldRaf;
         else delete globalThis.requestAnimationFrame;

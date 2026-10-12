@@ -160,13 +160,17 @@ export function createHostAdapter(getContext) {
         let pendingFrame = null;
         let lastObservedSource = readCurrentSource();
         let lastObservedHistory = [...readHistory()];
+        let observedSourceKeys = new Set(lastObservedHistory.map((item) => item?.sourceKey).filter(Boolean));
         let lastObservedOwner = currentOwner();
 
         function emit(type, details = {}) {
             if (Object.prototype.hasOwnProperty.call(details, 'source')) {
                 lastObservedSource = details.source;
             }
-            if (Array.isArray(details.history)) lastObservedHistory = [...details.history];
+            if (Array.isArray(details.history)) {
+                lastObservedHistory = [...details.history];
+                observedSourceKeys = new Set(lastObservedHistory.map((item) => item?.sourceKey).filter(Boolean));
+            }
             if (details.owner) lastObservedOwner = details.owner;
             onObservation({ type, ...details });
         }
@@ -209,13 +213,24 @@ export function createHostAdapter(getContext) {
                     if (changed) emit(type, { history, source: history.at(-1) ?? null, owner });
                     return;
                 }
-                const indices = new Set([messageCount - 1, ...(selectionChanged ? [] : scheduledIndices)]);
+                const trackedIndices = selectionChanged ? getTrackedIndices() : scheduledIndices;
+                const indices = new Set([messageCount - 1, ...(countDelta === 1 ? [messageCount - 2] : []), ...trackedIndices]);
                 const sources = [...indices]
                     .filter((index) => Number.isSafeInteger(index) && index >= 0 && index < messageCount)
                     .map((index) => readMessageAt(index, current));
                 const changed = countDelta !== 0 || sources.some((item) => !sameSource(item, lastObservedHistory[item.index]));
                 if (!changed) return;
-                if (countDelta === 1) lastObservedHistory = [...lastObservedHistory, sources.find((item) => item.index === messageCount - 1)];
+                if (countDelta === 1) {
+                    const previousTail = sources.find((item) => item.index === messageCount - 2);
+                    const incoming = sources.find((item) => item.index === messageCount - 1);
+                    if (!sameSource(previousTail, lastObservedHistory.at(-1)) || !incoming || observedSourceKeys.has(incoming.sourceKey)) {
+                        const history = readHistory();
+                        emit(type, { history, source: history.at(-1) ?? null, owner });
+                        return;
+                    }
+                    lastObservedHistory = [...lastObservedHistory, incoming];
+                    observedSourceKeys.add(incoming.sourceKey);
+                }
                 for (const item of sources) lastObservedHistory[item.index] = item;
                 emit(type, { sources, messageCount, source: sources.find((item) => item.index === messageCount - 1) ?? null, owner });
             };

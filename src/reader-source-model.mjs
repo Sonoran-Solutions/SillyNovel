@@ -31,6 +31,7 @@ export function createReaderSourceModel() {
     let newMessageCount = 0;
     let generationSequence = 0;
     let generation = null;
+    let generationStartMessageCount = 0;
     let sourceRevision = 0;
     let viewRevision = 0;
     let textScrollMode = 'followBottom';
@@ -69,6 +70,7 @@ function revise(snapshot, previous) {
         selectionState = head ? 'valid' : 'empty';
         newMessageCount = 0;
         generation = null;
+        generationStartMessageCount = 0;
         setHistory(history);
         cursor = head;
         selectionState = head ? 'valid' : 'empty';
@@ -97,7 +99,11 @@ function revise(snapshot, previous) {
             }
             if (addedAtEnd) newMessageCount = Math.min(99, newMessageCount + addedAtEnd);
         }
-        if (generation?.status === 'streaming' && addedAtEnd) generation = { ...generation, sourceKey: head?.sourceKey ?? null };
+        if (generation?.status === 'streaming' && !generation.sourceKey) {
+            const candidate = records.find((record) => record?.index >= generationStartMessageCount
+                && record.author.kind === 'character' && !priorKeys.includes(record.sourceKey));
+            if (candidate) generation = { ...generation, sourceKey: candidate.sourceKey, sourceRevision: candidate.revision };
+        }
         if (generation && generation.sourceKey) {
             const generatedSource = records.find((record) => record?.sourceKey === generation.sourceKey);
             if (generatedSource) generation = { ...generation, sourceRevision: generatedSource.revision };
@@ -127,7 +133,10 @@ function revise(snapshot, previous) {
         const byIndex = new Map((sources ?? []).filter(Boolean).map((source) => [source.index, source]));
         if (messageCount === previousCount + 1) {
             const appended = byIndex.get(messageCount - 1);
-            if (!appended || appended.sourceKey === null || appended.sourceKey === undefined) return getSnapshot();
+            const previousTail = byIndex.get(messageCount - 2);
+            if (!appended || appended.sourceKey === null || appended.sourceKey === undefined
+                || !previousTail || previousTail.sourceKey !== records.at(-1)?.sourceKey
+                || records.some((record) => record?.sourceKey === appended.sourceKey)) return getSnapshot();
             records.push(revise({ ...appended, index: messageCount - 1, identity: appended.identity ? { ...appended.identity } : null, author: { ...appended.author } }, null));
             head = records.at(-1);
             if (selectionMode === 'followLatest') {
@@ -137,7 +146,10 @@ function revise(snapshot, previous) {
             } else {
                 newMessageCount = Math.min(99, newMessageCount + 1);
             }
-            if (generation?.status === 'streaming') generation = { ...generation, sourceKey: head.sourceKey, sourceRevision: head.revision };
+            if (generation?.status === 'streaming' && !generation.sourceKey
+                && head?.index >= generationStartMessageCount && head.author.kind === 'character') {
+                generation = { ...generation, sourceKey: head.sourceKey, sourceRevision: head.revision };
+            }
         }
         for (const source of sources ?? []) {
             if (!source || source.index < 0 || source.index >= records.length) continue;
@@ -167,7 +179,17 @@ function revise(snapshot, previous) {
         if (observation.type === 'generationStarted') {
             if (observation.dryRun) return getSnapshot();
             generationSequence++;
-            generation = { id: generationSequence, type: observation.generationType ?? null, sourceKey: head?.sourceKey ?? null, sourceRevision: head?.revision ?? null, status: 'streaming', stopped: false };
+            const type = observation.generationType ?? null;
+            const mayReuseHead = (type === 'continue' || type === 'swipe') && head?.author.kind === 'character';
+            generation = {
+                id: generationSequence,
+                type,
+                sourceKey: mayReuseHead ? head.sourceKey : null,
+                sourceRevision: mayReuseHead ? head.revision : null,
+                status: 'streaming',
+                stopped: false,
+            };
+            generationStartMessageCount = records.length;
             viewRevision++;
         } else if (observation.type === 'generationStopped') {
             if (generation) generation = { ...generation, status: 'stopped-partial', stopped: true };
