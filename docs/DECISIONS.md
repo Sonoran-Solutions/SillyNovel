@@ -1,6 +1,6 @@
 # Decision register
 
-**Status:** user-stated scope is distinguished from recommendations. A proposed default is not a recorded owner approval. The dated M1 planning entry below records recommendations without settling owner or technical gates.
+**Status:** user-stated scope, proposed defaults, and measured facts remain distinct. The M1 planning entry records recommendations as they stood before DYL-16; the approved decisions are recorded in the dated owner entry below.
 
 ## Confirmed user-stated scope
 
@@ -30,7 +30,9 @@ No private character canon, relationship details, or unrelated game-art constrai
 | P11 | No required server plugin in the core | Keep the manual experience usable with a UI extension alone |
 | P12 | Provider capabilities verified independently | Text compatibility does not prove image, transparency, or billing support |
 
-## Proposed defaults
+## Proposed defaults before DYL-16
+
+The current owner-approved defaults and clarifications are recorded in the DYL-16 entry below.
 
 The extension starts disabled. Enabling it activates manual presentation only. Director and image generation are separately off. Automatic retries and automatic CG creation are off. Typewriter animation is off. Standard chat and the existing composer remain available.
 
@@ -42,7 +44,7 @@ Location, presence, and outfit overrides remain locked until released. Manual ex
 | --- | --- | --- |
 | O01 | Which actual SillyTavern release/commit and browser form the first tested baseline? | TECHNICALLY RESOLVED — SillyTavern 1.19.0 at `7e8663cd9c184a550b37238218bdd32c6efc68e9`, Brave `154.1.96.61` on Ubuntu 24.04. See [pinned target](M0_COMPATIBILITY.md#pinned-sillytavern-target) and [M0.2 host validation](M0_LIFECYCLE_VALIDATION.md#m02--final-host-compatibility-validation-2026-10-12), recorded 2026-10-12. |
 
-O01 records the tested environment, not owner approval of a product compatibility policy. Evidence remains tied to the documented candidates; other hosts/browsers remain unverified. Owner M0 acceptance, the L10 waiver and M1 implementation authorization remain pending in DYL-16.
+O01 records the tested environment, not owner approval of a product compatibility policy. Evidence remains tied to the documented candidates; other hosts/browsers remain unverified. The owner accepted the tested-scope M0 verdict and L10 waiver on 2026-10-12; see the DYL-16 owner decision below. M1 authorization is limited to DYL-17 and DYL-19.
 
 ## Decisions still needed
 
@@ -57,14 +59,41 @@ O01 records the tested environment, not owner approval of a product compatibilit
 
 These questions do not block documentation or the manual compatibility shell. Do not answer them by silently treating an example configuration as a user decision.
 
-## M1 planning entry — 2026-10-12, DYL-15
+## Historical M1 planning entry — 2026-10-12, DYL-15
 
 [M1_PLAN.md](M1_PLAN.md) narrows the existing UX/state/asset baseline into reviewable contracts. Its decision table distinguishes requirements, proposed defaults, owner decisions in DYL-16, and technical proofs in DYL-19. **Approving person: none; owner review pending.** It does not authorize M1 runtime work, accept M0, or approve the L10 waiver. Gate A remains NOT_RUN.
 
-Recommended defaults include a complete-message scene above the native composer with reversible native-feed hiding after mount; explicit Previous/Next pinning and native backlog handoff; neutral unresolved identity; a small raster library with stated limits; forward background/presence/outfit locks, message-only expressions and locked chat-level slots; and one visual writer with a read-only second tab. These favor stable scenes and reuse of native chat controls. Exact layout, visibility, lock behavior, rich-content limitations and any local-only storage fallback need owner review. DYL-19 must prove durable identities, asset ownership, metadata save targeting/completion and writer exclusion; failed proofs block dependent features.
+At planning time these defaults were proposals. The owner decision below approves A–G with clarifications; the historical planning record is retained as written.
 
 Affected documents: [roadmap](ROADMAP.md), [status](STATUS.md), and the new [reader plan](M1_PLAN.md), which refines [UX](UX_SPEC.md), [architecture](ARCHITECTURE.md), [state](STATE_AND_DIRECTOR.md) and [assets](ASSETS_AND_PROVIDERS.md) without rewriting historical evidence. No existing owner approval is superseded. DYL-16 must record the owner's actual statement/date/scope before approved defaults or implementation authorization are added here.
 
 ## Changing decisions
 
 Add a new entry with status, date, rationale, affected documents, and approving person where applicable. Preserve superseded decisions and link their replacements. Keep user statements, agent recommendations, measured findings, and owner approvals distinct.
+
+## Owner decision — 2026-10-12, DYL-16
+
+**Approving owner:** Dylan (explicit response in the working chat, 2026-10-12). **Status:** APPROVED for the exact scope below. This supersedes the pending owner questions and agent recommendations recorded in the DYL-15 planning entry; it does not expand beyond the authorized tickets.
+
+### M0 and L10
+
+- Accept the L10 waiver for the tested persistent-chat workflow on the pinned SillyTavern host. Record L10 as **UNSUPPORTED / WAIVED**, never HOST PASS. Retain synthetic empty-source regression coverage. Revisit the waiver if a supported reachable workflow is later demonstrated.
+- Approve M0 **PASS for the explicitly documented scope and evidence limits**. Do not claim real model/provider inference or compatibility beyond the documented host/browser/candidate evidence. Add a short current-main-head regression smoke check to DYL-17's pinned-host validation; this does not reopen M0.
+
+### M1 defaults A–G
+
+- **A — Reader layout:** Scene reader is the default; hide the native feed only after successful mount. Preserve native composer/send/stop and immediate Back to Chat. Permanent side-by-side mode is not required for M1.
+- **B — Reading/navigation:** Preserve whole-message pinned navigation and independent text-scroll position during streaming.
+- **C — Character identity:** Permit explicit manual resolution to distinguishable cards within verified scope. Unresolved identity must not block reading or unrelated scene controls.
+- **D — Assets/storage:** Prefer verified host storage. Browser-local persistence needs its own explicit proposal and approval.
+- **E — Manual controls:** Locks protect manual choices against automatic or delayed changes, not deliberate user replacements. Slots stay stable and are never automatically evicted.
+- **F — Rich content:** Require readable ordinary formatting. Use plain-text/native-view fallback only for unsupported or unsafe content.
+- **G — Persistence/writers:** Use a verified single-visual-writer policy with clear ownership and recovery. Other tabs retain ordinary chat access. Make no untested cross-device concurrency claims.
+
+### Authorization and limits
+
+- Authorize **DYL-17** and **DYL-19** in parallel, on separate branches with coordinated file ownership and separate PRs left open for review. DYL-19 is a bounded proof task, not authorization to implement the asset library or persistence system.
+- Keep **DYL-18 and later implementation tickets blocked** pending prerequisites and separate authorization. Gate A remains NOT_RUN; M2 is not authorized.
+- Record DYL-16's decisions and links before closing the owner gate. DYL-17 and DYL-19 are authorized but remain unstarted until their own work begins.
+
+Affected documents: [status](STATUS.md), [M1 reader plan](M1_PLAN.md), and [roadmap](ROADMAP.md). Affected issues: [DYL-16](https://linear.app/devils17/issue/DYL-16/sillynovel-m10-b-owner-decision-on-m0l10-and-m1-implementation-scope), [DYL-17](https://linear.app/devils17/issue/DYL-17/sillynovel-m11-a-build-the-reader-source-model-and-streaming-safe), [DYL-18](https://linear.app/devils17/issue/DYL-18/sillynovel-m11-b-ship-the-text-reader-backlog-handoff-and-composer), and [DYL-19](https://linear.app/devils17/issue/DYL-19/sillynovel-m12-a-prove-chatcard-identity-and-assetmetadata-storage).

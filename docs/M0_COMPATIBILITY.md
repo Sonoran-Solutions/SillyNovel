@@ -1,6 +1,6 @@
 # M0 compatibility and evidence
 
-**Checked:** 2026-10-11 (America/Phoenix). **M0 result:** partial / revise; core supported message lifecycle paths passed on the pinned local host, while switching into an empty chat and generating there, group, and missing-capability host cases remain untested. Deletion to an empty view was exercised. See [the lifecycle report](M0_LIFECYCLE_VALIDATION.md).
+**Checked:** 2026-10-11 (America/Phoenix); later M0.2 evidence is dated 2026-10-12. **Owner verdict (2026-10-12): M0 PASS for the explicitly documented scope and evidence limits.** L10 is **UNSUPPORTED / WAIVED** for the tested persistent-chat workflow on pinned SillyTavern 1.19.0; it is not HOST PASS. Preserve the synthetic empty-source regression and revisit if a supported reachable workflow is demonstrated. Group/duplicate-label and injected missing-capability results are recorded in the M0.2 addenda. See [the lifecycle report](M0_LIFECYCLE_VALIDATION.md).
 
 ## Pinned SillyTavern target
 
@@ -68,7 +68,7 @@ These facts are source inspection, not observations from a live model run. Error
 
 The adapter's `chatId`, `groupId`, and `characterId` observation is marked `durable: false` and is used only in memory. It does not claim a persistent chat/card key.
 
-## Test and manual evidence
+## Initial M0.1 test and manual evidence — historical
 
 | Check | Result | Evidence boundary |
 | --- | --- | --- |
@@ -85,7 +85,7 @@ The adapter's `chatId`, `groupId`, and `characterId` observation is marked `dura
 | Canonical chat mutation by enable/disable | HOST_TESTED — PASS; SIMULATED — PASS | Synthetic canonical chat snapshot unchanged through toggles; real generation/edit/delete changed only through native host actions. |
 | Other browsers, devices, ST versions, provider/model behavior | NOT_TESTED | No cross-environment or model claim is made. |
 
-This evidence completes several live lifecycle checks but is not a full compatibility pass. Exact per-scenario outcomes, event traces, and commands are in [the M0 lifecycle report](M0_LIFECYCLE_VALIDATION.md). Gate A remains NOT_RUN. M1 remains NOT_AUTHORIZED. The synthetic harness intentionally dispatches source-shaped arguments itself and is kept separate from host lifecycle evidence.
+At the time of this initial compatibility report, these checks were partial and M1 was not authorized. Exact per-scenario outcomes, event traces, and commands are in [the M0 lifecycle report](M0_LIFECYCLE_VALIDATION.md). The later owner verdict is recorded at the end of this document. The synthetic harness intentionally dispatches source-shaped arguments itself and is kept separate from host lifecycle evidence.
 
 ## Open integration seams
 
@@ -128,4 +128,8 @@ The review follow-up code commit `831714e9343b51682d643efb2eaa419ef9ab5145` also
 | L16: required event capability missing | **INSTRUMENTED_HOST_PASS** | Browser-local context wrapper omitted `MESSAGE_SWIPED`; activation refused before stage mount, native composer remained usable, and ordinary activation worked after restoration. Not a natural host failure. |
 | Eventless Temporary Chat source refresh defect | **FIXED and HOST_RECHECKED** | Production candidate owns a coalesced observer only on `#chat`; disposal is covered by the synthetic tests. |
 
-The browser evidence used synthetic isolated data, a deterministic loopback endpoint, and the removable observer fixture. It establishes no real model/provider behavior and no compatibility claim for other browsers or host releases. Exact observer and endpoint hashes, sanitized observations, and command results are in the [dated M0.2 report](M0_LIFECYCLE_VALIDATION.md). Recommended M0 status is **PASS subject to owner acceptance of the L10 waiver**; no owner approval is recorded. Gate A remains NOT_RUN and M1 remains NOT_AUTHORIZED.
+The browser evidence used synthetic isolated data, a deterministic loopback endpoint, and the removable observer fixture. It establishes no real model/provider behavior and no compatibility claim for other browsers or host releases. Exact observer and endpoint hashes, sanitized observations, and command results are in the [dated M0.2 report](M0_LIFECYCLE_VALIDATION.md). The recommendation at the time of validation was **PASS subject to owner acceptance of the L10 waiver**; the later owner decision is recorded below. Gate A remains NOT_RUN.
+
+## Owner decision — 2026-10-12, DYL-16
+
+The owner approved **M0 PASS for the explicitly documented scope and evidence limits** and accepted the L10 waiver for the tested persistent-chat workflow on pinned SillyTavern 1.19.0. L10 is **UNSUPPORTED / WAIVED**, never HOST PASS. Synthetic empty-source coverage remains. Revisit if a supported reachable workflow is demonstrated. Real model/provider behavior, other host releases/browsers, and listed error/abort and same-length browser rerun limits remain NOT_TESTED. See [decision register](DECISIONS.md#owner-decision--2026-10-12-dyl-16).

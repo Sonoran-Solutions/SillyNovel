@@ -1,6 +1,6 @@
 # Project status
 
-**Updated:** 2026-10-12. The status snapshot below preserves the M0.1 record from 2026-10-11; the current M0.2 result is appended at the end.
+**Updated:** 2026-10-12. Historical M0.1 and planning handoffs are preserved below; the owner-approved current state is recorded last.
 
 ## Current state
 
@@ -9,13 +9,14 @@ The repository now contains the M0 compatibility shell. This is not a visual-nov
 | Area | State |
 | --- | --- |
 | M0 shell code | IMPLEMENTED |
-| Synthetic adapter/controller/source harness | PASS — 8 tests |
+| Synthetic adapter/controller/source harness | PASS — 13 tests on the recorded review-fix candidate |
 | SillyTavern 1.19.0 source inspection | COMPLETE — commit `7e8663cd9c184a550b37238218bdd32c6efc68e9` |
-| Isolated real-host lifecycle checks | PARTIAL PASS — normal, streaming, stop, continuation, swipe, edit/delete, chat switching, toggles, and disable-during-stream verified with deterministic local endpoint |
+| Isolated real-host lifecycle checks | PASS within documented scope — normal, streaming, stop, continuation, swipe, edit/delete, chat switching, toggles, group/duplicate labels, and disable-during-stream verified with synthetic data and deterministic local endpoint |
 | Live model/provider behavior | NOT_TESTED — endpoint was deterministic and local |
-| Switch into empty B and generate; group/duplicate-name cases; capability removal in host UI | NOT_TESTED (deletion to an empty view was separately exercised) |
-| M0 overall | PARTIAL / REVISE — supported lifecycle paths passed; listed host gaps remain |
-| M1 — manual visual-novel reader | NOT_STARTED / NOT_AUTHORIZED |
+| L10 persistent empty-chat workflow | UNSUPPORTED / WAIVED; supported host UI restores the welcome message on reopen |
+| Missing-capability behavior | INSTRUMENTED_HOST_PASS; capability omission was injected, not a natural host failure |
+| M0 overall | OWNER APPROVED PASS for the explicitly documented scope and evidence limits; L10 is UNSUPPORTED / WAIVED |
+| M1 runtime | NOT_STARTED; DYL-17 and DYL-19 explicitly authorized, DYL-18 and later tickets remain blocked pending prerequisites and separate authorization |
 | Gate A — reader feel | NOT_RUN |
 | M2 — automatic direction | NOT_STARTED |
 | Gate B — direction quality | NOT_RUN |
@@ -47,11 +48,11 @@ Deletion to an empty view was exercised, but the host switch into an empty B cha
 
 ## Next action
 
-Complete the remaining real-host empty-chat switch/generation and group scenarios on the pinned host, then request owner review of the evidence. Gate A remains NOT_RUN. M1 remains NOT_AUTHORIZED.
+Run authorized DYL-17 and DYL-19 as separate, coordinated branches and separate open PRs. DYL-17 includes a short current-main-head regression smoke check in pinned-host validation. Gate A remains NOT_RUN; M2 remains unauthorized.
 
 ## Status discipline
 
-Keep implementation, simulated checks, real-host checks, provider checks, and owner verdicts separate. Do not promote M0 to fully passed until the outstanding host scenarios in the compatibility record have been exercised and the owner has reviewed the evidence.
+Keep implementation, simulated checks, real-host checks, provider checks, and owner verdicts separate. M0 PASS is limited to the explicitly documented scope and does not change any NOT_TESTED result.
 
 ## M0.2 current status (2026-10-12)
 
@@ -61,25 +62,31 @@ Keep implementation, simulated checks, real-host checks, provider checks, and ow
 | PR review fix candidate | `831714e9343b51682d643efb2eaa419ef9ab5145` |
 | Pinned host | SillyTavern 1.19.0 / `7e8663cd9c184a550b37238218bdd32c6efc68e9` |
 | Synthetic regression suite | PASS — 13 tests |
-| L10: revisitable empty B and generation | UNSUPPORTED / WAIVER REQUESTED; supported UI restores the welcome message after switching away and reopening |
+| L10: revisitable empty B and generation | UNSUPPORTED / WAIVED by owner for the tested persistent-chat workflow; revisit if a supported reachable workflow is demonstrated |
 | L12: group author labels and switching | HOST PASS |
 | L13: duplicate-name labels | HOST PASS for M0 label-only behavior; stable identity remains an M1 contract requirement |
 | L16: missing capability in browser | INSTRUMENTED_HOST_PASS; no stage/partial activation, native chat usable, normal activation recovered after restoring context |
 | Same-length eventless content update | SYNTHETIC PASS; one refresh, unchanged-source deduplication, and disposal verified; browser host not rerun for this edge case |
 | Confirmed production defect | Eventless Temporary Chat transition kept stale stage content on previous candidate; fixed and host-rechecked on the validated candidate |
-| M0 recommendation | PASS recommended subject to owner acceptance of L10 waiver; owner verdict pending |
+| M0 verdict | OWNER APPROVED PASS for the explicitly documented scope and evidence limits |
 | Gate A | NOT_RUN |
-| M1 | NOT_AUTHORIZED |
+| M1 authorization | DYL-17 and DYL-19 authorized in parallel; DYL-18 and later tickets blocked pending prerequisites and separate authorization |
 | Real model/provider, other host releases, browsers, and error/abort paths | NOT_TESTED |
 
-The host-validated candidate uses a coalesced, disposal-owned observer on `#chat`; the PR review fix additionally compares exact text when the other source fields and length match. It does not change canonical chat content or host source, and message bodies are neither logged nor hashed. The review fix was tested synthetically; host evidence remains tied to `de25366`. Full evidence and exact commands are in [M0 lifecycle validation](M0_LIFECYCLE_VALIDATION.md), [M0 compatibility](M0_COMPATIBILITY.md), and [testing](TESTING.md). The L10 waiver is a request for owner review, not an approval.
+The host-validated candidate uses a coalesced, disposal-owned observer on `#chat`; the PR review fix additionally compares exact text when the other source fields and length match. It does not change canonical chat content or host source, and message bodies are neither logged nor hashed. The review fix was tested synthetically; host evidence remains tied to `de25366`. Full evidence and exact commands are in [M0 lifecycle validation](M0_LIFECYCLE_VALIDATION.md), [M0 compatibility](M0_COMPATIBILITY.md), and [testing](TESTING.md). The L10 waiver and tested-scope M0 PASS were approved by the owner on 2026-10-12.
 
-## M1 planning handoff — 2026-10-12, DYL-15
+## Historical M1 planning handoff — 2026-10-12, DYL-15
 
-[M1 reader plan](M1_PLAN.md) supplies complete-message desktop/narrow/keyboard layouts, streaming and older-cursor rules, manual cast/asset/lock contracts, source-anchored state/save failure boundaries, component interfaces and a frozen owner Gate A session. Documentation only: M1 runtime is **NOT_STARTED / NOT_AUTHORIZED**. Owner M0/L10 acceptance remains pending; Gate A is **NOT_RUN**.
+[M1 reader plan](M1_PLAN.md) supplies complete-message desktop/narrow/keyboard layouts, streaming and older-cursor rules, manual cast/asset/lock contracts, source-anchored state/save failure boundaries, component interfaces and a frozen owner Gate A session. At that handoff, M1 runtime was **NOT_STARTED / NOT_AUTHORIZED**, owner M0/L10 acceptance was pending, and Gate A was **NOT_RUN**. The later DYL-16 owner decision below supersedes that authorization state.
 
 Initial clean checkout: `6eedb720e699b1194db41371975ddd07b4db46c6`. Fetched main and this focused branch's base: `a7f1a4a6299a459adce1e24ea7b1b3f4405d02b5` (merged PR #3). Branch: `codex/dyl-15-m1-reader-plan`. Final pushed head and PR are recorded in the GitHub/Linear handoff rather than inventing a self-referential SHA in this file.
 
 The Linear project and DYL-15–DYL-19 were read directly; those five existing M1 issues form plan → owner decisions → source model → text reader, plus identity/storage proof alongside source work after authorization. Eight later bounded ticket titles/dependencies are proposed in the plan; no issues were created or implementation started. DYL-19 failures block the affected persistence/binding/storage work. Next action: review DYL-15, then record actual owner decisions in DYL-16. DYL-17 is the recommended first implementation ticket only after explicit authorization.
 
 Verification for this planning PR: relative Markdown file/anchor and fenced-block checks, `git diff --check`, and docs-only path/runtime comparison, with exact results in the PR/Linear handoff. No new runtime tests, host/browser/provider/device run, or owner playtest is claimed. Existing M0 evidence retains its original candidate and limitations.
+
+## Owner decision — 2026-10-12, DYL-16
+
+The owner accepted L10 as **UNSUPPORTED / WAIVED** for the tested persistent-chat workflow on the pinned host, retaining synthetic empty-source coverage and requesting reconsideration if a supported reachable workflow is later demonstrated. The owner approved M0 **PASS for its documented scope and evidence limits**. A short smoke check against the current SillyNovel main head is included in DYL-17's host-validation scope; M0 is not reopened.
+
+The owner approved M1 defaults A–G with the clarifications in [DECISIONS](DECISIONS.md#owner-decision--2026-10-12-dyl-16) and [M1_PLAN](M1_PLAN.md#owner-approved-defaults--2026-10-12-dyl-16). DYL-17 (source model) and DYL-19 (identity/storage proof) are authorized in parallel as separate branches and separate open PRs with coordinated file ownership. DYL-19 does not authorize asset-library or persistence implementation. DYL-18 and later implementation remain blocked pending prerequisites and separate authorization. Gate A is **NOT_RUN** and M2 is **NOT_AUTHORIZED**.
