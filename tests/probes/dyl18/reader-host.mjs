@@ -83,11 +83,17 @@ async function settled(page) {
 async function composerState(page) {
     return page.evaluate(()=>{const d=document.getElementById('send_textarea');return[d.value,d.selectionStart,d.selectionEnd,d.selectionDirection,document.activeElement===d];});
 }
-const canonical = page => page.evaluate(()=>JSON.stringify({
-    chat:SillyTavern.getContext().chat,characters:SillyTavern.getContext().characters,
-    metadata:SillyTavern.getContext().chatMetadata,api:SillyTavern.getContext().mainApi,
-    connection:SillyTavern.getContext().chatCompletionSettings,
-}));
+const canonical = async page => {
+    // Host list statistics (date_last_chat/chat_size) can change after its own save.
+    // Compare canonical card content, not those asynchronous display statistics.
+    const content=await page.evaluate(()=>JSON.stringify({
+        chat:SillyTavern.getContext().chat,
+        characters:SillyTavern.getContext().characters.map(({avatar,name,description,personality,scenario,first_mes,mes_example,data})=>({avatar,name,description,personality,scenario,first_mes,mes_example,data})),
+        metadata:SillyTavern.getContext().chatMetadata,api:SillyTavern.getContext().mainApi,
+        connection:SillyTavern.getContext().chatCompletionSettings,
+    }));
+    return createHash('sha256').update(content).digest('hex');
+};
 
 try {
     const settings=JSON.parse(await readFile(resolve(hostRoot,'default/content/settings.json')));
