@@ -45,7 +45,7 @@ function revise(snapshot, previous) {
     }
 
     function setHistory(history = []) {
-        const previousByKey = new Map(records.map((record) => [record.sourceKey, record]));
+        const previousByKey = new Map(records.filter(Boolean).map((record) => [record.sourceKey, record]));
         const counts = new Map();
         for (const source of history) {
             if (source?.sourceKey !== null && source?.sourceKey !== undefined) {
@@ -135,7 +135,7 @@ function revise(snapshot, previous) {
             const appended = byIndex.get(messageCount - 1);
             const previousTail = byIndex.get(messageCount - 2);
             if (!appended || appended.sourceKey === null || appended.sourceKey === undefined
-                || !previousTail || previousTail.sourceKey !== records.at(-1)?.sourceKey
+                || (previousCount > 0 && (!previousTail || previousTail.sourceKey !== records.at(-1)?.sourceKey))
                 || records.some((record) => record?.sourceKey === appended.sourceKey)) return getSnapshot();
             records.push(revise({ ...appended, index: messageCount - 1, identity: appended.identity ? { ...appended.identity } : null, author: { ...appended.author } }, null));
             head = records.at(-1);
@@ -156,13 +156,16 @@ function revise(snapshot, previous) {
             const previous = records[source.index];
             const next = revise({ ...source, index: source.index, identity: source.identity ? { ...source.identity } : null, author: { ...source.author } }, previous);
             records[source.index] = next;
-            if (previous?.sourceKey !== source.sourceKey && cursor?.sourceKey === previous?.sourceKey) {
+            if (selectionMode === 'pinned' && previous?.sourceKey !== source.sourceKey && cursor?.sourceKey === previous?.sourceKey) {
                 cursor = null;
                 selectionState = 'invalidated';
             }
         }
         head = records.at(-1) ?? null;
-        if (selectionMode === 'followLatest' && selectionState !== 'invalidated') cursor = head;
+        if (selectionMode === 'followLatest') {
+            cursor = head;
+            selectionState = head ? 'valid' : 'empty';
+        }
         else if (cursor) cursor = records[cursor.index] ?? cursor;
         if (generation?.sourceKey) {
             const generatedSource = records.find((record) => record?.sourceKey === generation.sourceKey);

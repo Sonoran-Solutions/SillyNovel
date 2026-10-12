@@ -98,8 +98,9 @@ test('repeated identical text keeps distinct locators; replacing selected host o
     const ambiguous = modelWith(message('dup', 'same object', 0), message('dup', 'same object', 1));
     assert.equal(ambiguous.getSnapshot().head, null, 'duplicate locator values are rejected as ambiguous');
 
-    const streamed = modelWith(message('selected-live', 'same text', 0));
-    streamed.apply({ type: 'streamReconciled', messageCount: 1, sources: [message('replacement-live', 'same text', 0)] });
+    const streamed = modelWith(message('selected-live', 'same text', 0), message('live-head', 'latest', 1));
+    streamed.navigate(-1);
+    streamed.apply({ type: 'streamReconciled', messageCount: 2, sources: [message('replacement-live', 'same text', 0), message('live-head', 'latest', 1)] });
     assert.equal(streamed.getSnapshot().cursor, null, 'incremental reconciliation invalidates a replaced selected host object even when its text matches');
     assert.equal(streamed.getSnapshot().selectionState, 'invalidated');
 });
@@ -175,6 +176,103 @@ test('empty history has an explicit no-source state', () => {
     model.jumpToLatest();
     assert.equal(model.getSnapshot().cursor, null);
     assert.equal(model.getSnapshot().selectionState, 'empty');
+});
+
+test('DOM-only first-message arrival and latest-object replacement reconcile through adapter and model', async () => {
+    const previousDocument = Object.getOwnPropertyDescriptor(globalThis, 'document');
+    const previousObserver = Object.getOwnPropertyDescriptor(globalThis, 'MutationObserver');
+    const previousRaf = Object.getOwnPropertyDescriptor(globalThis, 'requestAnimationFrame');
+    const previousCancel = Object.getOwnPropertyDescriptor(globalThis, 'cancelAnimationFrame');
+    const frames = new Map();
+    let frameId = 0;
+    let mutationCallback;
+    const chatElement = {};
+    class TestMutationObserver {
+        constructor(callback) { mutationCallback = callback; }
+        observe() {}
+        disconnect() {}
+    }
+    globalThis.document = { getElementById: (id) => id === 'chat' ? chatElement : null };
+    globalThis.MutationObserver = TestMutationObserver;
+    globalThis.requestAnimationFrame = (callback) => { const id = ++frameId; frames.set(id, callback); return id; };
+    globalThis.cancelAnimationFrame = (id) => frames.delete(id);
+
+    function fixture(chat) {
+        const listeners = new Map();
+        const context = {
+            chat,
+            chatId: 'dom-only-chat',
+            characterId: 1,
+            eventSource: { on(name, listener) { listeners.set(name, listener); }, removeListener(name) { listeners.delete(name); } },
+            eventTypes: Object.fromEntries(['CHAT_CHANGED','MESSAGE_RECEIVED','CHARACTER_MESSAGE_RENDERED','STREAM_TOKEN_RECEIVED','GENERATION_STARTED','GENERATION_STOPPED','GENERATION_ENDED','MESSAGE_SWIPED','MESSAGE_EDITED','MESSAGE_DELETED'].map(name => [name, name])),
+            extensionSettings: {},
+            saveSettingsDebounced() {},
+        };
+        return context;
+    }
+
+    async function reconcileDomChange() {
+        mutationCallback([], null);
+        const [id, callback] = frames.entries().next().value;
+        frames.delete(id);
+        callback();
+        await Promise.resolve();
+    }
+
+    try {
+        const emptyContext = fixture([]);
+        const emptyAdapter = createHostAdapter(() => emptyContext);
+        const emptyReader = createReaderSourceModel();
+        emptyReader.activate(emptyAdapter.readHistory(), emptyAdapter.readChatIdentity());
+        const emptyObservations = [];
+        const disposeEmpty = emptyAdapter.subscribe((observation) => {
+            emptyObservations.push(observation);
+            emptyReader.apply(observation);
+        }, { getTrackedIndices: () => emptyReader.getTrackedIndices(), getScheduleState: () => emptyReader.getSnapshot() });
+        emptyContext.chat.push({ name: 'Mira', mes: 'First message arrives.' });
+        await reconcileDomChange();
+        assert.equal(emptyObservations.length, 1, 'the DOM observer reports the transition without a lifecycle event');
+        assert.equal(emptyObservations[0].messageCount, 1);
+        assert.equal(emptyReader.getSnapshot().head.text, 'First message arrives.');
+        assert.equal(emptyReader.getSnapshot().cursor.sourceKey, emptyReader.getSnapshot().head.sourceKey);
+        assert.equal(emptyReader.getSnapshot().selectionState, 'valid');
+        disposeEmpty();
+
+        const replacementContext = fixture([
+            { is_user: true, name: 'Reader', mes: 'Prompt.' },
+            { name: 'Mira', mes: 'Original latest.' },
+        ]);
+        const replacementAdapter = createHostAdapter(() => replacementContext);
+        const replacementReader = createReaderSourceModel();
+        replacementReader.activate(replacementAdapter.readHistory(), replacementAdapter.readChatIdentity());
+        const originalKey = replacementReader.getSnapshot().cursor.sourceKey;
+        const replacementObservations = [];
+        const disposeReplacement = replacementAdapter.subscribe((observation) => {
+            replacementObservations.push(observation);
+            replacementReader.apply(observation);
+        }, { getTrackedIndices: () => replacementReader.getTrackedIndices(), getScheduleState: () => replacementReader.getSnapshot() });
+        replacementContext.chat[1] = { name: 'Mira', mes: 'Replacement latest.' };
+        await reconcileDomChange();
+        assert.equal(replacementObservations.length, 1, 'latest replacement is observed by DOM reconciliation only');
+        assert.equal(replacementReader.getSnapshot().selectionMode, 'followLatest');
+        assert.equal(replacementReader.getSnapshot().cursor.text, 'Replacement latest.');
+        assert.notEqual(replacementReader.getSnapshot().cursor.sourceKey, originalKey);
+        assert.equal(replacementReader.getSnapshot().cursor.sourceKey, replacementReader.getSnapshot().head.sourceKey);
+        assert.equal(replacementReader.getSnapshot().selectionState, 'valid');
+        disposeReplacement();
+    } finally {
+        for (const [key, descriptor] of [['document', previousDocument], ['MutationObserver', previousObserver], ['requestAnimationFrame', previousRaf], ['cancelAnimationFrame', previousCancel]]) {
+            if (descriptor) Object.defineProperty(globalThis, key, descriptor);
+            else delete globalThis[key];
+        }
+    }
+});
+
+test('a refresh after ambiguous history safely skips unavailable source records', () => {
+    const model = modelWith(message('duplicate', 'first', 0), message('duplicate', 'second', 1));
+    assert.equal(model.getSnapshot().head, null);
+    assert.doesNotThrow(() => model.apply({ type: 'chatViewChanged', history: [message('unique', 'available again', 0)] }));
+    assert.equal(model.getSnapshot().head.text, 'available again');
 });
 
 test('text scrolling has a separate snapshot contract from message-following mode', () => {
