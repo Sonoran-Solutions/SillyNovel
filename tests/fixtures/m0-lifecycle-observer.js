@@ -38,15 +38,26 @@
         return value;
     }
 
+    function safeIdentity(value) {
+        if (value === undefined || value === null) return { status: 'missing', type: null, hash: null };
+        if (Number.isSafeInteger(value)) return { status: 'valid', type: 'integer', hash: hash('integer:' + value) };
+        if (typeof value === 'string') {
+            return value.trim()
+                ? { status: 'valid', type: 'string', hash: hash('string:' + value) }
+                : { status: 'invalid', type: 'string', hash: null };
+        }
+        return { status: 'invalid', type: typeof value, hash: null };
+    }
+
     function identity(ctx) {
         const rawChatId = typeof ctx.getCurrentChatId === 'function' ? ctx.getCurrentChatId() : ctx.chatId;
         const groupId = ctx.groupId;
         const characterId = ctx.characterId;
         return {
             scope: groupId !== undefined && groupId !== null ? 'group' : characterId !== undefined && characterId !== null ? 'character' : 'unknown',
-            chatIdHash: rawChatId === undefined || rawChatId === null ? null : hash(rawChatId),
-            groupId: Number.isSafeInteger(groupId) ? groupId : null,
-            characterId: Number.isSafeInteger(characterId) ? characterId : null,
+            chatId: safeIdentity(rawChatId),
+            groupId: safeIdentity(groupId),
+            characterId: safeIdentity(characterId),
         };
     }
 
@@ -118,7 +129,7 @@
             function safeArgs(keyName, args) {
                 switch (keyName) {
                     case 'CHAT_CHANGED':
-                        return { chatIdHash: args[0] === undefined ? null : hash(args[0]) };
+                        return { chatId: safeIdentity(args[0]) };
                     case 'GENERATION_STARTED':
                         return { generationType: typeof args[0] === 'string' ? args[0].slice(0, 40) : null, dryRun: args[2] === true };
                     case 'STREAM_TOKEN_RECEIVED':
