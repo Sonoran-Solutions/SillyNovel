@@ -196,7 +196,12 @@ test('adapter snapshots keep full labels and token signals coalesce into fresh c
         assert.ok(Object.isFrozen(initial[1].author));
 
         const observations = [];
-        const dispose = adapter.subscribe((observation) => observations.push(observation), { getTrackedIndices: () => [0] });
+        let trackedIndices = [0];
+        const scheduleState = { sessionEpoch: 1, viewRevision: 0 };
+        const dispose = adapter.subscribe((observation) => observations.push(observation), {
+            getTrackedIndices: () => trackedIndices,
+            getScheduleState: () => scheduleState,
+        });
         let indexedReads = 0;
         context.chat = new Proxy(context.chat, {
             get(target, key, receiver) {
@@ -208,6 +213,8 @@ test('adapter snapshots keep full labels and token signals coalesce into fresh c
         listeners.get('STREAM_TOKEN_RECEIVED')('must not be copied either');
         context.chat[1].mes = 'after';
         indexedReads = 0;
+        trackedIndices = [1];
+        scheduleState.viewRevision++;
         assert.equal(callbacks.size, 1, 'one canonical reconciliation is queued for the frame');
         const [id, callback] = callbacks.entries().next().value;
         callbacks.delete(id);
@@ -216,12 +223,14 @@ test('adapter snapshots keep full labels and token signals coalesce into fresh c
         assert.equal(observations.filter(item => item.type === 'streamToken').length, 2);
         const reconciled = observations.find(item => item.type === 'streamReconciled');
         assert.equal(reconciled.sources.find(item => item.index === 1).text, 'after');
+        assert.deepEqual(reconciled.sources.map(item => item.index), [1], 'a selection change drops the queued old-cursor sample and reads the current head');
         assert.equal(reconciled.messageCount, 2);
         assert.ok(indexedReads <= 2, 'token reconciliation reads only selected and latest host entries');
         assert.equal(observations[0].source, undefined, 'token event has no text authority');
 
         listeners.get('STREAM_TOKEN_RECEIVED')();
         const stale = callbacks.entries().next().value;
+        scheduleState.sessionEpoch++;
         dispose();
         callbacks.delete(stale[0]);
         stale[1]();

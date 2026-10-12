@@ -146,7 +146,7 @@ export function createHostAdapter(getContext) {
         return readMessageAt(context.chat.length - 1, context);
     }
 
-    function subscribe(onObservation, { getTrackedIndices = () => [] } = {}) {
+    function subscribe(onObservation, { getTrackedIndices = () => [], getScheduleState = () => null } = {}) {
         if (typeof onObservation !== 'function') throw new TypeError('An observation callback is required.');
         const capabilities = inspectCapabilities();
         if (!capabilities.ok) throw new Error('Missing SillyTavern capabilities: ' + capabilities.missing.join(', '));
@@ -178,6 +178,10 @@ export function createHostAdapter(getContext) {
         function scheduleReconciliation(type) {
             if (pendingRefresh || disposed) return;
             pendingRefresh = true;
+            const scheduledOwner = currentOwner();
+            const scheduledIndices = getTrackedIndices();
+            const scheduleState = getScheduleState();
+            const scheduledState = scheduleState && { ...scheduleState };
             const reconcile = () => {
                 pendingRefresh = false;
                 pendingFrame = null;
@@ -186,11 +190,17 @@ export function createHostAdapter(getContext) {
                 if (!current || !Array.isArray(current.chat)) return;
                 const messageCount = current.chat.length;
                 const owner = currentOwner();
-                if (JSON.stringify(owner) !== JSON.stringify(lastObservedOwner)) {
+                if (JSON.stringify(owner) !== JSON.stringify(lastObservedOwner)
+                    || JSON.stringify(owner) !== JSON.stringify(scheduledOwner)) {
                     const history = readHistory();
                     emit(type, { history, source: history.at(-1) ?? null, owner });
                     return;
                 }
+                const currentState = getScheduleState();
+                if (scheduledState?.sessionEpoch !== undefined
+                    && currentState?.sessionEpoch !== scheduledState.sessionEpoch) return;
+                const selectionChanged = scheduledState?.viewRevision !== undefined
+                    && currentState?.viewRevision !== scheduledState.viewRevision;
                 const countDelta = messageCount - lastObservedHistory.length;
                 if (countDelta < 0 || countDelta > 1) {
                     const history = readHistory();
@@ -199,7 +209,7 @@ export function createHostAdapter(getContext) {
                     if (changed) emit(type, { history, source: history.at(-1) ?? null, owner });
                     return;
                 }
-                const indices = new Set([messageCount - 1, ...getTrackedIndices()]);
+                const indices = new Set([messageCount - 1, ...(selectionChanged ? [] : scheduledIndices)]);
                 const sources = [...indices]
                     .filter((index) => Number.isSafeInteger(index) && index >= 0 && index < messageCount)
                     .map((index) => readMessageAt(index, current));

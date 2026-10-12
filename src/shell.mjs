@@ -63,6 +63,10 @@ export function createShellController(host, view) {
                 }
             }, {
                 getTrackedIndices: reader.getTrackedIndices,
+                getScheduleState: () => {
+                    const { sessionEpoch, viewRevision } = reader.getSnapshot();
+                    return { sessionEpoch, viewRevision };
+                },
             });
             if (typeof unsubscribe !== 'function') throw new Error('SillyTavern event listeners could not be registered.');
         } catch (error) {
