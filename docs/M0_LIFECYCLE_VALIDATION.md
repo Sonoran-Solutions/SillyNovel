@@ -329,3 +329,9 @@ Commands run after the code candidate was finalized: `node --test tests/m0.test.
 ### M0.2 recommendation
 
 Recommend **M0 PASS, subject to the owner's L10 waiver decision**: the reachable group, duplicate-label, injected-capability, lifecycle, and reversibility paths passed on the pinned host, and the reproduced eventless-transition defect is fixed on the validated candidate. L10 remains **UNSUPPORTED / WAIVER REQUESTED**, not passed. This is an agent recommendation only: owner waiver/acceptance is pending. Gate A remains NOT_RUN; M1 remains NOT_AUTHORIZED.
+
+### PR review follow-up — same-length eventless source revisions
+
+The PR review identified that the first DOM fallback signature compared message length but not content, so an eventless replacement such as `alpha` → `bravo` could be missed. Code/test commit `831714e9343b51682d643efb2eaa419ef9ab5145` replaces the signature with an equality check that compares chat identity, index, author, swipe ID, and text length first, then exact text when those values match. It does not hash or log message bodies. Normal content appends with a changed length short-circuit before the full text comparison.
+
+The regression replaces `Synthetic temporary reply.` with the same-length `Synthetic temporary story.` and verifies the new source is observed exactly once. A repeated unchanged mutation remains deduplicated, and the existing post-disposal assertion still passes. `node --test tests/m0.test.mjs` passes 13/13 on this fix. No browser host rerun was performed for this narrow equality correction; the L10/L12/L13/L16 host evidence above remains tied to candidate `de25366aeaa5e1cbd10e9bc40861e8ae91339aee`.

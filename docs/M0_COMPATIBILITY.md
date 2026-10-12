@@ -117,6 +117,8 @@ Follow-up host checks should use the same identified SillyTavern release and a s
 
 This addendum records validation on SillyNovel candidate `de25366aeaa5e1cbd10e9bc40861e8ae91339aee` against SillyTavern 1.19.0 commit `7e8663cd9c184a550b37238218bdd32c6efc68e9`. It supplements, rather than rewrites, the M0.1 evidence above. The earlier statement that M0 created no observer describes the M0.1 candidate; M0.2 adds one narrowly owned `MutationObserver` on `#chat` to cover host transitions that emit no event. Mutations are microtask-coalesced, current source is sampled only after a source-signature change, and the observer disconnects with the active shell. No chat body is logged.
 
+The review follow-up code commit `831714e9343b51682d643efb2eaa419ef9ab5145` also closes a same-length content-revision gap: after identity, index, author, swipe, and length match, the fallback compares exact source text. This comparison neither logs nor hashes message bodies; normal appends with a changed length skip it. A synthetic regression covers same-length replacement, one-time observation, deduplication, and disposal. The pinned-host results below remain evidence for `de25366`; no new host run is claimed for this narrow follow-up.
+
 | Scenario | M0.2 result | Boundary |
 | --- | --- | --- |
 | L10: populated A → revisitable empty B → generation | **UNSUPPORTED / WAIVER REQUESTED** | Supported “Start new chat” creates B with its normal greeting; switching away and reopening restores it. Deleting the greeting gives an empty view but does not persist across reopening. The synthetic empty-source regression passes. |

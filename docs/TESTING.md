@@ -128,6 +128,7 @@ Candidate `de25366aeaa5e1cbd10e9bc40861e8ae91339aee` was tested on pinned SillyT
 | L12 group authors and switching | HOST PASS | Synthetic 3-member group, host regeneration, group/individual switch, and disable/re-enable. |
 | L13 duplicate display names | HOST PASS for label-only behavior | Two distinct Mira cards share the host label; differing avatar fields are observed but not used as durable identity. |
 | L16 missing `MESSAGE_SWIPED` capability | INSTRUMENTED_HOST_PASS | Reversible browser-local override; refusal before mount/listeners, chat/composer usable, normal activation after restore. |
+| Same-length eventless source replacement | PASS — exact content compared and one refresh emitted | Synthetic DOM observer regression replaces `Synthetic temporary reply.` with same-length `Synthetic temporary story.`, then checks unchanged-source deduplication and disposal. Fix commit `831714e9343b51682d643efb2eaa419ef9ab5145`; browser host was not rerun for this edge case. |
 | Node regression harness | PASS — 13 tests | `node --test tests/m0.test.mjs` |
 | Fixture and adapter syntax | PASS | `node --check tests/fixtures/m0-openai-endpoint.mjs`; `node --check tests/fixtures/m0-lifecycle-observer.js`; `node --check src/host-adapter.mjs` |
 | JSON examples | PASS | Node `JSON.parse` on each `docs/examples/*.json`; command shown below. |
