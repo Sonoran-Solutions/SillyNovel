@@ -54,6 +54,9 @@ async function selectCharacter(page,name) {
     await page.waitForFunction(name=>SillyTavern.getContext().chat[0]?.name===name,name);
     await icon.click();
     await page.locator('#character_name_pole').waitFor({state:'hidden'});
+    if(await page.locator('#sillynovel-stage').count()) {
+        await page.waitForFunction(name=>document.querySelector('.sillynovel-reader__author')?.textContent.startsWith(name+' · '),name);
+    }
 }
 async function createCharacter(page,name,greeting) {
     if (!(await page.locator('#rm_button_create').isVisible())) await page.locator('#rightNavDrawerIcon').click();
@@ -83,6 +86,18 @@ async function settled(page) {
 async function composerState(page) {
     return page.evaluate(()=>{const d=document.getElementById('send_textarea');return[d.value,d.selectionStart,d.selectionEnd,d.selectionDirection,document.activeElement===d];});
 }
+const canonicalSnapshots=new Map();
+function assertCanonical(actual,expected) {
+    const changes=[];
+    function compare(left,right,path) {
+        if(JSON.stringify(left)===JSON.stringify(right)) return;
+        if(left && right && typeof left==='object' && typeof right==='object') {
+            for(const key of new Set([...Object.keys(left),...Object.keys(right)])) compare(left[key],right[key],path+'.'+key);
+        } else changes.push({path,before:typeof left==='string' ? 'string length '+left.length : left,after:typeof right==='string' ? 'string length '+right.length : right});
+    }
+    if(actual!==expected) compare(canonicalSnapshots.get(expected),canonicalSnapshots.get(actual),'canonical');
+    assert.equal(actual,expected,JSON.stringify(changes));
+}
 const canonical = async page => {
     // Host list statistics (date_last_chat/chat_size) can change after its own save.
     // Compare canonical card content, not those asynchronous display statistics.
@@ -92,7 +107,9 @@ const canonical = async page => {
         metadata:SillyTavern.getContext().chatMetadata,api:SillyTavern.getContext().mainApi,
         connection:SillyTavern.getContext().chatCompletionSettings,
     }));
-    return createHash('sha256').update(content).digest('hex');
+    const digest=createHash('sha256').update(content).digest('hex');
+    canonicalSnapshots.set(digest,JSON.parse(content));
+    return digest;
 };
 
 try {
@@ -120,7 +137,7 @@ try {
     await setEnabled(page,true);
     assert.equal(await page.locator('#chat').isVisible(),false);
     assert.equal(await page.locator('#sillynovel-stage').count(),1);
-    assert.equal(await canonical(page),beforeEnable);
+    assertCanonical(await canonical(page),beforeEnable);
     pass('enable and native data preservation');
     await send(page,'Please greet the reader.');await settled(page);
     assert.ok(await page.locator('.sillynovel-dialogue em').count()>0);
@@ -161,7 +178,7 @@ try {
     await page.evaluate(()=>document.getElementById('send_textarea').setSelectionRange(2,8,'backward'));
     const draft=await composerState(page),beforeToggles=await canonical(page);
     for(let i=0;i<3;i++){await button(page,'Back to Chat').click();await button(page,'Return to Reader').click();}
-    assert.deepEqual(await composerState(page),draft);assert.equal(await canonical(page),beforeToggles);
+    assert.deepEqual(await composerState(page),draft);assertCanonical(await canonical(page),beforeToggles);
     pass('three reader/chat transitions preserve exact draft, focus and backward selection');
     while(!(await button(page,'Previous').isDisabled())) await button(page,'Previous').click();
     const pinned=await page.locator('.sillynovel-dialogue__message').innerText();
