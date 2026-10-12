@@ -63,6 +63,7 @@ async function createCharacter(page,name,greeting) {
     await page.locator('#firstmessage_textarea').fill(greeting);
     await page.locator('#create_button_label').click();
     await page.waitForFunction(name=>SillyTavern.getContext().characters.some(c=>c.name===name),name);
+    await page.locator('#rm_button_create').waitFor({state:'visible'});
 }
 async function connected(page) {
     await page.locator('#API-status-top').click();
@@ -100,7 +101,7 @@ try {
     const context=await browser.newContext({viewport:{width:1440,height:1000},permissions:['clipboard-read','clipboard-write']});
     const page=await context.newPage();page.setDefaultTimeout(15000);
     await page.goto('http://127.0.0.1:8018');
-    await page.waitForSelector('#sillynovel-settings');
+    await page.waitForSelector('#sillynovel-settings',{state:'attached'});
     const greetingA='*The reading room is quiet.*\n\nWelcome, **reader**. This is a synthetic conversation.';
     const greetingB='This is synthetic conversation B. Its text belongs only here.';
     await createCharacter(page,'Mira Reader A',greetingA);
