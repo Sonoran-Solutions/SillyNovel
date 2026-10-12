@@ -35,8 +35,16 @@ function start(command,args,cwd,ready) {
     });
 }
 const pass=(name,details={})=>{results.push({name,result:'PASS',...details});console.log('PASS '+name);};
-async function screenshot(page,name,scale='css') {
-    await page.screenshot({path:resolve(output,name+'.png'),scale});evidence.screenshots.push(name+'.png');
+async function screenshot(page,name,unclipped=false) {
+    if(unclipped) {
+        // Playwright's inferred clip is halved again at native browser zoom. Capture
+        // the actual Chromium surface without a clip so the composer is included.
+        const client=await page.context().newCDPSession(page);
+        const result=await client.send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});
+        await writeFile(resolve(output,name+'.png'),Buffer.from(result.data,'base64'));
+        await client.detach();
+    } else await page.screenshot({path:resolve(output,name+'.png'),scale:'css'});
+    evidence.screenshots.push(name+'.png');
 }
 const button=(page,name)=>page.getByRole('button',{name,exact:true});
 async function setEnabled(page,enabled) {
@@ -258,7 +266,7 @@ try {
     const zoomMetrics=await zoomPage.evaluate(()=>({innerWidth,innerHeight,dpr:devicePixelRatio,scale:visualViewport.scale}));
     const zoomComposer=await zoomPage.locator('#send_textarea').boundingBox();assert.ok(zoomComposer.y+zoomComposer.height<=zoomMetrics.innerHeight);
     await button(zoomPage,'Previous').click();await button(zoomPage,'Jump to Latest').click();
-    await screenshot(zoomPage,'browser-zoom-200-percent','device');
+    await screenshot(zoomPage,'browser-zoom-200-percent',true);
     pass('actual 200 percent browser zoom; navigation and composer remain reachable',{zoom,beforeZoom,zoomMetrics});
     await zoomContext.close();zoomContext=null;
 
