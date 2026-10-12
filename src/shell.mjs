@@ -48,7 +48,7 @@ export function createShellController(host, view) {
         const mountedStage = view.mountStage(initialReader.cursor, initialReader);
         if (!mountedStage || typeof mountedStage.update !== 'function' || typeof mountedStage.dispose !== 'function') {
             try { mountedStage?.dispose?.(); } catch { /* cleanup after invalid mount */ }
-            throw new Error('SillyNovel could not mount its placeholder stage. The original chat remains available.');
+            throw new Error('SillyNovel could not mount its reader. The original chat remains available.');
         }
 
         stage = mountedStage;
@@ -76,5 +76,41 @@ export function createShellController(host, view) {
         return true;
     }
 
-    return { enable, disable, isActive: () => active, getReaderSnapshot: reader.getSnapshot };
+    function refresh() {
+        return reader.apply({ history: host.readHistory(), owner: host.readChatIdentity() });
+    }
+
+    function navigate(direction) {
+        if (!active) return false;
+        try {
+            refresh();
+            const changed = reader.navigate(direction);
+            stage.update({ reader: reader.getSnapshot() });
+            return changed;
+        } catch (error) { fail(error); return false; }
+    }
+
+    function jumpToLatest() {
+        if (!active) return;
+        try {
+            refresh();
+            reader.jumpToLatest();
+            stage.update({ reader: reader.getSnapshot() });
+        } catch (error) { fail(error); }
+    }
+
+    function openOriginal() {
+        if (!active) return false;
+        try {
+            const snapshot = refresh();
+            stage.update({ reader: snapshot });
+            return host.openOriginalMessage(snapshot.cursor);
+        } catch (error) { fail(error); return false; }
+    }
+
+    return {
+        enable, disable, navigate, jumpToLatest, openOriginal,
+        setTextScrollMode: reader.setTextScrollMode,
+        isActive: () => active, getReaderSnapshot: reader.getSnapshot,
+    };
 }

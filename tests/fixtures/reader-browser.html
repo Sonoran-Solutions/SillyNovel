@@ -1,0 +1,64 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>SillyNovel synthetic reader fixture</title>
+<script src="/vendor/showdown.js"></script>
+<script src="/vendor/purify.js"></script>
+<link rel="stylesheet" href="/style.css">
+<style>
+:root { --SmartThemeBodyColor: #eee; --SmartThemeBlurTintColor: #222; --SmartThemeChatTintColor: #181818; --SmartThemeBorderColor: #888; }
+body { margin: 0; background: #333; color: #eee; font: 16px sans-serif; }
+#extensions_settings { position: absolute; left: 0; width: 240px; }
+#sheld { display: flex; flex-direction: column; height: 90vh; width: min(780px, 95vw); margin: auto; }
+#chat { flex: 1; overflow: auto; }
+.mes { padding: 30px; }
+#send_form { display: flex; min-height: 60px; flex-shrink: 0; }
+#send_textarea { flex: 1; }
+</style>
+<div id="extensions_settings"></div>
+<div id="sheld"><div id="chat"></div><form id="send_form"><textarea id="send_textarea"></textarea><button id="send_but" type="button">Send</button><button id="stop_but" type="button">Stop</button></form></div>
+<script>
+const events = ['CHAT_CHANGED','MESSAGE_RECEIVED','CHARACTER_MESSAGE_RENDERED','STREAM_TOKEN_RECEIVED','GENERATION_STARTED','GENERATION_STOPPED','GENERATION_ENDED','MESSAGE_SWIPED','MESSAGE_EDITED','MESSAGE_DELETED'];
+const listeners = new Map();
+window.fixture = {
+    context: {
+        chat: [{ name: 'You', is_user: true, mes: 'First message.' }, { name: 'Mira', mes: '**Hello** reader.\n\nA complete second paragraph.', swipe_id: 0 }],
+        characterId: 0, groupId: null, chatId: 'synthetic-A',
+        name1: 'You', extensionSettings: {}, saveSettingsDebounced() {},
+        characters: [{ name: 'Mira', data: { description: 'Synthetic only' } }],
+        chatMetadata: {}, connection: { model: 'synthetic-local' },
+        eventTypes: Object.fromEntries(events.map(name => [name,name])),
+        eventSource: {
+            on(name, cb) { const values = listeners.get(name) || []; values.push(cb); listeners.set(name,values); },
+            removeListener(name, cb) { listeners.set(name,(listeners.get(name) || []).filter(item => item !== cb)); },
+        },
+    },
+    emit(name,...args) { for (const cb of [...(listeners.get(name) || [])]) cb(...args); },
+    listenerCount() { return [...listeners.values()].reduce((sum,list) => sum+list.length,0); },
+    renderNative() {
+        const chat = document.getElementById('chat');
+        chat.replaceChildren();
+        this.context.chat.forEach((message,index) => {
+            const div = document.createElement('div');
+            div.className = 'mes';
+            div.setAttribute('mesid',index);
+            div.setAttribute('ch_name', message.name || '');
+            div.setAttribute('is_user',message.is_user === true);
+            div.setAttribute('is_system',message.is_system === true);
+            div.setAttribute('swipeid',message.swipe_id || 0);
+            div.textContent = message.mes;
+            chat.append(div);
+        });
+    },
+    setText(text,index=this.context.chat.length-1) {
+        this.context.chat[index].mes = text;
+        this.renderNative();
+        this.emit('MESSAGE_EDITED',index);
+    },
+};
+window.SillyTavern = { getContext: () => fixture.context };
+fixture.renderNative();
+const params = new URLSearchParams(location.search);
+if (params.has('missing')) delete fixture.context.eventTypes.MESSAGE_EDITED;
+if (params.has('mount-failure')) document.getElementById('sheld').id = 'missing-shell';
+</script>
+<script type="module" src="/index.js"></script>

@@ -210,7 +210,9 @@ function revise(snapshot, previous) {
 
     function navigate(direction) {
         if (!cursor || (direction !== -1 && direction !== 1)) return false;
-        const next = records[cursor.index + direction];
+        let index = cursor.index + direction;
+        while (index >= 0 && index < records.length && !records[index]) index += direction;
+        const next = records[index];
         if (!next) return false;
         cursor = next;
         selectionMode = 'pinned';

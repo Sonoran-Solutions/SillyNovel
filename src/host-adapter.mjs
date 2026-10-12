@@ -302,5 +302,26 @@ export function createHostAdapter(getContext) {
         };
     }
 
-    return { inspectCapabilities, readChatIdentity, readMessageAt, readCurrentSource, readHistory, subscribe };
+    function openOriginalMessage(selected) {
+        if (!selected) return false;
+        // Re-resolve the transient object key; an old numeric index is never authority.
+        const matches = readHistory().filter((item) => item?.sourceKey === selected.sourceKey);
+        if (matches.length !== 1 || !sameSource(matches[0], selected)) return false;
+        const chat = globalThis.document?.getElementById('chat');
+        // ponytail: exact handoff covers rendered messages only; widen with a verified
+        // read-only history-loading seam. Native backlog remains available otherwise.
+        const elements = chat?.querySelectorAll(':scope > .mes[mesid="' + matches[0].index + '"]');
+        if (elements?.length !== 1) return false;
+        const element = elements[0];
+        const source = matches[0];
+        if (element.getAttribute('ch_name') !== source.author.label
+            || (element.getAttribute('is_user') === 'true') !== (source.author.kind === 'user')
+            || (element.getAttribute('is_system') === 'true') !== (source.author.kind === 'system')
+            || element.getAttribute('swipeid') !== String(source.swipeId ?? 0)) return false;
+        // Same DOM contract and scroll calculation as pinned host /chat-jump, without executing a command.
+        chat.scrollTo({ top: element.getBoundingClientRect().top - chat.getBoundingClientRect().top + chat.scrollTop, behavior: 'instant' });
+        return true;
+    }
+
+    return { inspectCapabilities, readChatIdentity, readMessageAt, readCurrentSource, readHistory, subscribe, openOriginalMessage };
 }
