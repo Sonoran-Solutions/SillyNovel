@@ -78,7 +78,7 @@ git clone https://github.com/Sonoran-Solutions/SillyNovel.git \
   /path/to/SillyTavern/public/scripts/extensions/third-party/SillyNovel
 ```
 
-This installs the default `main` branch, including the merged M0 compatibility corrections. For this open review candidate, check out `codex/dyl-18-text-reader` in the extension clone; `main` retains the prior source-model shell until the PR is reviewed and merged. Reload SillyTavern, open **Extensions**, and select **Enable SillyNovel reader** to read the current conversation. The feature starts off by default. Backlog opens the original native message when it can be precisely located; Back to Chat and Return to Reader preserve a valid selection. To develop, edit the cloned extension in place and reload the SillyTavern page; no `npm install` is needed for SillyNovel.
+This installs the default `main` branch, including the merged M0 compatibility corrections. For this open review candidate, check out `codex/dyl-18-text-reader` in the extension clone; `main` retains the prior source-model shell until the PR is reviewed and merged. Reload SillyTavern, open **Extensions**, and select **Enable SillyNovel reader** to read the current conversation. The feature starts off by default. Backlog opens native chat and scrolls to a matching candidate when available, with an explicit notice that its source revision could not be verified; Back to Chat and Return to Reader preserve a valid selection. To develop, edit the cloned extension in place and reload the SillyTavern page; no `npm install` is needed for SillyNovel.
 
 Run the synthetic adapter/controller harness from the extension checkout:
 

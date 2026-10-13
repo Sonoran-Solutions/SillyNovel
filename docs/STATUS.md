@@ -102,14 +102,14 @@ The 2026-10-12 senior re-review fixes are in code candidate `3d871679ca216eec121
 
 ## DYL-18 text-reader implementation and handoff — 2026-10-12
 
-The owner explicitly assigned the pasted DYL-18 implementation prompt in Codex on 2026-10-12 (America/Phoenix). The assignment/date/scope were recorded in Linear before implementation. Initial clean workspace SHA: `98ee37d7464063d607b0a0c892cd2259d4ed75ae`; fetched starting main: `aa43f4d938c6eafae296cda63a5b4f11111fbd95`. Focused branch: `codex/dyl-18-text-reader`. The full final host-tested SHA and runtime/fixture hashes are in [the evidence record](evidence/dyl18/results.json); the final pushed review head is recorded in GitHub/Linear. Documentation/evidence commits after the host run leave the tested runtime bytes unchanged.
+The owner explicitly assigned the pasted DYL-18 implementation prompt in Codex on 2026-10-12 (America/Phoenix). The assignment/date/scope were recorded in Linear before implementation. Initial clean workspace SHA: `98ee37d7464063d607b0a0c892cd2259d4ed75ae`; fetched starting main: `aa43f4d938c6eafae296cda63a5b4f11111fbd95`. Focused branch: `codex/dyl-18-text-reader`. The full final host-tested SHA and runtime/fixture hashes are in [the evidence record](evidence/dyl18/results.json); the final pushed review head is recorded in GitHub/Linear. The reviewed head `29cb5bf8d348490f407565f9c3f9e91db6afb1d7` left those host-tested runtime bytes unchanged. The later P2 correction below changes the adapter and has separate automated evidence.
 
 | Area | DYL-18 result |
 | --- | --- |
 | Complete formatted reader, selectable text and exact copy | IMPLEMENTED; actual-entry browser PASS and pinned HOST PASS |
 | Previous/Next/Latest, valid-record bounds, pinned unread and independent text scrolling | IMPLEMENTED; synthetic/browser PASS, normal pinned/streaming HOST PASS |
 | Native composer and repeated reader/chat transitions | HOST PASS; exact draft, backward caret selection and active textarea preserved |
-| Backlog/Open Original, native edit and swipe, Return to Reader | HOST PASS for rendered native messages; deep paginated locator fallback synthetic only |
+| Backlog/Open Original, native edit and swipe, Return to Reader | Historical HOST PASS on `3d136668e97a47f602775c9297b567c73293261e`; exact-match claim corrected below |
 | Native feed visibility/disposal and recovery | PASS; owned class only, original DOM retained; induced render failure INSTRUMENTED_HOST_PASS |
 | Chat A → B → A and toggle during/after generation | HOST PASS; queued old-epoch/clipboard work additionally synthetic browser PASS |
 | Automated suites | 37/37 Node + 14/14 behavioral Chromium PASS |
@@ -124,3 +124,9 @@ The implementation consumes a single source model, uses the host's installed Mar
 Exact commands, complete final test results, development failures, eight representative screenshots, synthetic fixture hashes, composer/backlog checks and remaining NOT_TESTED paths are in [TESTING](TESTING.md#dyl-18-text-reader--2026-10-12). Physical touch/IME/virtual keyboard, other engines/themes/extensions/host versions, real provider inference, natural capability/mount failures, native deep-pagination locator fallback and final-host empty/deleted/replaced/eventless/group-reader edge cases remain untested on this reader candidate. Existing history retains unknown completion provenance; unsupported rich content uses full literal text and a native route. M0/L10 historical conclusions are not rewritten.
 
 Recommendation: owner review and a direct text-reader trial of this open PR. If exact unrendered-history handoff matters, separately authorize a narrow, non-mutating host history-loading proof. Do not merge automatically, mark Gate A passed, or begin later milestones.
+
+### PR #8 P2 correction — 2026-10-12
+
+Starting reviewed head: `29cb5bf8d348490f407565f9c3f9e91db6afb1d7`. Correction code: `f0e811bab1b3c74acd0ac00c4f75d9e9cf980684`; final pushed head is recorded in GitHub/Linear. The actual-entry browser regression first reproduced the stale-DOM false success, then passed with the correction. Matching attributes permit a best-effort candidate scroll, but the adapter always reports unresolved correspondence because the pinned host provides no rendered source/revision token. Same-object edits and index-only render notifications also cannot produce an exact-match claim.
+
+**37/37 Node and 15/15 actual-entry Chromium tests PASS**. The host probe's expected notice was updated and syntax-checked; the 12-scenario host campaign was **not rerun** for this focused correction. Existing screenshots/results remain historical evidence on their recorded host-tested code. DYL-18 stays **In Review**, PR #8 stays open/unmerged, and Gate A stays **NOT_RUN**. See the [P2 testing addendum](TESTING.md#pr-8-p2-stale-native-dom-correction--2026-10-12).
