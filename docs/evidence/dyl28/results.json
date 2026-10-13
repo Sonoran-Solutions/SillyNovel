@@ -1,0 +1,2696 @@
+{
+  "runId": "b96dc8b1-2b37-4661-b310-a4d2145b8b0f",
+  "sourceHostSha": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
+  "testedSillyNovelSha": "3c159fd9031a50e70e061e47948851d506764131",
+  "node": "v26.8.1",
+  "platform": "linux 7.0.0-38-generic",
+  "checks": [
+    {
+      "name": "native create/save allocates host identity and sourceRevision 1 for A and B",
+      "result": "PASS",
+      "classification": "EXPERIMENTAL_HOST",
+      "aResponseExpected": [
+        {
+          "user_name": "Synthetic User",
+          "character_name": "Mira",
+          "chat_metadata": {
+            "integrity": "b96dc8b1-2b37-4661-b310-a4d2145b8b0f"
+          }
+        },
+        {
+          "name": "Mira",
+          "is_user": false,
+          "mes": "A-only canonical transcript.",
+          "extra": {}
+        }
+      ],
+      "bResponseExpected": [
+        {
+          "user_name": "Synthetic User",
+          "character_name": "Mira",
+          "chat_metadata": {
+            "integrity": "b96dc8b1-2b37-4661-b310-a4d2145b8b0f"
+          }
+        },
+        {
+          "name": "Mira",
+          "is_user": false,
+          "mes": "B-only canonical transcript.",
+          "extra": {}
+        }
+      ],
+      "actualState": {
+        "default-user": {
+          "registry": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"scopes\":[{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png\",\"scopeId\":\"6361cd47-3db6-4983-8e26-38d374e5f95a\"},{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1.png\",\"scopeId\":\"97a3abdc-2cbd-47b6-be1b-cbc66d0860d8\"}],\"chats\":[{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl\",\"scopeId\":\"6361cd47-3db6-4983-8e26-38d374e5f95a\",\"chatId\":\"9dd6723e-33dc-4927-aa20-aec066b417a3\",\"seal\":{\"dev\":66306,\"ino\":2134094,\"birthtimeMs\":1791923169792.5806,\"sha256\":\"8a07ae15da5c98d9a8539ff21ee30cd2c8e5b34a28d697647139d55d010c2d12\"},\"sourceRevision\":1},{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl\",\"scopeId\":\"97a3abdc-2cbd-47b6-be1b-cbc66d0860d8\",\"chatId\":\"76460354-8d47-4576-a055-8eab2281de2a\",\"seal\":{\"dev\":66306,\"ino\":2134106,\"birthtimeMs\":1791923169803.5803,\"sha256\":\"35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3\"},\"sourceRevision\":1}],\"pending\":null}",
+          "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+          "chats": [
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134094,
+                "birthtimeMs": 1791923169792.5806,
+                "sha256": "8a07ae15da5c98d9a8539ff21ee30cd2c8e5b34a28d697647139d55d010c2d12"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"A-only canonical transcript.\",\"extra\":{}}",
+              "sourceSha256": "8a07ae15da5c98d9a8539ff21ee30cd2c8e5b34a28d697647139d55d010c2d12",
+              "visualRecord": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"chatId\":\"9dd6723e-33dc-4927-aa20-aec066b417a3\",\"revision\":0,\"record\":{\"background\":null}}"
+            },
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134106,
+                "birthtimeMs": 1791923169803.5803,
+                "sha256": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"B-only canonical transcript.\",\"extra\":{}}",
+              "sourceSha256": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3",
+              "visualRecord": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"chatId\":\"76460354-8d47-4576-a055-8eab2281de2a\",\"revision\":0,\"record\":{\"background\":null}}"
+            }
+          ]
+        },
+        "dyl28-b96dc8b1-2b37-4661-b310-a4d2145b8b0f": {
+          "registry": "{\"storeId\":\"457e195c-f97f-4dd5-a2a7-2fa8ffdaede9\",\"scopes\":[{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png\",\"scopeId\":\"b23357f1-4475-4e8d-83a5-723a25345776\"}],\"chats\":[{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl\",\"scopeId\":\"b23357f1-4475-4e8d-83a5-723a25345776\",\"chatId\":\"901493c7-0275-4ccb-a5f7-9fee2701f610\",\"seal\":{\"dev\":66306,\"ino\":2134098,\"birthtimeMs\":1791923169812.58,\"sha256\":\"d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd\"},\"sourceRevision\":1}],\"pending\":null}",
+          "storeId": "457e195c-f97f-4dd5-a2a7-2fa8ffdaede9",
+          "chats": [
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl",
+              "chatId": "901493c7-0275-4ccb-a5f7-9fee2701f610",
+              "scopeId": "b23357f1-4475-4e8d-83a5-723a25345776",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134098,
+                "birthtimeMs": 1791923169812.58,
+                "sha256": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"Other user transcript.\",\"extra\":{}}",
+              "sourceSha256": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd",
+              "visualRecord": "{\"storeId\":\"457e195c-f97f-4dd5-a2a7-2fa8ffdaede9\",\"chatId\":\"901493c7-0275-4ccb-a5f7-9fee2701f610\",\"revision\":0,\"record\":{\"background\":null}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "delayed native A response after B: B transcript, DOM, identity and target stay current; A load token is stale",
+      "result": "PASS",
+      "classification": "NATIVE_HOST_UI",
+      "request": {
+        "ch_name": "Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f",
+        "file_name": "Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms",
+        "avatar_url": "Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png",
+        "dyl28ClientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+        "dyl28Sequence": 9
+      },
+      "delayedEnvelope": {
+        "dyl28Envelope": true,
+        "loadRequestId": "88f7f6c8-8bc5-4366-8a5d-afea4e0204e6",
+        "identity": {
+          "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+          "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+          "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3"
+        },
+        "sourceRevision": 1,
+        "messages": [
+          {
+            "user_name": "Synthetic User",
+            "character_name": "Mira",
+            "chat_metadata": {
+              "integrity": "b96dc8b1-2b37-4661-b310-a4d2145b8b0f"
+            }
+          },
+          {
+            "name": "Mira",
+            "is_user": false,
+            "mes": "A-only canonical transcript.",
+            "extra": {}
+          }
+        ]
+      },
+      "beforeLateA": {
+        "avatar": "Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1.png",
+        "chatName": "Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms",
+        "messages": [
+          "B-only canonical transcript."
+        ],
+        "dom": [
+          "B-only canonical transcript."
+        ],
+        "target": {
+          "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+          "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+          "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+          "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+          "loadRequestId": "11e964e6-15f7-415b-ae26-1f8f314a242e",
+          "sourceRevision": 1,
+          "viewToken": "f5f710a8-0569-4a0d-a1d8-35bfa9a1d0cd"
+        },
+        "history": [
+          {
+            "epoch": 2,
+            "loadRequestId": "09ecb37a-33c1-462c-829a-a9330064f3e7",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "09ecb37a-33c1-462c-829a-a9330064f3e7",
+              "sourceRevision": 1,
+              "viewToken": "e5018845-b1a1-4188-a4d7-c54377b5953b"
+            }
+          },
+          {
+            "epoch": 6,
+            "loadRequestId": "11e964e6-15f7-415b-ae26-1f8f314a242e",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "11e964e6-15f7-415b-ae26-1f8f314a242e",
+              "sourceRevision": 1,
+              "viewToken": "f5f710a8-0569-4a0d-a1d8-35bfa9a1d0cd"
+            }
+          }
+        ]
+      },
+      "afterLateA": {
+        "avatar": "Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1.png",
+        "chatName": "Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms",
+        "messages": [
+          "B-only canonical transcript."
+        ],
+        "dom": [
+          "B-only canonical transcript."
+        ],
+        "target": {
+          "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+          "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+          "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+          "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+          "loadRequestId": "11e964e6-15f7-415b-ae26-1f8f314a242e",
+          "sourceRevision": 1,
+          "viewToken": "f5f710a8-0569-4a0d-a1d8-35bfa9a1d0cd"
+        },
+        "history": [
+          {
+            "epoch": 2,
+            "loadRequestId": "09ecb37a-33c1-462c-829a-a9330064f3e7",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "09ecb37a-33c1-462c-829a-a9330064f3e7",
+              "sourceRevision": 1,
+              "viewToken": "e5018845-b1a1-4188-a4d7-c54377b5953b"
+            }
+          },
+          {
+            "epoch": 6,
+            "loadRequestId": "11e964e6-15f7-415b-ae26-1f8f314a242e",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "11e964e6-15f7-415b-ae26-1f8f314a242e",
+              "sourceRevision": 1,
+              "viewToken": "f5f710a8-0569-4a0d-a1d8-35bfa9a1d0cd"
+            }
+          }
+        ]
+      },
+      "staleAActivation": {
+        "error": "STALE_LOAD"
+      },
+      "actualState": {
+        "default-user": {
+          "registry": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"scopes\":[{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png\",\"scopeId\":\"6361cd47-3db6-4983-8e26-38d374e5f95a\"},{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1.png\",\"scopeId\":\"97a3abdc-2cbd-47b6-be1b-cbc66d0860d8\"}],\"chats\":[{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl\",\"scopeId\":\"6361cd47-3db6-4983-8e26-38d374e5f95a\",\"chatId\":\"9dd6723e-33dc-4927-aa20-aec066b417a3\",\"seal\":{\"dev\":66306,\"ino\":2134094,\"birthtimeMs\":1791923169792.5806,\"sha256\":\"8a07ae15da5c98d9a8539ff21ee30cd2c8e5b34a28d697647139d55d010c2d12\"},\"sourceRevision\":1},{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl\",\"scopeId\":\"97a3abdc-2cbd-47b6-be1b-cbc66d0860d8\",\"chatId\":\"76460354-8d47-4576-a055-8eab2281de2a\",\"seal\":{\"dev\":66306,\"ino\":2134106,\"birthtimeMs\":1791923169803.5803,\"sha256\":\"35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3\"},\"sourceRevision\":1}],\"pending\":null}",
+          "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+          "chats": [
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134094,
+                "birthtimeMs": 1791923169792.5806,
+                "sha256": "8a07ae15da5c98d9a8539ff21ee30cd2c8e5b34a28d697647139d55d010c2d12"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"A-only canonical transcript.\",\"extra\":{}}",
+              "sourceSha256": "8a07ae15da5c98d9a8539ff21ee30cd2c8e5b34a28d697647139d55d010c2d12",
+              "visualRecord": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"chatId\":\"9dd6723e-33dc-4927-aa20-aec066b417a3\",\"revision\":0,\"record\":{\"background\":null}}"
+            },
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134106,
+                "birthtimeMs": 1791923169803.5803,
+                "sha256": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"B-only canonical transcript.\",\"extra\":{}}",
+              "sourceSha256": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3",
+              "visualRecord": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"chatId\":\"76460354-8d47-4576-a055-8eab2281de2a\",\"revision\":0,\"record\":{\"background\":null}}"
+            }
+          ]
+        },
+        "dyl28-b96dc8b1-2b37-4661-b310-a4d2145b8b0f": {
+          "registry": "{\"storeId\":\"457e195c-f97f-4dd5-a2a7-2fa8ffdaede9\",\"scopes\":[{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png\",\"scopeId\":\"b23357f1-4475-4e8d-83a5-723a25345776\"}],\"chats\":[{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl\",\"scopeId\":\"b23357f1-4475-4e8d-83a5-723a25345776\",\"chatId\":\"901493c7-0275-4ccb-a5f7-9fee2701f610\",\"seal\":{\"dev\":66306,\"ino\":2134098,\"birthtimeMs\":1791923169812.58,\"sha256\":\"d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd\"},\"sourceRevision\":1}],\"pending\":null}",
+          "storeId": "457e195c-f97f-4dd5-a2a7-2fa8ffdaede9",
+          "chats": [
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl",
+              "chatId": "901493c7-0275-4ccb-a5f7-9fee2701f610",
+              "scopeId": "b23357f1-4475-4e8d-83a5-723a25345776",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134098,
+                "birthtimeMs": 1791923169812.58,
+                "sha256": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"Other user transcript.\",\"extra\":{}}",
+              "sourceSha256": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd",
+              "visualRecord": "{\"storeId\":\"457e195c-f97f-4dd5-a2a7-2fa8ffdaede9\",\"chatId\":\"901493c7-0275-4ccb-a5f7-9fee2701f610\",\"revision\":0,\"record\":{\"background\":null}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "A-B-A with reordered native transcript responses: only latest A request and visit remain accepted",
+      "result": "PASS",
+      "classification": "NATIVE_HOST_UI",
+      "oldARequest": {
+        "ch_name": "Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f",
+        "file_name": "Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms",
+        "avatar_url": "Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png",
+        "dyl28ClientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+        "dyl28Sequence": 17
+      },
+      "oldAEnvelope": {
+        "dyl28Envelope": true,
+        "loadRequestId": "3294ae95-dbc7-4634-9480-63ae470a0c31",
+        "identity": {
+          "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+          "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+          "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3"
+        },
+        "sourceRevision": 1,
+        "messages": [
+          {
+            "user_name": "Synthetic User",
+            "character_name": "Mira",
+            "chat_metadata": {
+              "integrity": "b96dc8b1-2b37-4661-b310-a4d2145b8b0f"
+            }
+          },
+          {
+            "name": "Mira",
+            "is_user": false,
+            "mes": "A-only canonical transcript.",
+            "extra": {}
+          }
+        ]
+      },
+      "latestA": {
+        "avatar": "Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png",
+        "chatName": "Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms",
+        "messages": [
+          "A-only canonical transcript."
+        ],
+        "dom": [
+          "A-only canonical transcript."
+        ],
+        "target": {
+          "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+          "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+          "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+          "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+          "loadRequestId": "a5710944-1d0e-4ca3-b3d4-78967b16786b",
+          "sourceRevision": 1,
+          "viewToken": "6f71107d-fa90-49cf-a354-d728411f18bd"
+        },
+        "history": [
+          {
+            "epoch": 2,
+            "loadRequestId": "09ecb37a-33c1-462c-829a-a9330064f3e7",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "09ecb37a-33c1-462c-829a-a9330064f3e7",
+              "sourceRevision": 1,
+              "viewToken": "e5018845-b1a1-4188-a4d7-c54377b5953b"
+            }
+          },
+          {
+            "epoch": 6,
+            "loadRequestId": "11e964e6-15f7-415b-ae26-1f8f314a242e",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "11e964e6-15f7-415b-ae26-1f8f314a242e",
+              "sourceRevision": 1,
+              "viewToken": "f5f710a8-0569-4a0d-a1d8-35bfa9a1d0cd"
+            }
+          },
+          {
+            "epoch": 10,
+            "loadRequestId": "dbaed746-fee6-46e6-bd60-92cbad6d4a21",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "dbaed746-fee6-46e6-bd60-92cbad6d4a21",
+              "sourceRevision": 1,
+              "viewToken": "39709d11-96eb-4e73-a442-157398b85403"
+            }
+          },
+          {
+            "epoch": 12,
+            "loadRequestId": "a5710944-1d0e-4ca3-b3d4-78967b16786b",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "a5710944-1d0e-4ca3-b3d4-78967b16786b",
+              "sourceRevision": 1,
+              "viewToken": "6f71107d-fa90-49cf-a354-d728411f18bd"
+            }
+          }
+        ]
+      },
+      "afterOldA": {
+        "avatar": "Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png",
+        "chatName": "Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms",
+        "messages": [
+          "A-only canonical transcript."
+        ],
+        "dom": [
+          "A-only canonical transcript."
+        ],
+        "target": {
+          "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+          "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+          "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+          "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+          "loadRequestId": "a5710944-1d0e-4ca3-b3d4-78967b16786b",
+          "sourceRevision": 1,
+          "viewToken": "6f71107d-fa90-49cf-a354-d728411f18bd"
+        },
+        "history": [
+          {
+            "epoch": 2,
+            "loadRequestId": "09ecb37a-33c1-462c-829a-a9330064f3e7",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "09ecb37a-33c1-462c-829a-a9330064f3e7",
+              "sourceRevision": 1,
+              "viewToken": "e5018845-b1a1-4188-a4d7-c54377b5953b"
+            }
+          },
+          {
+            "epoch": 6,
+            "loadRequestId": "11e964e6-15f7-415b-ae26-1f8f314a242e",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "11e964e6-15f7-415b-ae26-1f8f314a242e",
+              "sourceRevision": 1,
+              "viewToken": "f5f710a8-0569-4a0d-a1d8-35bfa9a1d0cd"
+            }
+          },
+          {
+            "epoch": 10,
+            "loadRequestId": "dbaed746-fee6-46e6-bd60-92cbad6d4a21",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "dbaed746-fee6-46e6-bd60-92cbad6d4a21",
+              "sourceRevision": 1,
+              "viewToken": "39709d11-96eb-4e73-a442-157398b85403"
+            }
+          },
+          {
+            "epoch": 12,
+            "loadRequestId": "a5710944-1d0e-4ca3-b3d4-78967b16786b",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "a5710944-1d0e-4ca3-b3d4-78967b16786b",
+              "sourceRevision": 1,
+              "viewToken": "6f71107d-fa90-49cf-a354-d728411f18bd"
+            }
+          }
+        ]
+      },
+      "oldARefusal": {
+        "error": "STALE_LOAD"
+      },
+      "actualState": {
+        "default-user": {
+          "registry": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"scopes\":[{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png\",\"scopeId\":\"6361cd47-3db6-4983-8e26-38d374e5f95a\"},{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1.png\",\"scopeId\":\"97a3abdc-2cbd-47b6-be1b-cbc66d0860d8\"}],\"chats\":[{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl\",\"scopeId\":\"6361cd47-3db6-4983-8e26-38d374e5f95a\",\"chatId\":\"9dd6723e-33dc-4927-aa20-aec066b417a3\",\"seal\":{\"dev\":66306,\"ino\":2134094,\"birthtimeMs\":1791923169792.5806,\"sha256\":\"8a07ae15da5c98d9a8539ff21ee30cd2c8e5b34a28d697647139d55d010c2d12\"},\"sourceRevision\":1},{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl\",\"scopeId\":\"97a3abdc-2cbd-47b6-be1b-cbc66d0860d8\",\"chatId\":\"76460354-8d47-4576-a055-8eab2281de2a\",\"seal\":{\"dev\":66306,\"ino\":2134106,\"birthtimeMs\":1791923169803.5803,\"sha256\":\"35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3\"},\"sourceRevision\":1}],\"pending\":null}",
+          "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+          "chats": [
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134094,
+                "birthtimeMs": 1791923169792.5806,
+                "sha256": "8a07ae15da5c98d9a8539ff21ee30cd2c8e5b34a28d697647139d55d010c2d12"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"A-only canonical transcript.\",\"extra\":{}}",
+              "sourceSha256": "8a07ae15da5c98d9a8539ff21ee30cd2c8e5b34a28d697647139d55d010c2d12",
+              "visualRecord": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"chatId\":\"9dd6723e-33dc-4927-aa20-aec066b417a3\",\"revision\":0,\"record\":{\"background\":null}}"
+            },
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134106,
+                "birthtimeMs": 1791923169803.5803,
+                "sha256": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"B-only canonical transcript.\",\"extra\":{}}",
+              "sourceSha256": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3",
+              "visualRecord": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"chatId\":\"76460354-8d47-4576-a055-8eab2281de2a\",\"revision\":0,\"record\":{\"background\":null}}"
+            }
+          ]
+        },
+        "dyl28-b96dc8b1-2b37-4661-b310-a4d2145b8b0f": {
+          "registry": "{\"storeId\":\"457e195c-f97f-4dd5-a2a7-2fa8ffdaede9\",\"scopes\":[{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png\",\"scopeId\":\"b23357f1-4475-4e8d-83a5-723a25345776\"}],\"chats\":[{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl\",\"scopeId\":\"b23357f1-4475-4e8d-83a5-723a25345776\",\"chatId\":\"901493c7-0275-4ccb-a5f7-9fee2701f610\",\"seal\":{\"dev\":66306,\"ino\":2134098,\"birthtimeMs\":1791923169812.58,\"sha256\":\"d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd\"},\"sourceRevision\":1}],\"pending\":null}",
+          "storeId": "457e195c-f97f-4dd5-a2a7-2fa8ffdaede9",
+          "chats": [
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl",
+              "chatId": "901493c7-0275-4ccb-a5f7-9fee2701f610",
+              "scopeId": "b23357f1-4475-4e8d-83a5-723a25345776",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134098,
+                "birthtimeMs": 1791923169812.58,
+                "sha256": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"Other user transcript.\",\"extra\":{}}",
+              "sourceSha256": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd",
+              "visualRecord": "{\"storeId\":\"457e195c-f97f-4dd5-a2a7-2fa8ffdaede9\",\"chatId\":\"901493c7-0275-4ccb-a5f7-9fee2701f610\",\"revision\":0,\"record\":{\"background\":null}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "held native activation acknowledgement across A-B-A is discarded without restoring its visit",
+      "result": "PASS",
+      "classification": "NATIVE_HOST_UI with response barrier",
+      "heldAck": {
+        "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+        "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+        "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+        "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+        "loadRequestId": "f961505a-7da4-41a8-ac63-4f670a093ce5",
+        "sourceRevision": 1,
+        "viewToken": "8af2e777-1923-4d0e-9c74-669cd9a6ae27"
+      },
+      "newestA": {
+        "avatar": "Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png",
+        "chatName": "Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms",
+        "messages": [
+          "A-only canonical transcript."
+        ],
+        "dom": [
+          "A-only canonical transcript."
+        ],
+        "target": {
+          "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+          "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+          "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+          "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+          "loadRequestId": "9a66c7ae-36ac-4c43-ba25-07ef5dc5f673",
+          "sourceRevision": 1,
+          "viewToken": "b3422020-c1d0-42c2-b92f-d432097b5d14"
+        },
+        "history": [
+          {
+            "epoch": 2,
+            "loadRequestId": "09ecb37a-33c1-462c-829a-a9330064f3e7",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "09ecb37a-33c1-462c-829a-a9330064f3e7",
+              "sourceRevision": 1,
+              "viewToken": "e5018845-b1a1-4188-a4d7-c54377b5953b"
+            }
+          },
+          {
+            "epoch": 6,
+            "loadRequestId": "11e964e6-15f7-415b-ae26-1f8f314a242e",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "11e964e6-15f7-415b-ae26-1f8f314a242e",
+              "sourceRevision": 1,
+              "viewToken": "f5f710a8-0569-4a0d-a1d8-35bfa9a1d0cd"
+            }
+          },
+          {
+            "epoch": 10,
+            "loadRequestId": "dbaed746-fee6-46e6-bd60-92cbad6d4a21",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "dbaed746-fee6-46e6-bd60-92cbad6d4a21",
+              "sourceRevision": 1,
+              "viewToken": "39709d11-96eb-4e73-a442-157398b85403"
+            }
+          },
+          {
+            "epoch": 12,
+            "loadRequestId": "a5710944-1d0e-4ca3-b3d4-78967b16786b",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "a5710944-1d0e-4ca3-b3d4-78967b16786b",
+              "sourceRevision": 1,
+              "viewToken": "6f71107d-fa90-49cf-a354-d728411f18bd"
+            }
+          },
+          {
+            "epoch": 15,
+            "loadRequestId": "4738cd6d-dd46-4586-a43a-b94b499baa07",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "4738cd6d-dd46-4586-a43a-b94b499baa07",
+              "sourceRevision": 1,
+              "viewToken": "1bd1c36a-e6a8-44be-bf76-ce032df125f9"
+            }
+          },
+          {
+            "epoch": 17,
+            "loadRequestId": "9a66c7ae-36ac-4c43-ba25-07ef5dc5f673",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "9a66c7ae-36ac-4c43-ba25-07ef5dc5f673",
+              "sourceRevision": 1,
+              "viewToken": "b3422020-c1d0-42c2-b92f-d432097b5d14"
+            }
+          }
+        ]
+      },
+      "afterLateAck": {
+        "avatar": "Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png",
+        "chatName": "Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms",
+        "messages": [
+          "A-only canonical transcript."
+        ],
+        "dom": [
+          "A-only canonical transcript."
+        ],
+        "target": {
+          "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+          "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+          "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+          "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+          "loadRequestId": "9a66c7ae-36ac-4c43-ba25-07ef5dc5f673",
+          "sourceRevision": 1,
+          "viewToken": "b3422020-c1d0-42c2-b92f-d432097b5d14"
+        },
+        "history": [
+          {
+            "epoch": 2,
+            "loadRequestId": "09ecb37a-33c1-462c-829a-a9330064f3e7",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "09ecb37a-33c1-462c-829a-a9330064f3e7",
+              "sourceRevision": 1,
+              "viewToken": "e5018845-b1a1-4188-a4d7-c54377b5953b"
+            }
+          },
+          {
+            "epoch": 6,
+            "loadRequestId": "11e964e6-15f7-415b-ae26-1f8f314a242e",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "11e964e6-15f7-415b-ae26-1f8f314a242e",
+              "sourceRevision": 1,
+              "viewToken": "f5f710a8-0569-4a0d-a1d8-35bfa9a1d0cd"
+            }
+          },
+          {
+            "epoch": 10,
+            "loadRequestId": "dbaed746-fee6-46e6-bd60-92cbad6d4a21",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "dbaed746-fee6-46e6-bd60-92cbad6d4a21",
+              "sourceRevision": 1,
+              "viewToken": "39709d11-96eb-4e73-a442-157398b85403"
+            }
+          },
+          {
+            "epoch": 12,
+            "loadRequestId": "a5710944-1d0e-4ca3-b3d4-78967b16786b",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "a5710944-1d0e-4ca3-b3d4-78967b16786b",
+              "sourceRevision": 1,
+              "viewToken": "6f71107d-fa90-49cf-a354-d728411f18bd"
+            }
+          },
+          {
+            "epoch": 15,
+            "loadRequestId": "4738cd6d-dd46-4586-a43a-b94b499baa07",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "4738cd6d-dd46-4586-a43a-b94b499baa07",
+              "sourceRevision": 1,
+              "viewToken": "1bd1c36a-e6a8-44be-bf76-ce032df125f9"
+            }
+          },
+          {
+            "epoch": 17,
+            "loadRequestId": "9a66c7ae-36ac-4c43-ba25-07ef5dc5f673",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "9a66c7ae-36ac-4c43-ba25-07ef5dc5f673",
+              "sourceRevision": 1,
+              "viewToken": "b3422020-c1d0-42c2-b92f-d432097b5d14"
+            }
+          },
+          {
+            "epoch": 13,
+            "loadRequestId": "f961505a-7da4-41a8-ac63-4f670a093ce5",
+            "discarded": true
+          }
+        ]
+      },
+      "actualState": {
+        "default-user": {
+          "registry": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"scopes\":[{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png\",\"scopeId\":\"6361cd47-3db6-4983-8e26-38d374e5f95a\"},{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1.png\",\"scopeId\":\"97a3abdc-2cbd-47b6-be1b-cbc66d0860d8\"}],\"chats\":[{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl\",\"scopeId\":\"6361cd47-3db6-4983-8e26-38d374e5f95a\",\"chatId\":\"9dd6723e-33dc-4927-aa20-aec066b417a3\",\"seal\":{\"dev\":66306,\"ino\":2134094,\"birthtimeMs\":1791923169792.5806,\"sha256\":\"8a07ae15da5c98d9a8539ff21ee30cd2c8e5b34a28d697647139d55d010c2d12\"},\"sourceRevision\":1},{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl\",\"scopeId\":\"97a3abdc-2cbd-47b6-be1b-cbc66d0860d8\",\"chatId\":\"76460354-8d47-4576-a055-8eab2281de2a\",\"seal\":{\"dev\":66306,\"ino\":2134106,\"birthtimeMs\":1791923169803.5803,\"sha256\":\"35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3\"},\"sourceRevision\":1}],\"pending\":null}",
+          "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+          "chats": [
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134094,
+                "birthtimeMs": 1791923169792.5806,
+                "sha256": "8a07ae15da5c98d9a8539ff21ee30cd2c8e5b34a28d697647139d55d010c2d12"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"A-only canonical transcript.\",\"extra\":{}}",
+              "sourceSha256": "8a07ae15da5c98d9a8539ff21ee30cd2c8e5b34a28d697647139d55d010c2d12",
+              "visualRecord": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"chatId\":\"9dd6723e-33dc-4927-aa20-aec066b417a3\",\"revision\":0,\"record\":{\"background\":null}}"
+            },
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134106,
+                "birthtimeMs": 1791923169803.5803,
+                "sha256": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"B-only canonical transcript.\",\"extra\":{}}",
+              "sourceSha256": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3",
+              "visualRecord": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"chatId\":\"76460354-8d47-4576-a055-8eab2281de2a\",\"revision\":0,\"record\":{\"background\":null}}"
+            }
+          ]
+        },
+        "dyl28-b96dc8b1-2b37-4661-b310-a4d2145b8b0f": {
+          "registry": "{\"storeId\":\"457e195c-f97f-4dd5-a2a7-2fa8ffdaede9\",\"scopes\":[{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png\",\"scopeId\":\"b23357f1-4475-4e8d-83a5-723a25345776\"}],\"chats\":[{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl\",\"scopeId\":\"b23357f1-4475-4e8d-83a5-723a25345776\",\"chatId\":\"901493c7-0275-4ccb-a5f7-9fee2701f610\",\"seal\":{\"dev\":66306,\"ino\":2134098,\"birthtimeMs\":1791923169812.58,\"sha256\":\"d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd\"},\"sourceRevision\":1}],\"pending\":null}",
+          "storeId": "457e195c-f97f-4dd5-a2a7-2fa8ffdaede9",
+          "chats": [
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl",
+              "chatId": "901493c7-0275-4ccb-a5f7-9fee2701f610",
+              "scopeId": "b23357f1-4475-4e8d-83a5-723a25345776",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134098,
+                "birthtimeMs": 1791923169812.58,
+                "sha256": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"Other user transcript.\",\"extra\":{}}",
+              "sourceSha256": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd",
+              "visualRecord": "{\"storeId\":\"457e195c-f97f-4dd5-a2a7-2fa8ffdaede9\",\"chatId\":\"901493c7-0275-4ccb-a5f7-9fee2701f610\",\"revision\":0,\"record\":{\"background\":null}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "old A visual CAS held across native A-B-A is refused against the old visit",
+      "result": "PASS",
+      "classification": "NATIVE_HOST_UI + EXPERIMENTAL_HOST",
+      "staleVisit": {
+        "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+        "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+        "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+        "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+        "loadRequestId": "9a66c7ae-36ac-4c43-ba25-07ef5dc5f673",
+        "sourceRevision": 1,
+        "viewToken": "b3422020-c1d0-42c2-b92f-d432097b5d14"
+      },
+      "latestVisit": {
+        "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+        "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+        "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+        "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+        "loadRequestId": "9861b0ad-19d7-4c43-a10e-b423985d65da",
+        "sourceRevision": 1,
+        "viewToken": "ac75deac-4f19-439c-8cc4-eb1d26ea9506"
+      },
+      "staleWrite": {
+        "error": "STALE_VIEW"
+      },
+      "actualState": {
+        "default-user": {
+          "registry": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"scopes\":[{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png\",\"scopeId\":\"6361cd47-3db6-4983-8e26-38d374e5f95a\"},{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1.png\",\"scopeId\":\"97a3abdc-2cbd-47b6-be1b-cbc66d0860d8\"}],\"chats\":[{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl\",\"scopeId\":\"6361cd47-3db6-4983-8e26-38d374e5f95a\",\"chatId\":\"9dd6723e-33dc-4927-aa20-aec066b417a3\",\"seal\":{\"dev\":66306,\"ino\":2134094,\"birthtimeMs\":1791923169792.5806,\"sha256\":\"8a07ae15da5c98d9a8539ff21ee30cd2c8e5b34a28d697647139d55d010c2d12\"},\"sourceRevision\":1},{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl\",\"scopeId\":\"97a3abdc-2cbd-47b6-be1b-cbc66d0860d8\",\"chatId\":\"76460354-8d47-4576-a055-8eab2281de2a\",\"seal\":{\"dev\":66306,\"ino\":2134106,\"birthtimeMs\":1791923169803.5803,\"sha256\":\"35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3\"},\"sourceRevision\":1}],\"pending\":null}",
+          "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+          "chats": [
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134094,
+                "birthtimeMs": 1791923169792.5806,
+                "sha256": "8a07ae15da5c98d9a8539ff21ee30cd2c8e5b34a28d697647139d55d010c2d12"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"A-only canonical transcript.\",\"extra\":{}}",
+              "sourceSha256": "8a07ae15da5c98d9a8539ff21ee30cd2c8e5b34a28d697647139d55d010c2d12",
+              "visualRecord": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"chatId\":\"9dd6723e-33dc-4927-aa20-aec066b417a3\",\"revision\":0,\"record\":{\"background\":null}}"
+            },
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134106,
+                "birthtimeMs": 1791923169803.5803,
+                "sha256": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"B-only canonical transcript.\",\"extra\":{}}",
+              "sourceSha256": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3",
+              "visualRecord": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"chatId\":\"76460354-8d47-4576-a055-8eab2281de2a\",\"revision\":0,\"record\":{\"background\":null}}"
+            }
+          ]
+        },
+        "dyl28-b96dc8b1-2b37-4661-b310-a4d2145b8b0f": {
+          "registry": "{\"storeId\":\"457e195c-f97f-4dd5-a2a7-2fa8ffdaede9\",\"scopes\":[{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png\",\"scopeId\":\"b23357f1-4475-4e8d-83a5-723a25345776\"}],\"chats\":[{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl\",\"scopeId\":\"b23357f1-4475-4e8d-83a5-723a25345776\",\"chatId\":\"901493c7-0275-4ccb-a5f7-9fee2701f610\",\"seal\":{\"dev\":66306,\"ino\":2134098,\"birthtimeMs\":1791923169812.58,\"sha256\":\"d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd\"},\"sourceRevision\":1}],\"pending\":null}",
+          "storeId": "457e195c-f97f-4dd5-a2a7-2fa8ffdaede9",
+          "chats": [
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl",
+              "chatId": "901493c7-0275-4ccb-a5f7-9fee2701f610",
+              "scopeId": "b23357f1-4475-4e8d-83a5-723a25345776",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134098,
+                "birthtimeMs": 1791923169812.58,
+                "sha256": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"Other user transcript.\",\"extra\":{}}",
+              "sourceSha256": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd",
+              "visualRecord": "{\"storeId\":\"457e195c-f97f-4dd5-a2a7-2fa8ffdaede9\",\"chatId\":\"901493c7-0275-4ccb-a5f7-9fee2701f610\",\"revision\":0,\"record\":{\"background\":null}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "canonical edit during pending load: old revision 1 is not committed, a fresh revision 2 load is activated",
+      "result": "PASS",
+      "classification": "NATIVE_HOST_UI + EXPERIMENTAL_HOST",
+      "oldEnvelope": {
+        "dyl28Envelope": true,
+        "loadRequestId": "a9ffe7bf-d30b-4072-9ec5-e1d34b4afe4e",
+        "identity": {
+          "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+          "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+          "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3"
+        },
+        "sourceRevision": 1,
+        "messages": [
+          {
+            "user_name": "Synthetic User",
+            "character_name": "Mira",
+            "chat_metadata": {
+              "integrity": "b96dc8b1-2b37-4661-b310-a4d2145b8b0f"
+            }
+          },
+          {
+            "name": "Mira",
+            "is_user": false,
+            "mes": "A-only canonical transcript.",
+            "extra": {}
+          }
+        ]
+      },
+      "currentSourceRevision": 2,
+      "oldCanonicalSha256": "8a07ae15da5c98d9a8539ff21ee30cd2c8e5b34a28d697647139d55d010c2d12",
+      "newCanonicalSha256": "54a45366d69052030cc2895660a9ff7bc0276ea865ad16016fd387cdc2881ac9",
+      "beforeFreshApply": {
+        "avatar": "Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png",
+        "chatName": "Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms",
+        "messages": [],
+        "dom": [],
+        "target": null,
+        "history": [
+          {
+            "epoch": 2,
+            "loadRequestId": "09ecb37a-33c1-462c-829a-a9330064f3e7",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "09ecb37a-33c1-462c-829a-a9330064f3e7",
+              "sourceRevision": 1,
+              "viewToken": "e5018845-b1a1-4188-a4d7-c54377b5953b"
+            }
+          },
+          {
+            "epoch": 6,
+            "loadRequestId": "11e964e6-15f7-415b-ae26-1f8f314a242e",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "11e964e6-15f7-415b-ae26-1f8f314a242e",
+              "sourceRevision": 1,
+              "viewToken": "f5f710a8-0569-4a0d-a1d8-35bfa9a1d0cd"
+            }
+          },
+          {
+            "epoch": 10,
+            "loadRequestId": "dbaed746-fee6-46e6-bd60-92cbad6d4a21",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "dbaed746-fee6-46e6-bd60-92cbad6d4a21",
+              "sourceRevision": 1,
+              "viewToken": "39709d11-96eb-4e73-a442-157398b85403"
+            }
+          },
+          {
+            "epoch": 12,
+            "loadRequestId": "a5710944-1d0e-4ca3-b3d4-78967b16786b",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "a5710944-1d0e-4ca3-b3d4-78967b16786b",
+              "sourceRevision": 1,
+              "viewToken": "6f71107d-fa90-49cf-a354-d728411f18bd"
+            }
+          },
+          {
+            "epoch": 15,
+            "loadRequestId": "4738cd6d-dd46-4586-a43a-b94b499baa07",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "4738cd6d-dd46-4586-a43a-b94b499baa07",
+              "sourceRevision": 1,
+              "viewToken": "1bd1c36a-e6a8-44be-bf76-ce032df125f9"
+            }
+          },
+          {
+            "epoch": 17,
+            "loadRequestId": "9a66c7ae-36ac-4c43-ba25-07ef5dc5f673",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "9a66c7ae-36ac-4c43-ba25-07ef5dc5f673",
+              "sourceRevision": 1,
+              "viewToken": "b3422020-c1d0-42c2-b92f-d432097b5d14"
+            }
+          },
+          {
+            "epoch": 13,
+            "loadRequestId": "f961505a-7da4-41a8-ac63-4f670a093ce5",
+            "discarded": true
+          },
+          {
+            "epoch": 19,
+            "loadRequestId": "fa089905-f8c8-43ed-aeac-c137cbb32934",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "fa089905-f8c8-43ed-aeac-c137cbb32934",
+              "sourceRevision": 1,
+              "viewToken": "5092e222-4d02-4948-96d2-8f5a45178c36"
+            }
+          },
+          {
+            "epoch": 21,
+            "loadRequestId": "9861b0ad-19d7-4c43-a10e-b423985d65da",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "9861b0ad-19d7-4c43-a10e-b423985d65da",
+              "sourceRevision": 1,
+              "viewToken": "ac75deac-4f19-439c-8cc4-eb1d26ea9506"
+            }
+          },
+          {
+            "epoch": 23,
+            "loadRequestId": "53127dbe-c855-4c7f-adb5-5898690c6fdf",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "53127dbe-c855-4c7f-adb5-5898690c6fdf",
+              "sourceRevision": 1,
+              "viewToken": "c8a0b755-89eb-4a6f-92e5-31128f75b6b3"
+            }
+          },
+          {
+            "epoch": 25,
+            "loadRequestId": "a9ffe7bf-d30b-4072-9ec5-e1d34b4afe4e",
+            "refused": "SOURCE_REVISION_MISMATCH"
+          }
+        ]
+      },
+      "freshEnvelope": {
+        "dyl28Envelope": true,
+        "loadRequestId": "b700f600-3ef8-4283-92f9-ca3d3ca7e51d",
+        "identity": {
+          "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+          "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+          "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3"
+        },
+        "sourceRevision": 2,
+        "messages": [
+          {
+            "chat_metadata": {
+              "integrity": "b96dc8b1-2b37-4661-b310-a4d2145b8b0f",
+              "note_prompt": "",
+              "note_interval": 1,
+              "note_position": 1,
+              "note_depth": 4,
+              "note_role": 0,
+              "tainted": true
+            },
+            "user_name": "unused",
+            "character_name": "unused"
+          },
+          {
+            "name": "Mira",
+            "is_user": false,
+            "mes": "A edited by authenticated client two.",
+            "extra": {
+              "bias": null
+            },
+            "swipes": [
+              "A edited by authenticated client two."
+            ],
+            "swipe_id": 0,
+            "swipe_info": [
+              {
+                "extra": {}
+              }
+            ]
+          }
+        ]
+      },
+      "nativeEditorState": {
+        "avatar": "Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png",
+        "chatName": "Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms",
+        "messages": [
+          "A edited by authenticated client two."
+        ],
+        "dom": [
+          "A edited by authenticated client two."
+        ],
+        "target": {
+          "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+          "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+          "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+          "clientId": "d6ad8b96-b122-4ba1-ab9e-bc221188bc98",
+          "loadRequestId": "c70dcf02-bff9-4f15-971f-821b27359984",
+          "sourceRevision": 1,
+          "viewToken": "4277a983-33d2-46db-9b44-b81f0242805b"
+        },
+        "history": [
+          {
+            "epoch": 2,
+            "loadRequestId": "c70dcf02-bff9-4f15-971f-821b27359984",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "clientId": "d6ad8b96-b122-4ba1-ab9e-bc221188bc98",
+              "loadRequestId": "c70dcf02-bff9-4f15-971f-821b27359984",
+              "sourceRevision": 1,
+              "viewToken": "4277a983-33d2-46db-9b44-b81f0242805b"
+            }
+          }
+        ]
+      },
+      "staleSourceView": {
+        "avatar": "Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png",
+        "chatName": "Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms",
+        "messages": [
+          "A edited by authenticated client two."
+        ],
+        "dom": [
+          "A edited by authenticated client two."
+        ],
+        "target": {
+          "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+          "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+          "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+          "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+          "loadRequestId": "b700f600-3ef8-4283-92f9-ca3d3ca7e51d",
+          "sourceRevision": 2,
+          "viewToken": "7361c7e2-3c87-4501-b691-e5d2bbf54258"
+        },
+        "history": [
+          {
+            "epoch": 2,
+            "loadRequestId": "09ecb37a-33c1-462c-829a-a9330064f3e7",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "09ecb37a-33c1-462c-829a-a9330064f3e7",
+              "sourceRevision": 1,
+              "viewToken": "e5018845-b1a1-4188-a4d7-c54377b5953b"
+            }
+          },
+          {
+            "epoch": 6,
+            "loadRequestId": "11e964e6-15f7-415b-ae26-1f8f314a242e",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "11e964e6-15f7-415b-ae26-1f8f314a242e",
+              "sourceRevision": 1,
+              "viewToken": "f5f710a8-0569-4a0d-a1d8-35bfa9a1d0cd"
+            }
+          },
+          {
+            "epoch": 10,
+            "loadRequestId": "dbaed746-fee6-46e6-bd60-92cbad6d4a21",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "dbaed746-fee6-46e6-bd60-92cbad6d4a21",
+              "sourceRevision": 1,
+              "viewToken": "39709d11-96eb-4e73-a442-157398b85403"
+            }
+          },
+          {
+            "epoch": 12,
+            "loadRequestId": "a5710944-1d0e-4ca3-b3d4-78967b16786b",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "a5710944-1d0e-4ca3-b3d4-78967b16786b",
+              "sourceRevision": 1,
+              "viewToken": "6f71107d-fa90-49cf-a354-d728411f18bd"
+            }
+          },
+          {
+            "epoch": 15,
+            "loadRequestId": "4738cd6d-dd46-4586-a43a-b94b499baa07",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "4738cd6d-dd46-4586-a43a-b94b499baa07",
+              "sourceRevision": 1,
+              "viewToken": "1bd1c36a-e6a8-44be-bf76-ce032df125f9"
+            }
+          },
+          {
+            "epoch": 17,
+            "loadRequestId": "9a66c7ae-36ac-4c43-ba25-07ef5dc5f673",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "9a66c7ae-36ac-4c43-ba25-07ef5dc5f673",
+              "sourceRevision": 1,
+              "viewToken": "b3422020-c1d0-42c2-b92f-d432097b5d14"
+            }
+          },
+          {
+            "epoch": 13,
+            "loadRequestId": "f961505a-7da4-41a8-ac63-4f670a093ce5",
+            "discarded": true
+          },
+          {
+            "epoch": 19,
+            "loadRequestId": "fa089905-f8c8-43ed-aeac-c137cbb32934",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "fa089905-f8c8-43ed-aeac-c137cbb32934",
+              "sourceRevision": 1,
+              "viewToken": "5092e222-4d02-4948-96d2-8f5a45178c36"
+            }
+          },
+          {
+            "epoch": 21,
+            "loadRequestId": "9861b0ad-19d7-4c43-a10e-b423985d65da",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "9861b0ad-19d7-4c43-a10e-b423985d65da",
+              "sourceRevision": 1,
+              "viewToken": "ac75deac-4f19-439c-8cc4-eb1d26ea9506"
+            }
+          },
+          {
+            "epoch": 23,
+            "loadRequestId": "53127dbe-c855-4c7f-adb5-5898690c6fdf",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "53127dbe-c855-4c7f-adb5-5898690c6fdf",
+              "sourceRevision": 1,
+              "viewToken": "c8a0b755-89eb-4a6f-92e5-31128f75b6b3"
+            }
+          },
+          {
+            "epoch": 25,
+            "loadRequestId": "a9ffe7bf-d30b-4072-9ec5-e1d34b4afe4e",
+            "refused": "SOURCE_REVISION_MISMATCH"
+          },
+          {
+            "epoch": 26,
+            "loadRequestId": "b700f600-3ef8-4283-92f9-ca3d3ca7e51d",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "b700f600-3ef8-4283-92f9-ca3d3ca7e51d",
+              "sourceRevision": 2,
+              "viewToken": "7361c7e2-3c87-4501-b691-e5d2bbf54258"
+            }
+          }
+        ]
+      },
+      "staleSourceCas": {
+        "error": "SOURCE_REVISION_MISMATCH"
+      },
+      "actualState": {
+        "default-user": {
+          "registry": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"scopes\":[{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png\",\"scopeId\":\"6361cd47-3db6-4983-8e26-38d374e5f95a\"},{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1.png\",\"scopeId\":\"97a3abdc-2cbd-47b6-be1b-cbc66d0860d8\"}],\"chats\":[{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl\",\"scopeId\":\"6361cd47-3db6-4983-8e26-38d374e5f95a\",\"chatId\":\"9dd6723e-33dc-4927-aa20-aec066b417a3\",\"seal\":{\"dev\":66306,\"ino\":2134110,\"birthtimeMs\":1791923178636.3835,\"sha256\":\"54a45366d69052030cc2895660a9ff7bc0276ea865ad16016fd387cdc2881ac9\"},\"sourceRevision\":2},{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl\",\"scopeId\":\"97a3abdc-2cbd-47b6-be1b-cbc66d0860d8\",\"chatId\":\"76460354-8d47-4576-a055-8eab2281de2a\",\"seal\":{\"dev\":66306,\"ino\":2134106,\"birthtimeMs\":1791923169803.5803,\"sha256\":\"35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3\"},\"sourceRevision\":1}],\"pending\":null}",
+          "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+          "chats": [
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "sourceRevision": 2,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134110,
+                "birthtimeMs": 1791923178636.3835,
+                "sha256": "54a45366d69052030cc2895660a9ff7bc0276ea865ad16016fd387cdc2881ac9"
+              },
+              "sourceText": "{\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\",\"note_prompt\":\"\",\"note_interval\":1,\"note_position\":1,\"note_depth\":4,\"note_role\":0,\"tainted\":true},\"user_name\":\"unused\",\"character_name\":\"unused\"}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"A edited by authenticated client two.\",\"extra\":{\"bias\":null},\"swipes\":[\"A edited by authenticated client two.\"],\"swipe_id\":0,\"swipe_info\":[{\"extra\":{}}]}",
+              "sourceSha256": "54a45366d69052030cc2895660a9ff7bc0276ea865ad16016fd387cdc2881ac9",
+              "visualRecord": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"chatId\":\"9dd6723e-33dc-4927-aa20-aec066b417a3\",\"revision\":0,\"record\":{\"background\":null}}"
+            },
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134106,
+                "birthtimeMs": 1791923169803.5803,
+                "sha256": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"B-only canonical transcript.\",\"extra\":{}}",
+              "sourceSha256": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3",
+              "visualRecord": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"chatId\":\"76460354-8d47-4576-a055-8eab2281de2a\",\"revision\":0,\"record\":{\"background\":null}}"
+            }
+          ]
+        },
+        "dyl28-b96dc8b1-2b37-4661-b310-a4d2145b8b0f": {
+          "registry": "{\"storeId\":\"457e195c-f97f-4dd5-a2a7-2fa8ffdaede9\",\"scopes\":[{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png\",\"scopeId\":\"b23357f1-4475-4e8d-83a5-723a25345776\"}],\"chats\":[{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl\",\"scopeId\":\"b23357f1-4475-4e8d-83a5-723a25345776\",\"chatId\":\"901493c7-0275-4ccb-a5f7-9fee2701f610\",\"seal\":{\"dev\":66306,\"ino\":2134098,\"birthtimeMs\":1791923169812.58,\"sha256\":\"d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd\"},\"sourceRevision\":1}],\"pending\":null}",
+          "storeId": "457e195c-f97f-4dd5-a2a7-2fa8ffdaede9",
+          "chats": [
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl",
+              "chatId": "901493c7-0275-4ccb-a5f7-9fee2701f610",
+              "scopeId": "b23357f1-4475-4e8d-83a5-723a25345776",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134098,
+                "birthtimeMs": 1791923169812.58,
+                "sha256": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"Other user transcript.\",\"extra\":{}}",
+              "sourceSha256": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd",
+              "visualRecord": "{\"storeId\":\"457e195c-f97f-4dd5-a2a7-2fa8ffdaede9\",\"chatId\":\"901493c7-0275-4ccb-a5f7-9fee2701f610\",\"revision\":0,\"record\":{\"background\":null}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "two authenticated clients on one host process: source revision 2 shared, visit tokens distinct, one visual CAS wins without canonical mutation",
+      "result": "PASS",
+      "classification": "EXPERIMENTAL_HOST + NATIVE_HOST_UI",
+      "target1": {
+        "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+        "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+        "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+        "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+        "loadRequestId": "5733253b-1ae4-4b2a-82a0-e5db9f07ae6c",
+        "sourceRevision": 2,
+        "viewToken": "ad1c56d7-7652-4365-8362-c083c59f97de"
+      },
+      "target2": {
+        "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+        "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+        "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+        "clientId": "d6ad8b96-b122-4ba1-ab9e-bc221188bc98",
+        "loadRequestId": "c6b463ad-a6ec-412b-a60f-400395b04625",
+        "sourceRevision": 2,
+        "viewToken": "476335df-04b3-4021-b61a-bf3fa016f9a9"
+      },
+      "committedVisualRecord": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"chatId\":\"9dd6723e-33dc-4927-aa20-aec066b417a3\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+      "loser": {
+        "error": "STALE_REVISION"
+      },
+      "canonicalSha256BeforeAndAfter": "54a45366d69052030cc2895660a9ff7bc0276ea865ad16016fd387cdc2881ac9",
+      "actualState": {
+        "default-user": {
+          "registry": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"scopes\":[{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png\",\"scopeId\":\"6361cd47-3db6-4983-8e26-38d374e5f95a\"},{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1.png\",\"scopeId\":\"97a3abdc-2cbd-47b6-be1b-cbc66d0860d8\"}],\"chats\":[{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl\",\"scopeId\":\"6361cd47-3db6-4983-8e26-38d374e5f95a\",\"chatId\":\"9dd6723e-33dc-4927-aa20-aec066b417a3\",\"seal\":{\"dev\":66306,\"ino\":2134110,\"birthtimeMs\":1791923178636.3835,\"sha256\":\"54a45366d69052030cc2895660a9ff7bc0276ea865ad16016fd387cdc2881ac9\"},\"sourceRevision\":2},{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl\",\"scopeId\":\"97a3abdc-2cbd-47b6-be1b-cbc66d0860d8\",\"chatId\":\"76460354-8d47-4576-a055-8eab2281de2a\",\"seal\":{\"dev\":66306,\"ino\":2134106,\"birthtimeMs\":1791923169803.5803,\"sha256\":\"35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3\"},\"sourceRevision\":1}],\"pending\":null}",
+          "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+          "chats": [
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "sourceRevision": 2,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134110,
+                "birthtimeMs": 1791923178636.3835,
+                "sha256": "54a45366d69052030cc2895660a9ff7bc0276ea865ad16016fd387cdc2881ac9"
+              },
+              "sourceText": "{\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\",\"note_prompt\":\"\",\"note_interval\":1,\"note_position\":1,\"note_depth\":4,\"note_role\":0,\"tainted\":true},\"user_name\":\"unused\",\"character_name\":\"unused\"}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"A edited by authenticated client two.\",\"extra\":{\"bias\":null},\"swipes\":[\"A edited by authenticated client two.\"],\"swipe_id\":0,\"swipe_info\":[{\"extra\":{}}]}",
+              "sourceSha256": "54a45366d69052030cc2895660a9ff7bc0276ea865ad16016fd387cdc2881ac9",
+              "visualRecord": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"chatId\":\"9dd6723e-33dc-4927-aa20-aec066b417a3\",\"revision\":1,\"record\":{\"background\":\"forest\"}}"
+            },
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134106,
+                "birthtimeMs": 1791923169803.5803,
+                "sha256": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"B-only canonical transcript.\",\"extra\":{}}",
+              "sourceSha256": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3",
+              "visualRecord": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"chatId\":\"76460354-8d47-4576-a055-8eab2281de2a\",\"revision\":0,\"record\":{\"background\":null}}"
+            }
+          ]
+        },
+        "dyl28-b96dc8b1-2b37-4661-b310-a4d2145b8b0f": {
+          "registry": "{\"storeId\":\"457e195c-f97f-4dd5-a2a7-2fa8ffdaede9\",\"scopes\":[{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png\",\"scopeId\":\"b23357f1-4475-4e8d-83a5-723a25345776\"}],\"chats\":[{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl\",\"scopeId\":\"b23357f1-4475-4e8d-83a5-723a25345776\",\"chatId\":\"901493c7-0275-4ccb-a5f7-9fee2701f610\",\"seal\":{\"dev\":66306,\"ino\":2134098,\"birthtimeMs\":1791923169812.58,\"sha256\":\"d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd\"},\"sourceRevision\":1}],\"pending\":null}",
+          "storeId": "457e195c-f97f-4dd5-a2a7-2fa8ffdaede9",
+          "chats": [
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl",
+              "chatId": "901493c7-0275-4ccb-a5f7-9fee2701f610",
+              "scopeId": "b23357f1-4475-4e8d-83a5-723a25345776",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134098,
+                "birthtimeMs": 1791923169812.58,
+                "sha256": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"Other user transcript.\",\"extra\":{}}",
+              "sourceSha256": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd",
+              "visualRecord": "{\"storeId\":\"457e195c-f97f-4dd5-a2a7-2fa8ffdaede9\",\"chatId\":\"901493c7-0275-4ccb-a5f7-9fee2701f610\",\"revision\":0,\"record\":{\"background\":null}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "activation acknowledgement timeout leaves visuals unavailable while native text and ordinary reply/save continue",
+      "result": "PASS",
+      "classification": "NATIVE_HOST_UI with response abort + deterministic loopback responder",
+      "timeoutState": {
+        "avatar": "Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png",
+        "chatName": "Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms",
+        "messages": [
+          "A edited by authenticated client two."
+        ],
+        "dom": [
+          "A edited by authenticated client two."
+        ],
+        "target": null,
+        "history": [
+          {
+            "epoch": 2,
+            "loadRequestId": "09ecb37a-33c1-462c-829a-a9330064f3e7",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "09ecb37a-33c1-462c-829a-a9330064f3e7",
+              "sourceRevision": 1,
+              "viewToken": "e5018845-b1a1-4188-a4d7-c54377b5953b"
+            }
+          },
+          {
+            "epoch": 6,
+            "loadRequestId": "11e964e6-15f7-415b-ae26-1f8f314a242e",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "11e964e6-15f7-415b-ae26-1f8f314a242e",
+              "sourceRevision": 1,
+              "viewToken": "f5f710a8-0569-4a0d-a1d8-35bfa9a1d0cd"
+            }
+          },
+          {
+            "epoch": 10,
+            "loadRequestId": "dbaed746-fee6-46e6-bd60-92cbad6d4a21",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "dbaed746-fee6-46e6-bd60-92cbad6d4a21",
+              "sourceRevision": 1,
+              "viewToken": "39709d11-96eb-4e73-a442-157398b85403"
+            }
+          },
+          {
+            "epoch": 12,
+            "loadRequestId": "a5710944-1d0e-4ca3-b3d4-78967b16786b",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "a5710944-1d0e-4ca3-b3d4-78967b16786b",
+              "sourceRevision": 1,
+              "viewToken": "6f71107d-fa90-49cf-a354-d728411f18bd"
+            }
+          },
+          {
+            "epoch": 15,
+            "loadRequestId": "4738cd6d-dd46-4586-a43a-b94b499baa07",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "4738cd6d-dd46-4586-a43a-b94b499baa07",
+              "sourceRevision": 1,
+              "viewToken": "1bd1c36a-e6a8-44be-bf76-ce032df125f9"
+            }
+          },
+          {
+            "epoch": 17,
+            "loadRequestId": "9a66c7ae-36ac-4c43-ba25-07ef5dc5f673",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "9a66c7ae-36ac-4c43-ba25-07ef5dc5f673",
+              "sourceRevision": 1,
+              "viewToken": "b3422020-c1d0-42c2-b92f-d432097b5d14"
+            }
+          },
+          {
+            "epoch": 13,
+            "loadRequestId": "f961505a-7da4-41a8-ac63-4f670a093ce5",
+            "discarded": true
+          },
+          {
+            "epoch": 19,
+            "loadRequestId": "fa089905-f8c8-43ed-aeac-c137cbb32934",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "fa089905-f8c8-43ed-aeac-c137cbb32934",
+              "sourceRevision": 1,
+              "viewToken": "5092e222-4d02-4948-96d2-8f5a45178c36"
+            }
+          },
+          {
+            "epoch": 21,
+            "loadRequestId": "9861b0ad-19d7-4c43-a10e-b423985d65da",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "9861b0ad-19d7-4c43-a10e-b423985d65da",
+              "sourceRevision": 1,
+              "viewToken": "ac75deac-4f19-439c-8cc4-eb1d26ea9506"
+            }
+          },
+          {
+            "epoch": 23,
+            "loadRequestId": "53127dbe-c855-4c7f-adb5-5898690c6fdf",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "53127dbe-c855-4c7f-adb5-5898690c6fdf",
+              "sourceRevision": 1,
+              "viewToken": "c8a0b755-89eb-4a6f-92e5-31128f75b6b3"
+            }
+          },
+          {
+            "epoch": 25,
+            "loadRequestId": "a9ffe7bf-d30b-4072-9ec5-e1d34b4afe4e",
+            "refused": "SOURCE_REVISION_MISMATCH"
+          },
+          {
+            "epoch": 26,
+            "loadRequestId": "b700f600-3ef8-4283-92f9-ca3d3ca7e51d",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "b700f600-3ef8-4283-92f9-ca3d3ca7e51d",
+              "sourceRevision": 2,
+              "viewToken": "7361c7e2-3c87-4501-b691-e5d2bbf54258"
+            }
+          },
+          {
+            "epoch": 28,
+            "loadRequestId": "0213e7e5-04ab-41ca-a2d4-7fab51e49625",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "0213e7e5-04ab-41ca-a2d4-7fab51e49625",
+              "sourceRevision": 1,
+              "viewToken": "9bfed895-7b30-498c-aed4-d9857e778dde"
+            }
+          },
+          {
+            "epoch": 30,
+            "loadRequestId": "5733253b-1ae4-4b2a-82a0-e5db9f07ae6c",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "5733253b-1ae4-4b2a-82a0-e5db9f07ae6c",
+              "sourceRevision": 2,
+              "viewToken": "ad1c56d7-7652-4365-8362-c083c59f97de"
+            }
+          },
+          {
+            "epoch": 31,
+            "loadRequestId": "b1a9fb28-b28a-45d3-99f1-b576f62db21a",
+            "refused": "Failed to fetch"
+          }
+        ]
+      },
+      "sourceBefore": "{\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\",\"note_prompt\":\"\",\"note_interval\":1,\"note_position\":1,\"note_depth\":4,\"note_role\":0,\"tainted\":true},\"user_name\":\"unused\",\"character_name\":\"unused\"}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"A edited by authenticated client two.\",\"extra\":{\"bias\":null},\"swipes\":[\"A edited by authenticated client two.\"],\"swipe_id\":0,\"swipe_info\":[{\"extra\":{}}]}",
+      "sourceAfter": "{\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\",\"note_prompt\":\"\",\"note_interval\":1,\"note_position\":1,\"note_depth\":4,\"note_role\":0,\"tainted\":true,\"timedWorldInfo\":{\"sticky\":{},\"cooldown\":{}},\"lastInContextMessageId\":0},\"user_name\":\"unused\",\"character_name\":\"unused\"}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"A edited by authenticated client two.\",\"extra\":{\"bias\":null},\"swipes\":[\"A edited by authenticated client two.\"],\"swipe_id\":0,\"swipe_info\":[{\"extra\":{}}]}\n{\"name\":\"User\",\"is_user\":true,\"is_system\":false,\"send_date\":\"2026-10-13T20:26:20.689Z\",\"mes\":\"Native reading remains usable after activation timeout.\",\"extra\":{\"isSmallSys\":false,\"reasoning\":\"\"},\"force_avatar\":\"/thumbnail?type=persona&file=user-default.png\"}\n{\"extra\":{\"api\":\"custom\",\"model\":\"dyl28-loopback\",\"reasoning\":\"\",\"reasoning_duration\":null,\"reasoning_signature\":null},\"name\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f\",\"is_user\":false,\"send_date\":\"2026-10-13T20:26:20.926Z\",\"mes\":\"Synthetic DYL28 reply.\",\"title\":\"\",\"gen_started\":\"2026-10-13T20:26:20.659Z\",\"gen_finished\":\"2026-10-13T20:26:20.925Z\",\"swipes\":[\"Synthetic DYL28 reply.\"],\"swipe_id\":0,\"swipe_info\":[{\"send_date\":\"2026-10-13T20:26:20.926Z\",\"gen_started\":\"2026-10-13T20:26:20.659Z\",\"gen_finished\":\"2026-10-13T20:26:20.925Z\",\"extra\":{\"api\":\"custom\",\"model\":\"dyl28-loopback\",\"reasoning\":\"\",\"reasoning_duration\":null,\"reasoning_signature\":null}}]}",
+      "actualState": {
+        "default-user": {
+          "registry": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"scopes\":[{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png\",\"scopeId\":\"6361cd47-3db6-4983-8e26-38d374e5f95a\"},{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1.png\",\"scopeId\":\"97a3abdc-2cbd-47b6-be1b-cbc66d0860d8\"}],\"chats\":[{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl\",\"scopeId\":\"6361cd47-3db6-4983-8e26-38d374e5f95a\",\"chatId\":\"9dd6723e-33dc-4927-aa20-aec066b417a3\",\"seal\":{\"dev\":66306,\"ino\":2134110,\"birthtimeMs\":1791923181041.33,\"sha256\":\"b77e9be7febf01e8b6eb0f7ee270f73a4e95151ec30c5ae62bb876c80da51701\"},\"sourceRevision\":4},{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl\",\"scopeId\":\"97a3abdc-2cbd-47b6-be1b-cbc66d0860d8\",\"chatId\":\"76460354-8d47-4576-a055-8eab2281de2a\",\"seal\":{\"dev\":66306,\"ino\":2134106,\"birthtimeMs\":1791923169803.5803,\"sha256\":\"35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3\"},\"sourceRevision\":1}],\"pending\":null}",
+          "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+          "chats": [
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "sourceRevision": 4,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134110,
+                "birthtimeMs": 1791923181041.33,
+                "sha256": "b77e9be7febf01e8b6eb0f7ee270f73a4e95151ec30c5ae62bb876c80da51701"
+              },
+              "sourceText": "{\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\",\"note_prompt\":\"\",\"note_interval\":1,\"note_position\":1,\"note_depth\":4,\"note_role\":0,\"tainted\":true,\"timedWorldInfo\":{\"sticky\":{},\"cooldown\":{}},\"lastInContextMessageId\":0},\"user_name\":\"unused\",\"character_name\":\"unused\"}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"A edited by authenticated client two.\",\"extra\":{\"bias\":null},\"swipes\":[\"A edited by authenticated client two.\"],\"swipe_id\":0,\"swipe_info\":[{\"extra\":{}}]}\n{\"name\":\"User\",\"is_user\":true,\"is_system\":false,\"send_date\":\"2026-10-13T20:26:20.689Z\",\"mes\":\"Native reading remains usable after activation timeout.\",\"extra\":{\"isSmallSys\":false,\"reasoning\":\"\"},\"force_avatar\":\"/thumbnail?type=persona&file=user-default.png\"}\n{\"extra\":{\"api\":\"custom\",\"model\":\"dyl28-loopback\",\"reasoning\":\"\",\"reasoning_duration\":null,\"reasoning_signature\":null},\"name\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f\",\"is_user\":false,\"send_date\":\"2026-10-13T20:26:20.926Z\",\"mes\":\"Synthetic DYL28 reply.\",\"title\":\"\",\"gen_started\":\"2026-10-13T20:26:20.659Z\",\"gen_finished\":\"2026-10-13T20:26:20.925Z\",\"swipes\":[\"Synthetic DYL28 reply.\"],\"swipe_id\":0,\"swipe_info\":[{\"send_date\":\"2026-10-13T20:26:20.926Z\",\"gen_started\":\"2026-10-13T20:26:20.659Z\",\"gen_finished\":\"2026-10-13T20:26:20.925Z\",\"extra\":{\"api\":\"custom\",\"model\":\"dyl28-loopback\",\"reasoning\":\"\",\"reasoning_duration\":null,\"reasoning_signature\":null}}]}",
+              "sourceSha256": "b77e9be7febf01e8b6eb0f7ee270f73a4e95151ec30c5ae62bb876c80da51701",
+              "visualRecord": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"chatId\":\"9dd6723e-33dc-4927-aa20-aec066b417a3\",\"revision\":1,\"record\":{\"background\":\"forest\"}}"
+            },
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134106,
+                "birthtimeMs": 1791923169803.5803,
+                "sha256": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"B-only canonical transcript.\",\"extra\":{}}",
+              "sourceSha256": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3",
+              "visualRecord": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"chatId\":\"76460354-8d47-4576-a055-8eab2281de2a\",\"revision\":0,\"record\":{\"background\":null}}"
+            }
+          ]
+        },
+        "dyl28-b96dc8b1-2b37-4661-b310-a4d2145b8b0f": {
+          "registry": "{\"storeId\":\"457e195c-f97f-4dd5-a2a7-2fa8ffdaede9\",\"scopes\":[{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png\",\"scopeId\":\"b23357f1-4475-4e8d-83a5-723a25345776\"}],\"chats\":[{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl\",\"scopeId\":\"b23357f1-4475-4e8d-83a5-723a25345776\",\"chatId\":\"901493c7-0275-4ccb-a5f7-9fee2701f610\",\"seal\":{\"dev\":66306,\"ino\":2134098,\"birthtimeMs\":1791923169812.58,\"sha256\":\"d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd\"},\"sourceRevision\":1}],\"pending\":null}",
+          "storeId": "457e195c-f97f-4dd5-a2a7-2fa8ffdaede9",
+          "chats": [
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl",
+              "chatId": "901493c7-0275-4ccb-a5f7-9fee2701f610",
+              "scopeId": "b23357f1-4475-4e8d-83a5-723a25345776",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134098,
+                "birthtimeMs": 1791923169812.58,
+                "sha256": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"Other user transcript.\",\"extra\":{}}",
+              "sourceSha256": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd",
+              "visualRecord": "{\"storeId\":\"457e195c-f97f-4dd5-a2a7-2fa8ffdaede9\",\"chatId\":\"901493c7-0275-4ccb-a5f7-9fee2701f610\",\"revision\":0,\"record\":{\"background\":null}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "native Temporary Chat transition revokes the persisted-chat visit",
+      "result": "PASS",
+      "classification": "NATIVE_HOST_UI via host functions",
+      "temporaryState": {
+        "messages": [
+          "<div data-type=\"assistant_note\">\n    <div class=\"assistant_note_title\">\n        <b data-i18n=\"Note:\">Note:</b> <span data-i18n=\"this chat is temporary and will be deleted as soon as you leave it.\">this chat is temporary and will be deleted as soon as you leave it.</span>\n    </div>\n    <button class=\"assistant_note_import menu_button menu_button_icon margin0\" data-i18n=\"[title]Import from JSONL\" title=\"Import from JSONL\">\n        <i class=\"fa-solid fa-file-import\"></i>\n        <span data-i18n=\"Load\">Load</span>\n    </button>\n    <button class=\"assistant_note_export menu_button menu_button_icon margin0\" data-i18n=\"[title]Export as JSONL\" title=\"Export as JSONL\">\n        <i class=\"fa-solid fa-file-export\"></i>\n        <span data-i18n=\"Save\">Save</span>\n    </button>\n</div>\n"
+        ],
+        "dom": [
+          "Note: this chat is temporary and will be deleted as soon as you leave it.\nLoad\nSave"
+        ],
+        "target": null,
+        "history": [
+          {
+            "epoch": 2,
+            "loadRequestId": "09ecb37a-33c1-462c-829a-a9330064f3e7",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "09ecb37a-33c1-462c-829a-a9330064f3e7",
+              "sourceRevision": 1,
+              "viewToken": "e5018845-b1a1-4188-a4d7-c54377b5953b"
+            }
+          },
+          {
+            "epoch": 6,
+            "loadRequestId": "11e964e6-15f7-415b-ae26-1f8f314a242e",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "11e964e6-15f7-415b-ae26-1f8f314a242e",
+              "sourceRevision": 1,
+              "viewToken": "f5f710a8-0569-4a0d-a1d8-35bfa9a1d0cd"
+            }
+          },
+          {
+            "epoch": 10,
+            "loadRequestId": "dbaed746-fee6-46e6-bd60-92cbad6d4a21",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "dbaed746-fee6-46e6-bd60-92cbad6d4a21",
+              "sourceRevision": 1,
+              "viewToken": "39709d11-96eb-4e73-a442-157398b85403"
+            }
+          },
+          {
+            "epoch": 12,
+            "loadRequestId": "a5710944-1d0e-4ca3-b3d4-78967b16786b",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "a5710944-1d0e-4ca3-b3d4-78967b16786b",
+              "sourceRevision": 1,
+              "viewToken": "6f71107d-fa90-49cf-a354-d728411f18bd"
+            }
+          },
+          {
+            "epoch": 15,
+            "loadRequestId": "4738cd6d-dd46-4586-a43a-b94b499baa07",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "4738cd6d-dd46-4586-a43a-b94b499baa07",
+              "sourceRevision": 1,
+              "viewToken": "1bd1c36a-e6a8-44be-bf76-ce032df125f9"
+            }
+          },
+          {
+            "epoch": 17,
+            "loadRequestId": "9a66c7ae-36ac-4c43-ba25-07ef5dc5f673",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "9a66c7ae-36ac-4c43-ba25-07ef5dc5f673",
+              "sourceRevision": 1,
+              "viewToken": "b3422020-c1d0-42c2-b92f-d432097b5d14"
+            }
+          },
+          {
+            "epoch": 13,
+            "loadRequestId": "f961505a-7da4-41a8-ac63-4f670a093ce5",
+            "discarded": true
+          },
+          {
+            "epoch": 19,
+            "loadRequestId": "fa089905-f8c8-43ed-aeac-c137cbb32934",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "fa089905-f8c8-43ed-aeac-c137cbb32934",
+              "sourceRevision": 1,
+              "viewToken": "5092e222-4d02-4948-96d2-8f5a45178c36"
+            }
+          },
+          {
+            "epoch": 21,
+            "loadRequestId": "9861b0ad-19d7-4c43-a10e-b423985d65da",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "9861b0ad-19d7-4c43-a10e-b423985d65da",
+              "sourceRevision": 1,
+              "viewToken": "ac75deac-4f19-439c-8cc4-eb1d26ea9506"
+            }
+          },
+          {
+            "epoch": 23,
+            "loadRequestId": "53127dbe-c855-4c7f-adb5-5898690c6fdf",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "53127dbe-c855-4c7f-adb5-5898690c6fdf",
+              "sourceRevision": 1,
+              "viewToken": "c8a0b755-89eb-4a6f-92e5-31128f75b6b3"
+            }
+          },
+          {
+            "epoch": 25,
+            "loadRequestId": "a9ffe7bf-d30b-4072-9ec5-e1d34b4afe4e",
+            "refused": "SOURCE_REVISION_MISMATCH"
+          },
+          {
+            "epoch": 26,
+            "loadRequestId": "b700f600-3ef8-4283-92f9-ca3d3ca7e51d",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "b700f600-3ef8-4283-92f9-ca3d3ca7e51d",
+              "sourceRevision": 2,
+              "viewToken": "7361c7e2-3c87-4501-b691-e5d2bbf54258"
+            }
+          },
+          {
+            "epoch": 28,
+            "loadRequestId": "0213e7e5-04ab-41ca-a2d4-7fab51e49625",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "0213e7e5-04ab-41ca-a2d4-7fab51e49625",
+              "sourceRevision": 1,
+              "viewToken": "9bfed895-7b30-498c-aed4-d9857e778dde"
+            }
+          },
+          {
+            "epoch": 30,
+            "loadRequestId": "5733253b-1ae4-4b2a-82a0-e5db9f07ae6c",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "clientId": "4026f1b1-55c4-4cd0-a596-4aa5f72b0899",
+              "loadRequestId": "5733253b-1ae4-4b2a-82a0-e5db9f07ae6c",
+              "sourceRevision": 2,
+              "viewToken": "ad1c56d7-7652-4365-8362-c083c59f97de"
+            }
+          },
+          {
+            "epoch": 31,
+            "loadRequestId": "b1a9fb28-b28a-45d3-99f1-b576f62db21a",
+            "refused": "Failed to fetch"
+          }
+        ]
+      },
+      "actualState": {
+        "default-user": {
+          "registry": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"scopes\":[{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png\",\"scopeId\":\"6361cd47-3db6-4983-8e26-38d374e5f95a\"},{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1.png\",\"scopeId\":\"97a3abdc-2cbd-47b6-be1b-cbc66d0860d8\"}],\"chats\":[{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl\",\"scopeId\":\"6361cd47-3db6-4983-8e26-38d374e5f95a\",\"chatId\":\"9dd6723e-33dc-4927-aa20-aec066b417a3\",\"seal\":{\"dev\":66306,\"ino\":2134110,\"birthtimeMs\":1791923181041.33,\"sha256\":\"b77e9be7febf01e8b6eb0f7ee270f73a4e95151ec30c5ae62bb876c80da51701\"},\"sourceRevision\":4},{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl\",\"scopeId\":\"97a3abdc-2cbd-47b6-be1b-cbc66d0860d8\",\"chatId\":\"76460354-8d47-4576-a055-8eab2281de2a\",\"seal\":{\"dev\":66306,\"ino\":2134106,\"birthtimeMs\":1791923169803.5803,\"sha256\":\"35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3\"},\"sourceRevision\":1}],\"pending\":null}",
+          "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+          "chats": [
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "sourceRevision": 4,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134110,
+                "birthtimeMs": 1791923181041.33,
+                "sha256": "b77e9be7febf01e8b6eb0f7ee270f73a4e95151ec30c5ae62bb876c80da51701"
+              },
+              "sourceText": "{\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\",\"note_prompt\":\"\",\"note_interval\":1,\"note_position\":1,\"note_depth\":4,\"note_role\":0,\"tainted\":true,\"timedWorldInfo\":{\"sticky\":{},\"cooldown\":{}},\"lastInContextMessageId\":0},\"user_name\":\"unused\",\"character_name\":\"unused\"}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"A edited by authenticated client two.\",\"extra\":{\"bias\":null},\"swipes\":[\"A edited by authenticated client two.\"],\"swipe_id\":0,\"swipe_info\":[{\"extra\":{}}]}\n{\"name\":\"User\",\"is_user\":true,\"is_system\":false,\"send_date\":\"2026-10-13T20:26:20.689Z\",\"mes\":\"Native reading remains usable after activation timeout.\",\"extra\":{\"isSmallSys\":false,\"reasoning\":\"\"},\"force_avatar\":\"/thumbnail?type=persona&file=user-default.png\"}\n{\"extra\":{\"api\":\"custom\",\"model\":\"dyl28-loopback\",\"reasoning\":\"\",\"reasoning_duration\":null,\"reasoning_signature\":null},\"name\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f\",\"is_user\":false,\"send_date\":\"2026-10-13T20:26:20.926Z\",\"mes\":\"Synthetic DYL28 reply.\",\"title\":\"\",\"gen_started\":\"2026-10-13T20:26:20.659Z\",\"gen_finished\":\"2026-10-13T20:26:20.925Z\",\"swipes\":[\"Synthetic DYL28 reply.\"],\"swipe_id\":0,\"swipe_info\":[{\"send_date\":\"2026-10-13T20:26:20.926Z\",\"gen_started\":\"2026-10-13T20:26:20.659Z\",\"gen_finished\":\"2026-10-13T20:26:20.925Z\",\"extra\":{\"api\":\"custom\",\"model\":\"dyl28-loopback\",\"reasoning\":\"\",\"reasoning_duration\":null,\"reasoning_signature\":null}}]}",
+              "sourceSha256": "b77e9be7febf01e8b6eb0f7ee270f73a4e95151ec30c5ae62bb876c80da51701",
+              "visualRecord": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"chatId\":\"9dd6723e-33dc-4927-aa20-aec066b417a3\",\"revision\":1,\"record\":{\"background\":\"forest\"}}"
+            },
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134106,
+                "birthtimeMs": 1791923169803.5803,
+                "sha256": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"B-only canonical transcript.\",\"extra\":{}}",
+              "sourceSha256": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3",
+              "visualRecord": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"chatId\":\"76460354-8d47-4576-a055-8eab2281de2a\",\"revision\":0,\"record\":{\"background\":null}}"
+            }
+          ]
+        },
+        "dyl28-b96dc8b1-2b37-4661-b310-a4d2145b8b0f": {
+          "registry": "{\"storeId\":\"457e195c-f97f-4dd5-a2a7-2fa8ffdaede9\",\"scopes\":[{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png\",\"scopeId\":\"b23357f1-4475-4e8d-83a5-723a25345776\"}],\"chats\":[{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl\",\"scopeId\":\"b23357f1-4475-4e8d-83a5-723a25345776\",\"chatId\":\"901493c7-0275-4ccb-a5f7-9fee2701f610\",\"seal\":{\"dev\":66306,\"ino\":2134098,\"birthtimeMs\":1791923169812.58,\"sha256\":\"d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd\"},\"sourceRevision\":1}],\"pending\":null}",
+          "storeId": "457e195c-f97f-4dd5-a2a7-2fa8ffdaede9",
+          "chats": [
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl",
+              "chatId": "901493c7-0275-4ccb-a5f7-9fee2701f610",
+              "scopeId": "b23357f1-4475-4e8d-83a5-723a25345776",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134098,
+                "birthtimeMs": 1791923169812.58,
+                "sha256": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"Other user transcript.\",\"extra\":{}}",
+              "sourceSha256": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd",
+              "visualRecord": "{\"storeId\":\"457e195c-f97f-4dd5-a2a7-2fa8ffdaede9\",\"chatId\":\"901493c7-0275-4ccb-a5f7-9fee2701f610\",\"revision\":0,\"record\":{\"background\":null}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "missing chat returns an empty native snapshot with no visual identity",
+      "result": "PASS",
+      "classification": "EXPERIMENTAL_HOST",
+      "missing": {
+        "dyl28Envelope": true,
+        "loadRequestId": "e0827eea-acf4-4d65-a013-f75346ea21b9",
+        "identity": null,
+        "sourceRevision": null,
+        "messages": [],
+        "unavailableReason": "UNRESOLVED_IDENTITY"
+      },
+      "actualState": {
+        "default-user": {
+          "registry": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"scopes\":[{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png\",\"scopeId\":\"6361cd47-3db6-4983-8e26-38d374e5f95a\"},{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1.png\",\"scopeId\":\"97a3abdc-2cbd-47b6-be1b-cbc66d0860d8\"}],\"chats\":[{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl\",\"scopeId\":\"6361cd47-3db6-4983-8e26-38d374e5f95a\",\"chatId\":\"9dd6723e-33dc-4927-aa20-aec066b417a3\",\"seal\":{\"dev\":66306,\"ino\":2134110,\"birthtimeMs\":1791923181041.33,\"sha256\":\"b77e9be7febf01e8b6eb0f7ee270f73a4e95151ec30c5ae62bb876c80da51701\"},\"sourceRevision\":4},{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl\",\"scopeId\":\"97a3abdc-2cbd-47b6-be1b-cbc66d0860d8\",\"chatId\":\"76460354-8d47-4576-a055-8eab2281de2a\",\"seal\":{\"dev\":66306,\"ino\":2134106,\"birthtimeMs\":1791923169803.5803,\"sha256\":\"35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3\"},\"sourceRevision\":1}],\"pending\":null}",
+          "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+          "chats": [
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "sourceRevision": 4,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134110,
+                "birthtimeMs": 1791923181041.33,
+                "sha256": "b77e9be7febf01e8b6eb0f7ee270f73a4e95151ec30c5ae62bb876c80da51701"
+              },
+              "sourceText": "{\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\",\"note_prompt\":\"\",\"note_interval\":1,\"note_position\":1,\"note_depth\":4,\"note_role\":0,\"tainted\":true,\"timedWorldInfo\":{\"sticky\":{},\"cooldown\":{}},\"lastInContextMessageId\":0},\"user_name\":\"unused\",\"character_name\":\"unused\"}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"A edited by authenticated client two.\",\"extra\":{\"bias\":null},\"swipes\":[\"A edited by authenticated client two.\"],\"swipe_id\":0,\"swipe_info\":[{\"extra\":{}}]}\n{\"name\":\"User\",\"is_user\":true,\"is_system\":false,\"send_date\":\"2026-10-13T20:26:20.689Z\",\"mes\":\"Native reading remains usable after activation timeout.\",\"extra\":{\"isSmallSys\":false,\"reasoning\":\"\"},\"force_avatar\":\"/thumbnail?type=persona&file=user-default.png\"}\n{\"extra\":{\"api\":\"custom\",\"model\":\"dyl28-loopback\",\"reasoning\":\"\",\"reasoning_duration\":null,\"reasoning_signature\":null},\"name\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f\",\"is_user\":false,\"send_date\":\"2026-10-13T20:26:20.926Z\",\"mes\":\"Synthetic DYL28 reply.\",\"title\":\"\",\"gen_started\":\"2026-10-13T20:26:20.659Z\",\"gen_finished\":\"2026-10-13T20:26:20.925Z\",\"swipes\":[\"Synthetic DYL28 reply.\"],\"swipe_id\":0,\"swipe_info\":[{\"send_date\":\"2026-10-13T20:26:20.926Z\",\"gen_started\":\"2026-10-13T20:26:20.659Z\",\"gen_finished\":\"2026-10-13T20:26:20.925Z\",\"extra\":{\"api\":\"custom\",\"model\":\"dyl28-loopback\",\"reasoning\":\"\",\"reasoning_duration\":null,\"reasoning_signature\":null}}]}",
+              "sourceSha256": "b77e9be7febf01e8b6eb0f7ee270f73a4e95151ec30c5ae62bb876c80da51701",
+              "visualRecord": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"chatId\":\"9dd6723e-33dc-4927-aa20-aec066b417a3\",\"revision\":1,\"record\":{\"background\":\"forest\"}}"
+            },
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134106,
+                "birthtimeMs": 1791923169803.5803,
+                "sha256": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"B-only canonical transcript.\",\"extra\":{}}",
+              "sourceSha256": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3",
+              "visualRecord": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"chatId\":\"76460354-8d47-4576-a055-8eab2281de2a\",\"revision\":0,\"record\":{\"background\":null}}"
+            }
+          ]
+        },
+        "dyl28-b96dc8b1-2b37-4661-b310-a4d2145b8b0f": {
+          "registry": "{\"storeId\":\"457e195c-f97f-4dd5-a2a7-2fa8ffdaede9\",\"scopes\":[{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png\",\"scopeId\":\"b23357f1-4475-4e8d-83a5-723a25345776\"}],\"chats\":[{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl\",\"scopeId\":\"b23357f1-4475-4e8d-83a5-723a25345776\",\"chatId\":\"901493c7-0275-4ccb-a5f7-9fee2701f610\",\"seal\":{\"dev\":66306,\"ino\":2134098,\"birthtimeMs\":1791923169812.58,\"sha256\":\"d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd\"},\"sourceRevision\":1}],\"pending\":null}",
+          "storeId": "457e195c-f97f-4dd5-a2a7-2fa8ffdaede9",
+          "chats": [
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl",
+              "chatId": "901493c7-0275-4ccb-a5f7-9fee2701f610",
+              "scopeId": "b23357f1-4475-4e8d-83a5-723a25345776",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134098,
+                "birthtimeMs": 1791923169812.58,
+                "sha256": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"Other user transcript.\",\"extra\":{}}",
+              "sourceSha256": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd",
+              "visualRecord": "{\"storeId\":\"457e195c-f97f-4dd5-a2a7-2fa8ffdaede9\",\"chatId\":\"901493c7-0275-4ccb-a5f7-9fee2701f610\",\"revision\":0,\"record\":{\"background\":null}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "native rename during pending load preserves chat ID/revision but refuses old locator-bound activation",
+      "result": "PASS",
+      "classification": "EXPERIMENTAL_HOST",
+      "beforeRename": {
+        "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/RenameTarget.jsonl",
+        "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+        "chatId": "e8f2a497-aa33-448c-8ecd-f5468ac44dab",
+        "seal": {
+          "dev": 66306,
+          "ino": 2134094,
+          "birthtimeMs": 1791923181238.3257,
+          "sha256": "952d8353f4d1975fa157193fdd7781f5393ba381032e5e3b55d0b084ed15bea8"
+        },
+        "sourceRevision": 1
+      },
+      "loadEnvelope": {
+        "dyl28Envelope": true,
+        "loadRequestId": "73ef1efd-ff25-445c-96dd-ea01e04d5443",
+        "identity": {
+          "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+          "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+          "chatId": "e8f2a497-aa33-448c-8ecd-f5468ac44dab"
+        },
+        "sourceRevision": 1,
+        "messages": [
+          {
+            "user_name": "Synthetic User",
+            "character_name": "Mira",
+            "chat_metadata": {
+              "integrity": "b96dc8b1-2b37-4661-b310-a4d2145b8b0f"
+            }
+          },
+          {
+            "name": "Mira",
+            "is_user": false,
+            "mes": "Rename race transcript.",
+            "extra": {}
+          }
+        ]
+      },
+      "afterRename": {
+        "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/RenamedDuringLoad.jsonl",
+        "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+        "chatId": "e8f2a497-aa33-448c-8ecd-f5468ac44dab",
+        "seal": {
+          "dev": 66306,
+          "ino": 2134173,
+          "birthtimeMs": 1791923181256.3252,
+          "sha256": "952d8353f4d1975fa157193fdd7781f5393ba381032e5e3b55d0b084ed15bea8"
+        },
+        "sourceRevision": 1
+      },
+      "actualState": {
+        "default-user": {
+          "registry": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"scopes\":[{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png\",\"scopeId\":\"6361cd47-3db6-4983-8e26-38d374e5f95a\"},{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1.png\",\"scopeId\":\"97a3abdc-2cbd-47b6-be1b-cbc66d0860d8\"}],\"chats\":[{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl\",\"scopeId\":\"6361cd47-3db6-4983-8e26-38d374e5f95a\",\"chatId\":\"9dd6723e-33dc-4927-aa20-aec066b417a3\",\"seal\":{\"dev\":66306,\"ino\":2134110,\"birthtimeMs\":1791923181041.33,\"sha256\":\"b77e9be7febf01e8b6eb0f7ee270f73a4e95151ec30c5ae62bb876c80da51701\"},\"sourceRevision\":4},{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl\",\"scopeId\":\"97a3abdc-2cbd-47b6-be1b-cbc66d0860d8\",\"chatId\":\"76460354-8d47-4576-a055-8eab2281de2a\",\"seal\":{\"dev\":66306,\"ino\":2134106,\"birthtimeMs\":1791923169803.5803,\"sha256\":\"35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3\"},\"sourceRevision\":1},{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/RenamedDuringLoad.jsonl\",\"scopeId\":\"6361cd47-3db6-4983-8e26-38d374e5f95a\",\"chatId\":\"e8f2a497-aa33-448c-8ecd-f5468ac44dab\",\"seal\":{\"dev\":66306,\"ino\":2134173,\"birthtimeMs\":1791923181256.3252,\"sha256\":\"952d8353f4d1975fa157193fdd7781f5393ba381032e5e3b55d0b084ed15bea8\"},\"sourceRevision\":1}],\"pending\":null}",
+          "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+          "chats": [
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "sourceRevision": 4,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134110,
+                "birthtimeMs": 1791923181041.33,
+                "sha256": "b77e9be7febf01e8b6eb0f7ee270f73a4e95151ec30c5ae62bb876c80da51701"
+              },
+              "sourceText": "{\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\",\"note_prompt\":\"\",\"note_interval\":1,\"note_position\":1,\"note_depth\":4,\"note_role\":0,\"tainted\":true,\"timedWorldInfo\":{\"sticky\":{},\"cooldown\":{}},\"lastInContextMessageId\":0},\"user_name\":\"unused\",\"character_name\":\"unused\"}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"A edited by authenticated client two.\",\"extra\":{\"bias\":null},\"swipes\":[\"A edited by authenticated client two.\"],\"swipe_id\":0,\"swipe_info\":[{\"extra\":{}}]}\n{\"name\":\"User\",\"is_user\":true,\"is_system\":false,\"send_date\":\"2026-10-13T20:26:20.689Z\",\"mes\":\"Native reading remains usable after activation timeout.\",\"extra\":{\"isSmallSys\":false,\"reasoning\":\"\"},\"force_avatar\":\"/thumbnail?type=persona&file=user-default.png\"}\n{\"extra\":{\"api\":\"custom\",\"model\":\"dyl28-loopback\",\"reasoning\":\"\",\"reasoning_duration\":null,\"reasoning_signature\":null},\"name\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f\",\"is_user\":false,\"send_date\":\"2026-10-13T20:26:20.926Z\",\"mes\":\"Synthetic DYL28 reply.\",\"title\":\"\",\"gen_started\":\"2026-10-13T20:26:20.659Z\",\"gen_finished\":\"2026-10-13T20:26:20.925Z\",\"swipes\":[\"Synthetic DYL28 reply.\"],\"swipe_id\":0,\"swipe_info\":[{\"send_date\":\"2026-10-13T20:26:20.926Z\",\"gen_started\":\"2026-10-13T20:26:20.659Z\",\"gen_finished\":\"2026-10-13T20:26:20.925Z\",\"extra\":{\"api\":\"custom\",\"model\":\"dyl28-loopback\",\"reasoning\":\"\",\"reasoning_duration\":null,\"reasoning_signature\":null}}]}",
+              "sourceSha256": "b77e9be7febf01e8b6eb0f7ee270f73a4e95151ec30c5ae62bb876c80da51701",
+              "visualRecord": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"chatId\":\"9dd6723e-33dc-4927-aa20-aec066b417a3\",\"revision\":1,\"record\":{\"background\":\"forest\"}}"
+            },
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134106,
+                "birthtimeMs": 1791923169803.5803,
+                "sha256": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"B-only canonical transcript.\",\"extra\":{}}",
+              "sourceSha256": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3",
+              "visualRecord": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"chatId\":\"76460354-8d47-4576-a055-8eab2281de2a\",\"revision\":0,\"record\":{\"background\":null}}"
+            },
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/RenamedDuringLoad.jsonl",
+              "chatId": "e8f2a497-aa33-448c-8ecd-f5468ac44dab",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134173,
+                "birthtimeMs": 1791923181256.3252,
+                "sha256": "952d8353f4d1975fa157193fdd7781f5393ba381032e5e3b55d0b084ed15bea8"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"Rename race transcript.\",\"extra\":{}}",
+              "sourceSha256": "952d8353f4d1975fa157193fdd7781f5393ba381032e5e3b55d0b084ed15bea8",
+              "visualRecord": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"chatId\":\"e8f2a497-aa33-448c-8ecd-f5468ac44dab\",\"revision\":0,\"record\":{\"background\":null}}"
+            }
+          ]
+        },
+        "dyl28-b96dc8b1-2b37-4661-b310-a4d2145b8b0f": {
+          "registry": "{\"storeId\":\"457e195c-f97f-4dd5-a2a7-2fa8ffdaede9\",\"scopes\":[{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png\",\"scopeId\":\"b23357f1-4475-4e8d-83a5-723a25345776\"}],\"chats\":[{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl\",\"scopeId\":\"b23357f1-4475-4e8d-83a5-723a25345776\",\"chatId\":\"901493c7-0275-4ccb-a5f7-9fee2701f610\",\"seal\":{\"dev\":66306,\"ino\":2134098,\"birthtimeMs\":1791923169812.58,\"sha256\":\"d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd\"},\"sourceRevision\":1}],\"pending\":null}",
+          "storeId": "457e195c-f97f-4dd5-a2a7-2fa8ffdaede9",
+          "chats": [
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl",
+              "chatId": "901493c7-0275-4ccb-a5f7-9fee2701f610",
+              "scopeId": "b23357f1-4475-4e8d-83a5-723a25345776",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134098,
+                "birthtimeMs": 1791923169812.58,
+                "sha256": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"Other user transcript.\",\"extra\":{}}",
+              "sourceSha256": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd",
+              "visualRecord": "{\"storeId\":\"457e195c-f97f-4dd5-a2a7-2fa8ffdaede9\",\"chatId\":\"901493c7-0275-4ccb-a5f7-9fee2701f610\",\"revision\":0,\"record\":{\"background\":null}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "different authenticated store and cookie session cannot reuse another client’s load identity",
+      "result": "PASS",
+      "classification": "EXPERIMENTAL_HOST",
+      "otherEnvelope": {
+        "dyl28Envelope": true,
+        "loadRequestId": "8128da55-d0f9-4e6e-b48f-ddefb192fc3a",
+        "identity": {
+          "storeId": "457e195c-f97f-4dd5-a2a7-2fa8ffdaede9",
+          "scopeId": "b23357f1-4475-4e8d-83a5-723a25345776",
+          "chatId": "901493c7-0275-4ccb-a5f7-9fee2701f610"
+        },
+        "sourceRevision": 1,
+        "messages": [
+          {
+            "user_name": "Synthetic User",
+            "character_name": "Mira",
+            "chat_metadata": {
+              "integrity": "b96dc8b1-2b37-4661-b310-a4d2145b8b0f"
+            }
+          },
+          {
+            "name": "Mira",
+            "is_user": false,
+            "mes": "Other user transcript.",
+            "extra": {}
+          }
+        ]
+      },
+      "otherTarget": {
+        "storeId": "457e195c-f97f-4dd5-a2a7-2fa8ffdaede9",
+        "scopeId": "b23357f1-4475-4e8d-83a5-723a25345776",
+        "chatId": "901493c7-0275-4ccb-a5f7-9fee2701f610",
+        "clientId": "83e920d3-e16a-4b55-b6b5-27d5f42d9213",
+        "loadRequestId": "8128da55-d0f9-4e6e-b48f-ddefb192fc3a",
+        "sourceRevision": 1,
+        "viewToken": "92c27abd-b75c-48bb-af6b-368a2d778366"
+      },
+      "primaryStoreId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+      "actualState": {
+        "default-user": {
+          "registry": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"scopes\":[{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png\",\"scopeId\":\"6361cd47-3db6-4983-8e26-38d374e5f95a\"},{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1.png\",\"scopeId\":\"97a3abdc-2cbd-47b6-be1b-cbc66d0860d8\"}],\"chats\":[{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl\",\"scopeId\":\"6361cd47-3db6-4983-8e26-38d374e5f95a\",\"chatId\":\"9dd6723e-33dc-4927-aa20-aec066b417a3\",\"seal\":{\"dev\":66306,\"ino\":2134110,\"birthtimeMs\":1791923181041.33,\"sha256\":\"b77e9be7febf01e8b6eb0f7ee270f73a4e95151ec30c5ae62bb876c80da51701\"},\"sourceRevision\":4},{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl\",\"scopeId\":\"97a3abdc-2cbd-47b6-be1b-cbc66d0860d8\",\"chatId\":\"76460354-8d47-4576-a055-8eab2281de2a\",\"seal\":{\"dev\":66306,\"ino\":2134106,\"birthtimeMs\":1791923169803.5803,\"sha256\":\"35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3\"},\"sourceRevision\":1},{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/RenamedDuringLoad.jsonl\",\"scopeId\":\"6361cd47-3db6-4983-8e26-38d374e5f95a\",\"chatId\":\"e8f2a497-aa33-448c-8ecd-f5468ac44dab\",\"seal\":{\"dev\":66306,\"ino\":2134173,\"birthtimeMs\":1791923181256.3252,\"sha256\":\"952d8353f4d1975fa157193fdd7781f5393ba381032e5e3b55d0b084ed15bea8\"},\"sourceRevision\":1}],\"pending\":null}",
+          "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+          "chats": [
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "sourceRevision": 4,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134110,
+                "birthtimeMs": 1791923181041.33,
+                "sha256": "b77e9be7febf01e8b6eb0f7ee270f73a4e95151ec30c5ae62bb876c80da51701"
+              },
+              "sourceText": "{\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\",\"note_prompt\":\"\",\"note_interval\":1,\"note_position\":1,\"note_depth\":4,\"note_role\":0,\"tainted\":true,\"timedWorldInfo\":{\"sticky\":{},\"cooldown\":{}},\"lastInContextMessageId\":0},\"user_name\":\"unused\",\"character_name\":\"unused\"}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"A edited by authenticated client two.\",\"extra\":{\"bias\":null},\"swipes\":[\"A edited by authenticated client two.\"],\"swipe_id\":0,\"swipe_info\":[{\"extra\":{}}]}\n{\"name\":\"User\",\"is_user\":true,\"is_system\":false,\"send_date\":\"2026-10-13T20:26:20.689Z\",\"mes\":\"Native reading remains usable after activation timeout.\",\"extra\":{\"isSmallSys\":false,\"reasoning\":\"\"},\"force_avatar\":\"/thumbnail?type=persona&file=user-default.png\"}\n{\"extra\":{\"api\":\"custom\",\"model\":\"dyl28-loopback\",\"reasoning\":\"\",\"reasoning_duration\":null,\"reasoning_signature\":null},\"name\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f\",\"is_user\":false,\"send_date\":\"2026-10-13T20:26:20.926Z\",\"mes\":\"Synthetic DYL28 reply.\",\"title\":\"\",\"gen_started\":\"2026-10-13T20:26:20.659Z\",\"gen_finished\":\"2026-10-13T20:26:20.925Z\",\"swipes\":[\"Synthetic DYL28 reply.\"],\"swipe_id\":0,\"swipe_info\":[{\"send_date\":\"2026-10-13T20:26:20.926Z\",\"gen_started\":\"2026-10-13T20:26:20.659Z\",\"gen_finished\":\"2026-10-13T20:26:20.925Z\",\"extra\":{\"api\":\"custom\",\"model\":\"dyl28-loopback\",\"reasoning\":\"\",\"reasoning_duration\":null,\"reasoning_signature\":null}}]}",
+              "sourceSha256": "b77e9be7febf01e8b6eb0f7ee270f73a4e95151ec30c5ae62bb876c80da51701",
+              "visualRecord": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"chatId\":\"9dd6723e-33dc-4927-aa20-aec066b417a3\",\"revision\":1,\"record\":{\"background\":\"forest\"}}"
+            },
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134106,
+                "birthtimeMs": 1791923169803.5803,
+                "sha256": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"B-only canonical transcript.\",\"extra\":{}}",
+              "sourceSha256": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3",
+              "visualRecord": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"chatId\":\"76460354-8d47-4576-a055-8eab2281de2a\",\"revision\":0,\"record\":{\"background\":null}}"
+            },
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/RenamedDuringLoad.jsonl",
+              "chatId": "e8f2a497-aa33-448c-8ecd-f5468ac44dab",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134173,
+                "birthtimeMs": 1791923181256.3252,
+                "sha256": "952d8353f4d1975fa157193fdd7781f5393ba381032e5e3b55d0b084ed15bea8"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"Rename race transcript.\",\"extra\":{}}",
+              "sourceSha256": "952d8353f4d1975fa157193fdd7781f5393ba381032e5e3b55d0b084ed15bea8",
+              "visualRecord": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"chatId\":\"e8f2a497-aa33-448c-8ecd-f5468ac44dab\",\"revision\":0,\"record\":{\"background\":null}}"
+            }
+          ]
+        },
+        "dyl28-b96dc8b1-2b37-4661-b310-a4d2145b8b0f": {
+          "registry": "{\"storeId\":\"457e195c-f97f-4dd5-a2a7-2fa8ffdaede9\",\"scopes\":[{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png\",\"scopeId\":\"b23357f1-4475-4e8d-83a5-723a25345776\"}],\"chats\":[{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl\",\"scopeId\":\"b23357f1-4475-4e8d-83a5-723a25345776\",\"chatId\":\"901493c7-0275-4ccb-a5f7-9fee2701f610\",\"seal\":{\"dev\":66306,\"ino\":2134098,\"birthtimeMs\":1791923169812.58,\"sha256\":\"d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd\"},\"sourceRevision\":1}],\"pending\":null}",
+          "storeId": "457e195c-f97f-4dd5-a2a7-2fa8ffdaede9",
+          "chats": [
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl",
+              "chatId": "901493c7-0275-4ccb-a5f7-9fee2701f610",
+              "scopeId": "b23357f1-4475-4e8d-83a5-723a25345776",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134098,
+                "birthtimeMs": 1791923169812.58,
+                "sha256": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"Other user transcript.\",\"extra\":{}}",
+              "sourceSha256": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd",
+              "visualRecord": "{\"storeId\":\"457e195c-f97f-4dd5-a2a7-2fa8ffdaede9\",\"chatId\":\"901493c7-0275-4ccb-a5f7-9fee2701f610\",\"revision\":0,\"record\":{\"background\":null}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "load request expires after the host TTL and cannot grant a visit",
+      "result": "PASS",
+      "classification": "EXPERIMENTAL_HOST",
+      "request": {
+        "clientId": "8d3662fb-5e08-4bfe-8be4-35bda7862f0e",
+        "sequence": 1,
+        "loadRequestId": "5af51412-2b7e-4a4d-ae74-fbcaafe7081b"
+      },
+      "expirationResponse": {
+        "error": "EXPIRED_LOAD"
+      },
+      "actualState": {
+        "default-user": {
+          "registry": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"scopes\":[{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png\",\"scopeId\":\"6361cd47-3db6-4983-8e26-38d374e5f95a\"},{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1.png\",\"scopeId\":\"97a3abdc-2cbd-47b6-be1b-cbc66d0860d8\"}],\"chats\":[{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl\",\"scopeId\":\"6361cd47-3db6-4983-8e26-38d374e5f95a\",\"chatId\":\"9dd6723e-33dc-4927-aa20-aec066b417a3\",\"seal\":{\"dev\":66306,\"ino\":2134110,\"birthtimeMs\":1791923181041.33,\"sha256\":\"b77e9be7febf01e8b6eb0f7ee270f73a4e95151ec30c5ae62bb876c80da51701\"},\"sourceRevision\":4},{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl\",\"scopeId\":\"97a3abdc-2cbd-47b6-be1b-cbc66d0860d8\",\"chatId\":\"76460354-8d47-4576-a055-8eab2281de2a\",\"seal\":{\"dev\":66306,\"ino\":2134106,\"birthtimeMs\":1791923169803.5803,\"sha256\":\"35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3\"},\"sourceRevision\":1},{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/RenamedDuringLoad.jsonl\",\"scopeId\":\"6361cd47-3db6-4983-8e26-38d374e5f95a\",\"chatId\":\"e8f2a497-aa33-448c-8ecd-f5468ac44dab\",\"seal\":{\"dev\":66306,\"ino\":2134173,\"birthtimeMs\":1791923181256.3252,\"sha256\":\"952d8353f4d1975fa157193fdd7781f5393ba381032e5e3b55d0b084ed15bea8\"},\"sourceRevision\":1}],\"pending\":null}",
+          "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+          "chats": [
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "sourceRevision": 4,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134110,
+                "birthtimeMs": 1791923181041.33,
+                "sha256": "b77e9be7febf01e8b6eb0f7ee270f73a4e95151ec30c5ae62bb876c80da51701"
+              },
+              "sourceText": "{\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\",\"note_prompt\":\"\",\"note_interval\":1,\"note_position\":1,\"note_depth\":4,\"note_role\":0,\"tainted\":true,\"timedWorldInfo\":{\"sticky\":{},\"cooldown\":{}},\"lastInContextMessageId\":0},\"user_name\":\"unused\",\"character_name\":\"unused\"}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"A edited by authenticated client two.\",\"extra\":{\"bias\":null},\"swipes\":[\"A edited by authenticated client two.\"],\"swipe_id\":0,\"swipe_info\":[{\"extra\":{}}]}\n{\"name\":\"User\",\"is_user\":true,\"is_system\":false,\"send_date\":\"2026-10-13T20:26:20.689Z\",\"mes\":\"Native reading remains usable after activation timeout.\",\"extra\":{\"isSmallSys\":false,\"reasoning\":\"\"},\"force_avatar\":\"/thumbnail?type=persona&file=user-default.png\"}\n{\"extra\":{\"api\":\"custom\",\"model\":\"dyl28-loopback\",\"reasoning\":\"\",\"reasoning_duration\":null,\"reasoning_signature\":null},\"name\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f\",\"is_user\":false,\"send_date\":\"2026-10-13T20:26:20.926Z\",\"mes\":\"Synthetic DYL28 reply.\",\"title\":\"\",\"gen_started\":\"2026-10-13T20:26:20.659Z\",\"gen_finished\":\"2026-10-13T20:26:20.925Z\",\"swipes\":[\"Synthetic DYL28 reply.\"],\"swipe_id\":0,\"swipe_info\":[{\"send_date\":\"2026-10-13T20:26:20.926Z\",\"gen_started\":\"2026-10-13T20:26:20.659Z\",\"gen_finished\":\"2026-10-13T20:26:20.925Z\",\"extra\":{\"api\":\"custom\",\"model\":\"dyl28-loopback\",\"reasoning\":\"\",\"reasoning_duration\":null,\"reasoning_signature\":null}}]}",
+              "sourceSha256": "b77e9be7febf01e8b6eb0f7ee270f73a4e95151ec30c5ae62bb876c80da51701",
+              "visualRecord": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"chatId\":\"9dd6723e-33dc-4927-aa20-aec066b417a3\",\"revision\":1,\"record\":{\"background\":\"forest\"}}"
+            },
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134106,
+                "birthtimeMs": 1791923169803.5803,
+                "sha256": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"B-only canonical transcript.\",\"extra\":{}}",
+              "sourceSha256": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3",
+              "visualRecord": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"chatId\":\"76460354-8d47-4576-a055-8eab2281de2a\",\"revision\":0,\"record\":{\"background\":null}}"
+            },
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/RenamedDuringLoad.jsonl",
+              "chatId": "e8f2a497-aa33-448c-8ecd-f5468ac44dab",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134173,
+                "birthtimeMs": 1791923181256.3252,
+                "sha256": "952d8353f4d1975fa157193fdd7781f5393ba381032e5e3b55d0b084ed15bea8"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"Rename race transcript.\",\"extra\":{}}",
+              "sourceSha256": "952d8353f4d1975fa157193fdd7781f5393ba381032e5e3b55d0b084ed15bea8",
+              "visualRecord": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"chatId\":\"e8f2a497-aa33-448c-8ecd-f5468ac44dab\",\"revision\":0,\"record\":{\"background\":null}}"
+            }
+          ]
+        },
+        "dyl28-b96dc8b1-2b37-4661-b310-a4d2145b8b0f": {
+          "registry": "{\"storeId\":\"457e195c-f97f-4dd5-a2a7-2fa8ffdaede9\",\"scopes\":[{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png\",\"scopeId\":\"b23357f1-4475-4e8d-83a5-723a25345776\"}],\"chats\":[{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl\",\"scopeId\":\"b23357f1-4475-4e8d-83a5-723a25345776\",\"chatId\":\"901493c7-0275-4ccb-a5f7-9fee2701f610\",\"seal\":{\"dev\":66306,\"ino\":2134098,\"birthtimeMs\":1791923169812.58,\"sha256\":\"d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd\"},\"sourceRevision\":1}],\"pending\":null}",
+          "storeId": "457e195c-f97f-4dd5-a2a7-2fa8ffdaede9",
+          "chats": [
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl",
+              "chatId": "901493c7-0275-4ccb-a5f7-9fee2701f610",
+              "scopeId": "b23357f1-4475-4e8d-83a5-723a25345776",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134098,
+                "birthtimeMs": 1791923169812.58,
+                "sha256": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"Other user transcript.\",\"extra\":{}}",
+              "sourceSha256": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd",
+              "visualRecord": "{\"storeId\":\"457e195c-f97f-4dd5-a2a7-2fa8ffdaede9\",\"chatId\":\"901493c7-0275-4ccb-a5f7-9fee2701f610\",\"revision\":0,\"record\":{\"background\":null}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "host restart recovers identity, source revision and visual record; old in-memory visit is rejected and a new visit is issued",
+      "result": "PASS",
+      "classification": "EXPERIMENTAL_HOST + NATIVE_HOST_UI",
+      "persistedChat": {
+        "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl",
+        "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+        "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+        "seal": {
+          "dev": 66306,
+          "ino": 2134110,
+          "birthtimeMs": 1791923181041.33,
+          "sha256": "b77e9be7febf01e8b6eb0f7ee270f73a4e95151ec30c5ae62bb876c80da51701"
+        },
+        "sourceRevision": 4
+      },
+      "persistedVisualRecord": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"chatId\":\"9dd6723e-33dc-4927-aa20-aec066b417a3\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+      "recovered": {
+        "avatar": "Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png",
+        "chatName": "Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms",
+        "messages": [
+          "A edited by authenticated client two.",
+          "Native reading remains usable after activation timeout.",
+          "Synthetic DYL28 reply."
+        ],
+        "dom": [
+          "A edited by authenticated client two.",
+          "Native reading remains usable after activation timeout.",
+          "Synthetic DYL28 reply."
+        ],
+        "target": {
+          "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+          "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+          "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+          "clientId": "20095e84-87b4-4478-aed0-8d4e0dca7718",
+          "loadRequestId": "a11e032b-bc2a-45c2-a0b7-53896811ef6d",
+          "sourceRevision": 4,
+          "viewToken": "455bd6ff-ea60-4943-933e-00a5db8b9664"
+        },
+        "history": [
+          {
+            "epoch": 2,
+            "loadRequestId": "a11e032b-bc2a-45c2-a0b7-53896811ef6d",
+            "target": {
+              "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "clientId": "20095e84-87b4-4478-aed0-8d4e0dca7718",
+              "loadRequestId": "a11e032b-bc2a-45c2-a0b7-53896811ef6d",
+              "sourceRevision": 4,
+              "viewToken": "455bd6ff-ea60-4943-933e-00a5db8b9664"
+            }
+          }
+        ]
+      },
+      "actualState": {
+        "default-user": {
+          "registry": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"scopes\":[{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png\",\"scopeId\":\"6361cd47-3db6-4983-8e26-38d374e5f95a\"},{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1.png\",\"scopeId\":\"97a3abdc-2cbd-47b6-be1b-cbc66d0860d8\"}],\"chats\":[{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl\",\"scopeId\":\"6361cd47-3db6-4983-8e26-38d374e5f95a\",\"chatId\":\"9dd6723e-33dc-4927-aa20-aec066b417a3\",\"seal\":{\"dev\":66306,\"ino\":2134110,\"birthtimeMs\":1791923181041.33,\"sha256\":\"b77e9be7febf01e8b6eb0f7ee270f73a4e95151ec30c5ae62bb876c80da51701\"},\"sourceRevision\":4},{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl\",\"scopeId\":\"97a3abdc-2cbd-47b6-be1b-cbc66d0860d8\",\"chatId\":\"76460354-8d47-4576-a055-8eab2281de2a\",\"seal\":{\"dev\":66306,\"ino\":2134106,\"birthtimeMs\":1791923169803.5803,\"sha256\":\"35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3\"},\"sourceRevision\":1},{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/RenamedDuringLoad.jsonl\",\"scopeId\":\"6361cd47-3db6-4983-8e26-38d374e5f95a\",\"chatId\":\"e8f2a497-aa33-448c-8ecd-f5468ac44dab\",\"seal\":{\"dev\":66306,\"ino\":2134173,\"birthtimeMs\":1791923181256.3252,\"sha256\":\"952d8353f4d1975fa157193fdd7781f5393ba381032e5e3b55d0b084ed15bea8\"},\"sourceRevision\":1}],\"pending\":null}",
+          "storeId": "4b659e6e-3fce-4235-b1e3-06f0cd811e6e",
+          "chats": [
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl",
+              "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "sourceRevision": 4,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134110,
+                "birthtimeMs": 1791923181041.33,
+                "sha256": "b77e9be7febf01e8b6eb0f7ee270f73a4e95151ec30c5ae62bb876c80da51701"
+              },
+              "sourceText": "{\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\",\"note_prompt\":\"\",\"note_interval\":1,\"note_position\":1,\"note_depth\":4,\"note_role\":0,\"tainted\":true,\"timedWorldInfo\":{\"sticky\":{},\"cooldown\":{}},\"lastInContextMessageId\":0},\"user_name\":\"unused\",\"character_name\":\"unused\"}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"A edited by authenticated client two.\",\"extra\":{\"bias\":null},\"swipes\":[\"A edited by authenticated client two.\"],\"swipe_id\":0,\"swipe_info\":[{\"extra\":{}}]}\n{\"name\":\"User\",\"is_user\":true,\"is_system\":false,\"send_date\":\"2026-10-13T20:26:20.689Z\",\"mes\":\"Native reading remains usable after activation timeout.\",\"extra\":{\"isSmallSys\":false,\"reasoning\":\"\"},\"force_avatar\":\"/thumbnail?type=persona&file=user-default.png\"}\n{\"extra\":{\"api\":\"custom\",\"model\":\"dyl28-loopback\",\"reasoning\":\"\",\"reasoning_duration\":null,\"reasoning_signature\":null},\"name\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f\",\"is_user\":false,\"send_date\":\"2026-10-13T20:26:20.926Z\",\"mes\":\"Synthetic DYL28 reply.\",\"title\":\"\",\"gen_started\":\"2026-10-13T20:26:20.659Z\",\"gen_finished\":\"2026-10-13T20:26:20.925Z\",\"swipes\":[\"Synthetic DYL28 reply.\"],\"swipe_id\":0,\"swipe_info\":[{\"send_date\":\"2026-10-13T20:26:20.926Z\",\"gen_started\":\"2026-10-13T20:26:20.659Z\",\"gen_finished\":\"2026-10-13T20:26:20.925Z\",\"extra\":{\"api\":\"custom\",\"model\":\"dyl28-loopback\",\"reasoning\":\"\",\"reasoning_duration\":null,\"reasoning_signature\":null}}]}",
+              "sourceSha256": "b77e9be7febf01e8b6eb0f7ee270f73a4e95151ec30c5ae62bb876c80da51701",
+              "visualRecord": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"chatId\":\"9dd6723e-33dc-4927-aa20-aec066b417a3\",\"revision\":1,\"record\":{\"background\":\"forest\"}}"
+            },
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl",
+              "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+              "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134106,
+                "birthtimeMs": 1791923169803.5803,
+                "sha256": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"B-only canonical transcript.\",\"extra\":{}}",
+              "sourceSha256": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3",
+              "visualRecord": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"chatId\":\"76460354-8d47-4576-a055-8eab2281de2a\",\"revision\":0,\"record\":{\"background\":null}}"
+            },
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/RenamedDuringLoad.jsonl",
+              "chatId": "e8f2a497-aa33-448c-8ecd-f5468ac44dab",
+              "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134173,
+                "birthtimeMs": 1791923181256.3252,
+                "sha256": "952d8353f4d1975fa157193fdd7781f5393ba381032e5e3b55d0b084ed15bea8"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"Rename race transcript.\",\"extra\":{}}",
+              "sourceSha256": "952d8353f4d1975fa157193fdd7781f5393ba381032e5e3b55d0b084ed15bea8",
+              "visualRecord": "{\"storeId\":\"4b659e6e-3fce-4235-b1e3-06f0cd811e6e\",\"chatId\":\"e8f2a497-aa33-448c-8ecd-f5468ac44dab\",\"revision\":0,\"record\":{\"background\":null}}"
+            }
+          ]
+        },
+        "dyl28-b96dc8b1-2b37-4661-b310-a4d2145b8b0f": {
+          "registry": "{\"storeId\":\"457e195c-f97f-4dd5-a2a7-2fa8ffdaede9\",\"scopes\":[{\"avatar\":\"Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f.png\",\"scopeId\":\"b23357f1-4475-4e8d-83a5-723a25345776\"}],\"chats\":[{\"relativePath\":\"chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl\",\"scopeId\":\"b23357f1-4475-4e8d-83a5-723a25345776\",\"chatId\":\"901493c7-0275-4ccb-a5f7-9fee2701f610\",\"seal\":{\"dev\":66306,\"ino\":2134098,\"birthtimeMs\":1791923169812.58,\"sha256\":\"d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd\"},\"sourceRevision\":1}],\"pending\":null}",
+          "storeId": "457e195c-f97f-4dd5-a2a7-2fa8ffdaede9",
+          "chats": [
+            {
+              "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl",
+              "chatId": "901493c7-0275-4ccb-a5f7-9fee2701f610",
+              "scopeId": "b23357f1-4475-4e8d-83a5-723a25345776",
+              "sourceRevision": 1,
+              "deleted": false,
+              "seal": {
+                "dev": 66306,
+                "ino": 2134098,
+                "birthtimeMs": 1791923169812.58,
+                "sha256": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd"
+              },
+              "sourceText": "{\"user_name\":\"Synthetic User\",\"character_name\":\"Mira\",\"chat_metadata\":{\"integrity\":\"b96dc8b1-2b37-4661-b310-a4d2145b8b0f\"}}\n{\"name\":\"Mira\",\"is_user\":false,\"mes\":\"Other user transcript.\",\"extra\":{}}",
+              "sourceSha256": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd",
+              "visualRecord": "{\"storeId\":\"457e195c-f97f-4dd5-a2a7-2fa8ffdaede9\",\"chatId\":\"901493c7-0275-4ccb-a5f7-9fee2701f610\",\"revision\":0,\"record\":{\"background\":null}}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "sourceSnapshots": [
+    {
+      "name": "native create/save allocates host identity and sourceRevision 1 for A and B",
+      "canonicalSha256": {
+        "default-user/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl": "8a07ae15da5c98d9a8539ff21ee30cd2c8e5b34a28d697647139d55d010c2d12",
+        "default-user/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3",
+        "dyl28-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd"
+      }
+    },
+    {
+      "name": "delayed native A response after B: B transcript, DOM, identity and target stay current; A load token is stale",
+      "canonicalSha256": {
+        "default-user/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl": "8a07ae15da5c98d9a8539ff21ee30cd2c8e5b34a28d697647139d55d010c2d12",
+        "default-user/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3",
+        "dyl28-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd"
+      }
+    },
+    {
+      "name": "A-B-A with reordered native transcript responses: only latest A request and visit remain accepted",
+      "canonicalSha256": {
+        "default-user/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl": "8a07ae15da5c98d9a8539ff21ee30cd2c8e5b34a28d697647139d55d010c2d12",
+        "default-user/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3",
+        "dyl28-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd"
+      }
+    },
+    {
+      "name": "held native activation acknowledgement across A-B-A is discarded without restoring its visit",
+      "canonicalSha256": {
+        "default-user/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl": "8a07ae15da5c98d9a8539ff21ee30cd2c8e5b34a28d697647139d55d010c2d12",
+        "default-user/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3",
+        "dyl28-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd"
+      }
+    },
+    {
+      "name": "old A visual CAS held across native A-B-A is refused against the old visit",
+      "canonicalSha256": {
+        "default-user/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl": "8a07ae15da5c98d9a8539ff21ee30cd2c8e5b34a28d697647139d55d010c2d12",
+        "default-user/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3",
+        "dyl28-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd"
+      }
+    },
+    {
+      "name": "canonical edit during pending load: old revision 1 is not committed, a fresh revision 2 load is activated",
+      "canonicalSha256": {
+        "default-user/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl": "54a45366d69052030cc2895660a9ff7bc0276ea865ad16016fd387cdc2881ac9",
+        "default-user/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3",
+        "dyl28-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd"
+      }
+    },
+    {
+      "name": "two authenticated clients on one host process: source revision 2 shared, visit tokens distinct, one visual CAS wins without canonical mutation",
+      "canonicalSha256": {
+        "default-user/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl": "54a45366d69052030cc2895660a9ff7bc0276ea865ad16016fd387cdc2881ac9",
+        "default-user/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3",
+        "dyl28-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd"
+      }
+    },
+    {
+      "name": "activation acknowledgement timeout leaves visuals unavailable while native text and ordinary reply/save continue",
+      "canonicalSha256": {
+        "default-user/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl": "b77e9be7febf01e8b6eb0f7ee270f73a4e95151ec30c5ae62bb876c80da51701",
+        "default-user/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3",
+        "dyl28-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd"
+      }
+    },
+    {
+      "name": "native Temporary Chat transition revokes the persisted-chat visit",
+      "canonicalSha256": {
+        "default-user/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl": "b77e9be7febf01e8b6eb0f7ee270f73a4e95151ec30c5ae62bb876c80da51701",
+        "default-user/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3",
+        "dyl28-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd"
+      }
+    },
+    {
+      "name": "missing chat returns an empty native snapshot with no visual identity",
+      "canonicalSha256": {
+        "default-user/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl": "b77e9be7febf01e8b6eb0f7ee270f73a4e95151ec30c5ae62bb876c80da51701",
+        "default-user/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3",
+        "dyl28-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd"
+      }
+    },
+    {
+      "name": "native rename during pending load preserves chat ID/revision but refuses old locator-bound activation",
+      "canonicalSha256": {
+        "default-user/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl": "b77e9be7febf01e8b6eb0f7ee270f73a4e95151ec30c5ae62bb876c80da51701",
+        "default-user/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3",
+        "default-user/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/RenamedDuringLoad.jsonl": "952d8353f4d1975fa157193fdd7781f5393ba381032e5e3b55d0b084ed15bea8",
+        "dyl28-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd"
+      }
+    },
+    {
+      "name": "different authenticated store and cookie session cannot reuse another client’s load identity",
+      "canonicalSha256": {
+        "default-user/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl": "b77e9be7febf01e8b6eb0f7ee270f73a4e95151ec30c5ae62bb876c80da51701",
+        "default-user/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3",
+        "default-user/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/RenamedDuringLoad.jsonl": "952d8353f4d1975fa157193fdd7781f5393ba381032e5e3b55d0b084ed15bea8",
+        "dyl28-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd"
+      }
+    },
+    {
+      "name": "load request expires after the host TTL and cannot grant a visit",
+      "canonicalSha256": {
+        "default-user/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl": "b77e9be7febf01e8b6eb0f7ee270f73a4e95151ec30c5ae62bb876c80da51701",
+        "default-user/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3",
+        "default-user/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/RenamedDuringLoad.jsonl": "952d8353f4d1975fa157193fdd7781f5393ba381032e5e3b55d0b084ed15bea8",
+        "dyl28-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd"
+      }
+    },
+    {
+      "name": "host restart recovers identity, source revision and visual record; old in-memory visit is rejected and a new visit is issued",
+      "canonicalSha256": {
+        "default-user/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl": "b77e9be7febf01e8b6eb0f7ee270f73a4e95151ec30c5ae62bb876c80da51701",
+        "default-user/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3",
+        "default-user/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/RenamedDuringLoad.jsonl": "952d8353f4d1975fa157193fdd7781f5393ba381032e5e3b55d0b084ed15bea8",
+        "dyl28-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd"
+      }
+    }
+  ],
+  "files": {
+    "host-storage.mjs": "77c5397c402e40bbc1580eb55e9f6df1559d1eaa7ab9ad5178e2ba86d4bd722a",
+    "host-visit.js": "82d8478c8316bc13924b474b28faef1944a9e4da9eeb391f7f2af81521a7fd72",
+    "host-envelope.patch": "947c3ffe6f8901996fa0039f20923f1db3bdba1bf108e40e21df5aca425b043a",
+    "host-probe.mjs": "a8a6bcb19d20400e66fbe3298ad78e7aa1475fa1fb1f94153d82641242a21334",
+    "dyl27-host-mount.patch": "a30ddf37b47c99d3db0e575df339e8fe3411b97914551a1351f9d0d6e312c6aa"
+  },
+  "initialMainSha": "3c159fd9031a50e70e061e47948851d506764131",
+  "initialFixtures": {
+    "a": {
+      "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl",
+      "scopeId": "6361cd47-3db6-4983-8e26-38d374e5f95a",
+      "chatId": "9dd6723e-33dc-4927-aa20-aec066b417a3",
+      "seal": {
+        "dev": 66306,
+        "ino": 2134094,
+        "birthtimeMs": 1791923169792.5806,
+        "sha256": "8a07ae15da5c98d9a8539ff21ee30cd2c8e5b34a28d697647139d55d010c2d12"
+      },
+      "sourceRevision": 1
+    },
+    "b": {
+      "relativePath": "chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl",
+      "scopeId": "97a3abdc-2cbd-47b6-be1b-cbc66d0860d8",
+      "chatId": "76460354-8d47-4576-a055-8eab2281de2a",
+      "seal": {
+        "dev": 66306,
+        "ino": 2134106,
+        "birthtimeMs": 1791923169803.5803,
+        "sha256": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3"
+      },
+      "sourceRevision": 1
+    },
+    "canonicalSha256": {
+      "default-user/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s714ms.jsonl": "8a07ae15da5c98d9a8539ff21ee30cd2c8e5b34a28d697647139d55d010c2d12",
+      "default-user/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f1/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s735ms.jsonl": "35fe548464d5acf9132eeb4e253431c4b6d5409781bd9773c3504e055a8bf6d3",
+      "dyl28-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/chats/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f/Mira-b96dc8b1-2b37-4661-b310-a4d2145b8b0f - 2026-10-13@13h26m09s750ms.jsonl": "d49deda0a24e49b7ee744b301c7853c86608fba19f66f8d6dc957587dc66b4fd"
+    }
+  },
+  "browser": "151.0.7922.34",
+  "result": "PASS_WITH_BOUNDED_CHARACTER_CHAT_LIMITS",
+  "recommendation": "REVISE",
+  "cleanup": {
+    "ownedRootRemoved": true,
+    "hostStopped": true,
+    "sourceCheckoutPresent": true,
+    "sourceStatusUnchanged": true
+  }
+}
