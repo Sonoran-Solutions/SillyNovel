@@ -600,6 +600,19 @@ try {
         otherEnvelope, otherTarget, primaryStoreId: registry('default-user').storeId,
     });
 
+    const expiringClient = (await first.api('client')).clientId;
+    const expiringEnvelope = await first.request('/api/chats/get', { avatar_url: avatarA, file_name: chatNameA,
+        dyl28ClientId: expiringClient, dyl28Sequence: 1 });
+    assert.equal(expiringEnvelope.dyl28Envelope, true);
+    await sleep(30100);
+    const expiredLoad = await first.api('accept-load', { clientId: expiringClient, sequence: 1,
+        loadRequestId: expiringEnvelope.loadRequestId }, 409);
+    assert.deepEqual(expiredLoad, { error: 'EXPIRED_LOAD' });
+    checkpoint('load request expires after the host TTL and cannot grant a visit', 'EXPERIMENTAL_HOST', {
+        request: { clientId: expiringClient, sequence: 1, loadRequestId: expiringEnvelope.loadRequestId },
+        expirationResponse: expiredLoad,
+    });
+
     // Close native pages before restart; the registry and visual bytes must recover, while in-memory clients do not.
     const persistedA = registry('default-user').chats.find(chat => chat.chatId === a.chatId);
     const persistedVisual = fs.readFileSync(visualFile('default-user', a.chatId), 'utf8');
