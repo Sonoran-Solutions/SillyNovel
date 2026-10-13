@@ -309,8 +309,7 @@ export function createHostAdapter(getContext) {
         if (matches.length !== 1 || !sameSource(matches[0], selected)) return false;
         const chat = globalThis.document?.getElementById('chat');
         if (typeof chat?.scrollTo !== 'function') return false;
-        // ponytail: exact handoff covers rendered messages only; widen with a verified
-        // read-only history-loading seam. Native backlog remains available otherwise.
+        // Native attributes identify a candidate, not its rendered source revision.
         const elements = chat?.querySelectorAll(':scope > .mes[mesid="' + matches[0].index + '"]');
         if (elements?.length !== 1) return false;
         const element = elements[0];
@@ -321,7 +320,9 @@ export function createHostAdapter(getContext) {
             || element.getAttribute('swipeid') !== String(source.swipeId ?? 0)) return false;
         // Same DOM contract and scroll calculation as pinned host /chat-jump, without executing a command.
         chat.scrollTo({ top: element.getBoundingClientRect().top - chat.getBoundingClientRect().top + chat.scrollTop, behavior: 'instant' });
-        return true;
+        // ponytail: pinned host has no rendered source/revision token. Only claim an
+        // exact match after a verified read-only host token can establish correspondence.
+        return false;
     }
 
     return { inspectCapabilities, readChatIdentity, readMessageAt, readCurrentSource, readHistory, subscribe, openOriginalMessage };

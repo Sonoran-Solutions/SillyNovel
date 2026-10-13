@@ -171,7 +171,7 @@ try {
     pass('stop and native continuation');
 
     await button(page,'Backlog').click();
-    assert.match(await page.locator('.sillynovel-native-bar__status').innerText(),/Original message located/);
+    assert.match(await page.locator('.sillynovel-native-bar__status').innerText(),/Exact source could not be located/);
     const last=page.locator('#chat > .mes').last();
     await last.locator('.mes_edit').click();
     const original=await last.locator('.edit_textarea').inputValue();

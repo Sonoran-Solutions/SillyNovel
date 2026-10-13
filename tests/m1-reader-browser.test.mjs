@@ -156,18 +156,58 @@ test('deleted/replaced pinned source is explicit and never silently retargeted',
     assert.match(await message(page).innerText(),/selection is unavailable/);
 });
 
+test('backlog never claims an exact match against a stale native revision', async t => {
+    const page = await fixture(t);
+    await page.evaluate(() => {
+        const previous = fixture.context.chat[1];
+        fixture.context.chat[1] = { ...previous, mes: 'Replacement **revision**.' };
+        // Keep the old native element, including its matching author/role/swipe attributes.
+        fixture.emit('MESSAGE_EDITED', 1);
+    });
+    assert.equal(await message(page).innerText(), 'Replacement revision.');
+    await button(page, 'Backlog').click();
+    assert.match(await page.locator('#chat .mes[mesid="1"]').innerText(), /Hello/);
+    assert.match(await page.locator('.sillynovel-native-bar__status').innerText(), /Exact source could not be located/);
+    assert.equal(await page.locator('#chat').isVisible(), true);
+    assert.equal(await page.locator('#send_textarea').isVisible(), true);
+    await button(page, 'Return to Reader').click();
+    await page.evaluate(() => {
+        // A render notification has an index, but no source/revision evidence.
+        fixture.renderNative();
+        fixture.emit('CHARACTER_MESSAGE_RENDERED', 1, 'normal');
+    });
+    await button(page, 'Backlog').click();
+    assert.equal(await page.locator('#chat .mes[mesid="1"]').innerText(), 'Replacement **revision**.');
+    assert.match(await page.locator('.sillynovel-native-bar__status').innerText(), /Exact source could not be located/);
+    await button(page, 'Return to Reader').click();
+    await page.evaluate(() => {
+        fixture.context.chat[1].mes = 'In-place revision.';
+        fixture.emit('MESSAGE_EDITED', 1);
+    });
+    assert.equal(await message(page).innerText(), 'In-place revision.');
+    await button(page, 'Backlog').click();
+    assert.match(await page.locator('#chat .mes[mesid="1"]').innerText(), /Replacement/);
+    assert.match(await page.locator('.sillynovel-native-bar__status').innerText(), /Exact source could not be located/);
+});
+
 test('backlog re-resolves reordered objects, returns pinned selection and reports locator fallback', async t => {
     const page = await fixture(t);
     await button(page,'Previous').click();
-    await page.evaluate(() => {fixture.context.chat.unshift({name:'Mira',mes:'inserted'});fixture.renderNative();});
+    await page.evaluate(() => {
+        fixture.context.chat.unshift({name:'Mira',mes:'inserted'});fixture.renderNative();
+        window.nativeScrolls=[];
+        document.getElementById('chat').scrollTo = options => nativeScrolls.push(options);
+    });
     await button(page,'Backlog').click();
     assert.equal(await page.locator('#chat').isVisible(),true);
-    assert.match(await page.locator('.sillynovel-native-bar__status').innerText(),/Original message located/);
+    assert.match(await page.locator('.sillynovel-native-bar__status').innerText(),/Exact source could not be located/);
+    assert.equal(await page.evaluate(() => nativeScrolls.length),1, 'current reordered candidate is still scrolled into view');
     await button(page,'Return to Reader').click();
     assert.equal(await message(page).innerText(),'First message.');
     await page.evaluate(() => document.querySelector('#chat .mes[mesid="1"]').remove());
     await button(page,'Backlog').click();
     assert.match(await page.locator('.sillynovel-native-bar__status').innerText(),/Exact source could not be located/);
+    assert.equal(await page.evaluate(() => nativeScrolls.length),1, 'missing native candidate must not scroll');
     await button(page,'Return to Reader').click();
     await page.evaluate(() => {
         // Canonical ownership changed before its event/observer reaches the reader.
