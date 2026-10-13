@@ -80,6 +80,7 @@ async function install() {
                 openOriginal: controller.openOriginal,
                 setTextScrollMode: controller.setTextScrollMode,
                 getSnapshot: controller.getReaderSnapshot,
+                getSceneEvidence: controller.getSceneEvidence,
                 fail: view.reportFailure,
             } });
         },

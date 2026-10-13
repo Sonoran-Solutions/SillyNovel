@@ -1,0 +1,20 @@
+{
+  "messages": 1000,
+  "charactersPerMessage": 1500,
+  "swipeTextIncluded": true,
+  "coldMs": 1858.417668,
+  "warmMs": 0.25739599999997154,
+  "tailMs": 4.719523999999865,
+  "coldCalls": 1000,
+  "retainedBytes": 5201912,
+  "peakBytes": 10355743,
+  "encodedBytes": 3047000,
+  "budgets": {
+    "coldMs": 5000,
+    "warmMs": 100,
+    "tailMs": 250,
+    "retainedBytes": 16777216,
+    "peakBytes": 67108864
+  },
+  "node": "v26.8.1"
+}
