@@ -69,9 +69,9 @@ Two RGB PNG backgrounds are 1280×720. Eight RGBA PNG character/variation cutout
 | sage.png | 420×660 PNG RGBA | `2ff97d72355e8c093e032d450746b4484212041ffee857359604fc080542ef88` |
 | tavern.png | 1280×720 PNG RGB | `7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448` |
 
-## Verification and evidence
+## Initial implementation evidence (historical)
 
-Runtime/host-tested and pushed code SHA: `1ae59b12c8d4abdbf72394186b10ad9163978e30`. The final evidence/README commit changes documentation only; runtime/test/fixture bytes match this tested SHA. [Machine-readable results and runtime/fixture hashes](evidence/m12-stage/results.json), [screenshot/result checksums](evidence/m12-stage/SHA256SUMS).
+Runtime/host-tested and pushed code SHA: `1ae59b12c8d4abdbf72394186b10ad9163978e30`. The original review head `3e8073a7b5be60dba9a6dbb06f765e8d5d082a32` changed documentation/evidence only after this tested runtime. The senior-review corrections below supersede these runtime/test results. [Machine-readable results and runtime/fixture hashes](evidence/m12-stage/results.json), [screenshot/result checksums](evidence/m12-stage/SHA256SUMS).
 
 | Check | Result on final code |
 | --- | --- |
@@ -123,7 +123,7 @@ The opt-in `--stage` hook reuses the existing isolated host runner and adds nati
 
 Development failures were kept as failures: the first browser run passed 17/19; its corrupt-image test had provided only a signature (correctly refused before URL creation), and its reload test had omitted re-enabling the fresh synthetic host. Corrected inputs/control flow passed. The first host run stopped on an ambiguous Background selector; the second passed the stage checks then stopped because the stage navigation test left the reader pinned while the old Stop check expected follow-latest. The corrected probe explicitly resumes latest. A successful earlier run on `d2b3f452bf859f2f03edf57e598522c917a82c87` was followed by screenshot review that found excessive art height while editing. The final layout correction received its own full run and fresh screenshots. These failed/earlier runs are not promoted to final-head evidence.
 
-## Screenshots
+## Initial implementation screenshots (historical)
 
 All screenshots contain only invented cards, deterministic synthetic chat and generated fixtures.
 
@@ -144,3 +144,76 @@ This is a usable unsaved test presentation, not the persistent M1/Gate A candida
 **NOT_TESTED:** physical touch device, actual virtual keyboard/IME, other engines/themes/extension combinations/host versions, real model/provider behavior, native group conversation on this new candidate, natural host capability/mount/render failures, native deep-history pagination/verified original-revision correspondence, JPEG/static WebP/animated-format real-file variants, production import safety/storage/export/quota and whole-browser large-history memory on real chats. The synthetic 1,000-message prefix benchmark is measured separately below. Narrow/keyboard checks simulate viewport size only. The source adapter continues its honest unresolved exact-original correspondence notice. Existing reducer tests cover malformed input and automatic lock precedence without an automatic producer.
 
 Recommend owner installation and a hands-on session trial of this open PR. Keep DYL-24 In Review, the PR OPEN/UNMERGED with auto-merge disabled, DYL-22/23 gated, and Gate A NOT_RUN. Storage architecture decisions remain a separate lane.
+
+
+## PR #12 senior-review corrections — 2026-10-12
+
+Reviewed starting head: `3e8073a7b5be60dba9a6dbb06f765e8d5d082a32`, clean. Corrected runtime/test candidate: `20554b0fcf3f1c7d61ed21df9636fe62cd7617c6`. Host-probe candidate: `cdf9761853e3f9c60e41230556a9be1392b146d8` (only the probe’s clipboard completion wait changed; identical runtime bytes). The final pushed documentation/evidence head is recorded in the PR and DYL-24 handoff. No storage-design or reducer rules changed.
+
+P1 replaces quadratic retained prefix strings with bounded encoded entries, reusable compact digests and one scratch buffer. Exact `sn-source-v1` equality is checked against the existing DYL-19 reference for Unicode/control characters, swipes, edits, insertion, deletion, reorder and owner changes. Tests also enforce no rehash on unchanged history, one digest after a tail edit, suffix recomputation, stale-work rejection and both resource ceilings. The runtime checks the work ticket again after the async helper returns, before accepting its cache.
+
+P2 detects either missing crypto API before creating the visual model or controls. Two actual-entry capability-denial tests verify actionable fallback, readable/navigable text, native chat return, unchanged canonical data, preserved composer/draft, clean toggles and no uncaught exceptions. The delayed-hash regression blocks validation across a historical edit and navigation, checks neutral art while new dialogue is visible, completes the obsolete request first, and verifies that it cannot restore old art or enable controls. A separate oversized-history browser test checks the limit notice, neutral art and continued reading/composing.
+
+### Long-history regression
+
+[Runnable benchmark](../tests/probes/m12-stage/prefix-benchmark.mjs), [recorded measurements and asserted budgets](evidence/m12-stage-review/prefix-benchmark.json). The actual production prefix helper processes **1,000 messages × 1,500 characters**, including duplicate selected swipe text in the canonical encoding. It uses native Node Web Crypto on Node `v26.8.1`; it is an implementation benchmark, not a complete SillyNovel browser-memory benchmark.
+
+| Measurement | Observed | Asserted budget |
+| --- | ---: | ---: |
+| Cold load, 1,000 digests | 1,858.42 ms | 5,000 ms |
+| Unchanged history/navigation, no new digests | 0.26 ms | 100 ms |
+| Tail text update, one new digest | 4.72 ms | 250 ms |
+| Retained heap + ArrayBuffer growth after GC | 5,201,912 bytes | 16 MiB |
+| Peak sampled heap + ArrayBuffer growth | 10,355,743 bytes | 64 MiB |
+| Retained canonical entry bytes | 3,047,000 bytes | Runtime encoded-history ceiling: 8 MiB |
+
+Memory growth is relative to the post-fixture baseline; the benchmark samples before and after each digest. It does not measure browser DOM/layout, process RSS, or every native-library allocation. Cold and historical-suffix hashing still read quadratic total bytes; memory retention and serialization do not. The size/time refusal is deliberate until a separately measured incremental hashing implementation supports larger histories. No truncated or substitute source fingerprint is accepted.
+
+### Commands and verification
+
+```sh
+node --test tests/m0.test.mjs tests/m1-reader-source.test.mjs tests/m1-scene-reducer.test.mjs tests/m1-source-prefix.test.mjs tests/probes/dyl19/*.test.mjs
+SN_PLAYWRIGHT_MODULE=/home/dq/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs SILLYTAVERN_ROOT=/tmp/SillyTavern-dyl18 node --test tests/m1-reader-browser.test.mjs
+node --expose-gc tests/probes/m12-stage/prefix-benchmark.mjs
+node --check src/source-prefix.mjs
+node --check src/transient-scene.mjs
+node --check src/stage-view.mjs
+node --check tests/probes/dyl18/reader-host.mjs
+git diff --check
+```
+
+**64/64 Node tests, 24/24 actual-entry Chromium tests, and all benchmark budgets PASS.** The first delayed-hash browser test attempt failed because its role locator excluded controls in the collapsed panel; the corrected DOM locator and full suite passed. Three recreated-host attempts stopped at the clipboard assertion after eight passing checks, including an Xvfb launch that still inherited the desktop Wayland session. Waiting for “Message copied.” did not prevent unrelated desktop clipboard contents from being returned. These are failed attempts; unrelated clipboard contents are omitted. The probe retains the explicit async completion wait. Detaching Wayland and setting an X11 session made a standalone native clipboard round-trip pass; the final campaign uses that isolated Xvfb configuration. No hosted GitHub CI result is claimed.
+
+The first host rerun printed 16 passing checks before the conversation interruption, but its temporary output and final result were unavailable afterward. That incomplete run is not promoted to completed host evidence. A fresh isolated host was recreated with its pinned lockfile dependencies (no extension dependencies added):
+
+```sh
+git init /tmp/SillyTavern-m12-review
+git -C /tmp/SillyTavern-m12-review remote add origin https://github.com/SillyTavern/SillyTavern.git
+git -C /tmp/SillyTavern-m12-review fetch --depth=1 origin 7e8663cd9c184a550b37238218bdd32c6efc68e9
+git -C /tmp/SillyTavern-m12-review checkout --detach FETCH_HEAD
+# Run inside /tmp/SillyTavern-m12-review:
+npm ci --omit=dev --no-audit --no-fund
+mkdir -p /tmp/SillyTavern-m12-review/public/scripts/extensions/third-party
+ln -s /home/dq/.codex/worktrees/m12-d0/SillyNovel /tmp/SillyTavern-m12-review/public/scripts/extensions/third-party/SillyNovel
+# Run inside the SillyNovel review worktree:
+SN_PLAYWRIGHT_MODULE=/home/dq/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs node tests/probes/dyl18/reader-host.mjs /tmp/SillyTavern-m12-review /tmp/sillynovel-m12-review-verified --stage
+```
+
+
+To isolate the final campaign from the user’s desktop clipboard, the Ubuntu `xvfb` package (`2:21.1.12-1ubuntu1.8`) was downloaded and extracted into a task-owned temporary directory without system installation:
+
+```sh
+mkdir -p /tmp/sillynovel-xvfb
+# Run inside /tmp/sillynovel-xvfb:
+apt-get download xvfb
+dpkg-deb -x xvfb_*.deb extracted
+# Run inside the SillyNovel review worktree:
+env -u WAYLAND_DISPLAY -u WAYLAND_SOCKET PATH="/tmp/sillynovel-xvfb/extracted/usr/bin:$PATH" XDG_SESSION_TYPE=x11 SN_PLAYWRIGHT_MODULE=/home/dq/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs xvfb-run -a -s '-screen 0 1600x1200x24 -nolisten tcp' node tests/probes/dyl18/reader-host.mjs /tmp/SillyTavern-m12-review /tmp/sillynovel-m12-review-x11 --stage
+```
+
+
+**Completed host campaign: 16/16 PASS**, on `cdf9761853e3f9c60e41230556a9be1392b146d8`, with runtime bytes identical to `20554b0fcf3f1c7d61ed21df9636fe62cd7617c6`. Host: SillyTavern 1.19.0 / `7e8663cd9c184a550b37238218bdd32c6efc68e9`; Chromium 151.0.7922.34, headful on an isolated Xvfb X11 display; Node v26.8.1; deterministic loopback endpoint; synthetic data only. The runner closed its browser/processes and removed its owned data root.
+
+[Current host results and runtime hashes](evidence/m12-stage-review/results.json), [all screenshot/result/benchmark checksums](evidence/m12-stage-review/SHA256SUMS), [desktop scene](evidence/m12-stage-review/desktop-tavern.png), [manual controls](evidence/m12-stage-review/manual-controls.png), [narrow scene](evidence/m12-stage-review/narrow-stage.png), [expression](evidence/m12-stage-review/expression-change.png), [outfit](evidence/m12-stage-review/outfit-change.png), [missing-art fallback](evidence/m12-stage-review/missing-art-fallback.png). All 14 screenshots from this completed campaign are retained separately from the original evidence. Runtime hashes were compared with the working tree and `sha256sum -c SHA256SUMS` verified the saved artifacts.
+
+Actual HTTP LAN origin/device, whole-browser long-chat memory, real providers, physical touch/keyboard/IME, other engines/hosts and owner experience remain **NOT_TESTED**; Gates A/B/C remain **NOT_RUN**. Crypto compatibility is covered by equivalent capability denial, and long-history performance by the bounded production-helper benchmark. Next bounded step: senior re-review and owner installation/trial. Leave PR #12 open/unmerged, auto-merge off, DYL-24 In Review, and DYL-22/23 blockers unchanged.

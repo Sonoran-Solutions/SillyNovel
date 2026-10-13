@@ -1,0 +1,147 @@
+{
+  "candidate": "cdf9761853e3f9c60e41230556a9be1392b146d8",
+  "host": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
+  "results": [
+    {
+      "name": "enable and native data preservation",
+      "result": "PASS"
+    },
+    {
+      "name": "normal send and streaming reply",
+      "result": "PASS"
+    },
+    {
+      "name": "stage: tavern with two visible sprites and four manual session actors",
+      "result": "PASS",
+      "actors": [
+        "manual-session-actor-1",
+        "manual-session-actor-2",
+        "manual-session-actor-3",
+        "manual-session-actor-4"
+      ]
+    },
+    {
+      "name": "stage: outfit/expression changes, explicit swap and missing-art fallback",
+      "result": "PASS"
+    },
+    {
+      "name": "stage: source projection, repeated chat return and narrow viewport",
+      "result": "PASS",
+      "dialogueHeight": 242.203125
+    },
+    {
+      "name": "stop and native continuation",
+      "result": "PASS"
+    },
+    {
+      "name": "native handoff with unresolved-source notice, native edit, swipe generation and previous swipe",
+      "result": "PASS"
+    },
+    {
+      "name": "three reader/chat transitions preserve exact draft, focus and backward selection",
+      "result": "PASS"
+    },
+    {
+      "name": "pinned new replies, explicit latest, independent scroll and full formatted copy",
+      "result": "PASS",
+      "characters": 9951,
+      "scrollTop": 100
+    },
+    {
+      "name": "narrow-reader",
+      "result": "PASS",
+      "width": 390,
+      "height": 800,
+      "composer": {
+        "x": 77,
+        "y": 761.5,
+        "width": 270.5,
+        "height": 36.5
+      },
+      "dialogueHeight": 242.203125
+    },
+    {
+      "name": "keyboard-viewport-simulation",
+      "result": "PASS",
+      "width": 390,
+      "height": 500,
+      "composer": {
+        "x": 77,
+        "y": 461.5,
+        "width": 270.5,
+        "height": 36.5
+      },
+      "dialogueHeight": 107.90625
+    },
+    {
+      "name": "stage: native character/chat switch clears transient visuals",
+      "result": "PASS"
+    },
+    {
+      "name": "native A to B to A starts each activation at its current latest source",
+      "result": "PASS"
+    },
+    {
+      "name": "disable/re-enable during and after generation leaves native reply running",
+      "result": "PASS"
+    },
+    {
+      "name": "instrumented render failure restores native feed, draft/caret and clean re-enable",
+      "result": "PASS"
+    },
+    {
+      "name": "actual 200 percent browser zoom; navigation and composer remain reachable",
+      "result": "PASS",
+      "zoom": 2,
+      "beforeZoom": {
+        "innerWidth": 1440,
+        "innerHeight": 993,
+        "dpr": 1
+      },
+      "zoomMetrics": {
+        "innerWidth": 720,
+        "innerHeight": 496,
+        "dpr": 2,
+        "scale": 1
+      }
+    }
+  ],
+  "screenshots": [
+    "desktop-reader.png",
+    "manual-controls.png",
+    "desktop-tavern.png",
+    "expression-change.png",
+    "outfit-change.png",
+    "missing-art-fallback.png",
+    "narrow-stage.png",
+    "native-backlog.png",
+    "pinned-older-message.png",
+    "long-scrollable-reply.png",
+    "narrow-reader.png",
+    "keyboard-viewport-simulation.png",
+    "render-failure-native-recovery.png",
+    "browser-zoom-200-percent.png"
+  ],
+  "fixtures": {
+    "tests/fixtures/reader-browser.html": "2d1ae7870c4b2b827486ff652bea280f6562eaf621602f66daa1671a6410a937",
+    "tests/fixtures/dyl18-openai-endpoint.mjs": "ed2223fd2179c75503afefc8387d133d14ffaba84ce59729c3ffbb09d13b97c8",
+    "index.js": "5d7e1b336ccfef1ef74515e45e5c9f0365a59191ccb8f2b103eea396eab27dac",
+    "style.css": "5455f6a27d62cd2c255112306151b962245a2322e63e3aa9819e70ffd45b1fe1",
+    "src/reader-view.mjs": "1f991ef8071aa743622729eb9be88d1096c1f3364dba69139b75c83b051609eb",
+    "src/reader-source-model.mjs": "aa163b530abd1fc7e348cef193b5c05ae0c10ab9bde9fab614d15419b5c91a4e",
+    "src/shell.mjs": "9a518628590b1834f8bfae804efaf011547d95a2ed2d420791e4056b38fed426",
+    "src/host-adapter.mjs": "6981f8159530b17e7efc6b44d7e60ad70f59a6510ad67108a6c01d064377b136",
+    "src/stage-view.mjs": "f45bf8c50e0f4e16b2f5a7dccfee77f58eda19d3051ba819fff0ec95220a7b2a",
+    "src/transient-scene.mjs": "7594fe71af2d24f1917f16afd299cf480cbe67409292907bd835db1a76968624",
+    "src/source-prefix.mjs": "9ea8acc333e98406ff055aa76d572873d7b9a068084d9c97101b39983c8d05f2",
+    "src/scene-reducer.mjs": "d14150f81499be16a2247ae1d2e3ee7e3e51e0a2f43864eea12a0e57a6c17ee1"
+  },
+  "notTested": [
+    "Physical touch device, real IME input, real virtual keyboard",
+    "Other browsers/themes/extension combinations or host versions",
+    "Real model/provider inference; endpoint is deterministic and local",
+    "Owner reader-feel verdict: Gate A NOT_RUN"
+  ],
+  "browser": "151.0.7922.34",
+  "completed": true
+}
