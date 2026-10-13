@@ -207,7 +207,11 @@ try {
     snapshot('native create/save: distinct chats/scopes/users despite duplicate labels and identical bytes', { classification: 'EXPERIMENTAL_HOST' });
     const client1 = (await first.api('client')).clientId;
     let target = await activate(first, client1, a.relativePath);
+    const cardFile = path.join(data, 'default-user/characters', avatar);
+    const cardHash = hash(fs.readFileSync(cardFile));
     const initial = await first.api('cas', casBody(target, 0));
+    assert.equal(hash(fs.readFileSync(cardFile)), cardHash);
+    evidence.cardHashesAroundVisualCAS = { before: cardHash, after: hash(fs.readFileSync(cardFile)) };
     assert.deepEqual(initial, disk('default-user', a.chatId));
     await error(other, 'cas', casBody(target, 0), 'WRONG_STORE', 403);
     await error(first, 'cas', casBody({ ...target, clientId: randomUUID() }, 1), 'INVALID_CLIENT', 403);
@@ -224,6 +228,7 @@ try {
     await first.request('/api/chats/rename', { avatar_url: avatar, original_file: 'A.jsonl', renamed_file: 'Renamed.jsonl', is_group: false });
     cat = refresh('default-user'); const renamed = cat.chats.find(c => c.chatId === a.chatId);
     assert.equal(renamed.relativePath.split('/').at(-1), 'Renamed.jsonl');
+    assert.equal(hash(fs.readFileSync(path.join(data, 'default-user', renamed.relativePath))), canonical.get(path.join(data, 'default-user', a.relativePath)));
     assert.equal((await first.api('read', { target })).revision, 1);
     await save(first, avatar, 'A'); cat = refresh('default-user');
     assert.notEqual(cat.chats.find(c => c.relativePath === a.relativePath && !c.deleted).chatId, a.chatId);
@@ -308,12 +313,13 @@ try {
     // Native exported loader is used only for the overlapping-load instrumentation case.
     const late = page.evaluate(async () => (await import('/script.js')).getChat());
     await Promise.race([ackEntered, sleep(10000).then(() => { throw new Error('activation ACK barrier timeout'); })]);
-    await select(avatarB); releaseAck(); await late;
+    await select(avatarB); const newestA = await select(avatar); releaseAck(); await late;
     await page.unroute('**/api/dyl27/activate');
     await page.waitForFunction(() => window.dyl27.history.some(h => h.discarded));
-    assert.equal((await page.evaluate(() => window.dyl27.target)).chatId, uiB.chatId);
+    assert.deepEqual(await page.evaluate(() => window.dyl27.target), newestA);
+    assert.equal(newestA.chatId, uiA.chatId); assert.notEqual(newestA.viewToken, uiA2.viewToken);
     evidence.nativeVisits = await page.evaluate(() => window.dyl27.history);
-    snapshot('out-of-order native activation ACK discarded by local epoch', { classification: 'NATIVE_HOST_UI with response barrier' });
+    snapshot('out-of-order native activation ACK across A-B-A discarded by local epoch', { classification: 'NATIVE_HOST_UI with response barrier' });
     // Native editor and ordinary composer remain owned by the host.
     const nativeTarget = await page.evaluate(() => window.dyl27.target);
     const nativeMessage = page.locator('#chat > .mes').last();
