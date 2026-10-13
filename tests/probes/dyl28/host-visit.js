@@ -53,8 +53,9 @@ export function isCurrentLoad(current) {
 export async function acceptLoad(load, envelope, headers) {
     if (!isCurrentLoad(load.epoch) || !load.ready || envelope?.dyl28Envelope !== true) return null;
     if (!envelope.identity || !Number.isSafeInteger(envelope.sourceRevision) || !envelope.loadRequestId) {
-        history.push({ epoch: load.epoch, loadRequestId: envelope.loadRequestId, refused: envelope.unavailableReason ?? 'UNRESOLVED_IDENTITY' });
-        return null;
+        const error = envelope.unavailableReason ?? 'UNRESOLVED_IDENTITY';
+        history.push({ epoch: load.epoch, loadRequestId: envelope.loadRequestId, refused: error });
+        return { target: null, error };
     }
     try {
         const accepted = await api('accept-load', {
@@ -74,10 +75,10 @@ export async function acceptLoad(load, envelope, headers) {
         }
         target = accepted;
         history.push({ epoch: load.epoch, loadRequestId: envelope.loadRequestId, target: accepted });
-        return accepted;
+        return { target: accepted, error: null };
     } catch (error) {
         history.push({ epoch: load.epoch, loadRequestId: envelope.loadRequestId, refused: error.message });
-        return null;
+        return { target: null, error: error.message };
     }
 }
 

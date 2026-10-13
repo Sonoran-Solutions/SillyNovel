@@ -6,13 +6,15 @@
  import {
      showdown,
      moment,
-@@ -7634,20 +7634,27 @@
+@@ -7633,21 +7633,28 @@
+     await getOneCharacter(avatar);
  }
 
- export async function getChat() {
+-export async function getChat() {
 -    const visit = await beginVisit(getRequestHeaders);
 -    const visitCharacter = characters[this_chid];
 -    const visitLocator = `chats/${visitCharacter?.avatar?.replace('.png', '')}/${visitCharacter?.chat}.jsonl`;
++export async function getChat(retrySourceMismatch = true) {
 +    const requestedCharacterId = this_chid;
 +    const requestedCharacter = characters[requestedCharacterId];
 +    const requested = { name: requestedCharacter?.name, avatar: requestedCharacter?.avatar, fileName: requestedCharacter?.chat };
@@ -41,7 +43,7 @@
              }),
          });
 
-@@ -7655,7 +7662,16 @@
+@@ -7655,7 +7662,21 @@
              throw new Error('Chat could not be loaded');
          }
 
@@ -52,14 +54,19 @@
 +        let data = result;
 +        if (result?.dyl28Envelope === true) {
 +            data = result.messages;
-+            await acceptLoad(load, result, getRequestHeaders);
++            const activation = await acceptLoad(load, result, getRequestHeaders);
 +            if (!isCurrent()) return;
++            if (activation?.error === 'SOURCE_REVISION_MISMATCH') {
++                if (retrySourceMismatch) return getChat(false);
++                toastr.warning('The chat changed while loading. Reopen it to read the latest version.');
++                return;
++            }
 +        }
 +        if (!Array.isArray(data)) data = [];
          if (Array.isArray(data) && data.length > 0) {
              /** @type {ChatHeader} */
              const chatHeader = data.shift();
-@@ -7670,25 +7686,31 @@
+@@ -7670,25 +7691,31 @@
          if (!chat_metadata.integrity) {
              chat_metadata.integrity = uuidv4();
          }
@@ -97,7 +104,7 @@
      let freshChat = false;
      if (chat.length === 0) {
          const message = getFirstMessage();
-@@ -7698,17 +7720,25 @@
+@@ -7698,17 +7725,25 @@
          }
          // Make sure the chat appears on the server
          await saveChatConditional();

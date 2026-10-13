@@ -446,12 +446,23 @@ try {
     assert.equal(a.sourceRevision, 2);
     const revisedCanonical = fs.readFileSync(chatFile('default-user', a.relativePath), 'utf8');
     assert.match(revisedCanonical, /A edited by authenticated client two\./);
+    const freshSource = holdFirst(firstPage, '**/api/chats/get', body => body.avatar_url === avatarA);
+    await freshSource.install();
     pendingSource.release(); await pendingSource.fulfilled; await pendingSource.remove();
-    await firstPage.waitForTimeout(100);
+    const currentSource = await Promise.race([freshSource.entered, sleep(12000).then(() => { throw new Error('fresh source retry barrier timeout'); })]);
+    assert.equal(currentSource.response.sourceRevision, 2);
+    assert.notEqual(currentSource.response.loadRequestId, oldSource.response.loadRequestId);
+    const beforeFreshApply = await pageState(firstPage);
+    assert.equal(beforeFreshApply.target, null);
+    assert.equal(beforeFreshApply.messages.includes('A-only canonical transcript.'), false);
+    assert.equal(beforeFreshApply.dom.some(text => text.includes('A-only canonical transcript.')), false);
+    freshSource.release(); await freshSource.fulfilled; await freshSource.remove();
+    await waitForTarget(firstPage, avatarA, a.chatId, 2);
     const staleSourceView = await pageState(firstPage);
     assert.equal(staleSourceView.avatar, avatarA);
-    assert.equal(staleSourceView.target, null);
-    assert.deepEqual(staleSourceView.messages, ['A-only canonical transcript.']);
+    assert.equal(staleSourceView.target.sourceRevision, 2);
+    assert.ok(staleSourceView.messages.includes('A edited by authenticated client two.'));
+    assert.equal(staleSourceView.messages.includes('A-only canonical transcript.'), false);
     assert.ok(staleSourceView.history.some(entry => entry.refused === 'SOURCE_REVISION_MISMATCH'));
     assert.equal(registry('default-user').chats.find(chat => chat.chatId === a.chatId).sourceRevision, 2);
     const visualBeforeStaleSourceWrite = fs.readFileSync(visualFile('default-user', a.chatId), 'utf8');
@@ -459,10 +470,10 @@ try {
         record: { background: 'forest' } }, 409);
     assert.equal(staleSourceCas.error, 'SOURCE_REVISION_MISMATCH');
     assert.equal(fs.readFileSync(visualFile('default-user', a.chatId), 'utf8'), visualBeforeStaleSourceWrite);
-    checkpoint('canonical edit during pending load: exact old snapshot is reported as revision 1, activation refuses revision 2, and no visual target exists', 'NATIVE_HOST_UI + EXPERIMENTAL_HOST', {
+    checkpoint('canonical edit during pending load: old revision 1 is not committed, a fresh revision 2 load is activated', 'NATIVE_HOST_UI + EXPERIMENTAL_HOST', {
         oldEnvelope: oldSource.response, currentSourceRevision: a.sourceRevision,
         oldCanonicalSha256: hash(Buffer.from(initialA)), newCanonicalSha256: hash(Buffer.from(revisedCanonical)),
-        nativeEditorState: await pageState(secondPage), staleSourceView, staleSourceCas,
+        beforeFreshApply, freshEnvelope: currentSource.response, nativeEditorState: await pageState(secondPage), staleSourceView, staleSourceCas,
     });
 
     // Both independent authenticated clients load the same revised identity; source revision and visual CAS stay separate.
