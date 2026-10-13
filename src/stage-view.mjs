@@ -2,6 +2,12 @@ import { createTransientScene, TEST_ACTORS, evidenceStamp } from './transient-sc
 
 export function mountVisualStage({ document, stage, actions }) {
     const make = (tag, cls, text) => { const e=document.createElement(tag); e.className=cls; if(text)e.textContent=text; return e; };
+    if (typeof globalThis.crypto?.randomUUID !== 'function' || typeof globalThis.crypto?.subtle?.digest !== 'function') {
+        const notice = make('p', 'sillynovel-visual-unavailable', 'Visual stage unavailable: secure browser crypto is missing. Continue in the text reader, or open SillyTavern over HTTPS (or localhost on the host computer) and reload to enable visuals.');
+        notice.setAttribute('role', 'status');
+        stage.querySelector('header').after(notice);
+        return { update() {}, dispose() { notice.remove(); } };
+    }
     const art = make('div','sillynovel-art'); art.setAttribute('aria-label','Temporary scene art');
     const background = make('img','sillynovel-art__background'); background.alt=''; background.hidden=true;
     const slots = new Map(['left','center','right'].map(slot=> {
@@ -68,8 +74,9 @@ export function mountVisualStage({ document, stage, actions }) {
     for(const {image:img,label} of slots.values())listen(img,'error',()=>{img.hidden=true;label.textContent+=' · art unavailable';});
     function render() {
         if(disposed)return;
-        const {scene,actors,assets,media,notice}=model.get();
-        const view=scene?.view;
+        const {scene,actors,assets,media,notice,verifiedStamp}=model.get();
+        const verified=verifiedStamp===evidenceStamp(actions.getSnapshot());
+        const view=verified?scene?.view:null;
         options(bg,[['','Clear · neutral'],...assets.filter(a=>a.kind==='background').map(a=>[a.id,media.get(a.id)?.label??a.id])]);
         options(actor,actors.map(a=>[a.key,a.label+' · '+a.description+' · '+a.key.split('-').at(-1)]));
         const active=actor.value;
@@ -92,17 +99,17 @@ export function mountVisualStage({ document, stage, actions }) {
             const url=ref?(ref.status==='ready'?media.get(ref.id)?.url:null):manual?.defaultURL;
             image(img,url);label.textContent=a.label+' · '+manual?.description+(url?'':' · art unavailable');
         }
-        const ready=Boolean(scene?.context.selectedSourceKey);
+        const ready=Boolean(verified && scene?.context.selectedSourceKey);
         for(const e of controls)e.disabled=e===reset ? false : !ready;
     }
     function update(snapshot) {
         const stamp=evidenceStamp(snapshot);
         if(stamp===lastStamp)return;
         lastStamp=stamp;
-        // Clear old art immediately at an epoch boundary; text rendering never awaits hashing/decoding.
-        if(model.get().scene?.context.sessionEpoch!==snapshot.sessionEpoch) {
-            background.hidden=true;for(const {figure} of slots.values())figure.hidden=true;
-        }
+        // Neutralize synchronously before the reader paints changed dialogue. A later
+        // render can show art only when its accepted evidence stamp still matches.
+        render();
+        feedback.textContent='Checking the scene for this message…';
         run(()=>model.sync(false));
     }
     render();update(actions.getSnapshot());

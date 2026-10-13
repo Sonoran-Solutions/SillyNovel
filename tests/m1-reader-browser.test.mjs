@@ -14,7 +14,7 @@ const files = new Map([
     ['/', resolve(root, 'tests/fixtures/reader-browser.html')],
     ['/vendor/showdown.js', resolve(hostRoot, 'node_modules/showdown/dist/showdown.js')],
     ['/vendor/purify.js', resolve(hostRoot, 'node_modules/dompurify/dist/purify.js')],
-    ...['index.js', 'style.css', 'src/shell.mjs', 'src/reader-view.mjs', 'src/reader-source-model.mjs', 'src/host-adapter.mjs', 'src/stage-view.mjs', 'src/transient-scene.mjs', 'src/scene-reducer.mjs'].map(path => ['/' + path, resolve(root, path)]),
+    ...['index.js', 'style.css', 'src/shell.mjs', 'src/reader-view.mjs', 'src/reader-source-model.mjs', 'src/host-adapter.mjs', 'src/stage-view.mjs', 'src/transient-scene.mjs', 'src/source-prefix.mjs', 'src/scene-reducer.mjs'].map(path => ['/' + path, resolve(root, path)]),
 ]);
 for (const asset of JSON.parse(await readFile(resolve(root,'tests/fixtures/m12-stage/manifest.json')))) files.set('/tests/fixtures/m12-stage/'+asset.file,resolve(root,'tests/fixtures/m12-stage',asset.file));
 before(async () => {
@@ -32,9 +32,10 @@ before(async () => {
     browser = await chromium.launch({ headless: true });
 });
 after(async () => { await browser?.close(); await new Promise(resolve => server?.close(resolve)); });
-async function fixture(t, query = '') {
+async function fixture(t, query = '', initScript = null) {
     const context = await browser.newContext({ viewport: { width: 1280, height: 900 }, permissions: ['clipboard-read', 'clipboard-write'] });
     t.after(() => context.close());
+    if (initScript) await context.addInitScript(initScript);
     const page = await context.newPage();
     await page.goto(origin + '/' + query);
     await page.waitForFunction(() => document.getElementById('sillynovel-settings-status')?.textContent !== '');
@@ -442,4 +443,85 @@ test('session stage: delayed image cannot apply after same-source reset, manual 
     await delay();await page.evaluate(()=>{fixture.context.chat[1].mes='canonical edit without a lifecycle event';});await finish();
     await page.waitForFunction(()=>document.querySelector('.sillynovel-visual-status').textContent.includes('STALE_SOURCE'));
     assert.equal(await page.locator('.sillynovel-art__background').getAttribute('src')?.then(x=>x?.startsWith('blob:')),false);
+});
+
+for (const capability of ['subtle','randomUUID']) test(`session stage: denied ${capability} leaves a complete text reader`,async t=> {
+    const page=await fixture(t,'?deny='+capability,()=>{
+        window.cryptoErrors=[];
+        addEventListener('error',e=>cryptoErrors.push(e.message));
+        addEventListener('unhandledrejection',e=>cryptoErrors.push(String(e.reason)));
+        Object.defineProperty(crypto,new URLSearchParams(location.search).get('deny'),{value:undefined});
+    });
+    await page.evaluate(()=>{window.originalComposer=document.getElementById('send_textarea');originalComposer.value='Preserved draft';});
+    const canonical=await page.evaluate(()=>JSON.stringify([fixture.context.chat,fixture.context.chatMetadata,fixture.context.characters,fixture.context.connection]));
+    for(let i=0;i<2;i++) {
+        assert.equal(await page.locator('.sillynovel-visual-unavailable').count(),1);
+        assert.match(await page.locator('.sillynovel-visual-unavailable').innerText(),/HTTPS.*localhost.*reload/);
+        assert.equal(await page.locator('.sillynovel-art,.sillynovel-controls,.sillynovel-cast,.sillynovel-unsaved').count(),0);
+        assert.match(await message(page).innerText(),/Hello reader/);
+        await button(page,'Previous').click();assert.equal(await message(page).innerText(),'First message.');
+        await button(page,'Next').click();
+        await button(page,'Back to Chat').click();assert.equal(await page.locator('#chat').isVisible(),true);
+        await button(page,'Return to Reader').click();
+        await page.locator('#sillynovel-enabled').uncheck();assert.equal(await page.locator('.sillynovel-visual-unavailable').count(),0);
+        await page.locator('#sillynovel-enabled').check();
+    }
+    assert.equal(await page.evaluate(()=>document.getElementById('send_textarea')===originalComposer),true);
+    assert.equal(await page.locator('#send_textarea').inputValue(),'Preserved draft');
+    assert.equal(await page.locator('#send_textarea').isVisible(),true);
+    assert.equal(await page.evaluate(()=>JSON.stringify([fixture.context.chat,fixture.context.chatMetadata,fixture.context.characters,fixture.context.connection])),canonical);
+    assert.deepEqual(await page.evaluate(()=>cryptoErrors),[]);
+});
+
+test('session stage: delayed historical hashing neutralizes art before navigation and rejects obsolete work',async t=> {
+    const page=await fixture(t);await sceneControls(page);
+    const a=await addActor(page,'mira-a');await positionActor(page,a,'left');
+    await field(page,'Background').selectOption('tavern');await applyScene(page,'Apply background');
+    await page.locator('.sillynovel-controls summary').click();
+    assert.equal(await sprite(page,'left').isVisible(),true);
+    await page.evaluate(()=>{
+        const digest=crypto.subtle.digest.bind(crypto.subtle);
+        window.hashWaiters=[];window.hashFinished=0;
+        crypto.subtle.digest=async(...args)=>{
+            await new Promise(resolve=>hashWaiters.push(resolve));
+            const result=await digest(...args);hashFinished++;return result;
+        };
+        window.restoreDigest=()=>{crypto.subtle.digest=digest;};
+        fixture.setText('edited history under delayed validation',0);
+    });
+    await page.waitForFunction(()=>hashWaiters.length===1);
+    assert.equal(await sprite(page,'left').isVisible(),false);
+    assert.equal(await page.locator('.sillynovel-art__background').isVisible(),false);
+    assert.equal(await page.locator('[aria-label="Background"]').isDisabled(),true);
+    await button(page,'Previous').click();
+    assert.equal(await message(page).innerText(),'edited history under delayed validation');
+    await page.waitForFunction(()=>hashWaiters.length===2);
+    assert.equal(await sprite(page,'left').isVisible(),false);
+    assert.equal(await page.locator('.sillynovel-art__background').isVisible(),false);
+    // Complete the abandoned latest-source validation while current navigation is still blocked.
+    await page.evaluate(()=>hashWaiters[0]());await page.waitForFunction(()=>hashFinished===1);
+    assert.equal(await page.locator('[aria-label="Background"]').isDisabled(),true);
+    assert.equal(await sprite(page,'left').isVisible(),false);
+    await page.evaluate(()=>{restoreDigest();hashWaiters[1]();});
+    await page.waitForFunction(()=>!document.querySelector('[aria-label="Background"]').disabled);
+    await button(page,'Next').click();
+    await page.waitForFunction(()=>!document.querySelector('[aria-label="Background"]').disabled);
+    assert.equal(await sprite(page,'left').isVisible(),false);
+    assert.equal(await page.locator('.sillynovel-art__background').isVisible(),false);
+    assert.equal(await page.locator('#send_textarea').isVisible(),true);
+});
+
+test('session stage: history size refusal leaves neutral art and a usable text reader',async t=> {
+    const page=await fixture(t);await sceneControls(page);
+    await field(page,'Background').selectOption('tavern');await applyScene(page,'Apply background');
+    await page.locator('.sillynovel-controls summary').click();
+    await page.evaluate(()=>{fixture.context.chat[0].mes='x'.repeat(8*1024*1024+1);fixture.emit('MESSAGE_EDITED',0);});
+    await page.waitForFunction(()=>document.querySelector('.sillynovel-visual-status').textContent.includes('8 MiB'));
+    assert.equal(await page.locator('.sillynovel-art__background').isVisible(),false);
+    assert.equal(await page.locator('[aria-label="Background"]').isDisabled(),true);
+    assert.match(await message(page).innerText(),/Hello reader/);
+    await page.locator('#send_textarea').fill('Text still usable');
+    await button(page,'Back to Chat').click();
+    assert.equal(await page.locator('#chat').isVisible(),true);
+    assert.equal(await page.locator('#send_textarea').inputValue(),'Text still usable');
 });

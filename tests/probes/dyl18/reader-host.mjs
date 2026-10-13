@@ -14,7 +14,7 @@ const extensionRoot = resolve(import.meta.dirname, '../../..');
 const git = (root,...args) => execFileSync('git',['-C',root,...args],{encoding:'utf8'}).trim();
 assert.equal(git(hostRoot,'rev-parse','HEAD'),PIN,'Refusing an unpinned host');
 assert.equal(await realpath(resolve(hostRoot,'public/scripts/extensions/third-party/SillyNovel')),extensionRoot,'Use a dedicated host checkout with this extension mounted');
-const runtimeFiles = ['index.js','style.css','src/reader-view.mjs','src/reader-source-model.mjs','src/shell.mjs','src/host-adapter.mjs','src/stage-view.mjs','src/transient-scene.mjs','src/scene-reducer.mjs'];
+const runtimeFiles = ['index.js','style.css','src/reader-view.mjs','src/reader-source-model.mjs','src/shell.mjs','src/host-adapter.mjs','src/stage-view.mjs','src/transient-scene.mjs','src/source-prefix.mjs','src/scene-reducer.mjs'];
 assert.equal(git(extensionRoot,'diff','HEAD','--',...runtimeFiles),'','Commit runtime changes before host validation');
 const candidate = git(extensionRoot,'rev-parse','HEAD');
 const dataRoot = await mkdtemp(resolve(tmpdir(),'sillynovel-dyl18-owned-'));

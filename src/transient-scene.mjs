@@ -1,3 +1,4 @@
+import { fingerprintHistory } from './source-prefix.mjs';
 import { createScene, reconcileScene, reduceScene } from './scene-reducer.mjs';
 
 export const TEST_ACTORS = [
@@ -14,7 +15,7 @@ export const evidenceStamp = s => JSON.stringify([s.sessionEpoch, s.sourceRevisi
 export function createTransientScene(actions, changed) {
     let scene = null, epoch = null, ownerKey, historyRevision = 0, selectionRevision = 0;
     let selectedKey = null, priorHistory = '', catalogRevision = 0, nextActor = 0, disposed = false;
-    let actors = [], assets = [], media = new Map(), digests = new Map();
+    let actors = [], assets = [], media = new Map(), prefixCache = null, verifiedStamp = null;
     let notice = 'Choose test art and explicitly register session actors. No host card binding.';
     let work = 0;
     const pending = new Map();
@@ -24,7 +25,7 @@ export function createTransientScene(actions, changed) {
         for (const url of pending.keys()) URL.revokeObjectURL(url);
         pending.clear();
         for (const item of media.values()) revoke(item);
-        actors = []; assets = []; media = new Map(); digests = new Map(); scene = null;
+        actors = []; assets = []; media = new Map(); prefixCache = null; verifiedStamp = null; scene = null;
         epoch = nextEpoch; ownerKey = disposed ? null : 'session-stage-' + crypto.randomUUID();
         historyRevision = 0; selectionRevision = 0; selectedKey = null; priorHistory = ''; catalogRevision = 0;
         for (const name of ['tavern', 'forest']) {
@@ -46,28 +47,16 @@ export function createTransientScene(actions, changed) {
         const { snapshot, history } = actions.getSceneEvidence(refreshCanonical);
         if (epoch !== snapshot.sessionEpoch) { clear(snapshot.sessionEpoch); notice = 'New activation: temporary visuals cleared.'; }
         const stamp = evidenceStamp(snapshot), ticket = ++work;
+        if (verifiedStamp !== stamp) verifiedStamp = null;
         for (const [url, captured] of pending) if (captured !== stamp) { URL.revokeObjectURL(url); pending.delete(url); }
         if (history.some(s => !s || typeof s.sourceKey !== 'string' || typeof s.text !== 'string')
             || new Set(history.map(s => s.sourceKey)).size !== history.length) {
             scene = null; notify('UNRESOLVED_SOURCE: history has unavailable or ambiguous source objects. Text reading remains available.'); return false;
         }
-        // ponytail: whole-prefix hashing is quadratic on the first load of a long history;
-        // reuse immutable revision results now, add validated incremental prefix hashing if measured necessary.
-        const prefix = [];
-        const sources = [], activeDigests = new Map();
-        for (const s of history) {
-            prefix.push([s.author.kind, ['unresolved', s.author.label], s.text, s.swipeId == null ? null : [String(s.swipeId), s.text]]);
-            const serialized = JSON.stringify(['sn-source-v1', ownerKey, 'session', ownerKey, prefix]);
-            let digest = digests.get(serialized);
-            if (!digest) {
-                digest = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(serialized))), b => b.toString(16).padStart(2,'0')).join('');
-                if (ticket !== work || !current(stamp)) return false;
-                digests.set(serialized, digest);
-            }
-            activeDigests.set(serialized,digest);
-            sources.push({key:s.sourceKey,revision:s.revision,swipeRevision:s.swipeId ?? 0,fingerprintVersion:'sn-source-v1',prefixSha256:digest});
-        }
-        if (ticket !== work || !current(stamp, refreshCanonical)) return false;
+        const cache = await fingerprintHistory(history, ownerKey, prefixCache, () => ticket === work && current(stamp));
+        if (!cache || ticket !== work || !current(stamp, refreshCanonical)) return false;
+        prefixCache = cache;
+        const { sources } = cache;
         const signature = JSON.stringify(sources);
         if (signature !== priorHistory) { historyRevision++; priorHistory = signature; }
         if (selectedKey !== snapshot.cursor?.sourceKey) { selectionRevision++; selectedKey = snapshot.cursor?.sourceKey; }
@@ -76,8 +65,7 @@ export function createTransientScene(actions, changed) {
         if (!outcome.result.accepted) { notify(outcome.result.code + ': ' + (outcome.result.detail ?? 'Visual authority unavailable.')); return false; }
         if (scene?.commands.some((command,index)=>command.valid && !outcome.scene.commands[index]?.valid)) notice = 'Historical change: dependent visuals invalidated. Choose them again.';
         scene = outcome.scene;
-        // Retain only the active validated prefixes, not private text from prior revisions.
-        digests = activeDigests;
+        verifiedStamp = stamp;
         notify(); return true;
     }
     function authority() {
@@ -158,8 +146,8 @@ export function createTransientScene(actions, changed) {
         } catch (error) { if (url) { URL.revokeObjectURL(url); pending.delete(url); } if (!disposed && epoch===token.sessionEpoch && ownerKey===token.ownerKey) notify(error.message || 'Image decode failed.'); }
     }
     return { sync, dispatch, register, importFile,
-        get: () => ({scene,actors,assets,media,notice}),
-        reset() { clear(actions.getSnapshot().sessionEpoch); notice='Temporary visuals reset. Nothing was saved.'; return sync(); },
+        get: () => ({scene,actors,assets,media,notice,verifiedStamp}),
+        reset() { clear(actions.getSnapshot().sessionEpoch); notice='Temporary visuals reset. Nothing was saved.'; notify(); return sync(); },
         dispose() { disposed=true; clear(null); },
     };
 }
