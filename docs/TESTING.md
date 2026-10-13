@@ -289,7 +289,7 @@ Recommendation: review and manually try this bounded DYL-18 reader candidate. Ke
 
 ## PR #8 P2 stale native DOM correction — 2026-10-12
 
-Reviewed starting head: `29cb5bf8d348490f407565f9c3f9e91db6afb1d7`. Automated-tested correction code: `f0e811bab1b3c74acd0ac00c4f75d9e9cf980684`. The final pushed head is recorded in the PR/Linear handoff; subsequent documentation changes do not change this correction's runtime/test bytes.
+Reviewed starting head: `29cb5bf8d348490f407565f9c3f9e91db6afb1d7`. Automated-tested correction code: `f0e811bab1b3c74acd0ac00c4f75d9e9cf980684`. The final pushed head is recorded in the PR/Linear handoff; subsequent documentation and host-probe result-label changes do not change this correction's runtime or automated-test bytes.
 
 The added actual-entry test replaces the canonical Mira message object at index 1 without calling `renderNative()`, retains the same author/role/swipe attributes, emits `MESSAGE_EDITED`, confirms that the reader accepted the new canonical text, and requests Backlog. Before the fix, the targeted command below failed with “Original message located.” Afterward it reports “Exact source could not be located”, opens native chat, and keeps the composer usable. The same test covers a subsequent native render with an index-only notification and an in-place canonical edit while the DOM stays stale. Existing reorder coverage verifies that candidate scrolling and returning to the pinned reader still work, while a missing candidate does not scroll.
 

@@ -184,7 +184,7 @@ try {
     await page.waitForFunction(()=>SillyTavern.getContext().chat.at(-1).swipe_id===0);
     await screenshot(page,'native-backlog');await button(page,'Return to Reader').click();
     assert.match(await page.locator('.sillynovel-dialogue__message').innerText(),/NATIVE EDIT MARKER/);
-    pass('exact native handoff, native edit, swipe generation and previous swipe');
+    pass('native handoff with unresolved-source notice, native edit, swipe generation and previous swipe');
 
     await page.locator('#send_textarea').fill('Exact draft 日本語 with selection');await page.locator('#send_textarea').focus();
     await page.evaluate(()=>document.getElementById('send_textarea').setSelectionRange(2,8,'backward'));
