@@ -210,3 +210,24 @@ These UI function names are explanatory placeholders, not shipped renderer scaff
 Verification uses public-safe synthetic authority/catalog records and Node's built-in test runner. The existing behavioral browser suite exercises the actual reader entry with pinned host libraries; it is a fixture regression, not a new host campaign. Node: `v26.8.1`. Code-tested SHA and exact-head results are appended after verification; the final pushed head/PR URL are recorded in GitHub and the Linear handoff rather than guessed or made self-referential here.
 
 Durable card/account ownership, host source-to-scene binding, targeted metadata-save completion, immutable owned assets, import/export, scene restore, writer exclusion, real provider/device integration, and owner reader feel remain **NOT_TESTED / unimplemented here**. DYL-19's PARTIAL/BLOCKED findings are unchanged; no DYL-21 unmerged code is consumed. No browser-local storage fallback is used. Gate A remains **NOT_RUN**. Recommended next step is review of this bounded reducer contract; later UI/registry/storage/history integration needs its own assignment.
+
+### Exact-head verification — 2026-10-12
+
+Code-tested commit: `b91822d35312b5ffd479b2c34650cc39e272afcb`. The subsequent evidence-only commit changes this document; reducer/test bytes remain identical to that tested commit. Commands actually run from the dedicated worktree:
+
+```sh
+node --test tests/m0.test.mjs tests/m1-reader-source.test.mjs tests/probes/dyl19/*.test.mjs tests/m1-scene-reducer.test.mjs
+SN_PLAYWRIGHT_MODULE=/home/dq/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs SILLYTAVERN_ROOT=/tmp/SillyTavern-dyl18 node --test tests/m1-reader-browser.test.mjs
+node --check src/scene-reducer.mjs
+node --check tests/m1-scene-reducer.test.mjs
+git diff --check
+git diff d253ce597532d6193b00401d30c173473d0f1de7 --name-only
+git -C /tmp/SillyTavern-dyl18 rev-parse HEAD
+node --input-type=module -e 'const {chromium}=await import("/home/dq/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs"); const browser=await chromium.launch({headless:true}); console.log(browser.version()); await browser.close();'
+```
+
+Results: **61/61 Node PASS** (24 reducer tests plus all 37 existing M0/source/DYL-19 regressions); **15/15 actual-entry behavioral browser PASS**; syntax and whitespace checks PASS. Browser: headless Chromium `151.0.7922.34`, synthetic host fixture, pinned SillyTavern checkout/libraries at `7e8663cd9c184a550b37238218bdd32c6efc68e9`. No new host process/campaign, real provider, physical device, or owner playtest was run. No hosted CI result is claimed.
+
+Reducer coverage includes neutral schema and deep immutability; all commands; forward background/outfit/release scope; message/swipe expression scope; lock precedence, stale delayed authority, and atomic refusal; explicit slot conflict/swap/replace with four logical members; duplicate labels/unresolved keys; missing/incompatible assets and catalog revision pinning; all revision rules; deterministic replay; historical correction, edit/continue/delete/replace/insert/reorder suffix invalidation; non-resurrection; A → B → A; malformed/sparse/cyclic data; and safe-integer ceilings. An initial local run caught a parenthesis typo while tightening journal validation; it was fixed before the passing exact-head runs.
+
+Only the three declared files differ from starting main. Shared status/testing and DYL-21 storage evidence remain untouched. The final pushed full SHA and open PR URL are in the Linear/GitHub handoff. Next bounded step: review this pure reducer and its documented session-layout choices; later registry/UI/persistence authorization is separate.
