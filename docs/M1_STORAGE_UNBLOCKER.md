@@ -1,6 +1,6 @@
 # DYL-21: Safe saves and owned asset storage
 
-**Status:** investigation complete; targeted persistent visual saves and an extension-owned asset library remain **BLOCKED**. No production persistence, asset library, host fork, server plugin, or browser-local fallback was implemented. DYL-21 is in Linear **In Progress** until this report is reviewed; the requested PR handoff should move it to In Review.
+**Status:** investigation complete; targeted persistent visual saves and an extension-owned asset library remain **BLOCKED**. No production persistence, asset library, host fork, server plugin, or browser-local fallback was implemented. DYL-21 is **In Review** with [PR #9](https://github.com/Sonoran-Solutions/SillyNovel/pull/9) open and unmerged.
 
 ## Scope and exact heads
 
@@ -9,8 +9,6 @@
 | Fetched `origin/main` before work | `d253ce597532d6193b00401d30c173473d0f1de7` |
 | DYL-21 work branch base / tested SillyNovel candidate | `d253ce597532d6193b00401d30c173473d0f1de7` |
 | Pinned SillyTavern | 1.19.0, `7e8663cd9c184a550b37238218bdd32c6efc68e9` |
-| Final pushed head | Pending handoff |
-
 The investigation read the current DYL-21 and completed DYL-19 Linear records, the repository instructions, README, status, roadmap, decisions, architecture, M1 plan, identity/storage contract, state/director contract, asset/provider contract, and testing guide. Work is on `research/dyl-21-storage-unblocker`; it does not touch DYL-20 source/tests or shared `STATUS.md` / `TESTING.md`.
 
 ## Evidence and reproduction
