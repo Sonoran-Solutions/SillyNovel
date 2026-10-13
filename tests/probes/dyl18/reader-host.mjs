@@ -208,7 +208,9 @@ try {
     const complete=await page.evaluate(()=>SillyTavern.getContext().chat.at(-1).mes);
     assert.ok(complete.endsWith('END OF COMPLETE SYNTHETIC REPLY'));
     assert.ok(await page.locator('.sillynovel-dialogue p').count()>=65);
-    await button(page,'Copy message').click();assert.equal(await page.evaluate(()=>navigator.clipboard.readText()),complete);
+    await button(page,'Copy message').click();
+    await page.waitForFunction(()=>document.querySelector('.sillynovel-reader__status').textContent==='Message copied.');
+    assert.equal(await page.evaluate(()=>navigator.clipboard.readText()),complete);
     await screenshot(page,'long-scrollable-reply');
     pass('pinned new replies, explicit latest, independent scroll and full formatted copy',{characters:complete.length,scrollTop:100});
 
