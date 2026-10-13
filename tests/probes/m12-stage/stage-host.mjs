@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 
 /** Native pinned-host UI exercise; no host state injection. */
 export async function exerciseStage(page,{screenshot,pass}) {
-    const field=name=>page.getByLabel(name,{exact:true});
+    const field=name=>page.locator('#sillynovel-stage').getByLabel(name,{exact:true});
     const button=name=>page.getByRole('button',{name,exact:true});
     const applied=async name=>{await button(name).click();await page.waitForFunction(()=>document.querySelector('.sillynovel-visual-status').textContent.startsWith('Applied'));};
     const register=async preset=>{

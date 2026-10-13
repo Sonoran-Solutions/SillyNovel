@@ -388,14 +388,15 @@ test('session stage: temporary raster decode, replacement/reset/disable cleanup 
     await page.waitForFunction(()=>document.querySelector('.sillynovel-visual-status').textContent.includes('format'));
     await field(page,'Temporary raster file').setInputFiles({name:'broken.png',mimeType:'image/png',buffer:Buffer.from([137,80,78,71,13,10,26,10,0])});
     await page.waitForFunction(()=>revokedURLs.length===3);
+    await upload('oversized.png');await page.waitForFunction(()=>document.querySelector('.sillynovel-visual-status').textContent.includes('dimensions'));
     await page.evaluate(()=>{window.originalDecode=Image.prototype.decode;Image.prototype.decode=function(){const self=this;return new Promise((resolve,reject)=>window.finishDecode=()=>originalDecode.call(self).then(resolve,reject));};});
     await upload('forest.png');await page.waitForFunction(()=>typeof window.finishDecode==='function');
     await page.evaluate(()=>{fixture.context.chatId='synthetic-B';fixture.emit('CHAT_CHANGED');});
-    await page.waitForFunction(()=>revokedURLs.length===4);
+    await page.waitForFunction(()=>revokedURLs.length===5);
     await page.evaluate(()=>{finishDecode();Image.prototype.decode=originalDecode;});
     await page.waitForFunction(()=>!document.querySelector('.sillynovel-art__background').src.startsWith('blob:'));
     await upload('tavern.png');await page.waitForFunction(()=>document.querySelector('.sillynovel-art__background').src.startsWith('blob:'));
-    await page.locator('#sillynovel-enabled').uncheck();assert.equal(await page.evaluate(()=>new Set(revokedURLs).size),5);
+    await page.locator('#sillynovel-enabled').uncheck();assert.equal(await page.evaluate(()=>new Set(revokedURLs).size),6);
     await page.locator('#sillynovel-enabled').check();await sceneControls(page);assert.equal(await page.locator('.sillynovel-art__background').isVisible(),false);
     assert.deepEqual(await page.evaluate(()=>Object.keys(fixture.context.extensionSettings.sillynovel)),['enabled']);
 });

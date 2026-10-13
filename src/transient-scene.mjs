@@ -25,7 +25,7 @@ export function createTransientScene(actions, changed) {
         pending.clear();
         for (const item of media.values()) revoke(item);
         actors = []; assets = []; media = new Map(); digests = new Map(); scene = null;
-        epoch = nextEpoch; ownerKey = 'session-stage-' + crypto.randomUUID();
+        epoch = nextEpoch; ownerKey = disposed ? null : 'session-stage-' + crypto.randomUUID();
         historyRevision = 0; selectionRevision = 0; selectedKey = null; priorHistory = ''; catalogRevision = 0;
         for (const name of ['tavern', 'forest']) {
             assets.push({ id: name, revision: 'fixture-v1', kind: 'background', available: true });
@@ -56,7 +56,7 @@ export function createTransientScene(actions, changed) {
         const prefix = [];
         const sources = [], activeDigests = new Map();
         for (const s of history) {
-            prefix.push([s.author.kind, ['unresolved', s.author.label], s.text, [s.swipeId == null ? null : String(s.swipeId), s.text]]);
+            prefix.push([s.author.kind, ['unresolved', s.author.label], s.text, s.swipeId == null ? null : [String(s.swipeId), s.text]]);
             const serialized = JSON.stringify(['sn-source-v1', ownerKey, 'session', ownerKey, prefix]);
             let digest = digests.get(serialized);
             if (!digest) {
@@ -133,6 +133,7 @@ export function createTransientScene(actions, changed) {
             // production importer limits need separate measured policy and authorization.
             if (!file || file.size > 5*1024*1024 || !['image/png','image/jpeg','image/webp'].includes(file.type)) throw Error('Use a static PNG, JPEG or WebP up to 5 MiB.');
             const bytes = new Uint8Array(await file.arrayBuffer());
+            if (!current(stamp, true) || scene?.context.ownerKey!==token.ownerKey || scene?.revision!==token.expectedRevision) throw Error('STALE_SOURCE: file read belongs to an old source or session.');
             const ascii = (start,end) => String.fromCharCode(...bytes.slice(start,end));
             const png = bytes.length>8 && bytes[0]===137 && ascii(1,4)==='PNG' && bytes[4]===13 && bytes[5]===10 && bytes[6]===26 && bytes[7]===10;
             const jpeg = bytes[0]===255 && bytes[1]===216 && bytes[2]===255;

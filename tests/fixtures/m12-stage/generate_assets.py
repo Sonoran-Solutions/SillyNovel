@@ -61,6 +61,8 @@ actor('mira-a-coat-joy','#438a9b','#543245','coat','joy')
 actor('mira-b','#8b71bf','#dcd29b','hat')
 actor('rowan','#659761','#9a6244','coat')
 actor('sage','#dba451','#424663','hat')
+# Small, deliberately too-wide raster for decoded-dimension refusal.
+save(Image.new('RGB',(4097,1),'#000000'),'oversized')
 manifest=[]
 for path in sorted(root.glob('*.png')):
     im=Image.open(path)
