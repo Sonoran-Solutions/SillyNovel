@@ -17,6 +17,7 @@ export async function exerciseStage(page,{screenshot,pass}) {
     const a=await register('mira-a'),b=await register('mira-b'),r=await register('rowan'),s=await register('sage');
     await field('Background').selectOption('tavern');await applied('Apply background');
     await position(a,'left');await position(b,'right');
+    assert.ok((await page.locator('.sillynovel-dialogue').boundingBox()).height>140,'Dialogue remains readable with controls open');
     await screenshot(page,'manual-controls');
     await page.locator('.sillynovel-controls summary').click();
     await page.waitForFunction(()=>[...document.querySelectorAll('.sillynovel-art img')].filter(e=>!e.hidden).every(e=>e.complete&&e.naturalWidth));

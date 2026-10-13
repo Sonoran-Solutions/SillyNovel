@@ -88,3 +88,6 @@
 @media (max-width: 600px) { .sillynovel-art { height: 110px; flex-basis: 18%; } .sillynovel-controls__panel { gap: 0.25rem; } }
 @media (max-height: 620px) { .sillynovel-art { display: none; } .sillynovel-reader__position { display: none; } .sillynovel-stage { gap: 0.2rem; padding: 0.3rem; } }
 @media (prefers-reduced-motion: reduce) { .sillynovel-stage * { animation: none !important; transition: none !important; } }
+/* Editing yields art space to the dialogue before the control panel grows. */
+.sillynovel-controls[open] ~ .sillynovel-art { height: 90px; flex-basis: 10%; }
+@media (max-width: 600px) { .sillynovel-controls[open] ~ .sillynovel-art { display: none; } }

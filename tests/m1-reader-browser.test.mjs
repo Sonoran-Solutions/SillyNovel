@@ -328,6 +328,7 @@ test('session stage: four manual actors, duplicate names, stable slots, refusal,
     const canonical=await page.evaluate(()=>JSON.stringify([fixture.context.chat,fixture.context.characters,fixture.context.chatMetadata,fixture.context.connection]));
     const a=await addActor(page,'mira-a'), b=await addActor(page,'mira-b'), r=await addActor(page,'rowan'), s=await addActor(page,'sage');
     assert.notEqual(a,b);
+    assert.ok((await page.locator('.sillynovel-dialogue').boundingBox()).height>140,'Open controls yield art space to dialogue');
     await field(page,'Background').selectOption('tavern');await applyScene(page,'Apply background');
     await positionActor(page,a,'left');await positionActor(page,b,'center');await positionActor(page,r,'right');
     assert.equal(await page.locator('.sillynovel-sprite:visible').count(),3);
