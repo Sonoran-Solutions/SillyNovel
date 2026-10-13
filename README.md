@@ -4,7 +4,7 @@
 
 SillyNovel is a planned SillyTavern extension that presents ordinary roleplay chats with scene backgrounds, character sprites, a dialogue box, and restrained visual direction. Keep the characters, lorebooks, personas, model connections, and conversations you already use. Change how the story feels on screen—not who is writing it.
 
-> **Status: DYL-18 text-reader review candidate.** Complete formatted messages, Previous/Next/Latest navigation, a new-message indicator, native backlog handoff, and reversible chat/reader controls are implemented. The original composer handles replies. Art and persistence are not implemented; Gate A remains NOT_RUN. See [project status](docs/STATUS.md) and [reader contract](docs/M1_READER_SOURCE.md) for evidence and limits.
+> **Status: M1.2-D0 session-stage review candidate.** Main contains the complete text reader and pure scene reducer. Branch `codex/m12-d0-session-stage` adds manually selected backgrounds, up to three sprites, a larger session cast, outfits/expressions and explicit locks. All visual choices are **UNSAVED** and clear on reload, disable or chat reactivation. The native composer remains in place. [Install/trial instructions, tests and screenshots](docs/M1_TRANSIENT_STAGE.md); Gate A remains NOT_RUN.
 
 ## The experience
 
@@ -58,6 +58,7 @@ The image plan therefore includes manual prompt/reference export and result impo
 | [State and director contract](docs/STATE_AND_DIRECTOR.md) | Identity, snapshots, invalidation, automation, and manual authority |
 | [Assets and providers](docs/ASSETS_AND_PROVIDERS.md) | Asset library, generation queue, billing boundaries, and privacy |
 | [Roadmap](docs/ROADMAP.md) | Small implementation slices and human acceptance gates |
+| [Transient manual stage](docs/M1_TRANSIENT_STAGE.md) | M1.2-D0 unsaved prototype, fixture hashes, installation and host evidence |
 | [M1 reader plan](docs/M1_PLAN.md) | DYL-15 interaction designs, component contracts, dependencies, and pending owner decisions |
 | [Testing](docs/TESTING.md) | Regression matrix and evidence requirements |
 | [M0 compatibility](docs/M0_COMPATIBILITY.md) | Pinned host source, smoke results, lifecycle limits, and open integration seams |
@@ -78,7 +79,7 @@ git clone https://github.com/Sonoran-Solutions/SillyNovel.git \
   /path/to/SillyTavern/public/scripts/extensions/third-party/SillyNovel
 ```
 
-This installs the default `main` branch, including the merged M0 compatibility corrections. For this open review candidate, check out `codex/dyl-18-text-reader` in the extension clone; `main` retains the prior source-model shell until the PR is reviewed and merged. Reload SillyTavern, open **Extensions**, and select **Enable SillyNovel reader** to read the current conversation. The feature starts off by default. Backlog opens native chat and scrolls to a matching candidate when available, with an explicit notice that its source revision could not be verified; Back to Chat and Return to Reader preserve a valid selection. To develop, edit the cloned extension in place and reload the SillyTavern page; no `npm install` is needed for SillyNovel.
+This installs the default `main` branch, including the merged text reader and pure reducer. For the session-only stage review candidate, check out `codex/m12-d0-session-stage` in the extension clone. Visual choices are unsaved; see the [manual stage trial](docs/M1_TRANSIENT_STAGE.md#install-and-try). Reload SillyTavern, open **Extensions**, and select **Enable SillyNovel reader** to read the current conversation. The feature starts off by default. Backlog opens native chat and scrolls to a matching candidate when available, with an explicit notice that its source revision could not be verified; Back to Chat and Return to Reader preserve a valid selection. To develop, edit the cloned extension in place and reload the SillyTavern page; no `npm install` is needed for SillyNovel.
 
 Run the synthetic adapter/controller harness from the extension checkout:
 
