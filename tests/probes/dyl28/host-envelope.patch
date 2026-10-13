@@ -56,7 +56,7 @@
 +            data = result.messages;
 +            const activation = await acceptLoad(load, result, getRequestHeaders);
 +            if (!isCurrent()) return;
-+            if (activation?.error === 'SOURCE_REVISION_MISMATCH') {
++            if (['SOURCE_REVISION_MISMATCH', 'SOURCE_SNAPSHOT_MISMATCH'].includes(activation?.error)) {
 +                if (retrySourceMismatch) return getChat(false);
 +                toastr.warning('The chat changed while loading. Reopen it to read the latest version.');
 +                return;
