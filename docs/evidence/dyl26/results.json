@@ -1,0 +1,532 @@
+{
+  "runId": "117631d6-f477-402b-8b0d-be8944406da9",
+  "hostSha": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
+  "testedSillyNovelSha": "5b5065803ee8d4a98bcf6401a2eb87547417ebcb",
+  "node": "v26.8.1",
+  "platform": "linux 7.0.0-38-generic",
+  "checks": [
+    {
+      "name": "fixture enrollment collision refusal",
+      "result": "PASS",
+      "storedRecords": {
+        "default-user": {
+          "A": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"7bbc89f9-fbb1-48cf-a556-aeb0b4950082\",\"revision\":0,\"record\":{\"background\":null}}",
+          "B": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4a5ef8d5-310c-4a33-abe6-4238e602e260\",\"revision\":0,\"record\":{\"background\":null}}",
+          "new": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4c87d2a5-f803-4c9f-91f5-0381bc178595\",\"revision\":0,\"record\":{\"background\":null}}",
+          "copy": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"5a6f3b72-e6b1-464d-9db5-f5725afc02f0\",\"revision\":0,\"record\":{\"background\":null}}",
+          "branch": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"0e7ca274-ca31-484c-afde-6d61d9554b50\",\"revision\":0,\"record\":{\"background\":null}}"
+        },
+        "dyl26-117631d6-f477-402b-8b0d-be8944406da9": {
+          "A": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"96c157d4-c8c2-45a3-9b11-6b93f128d2a6\",\"revision\":0,\"record\":{\"background\":null}}",
+          "B": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"1e0eb7b4-8844-4732-a3c9-3767f76a89f7\",\"revision\":0,\"record\":{\"background\":null}}",
+          "new": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"9565b525-28a5-49e8-a01f-895392ab6405\",\"revision\":0,\"record\":{\"background\":null}}",
+          "copy": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"6fb66a14-bcfc-4890-b419-0318636e145c\",\"revision\":0,\"record\":{\"background\":null}}",
+          "branch": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"1e8b5577-9ded-481b-8996-593014eab130\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      }
+    },
+    {
+      "name": "authenticated user/store and session isolation",
+      "result": "PASS",
+      "storedRecords": {
+        "default-user": {
+          "A": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"7bbc89f9-fbb1-48cf-a556-aeb0b4950082\",\"revision\":0,\"record\":{\"background\":null}}",
+          "B": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4a5ef8d5-310c-4a33-abe6-4238e602e260\",\"revision\":0,\"record\":{\"background\":null}}",
+          "new": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4c87d2a5-f803-4c9f-91f5-0381bc178595\",\"revision\":0,\"record\":{\"background\":null}}",
+          "copy": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"5a6f3b72-e6b1-464d-9db5-f5725afc02f0\",\"revision\":0,\"record\":{\"background\":null}}",
+          "branch": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"0e7ca274-ca31-484c-afde-6d61d9554b50\",\"revision\":0,\"record\":{\"background\":null}}"
+        },
+        "dyl26-117631d6-f477-402b-8b0d-be8944406da9": {
+          "A": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"96c157d4-c8c2-45a3-9b11-6b93f128d2a6\",\"revision\":1,\"record\":{\"background\":\"tavern\"}}",
+          "B": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"1e0eb7b4-8844-4732-a3c9-3767f76a89f7\",\"revision\":0,\"record\":{\"background\":null}}",
+          "new": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"9565b525-28a5-49e8-a01f-895392ab6405\",\"revision\":0,\"record\":{\"background\":null}}",
+          "copy": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"6fb66a14-bcfc-4890-b419-0318636e145c\",\"revision\":0,\"record\":{\"background\":null}}",
+          "branch": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"1e8b5577-9ded-481b-8996-593014eab130\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      }
+    },
+    {
+      "name": "initial revision creation and acknowledged disk readback",
+      "result": "PASS",
+      "storedRecords": {
+        "default-user": {
+          "A": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"7bbc89f9-fbb1-48cf-a556-aeb0b4950082\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "B": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4a5ef8d5-310c-4a33-abe6-4238e602e260\",\"revision\":0,\"record\":{\"background\":null}}",
+          "new": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4c87d2a5-f803-4c9f-91f5-0381bc178595\",\"revision\":0,\"record\":{\"background\":null}}",
+          "copy": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"5a6f3b72-e6b1-464d-9db5-f5725afc02f0\",\"revision\":0,\"record\":{\"background\":null}}",
+          "branch": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"0e7ca274-ca31-484c-afde-6d61d9554b50\",\"revision\":0,\"record\":{\"background\":null}}"
+        },
+        "dyl26-117631d6-f477-402b-8b0d-be8944406da9": {
+          "A": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"96c157d4-c8c2-45a3-9b11-6b93f128d2a6\",\"revision\":1,\"record\":{\"background\":\"tavern\"}}",
+          "B": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"1e0eb7b4-8844-4732-a3c9-3767f76a89f7\",\"revision\":0,\"record\":{\"background\":null}}",
+          "new": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"9565b525-28a5-49e8-a01f-895392ab6405\",\"revision\":0,\"record\":{\"background\":null}}",
+          "copy": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"6fb66a14-bcfc-4890-b419-0318636e145c\",\"revision\":0,\"record\":{\"background\":null}}",
+          "branch": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"1e8b5577-9ded-481b-8996-593014eab130\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      }
+    },
+    {
+      "name": "stale CAS refuses without partial mutation",
+      "result": "PASS",
+      "storedRecords": {
+        "default-user": {
+          "A": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"7bbc89f9-fbb1-48cf-a556-aeb0b4950082\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "B": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4a5ef8d5-310c-4a33-abe6-4238e602e260\",\"revision\":0,\"record\":{\"background\":null}}",
+          "new": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4c87d2a5-f803-4c9f-91f5-0381bc178595\",\"revision\":0,\"record\":{\"background\":null}}",
+          "copy": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"5a6f3b72-e6b1-464d-9db5-f5725afc02f0\",\"revision\":0,\"record\":{\"background\":null}}",
+          "branch": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"0e7ca274-ca31-484c-afde-6d61d9554b50\",\"revision\":0,\"record\":{\"background\":null}}"
+        },
+        "dyl26-117631d6-f477-402b-8b0d-be8944406da9": {
+          "A": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"96c157d4-c8c2-45a3-9b11-6b93f128d2a6\",\"revision\":1,\"record\":{\"background\":\"tavern\"}}",
+          "B": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"1e0eb7b4-8844-4732-a3c9-3767f76a89f7\",\"revision\":0,\"record\":{\"background\":null}}",
+          "new": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"9565b525-28a5-49e8-a01f-895392ab6405\",\"revision\":0,\"record\":{\"background\":null}}",
+          "copy": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"6fb66a14-bcfc-4890-b419-0318636e145c\",\"revision\":0,\"record\":{\"background\":null}}",
+          "branch": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"1e8b5577-9ded-481b-8996-593014eab130\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      }
+    },
+    {
+      "name": "two overlapping authenticated clients: one commit, one conflict",
+      "result": "PASS",
+      "storedRecords": {
+        "default-user": {
+          "A": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"7bbc89f9-fbb1-48cf-a556-aeb0b4950082\",\"revision\":2,\"record\":{\"background\":\"tavern\"}}",
+          "B": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4a5ef8d5-310c-4a33-abe6-4238e602e260\",\"revision\":0,\"record\":{\"background\":null}}",
+          "new": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4c87d2a5-f803-4c9f-91f5-0381bc178595\",\"revision\":0,\"record\":{\"background\":null}}",
+          "copy": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"5a6f3b72-e6b1-464d-9db5-f5725afc02f0\",\"revision\":0,\"record\":{\"background\":null}}",
+          "branch": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"0e7ca274-ca31-484c-afde-6d61d9554b50\",\"revision\":0,\"record\":{\"background\":null}}"
+        },
+        "dyl26-117631d6-f477-402b-8b0d-be8944406da9": {
+          "A": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"96c157d4-c8c2-45a3-9b11-6b93f128d2a6\",\"revision\":1,\"record\":{\"background\":\"tavern\"}}",
+          "B": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"1e0eb7b4-8844-4732-a3c9-3767f76a89f7\",\"revision\":0,\"record\":{\"background\":null}}",
+          "new": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"9565b525-28a5-49e8-a01f-895392ab6405\",\"revision\":0,\"record\":{\"background\":null}}",
+          "copy": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"6fb66a14-bcfc-4890-b419-0318636e145c\",\"revision\":0,\"record\":{\"background\":null}}",
+          "branch": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"1e8b5577-9ded-481b-8996-593014eab130\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      }
+    },
+    {
+      "name": "A to B during delayed write: stale view, neither record changed",
+      "result": "PASS",
+      "storedRecords": {
+        "default-user": {
+          "A": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"7bbc89f9-fbb1-48cf-a556-aeb0b4950082\",\"revision\":2,\"record\":{\"background\":\"tavern\"}}",
+          "B": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4a5ef8d5-310c-4a33-abe6-4238e602e260\",\"revision\":0,\"record\":{\"background\":null}}",
+          "new": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4c87d2a5-f803-4c9f-91f5-0381bc178595\",\"revision\":0,\"record\":{\"background\":null}}",
+          "copy": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"5a6f3b72-e6b1-464d-9db5-f5725afc02f0\",\"revision\":0,\"record\":{\"background\":null}}",
+          "branch": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"0e7ca274-ca31-484c-afde-6d61d9554b50\",\"revision\":0,\"record\":{\"background\":null}}"
+        },
+        "dyl26-117631d6-f477-402b-8b0d-be8944406da9": {
+          "A": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"96c157d4-c8c2-45a3-9b11-6b93f128d2a6\",\"revision\":1,\"record\":{\"background\":\"tavern\"}}",
+          "B": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"1e0eb7b4-8844-4732-a3c9-3767f76a89f7\",\"revision\":0,\"record\":{\"background\":null}}",
+          "new": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"9565b525-28a5-49e8-a01f-895392ab6405\",\"revision\":0,\"record\":{\"background\":null}}",
+          "copy": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"6fb66a14-bcfc-4890-b419-0318636e145c\",\"revision\":0,\"record\":{\"background\":null}}",
+          "branch": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"1e8b5577-9ded-481b-8996-593014eab130\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      }
+    },
+    {
+      "name": "A to B to A: old visit remains invalid",
+      "result": "PASS",
+      "storedRecords": {
+        "default-user": {
+          "A": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"7bbc89f9-fbb1-48cf-a556-aeb0b4950082\",\"revision\":2,\"record\":{\"background\":\"tavern\"}}",
+          "B": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4a5ef8d5-310c-4a33-abe6-4238e602e260\",\"revision\":0,\"record\":{\"background\":null}}",
+          "new": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4c87d2a5-f803-4c9f-91f5-0381bc178595\",\"revision\":0,\"record\":{\"background\":null}}",
+          "copy": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"5a6f3b72-e6b1-464d-9db5-f5725afc02f0\",\"revision\":0,\"record\":{\"background\":null}}",
+          "branch": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"0e7ca274-ca31-484c-afde-6d61d9554b50\",\"revision\":0,\"record\":{\"background\":null}}"
+        },
+        "dyl26-117631d6-f477-402b-8b0d-be8944406da9": {
+          "A": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"96c157d4-c8c2-45a3-9b11-6b93f128d2a6\",\"revision\":1,\"record\":{\"background\":\"tavern\"}}",
+          "B": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"1e0eb7b4-8844-4732-a3c9-3767f76a89f7\",\"revision\":0,\"record\":{\"background\":null}}",
+          "new": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"9565b525-28a5-49e8-a01f-895392ab6405\",\"revision\":0,\"record\":{\"background\":null}}",
+          "copy": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"6fb66a14-bcfc-4890-b419-0318636e145c\",\"revision\":0,\"record\":{\"background\":null}}",
+          "branch": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"1e8b5577-9ded-481b-8996-593014eab130\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      }
+    },
+    {
+      "name": "invalid target/token/path/payload cannot redirect writes",
+      "result": "PASS",
+      "storedRecords": {
+        "default-user": {
+          "A": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"7bbc89f9-fbb1-48cf-a556-aeb0b4950082\",\"revision\":2,\"record\":{\"background\":\"tavern\"}}",
+          "B": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4a5ef8d5-310c-4a33-abe6-4238e602e260\",\"revision\":0,\"record\":{\"background\":null}}",
+          "new": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4c87d2a5-f803-4c9f-91f5-0381bc178595\",\"revision\":0,\"record\":{\"background\":null}}",
+          "copy": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"5a6f3b72-e6b1-464d-9db5-f5725afc02f0\",\"revision\":0,\"record\":{\"background\":null}}",
+          "branch": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"0e7ca274-ca31-484c-afde-6d61d9554b50\",\"revision\":0,\"record\":{\"background\":null}}"
+        },
+        "dyl26-117631d6-f477-402b-8b0d-be8944406da9": {
+          "A": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"96c157d4-c8c2-45a3-9b11-6b93f128d2a6\",\"revision\":1,\"record\":{\"background\":\"tavern\"}}",
+          "B": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"1e0eb7b4-8844-4732-a3c9-3767f76a89f7\",\"revision\":0,\"record\":{\"background\":null}}",
+          "new": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"9565b525-28a5-49e8-a01f-895392ab6405\",\"revision\":0,\"record\":{\"background\":null}}",
+          "copy": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"6fb66a14-bcfc-4890-b419-0318636e145c\",\"revision\":0,\"record\":{\"background\":null}}",
+          "branch": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"1e8b5577-9ded-481b-8996-593014eab130\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      }
+    },
+    {
+      "name": "same filename and identical bytes under distinct card scopes",
+      "result": "PASS",
+      "storedRecords": {
+        "default-user": {
+          "A": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"7bbc89f9-fbb1-48cf-a556-aeb0b4950082\",\"revision\":2,\"record\":{\"background\":\"tavern\"}}",
+          "B": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4a5ef8d5-310c-4a33-abe6-4238e602e260\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "new": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4c87d2a5-f803-4c9f-91f5-0381bc178595\",\"revision\":0,\"record\":{\"background\":null}}",
+          "copy": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"5a6f3b72-e6b1-464d-9db5-f5725afc02f0\",\"revision\":0,\"record\":{\"background\":null}}",
+          "branch": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"0e7ca274-ca31-484c-afde-6d61d9554b50\",\"revision\":0,\"record\":{\"background\":null}}"
+        },
+        "dyl26-117631d6-f477-402b-8b0d-be8944406da9": {
+          "A": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"96c157d4-c8c2-45a3-9b11-6b93f128d2a6\",\"revision\":1,\"record\":{\"background\":\"tavern\"}}",
+          "B": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"1e0eb7b4-8844-4732-a3c9-3767f76a89f7\",\"revision\":0,\"record\":{\"background\":null}}",
+          "new": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"9565b525-28a5-49e8-a01f-895392ab6405\",\"revision\":0,\"record\":{\"background\":null}}",
+          "copy": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"6fb66a14-bcfc-4890-b419-0318636e145c\",\"revision\":0,\"record\":{\"background\":null}}",
+          "branch": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"1e8b5577-9ded-481b-8996-593014eab130\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      }
+    },
+    {
+      "name": "fixture-created new/copy/branch receive distinct IDs",
+      "result": "PASS",
+      "classification": "EXPERIMENTAL_ENROLLMENT; native branch/copy NOT_TESTED",
+      "storedRecords": {
+        "default-user": {
+          "A": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"7bbc89f9-fbb1-48cf-a556-aeb0b4950082\",\"revision\":2,\"record\":{\"background\":\"tavern\"}}",
+          "B": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4a5ef8d5-310c-4a33-abe6-4238e602e260\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "new": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4c87d2a5-f803-4c9f-91f5-0381bc178595\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "copy": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"5a6f3b72-e6b1-464d-9db5-f5725afc02f0\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "branch": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"0e7ca274-ca31-484c-afde-6d61d9554b50\",\"revision\":1,\"record\":{\"background\":\"forest\"}}"
+        },
+        "dyl26-117631d6-f477-402b-8b0d-be8944406da9": {
+          "A": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"96c157d4-c8c2-45a3-9b11-6b93f128d2a6\",\"revision\":1,\"record\":{\"background\":\"tavern\"}}",
+          "B": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"1e0eb7b4-8844-4732-a3c9-3767f76a89f7\",\"revision\":0,\"record\":{\"background\":null}}",
+          "new": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"9565b525-28a5-49e8-a01f-895392ab6405\",\"revision\":0,\"record\":{\"background\":null}}",
+          "copy": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"6fb66a14-bcfc-4890-b419-0318636e145c\",\"revision\":0,\"record\":{\"background\":null}}",
+          "branch": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"1e8b5577-9ded-481b-8996-593014eab130\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      }
+    },
+    {
+      "name": "temporary activation refuses and revokes prior visit",
+      "result": "PASS",
+      "classification": "EXPERIMENTAL_ACTIVATION; native Temporary Chat UI NOT_TESTED",
+      "storedRecords": {
+        "default-user": {
+          "A": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"7bbc89f9-fbb1-48cf-a556-aeb0b4950082\",\"revision\":2,\"record\":{\"background\":\"tavern\"}}",
+          "B": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4a5ef8d5-310c-4a33-abe6-4238e602e260\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "new": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4c87d2a5-f803-4c9f-91f5-0381bc178595\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "copy": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"5a6f3b72-e6b1-464d-9db5-f5725afc02f0\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "branch": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"0e7ca274-ca31-484c-afde-6d61d9554b50\",\"revision\":1,\"record\":{\"background\":\"forest\"}}"
+        },
+        "dyl26-117631d6-f477-402b-8b0d-be8944406da9": {
+          "A": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"96c157d4-c8c2-45a3-9b11-6b93f128d2a6\",\"revision\":1,\"record\":{\"background\":\"tavern\"}}",
+          "B": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"1e0eb7b4-8844-4732-a3c9-3767f76a89f7\",\"revision\":0,\"record\":{\"background\":null}}",
+          "new": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"9565b525-28a5-49e8-a01f-895392ab6405\",\"revision\":0,\"record\":{\"background\":null}}",
+          "copy": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"6fb66a14-bcfc-4890-b419-0318636e145c\",\"revision\":0,\"record\":{\"background\":null}}",
+          "branch": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"1e8b5577-9ded-481b-8996-593014eab130\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      }
+    },
+    {
+      "name": "missing record refuses recreation even at revision zero",
+      "result": "PASS",
+      "storedRecords": {
+        "default-user": {
+          "A": "MISSING",
+          "B": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4a5ef8d5-310c-4a33-abe6-4238e602e260\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "new": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4c87d2a5-f803-4c9f-91f5-0381bc178595\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "copy": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"5a6f3b72-e6b1-464d-9db5-f5725afc02f0\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "branch": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"0e7ca274-ca31-484c-afde-6d61d9554b50\",\"revision\":1,\"record\":{\"background\":\"forest\"}}"
+        },
+        "dyl26-117631d6-f477-402b-8b0d-be8944406da9": {
+          "A": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"96c157d4-c8c2-45a3-9b11-6b93f128d2a6\",\"revision\":1,\"record\":{\"background\":\"tavern\"}}",
+          "B": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"1e0eb7b4-8844-4732-a3c9-3767f76a89f7\",\"revision\":0,\"record\":{\"background\":null}}",
+          "new": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"9565b525-28a5-49e8-a01f-895392ab6405\",\"revision\":0,\"record\":{\"background\":null}}",
+          "copy": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"6fb66a14-bcfc-4890-b419-0318636e145c\",\"revision\":0,\"record\":{\"background\":null}}",
+          "branch": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"1e8b5577-9ded-481b-8996-593014eab130\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      }
+    },
+    {
+      "name": "corrupt record preserved",
+      "result": "PASS",
+      "corruptBytes": "{broken",
+      "storedRecords": {
+        "default-user": {
+          "A": "{broken",
+          "B": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4a5ef8d5-310c-4a33-abe6-4238e602e260\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "new": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4c87d2a5-f803-4c9f-91f5-0381bc178595\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "copy": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"5a6f3b72-e6b1-464d-9db5-f5725afc02f0\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "branch": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"0e7ca274-ca31-484c-afde-6d61d9554b50\",\"revision\":1,\"record\":{\"background\":\"forest\"}}"
+        },
+        "dyl26-117631d6-f477-402b-8b0d-be8944406da9": {
+          "A": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"96c157d4-c8c2-45a3-9b11-6b93f128d2a6\",\"revision\":1,\"record\":{\"background\":\"tavern\"}}",
+          "B": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"1e0eb7b4-8844-4732-a3c9-3767f76a89f7\",\"revision\":0,\"record\":{\"background\":null}}",
+          "new": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"9565b525-28a5-49e8-a01f-895392ab6405\",\"revision\":0,\"record\":{\"background\":null}}",
+          "copy": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"6fb66a14-bcfc-4890-b419-0318636e145c\",\"revision\":0,\"record\":{\"background\":null}}",
+          "branch": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"1e8b5577-9ded-481b-8996-593014eab130\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      }
+    },
+    {
+      "name": "corrupt record preserved",
+      "result": "PASS",
+      "corruptBytes": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"7bbc89f9-fbb1-48cf-a556-aeb0b4950082\",\"revision\":-1,\"record\":{\"background\":\"tavern\"}}",
+      "storedRecords": {
+        "default-user": {
+          "A": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"7bbc89f9-fbb1-48cf-a556-aeb0b4950082\",\"revision\":-1,\"record\":{\"background\":\"tavern\"}}",
+          "B": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4a5ef8d5-310c-4a33-abe6-4238e602e260\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "new": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4c87d2a5-f803-4c9f-91f5-0381bc178595\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "copy": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"5a6f3b72-e6b1-464d-9db5-f5725afc02f0\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "branch": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"0e7ca274-ca31-484c-afde-6d61d9554b50\",\"revision\":1,\"record\":{\"background\":\"forest\"}}"
+        },
+        "dyl26-117631d6-f477-402b-8b0d-be8944406da9": {
+          "A": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"96c157d4-c8c2-45a3-9b11-6b93f128d2a6\",\"revision\":1,\"record\":{\"background\":\"tavern\"}}",
+          "B": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"1e0eb7b4-8844-4732-a3c9-3767f76a89f7\",\"revision\":0,\"record\":{\"background\":null}}",
+          "new": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"9565b525-28a5-49e8-a01f-895392ab6405\",\"revision\":0,\"record\":{\"background\":null}}",
+          "copy": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"6fb66a14-bcfc-4890-b419-0318636e145c\",\"revision\":0,\"record\":{\"background\":null}}",
+          "branch": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"1e8b5577-9ded-481b-8996-593014eab130\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      }
+    },
+    {
+      "name": "corrupt record preserved",
+      "result": "PASS",
+      "corruptBytes": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4a5ef8d5-310c-4a33-abe6-4238e602e260\",\"revision\":2,\"record\":{\"background\":\"tavern\"}}",
+      "storedRecords": {
+        "default-user": {
+          "A": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4a5ef8d5-310c-4a33-abe6-4238e602e260\",\"revision\":2,\"record\":{\"background\":\"tavern\"}}",
+          "B": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4a5ef8d5-310c-4a33-abe6-4238e602e260\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "new": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4c87d2a5-f803-4c9f-91f5-0381bc178595\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "copy": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"5a6f3b72-e6b1-464d-9db5-f5725afc02f0\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "branch": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"0e7ca274-ca31-484c-afde-6d61d9554b50\",\"revision\":1,\"record\":{\"background\":\"forest\"}}"
+        },
+        "dyl26-117631d6-f477-402b-8b0d-be8944406da9": {
+          "A": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"96c157d4-c8c2-45a3-9b11-6b93f128d2a6\",\"revision\":1,\"record\":{\"background\":\"tavern\"}}",
+          "B": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"1e0eb7b4-8844-4732-a3c9-3767f76a89f7\",\"revision\":0,\"record\":{\"background\":null}}",
+          "new": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"9565b525-28a5-49e8-a01f-895392ab6405\",\"revision\":0,\"record\":{\"background\":null}}",
+          "copy": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"6fb66a14-bcfc-4890-b419-0318636e145c\",\"revision\":0,\"record\":{\"background\":null}}",
+          "branch": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"1e8b5577-9ded-481b-8996-593014eab130\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      }
+    },
+    {
+      "name": "actual EACCES write failure preserves revision and bytes",
+      "result": "PASS",
+      "storedRecords": {
+        "default-user": {
+          "A": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"7bbc89f9-fbb1-48cf-a556-aeb0b4950082\",\"revision\":2,\"record\":{\"background\":\"tavern\"}}",
+          "B": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4a5ef8d5-310c-4a33-abe6-4238e602e260\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "new": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4c87d2a5-f803-4c9f-91f5-0381bc178595\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "copy": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"5a6f3b72-e6b1-464d-9db5-f5725afc02f0\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "branch": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"0e7ca274-ca31-484c-afde-6d61d9554b50\",\"revision\":1,\"record\":{\"background\":\"forest\"}}"
+        },
+        "dyl26-117631d6-f477-402b-8b0d-be8944406da9": {
+          "A": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"96c157d4-c8c2-45a3-9b11-6b93f128d2a6\",\"revision\":1,\"record\":{\"background\":\"tavern\"}}",
+          "B": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"1e0eb7b4-8844-4732-a3c9-3767f76a89f7\",\"revision\":0,\"record\":{\"background\":null}}",
+          "new": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"9565b525-28a5-49e8-a01f-895392ab6405\",\"revision\":0,\"record\":{\"background\":null}}",
+          "copy": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"6fb66a14-bcfc-4890-b419-0318636e145c\",\"revision\":0,\"record\":{\"background\":null}}",
+          "branch": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"1e8b5577-9ded-481b-8996-593014eab130\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      }
+    },
+    {
+      "name": "host process restart recovers exact stored revision and issues new visits",
+      "result": "PASS",
+      "storedRecords": {
+        "default-user": {
+          "A": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"7bbc89f9-fbb1-48cf-a556-aeb0b4950082\",\"revision\":3,\"record\":{\"background\":\"forest\"}}",
+          "B": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4a5ef8d5-310c-4a33-abe6-4238e602e260\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "new": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4c87d2a5-f803-4c9f-91f5-0381bc178595\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "copy": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"5a6f3b72-e6b1-464d-9db5-f5725afc02f0\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "branch": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"0e7ca274-ca31-484c-afde-6d61d9554b50\",\"revision\":1,\"record\":{\"background\":\"forest\"}}"
+        },
+        "dyl26-117631d6-f477-402b-8b0d-be8944406da9": {
+          "A": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"96c157d4-c8c2-45a3-9b11-6b93f128d2a6\",\"revision\":1,\"record\":{\"background\":\"tavern\"}}",
+          "B": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"1e0eb7b4-8844-4732-a3c9-3767f76a89f7\",\"revision\":0,\"record\":{\"background\":null}}",
+          "new": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"9565b525-28a5-49e8-a01f-895392ab6405\",\"revision\":0,\"record\":{\"background\":null}}",
+          "copy": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"6fb66a14-bcfc-4890-b419-0318636e145c\",\"revision\":0,\"record\":{\"background\":null}}",
+          "branch": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"1e8b5577-9ded-481b-8996-593014eab130\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      }
+    },
+    {
+      "name": "native rename and same-name recreation refuse old binding",
+      "result": "PASS",
+      "classification": "HOST_TESTED refusal; rename identity preservation UNSUPPORTED",
+      "storedRecords": {
+        "default-user": {
+          "A": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"7bbc89f9-fbb1-48cf-a556-aeb0b4950082\",\"revision\":3,\"record\":{\"background\":\"forest\"}}",
+          "B": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4a5ef8d5-310c-4a33-abe6-4238e602e260\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "new": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"4c87d2a5-f803-4c9f-91f5-0381bc178595\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "copy": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"5a6f3b72-e6b1-464d-9db5-f5725afc02f0\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "branch": "{\"storeId\":\"3a23dfe9-393f-4e26-b783-2a14436b862d\",\"chatId\":\"0e7ca274-ca31-484c-afde-6d61d9554b50\",\"revision\":1,\"record\":{\"background\":\"forest\"}}"
+        },
+        "dyl26-117631d6-f477-402b-8b0d-be8944406da9": {
+          "A": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"96c157d4-c8c2-45a3-9b11-6b93f128d2a6\",\"revision\":1,\"record\":{\"background\":\"tavern\"}}",
+          "B": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"1e0eb7b4-8844-4732-a3c9-3767f76a89f7\",\"revision\":0,\"record\":{\"background\":null}}",
+          "new": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"9565b525-28a5-49e8-a01f-895392ab6405\",\"revision\":0,\"record\":{\"background\":null}}",
+          "copy": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"6fb66a14-bcfc-4890-b419-0318636e145c\",\"revision\":0,\"record\":{\"background\":null}}",
+          "branch": "{\"storeId\":\"f066354c-5746-4c34-8ef6-cbb0fc7d1628\",\"chatId\":\"1e8b5577-9ded-481b-8996-593014eab130\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      }
+    }
+  ],
+  "files": {
+    "host-storage.mjs": "8159d79a82d46e90d54295d31f3bd8a014377c625766b04868f3128cc3266a59",
+    "host-mount.patch": "52183a75145885fadc97accba4e838be613cb05ab6e4974767fc1cded193d51f",
+    "host-probe.mjs": "f02dd60565d3b0ff150e7014bc934e89f9617cfeb00bd356ea782411bc611408"
+  },
+  "identities": {
+    "default": {
+      "storeId": "3a23dfe9-393f-4e26-b783-2a14436b862d",
+      "chats": [
+        {
+          "label": "A",
+          "relativePath": "chats/DYL26-117631d6-f477-402b-8b0d-be8944406da9-card-a/same.jsonl",
+          "scopeId": "7e46cf09-3c18-4c11-b6bf-098f5a0c4194",
+          "chatId": "7bbc89f9-fbb1-48cf-a556-aeb0b4950082",
+          "seal": {
+            "dev": 66306,
+            "ino": 1977315,
+            "birthtimeMs": 1791862547088.3125,
+            "sha256": "cfc079fe197917874297d030e2b47f040e6e2f17c1d7456afc8dce7495591434"
+          }
+        },
+        {
+          "label": "B",
+          "relativePath": "chats/DYL26-117631d6-f477-402b-8b0d-be8944406da9-card-b/same.jsonl",
+          "scopeId": "54ad378a-dfe0-4e52-8ff6-b7505fcd6cb8",
+          "chatId": "4a5ef8d5-310c-4a33-abe6-4238e602e260",
+          "seal": {
+            "dev": 66306,
+            "ino": 1977317,
+            "birthtimeMs": 1791862547088.3125,
+            "sha256": "cfc079fe197917874297d030e2b47f040e6e2f17c1d7456afc8dce7495591434"
+          }
+        },
+        {
+          "label": "new",
+          "relativePath": "chats/DYL26-117631d6-f477-402b-8b0d-be8944406da9-card-a/new.jsonl",
+          "scopeId": "7e46cf09-3c18-4c11-b6bf-098f5a0c4194",
+          "chatId": "4c87d2a5-f803-4c9f-91f5-0381bc178595",
+          "seal": {
+            "dev": 66306,
+            "ino": 1977318,
+            "birthtimeMs": 1791862547088.3125,
+            "sha256": "cfc079fe197917874297d030e2b47f040e6e2f17c1d7456afc8dce7495591434"
+          }
+        },
+        {
+          "label": "copy",
+          "relativePath": "chats/DYL26-117631d6-f477-402b-8b0d-be8944406da9-card-a/copy.jsonl",
+          "scopeId": "7e46cf09-3c18-4c11-b6bf-098f5a0c4194",
+          "chatId": "5a6f3b72-e6b1-464d-9db5-f5725afc02f0",
+          "seal": {
+            "dev": 66306,
+            "ino": 1977319,
+            "birthtimeMs": 1791862547089.0242,
+            "sha256": "cfc079fe197917874297d030e2b47f040e6e2f17c1d7456afc8dce7495591434"
+          }
+        },
+        {
+          "label": "branch",
+          "relativePath": "chats/DYL26-117631d6-f477-402b-8b0d-be8944406da9-card-a/branch.jsonl",
+          "scopeId": "7e46cf09-3c18-4c11-b6bf-098f5a0c4194",
+          "chatId": "0e7ca274-ca31-484c-afde-6d61d9554b50",
+          "seal": {
+            "dev": 66306,
+            "ino": 1977320,
+            "birthtimeMs": 1791862547089.0703,
+            "sha256": "cfc079fe197917874297d030e2b47f040e6e2f17c1d7456afc8dce7495591434"
+          }
+        }
+      ]
+    },
+    "second": {
+      "storeId": "f066354c-5746-4c34-8ef6-cbb0fc7d1628",
+      "chats": [
+        {
+          "label": "A",
+          "relativePath": "chats/DYL26-117631d6-f477-402b-8b0d-be8944406da9-card-a/same.jsonl",
+          "scopeId": "7e0fc1be-487f-4d1d-abd0-15438afd6e0c",
+          "chatId": "96c157d4-c8c2-45a3-9b11-6b93f128d2a6",
+          "seal": {
+            "dev": 66306,
+            "ino": 1977329,
+            "birthtimeMs": 1791862547089.3125,
+            "sha256": "cfc079fe197917874297d030e2b47f040e6e2f17c1d7456afc8dce7495591434"
+          }
+        },
+        {
+          "label": "B",
+          "relativePath": "chats/DYL26-117631d6-f477-402b-8b0d-be8944406da9-card-b/same.jsonl",
+          "scopeId": "899d8a7f-c5b9-4e5d-9200-aa05a7744da4",
+          "chatId": "1e0eb7b4-8844-4732-a3c9-3767f76a89f7",
+          "seal": {
+            "dev": 66306,
+            "ino": 1977331,
+            "birthtimeMs": 1791862547090.3125,
+            "sha256": "cfc079fe197917874297d030e2b47f040e6e2f17c1d7456afc8dce7495591434"
+          }
+        },
+        {
+          "label": "new",
+          "relativePath": "chats/DYL26-117631d6-f477-402b-8b0d-be8944406da9-card-a/new.jsonl",
+          "scopeId": "7e0fc1be-487f-4d1d-abd0-15438afd6e0c",
+          "chatId": "9565b525-28a5-49e8-a01f-895392ab6405",
+          "seal": {
+            "dev": 66306,
+            "ino": 1977332,
+            "birthtimeMs": 1791862547090.3125,
+            "sha256": "cfc079fe197917874297d030e2b47f040e6e2f17c1d7456afc8dce7495591434"
+          }
+        },
+        {
+          "label": "copy",
+          "relativePath": "chats/DYL26-117631d6-f477-402b-8b0d-be8944406da9-card-a/copy.jsonl",
+          "scopeId": "7e0fc1be-487f-4d1d-abd0-15438afd6e0c",
+          "chatId": "6fb66a14-bcfc-4890-b419-0318636e145c",
+          "seal": {
+            "dev": 66306,
+            "ino": 1977333,
+            "birthtimeMs": 1791862547090.3125,
+            "sha256": "cfc079fe197917874297d030e2b47f040e6e2f17c1d7456afc8dce7495591434"
+          }
+        },
+        {
+          "label": "branch",
+          "relativePath": "chats/DYL26-117631d6-f477-402b-8b0d-be8944406da9-card-a/branch.jsonl",
+          "scopeId": "7e0fc1be-487f-4d1d-abd0-15438afd6e0c",
+          "chatId": "1e8b5577-9ded-481b-8996-593014eab130",
+          "seal": {
+            "dev": 66306,
+            "ino": 1977334,
+            "birthtimeMs": 1791862547090.9578,
+            "sha256": "cfc079fe197917874297d030e2b47f040e6e2f17c1d7456afc8dce7495591434"
+          }
+        }
+      ]
+    }
+  },
+  "canonicalSha256": {
+    "default-user/chats/DYL26-117631d6-f477-402b-8b0d-be8944406da9-card-b/same.jsonl": "cfc079fe197917874297d030e2b47f040e6e2f17c1d7456afc8dce7495591434",
+    "default-user/chats/DYL26-117631d6-f477-402b-8b0d-be8944406da9-card-a/new.jsonl": "cfc079fe197917874297d030e2b47f040e6e2f17c1d7456afc8dce7495591434",
+    "default-user/chats/DYL26-117631d6-f477-402b-8b0d-be8944406da9-card-a/copy.jsonl": "cfc079fe197917874297d030e2b47f040e6e2f17c1d7456afc8dce7495591434",
+    "default-user/chats/DYL26-117631d6-f477-402b-8b0d-be8944406da9-card-a/branch.jsonl": "cfc079fe197917874297d030e2b47f040e6e2f17c1d7456afc8dce7495591434",
+    "dyl26-117631d6-f477-402b-8b0d-be8944406da9/chats/DYL26-117631d6-f477-402b-8b0d-be8944406da9-card-a/same.jsonl": "cfc079fe197917874297d030e2b47f040e6e2f17c1d7456afc8dce7495591434",
+    "dyl26-117631d6-f477-402b-8b0d-be8944406da9/chats/DYL26-117631d6-f477-402b-8b0d-be8944406da9-card-b/same.jsonl": "cfc079fe197917874297d030e2b47f040e6e2f17c1d7456afc8dce7495591434",
+    "dyl26-117631d6-f477-402b-8b0d-be8944406da9/chats/DYL26-117631d6-f477-402b-8b0d-be8944406da9-card-a/new.jsonl": "cfc079fe197917874297d030e2b47f040e6e2f17c1d7456afc8dce7495591434",
+    "dyl26-117631d6-f477-402b-8b0d-be8944406da9/chats/DYL26-117631d6-f477-402b-8b0d-be8944406da9-card-a/copy.jsonl": "cfc079fe197917874297d030e2b47f040e6e2f17c1d7456afc8dce7495591434",
+    "dyl26-117631d6-f477-402b-8b0d-be8944406da9/chats/DYL26-117631d6-f477-402b-8b0d-be8944406da9-card-a/branch.jsonl": "cfc079fe197917874297d030e2b47f040e6e2f17c1d7456afc8dce7495591434",
+    "default-user/chats/DYL26-117631d6-f477-402b-8b0d-be8944406da9-card-a/renamed.jsonl": "cfc079fe197917874297d030e2b47f040e6e2f17c1d7456afc8dce7495591434",
+    "default-user/chats/DYL26-117631d6-f477-402b-8b0d-be8944406da9-card-a/same.jsonl": "cfc079fe197917874297d030e2b47f040e6e2f17c1d7456afc8dce7495591434"
+  },
+  "result": "PASS_WITH_IDENTITY_LIMITS",
+  "cleanup": {
+    "ownedRootRemoved": true,
+    "hostStopped": true,
+    "sourceCheckoutPresent": true,
+    "sourceStatusUnchanged": true
+  }
+}

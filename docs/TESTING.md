@@ -307,3 +307,9 @@ git diff --check
 ```
 
 Results: targeted pre-fix reproduction **FAIL as expected**; corrected full browser suite **15/15 PASS**; Node regressions **37/37 PASS**; syntax/diff checks **PASS**. `sha256sum -c SHA256SUMS` in `docs/evidence/dyl18` verified all nine unchanged historical artifacts. Browser: headless Chromium 151.0.7922.34, synthetic host fixture, actual extension entry and pinned-host Showdown/DOMPurify libraries. The 12-scenario SillyTavern host campaign was **not rerun**, as requested by the review. Its existing results/screenshots/checksums are retained at the recorded host-tested SHA `3d136668e97a47f602775c9297b567c73293261e`, not attributed to this new adapter. No hosted GitHub CI result is claimed. All previous untested surfaces remain untested; DYL-18 remains In Review and Gate A remains NOT_RUN.
+
+## DYL-26 isolated host storage spike — 2026-10-12
+
+The [spike report](M1_HOST_STORAGE_SPIKE.md) records exact candidate/host/fixture hashes, commands, stored records, negative cases and identity limits. `tests/probes/dyl26/host-probe.mjs` creates its own disposable checkout and data root from a pinned host checkout with installed dependencies; it applies the test-only mount patch and module, uses authenticated synthetic users and loopback-only HTTP, then removes only its owned process/data/checkout. Supply a new output directory; an existing output or fixture namespace refuses collision.
+
+This is an **EXPERIMENTAL_HOST** storage/API test, not a native UI lifecycle test or production persistence. New/copy/branch identities and view activation are test-only host additions. Native rename is tested for safe refusal; identity preservation through rename remains unsupported. Node and actual-entry browser regressions retain the unchanged session-only stage; their passes are distinct from owner experience. Gate A remains NOT_RUN.

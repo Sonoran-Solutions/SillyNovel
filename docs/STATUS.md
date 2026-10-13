@@ -130,3 +130,9 @@ Recommendation: owner review and a direct text-reader trial of this open PR. If 
 Starting reviewed head: `29cb5bf8d348490f407565f9c3f9e91db6afb1d7`. Correction code: `f0e811bab1b3c74acd0ac00c4f75d9e9cf980684`; final pushed head is recorded in GitHub/Linear. The actual-entry browser regression first reproduced the stale-DOM false success, then passed with the correction. Matching attributes permit a best-effort candidate scroll, but the adapter always reports unresolved correspondence because the pinned host provides no rendered source/revision token. Same-object edits and index-only render notifications also cannot produce an exact-match claim.
 
 **37/37 Node and 15/15 actual-entry Chromium tests PASS**. The host probe's expected notice was updated and syntax-checked; the 12-scenario host campaign was **not rerun** for this focused correction. Existing screenshots/results remain historical evidence on their recorded host-tested code. DYL-18 stays **In Review**, PR #8 stays open/unmerged, and Gate A stays **NOT_RUN**. See the [P2 testing addendum](TESTING.md#pr-8-p2-stale-native-dom-correction--2026-10-12).
+
+## DYL-26 owner assignment — 2026-10-12
+
+Fetched main at `0d3510816afb255e9d5eb3ef2c9e2335bcf962e0`; PRs #11 and #12 verified merged, DYL-24 and DYL-25 verified Done. The owner's DYL-26 assignment records **PASS for the bounded DYL-24 session-only prototype**, with the exact statement and limits in [decisions](DECISIONS.md#owner-decision-and-bounded-assignment--2026-10-12-dyl-26). This supersedes the historical “owner trial pending” status only for that prototype. **Gate A remains NOT_RUN**.
+
+DYL-26 is a test-only host storage spike; see [report and evidence](M1_HOST_STORAGE_SPIKE.md). The production reader/stage remains unchanged and session-only. DYL-22/23 remain Backlog/blocked; M1.3 persistence and later milestones remain gated. No upstream request, release architecture selection or production installation is authorized.
