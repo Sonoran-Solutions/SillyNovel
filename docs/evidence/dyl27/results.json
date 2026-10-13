@@ -1,0 +1,800 @@
+{
+  "runId": "db25f9db-e93f-417a-bd6f-03121887a218",
+  "hostSha": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
+  "testedSillyNovelSha": "d1a46a6be7dfdaf02e4c1020adb3b555bbdb811b",
+  "node": "v26.8.1",
+  "platform": "linux 7.0.0-38-generic",
+  "checks": [
+    {
+      "name": "native create/save: distinct chats/scopes/users despite duplicate labels and identical bytes",
+      "result": "PASS",
+      "classification": "EXPERIMENTAL_HOST",
+      "storedRecords": {
+        "default-user": {
+          "3e5b8429-ae3f-49d4-99a5-d5947ea0caf4": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"3e5b8429-ae3f-49d4-99a5-d5947ea0caf4\",\"revision\":0,\"record\":{\"background\":null}}",
+          "897bf747-cbbb-4263-b71d-e4c0e6c1f9ac": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"897bf747-cbbb-4263-b71d-e4c0e6c1f9ac\",\"revision\":0,\"record\":{\"background\":null}}"
+        },
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218": {
+          "a2f80e19-6513-4bbd-993a-4838b59f1845": "{\"storeId\":\"49dda47e-d782-4df1-b64d-8146f611e9cb\",\"chatId\":\"a2f80e19-6513-4bbd-993a-4838b59f1845\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      },
+      "canonicalSha256": {
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/B.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507"
+      }
+    },
+    {
+      "name": "visual CAS readback, authenticated isolation, identity and token refusals; canonical unchanged",
+      "result": "PASS",
+      "classification": "EXPERIMENTAL_HOST",
+      "storedRecords": {
+        "default-user": {
+          "3e5b8429-ae3f-49d4-99a5-d5947ea0caf4": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"3e5b8429-ae3f-49d4-99a5-d5947ea0caf4\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "897bf747-cbbb-4263-b71d-e4c0e6c1f9ac": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"897bf747-cbbb-4263-b71d-e4c0e6c1f9ac\",\"revision\":0,\"record\":{\"background\":null}}"
+        },
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218": {
+          "a2f80e19-6513-4bbd-993a-4838b59f1845": "{\"storeId\":\"49dda47e-d782-4df1-b64d-8146f611e9cb\",\"chatId\":\"a2f80e19-6513-4bbd-993a-4838b59f1845\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      },
+      "canonicalSha256": {
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/B.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507"
+      }
+    },
+    {
+      "name": "native message save keeps durable identity through atomic replacement",
+      "result": "PASS",
+      "classification": "EXPERIMENTAL_HOST",
+      "beforeCanonical": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+      "afterCanonical": {
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "4e939e1792662e428cebf587266178cd6f58b991bc73ed1dd7c2ca3031b3718f",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/B.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507"
+      },
+      "storedRecords": {
+        "default-user": {
+          "3e5b8429-ae3f-49d4-99a5-d5947ea0caf4": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"3e5b8429-ae3f-49d4-99a5-d5947ea0caf4\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "897bf747-cbbb-4263-b71d-e4c0e6c1f9ac": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"897bf747-cbbb-4263-b71d-e4c0e6c1f9ac\",\"revision\":0,\"record\":{\"background\":null}}"
+        },
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218": {
+          "a2f80e19-6513-4bbd-993a-4838b59f1845": "{\"storeId\":\"49dda47e-d782-4df1-b64d-8146f611e9cb\",\"chatId\":\"a2f80e19-6513-4bbd-993a-4838b59f1845\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      },
+      "canonicalSha256": {
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "4e939e1792662e428cebf587266178cd6f58b991bc73ed1dd7c2ca3031b3718f",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/B.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507"
+      }
+    },
+    {
+      "name": "native rename preserves ID; reused old filename gets a new ID",
+      "result": "PASS",
+      "classification": "EXPERIMENTAL_HOST",
+      "storedRecords": {
+        "default-user": {
+          "3e5b8429-ae3f-49d4-99a5-d5947ea0caf4": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"3e5b8429-ae3f-49d4-99a5-d5947ea0caf4\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "897bf747-cbbb-4263-b71d-e4c0e6c1f9ac": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"897bf747-cbbb-4263-b71d-e4c0e6c1f9ac\",\"revision\":0,\"record\":{\"background\":null}}",
+          "9face863-2d8a-42ee-a034-227385cb6c45": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"9face863-2d8a-42ee-a034-227385cb6c45\",\"revision\":0,\"record\":{\"background\":null}}"
+        },
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218": {
+          "a2f80e19-6513-4bbd-993a-4838b59f1845": "{\"storeId\":\"49dda47e-d782-4df1-b64d-8146f611e9cb\",\"chatId\":\"a2f80e19-6513-4bbd-993a-4838b59f1845\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      },
+      "canonicalSha256": {
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Renamed.jsonl": "4e939e1792662e428cebf587266178cd6f58b991bc73ed1dd7c2ca3031b3718f",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/B.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507"
+      }
+    },
+    {
+      "name": "new save with copied bytes and untrusted ID gets a fresh ID",
+      "result": "PASS",
+      "classification": "EXPERIMENTAL_HOST; native branch UI NOT_TESTED",
+      "storedRecords": {
+        "default-user": {
+          "3e5b8429-ae3f-49d4-99a5-d5947ea0caf4": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"3e5b8429-ae3f-49d4-99a5-d5947ea0caf4\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "897bf747-cbbb-4263-b71d-e4c0e6c1f9ac": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"897bf747-cbbb-4263-b71d-e4c0e6c1f9ac\",\"revision\":0,\"record\":{\"background\":null}}",
+          "9face863-2d8a-42ee-a034-227385cb6c45": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"9face863-2d8a-42ee-a034-227385cb6c45\",\"revision\":0,\"record\":{\"background\":null}}",
+          "4346f482-3ee3-429b-b544-8e9eaf16f780": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"4346f482-3ee3-429b-b544-8e9eaf16f780\",\"revision\":0,\"record\":{\"background\":null}}"
+        },
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218": {
+          "a2f80e19-6513-4bbd-993a-4838b59f1845": "{\"storeId\":\"49dda47e-d782-4df1-b64d-8146f611e9cb\",\"chatId\":\"a2f80e19-6513-4bbd-993a-4838b59f1845\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      },
+      "canonicalSha256": {
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Renamed.jsonl": "4e939e1792662e428cebf587266178cd6f58b991bc73ed1dd7c2ca3031b3718f",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/B.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Branch.jsonl": "7e524169d78a31237d6ccb89d46d4cc4adf2e87d4e49759be20df864bc3e4042",
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507"
+      }
+    },
+    {
+      "name": "overlapping native-target visual writes: one commit, one revision conflict",
+      "result": "PASS",
+      "classification": "EXPERIMENTAL_HOST",
+      "storedRecords": {
+        "default-user": {
+          "3e5b8429-ae3f-49d4-99a5-d5947ea0caf4": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"3e5b8429-ae3f-49d4-99a5-d5947ea0caf4\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "897bf747-cbbb-4263-b71d-e4c0e6c1f9ac": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"897bf747-cbbb-4263-b71d-e4c0e6c1f9ac\",\"revision\":0,\"record\":{\"background\":null}}",
+          "9face863-2d8a-42ee-a034-227385cb6c45": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"9face863-2d8a-42ee-a034-227385cb6c45\",\"revision\":0,\"record\":{\"background\":null}}",
+          "4346f482-3ee3-429b-b544-8e9eaf16f780": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"4346f482-3ee3-429b-b544-8e9eaf16f780\",\"revision\":1,\"record\":{\"background\":\"forest\"}}"
+        },
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218": {
+          "a2f80e19-6513-4bbd-993a-4838b59f1845": "{\"storeId\":\"49dda47e-d782-4df1-b64d-8146f611e9cb\",\"chatId\":\"a2f80e19-6513-4bbd-993a-4838b59f1845\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      },
+      "canonicalSha256": {
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Renamed.jsonl": "4e939e1792662e428cebf587266178cd6f58b991bc73ed1dd7c2ca3031b3718f",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/B.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Branch.jsonl": "7e524169d78a31237d6ccb89d46d4cc4adf2e87d4e49759be20df864bc3e4042",
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507"
+      }
+    },
+    {
+      "name": "deterministic delayed CAS across A-B and A-B-A refuses old visit",
+      "result": "PASS",
+      "classification": "EXPERIMENTAL_HOST",
+      "storedRecords": {
+        "default-user": {
+          "3e5b8429-ae3f-49d4-99a5-d5947ea0caf4": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"3e5b8429-ae3f-49d4-99a5-d5947ea0caf4\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "897bf747-cbbb-4263-b71d-e4c0e6c1f9ac": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"897bf747-cbbb-4263-b71d-e4c0e6c1f9ac\",\"revision\":0,\"record\":{\"background\":null}}",
+          "9face863-2d8a-42ee-a034-227385cb6c45": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"9face863-2d8a-42ee-a034-227385cb6c45\",\"revision\":0,\"record\":{\"background\":null}}",
+          "4346f482-3ee3-429b-b544-8e9eaf16f780": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"4346f482-3ee3-429b-b544-8e9eaf16f780\",\"revision\":1,\"record\":{\"background\":\"forest\"}}"
+        },
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218": {
+          "a2f80e19-6513-4bbd-993a-4838b59f1845": "{\"storeId\":\"49dda47e-d782-4df1-b64d-8146f611e9cb\",\"chatId\":\"a2f80e19-6513-4bbd-993a-4838b59f1845\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      },
+      "canonicalSha256": {
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Renamed.jsonl": "4e939e1792662e428cebf587266178cd6f58b991bc73ed1dd7c2ca3031b3718f",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/B.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Branch.jsonl": "7e524169d78a31237d6ccb89d46d4cc4adf2e87d4e49759be20df864bc3e4042",
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507"
+      }
+    },
+    {
+      "name": "out-of-order activation and unresolved/temporary intent cannot restore old authority",
+      "result": "PASS",
+      "classification": "EXPERIMENTAL_HOST",
+      "storedRecords": {
+        "default-user": {
+          "3e5b8429-ae3f-49d4-99a5-d5947ea0caf4": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"3e5b8429-ae3f-49d4-99a5-d5947ea0caf4\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "897bf747-cbbb-4263-b71d-e4c0e6c1f9ac": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"897bf747-cbbb-4263-b71d-e4c0e6c1f9ac\",\"revision\":0,\"record\":{\"background\":null}}",
+          "9face863-2d8a-42ee-a034-227385cb6c45": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"9face863-2d8a-42ee-a034-227385cb6c45\",\"revision\":0,\"record\":{\"background\":null}}",
+          "4346f482-3ee3-429b-b544-8e9eaf16f780": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"4346f482-3ee3-429b-b544-8e9eaf16f780\",\"revision\":1,\"record\":{\"background\":\"forest\"}}"
+        },
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218": {
+          "a2f80e19-6513-4bbd-993a-4838b59f1845": "{\"storeId\":\"49dda47e-d782-4df1-b64d-8146f611e9cb\",\"chatId\":\"a2f80e19-6513-4bbd-993a-4838b59f1845\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      },
+      "canonicalSha256": {
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Renamed.jsonl": "4e939e1792662e428cebf587266178cd6f58b991bc73ed1dd7c2ca3031b3718f",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/B.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Branch.jsonl": "7e524169d78a31237d6ccb89d46d4cc4adf2e87d4e49759be20df864bc3e4042",
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507"
+      }
+    },
+    {
+      "name": "actual native UI A-B-A: stable chat identity, fresh visit",
+      "result": "PASS",
+      "classification": "NATIVE_HOST_UI",
+      "uiA": {
+        "storeId": "e8c79674-2e9e-4c32-950e-e6e42198c72d",
+        "scopeId": "c10ba838-4d88-4fff-a29d-2310852136aa",
+        "chatId": "1ca22a19-8723-4efe-ad59-f7a7216c6527",
+        "clientId": "55da422f-7226-43f4-97ec-266b52200bd2",
+        "viewToken": "563ac14f-2825-41fa-a935-a4d4b0e0a173"
+      },
+      "uiB": {
+        "storeId": "e8c79674-2e9e-4c32-950e-e6e42198c72d",
+        "scopeId": "5f35fa27-b689-4f74-96de-9677c3ee2383",
+        "chatId": "929d89fd-9e04-49fa-9303-881740d56f7d",
+        "clientId": "55da422f-7226-43f4-97ec-266b52200bd2",
+        "viewToken": "991d1fdf-a391-41a7-b4ee-dd45ff0cae3d"
+      },
+      "uiA2": {
+        "storeId": "e8c79674-2e9e-4c32-950e-e6e42198c72d",
+        "scopeId": "c10ba838-4d88-4fff-a29d-2310852136aa",
+        "chatId": "1ca22a19-8723-4efe-ad59-f7a7216c6527",
+        "clientId": "55da422f-7226-43f4-97ec-266b52200bd2",
+        "viewToken": "bbc84278-bf0a-4f2b-8979-c538eb526752"
+      },
+      "storedRecords": {
+        "default-user": {
+          "3e5b8429-ae3f-49d4-99a5-d5947ea0caf4": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"3e5b8429-ae3f-49d4-99a5-d5947ea0caf4\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "897bf747-cbbb-4263-b71d-e4c0e6c1f9ac": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"897bf747-cbbb-4263-b71d-e4c0e6c1f9ac\",\"revision\":0,\"record\":{\"background\":null}}",
+          "9face863-2d8a-42ee-a034-227385cb6c45": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"9face863-2d8a-42ee-a034-227385cb6c45\",\"revision\":0,\"record\":{\"background\":null}}",
+          "4346f482-3ee3-429b-b544-8e9eaf16f780": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"4346f482-3ee3-429b-b544-8e9eaf16f780\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "1ca22a19-8723-4efe-ad59-f7a7216c6527": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"1ca22a19-8723-4efe-ad59-f7a7216c6527\",\"revision\":0,\"record\":{\"background\":null}}",
+          "929d89fd-9e04-49fa-9303-881740d56f7d": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"929d89fd-9e04-49fa-9303-881740d56f7d\",\"revision\":0,\"record\":{\"background\":null}}"
+        },
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218": {
+          "a2f80e19-6513-4bbd-993a-4838b59f1845": "{\"storeId\":\"49dda47e-d782-4df1-b64d-8146f611e9cb\",\"chatId\":\"a2f80e19-6513-4bbd-993a-4838b59f1845\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      },
+      "canonicalSha256": {
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Renamed.jsonl": "4e939e1792662e428cebf587266178cd6f58b991bc73ed1dd7c2ca3031b3718f",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/B.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Branch.jsonl": "7e524169d78a31237d6ccb89d46d4cc4adf2e87d4e49759be20df864bc3e4042",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s017ms.jsonl": "392b59fbb966f0cfaefe770e9adbac97bbb1c1d93fc2716961ffa92490f2bd04",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s045ms.jsonl": "c928cb6affc3c2124a8fde1c4c7ac3b01f0dc0cc9c41e87e21204df59c717566",
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507"
+      }
+    },
+    {
+      "name": "native UI switch while CAS is held: server refuses old activation",
+      "result": "PASS",
+      "classification": "NATIVE_HOST_UI",
+      "storedRecords": {
+        "default-user": {
+          "3e5b8429-ae3f-49d4-99a5-d5947ea0caf4": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"3e5b8429-ae3f-49d4-99a5-d5947ea0caf4\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "897bf747-cbbb-4263-b71d-e4c0e6c1f9ac": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"897bf747-cbbb-4263-b71d-e4c0e6c1f9ac\",\"revision\":0,\"record\":{\"background\":null}}",
+          "9face863-2d8a-42ee-a034-227385cb6c45": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"9face863-2d8a-42ee-a034-227385cb6c45\",\"revision\":0,\"record\":{\"background\":null}}",
+          "4346f482-3ee3-429b-b544-8e9eaf16f780": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"4346f482-3ee3-429b-b544-8e9eaf16f780\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "1ca22a19-8723-4efe-ad59-f7a7216c6527": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"1ca22a19-8723-4efe-ad59-f7a7216c6527\",\"revision\":0,\"record\":{\"background\":null}}",
+          "929d89fd-9e04-49fa-9303-881740d56f7d": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"929d89fd-9e04-49fa-9303-881740d56f7d\",\"revision\":0,\"record\":{\"background\":null}}"
+        },
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218": {
+          "a2f80e19-6513-4bbd-993a-4838b59f1845": "{\"storeId\":\"49dda47e-d782-4df1-b64d-8146f611e9cb\",\"chatId\":\"a2f80e19-6513-4bbd-993a-4838b59f1845\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      },
+      "canonicalSha256": {
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Renamed.jsonl": "4e939e1792662e428cebf587266178cd6f58b991bc73ed1dd7c2ca3031b3718f",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/B.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Branch.jsonl": "7e524169d78a31237d6ccb89d46d4cc4adf2e87d4e49759be20df864bc3e4042",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s017ms.jsonl": "392b59fbb966f0cfaefe770e9adbac97bbb1c1d93fc2716961ffa92490f2bd04",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s045ms.jsonl": "c928cb6affc3c2124a8fde1c4c7ac3b01f0dc0cc9c41e87e21204df59c717566",
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507"
+      }
+    },
+    {
+      "name": "out-of-order native activation ACK across A-B-A discarded by local epoch",
+      "result": "PASS",
+      "classification": "NATIVE_HOST_UI with response barrier",
+      "storedRecords": {
+        "default-user": {
+          "3e5b8429-ae3f-49d4-99a5-d5947ea0caf4": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"3e5b8429-ae3f-49d4-99a5-d5947ea0caf4\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "897bf747-cbbb-4263-b71d-e4c0e6c1f9ac": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"897bf747-cbbb-4263-b71d-e4c0e6c1f9ac\",\"revision\":0,\"record\":{\"background\":null}}",
+          "9face863-2d8a-42ee-a034-227385cb6c45": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"9face863-2d8a-42ee-a034-227385cb6c45\",\"revision\":0,\"record\":{\"background\":null}}",
+          "4346f482-3ee3-429b-b544-8e9eaf16f780": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"4346f482-3ee3-429b-b544-8e9eaf16f780\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "1ca22a19-8723-4efe-ad59-f7a7216c6527": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"1ca22a19-8723-4efe-ad59-f7a7216c6527\",\"revision\":0,\"record\":{\"background\":null}}",
+          "929d89fd-9e04-49fa-9303-881740d56f7d": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"929d89fd-9e04-49fa-9303-881740d56f7d\",\"revision\":0,\"record\":{\"background\":null}}"
+        },
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218": {
+          "a2f80e19-6513-4bbd-993a-4838b59f1845": "{\"storeId\":\"49dda47e-d782-4df1-b64d-8146f611e9cb\",\"chatId\":\"a2f80e19-6513-4bbd-993a-4838b59f1845\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      },
+      "canonicalSha256": {
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Renamed.jsonl": "4e939e1792662e428cebf587266178cd6f58b991bc73ed1dd7c2ca3031b3718f",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/B.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Branch.jsonl": "7e524169d78a31237d6ccb89d46d4cc4adf2e87d4e49759be20df864bc3e4042",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s017ms.jsonl": "392b59fbb966f0cfaefe770e9adbac97bbb1c1d93fc2716961ffa92490f2bd04",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s045ms.jsonl": "c928cb6affc3c2124a8fde1c4c7ac3b01f0dc0cc9c41e87e21204df59c717566",
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507"
+      }
+    },
+    {
+      "name": "native message editor and ordinary send/reply preserve chat identity",
+      "result": "PASS",
+      "classification": "NATIVE_HOST_UI; deterministic loopback provider",
+      "storedRecords": {
+        "default-user": {
+          "3e5b8429-ae3f-49d4-99a5-d5947ea0caf4": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"3e5b8429-ae3f-49d4-99a5-d5947ea0caf4\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "897bf747-cbbb-4263-b71d-e4c0e6c1f9ac": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"897bf747-cbbb-4263-b71d-e4c0e6c1f9ac\",\"revision\":0,\"record\":{\"background\":null}}",
+          "9face863-2d8a-42ee-a034-227385cb6c45": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"9face863-2d8a-42ee-a034-227385cb6c45\",\"revision\":0,\"record\":{\"background\":null}}",
+          "4346f482-3ee3-429b-b544-8e9eaf16f780": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"4346f482-3ee3-429b-b544-8e9eaf16f780\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "1ca22a19-8723-4efe-ad59-f7a7216c6527": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"1ca22a19-8723-4efe-ad59-f7a7216c6527\",\"revision\":0,\"record\":{\"background\":null}}",
+          "929d89fd-9e04-49fa-9303-881740d56f7d": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"929d89fd-9e04-49fa-9303-881740d56f7d\",\"revision\":0,\"record\":{\"background\":null}}"
+        },
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218": {
+          "a2f80e19-6513-4bbd-993a-4838b59f1845": "{\"storeId\":\"49dda47e-d782-4df1-b64d-8146f611e9cb\",\"chatId\":\"a2f80e19-6513-4bbd-993a-4838b59f1845\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      },
+      "canonicalSha256": {
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Renamed.jsonl": "4e939e1792662e428cebf587266178cd6f58b991bc73ed1dd7c2ca3031b3718f",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/B.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Branch.jsonl": "7e524169d78a31237d6ccb89d46d4cc4adf2e87d4e49759be20df864bc3e4042",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s017ms.jsonl": "08cc56ee0aa8f37755950ee8b1fde7c2405d8b3252c0a146082493b4960158e9",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s045ms.jsonl": "c928cb6affc3c2124a8fde1c4c7ac3b01f0dc0cc9c41e87e21204df59c717566",
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507"
+      }
+    },
+    {
+      "name": "actual native createBranch function allocates separate identity",
+      "result": "PASS",
+      "classification": "EXPERIMENTAL_HOST via native browser function, not branch-button UI",
+      "storedRecords": {
+        "default-user": {
+          "3e5b8429-ae3f-49d4-99a5-d5947ea0caf4": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"3e5b8429-ae3f-49d4-99a5-d5947ea0caf4\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "897bf747-cbbb-4263-b71d-e4c0e6c1f9ac": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"897bf747-cbbb-4263-b71d-e4c0e6c1f9ac\",\"revision\":0,\"record\":{\"background\":null}}",
+          "9face863-2d8a-42ee-a034-227385cb6c45": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"9face863-2d8a-42ee-a034-227385cb6c45\",\"revision\":0,\"record\":{\"background\":null}}",
+          "4346f482-3ee3-429b-b544-8e9eaf16f780": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"4346f482-3ee3-429b-b544-8e9eaf16f780\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "1ca22a19-8723-4efe-ad59-f7a7216c6527": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"1ca22a19-8723-4efe-ad59-f7a7216c6527\",\"revision\":0,\"record\":{\"background\":null}}",
+          "929d89fd-9e04-49fa-9303-881740d56f7d": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"929d89fd-9e04-49fa-9303-881740d56f7d\",\"revision\":0,\"record\":{\"background\":null}}",
+          "105f351e-37bf-43ed-a1dc-abbfb8245b2d": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"105f351e-37bf-43ed-a1dc-abbfb8245b2d\",\"revision\":0,\"record\":{\"background\":null}}"
+        },
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218": {
+          "a2f80e19-6513-4bbd-993a-4838b59f1845": "{\"storeId\":\"49dda47e-d782-4df1-b64d-8146f611e9cb\",\"chatId\":\"a2f80e19-6513-4bbd-993a-4838b59f1845\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      },
+      "canonicalSha256": {
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Renamed.jsonl": "4e939e1792662e428cebf587266178cd6f58b991bc73ed1dd7c2ca3031b3718f",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/B.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Branch.jsonl": "7e524169d78a31237d6ccb89d46d4cc4adf2e87d4e49759be20df864bc3e4042",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s017ms.jsonl": "08cc56ee0aa8f37755950ee8b1fde7c2405d8b3252c0a146082493b4960158e9",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s045ms.jsonl": "c928cb6affc3c2124a8fde1c4c7ac3b01f0dc0cc9c41e87e21204df59c717566",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s017ms - Branch #1.jsonl": "abb358d9e1637f65a78402b23ab28f57d761ecb96a6f12b5663a68f1b58ce6a0",
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507"
+      }
+    },
+    {
+      "name": "native Temporary Chat function revokes durable visual visit",
+      "result": "PASS",
+      "classification": "EXPERIMENTAL_HOST via native browser function, not menu UI",
+      "storedRecords": {
+        "default-user": {
+          "3e5b8429-ae3f-49d4-99a5-d5947ea0caf4": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"3e5b8429-ae3f-49d4-99a5-d5947ea0caf4\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "897bf747-cbbb-4263-b71d-e4c0e6c1f9ac": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"897bf747-cbbb-4263-b71d-e4c0e6c1f9ac\",\"revision\":0,\"record\":{\"background\":null}}",
+          "9face863-2d8a-42ee-a034-227385cb6c45": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"9face863-2d8a-42ee-a034-227385cb6c45\",\"revision\":0,\"record\":{\"background\":null}}",
+          "4346f482-3ee3-429b-b544-8e9eaf16f780": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"4346f482-3ee3-429b-b544-8e9eaf16f780\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "1ca22a19-8723-4efe-ad59-f7a7216c6527": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"1ca22a19-8723-4efe-ad59-f7a7216c6527\",\"revision\":0,\"record\":{\"background\":null}}",
+          "929d89fd-9e04-49fa-9303-881740d56f7d": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"929d89fd-9e04-49fa-9303-881740d56f7d\",\"revision\":0,\"record\":{\"background\":null}}",
+          "105f351e-37bf-43ed-a1dc-abbfb8245b2d": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"105f351e-37bf-43ed-a1dc-abbfb8245b2d\",\"revision\":0,\"record\":{\"background\":null}}"
+        },
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218": {
+          "a2f80e19-6513-4bbd-993a-4838b59f1845": "{\"storeId\":\"49dda47e-d782-4df1-b64d-8146f611e9cb\",\"chatId\":\"a2f80e19-6513-4bbd-993a-4838b59f1845\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      },
+      "canonicalSha256": {
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Renamed.jsonl": "4e939e1792662e428cebf587266178cd6f58b991bc73ed1dd7c2ca3031b3718f",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/B.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Branch.jsonl": "7e524169d78a31237d6ccb89d46d4cc4adf2e87d4e49759be20df864bc3e4042",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s017ms.jsonl": "08cc56ee0aa8f37755950ee8b1fde7c2405d8b3252c0a146082493b4960158e9",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s045ms.jsonl": "c928cb6affc3c2124a8fde1c4c7ac3b01f0dc0cc9c41e87e21204df59c717566",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s017ms - Branch #1.jsonl": "abb358d9e1637f65a78402b23ab28f57d761ecb96a6f12b5663a68f1b58ce6a0",
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507"
+      }
+    },
+    {
+      "name": "process restart recovers native mappings and visual records; old client refuses",
+      "result": "PASS",
+      "classification": "EXPERIMENTAL_HOST",
+      "storedRecords": {
+        "default-user": {
+          "3e5b8429-ae3f-49d4-99a5-d5947ea0caf4": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"3e5b8429-ae3f-49d4-99a5-d5947ea0caf4\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "897bf747-cbbb-4263-b71d-e4c0e6c1f9ac": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"897bf747-cbbb-4263-b71d-e4c0e6c1f9ac\",\"revision\":0,\"record\":{\"background\":null}}",
+          "9face863-2d8a-42ee-a034-227385cb6c45": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"9face863-2d8a-42ee-a034-227385cb6c45\",\"revision\":0,\"record\":{\"background\":null}}",
+          "4346f482-3ee3-429b-b544-8e9eaf16f780": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"4346f482-3ee3-429b-b544-8e9eaf16f780\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "1ca22a19-8723-4efe-ad59-f7a7216c6527": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"1ca22a19-8723-4efe-ad59-f7a7216c6527\",\"revision\":0,\"record\":{\"background\":null}}",
+          "929d89fd-9e04-49fa-9303-881740d56f7d": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"929d89fd-9e04-49fa-9303-881740d56f7d\",\"revision\":0,\"record\":{\"background\":null}}",
+          "105f351e-37bf-43ed-a1dc-abbfb8245b2d": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"105f351e-37bf-43ed-a1dc-abbfb8245b2d\",\"revision\":0,\"record\":{\"background\":null}}"
+        },
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218": {
+          "a2f80e19-6513-4bbd-993a-4838b59f1845": "{\"storeId\":\"49dda47e-d782-4df1-b64d-8146f611e9cb\",\"chatId\":\"a2f80e19-6513-4bbd-993a-4838b59f1845\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      },
+      "canonicalSha256": {
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Renamed.jsonl": "4e939e1792662e428cebf587266178cd6f58b991bc73ed1dd7c2ca3031b3718f",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/B.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Branch.jsonl": "7e524169d78a31237d6ccb89d46d4cc4adf2e87d4e49759be20df864bc3e4042",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s017ms.jsonl": "08cc56ee0aa8f37755950ee8b1fde7c2405d8b3252c0a146082493b4960158e9",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s045ms.jsonl": "c928cb6affc3c2124a8fde1c4c7ac3b01f0dc0cc9c41e87e21204df59c717566",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s017ms - Branch #1.jsonl": "abb358d9e1637f65a78402b23ab28f57d761ecb96a6f12b5663a68f1b58ce6a0",
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507"
+      }
+    },
+    {
+      "name": "native delete and byte-identical recreation never inherit deleted identity",
+      "result": "PASS",
+      "classification": "EXPERIMENTAL_HOST",
+      "storedRecords": {
+        "default-user": {
+          "3e5b8429-ae3f-49d4-99a5-d5947ea0caf4": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"3e5b8429-ae3f-49d4-99a5-d5947ea0caf4\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "897bf747-cbbb-4263-b71d-e4c0e6c1f9ac": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"897bf747-cbbb-4263-b71d-e4c0e6c1f9ac\",\"revision\":0,\"record\":{\"background\":null}}",
+          "9face863-2d8a-42ee-a034-227385cb6c45": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"9face863-2d8a-42ee-a034-227385cb6c45\",\"revision\":0,\"record\":{\"background\":null}}",
+          "4346f482-3ee3-429b-b544-8e9eaf16f780": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"4346f482-3ee3-429b-b544-8e9eaf16f780\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "1ca22a19-8723-4efe-ad59-f7a7216c6527": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"1ca22a19-8723-4efe-ad59-f7a7216c6527\",\"revision\":0,\"record\":{\"background\":null}}",
+          "929d89fd-9e04-49fa-9303-881740d56f7d": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"929d89fd-9e04-49fa-9303-881740d56f7d\",\"revision\":0,\"record\":{\"background\":null}}",
+          "105f351e-37bf-43ed-a1dc-abbfb8245b2d": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"105f351e-37bf-43ed-a1dc-abbfb8245b2d\",\"revision\":0,\"record\":{\"background\":null}}",
+          "75dee965-e7a2-470a-a511-ec9d79051fee": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"75dee965-e7a2-470a-a511-ec9d79051fee\",\"revision\":0,\"record\":{\"background\":null}}"
+        },
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218": {
+          "a2f80e19-6513-4bbd-993a-4838b59f1845": "{\"storeId\":\"49dda47e-d782-4df1-b64d-8146f611e9cb\",\"chatId\":\"a2f80e19-6513-4bbd-993a-4838b59f1845\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      },
+      "canonicalSha256": {
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Renamed.jsonl": "4e939e1792662e428cebf587266178cd6f58b991bc73ed1dd7c2ca3031b3718f",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/B.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Branch.jsonl": "7e524169d78a31237d6ccb89d46d4cc4adf2e87d4e49759be20df864bc3e4042",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s017ms.jsonl": "08cc56ee0aa8f37755950ee8b1fde7c2405d8b3252c0a146082493b4960158e9",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s045ms.jsonl": "c928cb6affc3c2124a8fde1c4c7ac3b01f0dc0cc9c41e87e21204df59c717566",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s017ms - Branch #1.jsonl": "abb358d9e1637f65a78402b23ab28f57d761ecb96a6f12b5663a68f1b58ce6a0",
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507"
+      }
+    },
+    {
+      "name": "native JSONL import ignores embedded identity by refusing adoption",
+      "result": "PASS",
+      "classification": "EXPERIMENTAL_HOST",
+      "storedRecords": {
+        "default-user": {
+          "3e5b8429-ae3f-49d4-99a5-d5947ea0caf4": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"3e5b8429-ae3f-49d4-99a5-d5947ea0caf4\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "897bf747-cbbb-4263-b71d-e4c0e6c1f9ac": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"897bf747-cbbb-4263-b71d-e4c0e6c1f9ac\",\"revision\":0,\"record\":{\"background\":null}}",
+          "9face863-2d8a-42ee-a034-227385cb6c45": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"9face863-2d8a-42ee-a034-227385cb6c45\",\"revision\":0,\"record\":{\"background\":null}}",
+          "4346f482-3ee3-429b-b544-8e9eaf16f780": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"4346f482-3ee3-429b-b544-8e9eaf16f780\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "1ca22a19-8723-4efe-ad59-f7a7216c6527": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"1ca22a19-8723-4efe-ad59-f7a7216c6527\",\"revision\":0,\"record\":{\"background\":null}}",
+          "929d89fd-9e04-49fa-9303-881740d56f7d": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"929d89fd-9e04-49fa-9303-881740d56f7d\",\"revision\":0,\"record\":{\"background\":null}}",
+          "105f351e-37bf-43ed-a1dc-abbfb8245b2d": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"105f351e-37bf-43ed-a1dc-abbfb8245b2d\",\"revision\":0,\"record\":{\"background\":null}}",
+          "75dee965-e7a2-470a-a511-ec9d79051fee": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"75dee965-e7a2-470a-a511-ec9d79051fee\",\"revision\":0,\"record\":{\"background\":null}}"
+        },
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218": {
+          "a2f80e19-6513-4bbd-993a-4838b59f1845": "{\"storeId\":\"49dda47e-d782-4df1-b64d-8146f611e9cb\",\"chatId\":\"a2f80e19-6513-4bbd-993a-4838b59f1845\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      },
+      "canonicalSha256": {
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Renamed.jsonl": "4e939e1792662e428cebf587266178cd6f58b991bc73ed1dd7c2ca3031b3718f",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/B.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Branch.jsonl": "7e524169d78a31237d6ccb89d46d4cc4adf2e87d4e49759be20df864bc3e4042",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s017ms.jsonl": "08cc56ee0aa8f37755950ee8b1fde7c2405d8b3252c0a146082493b4960158e9",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s045ms.jsonl": "c928cb6affc3c2124a8fde1c4c7ac3b01f0dc0cc9c41e87e21204df59c717566",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s017ms - Branch #1.jsonl": "abb358d9e1637f65a78402b23ab28f57d761ecb96a6f12b5663a68f1b58ce6a0",
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507"
+      }
+    },
+    {
+      "name": "identity/visual-record mismatch refuses without repair",
+      "result": "PASS",
+      "classification": "EXPERIMENTAL_HOST",
+      "storedRecords": {
+        "default-user": {
+          "3e5b8429-ae3f-49d4-99a5-d5947ea0caf4": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"3e5b8429-ae3f-49d4-99a5-d5947ea0caf4\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "897bf747-cbbb-4263-b71d-e4c0e6c1f9ac": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"897bf747-cbbb-4263-b71d-e4c0e6c1f9ac\",\"revision\":0,\"record\":{\"background\":null}}",
+          "9face863-2d8a-42ee-a034-227385cb6c45": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"9face863-2d8a-42ee-a034-227385cb6c45\",\"revision\":0,\"record\":{\"background\":null}}",
+          "4346f482-3ee3-429b-b544-8e9eaf16f780": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"4346f482-3ee3-429b-b544-8e9eaf16f780\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "1ca22a19-8723-4efe-ad59-f7a7216c6527": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"1ca22a19-8723-4efe-ad59-f7a7216c6527\",\"revision\":0,\"record\":{\"background\":null}}",
+          "929d89fd-9e04-49fa-9303-881740d56f7d": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"929d89fd-9e04-49fa-9303-881740d56f7d\",\"revision\":0,\"record\":{\"background\":null}}",
+          "105f351e-37bf-43ed-a1dc-abbfb8245b2d": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"105f351e-37bf-43ed-a1dc-abbfb8245b2d\",\"revision\":0,\"record\":{\"background\":null}}",
+          "75dee965-e7a2-470a-a511-ec9d79051fee": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"75dee965-e7a2-470a-a511-ec9d79051fee\",\"revision\":0,\"record\":{\"background\":null}}"
+        },
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218": {
+          "a2f80e19-6513-4bbd-993a-4838b59f1845": "{\"storeId\":\"49dda47e-d782-4df1-b64d-8146f611e9cb\",\"chatId\":\"a2f80e19-6513-4bbd-993a-4838b59f1845\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      },
+      "canonicalSha256": {
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Renamed.jsonl": "4e939e1792662e428cebf587266178cd6f58b991bc73ed1dd7c2ca3031b3718f",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/B.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Branch.jsonl": "7e524169d78a31237d6ccb89d46d4cc4adf2e87d4e49759be20df864bc3e4042",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s017ms.jsonl": "08cc56ee0aa8f37755950ee8b1fde7c2405d8b3252c0a146082493b4960158e9",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s045ms.jsonl": "c928cb6affc3c2124a8fde1c4c7ac3b01f0dc0cc9c41e87e21204df59c717566",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s017ms - Branch #1.jsonl": "abb358d9e1637f65a78402b23ab28f57d761ecb96a6f12b5663a68f1b58ce6a0",
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Imported - 2026-10-12@21h04m26s098ms imported.jsonl": "915f31b20346db5210ddc2263f50df00d83d94238e0ec28790e6ea3928a882c2"
+      }
+    },
+    {
+      "name": "native group creation/membership save works; unresolved durable group scope refuses",
+      "result": "PASS",
+      "classification": "EXPERIMENTAL_HOST; group identity BLOCKED",
+      "storedRecords": {
+        "default-user": {
+          "3e5b8429-ae3f-49d4-99a5-d5947ea0caf4": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"3e5b8429-ae3f-49d4-99a5-d5947ea0caf4\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "897bf747-cbbb-4263-b71d-e4c0e6c1f9ac": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"897bf747-cbbb-4263-b71d-e4c0e6c1f9ac\",\"revision\":0,\"record\":{\"background\":null}}",
+          "9face863-2d8a-42ee-a034-227385cb6c45": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"9face863-2d8a-42ee-a034-227385cb6c45\",\"revision\":0,\"record\":{\"background\":null}}",
+          "4346f482-3ee3-429b-b544-8e9eaf16f780": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"4346f482-3ee3-429b-b544-8e9eaf16f780\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "1ca22a19-8723-4efe-ad59-f7a7216c6527": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"1ca22a19-8723-4efe-ad59-f7a7216c6527\",\"revision\":0,\"record\":{\"background\":null}}",
+          "929d89fd-9e04-49fa-9303-881740d56f7d": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"929d89fd-9e04-49fa-9303-881740d56f7d\",\"revision\":0,\"record\":{\"background\":null}}",
+          "105f351e-37bf-43ed-a1dc-abbfb8245b2d": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"105f351e-37bf-43ed-a1dc-abbfb8245b2d\",\"revision\":0,\"record\":{\"background\":null}}",
+          "75dee965-e7a2-470a-a511-ec9d79051fee": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"75dee965-e7a2-470a-a511-ec9d79051fee\",\"revision\":0,\"record\":{\"background\":null}}"
+        },
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218": {
+          "a2f80e19-6513-4bbd-993a-4838b59f1845": "{\"storeId\":\"49dda47e-d782-4df1-b64d-8146f611e9cb\",\"chatId\":\"a2f80e19-6513-4bbd-993a-4838b59f1845\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      },
+      "canonicalSha256": {
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Renamed.jsonl": "4e939e1792662e428cebf587266178cd6f58b991bc73ed1dd7c2ca3031b3718f",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/B.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Branch.jsonl": "7e524169d78a31237d6ccb89d46d4cc4adf2e87d4e49759be20df864bc3e4042",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s017ms.jsonl": "08cc56ee0aa8f37755950ee8b1fde7c2405d8b3252c0a146082493b4960158e9",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s045ms.jsonl": "c928cb6affc3c2124a8fde1c4c7ac3b01f0dc0cc9c41e87e21204df59c717566",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s017ms - Branch #1.jsonl": "abb358d9e1637f65a78402b23ab28f57d761ecb96a6f12b5663a68f1b58ce6a0",
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Imported - 2026-10-12@21h04m26s098ms imported.jsonl": "915f31b20346db5210ddc2263f50df00d83d94238e0ec28790e6ea3928a882c2"
+      }
+    },
+    {
+      "name": "interrupted registry update survives restart as refusal; ordinary native save still succeeds",
+      "result": "PASS",
+      "classification": "EXPERIMENTAL_HOST fault injection; automatic recovery BLOCKED",
+      "storedRecords": {
+        "default-user": {
+          "3e5b8429-ae3f-49d4-99a5-d5947ea0caf4": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"3e5b8429-ae3f-49d4-99a5-d5947ea0caf4\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "897bf747-cbbb-4263-b71d-e4c0e6c1f9ac": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"897bf747-cbbb-4263-b71d-e4c0e6c1f9ac\",\"revision\":0,\"record\":{\"background\":null}}",
+          "9face863-2d8a-42ee-a034-227385cb6c45": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"9face863-2d8a-42ee-a034-227385cb6c45\",\"revision\":0,\"record\":{\"background\":null}}",
+          "4346f482-3ee3-429b-b544-8e9eaf16f780": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"4346f482-3ee3-429b-b544-8e9eaf16f780\",\"revision\":1,\"record\":{\"background\":\"forest\"}}",
+          "1ca22a19-8723-4efe-ad59-f7a7216c6527": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"1ca22a19-8723-4efe-ad59-f7a7216c6527\",\"revision\":0,\"record\":{\"background\":null}}",
+          "929d89fd-9e04-49fa-9303-881740d56f7d": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"929d89fd-9e04-49fa-9303-881740d56f7d\",\"revision\":0,\"record\":{\"background\":null}}",
+          "105f351e-37bf-43ed-a1dc-abbfb8245b2d": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"105f351e-37bf-43ed-a1dc-abbfb8245b2d\",\"revision\":0,\"record\":{\"background\":null}}",
+          "75dee965-e7a2-470a-a511-ec9d79051fee": "{\"storeId\":\"e8c79674-2e9e-4c32-950e-e6e42198c72d\",\"chatId\":\"75dee965-e7a2-470a-a511-ec9d79051fee\",\"revision\":0,\"record\":{\"background\":null}}"
+        },
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218": {
+          "a2f80e19-6513-4bbd-993a-4838b59f1845": "{\"storeId\":\"49dda47e-d782-4df1-b64d-8146f611e9cb\",\"chatId\":\"a2f80e19-6513-4bbd-993a-4838b59f1845\",\"revision\":0,\"record\":{\"background\":null}}"
+        }
+      },
+      "canonicalSha256": {
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Renamed.jsonl": "4e939e1792662e428cebf587266178cd6f58b991bc73ed1dd7c2ca3031b3718f",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/B.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Branch.jsonl": "7e524169d78a31237d6ccb89d46d4cc4adf2e87d4e49759be20df864bc3e4042",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s017ms.jsonl": "08cc56ee0aa8f37755950ee8b1fde7c2405d8b3252c0a146082493b4960158e9",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s045ms.jsonl": "c928cb6affc3c2124a8fde1c4c7ac3b01f0dc0cc9c41e87e21204df59c717566",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s017ms - Branch #1.jsonl": "abb358d9e1637f65a78402b23ab28f57d761ecb96a6f12b5663a68f1b58ce6a0",
+        "dyl27-db25f9db-e93f-417a-bd6f-03121887a218/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+        "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Imported - 2026-10-12@21h04m26s098ms imported.jsonl": "915f31b20346db5210ddc2263f50df00d83d94238e0ec28790e6ea3928a882c2"
+      }
+    }
+  ],
+  "files": {
+    "host-storage.mjs": "1c422799e2e4d8db1e225b1f411e559a0835f776686a54946ba60bb4b135f020",
+    "host-mount.patch": "a30ddf37b47c99d3db0e575df339e8fe3411b97914551a1351f9d0d6e312c6aa",
+    "host-probe.mjs": "cd0a0f2cfb788068a1ee87db656a20e384bceeed82ccf77cedce13ee1b26e08d",
+    "host-visit.js": "85e045142c6e1e3955ef86f80aff308271509e5e3958eaaeb9280eca3b46c035"
+  },
+  "cardHashesAroundVisualCAS": {
+    "before": "4fd5c07c821b560bd52347f47618439838645df8c25cece010e714fbc2da768d",
+    "after": "4fd5c07c821b560bd52347f47618439838645df8c25cece010e714fbc2da768d"
+  },
+  "browser": "151.0.7922.34",
+  "nativeVisits": [
+    {
+      "epoch": 2,
+      "locator": "chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s017ms.jsonl",
+      "target": {
+        "storeId": "e8c79674-2e9e-4c32-950e-e6e42198c72d",
+        "scopeId": "c10ba838-4d88-4fff-a29d-2310852136aa",
+        "chatId": "1ca22a19-8723-4efe-ad59-f7a7216c6527",
+        "clientId": "55da422f-7226-43f4-97ec-266b52200bd2",
+        "viewToken": "563ac14f-2825-41fa-a935-a4d4b0e0a173"
+      }
+    },
+    {
+      "epoch": 4,
+      "locator": "chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s045ms.jsonl",
+      "target": {
+        "storeId": "e8c79674-2e9e-4c32-950e-e6e42198c72d",
+        "scopeId": "5f35fa27-b689-4f74-96de-9677c3ee2383",
+        "chatId": "929d89fd-9e04-49fa-9303-881740d56f7d",
+        "clientId": "55da422f-7226-43f4-97ec-266b52200bd2",
+        "viewToken": "991d1fdf-a391-41a7-b4ee-dd45ff0cae3d"
+      }
+    },
+    {
+      "epoch": 6,
+      "locator": "chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s017ms.jsonl",
+      "target": {
+        "storeId": "e8c79674-2e9e-4c32-950e-e6e42198c72d",
+        "scopeId": "c10ba838-4d88-4fff-a29d-2310852136aa",
+        "chatId": "1ca22a19-8723-4efe-ad59-f7a7216c6527",
+        "clientId": "55da422f-7226-43f4-97ec-266b52200bd2",
+        "viewToken": "bbc84278-bf0a-4f2b-8979-c538eb526752"
+      }
+    },
+    {
+      "epoch": 8,
+      "locator": "chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s045ms.jsonl",
+      "target": {
+        "storeId": "e8c79674-2e9e-4c32-950e-e6e42198c72d",
+        "scopeId": "5f35fa27-b689-4f74-96de-9677c3ee2383",
+        "chatId": "929d89fd-9e04-49fa-9303-881740d56f7d",
+        "clientId": "55da422f-7226-43f4-97ec-266b52200bd2",
+        "viewToken": "096d51d0-9473-4836-a1f1-76903885812e"
+      }
+    },
+    {
+      "epoch": 10,
+      "locator": "chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s017ms.jsonl",
+      "target": {
+        "storeId": "e8c79674-2e9e-4c32-950e-e6e42198c72d",
+        "scopeId": "c10ba838-4d88-4fff-a29d-2310852136aa",
+        "chatId": "1ca22a19-8723-4efe-ad59-f7a7216c6527",
+        "clientId": "55da422f-7226-43f4-97ec-266b52200bd2",
+        "viewToken": "8320b3ef-b199-45e5-b7a6-ee15ae344dd4"
+      }
+    },
+    {
+      "epoch": 13,
+      "locator": "chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s045ms.jsonl",
+      "target": {
+        "storeId": "e8c79674-2e9e-4c32-950e-e6e42198c72d",
+        "scopeId": "5f35fa27-b689-4f74-96de-9677c3ee2383",
+        "chatId": "929d89fd-9e04-49fa-9303-881740d56f7d",
+        "clientId": "55da422f-7226-43f4-97ec-266b52200bd2",
+        "viewToken": "1a3ad631-3910-4676-8847-f74ff8a3edf0"
+      }
+    },
+    {
+      "epoch": 15,
+      "locator": "chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s017ms.jsonl",
+      "target": {
+        "storeId": "e8c79674-2e9e-4c32-950e-e6e42198c72d",
+        "scopeId": "c10ba838-4d88-4fff-a29d-2310852136aa",
+        "chatId": "1ca22a19-8723-4efe-ad59-f7a7216c6527",
+        "clientId": "55da422f-7226-43f4-97ec-266b52200bd2",
+        "viewToken": "6d2b7081-0e65-4937-814f-87fb40dc5c6b"
+      }
+    },
+    {
+      "epoch": 11,
+      "discarded": true
+    }
+  ],
+  "importCanonicalSha256": "915f31b20346db5210ddc2263f50df00d83d94238e0ec28790e6ea3928a882c2",
+  "identities": {
+    "default-user": {
+      "storeId": "e8c79674-2e9e-4c32-950e-e6e42198c72d",
+      "scopes": [
+        {
+          "avatar": "Mira-db25f9db-e93f-417a-bd6f-03121887a218.png",
+          "scopeId": "c10ba838-4d88-4fff-a29d-2310852136aa"
+        },
+        {
+          "avatar": "Mira-db25f9db-e93f-417a-bd6f-03121887a2181.png",
+          "scopeId": "5f35fa27-b689-4f74-96de-9677c3ee2383"
+        }
+      ],
+      "chats": [
+        {
+          "relativePath": "chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Renamed.jsonl",
+          "scopeId": "c10ba838-4d88-4fff-a29d-2310852136aa",
+          "chatId": "3e5b8429-ae3f-49d4-99a5-d5947ea0caf4",
+          "seal": {
+            "dev": 66306,
+            "ino": 1982472,
+            "birthtimeMs": 1791864254167.3616,
+            "sha256": "4e939e1792662e428cebf587266178cd6f58b991bc73ed1dd7c2ca3031b3718f"
+          },
+          "deleted": true
+        },
+        {
+          "relativePath": "chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/B.jsonl",
+          "scopeId": "5f35fa27-b689-4f74-96de-9677c3ee2383",
+          "chatId": "897bf747-cbbb-4263-b71d-e4c0e6c1f9ac",
+          "seal": {
+            "dev": 66306,
+            "ino": 1982482,
+            "birthtimeMs": 1791864254088.3647,
+            "sha256": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507"
+          }
+        },
+        {
+          "relativePath": "chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl",
+          "scopeId": "c10ba838-4d88-4fff-a29d-2310852136aa",
+          "chatId": "9face863-2d8a-42ee-a034-227385cb6c45",
+          "seal": {
+            "dev": 66306,
+            "ino": 1982485,
+            "birthtimeMs": 1791864254179.361,
+            "sha256": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507"
+          }
+        },
+        {
+          "relativePath": "chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Branch.jsonl",
+          "scopeId": "c10ba838-4d88-4fff-a29d-2310852136aa",
+          "chatId": "4346f482-3ee3-429b-b544-8e9eaf16f780",
+          "seal": {
+            "dev": 66306,
+            "ino": 1982492,
+            "birthtimeMs": 1791864254187.3608,
+            "sha256": "7e524169d78a31237d6ccb89d46d4cc4adf2e87d4e49759be20df864bc3e4042"
+          }
+        },
+        {
+          "relativePath": "chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s017ms.jsonl",
+          "scopeId": "c10ba838-4d88-4fff-a29d-2310852136aa",
+          "chatId": "1ca22a19-8723-4efe-ad59-f7a7216c6527",
+          "seal": {
+            "dev": 66306,
+            "ino": 1982545,
+            "birthtimeMs": 1791864262727.035,
+            "sha256": "08cc56ee0aa8f37755950ee8b1fde7c2405d8b3252c0a146082493b4960158e9"
+          }
+        },
+        {
+          "relativePath": "chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s045ms.jsonl",
+          "scopeId": "5f35fa27-b689-4f74-96de-9677c3ee2383",
+          "chatId": "929d89fd-9e04-49fa-9303-881740d56f7d",
+          "seal": {
+            "dev": 66306,
+            "ino": 1982555,
+            "birthtimeMs": 1791864259581.155,
+            "sha256": "c928cb6affc3c2124a8fde1c4c7ac3b01f0dc0cc9c41e87e21204df59c717566"
+          }
+        },
+        {
+          "relativePath": "chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s017ms - Branch #1.jsonl",
+          "scopeId": "c10ba838-4d88-4fff-a29d-2310852136aa",
+          "chatId": "105f351e-37bf-43ed-a1dc-abbfb8245b2d",
+          "seal": {
+            "dev": 66306,
+            "ino": 1982494,
+            "birthtimeMs": 1791864262901.0283,
+            "sha256": "abb358d9e1637f65a78402b23ab28f57d761ecb96a6f12b5663a68f1b58ce6a0"
+          }
+        },
+        {
+          "relativePath": "chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Renamed.jsonl",
+          "scopeId": "c10ba838-4d88-4fff-a29d-2310852136aa",
+          "chatId": "75dee965-e7a2-470a-a511-ec9d79051fee",
+          "seal": {
+            "dev": 66306,
+            "ino": 1982472,
+            "birthtimeMs": 1791864266060.9077,
+            "sha256": "4e939e1792662e428cebf587266178cd6f58b991bc73ed1dd7c2ca3031b3718f"
+          }
+        }
+      ],
+      "pending": {
+        "operation": "save",
+        "relativePath": "chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Interrupted.jsonl"
+      }
+    },
+    "dyl27-db25f9db-e93f-417a-bd6f-03121887a218": {
+      "storeId": "49dda47e-d782-4df1-b64d-8146f611e9cb",
+      "scopes": [
+        {
+          "avatar": "Mira-db25f9db-e93f-417a-bd6f-03121887a218.png",
+          "scopeId": "cff0c02d-00e3-49b0-bc2c-969171d54d91"
+        }
+      ],
+      "chats": [
+        {
+          "relativePath": "chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl",
+          "scopeId": "cff0c02d-00e3-49b0-bc2c-969171d54d91",
+          "chatId": "a2f80e19-6513-4bbd-993a-4838b59f1845",
+          "seal": {
+            "dev": 66306,
+            "ino": 1982480,
+            "birthtimeMs": 1791864254098.3643,
+            "sha256": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507"
+          }
+        }
+      ],
+      "pending": null
+    }
+  },
+  "canonicalSha256": {
+    "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Renamed.jsonl": "4e939e1792662e428cebf587266178cd6f58b991bc73ed1dd7c2ca3031b3718f",
+    "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/B.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+    "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+    "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Branch.jsonl": "7e524169d78a31237d6ccb89d46d4cc4adf2e87d4e49759be20df864bc3e4042",
+    "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s017ms.jsonl": "08cc56ee0aa8f37755950ee8b1fde7c2405d8b3252c0a146082493b4960158e9",
+    "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a2181/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s045ms.jsonl": "c928cb6affc3c2124a8fde1c4c7ac3b01f0dc0cc9c41e87e21204df59c717566",
+    "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Mira-db25f9db-e93f-417a-bd6f-03121887a218 - 2026-10-12@21h04m14s017ms - Branch #1.jsonl": "abb358d9e1637f65a78402b23ab28f57d761ecb96a6f12b5663a68f1b58ce6a0",
+    "dyl27-db25f9db-e93f-417a-bd6f-03121887a218/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/A.jsonl": "888485667681667e87053ca9a22ac8c45d19a6a119169d915d95debae4e0e507",
+    "default-user/chats/Mira-db25f9db-e93f-417a-bd6f-03121887a218/Imported - 2026-10-12@21h04m26s098ms imported.jsonl": "915f31b20346db5210ddc2263f50df00d83d94238e0ec28790e6ea3928a882c2"
+  },
+  "result": "PASS_WITH_IDENTITY_LIMITS",
+  "cleanup": {
+    "ownedRootRemoved": true,
+    "hostStopped": true,
+    "sourceCheckoutPresent": true,
+    "sourceStatusUnchanged": true
+  }
+}
