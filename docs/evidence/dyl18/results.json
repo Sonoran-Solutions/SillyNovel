@@ -1,0 +1,114 @@
+{
+  "candidate": "3d136668e97a47f602775c9297b567c73293261e",
+  "host": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
+  "results": [
+    {
+      "name": "enable and native data preservation",
+      "result": "PASS"
+    },
+    {
+      "name": "normal send and streaming reply",
+      "result": "PASS"
+    },
+    {
+      "name": "stop and native continuation",
+      "result": "PASS"
+    },
+    {
+      "name": "exact native handoff, native edit, swipe generation and previous swipe",
+      "result": "PASS"
+    },
+    {
+      "name": "three reader/chat transitions preserve exact draft, focus and backward selection",
+      "result": "PASS"
+    },
+    {
+      "name": "pinned new replies, explicit latest, independent scroll and full formatted copy",
+      "result": "PASS",
+      "characters": 9951,
+      "scrollTop": 100
+    },
+    {
+      "name": "narrow-reader",
+      "result": "PASS",
+      "width": 390,
+      "height": 800,
+      "composer": {
+        "x": 76.80000305175781,
+        "y": 761.7000122070312,
+        "width": 271.3000030517578,
+        "height": 36.5
+      },
+      "dialogueHeight": 520.8999786376953
+    },
+    {
+      "name": "keyboard-viewport-simulation",
+      "result": "PASS",
+      "width": 390,
+      "height": 500,
+      "composer": {
+        "x": 76.80000305175781,
+        "y": 461.70001220703125,
+        "width": 271.3000030517578,
+        "height": 36.5
+      },
+      "dialogueHeight": 220.90000915527344
+    },
+    {
+      "name": "native A to B to A starts each activation at its current latest source",
+      "result": "PASS"
+    },
+    {
+      "name": "disable/re-enable during and after generation leaves native reply running",
+      "result": "PASS"
+    },
+    {
+      "name": "instrumented render failure restores native feed, draft/caret and clean re-enable",
+      "result": "PASS"
+    },
+    {
+      "name": "actual 200 percent browser zoom; navigation and composer remain reachable",
+      "result": "PASS",
+      "zoom": 2,
+      "beforeZoom": {
+        "innerWidth": 1420,
+        "innerHeight": 970,
+        "dpr": 1.25
+      },
+      "zoomMetrics": {
+        "innerWidth": 710,
+        "innerHeight": 485,
+        "dpr": 2.5,
+        "scale": 1
+      }
+    }
+  ],
+  "screenshots": [
+    "desktop-reader.png",
+    "native-backlog.png",
+    "pinned-older-message.png",
+    "long-scrollable-reply.png",
+    "narrow-reader.png",
+    "keyboard-viewport-simulation.png",
+    "render-failure-native-recovery.png",
+    "browser-zoom-200-percent.png"
+  ],
+  "fixtures": {
+    "tests/fixtures/reader-browser.html": "2d1ae7870c4b2b827486ff652bea280f6562eaf621602f66daa1671a6410a937",
+    "tests/fixtures/dyl18-openai-endpoint.mjs": "ed2223fd2179c75503afefc8387d133d14ffaba84ce59729c3ffbb09d13b97c8",
+    "index.js": "ac0153af1aa6ed8986a2512b3aaa78895f1a3656b16329b3ce5e9ef52514dde3",
+    "style.css": "9751716e1dc864eef4ec3318b472fdb59a096d568207c3bbb2459df55a3f33c2",
+    "src/reader-view.mjs": "e47e9070c08d0dc82740ac769af6267ea312d0d5876fa5f9a77054cbf4869ffd",
+    "src/reader-source-model.mjs": "e1cad0f7c68380c0d5f1012dfe75b09ddb5d7599f61765d08e7e1ac9fcbcffd0",
+    "src/shell.mjs": "ae59801414066b0e56790317af6b0ca74aeed16e47377c63c09b86758aa2d1cc",
+    "src/host-adapter.mjs": "92f39486cbac232d183b1c9d720153c44d74add4e31ed916be7735a5b91b3d10"
+  },
+  "notTested": [
+    "Physical touch device, real IME input, real virtual keyboard",
+    "Other browsers/themes/extension combinations or host versions",
+    "Real model/provider inference; endpoint is deterministic and local",
+    "Owner reader-feel verdict: Gate A NOT_RUN"
+  ],
+  "browser": "151.0.7922.34",
+  "completed": true
+}

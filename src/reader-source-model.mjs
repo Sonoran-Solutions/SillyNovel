@@ -208,9 +208,16 @@ function revise(snapshot, previous) {
         return getSnapshot();
     }
 
+    function adjacent(direction) {
+        if (!cursor) return null;
+        let index = cursor.index + direction;
+        while (index >= 0 && index < records.length && !records[index]) index += direction;
+        return records[index] ?? null;
+    }
+
     function navigate(direction) {
-        if (!cursor || (direction !== -1 && direction !== 1)) return false;
-        const next = records[cursor.index + direction];
+        if (direction !== -1 && direction !== 1) return false;
+        const next = adjacent(direction);
         if (!next) return false;
         cursor = next;
         selectionMode = 'pinned';
@@ -243,6 +250,7 @@ function revise(snapshot, previous) {
             cursor,
             selectionMode,
             selectionState,
+            navigation: { previous: Boolean(adjacent(-1)), next: Boolean(adjacent(1)) },
             newMessageCount,
             newMessageIndicator: newMessageCount ? (newMessageCount >= 99 ? '99+' : String(newMessageCount)) : null,
             sourceRevision,

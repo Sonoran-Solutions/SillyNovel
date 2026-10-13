@@ -1,22 +1,22 @@
 # Project status
 
-**Updated:** 2026-10-12. Historical M0.1 and planning handoffs are preserved below; the owner-approved current state is recorded last.
+**Updated:** 2026-10-12. Historical M0.1 and planning handoffs are preserved below; the current DYL-18 implementation/evidence record is last. Owner approvals and technical evidence remain distinct.
 
 ## Current state
 
-The repository now contains the M0 compatibility shell. This is not a visual-novel reader and does not implement visual state, scene direction, or asset handling.
+The DYL-18 review branch now implements a complete text reader on the merged DYL-17 source model, with native composer/backlog access. It does not implement visual state, scene direction, art or persistence.
 
 | Area | State |
 | --- | --- |
 | M0 shell code | IMPLEMENTED |
-| Synthetic adapter/controller/source harness | PASS — 13 tests on the recorded review-fix candidate |
+| Current automated reader regressions | PASS — 37 Node + 14 actual-entry behavioral Chromium tests; prior M0/source/storage regressions retained |
 | SillyTavern 1.19.0 source inspection | COMPLETE — commit `7e8663cd9c184a550b37238218bdd32c6efc68e9` |
 | Isolated real-host lifecycle checks | PASS within documented scope — normal, streaming, stop, continuation, swipe, edit/delete, chat switching, toggles, group/duplicate labels, and disable-during-stream verified with synthetic data and deterministic local endpoint |
 | Live model/provider behavior | NOT_TESTED — endpoint was deterministic and local |
 | L10 persistent empty-chat workflow | UNSUPPORTED / WAIVED; supported host UI restores the welcome message on reopen |
 | Missing-capability behavior | INSTRUMENTED_HOST_PASS; capability omission was injected, not a natural host failure |
 | M0 overall | OWNER APPROVED PASS for the explicitly documented scope and evidence limits; L10 is UNSUPPORTED / WAIVED |
-| M1 runtime | IN_PROGRESS on DYL-17 source model; DYL-19 is separately authorized work, DYL-18 and later tickets remain blocked pending prerequisites and separate authorization |
+| M1 runtime | DYL-17/19 merged; separately owner-assigned DYL-18 text-reader review candidate IMPLEMENTED / HOST_TESTED. Later art/persistence work remains gated |
 | Gate A — reader feel | NOT_RUN |
 | M2 — automatic direction | NOT_STARTED |
 | Gate B — direction quality | NOT_RUN |
@@ -26,11 +26,11 @@ The repository now contains the M0 compatibility shell. This is not a visual-nov
 | Provider tests | Deterministic localhost OpenAI-compatible endpoint tested; real model/provider behavior NOT_TESTED |
 | License choice | OPEN |
 
-## Starting repository state
+## Historical M0 starting repository state
 
 The implementation checkout was cloned from the repository's default `main` branch at full SHA `6631f6e29b6a05420bc5b9c16bf02b242c9fad8c`. The branch was clean at that commit. The implementation branch is `codex/m0-shell`. The initial supplied workspace directory was empty; no pre-existing local files or changes were overwritten.
 
-## Scope implemented
+## Historical M0 scope implemented
 
 - SillyTavern manifest, module entry point, and scoped stylesheet.
 - A setting that defaults off, mounts a labeled placeholder before the chat surface, and disposes its owned stage and event listeners.
@@ -40,7 +40,7 @@ The implementation checkout was cloned from the repository's default `main` bran
 
 The implementation persists only the user's `extensionSettings.sillynovel.enabled` preference. It does not persist chat or character identity. Details and limitations are in [M0 compatibility](M0_COMPATIBILITY.md).
 
-## Verification record
+## Historical M0 verification record
 
 The synthetic harness passed 8 tests, including source clearing across empty-chat transitions, A → B → A refresh, malformed indices, missing capabilities, listener cleanup, and canonical chat immutability through enable/disable. The real-host checks used pinned SillyTavern 1.19.0 and a deterministic localhost endpoint. Normal, streaming, stopped, continued, regenerated, swipe-selected, edited, deleted, and chat-switch flows were exercised. Disabling SillyNovel during a stream removed its stage/listeners without stopping the host reply. The streamed message object lagged the `STREAM_TOKEN_RECEIVED` event until SillyTavern's progress update; M1 must not treat a token-event-time sample as current text.
 
@@ -48,7 +48,7 @@ Deletion to an empty view was exercised, but the host switch into an empty B cha
 
 ## Next action
 
-Run authorized DYL-17 and DYL-19 as separate, coordinated branches and separate open PRs. DYL-17 includes a short current-main-head regression smoke check in pinned-host validation. Gate A remains NOT_RUN; M2 remains unauthorized.
+Review and manually try the bounded DYL-18 text-reader PR. Keep it open/unmerged and DYL-18 In Review until the owner decides. Gate A remains NOT_RUN; M1.2/M1.3/M2 work is not started by this handoff.
 
 ## Status discipline
 
@@ -98,3 +98,35 @@ DYL-17 adds the internal in-memory reader source model and connects it to the ho
 Contract and limits: [M1 reader source model](M1_READER_SOURCE.md). Verification and host evidence for this candidate are recorded in [TESTING](TESTING.md). DYL-18 was not started; DYL-19 remains separate. Gate A remains **NOT_RUN**.
 
 The 2026-10-12 senior re-review fixes are in code candidate `3d871679ca216eec1210f3bec5845299a672af92`: zero-to-one append, follow-latest recovery on latest-object replacement, and null-record refresh safety. The two adapter/model regressions and P3 regression pass in the 27-test suite. The pinned host loaded the candidate and refreshed its synthetic source, but the exact zero-history and eventless-object-replacement cases were not reachable through its UI; those host cases remain **NOT_TESTED**. See the dated addendum in [TESTING](TESTING.md).
+
+
+## DYL-18 text-reader implementation and handoff — 2026-10-12
+
+The owner explicitly assigned the pasted DYL-18 implementation prompt in Codex on 2026-10-12 (America/Phoenix). The assignment/date/scope were recorded in Linear before implementation. Initial clean workspace SHA: `98ee37d7464063d607b0a0c892cd2259d4ed75ae`; fetched starting main: `aa43f4d938c6eafae296cda63a5b4f11111fbd95`. Focused branch: `codex/dyl-18-text-reader`. The full final host-tested SHA and runtime/fixture hashes are in [the evidence record](evidence/dyl18/results.json); the final pushed review head is recorded in GitHub/Linear. The reviewed head `29cb5bf8d348490f407565f9c3f9e91db6afb1d7` left those host-tested runtime bytes unchanged. The later P2 correction below changes the adapter and has separate automated evidence.
+
+| Area | DYL-18 result |
+| --- | --- |
+| Complete formatted reader, selectable text and exact copy | IMPLEMENTED; actual-entry browser PASS and pinned HOST PASS |
+| Previous/Next/Latest, valid-record bounds, pinned unread and independent text scrolling | IMPLEMENTED; synthetic/browser PASS, normal pinned/streaming HOST PASS |
+| Native composer and repeated reader/chat transitions | HOST PASS; exact draft, backward caret selection and active textarea preserved |
+| Backlog/Open Original, native edit and swipe, Return to Reader | Historical HOST PASS on `3d136668e97a47f602775c9297b567c73293261e`; exact-match claim corrected below |
+| Native feed visibility/disposal and recovery | PASS; owned class only, original DOM retained; induced render failure INSTRUMENTED_HOST_PASS |
+| Chat A → B → A and toggle during/after generation | HOST PASS; queued old-epoch/clipboard work additionally synthetic browser PASS |
+| Automated suites | 37/37 Node + 14/14 behavioral Chromium PASS |
+| Pinned-host scenario runner | 12/12 PASS with deterministic local endpoint and fresh owned data root |
+| Narrow/keyboard-height and zoom | HOST PASS as 390×800 / 390×500 viewport simulations; actual 200% browser zoom PASS |
+| Host/browser | SillyTavern 1.19.0 / `7e8663cd9c184a550b37238218bdd32c6efc68e9`; Chromium 151.0.7922.34, Ubuntu 24.04.5 LTS |
+| Durable identity, asset storage and metadata saves | DYL-19 findings unchanged: PARTIAL/BLOCKED; no implementation or fallback added |
+| Gate A | NOT_RUN; technical evidence is not an owner verdict |
+
+The implementation consumes a single source model, uses the host's installed Markdown/sanitizer libraries through a restricted read-only path, and never writes canonical chat/cards/lore/personas/provider settings. Only the existing enabled preference is persisted. Backlog and Open Original are one control to keep narrow layouts compact. Runtime interfaces, safe complete-text fallback, DOM/visibility ownership and the verified handoff ceiling are in [the reader contract](M1_READER_SOURCE.md#dyl-18-reader-ui-contract).
+
+Exact commands, complete final test results, development failures, eight representative screenshots, synthetic fixture hashes, composer/backlog checks and remaining NOT_TESTED paths are in [TESTING](TESTING.md#dyl-18-text-reader--2026-10-12). Physical touch/IME/virtual keyboard, other engines/themes/extensions/host versions, real provider inference, natural capability/mount failures, native deep-pagination locator fallback and final-host empty/deleted/replaced/eventless/group-reader edge cases remain untested on this reader candidate. Existing history retains unknown completion provenance; unsupported rich content uses full literal text and a native route. M0/L10 historical conclusions are not rewritten.
+
+Recommendation: owner review and a direct text-reader trial of this open PR. If exact unrendered-history handoff matters, separately authorize a narrow, non-mutating host history-loading proof. Do not merge automatically, mark Gate A passed, or begin later milestones.
+
+### PR #8 P2 correction — 2026-10-12
+
+Starting reviewed head: `29cb5bf8d348490f407565f9c3f9e91db6afb1d7`. Correction code: `f0e811bab1b3c74acd0ac00c4f75d9e9cf980684`; final pushed head is recorded in GitHub/Linear. The actual-entry browser regression first reproduced the stale-DOM false success, then passed with the correction. Matching attributes permit a best-effort candidate scroll, but the adapter always reports unresolved correspondence because the pinned host provides no rendered source/revision token. Same-object edits and index-only render notifications also cannot produce an exact-match claim.
+
+**37/37 Node and 15/15 actual-entry Chromium tests PASS**. The host probe's expected notice was updated and syntax-checked; the 12-scenario host campaign was **not rerun** for this focused correction. Existing screenshots/results remain historical evidence on their recorded host-tested code. DYL-18 stays **In Review**, PR #8 stays open/unmerged, and Gate A stays **NOT_RUN**. See the [P2 testing addendum](TESTING.md#pr-8-p2-stale-native-dom-correction--2026-10-12).

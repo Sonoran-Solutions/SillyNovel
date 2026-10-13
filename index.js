@@ -1,7 +1,8 @@
 import { createHostAdapter } from './src/host-adapter.mjs';
-import { createShellController, createSourceTracker } from './src/shell.mjs';
+import { createShellController } from './src/shell.mjs';
+import { createMessageFormatter, mountReader } from './src/reader-view.mjs';
 
-function install() {
+async function install() {
     const document = globalThis.document;
     const settingsHost = document?.getElementById('extensions_settings');
     if (!settingsHost) {
@@ -22,7 +23,7 @@ function install() {
     checkbox.type = 'checkbox';
     checkbox.id = 'sillynovel-enabled';
     const labelText = document.createElement('span');
-    labelText.textContent = 'Enable SillyNovel placeholder stage';
+    labelText.textContent = 'Enable SillyNovel reader';
     label.append(checkbox, labelText);
 
     const status = document.createElement('p');
@@ -70,64 +71,18 @@ function install() {
         }
     }
 
-    function mountStage(initialSource) {
-        const chatShell = document.getElementById('sheld');
-        const chat = document.getElementById('chat');
-        if (!chatShell || !chat || chat.parentElement !== chatShell) {
-            throw new Error('SillyTavern chat stage container is unavailable. The original chat was left untouched.');
-        }
-        if (document.getElementById('sillynovel-stage')) {
-            throw new Error('A SillyNovel stage already exists; refusing to replace an unowned element.');
-        }
-
-        const stage = document.createElement('section');
-        stage.id = 'sillynovel-stage';
-        stage.className = 'sillynovel-stage';
-        stage.setAttribute('aria-labelledby', 'sillynovel-stage-title');
-        const heading = document.createElement('h2');
-        heading.id = 'sillynovel-stage-title';
-        heading.textContent = 'SillyNovel — M0 placeholder stage';
-        const description = document.createElement('p');
-        description.className = 'sillynovel-stage__description';
-        description.textContent = 'Presentation shell only. The original chat and composer remain available.';
-        const sourceStatus = document.createElement('p');
-        sourceStatus.className = 'sillynovel-stage__source';
-        const observationStatus = document.createElement('p');
-        observationStatus.className = 'sillynovel-stage__observation';
-        stage.append(heading, description, sourceStatus, observationStatus);
-        const sourceTracker = createSourceTracker(initialSource);
-
-        function render(observation) {
-            const source = sourceTracker.observe(observation);
-            if (source?.index === null || source?.index === undefined) {
-                sourceStatus.textContent = 'No current message is available.';
-            } else {
-                const author = source.author?.label || 'Unknown author';
-                sourceStatus.textContent = 'Observed message ' + (source.index + 1) + ' by ' + author + ' (' + source.text.length + ' characters).';
-            }
-            observationStatus.textContent = 'Last host observation: ' + (observation?.type || 'stageMounted') + '.';
-        }
-
-        try {
-            chatShell.insertBefore(stage, chat);
-            if (!stage.isConnected) throw new Error('SillyNovel stage did not attach to the chat shell.');
-            render({ type: 'stageMounted', source: initialSource });
-        } catch (error) {
-            stage.remove();
-            throw error;
-        }
-
-        return {
-            update: render,
-            dispose() {
-                stage.remove();
-            },
-        };
-    }
-
     let controller;
     const view = {
-        mountStage,
+        mountStage(_source, snapshot) {
+            return mountReader({ document, snapshot, formatMessage, actions: {
+                navigate: controller.navigate,
+                jumpToLatest: controller.jumpToLatest,
+                openOriginal: controller.openOriginal,
+                setTextScrollMode: controller.setTextScrollMode,
+                getSnapshot: controller.getReaderSnapshot,
+                fail: view.reportFailure,
+            } });
+        },
         reportFailure(error) {
             controller?.disable();
             checkbox.checked = false;
@@ -135,6 +90,16 @@ function install() {
             setStatus(error instanceof Error ? error.message : 'SillyNovel stopped safely after an unexpected host error.');
         },
     };
+    let formatMessage;
+    checkbox.disabled = true;
+    try {
+        // The pinned host exposes these installed libraries; no formatter hooks or canonical writes.
+        formatMessage = createMessageFormatter(await import('/lib.js'), document);
+    } catch {
+        setStatus('Message formatting is unavailable. Standard chat remains available; reload to retry.');
+        return;
+    }
+    checkbox.disabled = false;
     controller = createShellController(adapter, view);
 
     checkbox.addEventListener('change', () => {
@@ -142,7 +107,7 @@ function install() {
             try {
                 controller.enable();
                 const saved = saveEnabled(true);
-                setStatus(saved ? 'SillyNovel placeholder stage is active.' : 'SillyNovel is active for this session; its setting could not be saved.');
+                setStatus(saved ? 'SillyNovel reader is active.' : 'SillyNovel is active for this session; its setting could not be saved.');
             } catch (error) {
                 controller.disable();
                 checkbox.checked = false;
@@ -168,7 +133,7 @@ function install() {
         checkbox.checked = true;
         try {
             controller.enable();
-            setStatus('SillyNovel placeholder stage is active.');
+            setStatus('SillyNovel reader is active.');
         } catch (error) {
             checkbox.checked = false;
             saveEnabled(false);

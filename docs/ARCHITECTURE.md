@@ -1,6 +1,6 @@
 # Architecture
 
-**Status:** proposed architecture. M0 now implements only the manifest, browser entry, settings control, placeholder stage, and narrow host adapter. All other named SillyNovel modules and interfaces below are design names, not existing SillyTavern APIs. Exact M0 host references are in [M0 compatibility](M0_COMPATIBILITY.md).
+**Status:** proposed longer-term architecture; M0 and the DYL-17/18 transient text-reader lane are implemented. Current runtime consists of the manifest, browser entry, settings, narrow adapter, source model, shell controller and `src/reader-view.mjs`. See [reader contract](M1_READER_SOURCE.md#dyl-18-reader-ui-contract) for implemented boundaries. Scene, director, asset and persistence modules below remain design proposals, not existing SillyTavern APIs. Exact M0 host references are in [M0 compatibility](M0_COMPATIBILITY.md).
 
 ## 1. Integration strategy
 
@@ -88,7 +88,7 @@ Multiple tabs require ownership coordination or explicit single-writer mode. M1 
 
 ## 8. Failure and shutdown
 
-On enable, probe required capabilities before hiding any host content. Keep the original interface available until the stage is successfully mounted. M0 does not hide or move host content; its placeholder is inserted before `#chat` and leaves the composer untouched.
+On enable, probe required capabilities before hiding any host content. Keep the original interface available until the stage is successfully mounted. DYL-18 inserts the reader before `#chat` and hides that feed only after successful initialization with an extension-owned class. Native feed/composer DOM stays mounted. Back to Chat, disable and failure remove only that class; the native composer remains untouched.
 
 On disable or chat change, cancel owned jobs where possible, invalidate their epoch regardless of cancellation success, remove owned listeners/observers/timers, release object URLs, and remove scoped DOM/styles. Restore only the host UI changes this extension owns; do not overwrite another extension's newer settings.
 

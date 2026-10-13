@@ -422,3 +422,17 @@ test('one-message middle insertion falls back to full history and preserves the 
         else delete globalThis.cancelAnimationFrame;
     }
 });
+
+test('reader navigation skips unavailable records instead of becoming stuck at a gap', () => {
+    const model = createReaderSourceModel();
+    const first = { sourceKey: 'first', index: 0, text: 'first', author: { kind: 'user', label: 'You' } };
+    const last = { sourceKey: 'last', index: 2, text: 'last', author: { kind: 'character', label: 'Mira' } };
+    model.activate([first, null, last], null);
+    assert.deepEqual(model.getSnapshot().navigation, { previous: true, next: false });
+    assert.equal(model.navigate(-1), true);
+    assert.equal(model.getSnapshot().cursor.sourceKey, 'first');
+    assert.deepEqual(model.getSnapshot().navigation, { previous: false, next: true });
+    assert.equal(model.navigate(1), true);
+    assert.equal(model.getSnapshot().cursor.sourceKey, 'last');
+    assert.equal(model.getSnapshot().selectionMode, 'pinned');
+});
