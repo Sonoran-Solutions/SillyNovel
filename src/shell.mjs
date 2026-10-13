@@ -116,5 +116,6 @@ export function createShellController(host, view) {
         enable, disable, navigate, jumpToLatest, openOriginal,
         setTextScrollMode: reader.setTextScrollMode,
         isActive: () => active, getReaderSnapshot: reader.getSnapshot,
+        getSceneEvidence: (refreshCanonical = true) => ({ snapshot: refreshCanonical ? refresh() : reader.getSnapshot(), history: reader.getHistory() }),
     };
 }

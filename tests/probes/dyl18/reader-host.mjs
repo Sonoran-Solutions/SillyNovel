@@ -1,3 +1,4 @@
+import { exerciseStage } from '../m12-stage/stage-host.mjs';
 import assert from 'node:assert/strict';
 import { spawn, execFileSync } from 'node:child_process';
 import { mkdtemp, mkdir, readFile, writeFile, rm, realpath } from 'node:fs/promises';
@@ -13,7 +14,7 @@ const extensionRoot = resolve(import.meta.dirname, '../../..');
 const git = (root,...args) => execFileSync('git',['-C',root,...args],{encoding:'utf8'}).trim();
 assert.equal(git(hostRoot,'rev-parse','HEAD'),PIN,'Refusing an unpinned host');
 assert.equal(await realpath(resolve(hostRoot,'public/scripts/extensions/third-party/SillyNovel')),extensionRoot,'Use a dedicated host checkout with this extension mounted');
-const runtimeFiles = ['index.js','style.css','src/reader-view.mjs','src/reader-source-model.mjs','src/shell.mjs','src/host-adapter.mjs'];
+const runtimeFiles = ['index.js','style.css','src/reader-view.mjs','src/reader-source-model.mjs','src/shell.mjs','src/host-adapter.mjs','src/stage-view.mjs','src/transient-scene.mjs','src/scene-reducer.mjs'];
 assert.equal(git(extensionRoot,'diff','HEAD','--',...runtimeFiles),'','Commit runtime changes before host validation');
 const candidate = git(extensionRoot,'rev-parse','HEAD');
 const dataRoot = await mkdtemp(resolve(tmpdir(),'sillynovel-dyl18-owned-'));
@@ -155,6 +156,7 @@ try {
     assert.ok(await page.locator('.sillynovel-dialogue em').count()>0);
     await screenshot(page,'desktop-reader');
     pass('normal send and streaming reply');
+    if(process.argv.includes('--stage')) await exerciseStage(page,{screenshot,pass});
 
     await send(page,'Show a reply I can stop.');
     await page.waitForFunction(()=>{
@@ -220,6 +222,11 @@ try {
     await page.setViewportSize({width:1440,height:1000});
     await button(page,'Previous').click();await selectCharacter(page,'Mira Reader B');
     assert.equal(await page.locator('.sillynovel-dialogue__message').innerText(),greetingB);
+    if(process.argv.includes('--stage')) {
+        await page.waitForFunction(()=>document.querySelector('.sillynovel-cast').dataset.count==='0');
+        assert.equal(await page.locator('.sillynovel-art__background').isVisible(),false);
+        pass('stage: native character/chat switch clears transient visuals');
+    }
     await selectCharacter(page,'Mira Reader A');
     assert.match(await page.locator('.sillynovel-dialogue__message').innerText(),/END OF COMPLETE SYNTHETIC REPLY/);
     assert.equal(await page.locator('.sillynovel-reader__unread').innerText(),'');

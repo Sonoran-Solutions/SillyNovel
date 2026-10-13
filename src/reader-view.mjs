@@ -1,3 +1,4 @@
+import { mountVisualStage } from './stage-view.mjs';
 const TAGS = ['p', 'br', 'em', 'strong', 'ul', 'ol', 'li', 'code', 'pre', 'a', 'blockquote', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'del', 's', 'table', 'thead', 'tbody', 'tr', 'th', 'td'];
 
 export function createMessageFormatter({ showdown, DOMPurify }, document) {
@@ -163,6 +164,7 @@ export function mountReader({ document, snapshot, formatMessage, actions }) {
         if (transferFocus) dialogue.focus({ preventScroll: true });
     });
     nativeBar.append(returnToReader, handoffStatus);
+    let visuals = null;
     let disposed = false;
     let renderedSource = null;
     let renderedEpoch = null;
@@ -201,6 +203,7 @@ export function mountReader({ document, snapshot, formatMessage, actions }) {
     function render({ reader }) {
         if (disposed) return;
         if (!stage.isConnected || !chat.isConnected || chat.parentElement !== shell) throw new Error('Reader container changed. Standard chat restored; reload to retry.');
+        visuals?.update(reader);
         const source = reader.cursor;
         const changedSelection = renderedEpoch !== reader.sessionEpoch || renderedSource?.sourceKey !== source?.sourceKey;
         resetScroll ||= changedSelection;
@@ -281,6 +284,7 @@ export function mountReader({ document, snapshot, formatMessage, actions }) {
         disposed = true;
         // Restore visibility first, even if later cleanup fails.
         chat.classList.remove('sillynovel-native-hidden');
+        visuals?.dispose();
         for (const remove of listeners.splice(0)) remove();
         stage.remove();
         nativeBar.remove();
@@ -289,6 +293,7 @@ export function mountReader({ document, snapshot, formatMessage, actions }) {
         shell.insertBefore(stage, chat);
         shell.insertBefore(nativeBar, chat);
         render({ reader: snapshot });
+        visuals = mountVisualStage({ document, stage, actions });
         chat.classList.add('sillynovel-native-hidden');
     } catch (error) { dispose(); throw error; }
     return { update: render, dispose };

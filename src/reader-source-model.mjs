@@ -264,5 +264,5 @@ function revise(snapshot, previous) {
         return [head?.index, cursor?.index].filter(Number.isSafeInteger);
     }
 
-    return { activate, apply, reconcile, navigate, jumpToLatest, setTextScrollMode, getSnapshot, getTrackedIndices };
+    return { activate, apply, reconcile, navigate, jumpToLatest, setTextScrollMode, getSnapshot, getTrackedIndices, getHistory: () => Object.freeze([...records]) };
 }
