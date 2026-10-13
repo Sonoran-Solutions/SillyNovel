@@ -1,0 +1,571 @@
+{
+  "hostSha": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
+  "classification": "SOURCE_INSPECTION",
+  "files": {
+    "src/endpoints/chats.js": {
+      "sha256": "40012ebc71a75357e62f7532e5b20def0d8b6c132bb6ab48f662993cc97b9063",
+      "locations": [
+        {
+          "line": 9,
+          "text": "import { sync as writeFileAtomicSync } from 'write-file-atomic';"
+        },
+        {
+          "line": 20,
+          "text": "tryWriteFileSync,"
+        },
+        {
+          "line": 69,
+          "text": "tryWriteFileSync(backupFile, data);"
+        },
+        {
+          "line": 532,
+          "text": "export async function trySaveChat(chatData, filePath, skipIntegrityCheck = false, handle, cardName, backupDirectory) {"
+        },
+        {
+          "line": 541,
+          "text": "tryWriteFileSync(filePath, jsonlData);"
+        },
+        {
+          "line": 545,
+          "text": "router.post('/save', validateAvatarUrlMiddleware, async function (request, response) {"
+        },
+        {
+          "line": 592,
+          "text": "router.post('/get', validateAvatarUrlMiddleware, function (request, response) {"
+        },
+        {
+          "line": 621,
+          "text": "router.post('/rename', validateAvatarUrlMiddleware, async function (request, response) {"
+        },
+        {
+          "line": 644,
+          "text": "fs.copyFileSync(pathToOriginalFile, pathToRenamedFile);"
+        },
+        {
+          "line": 645,
+          "text": "fs.unlinkSync(pathToOriginalFile);"
+        },
+        {
+          "line": 654,
+          "text": "router.post('/delete', validateAvatarUrlMiddleware, function (request, response) {"
+        },
+        {
+          "line": 679,
+          "text": "router.post('/export', validateAvatarUrlMiddleware, async function (request, response) {"
+        },
+        {
+          "line": 751,
+          "text": "router.post('/group/import', function (request, response) {"
+        },
+        {
+          "line": 762,
+          "text": "fs.copyFileSync(pathToUpload, pathToNewFile);"
+        },
+        {
+          "line": 763,
+          "text": "fs.unlinkSync(pathToUpload);"
+        },
+        {
+          "line": 771,
+          "text": "router.post('/import', validateAvatarUrlMiddleware, function (request, response) {"
+        },
+        {
+          "line": 794,
+          "text": "fs.unlinkSync(pathToUpload);"
+        },
+        {
+          "line": 819,
+          "text": "writeFileAtomicSync(filePath, chat, 'utf8');"
+        },
+        {
+          "line": 859,
+          "text": "writeFileAtomicSync(filePath, flattenedChat, 'utf8');"
+        },
+        {
+          "line": 861,
+          "text": "fs.copyFileSync(pathToUpload, filePath);"
+        },
+        {
+          "line": 863,
+          "text": "fs.unlinkSync(pathToUpload);"
+        },
+        {
+          "line": 872,
+          "text": "router.post('/group/get', (request, response) => {"
+        },
+        {
+          "line": 883,
+          "text": "router.post('/group/info', async (request, response) => {"
+        },
+        {
+          "line": 900,
+          "text": "router.post('/group/delete', (request, response) => {"
+        },
+        {
+          "line": 922,
+          "text": "router.post('/group/save', async function (request, response) {"
+        },
+        {
+          "line": 949,
+          "text": "router.post('/search', validateAvatarUrlMiddleware, async function (request, response) {"
+        },
+        {
+          "line": 1054,
+          "text": "router.post('/recent', async function (request, response) {"
+        }
+      ]
+    },
+    "src/endpoints/characters.js": {
+      "sha256": "3235555529e9ff17ecc2ebe9168b0af77fe6ef5947f3d1f7de3df6d5f2567d89",
+      "locations": [
+        {
+          "line": 220,
+          "text": "async function writeCharacterData(inputFile, data, outputFile, request, crop = undefined) {"
+        },
+        {
+          "line": 753,
+          "text": "const result = await writeCharacterData(DEFAULT_AVATAR_PATH, JSON.stringify(char), fileName, context.request);"
+        },
+        {
+          "line": 799,
+          "text": "const result = await writeCharacterData(avatar, JSON.stringify(processedCard), fileName, request);"
+        },
+        {
+          "line": 871,
+          "text": "const result = await writeCharacterData(byafData.images[0].image, JSON.stringify(card), fileName, request);"
+        },
+        {
+          "line": 901,
+          "text": "const result = await writeCharacterData(DEFAULT_AVATAR_PATH, char, pngName, request);"
+        },
+        {
+          "line": 927,
+          "text": "const result = await writeCharacterData(DEFAULT_AVATAR_PATH, charJSON, pngName, request);"
+        },
+        {
+          "line": 954,
+          "text": "const result = await writeCharacterData(DEFAULT_AVATAR_PATH, charJSON, pngName, request);"
+        },
+        {
+          "line": 987,
+          "text": "const result = await writeCharacterData(uploadPath, char, pngName, request);"
+        },
+        {
+          "line": 1014,
+          "text": "const result = await writeCharacterData(uploadPath, charJSON, pngName, request);"
+        },
+        {
+          "line": 1024,
+          "text": "router.post('/create', getFileNameValidationFunction('file_name'), async function (request, response) {"
+        },
+        {
+          "line": 1038,
+          "text": "await writeCharacterData(DEFAULT_AVATAR_PATH, char, internalName, request);"
+        },
+        {
+          "line": 1043,
+          "text": "await writeCharacterData(uploadPath, char, internalName, request, crop);"
+        },
+        {
+          "line": 1053,
+          "text": "router.post('/rename', validateAvatarUrlMiddleware, async function (request, response) {"
+        },
+        {
+          "line": 1066,
+          "text": "const oldChatsPath = path.join(request.user.directories.chats, oldInternalName);"
+        },
+        {
+          "line": 1067,
+          "text": "const newChatsPath = path.join(request.user.directories.chats, newInternalName);"
+        },
+        {
+          "line": 1080,
+          "text": "await writeCharacterData(oldAvatarPath, newData, newInternalName, request);"
+        },
+        {
+          "line": 1083,
+          "text": "if (fs.existsSync(oldChatsPath) && !fs.existsSync(newChatsPath)) {"
+        },
+        {
+          "line": 1086,
+          "text": "fs.cpSync(oldChatsPath, newChatsPath, { recursive: true, filter: () => true });"
+        },
+        {
+          "line": 1087,
+          "text": "fs.rmSync(oldChatsPath, { recursive: true, force: true });"
+        },
+        {
+          "line": 1101,
+          "text": "router.post('/edit', validateAvatarUrlMiddleware, async function (request, response) {"
+        },
+        {
+          "line": 1123,
+          "text": "await writeCharacterData(avatarPath, char, targetFile, request);"
+        },
+        {
+          "line": 1128,
+          "text": "await writeCharacterData(newAvatarPath, char, targetFile, request, crop);"
+        },
+        {
+          "line": 1142,
+          "text": "router.post('/edit-avatar', validateAvatarUrlMiddleware, async function (request, response) {"
+        },
+        {
+          "line": 1167,
+          "text": "await writeCharacterData(uploadPath, data, fileName, request, crop);"
+        },
+        {
+          "line": 1193,
+          "text": "router.post('/edit-attribute', validateAvatarUrlMiddleware, async function (request, response) {"
+        },
+        {
+          "line": 1226,
+          "text": "await writeCharacterData(avatarPath, newCharJSON, targetFile, request);"
+        },
+        {
+          "line": 1302,
+          "text": "await writeCharacterData(avatarPath, JSON.stringify(character), targetImg, request);"
+        },
+        {
+          "line": 1328,
+          "text": "router.post('/merge-attributes', getFileNameValidationFunction('avatar'), async function (request, response) {"
+        },
+        {
+          "line": 1416,
+          "text": "router.post('/delete', validateAvatarUrlMiddleware, async function (request, response) {"
+        },
+        {
+          "line": 1466,
+          "text": "router.post('/all', async function (request, response) {"
+        },
+        {
+          "line": 1480,
+          "text": "router.post('/get', validateAvatarUrlMiddleware, async function (request, response) {"
+        },
+        {
+          "line": 1499,
+          "text": "router.post('/chats', validateAvatarUrlMiddleware, async function (request, response) {"
+        },
+        {
+          "line": 1560,
+          "text": "router.post('/import', async function (request, response) {"
+        },
+        {
+          "line": 1601,
+          "text": "router.post('/duplicate', validateAvatarUrlMiddleware, async function (request, response) {"
+        },
+        {
+          "line": 1637,
+          "text": "fs.copyFileSync(filename, newFilename);"
+        },
+        {
+          "line": 1646,
+          "text": "router.post('/export', validateAvatarUrlMiddleware, async function (request, response) {"
+        }
+      ]
+    },
+    "src/endpoints/groups.js": {
+      "sha256": "c5b956f8b4a2809b554229fed24588ed37163f1e73c129d4270ac6832438612b",
+      "locations": [
+        {
+          "line": 7,
+          "text": "import { sync as writeFileAtomicSync, default as writeFileAtomic } from 'write-file-atomic';"
+        },
+        {
+          "line": 87,
+          "text": "await writeFileAtomic(chatFilePath, newChatDataRaw, 'utf8');"
+        },
+        {
+          "line": 96,
+          "text": "await writeFileAtomic(groupFilePath, JSON.stringify(groupData, null, 4), 'utf8');"
+        },
+        {
+          "line": 113,
+          "text": "router.post('/all', (request, response) => {"
+        },
+        {
+          "line": 156,
+          "text": "router.post('/create', (request, response) => {"
+        },
+        {
+          "line": 186,
+          "text": "writeFileAtomicSync(pathToFile, fileData);"
+        },
+        {
+          "line": 190,
+          "text": "router.post('/edit', getFileNameValidationFunction('id'), (request, response) => {"
+        },
+        {
+          "line": 199,
+          "text": "writeFileAtomicSync(pathToFile, fileData);"
+        },
+        {
+          "line": 203,
+          "text": "router.post('/delete', getFileNameValidationFunction('id'), async (request, response) => {"
+        },
+        {
+          "line": 221,
+          "text": "fs.unlinkSync(pathToFile);"
+        },
+        {
+          "line": 230,
+          "text": "fs.unlinkSync(pathToGroup);"
+        }
+      ]
+    },
+    "src/users.js": {
+      "sha256": "3100591d000a28f6d3a548242c9de69060c2fd4777c170b13f38a99bc67f3476",
+      "locations": [
+        {
+          "line": 121,
+          "text": "const directoriesList = userHandles.map(handle => getUserDirectories(handle));"
+        },
+        {
+          "line": 223,
+          "text": "export async function getUserDirectoriesList() {"
+        },
+        {
+          "line": 225,
+          "text": "const directoriesList = userHandles.map(handle => getUserDirectories(handle));"
+        },
+        {
+          "line": 256,
+          "text": "const userDirectories = getUserDirectories(DEFAULT_USER.handle);"
+        },
+        {
+          "line": 447,
+          "text": "const directories = await getUserDirectoriesList();"
+        },
+        {
+          "line": 683,
+          "text": "export function getUserDirectories(handle) {"
+        },
+        {
+          "line": 715,
+          "text": "const directory = getUserDirectories(handle);"
+        },
+        {
+          "line": 959,
+          "text": "const directories = getUserDirectories(handle);"
+        },
+        {
+          "line": 960,
+          "text": "request.user = {"
+        },
+        {
+          "line": 1007,
+          "text": "const directories = getUserDirectories(handle);"
+        },
+        {
+          "line": 1008,
+          "text": "request.user = {"
+        },
+        {
+          "line": 1027,
+          "text": "export function requireLoginMiddleware(request, response, next) {"
+        },
+        {
+          "line": 1149,
+          "text": "const directories = getUserDirectories(handle);"
+        }
+      ]
+    },
+    "src/util.js": {
+      "sha256": "d33d67234af4e188bb7fcfac9c3ca7952c19e8c58791e96b19f9ad748dd168cd",
+      "locations": [
+        {
+          "line": 23,
+          "text": "import { sync as writeFileAtomicSync } from 'write-file-atomic';"
+        },
+        {
+          "line": 1514,
+          "text": "export function tryWriteFileSync(filePath, data) {"
+        },
+        {
+          "line": 1520,
+          "text": "writeFileAtomicSync(filePath, data, 'utf8');"
+        }
+      ]
+    },
+    "public/script.js": {
+      "sha256": "955c603d0bad84bac5a716f0818d85c2543e44d4c43878e0d63ef1e55ca91855",
+      "locations": [
+        {
+          "line": 1586,
+          "text": "export async function clearChat({ clearData = false } = {}) {"
+        },
+        {
+          "line": 1723,
+          "text": "await eventSource.emit(event_types.CHAT_CHANGED, getCurrentChatId());"
+        },
+        {
+          "line": 7361,
+          "text": "export function saveChatDebounced() {"
+        },
+        {
+          "line": 7395,
+          "text": "export async function saveChat({ chatName, withMetadata, mesId, force = false, chatData = undefined } = {}) {"
+        },
+        {
+          "line": 7634,
+          "text": "export async function getChat() {"
+        },
+        {
+          "line": 7684,
+          "text": "async function getChatResult() {"
+        },
+        {
+          "line": 7700,
+          "text": "await eventSource.emit(event_types.CHAT_CHANGED, (getCurrentChatId()));"
+        },
+        {
+          "line": 7744,
+          "text": "export async function openCharacterChat(file_name) {"
+        },
+        {
+          "line": 8405,
+          "text": "await eventSource.emit(event_types.MESSAGE_EDITED, this_edit_mes_id);"
+        },
+        {
+          "line": 8447,
+          "text": "export async function getChatsFromFiles(data, isGroupChat) {"
+        },
+        {
+          "line": 9412,
+          "text": "export async function saveChatConditional() {"
+        },
+        {
+          "line": 10315,
+          "text": "await eventSource.emit(event_types.MESSAGE_SWIPED, (mesId));"
+        },
+        {
+          "line": 10618,
+          "text": "export async function doNewChat({ deleteCurrentChat = false } = {}) {"
+        },
+        {
+          "line": 10731,
+          "text": "export async function renameChat(oldFileName, newName) {"
+        },
+        {
+          "line": 10760,
+          "text": "await eventSource.emit(event_types.CHAT_CHANGED, getCurrentChatId());"
+        },
+        {
+          "line": 10913,
+          "text": "await eventSource.emit(event_types.CHAT_CHANGED, getCurrentChatId());"
+        },
+        {
+          "line": 10922,
+          "text": "export async function newAssistantChat({ temporary = false } = {}) {"
+        }
+      ]
+    },
+    "public/scripts/bookmarks.js": {
+      "sha256": "5c3a68aa82e58c0d82777065b8466572fc1b202cad98a92ba4daa852c386ad1b",
+      "locations": [
+        {
+          "line": 3,
+          "text": "saveChat,"
+        },
+        {
+          "line": 13,
+          "text": "saveChatConditional,"
+        },
+        {
+          "line": 187,
+          "text": "export async function createBranch(mesId, { swipeId = null } = {}) {"
+        },
+        {
+          "line": 200,
+          "text": "// Mint a fresh integrity slug so the branch is distinguishable from its parent (#5942)"
+        },
+        {
+          "line": 201,
+          "text": "const newMetadata = { main_chat: mainChatName, integrity: uuidv4() };"
+        },
+        {
+          "line": 233,
+          "text": "await saveChat({ chatName: name, withMetadata: newMetadata, mesId, chatData: branchChatSnapshot });"
+        },
+        {
+          "line": 255,
+          "text": "export async function createNewBookmark(mesId, { forceName = null } = {}) {"
+        },
+        {
+          "line": 283,
+          "text": "// Mint a fresh integrity slug so the checkpoint is distinguishable from its parent (#5942)"
+        },
+        {
+          "line": 284,
+          "text": "const newMetadata = { main_chat: mainChat, integrity: uuidv4() };"
+        },
+        {
+          "line": 290,
+          "text": "await saveChat({ chatName: name, withMetadata: newMetadata, mesId });"
+        },
+        {
+          "line": 298,
+          "text": "await saveChatConditional();"
+        }
+      ]
+    },
+    "public/scripts/chats.js": {
+      "sha256": "2b870d44c55f99c622b5afcd7b1fd563219b9444bc70e8653611327d6e7f7be6",
+      "locations": [
+        {
+          "line": 1855,
+          "text": "const NEUTRAL_CHAT_KEY = 'neutralChat';"
+        },
+        {
+          "line": 1857,
+          "text": "export function preserveNeutralChat() {"
+        },
+        {
+          "line": 1862,
+          "text": "sessionStorage.setItem(NEUTRAL_CHAT_KEY, JSON.stringify({ chat, chat_metadata }));"
+        },
+        {
+          "line": 1865,
+          "text": "export function restoreNeutralChat() {"
+        },
+        {
+          "line": 1870,
+          "text": "const neutralChat = sessionStorage.getItem(NEUTRAL_CHAT_KEY);"
+        },
+        {
+          "line": 1878,
+          "text": "sessionStorage.removeItem(NEUTRAL_CHAT_KEY);"
+        }
+      ]
+    },
+    "public/scripts/group-chats.js": {
+      "sha256": "862eb24dfe1f596a2bd6d039a69397667829e0fc34471d22d2028d7781a5c73c",
+      "locations": [
+        {
+          "line": 156,
+          "text": "await fetch('/api/groups/edit', {"
+        },
+        {
+          "line": 255,
+          "text": "export async function getGroupChat(groupId, reload = false) {"
+        },
+        {
+          "line": 318,
+          "text": "await eventSource.emit(event_types.CHAT_CHANGED, getCurrentChatId());"
+        },
+        {
+          "line": 623,
+          "text": "async function saveGroupChat(groupId, shouldSaveGroup, force = false) {"
+        },
+        {
+          "line": 924,
+          "text": "function getGroupChatNames(groupId) {"
+        },
+        {
+          "line": 2140,
+          "text": "export async function createNewGroupChat(groupId) {"
+        }
+      ]
+    }
+  }
+}

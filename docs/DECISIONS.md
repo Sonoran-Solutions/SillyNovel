@@ -112,3 +112,7 @@ The implementation reuses the existing source model and installed host Markdown/
 The assignment authorizes **DYL-26 only**, an isolated technical feasibility spike of DYL-25's host-owned storage proposal, on a disposable SillyTavern 1.19.0 checkout at `7e8663cd9c184a550b37238218bdd32c6efc68e9`. It authorizes a reproducible test-only host patch/fixture and one open, unmerged SillyNovel PR. It does not select an architecture for release or authorize production persistence, live-host changes, a permanent fork, an upstream issue/PR, a required server plugin, DYL-22/23, M1.3, or M2. DYL-22/23 blockers remain.
 
 The [spike report](M1_HOST_STORAGE_SPIKE.md) distinguishes experimental identity enrollment and activation from existing supported host behavior. These bounded test choices and its recommendation are engineering findings, not further owner approvals.
+
+## Owner assignment — 2026-10-12, DYL-27
+
+The owner's pasted DYL-27 assignment authorizes one native identity/activation feasibility experiment after merged PR #13, using a disposable pinned SillyTavern checkout and fresh synthetic data. It authorizes one open/unmerged PR only; no installed-host changes, permanent fork, production persistence, upstream publication, required plugin, DYL-22/23, M1.3, Gate A or M2. The [DYL-27 report](M1_NATIVE_IDENTITY_ACTIVATION.md) records engineering findings and bounded design choices, **not owner approval** of the registry, migration or release architecture. Recommendation remains REVISE; subsequent work needs its own authorization.
