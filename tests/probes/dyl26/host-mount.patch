@@ -1,0 +1,13 @@
+diff --git a/src/server-main.js b/src/server-main.js
+--- a/src/server-main.js
++++ b/src/server-main.js
+@@ -246,6 +246,9 @@ app.use('/api/users', usersPublicRouter);
+ 
+ // Everything below this line requires authentication
+ app.use(requireLoginMiddleware);
++if (process.env.SN_DYL26_RUN) {
++    (await import('./dyl26-storage.mjs')).install(app);
++}
+ app.post('/api/ping', (request, response) => {
+     if (request.query.extend && request.session) {
+         request.session.touch = Date.now();
