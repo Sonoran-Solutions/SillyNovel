@@ -423,3 +423,22 @@ test('session stage: chat return, A to B to A, reload, narrow/keyboard layout an
     for(const id of ['synthetic-B','synthetic-A']){await page.evaluate(id=>{fixture.context.chatId=id;fixture.emit('CHAT_CHANGED');},id);await page.waitForFunction(()=>document.querySelector('.sillynovel-cast').dataset.count==='0');}
     await page.reload();await page.locator('#sillynovel-enabled').check();await page.waitForSelector('.sillynovel-unsaved');assert.equal(await page.locator('.sillynovel-cast').getAttribute('data-count'),'0');
 });
+
+test('session stage: delayed image cannot apply after same-source reset, manual override or unobserved source edit',async t=> {
+    const page=await fixture(t);await sceneControls(page);
+    const delay=async()=>{
+        await page.evaluate(()=>{window.baseDecode=Image.prototype.decode;window.delayedReady=false;Image.prototype.decode=function(){const image=this;return new Promise((resolve,reject)=>{window.delayedReady=true;window.completeImage=()=>baseDecode.call(image).then(resolve,reject);});};});
+        await field(page,'Temporary raster file').setInputFiles(resolve(root,'tests/fixtures/m12-stage/forest.png'));
+        await page.waitForFunction(()=>window.delayedReady);
+    };
+    const finish=()=>page.evaluate(()=>{completeImage();Image.prototype.decode=baseDecode;});
+    await delay();await button(page,'Reset transient visuals').click();await finish();
+    await page.waitForFunction(()=>document.querySelector('.sillynovel-visual-status').textContent.includes('Nothing was saved'));
+    assert.equal(await page.locator('.sillynovel-art__background').isVisible(),false);
+    await delay();await field(page,'Background').selectOption('tavern');await applyScene(page,'Apply background');await finish();
+    await page.waitForFunction(()=>document.querySelector('.sillynovel-visual-status').textContent.includes('STALE_SOURCE'));
+    assert.match(await page.locator('.sillynovel-art__background').getAttribute('src'),/tavern.png/);
+    await delay();await page.evaluate(()=>{fixture.context.chat[1].mes='canonical edit without a lifecycle event';});await finish();
+    await page.waitForFunction(()=>document.querySelector('.sillynovel-visual-status').textContent.includes('STALE_SOURCE'));
+    assert.equal(await page.locator('.sillynovel-art__background').getAttribute('src')?.then(x=>x?.startsWith('blob:')),false);
+});

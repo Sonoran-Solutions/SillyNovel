@@ -53,5 +53,6 @@ export async function exerciseStage(page,{screenshot,pass}) {
     assert.equal(await page.locator('#send_textarea').isVisible(),true);
     const d=await page.locator('.sillynovel-dialogue').boundingBox();assert.ok(d.height>65);
     await page.setViewportSize({width:1440,height:1000});
+    await button('Jump to Latest').click();
     pass('stage: source projection, repeated chat return and narrow viewport',{dialogueHeight:d.height});
 }

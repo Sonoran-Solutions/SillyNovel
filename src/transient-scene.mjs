@@ -74,7 +74,7 @@ export function createTransientScene(actions, changed) {
         const c = context(sources, snapshot);
         const outcome = scene ? reconcileScene(scene,c) : createScene(c);
         if (!outcome.result.accepted) { notify(outcome.result.code + ': ' + (outcome.result.detail ?? 'Visual authority unavailable.')); return false; }
-        if (outcome.scene !== scene && outcome.scene.invalidatedFrom !== null) notice = 'Historical change: dependent visuals invalidated. Choose them again.';
+        if (scene?.commands.some((command,index)=>command.valid && !outcome.scene.commands[index]?.valid)) notice = 'Historical change: dependent visuals invalidated. Choose them again.';
         scene = outcome.scene;
         // Retain only the active validated prefixes, not private text from prior revisions.
         digests = activeDigests;
@@ -155,7 +155,7 @@ export function createTransientScene(actions, changed) {
             pending.delete(url);
             media.set(id,{url,temporary:true,label:'Temporary file'}); url=null; revoke(old); catalogRevision++;
             if (await sync()) apply({type:kind==='background'?'setBackground':'setOutfit',assetId:id,...(kind==='outfit'?{characterKey:actorKey}:{})});
-        } catch (error) { if (url) { URL.revokeObjectURL(url); pending.delete(url); } if (!disposed && epoch===token.sessionEpoch) notify(error.message || 'Image decode failed.'); }
+        } catch (error) { if (url) { URL.revokeObjectURL(url); pending.delete(url); } if (!disposed && epoch===token.sessionEpoch && ownerKey===token.ownerKey) notify(error.message || 'Image decode failed.'); }
     }
     return { sync, dispatch, register, importFile,
         get: () => ({scene,actors,assets,media,notice}),
