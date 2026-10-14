@@ -558,7 +558,7 @@ try {
     assert.ok(refusedState.dom.some(text => text.includes('A edited by authenticated client two.')));
     assert.equal(refusedState.dom.some(text => text.includes('A expired-ticket edit by client two.')), false);
     assert.ok(refusedState.history.some(entry => entry.refused === 'EXPIRED_LOAD'));
-    await firstPage.waitForFunction(() => [...document.querySelectorAll('.toast')].some(node => node.textContent.includes('The chat changed while loading. Reopen it to read the latest version.')));
+    await firstPage.waitForFunction(() => [...document.querySelectorAll('.toast')].some(node => node.textContent.includes('This chat could not be activated. Reopen it to read the latest version.')));
     await clickCard(firstPage, avatarB); await waitForTarget(firstPage, avatarB, b.chatId, 1);
     await clickCard(firstPage, avatarA); await waitForTarget(firstPage, avatarA, a.chatId, 3);
     const reopened = await pageState(firstPage);
@@ -569,6 +569,8 @@ try {
     });
 
     // An activation transport failure does not stop the native conversation from loading or replying.
+    // Start from B so the timed A load's own revision 3 text is what must appear on screen afterwards.
+    await clickCard(firstPage, avatarB); await waitForTarget(firstPage, avatarB, b.chatId, 1);
     let timeoutInjected = false;
     const timeoutHandler = async route => {
         if (!timeoutInjected) { timeoutInjected = true; await route.abort('timedout'); }
@@ -577,12 +579,26 @@ try {
     await firstPage.route('**/api/dyl27/accept-load', timeoutHandler);
     const sourceRevisionBeforeTimeout = a.sourceRevision;
     const beforeTimeoutRead = await fs.promises.readFile(chatFile('default-user', a.relativePath), 'utf8');
-    const timedLoad = firstPage.evaluate(async () => (await import('/script.js')).getChat());
-    await timedLoad; await firstPage.unroute('**/api/dyl27/accept-load', timeoutHandler);
+    const timeoutEpochBefore = await firstPage.evaluate(() => window.dyl28.epoch);
+    await clickCard(firstPage, avatarA);
+    await firstPage.waitForFunction(({ avatar }) => {
+        const context = SillyTavern.getContext();
+        return context.characters[context.characterId]?.avatar === avatar
+            && window.dyl28?.target === null
+            && context.chat.map(message => message.mes).includes('A expired-ticket edit by client two.');
+    }, { avatar: avatarA }, { timeout: 15000 });
+    await firstPage.unroute('**/api/dyl27/accept-load', timeoutHandler);
     const timeoutState = await pageState(firstPage);
     assert.equal(timeoutInjected, true);
+    assert.equal(timeoutState.avatar, avatarA);
     assert.equal(timeoutState.target, null);
     assert.ok(timeoutState.messages.includes('A expired-ticket edit by client two.'));
+    assert.ok(timeoutState.dom.some(text => text.includes('A expired-ticket edit by client two.')));
+    assert.equal(timeoutState.messages.includes('B-only canonical transcript.'), false);
+    const transportEntries = timeoutState.history.filter(entry => entry.transportFailure);
+    assert.equal(transportEntries.length, 1, `exactly one transport-failure history entry: ${JSON.stringify(timeoutState.history)}`);
+    assert.ok(transportEntries[0].epoch > timeoutEpochBefore,
+        `timed load epoch ${transportEntries[0].epoch} is after the armed epoch ${timeoutEpochBefore}`);
     await firstPage.locator('#API-status-top').click(); await firstPage.locator('#api_button_openai').click();
     await firstPage.locator('#send_but').waitFor({ state: 'visible' }); await firstPage.locator('#API-status-top').click();
     await firstPage.locator('#send_textarea').fill('Native reading remains usable after activation timeout.');

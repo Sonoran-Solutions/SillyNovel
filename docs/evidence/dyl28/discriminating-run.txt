@@ -1,0 +1,23 @@
+PASS native create/save allocates host identity and sourceRevision 1 for A and B
+PASS delayed native A response after B: B transcript, DOM, identity and target stay current; A load token is stale
+PASS A-B-A with reordered native transcript responses: only latest A request and visit remain accepted
+PASS held native activation acknowledgement across A-B-A is discarded without restoring its visit
+PASS old A visual CAS held across native A-B-A is refused against the old visit
+PASS canonical edit during pending load: old revision 1 is not committed, a fresh revision 2 load is activated
+PASS two authenticated clients on one host process: source revision 2 shared, visit tokens distinct, one visual CAS wins without canonical mutation
+page.waitForFunction: Timeout 30000ms exceeded.
+    at /tmp/opencode/dyl28-prefix/dyl28/host-probe.mjs:561:21 {
+  log: [],
+  name: 'TimeoutError'
+}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+page.waitForFunction: Timeout 30000ms exceeded.
+    at /tmp/opencode/dyl28-prefix/dyl28/host-probe.mjs:561:21 {
+  log: [],
+  name: 'TimeoutError'
+}
+
+Node.js v26.8.1

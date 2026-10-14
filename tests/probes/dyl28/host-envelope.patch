@@ -6,7 +6,7 @@
  import {
      showdown,
      moment,
-@@ -7633,21 +7633,28 @@
+@@ -7633,21 +7633,28 @@ export async function unshallowCharacter(characterId) {
      await getOneCharacter(avatar);
  }
 
@@ -43,7 +43,7 @@
              }),
          });
 
-@@ -7655,7 +7662,24 @@
+@@ -7655,7 +7662,23 @@ export async function getChat() {
              throw new Error('Chat could not be loaded');
          }
 
@@ -55,12 +55,11 @@
 +        if (result?.dyl28Envelope === true) {
 +            const activation = await acceptLoad(load, result, getRequestHeaders);
 +            if (!isCurrent()) return;
-+            const refused = activation === null || activation.target === null;
-+            if (refused && (Boolean(result.identity) || activation?.error !== 'UNRESOLVED_IDENTITY')) {
-+                if (['SOURCE_REVISION_MISMATCH', 'SOURCE_SNAPSHOT_MISMATCH'].includes(activation?.error) && retrySourceMismatch) {
++            if (activation?.refusal) {
++                if (['SOURCE_REVISION_MISMATCH', 'SOURCE_SNAPSHOT_MISMATCH'].includes(activation.error) && retrySourceMismatch) {
 +                    return getChat(false);
 +                }
-+                toastr.warning('The chat changed while loading. Reopen it to read the latest version.');
++                toastr.warning('This chat could not be activated. Reopen it to read the latest version.');
 +                return;
 +            }
 +            data = result.messages;
@@ -69,7 +68,7 @@
          if (Array.isArray(data) && data.length > 0) {
              /** @type {ChatHeader} */
              const chatHeader = data.shift();
-@@ -7670,25 +7694,31 @@
+@@ -7670,25 +7693,31 @@ export async function getChat() {
          if (!chat_metadata.integrity) {
              chat_metadata.integrity = uuidv4();
          }
@@ -107,7 +106,7 @@
      let freshChat = false;
      if (chat.length === 0) {
          const message = getFirstMessage();
-@@ -7698,17 +7725,25 @@
+@@ -7698,17 +7727,25 @@ async function getChatResult() {
          }
          // Make sure the chat appears on the server
          await saveChatConditional();
@@ -145,7 +144,7 @@
  import crypto from 'node:crypto';
  import fs from 'node:fs';
  import path from 'node:path';
-@@ -577,9 +577,17 @@
+@@ -577,9 +577,17 @@ router.post('/save', validateAvatarUrlMiddleware, async function (request, respo
   * @returns {Array}} If the chatFilePath cannot be read, this will return [].
   */
  export function getChatData(chatFilePath) {
@@ -165,7 +164,7 @@
      if (chatJSON.length > 0) {
          const lines = chatJSON.split('\n');
          // Iterate through the array of strings and parse each line as JSON
-@@ -592,6 +600,10 @@
+@@ -592,6 +600,10 @@ export function getChatData(chatFilePath) {
  }
 
  router.post('/get', validateAvatarUrlMiddleware, function (request, response) {
@@ -176,7 +175,7 @@
      try {
          const dirName = String(request.body.avatar_url).replace('.png', '');
          const directoryPath = path.join(request.user.directories.chats, dirName);
-@@ -603,19 +615,24 @@
+@@ -603,19 +615,24 @@ router.post('/get', validateAvatarUrlMiddleware, function (request, response) {
          //if no chat dir for the character is found, make one with the character name
          if (!chatDirExists) {
              fs.mkdirSync(directoryPath);
