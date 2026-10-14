@@ -512,6 +512,62 @@ try {
         canonicalSha256BeforeAndAfter: hash(Buffer.from(revisedCanonical)),
     });
 
+    // An expired load ticket must not commit its snapshot: a concurrent native edit supersedes the
+    // screen, the acknowledgement is held past the ticket's TTL, and the refusal keeps the stale view.
+    const staleScreen = await pageState(firstPage);
+    assert.equal(staleScreen.target.sourceRevision, 2);
+    assert.ok(staleScreen.messages.includes('A edited by authenticated client two.'));
+    const expiredEditNode = secondPage.locator('#chat > .mes').last();
+    await expiredEditNode.locator('.mes_edit').click();
+    await expiredEditNode.locator('.edit_textarea').fill('A expired-ticket edit by client two.');
+    await expiredEditNode.locator('.mes_edit_done').click();
+    const expiredSaveDeadline = Date.now() + 10000;
+    while (Date.now() < expiredSaveDeadline) {
+        catalogA = registry('default-user'); a = catalogA.chats.find(chat => chat.chatId === a.chatId);
+        const expiredText = fs.readFileSync(chatFile('default-user', a.relativePath), 'utf8');
+        if (a.sourceRevision === 3 && expiredText.includes('A expired-ticket edit by client two.')) break;
+        await sleep(25);
+    }
+    catalogA = registry('default-user'); a = catalogA.chats.find(chat => chat.chatId === a.chatId);
+    assert.equal(a.sourceRevision, 3);
+    let expiredAckHeld = false;
+    let expiredAckRelease;
+    let expiredAckEnter;
+    const expiredAckGate = new Promise(resolve => { expiredAckRelease = resolve; });
+    const expiredAckEntered = new Promise(resolve => { expiredAckEnter = resolve; });
+    const expiredAckHandler = async route => {
+        if (!expiredAckHeld) {
+            expiredAckHeld = true;
+            expiredAckEnter();
+            await expiredAckGate;
+            await route.continue();
+        } else await route.continue();
+    };
+    await firstPage.route('**/api/dyl27/accept-load', expiredAckHandler);
+    const expiredChatLoad = firstPage.evaluate(async () => (await import('/script.js')).getChat());
+    await Promise.race([expiredAckEntered, sleep(12000).then(() => { throw new Error('expired-ticket acceptance barrier timeout'); })]);
+    assert.deepEqual((await pageState(firstPage)).messages, staleScreen.messages);
+    await sleep(30100);
+    expiredAckRelease();
+    await expiredChatLoad;
+    await firstPage.unroute('**/api/dyl27/accept-load', expiredAckHandler);
+    const refusedState = await pageState(firstPage);
+    assert.equal(refusedState.avatar, avatarA);
+    assert.equal(refusedState.target, null);
+    assert.deepEqual(refusedState.messages, staleScreen.messages);
+    assert.ok(refusedState.dom.some(text => text.includes('A edited by authenticated client two.')));
+    assert.equal(refusedState.dom.some(text => text.includes('A expired-ticket edit by client two.')), false);
+    assert.ok(refusedState.history.some(entry => entry.refused === 'EXPIRED_LOAD'));
+    await firstPage.waitForFunction(() => [...document.querySelectorAll('.toast')].some(node => node.textContent.includes('The chat changed while loading. Reopen it to read the latest version.')));
+    await clickCard(firstPage, avatarB); await waitForTarget(firstPage, avatarB, b.chatId, 1);
+    await clickCard(firstPage, avatarA); await waitForTarget(firstPage, avatarA, a.chatId, 3);
+    const reopened = await pageState(firstPage);
+    assert.equal(reopened.target.sourceRevision, 3);
+    assert.ok(reopened.messages.includes('A expired-ticket edit by client two.'));
+    checkpoint('expired load ticket after a concurrent native edit: the revision 3 snapshot is not committed, the screen keeps revision 2, and the reopen activates revision 3', 'NATIVE_HOST_UI with request barrier + EXPERIMENTAL_HOST', {
+        staleScreen, refusedState, reopened, sourceAfter: fs.readFileSync(chatFile('default-user', a.relativePath), 'utf8'),
+    });
+
     // An activation transport failure does not stop the native conversation from loading or replying.
     let timeoutInjected = false;
     const timeoutHandler = async route => {
@@ -526,7 +582,7 @@ try {
     const timeoutState = await pageState(firstPage);
     assert.equal(timeoutInjected, true);
     assert.equal(timeoutState.target, null);
-    assert.ok(timeoutState.messages.includes('A edited by authenticated client two.'));
+    assert.ok(timeoutState.messages.includes('A expired-ticket edit by client two.'));
     await firstPage.locator('#API-status-top').click(); await firstPage.locator('#api_button_openai').click();
     await firstPage.locator('#send_but').waitFor({ state: 'visible' }); await firstPage.locator('#API-status-top').click();
     await firstPage.locator('#send_textarea').fill('Native reading remains usable after activation timeout.');

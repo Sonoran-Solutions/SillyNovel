@@ -43,7 +43,7 @@
              }),
          });
 
-@@ -7655,7 +7662,21 @@
+@@ -7655,7 +7662,24 @@
              throw new Error('Chat could not be loaded');
          }
 
@@ -53,20 +53,23 @@
 +
 +        let data = result;
 +        if (result?.dyl28Envelope === true) {
-+            data = result.messages;
 +            const activation = await acceptLoad(load, result, getRequestHeaders);
 +            if (!isCurrent()) return;
-+            if (['SOURCE_REVISION_MISMATCH', 'SOURCE_SNAPSHOT_MISMATCH'].includes(activation?.error)) {
-+                if (retrySourceMismatch) return getChat(false);
++            const refused = activation === null || activation.target === null;
++            if (refused && (Boolean(result.identity) || activation?.error !== 'UNRESOLVED_IDENTITY')) {
++                if (['SOURCE_REVISION_MISMATCH', 'SOURCE_SNAPSHOT_MISMATCH'].includes(activation?.error) && retrySourceMismatch) {
++                    return getChat(false);
++                }
 +                toastr.warning('The chat changed while loading. Reopen it to read the latest version.');
 +                return;
 +            }
++            data = result.messages;
 +        }
 +        if (!Array.isArray(data)) data = [];
          if (Array.isArray(data) && data.length > 0) {
              /** @type {ChatHeader} */
              const chatHeader = data.shift();
-@@ -7670,25 +7691,31 @@
+@@ -7670,25 +7694,31 @@
          if (!chat_metadata.integrity) {
              chat_metadata.integrity = uuidv4();
          }

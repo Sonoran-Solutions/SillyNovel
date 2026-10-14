@@ -4,9 +4,9 @@ let clientPromise;
 let target = null;
 const history = [];
 
-async function api(name, body, headers) {
+async function api(name, body, headers, timeout = 5000) {
     const response = await fetch(`/api/dyl27/${name}`, {
-        method: 'POST', signal: AbortSignal.timeout(5000), headers: headers(), body: JSON.stringify(body),
+        method: 'POST', signal: AbortSignal.timeout(timeout), headers: headers(), body: JSON.stringify(body),
     });
     const value = await response.json();
     if (!response.ok) throw new Error(value.error);
@@ -60,7 +60,7 @@ export async function acceptLoad(load, envelope, headers) {
     try {
         const accepted = await api('accept-load', {
             clientId: load.clientId, sequence: load.sequence, loadRequestId: envelope.loadRequestId,
-        }, headers);
+        }, headers, 60000);
         if (!isCurrentLoad(load.epoch)) {
             history.push({ epoch: load.epoch, loadRequestId: envelope.loadRequestId, discarded: true });
             return null;
