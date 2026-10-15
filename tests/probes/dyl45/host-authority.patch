@@ -1,0 +1,181 @@
+--- a/src/dyl27-storage.mjs
++++ b/src/dyl27-storage.mjs
+@@ -1,6 +1,7 @@
+ // DYL-27 registry plus DYL-28 load-envelope proof; copied into a disposable host only.
+ import fs from 'node:fs';
+ import path from 'node:path';
++import { read as readCard } from './character-card-parser.js';
+ import { AsyncLocalStorage } from 'node:async_hooks';
+ import { createHash, randomUUID } from 'node:crypto';
+ 
+@@ -62,6 +63,87 @@
+     persist(userRoot, catalog); // Failure propagates BEFORE canonical mutation.
+     if (fs.existsSync(path.join(rootFor(userRoot), 'dyl43-after-revoke'))) fail('INJECTED_AFTER_REVOCATION', 503);
+ }
++// DYL-45 test-only external authority; never mounted in an installed host.
++const externalDirectory = () => path.resolve(process.env.SN_DYL45_AUTHORITY);
++const externalFile = root => path.join(externalDirectory(), `${hash(path.resolve(root))}.json`);
++const registryDigest = root => fs.existsSync(path.join(rootFor(root), 'identities.json'))
++    ? hash(fs.readFileSync(path.join(rootFor(root), 'identities.json'))) : null;
++function external(root) {
++    const value = JSON.parse(fs.readFileSync(externalFile(root), 'utf8'));
++    if (value.root !== path.resolve(root) || !uuid(value.storeInstanceId) || !uuid(value.trustedIncarnation)
++        || !Number.isSafeInteger(value.generation) || value.generation < 0
++        || typeof value.account !== 'string' || !(value.registryDigest === null || /^[a-f0-9]{64}$/.test(value.registryDigest))
++        || !(value.pending === null || uuid(value.pending))) fail('EXTERNAL_UNAVAILABLE', 503);
++    return value;
++}
++function trusted(root, req) {
++    const authority = external(root), local = reservation(root);
++    if (req && authority.account !== JSON.stringify([req.user.profile.handle, req.user.profile.created])) fail('ACCOUNT_INSTANCE_MISMATCH', 403);
++    if (authority.pending || local.pending || authority.trustedIncarnation !== local.storeIncarnation
++        || authority.generation !== local.serial || authority.registryDigest !== registryDigest(root)) fail('EXTERNAL_LOCAL_MISMATCH', 503);
++    return authority;
++}
++function externalFault(root, point) {
++    if (fs.existsSync(path.join(rootFor(root), `dyl45-${point}-failure`))) fail('EXTERNAL_TRANSITION_FAILED', 503);
++}
++function provision(req) {
++    const root = req.user.directories.root;
++    // Explicit authenticated action, only for a never-enrolled empty synthetic store.
++    if (!exact(req.body, []) || fs.existsSync(externalFile(root)) || fs.existsSync(rootFor(root))
++        || fs.existsSync(reservationFile(root)) || ['characters', 'chats'].some(dir => fs.readdirSync(path.join(root, dir)).length)) fail('PROVISION_REFUSED', 409);
++    const authority = { root: path.resolve(root), account: JSON.stringify([req.user.profile.handle, req.user.profile.created]),
++        storeInstanceId: randomUUID(), trustedIncarnation: randomUUID(), generation: 0, pending: null, registryDigest: null };
++    atomic(externalFile(root), authority); // A partial provision is never retried automatically.
++    atomic(reservationFile(root), { storeIncarnation: authority.trustedIncarnation, serial: 0, pending: null });
++    return { provisioned: true };
++}
++async function reenroll(req) {
++    const root = req.user.directories.root;
++    assertWriter(root);
++    if (!exact(req.body, ['avatar']) || typeof req.body.avatar !== 'string'
++        || !/^[^/\\\x00]+\.png$/.test(req.body.avatar) || req.body.avatar.length > 200) fail('INVALID_INPUT');
++    const catalog = load(root), matches = catalog.scopes.filter(s => s.avatar === req.body.avatar);
++    if (catalog.pending || matches.length !== 1 || !matches[0].disabled) fail('REENROLL_REFUSED', 409);
++    const card = path.join(root, 'characters', req.body.avatar);
++    const cardSeal = seal(card); // Never follow a symlink.
++    const cardData = JSON.parse(readCard(fs.readFileSync(card)));
++    if (!cardData || typeof cardData.name !== 'string' || !cardData.name) fail('REENROLL_REFUSED', 409);
++    const directory = path.join(root, 'chats', req.body.avatar.slice(0, -4));
++    const stat = fs.lstatSync(directory);
++    if (!stat.isDirectory() || stat.isSymbolicLink()) fail('REENROLL_REFUSED', 409);
++    // ponytail: at most 32 synthetic JSONL chats; production enrollment needs bounded byte parsing and a reviewed inventory contract.
++    const files = fs.readdirSync(directory).sort();
++    if (!files.length || files.length > 32 || files.some(f => !f.endsWith('.jsonl'))) fail('REENROLL_REFUSED', 409);
++    const inventory = files.map(name => {
++        const file = path.join(directory, name), stamp = seal(file);
++        const lines = fs.readFileSync(file, 'utf8').split('\n').filter(line => line.trim());
++        if (!lines.length || lines.some(line => { const v = JSON.parse(line); return !v || typeof v !== 'object' || Array.isArray(v); })) fail('REENROLL_REFUSED', 409);
++        const relativePath = path.relative(root, file);
++        if (catalog.chats.some(c => c.relativePath === relativePath && c.scopeId !== matches[0].scopeId && !c.deleted)) fail('REENROLL_REFUSED', 409);
++        return { relativePath, seal: stamp };
++    });
++    await lifecycleBarrier(root, 'enroll');
++    // Participating writers are excluded; also recheck observed source drift after await.
++    if (JSON.stringify(seal(card)) !== JSON.stringify(cardSeal)) fail('REENROLL_REFUSED', 409);
++    const currentFiles = fs.readdirSync(directory).sort();
++    if (JSON.stringify(currentFiles) !== JSON.stringify(files)) fail('REENROLL_REFUSED', 409);
++    for (const entry of inventory) if (JSON.stringify(seal(path.join(root, entry.relativePath))) !== JSON.stringify(entry.seal)) fail('REENROLL_REFUSED', 409);
++    const previousScope = matches[0].scopeId;
++    const scope = { avatar: req.body.avatar, scopeId: randomUUID(), incarnation: 1 };
++    catalog.pending = { operation: 'explicit-reenrollment', previousScope };
++    persist(root, catalog);
++    for (const c of catalog.chats) if (c.scopeId === previousScope) { c.disabled = true; c.deleted = true; }
++    catalog.scopes[catalog.scopes.indexOf(matches[0])] = scope;
++    for (const entry of inventory) {
++        const chat = { ...entry, scopeId: scope.scopeId, chatId: randomUUID(), incarnation: randomUUID(), writeGeneration: 1, sourceRevision: 1 };
++        catalog.chats.push(chat);
++        atomic(path.join(rootFor(root), `${chat.chatId}.json`), { storeId: catalog.storeId, chatId: chat.chatId, revision: 0, record: { background: null } });
++    }
++    externalFault(root, 'enroll-finalize');
++    catalog.pending = null; persist(root, catalog);
++    return { scopeId: scope.scopeId, chatIds: catalog.chats.filter(c => c.scopeId === scope.scopeId).map(c => c.chatId) };
++}
++
+ // DYL-44: a store-wide lock reserves every source/destination locator before routing.
+ // ponytail: one process, participating routes only; no external-writer or power-loss guarantee.
+ const writers = new AsyncLocalStorage();
+@@ -70,7 +152,7 @@
+     '/api/characters/create', '/api/characters/rename', '/api/characters/delete',
+     '/api/characters/import', '/api/characters/edit-avatar',
+     '/api/chats/save', '/api/chats/import', '/api/chats/rename', '/api/chats/delete',
+-    '/api/data-maid/delete',
++    '/api/data-maid/delete', '/api/dyl27/reenroll',
+ ]);
+ const reservationFile = root => path.join(root, 'sillynovel-dyl44-reservation.json');
+ function reservation(root) {
+@@ -113,16 +195,17 @@
+         let state;
+         try {
+             if (activeWriters.has(root)) fail('RESERVATION_BUSY', 409);
+-            if (!fs.existsSync(reservationFile(root)) && !fs.existsSync(rootFor(root))) {
+-                atomic(reservationFile(root), { storeIncarnation: randomUUID(), serial: 0, pending: null });
+-            }
++            const authority = trusted(root, req);
+             state = reservation(root);
+             if (state.pending) fail('UNRESOLVED_RESERVATION', 503);
+             if (state.serial === Number.MAX_SAFE_INTEGER) fail('GENERATION_LIMIT', 503);
+             state.serial++;
+             state.pending = { operationId: randomUUID(), operation: route, reservedLocators: ['*'] };
+             if (fs.existsSync(path.join(rootFor(root), 'dyl44-reserve-failure'))) fail('RESERVATION_PERSIST_FAILED', 503);
+-            atomic(reservationFile(root), state); // Synchronous durable intent before next/native mutation.
++            externalFault(root, 'begin');
++            atomic(externalFile(root), { ...authority, generation: state.serial, pending: state.pending.operationId });
++            externalFault(root, 'local-begin');
++            atomic(reservationFile(root), state); // External intent precedes local intent and native mutation.
+         } catch (error) { return res.status(error.status ?? 503).json({ error: error.code ?? 'RESERVATION_UNAVAILABLE' }); }
+         const owned = { root, operationId: state.pending.operationId };
+         activeWriters.set(root, owned);
+@@ -133,7 +216,12 @@
+                 if (fs.existsSync(path.join(rootFor(root), 'dyl44-finalize-failure'))) fail('FINALIZATION_FAILED', 503);
+                 // Failed native operations retain their scoped tombstones/pending registry.
+                 // Clearing the route lock never restores any identity or visual record.
++                const authority = external(root);
++                if (authority.pending !== owned.operationId || authority.generation !== state.serial) fail('STALE_EXTERNAL_OWNER', 503);
++                if (res.statusCode >= 400 || (fs.existsSync(rootFor(root)) && load(root).pending)) fail('INCOMPLETE_NATIVE_OPERATION', 503);
+                 atomic(reservationFile(root), { ...state, pending: null });
++                externalFault(root, 'finalize');
++                atomic(externalFile(root), { ...authority, pending: null, registryDigest: registryDigest(root) });
+             } catch { /* Disk intent remains: all visual authority and participating writers refuse after restart. */ }
+             activeWriters.delete(root);
+             return end.apply(this, args);
+@@ -147,7 +235,7 @@
+     const root = rootFor(userRoot);
+     if (!fs.existsSync(root)) {
+         fs.mkdirSync(root);
+-        persist(userRoot, { storeId: randomUUID(), scopes: [], chats: [], pending: null });
++        persist(userRoot, { storeId: external(userRoot).storeInstanceId, scopes: [], chats: [], pending: null });
+     }
+     const catalog = load(userRoot);
+     if (catalog.pending) return;
+@@ -230,6 +318,12 @@
+         || fs.readFileSync(path.join(dataRoot, '.dyl27-owned'), 'utf8') !== runId) {
+         throw new Error('DYL27 requires an explicitly owned disposable data root');
+     }
++    const authorityRoot = externalDirectory();
++    if (authorityRoot.startsWith(dataRoot + path.sep) || authorityRoot === dataRoot
++        || fs.readFileSync(path.join(authorityRoot, '.owned'), 'utf8') !== runId) throw new Error('DYL45 external ownership boundary required');
++    app.post('/api/dyl27/provision', (req, res) => {
++        try { res.json(provision(req)); } catch (e) { res.status(e.status ?? 503).json({ error: e.code ?? 'EXTERNAL_UNAVAILABLE' }); }
++    });
+     installReservations(app);
+     const clients = new Map();
+     const loadRequests = new Map();
+@@ -249,7 +343,7 @@
+         try { catalog = JSON.parse(fs.readFileSync(path.join(root, 'identities.json'), 'utf8')); }
+         catch { fail('IDENTITY_UNAVAILABLE', 409); }
+         if (catalog.pending || !uuid(catalog.storeId) || !Array.isArray(catalog.chats) || !Array.isArray(catalog.scopes)) fail('IDENTITY_UNAVAILABLE', 409);
+-        try { if (reservation(userRoot).pending) fail('IDENTITY_UNAVAILABLE', 409); }
++        try { trusted(userRoot, req); }
+         catch { fail('IDENTITY_UNAVAILABLE', 409); }
+         return { userRoot, root, catalog };
+     }
+@@ -325,6 +419,7 @@
+             catch (error) { res.status(error.status ?? 500).json({ error: error.status ? error.code : 'IO_FAILED' }); }
+         });
+     }
++    route('reenroll', reenroll);
+     route('catalog', req => {
+         const { catalog } = catalogFor(req);
+         return { storeId: catalog.storeId, chats: catalog.chats.map(({ relativePath, scopeId, chatId, deleted }) => ({ relativePath, scopeId, chatId, deleted })) };

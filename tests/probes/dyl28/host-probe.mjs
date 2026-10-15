@@ -24,6 +24,7 @@ const owned = fs.mkdtempSync(path.join(os.tmpdir(), 'sillynovel-dyl28-'));
 const host = path.join(owned, 'host');
 const data = path.join(owned, `sillynovel-dyl27-${runId}`);
 const config = path.join(owned, 'config.yaml');
+const authority = path.join(owned, 'host-authority');
 const evidence = {
     runId, sourceHostSha: hostSha, testedSillyNovelSha: execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(),
     node: process.version, platform: `${os.platform()} ${os.release()}`, checks: [], sourceSnapshots: [], files: {},
@@ -103,7 +104,7 @@ async function startHost() {
     child = spawn(process.execPath, [path.join(host, 'server.js'), '--configPath', config, '--port', String(port),
         '--listen', 'false', '--enableIPv4', 'true', '--enableIPv6', 'false', '--listenAddressIPv4', '127.0.0.1',
         '--browserLaunchEnabled', 'false', '--whitelist', 'false', '--dataRoot', data], {
-        cwd: host, env: { ...process.env, SN_DYL27_RUN: runId, SN_DYL27_INTERRUPT: '', ...(process.env.SN_DYL42 === '1' ? { SN_DYL42_IMPORT_TIME: '1700000000000' } : {}) },
+        cwd: host, env: { ...process.env, SN_DYL27_RUN: runId, SN_DYL27_INTERRUPT: '', ...(process.env.SN_DYL45 ? { SN_DYL45_AUTHORITY: authority } : {}), ...(process.env.SN_DYL42 === '1' ? { SN_DYL42_IMPORT_TIME: '1700000000000' } : {}) },
         stdio: ['ignore', 'pipe', 'pipe'],
     });
     child.stdout.on('data', bytes => { logs += bytes; });
@@ -273,6 +274,19 @@ try {
             evidence.files[`dyl44-${file}`] = hash(fs.readFileSync(path.resolve(probeDir, '../dyl44', file)));
         }
     }
+    if (process.env.SN_DYL45) {
+        const patch = path.resolve(probeDir, '../dyl45/host-authority.patch');
+        execFileSync('git', ['-C', host, 'apply', '--check', patch]);
+        execFileSync('git', ['-C', host, 'apply', patch]);
+        for (const file of ['host-authority.patch', 'authority-campaign.mjs']) evidence.files[`dyl45-${file}`] = hash(fs.readFileSync(path.resolve(probeDir, '../dyl45', file)));
+        // Fresh-store provisioning requires no seeded character; modify only this owned clone's seed list.
+        const seedFile = path.join(host, 'default/content/index.json');
+        const seed = JSON.parse(fs.readFileSync(seedFile, 'utf8')).filter(item => !['character', 'sprites'].includes(item.type));
+        fs.writeFileSync(seedFile, JSON.stringify(seed));
+        evidence.files['owned-content-index.json'] = hash(fs.readFileSync(seedFile));
+        fs.mkdirSync(authority, { mode: 0o700 });
+        fs.writeFileSync(path.join(authority, '.owned'), runId, { flag: 'wx', mode: 0o600 });
+    }
     evidence.files['applied-host-storage.mjs'] = hash(fs.readFileSync(path.join(host, 'src/dyl27-storage.mjs')));
     const settings = JSON.parse(fs.readFileSync(path.join(host, 'default/content/settings.json'), 'utf8'));
     provider = createServer(async (request, response) => {
@@ -298,6 +312,11 @@ try {
     first = session(); await first.login('default-user');
     await first.request('/api/users/create', { handle: otherHandle, name: 'Synthetic second user' });
     other = session(); await other.login(otherHandle);
+    if (process.env.SN_DYL45) {
+        evidence.provisionInventory = Object.fromEntries(['default-user', otherHandle].map(handle => [handle, Object.fromEntries(['characters', 'chats'].map(dir => [dir, fs.readdirSync(path.join(userRoot(handle), dir))]))]));
+        console.log('Provision inventory', JSON.stringify(evidence.provisionInventory));
+        await first.api('provision'); await other.api('provision');
+    }
     const cardBody = { ch_name: `Mira-${runId}`, first_mes: 'Identical synthetic greeting.', description: 'Synthetic DYL28 test character.' };
     avatarA = await first.request('/api/characters/create', cardBody);
     avatarB = await first.request('/api/characters/create', cardBody);
@@ -788,6 +807,11 @@ try {
         await run({ first: afterRestart, otherHandle, session, firstPage, registry, userRoot, visualFile, chatFile,
             checkpoint, evidence, runId, avatarA, avatarB, chatMessages, pageState, uiApi, startHost, stopHost,
             browser, baseUrl: () => base, hash, clickCard });
+    }
+    if (process.env.SN_DYL45 === '1') {
+        const { run } = await import('../dyl45/authority-campaign.mjs');
+        await run({ first: afterRestart, otherHandle, session, firstPage, registry, userRoot, visualFile,
+            checkpoint, evidence, runId, chatMessages, startHost, stopHost, hash, authority });
     }
     if (process.env.SN_DYL44 === '1') {
         const { run } = await import('../dyl44/generation-campaign.mjs');
