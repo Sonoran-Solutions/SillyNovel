@@ -1,0 +1,12 @@
+{
+  "runId": "fce11e3b-4ecd-46b9-beaf-c9ebe7237306",
+  "testedSillyNovelSha": "ea6659d70813812617ac0869bf9fd20093d71f0c",
+  "result": "FAIL",
+  "failure": "AssertionError [ERR_ASSERTION]: /api/dyl27/accept-load: {\"error\":\"INVALID_CLIENT\"}\n\n403 !== 400\n\n    at request (file:///tmp/sillynovel-dyl43/tests/probes/dyl28/host-probe.mjs:133:16)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async revoked (file:///tmp/sillynovel-dyl43/tests/probes/dyl43/lifecycle-campaign.mjs:45:24)\n    at async run (file:///tmp/sillynovel-dyl43/tests/probes/dyl43/lifecycle-campaign.mjs:227:9)\n    at async file:///tmp/sillynovel-dyl43/tests/probes/dyl28/host-probe.mjs:781:9",
+  "cleanup": {
+    "ownedRootRemoved": true,
+    "hostStopped": true,
+    "sourceCheckoutPresent": true,
+    "sourceStatusUnchanged": true
+  }
+}

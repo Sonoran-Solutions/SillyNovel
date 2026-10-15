@@ -1,0 +1,10 @@
+{
+  "path": "/tmp/dyl43-patch-host",
+  "originVerified": "/tmp/SillyTavern-m12-review",
+  "baseVerified": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
+  "onlyExpectedPatchPaths": true,
+  "nodeModulesAbsent": true,
+  "dataContainedOnlyTrackedGitkeep": true,
+  "appliedStorageSha256": "0c6b90a720120999177ce09aabd84be68fe323181dea7907492d5f1b91021861",
+  "removed": true
+}
