@@ -141,6 +141,7 @@ export async function run(h) {
     assert.deepEqual(capture(), clean); assert.equal(bytes(x.file), x.canonical);
     cp('F1 real external-directory EACCES prevents native mutation', { permission });
     for (const point of ['local-begin', 'registry-finalize', 'reservation-finalize', 'finalize']) {
+        const isolation = process.env.SN_DYL46 && h.captureFixture(owner);
         const flag = path.join(ns, point === 'registry-finalize' ? 'dyl43-finalize-failure'
             : point === 'reservation-finalize' ? 'dyl44-finalize-failure' : `dyl45-${point}-failure`); fs.writeFileSync(flag, h.runId);
         const result = await save(x, point === 'local-begin' ? 503 : 200); fs.unlinkSync(flag);
@@ -158,7 +159,7 @@ export async function run(h) {
         assert.equal((await first.api('reenroll', { avatar: x.avatar }, 503)).error, 'EXTERNAL_LOCAL_MISMATCH');
         cp(`${point === 'local-begin' ? 'F2' : 'F3'} external/local ${point} failure stays refused after restart`, { response: result, refusal, pending }, 'SYNTHETIC');
         }
-        reset(clean);
+        if (isolation) { await h.stopHost(); isolation.restore(); await restart(); } else reset(clean);
     }
     // Actual native failure after external intent and lifecycle revocation.
     const flag = path.join(ns, 'dyl43-after-revoke'); fs.writeFileSync(flag, h.runId);
@@ -173,6 +174,7 @@ export async function run(h) {
     } else nativeRefusal = await unavailable(x);
     cp('F2 native mutation fails after external advance; unchanged canonical bytes confer no authority', { nativeFailure, nativeRefusal }, 'SYNTHETIC'); reset(clean);
 
+    const logicalIsolation = process.env.SN_DYL46 && h.captureFixture(owner);
     const malformed = new FormData(); malformed.set('file_type', 'jsonl'); malformed.set('avatar_url', x.avatar);
     malformed.set('character_name', 'Synthetic'); malformed.set('user_name', 'Synthetic');
     malformed.set('avatar', new Blob(['{}']), 'malformed.jsonl');
@@ -180,7 +182,7 @@ export async function run(h) {
     if (process.env.SN_DYL46) {
         assert.equal(nativeLogicalFailure.error, true); assert.equal(external().pending, null);
         assert.equal(external().outcome, 'VERIFIED_CLEAN_ABORT'); assert.equal(bytes(x.file), x.canonical);
-        await restart(); const logicalRecovery = await load(x); assert.ok(logicalRecovery.target);
+        await restart(); const logicalRecovery = await load(x); assert.ok(logicalRecovery.target, JSON.stringify(logicalRecovery.envelope));
         assert.equal((await first.api('read', { target: logicalRecovery.target })).revision, 1);
         await save(x); assert.equal(bytes(x.file), x.canonical); assert.equal(bytes(x.visualFile), x.visual);
         cp('approved malformed-header clean abort preserves native error and permits later save after restart', { nativeLogicalFailure, logicalRecovery });
@@ -189,7 +191,7 @@ export async function run(h) {
     assert.equal(bytes(x.file), x.canonical); await restart(); const logicalRefusal = await unavailable(x);
     cp('F2 native HTTP 200 error is not commit evidence; external intent remains refused after restart', { nativeLogicalFailure, logicalRefusal });
     }
-    reset(clean);
+    if (logicalIsolation) { await h.stopHost(); logicalIsolation.restore(); await restart(); } else reset(clean);
 
     for (const [label, file] of [['F4 registry', registryFile], ['F5 external', authorityFile]]) {
         for (const fault of ['missing', 'corrupt', 'stale']) {

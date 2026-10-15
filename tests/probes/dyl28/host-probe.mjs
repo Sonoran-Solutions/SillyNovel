@@ -869,12 +869,12 @@ try {
     if (process.env.SN_DYL46 === '1') {
         const { run } = await import('../dyl46/reconciliation-campaign.mjs');
         await run({ first: afterRestart, otherHandle, session, firstPage, registry, userRoot, visualFile,
-            checkpoint, evidence, runId, chatMessages, startHost, stopHost, hash, authority });
+            checkpoint, evidence, runId, chatMessages, startHost, stopHost, hash, authority, captureFixture });
     }
     if (process.env.SN_DYL45 === '1') {
         const { run } = await import('../dyl45/authority-campaign.mjs');
         await run({ first: afterRestart, otherHandle, session, firstPage, registry, userRoot, visualFile,
-            checkpoint, evidence, runId, chatMessages, startHost, stopHost, hash, authority });
+            checkpoint, evidence, runId, chatMessages, startHost, stopHost, hash, authority, captureFixture });
     }
     if (process.env.SN_DYL44 === '1') {
         const { run } = await import('../dyl44/generation-campaign.mjs');

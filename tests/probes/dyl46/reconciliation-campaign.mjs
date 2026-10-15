@@ -254,6 +254,14 @@ export async function run(h) {
     assert.equal(bytes(unstarted.file), unstarted.canonical); assert.equal(bytes(unstarted.visualFile), unstarted.visual);
     cp('real local-parent EACCES: exact independently persisted unstarted receipt permits forward recovery and next native save', { unstarted, unstartedBefore, deniedBegin, receipt, durableIntent, recovered });
 
+    const live = await fixture('LiveUnstarted'); const liveBefore = capture();
+    const undoLive = flag('dyl45-local-begin-failure'); await save(live, 503); undoLive();
+    assert.ok(external().unstarted);
+    assert.equal((await first.api('read', { target: live.active.target })).revision, 1);
+    assert.equal(external().pending, null); assert.equal(external().outcome, 'VERIFIED_CLEAN_ABORT');
+    assert.equal(bytes(registryFile), liveBefore[2][1]); assert.equal(bytes(live.visualFile), live.visual);
+    cp('same-process authenticated visual read recovers unstarted intent without replacing its prior visit', { live, liveBefore });
+
     for (const point of ['local', 'finalize']) {
         const x = await fixture(`Recovery-${point}`), before = capture(); const undoBegin = flag('dyl45-local-begin-failure');
         await save(x, 503); undoBegin(); const undoRecovery = flag(`dyl46-recovery-${point}-failure`);

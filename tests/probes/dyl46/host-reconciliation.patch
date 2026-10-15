@@ -398,11 +398,30 @@
 +++ b/src/endpoints/data-maid.js
 @@ -1,4 +1,4 @@
 -import { revokeLifecycle, lifecycleBarrier } from '../dyl27-storage.mjs';
-+import { revokeLifecycle, lifecycleBarrier, canonicalBoundary } from '../dyl27-storage.mjs';
++import { revokeLifecycle, lifecycleBarrier, canonicalBoundary, verifiedCleanAbort } from '../dyl27-storage.mjs';
  import crypto from 'node:crypto';
  import fs from 'node:fs';
  import path from 'node:path';
-@@ -808,6 +808,7 @@
+@@ -776,15 +776,18 @@
+ 
+         const { token, hashes } = req.body;
+         if (!token || !Array.isArray(hashes) || hashes.length === 0) {
++            if (process.env.SN_DYL27_RUN) verifiedCleanAbort(req.user.directories.root);
+             return res.sendStatus(400);
+         }
+ 
+         if (!DataMaidService.TOKENS.has(token)) {
++            if (process.env.SN_DYL27_RUN) verifiedCleanAbort(req.user.directories.root);
+             return res.sendStatus(403);
+         }
+ 
+         const tokenEntry = DataMaidService.TOKENS.get(token);
+         if (!tokenEntry || tokenEntry.handle !== req.user.profile.handle) {
++            if (process.env.SN_DYL27_RUN) verifiedCleanAbort(req.user.directories.root);
+             return res.sendStatus(403);
+         }
+ 
+@@ -808,6 +811,7 @@
  
              if (process.env.SN_DYL27_RUN) revokeLifecycle(req.user.directories.root, null, pathToFile);
              if (process.env.SN_DYL27_RUN) await lifecycleBarrier(req.user.directories.root, 'maid-unlink');
