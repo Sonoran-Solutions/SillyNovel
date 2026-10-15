@@ -1,23 +1,17 @@
-PASS native create/save allocates host identity and sourceRevision 1 for A and B
-PASS delayed native A response after B: B transcript, DOM, identity and target stay current; A load token is stale
-PASS A-B-A with reordered native transcript responses: only latest A request and visit remain accepted
-PASS held native activation acknowledgement across A-B-A is discarded without restoring its visit
-PASS old A visual CAS held across native A-B-A is refused against the old visit
-PASS canonical edit during pending load: old revision 1 is not committed, a fresh revision 2 load is activated
-PASS two authenticated clients on one host process: source revision 2 shared, visit tokens distinct, one visual CAS wins without canonical mutation
-page.waitForFunction: Timeout 30000ms exceeded.
-    at /tmp/opencode/dyl28-prefix/dyl28/host-probe.mjs:561:21 {
-  log: [],
-  name: 'TimeoutError'
-}
-node:internal/modules/run_main:107
-    triggerUncaughtException(
-    ^
+Negative control: previous activation parser against the non-JSON HTTP 403 regression
 
-page.waitForFunction: Timeout 30000ms exceeded.
-    at /tmp/opencode/dyl28-prefix/dyl28/host-probe.mjs:561:21 {
-  log: [],
-  name: 'TimeoutError'
-}
+Tested host: SillyTavern 1.19.0 at 7e8663cd9c184a550b37238218bdd32c6efc68e9
+Regression harness: host-probe.mjs from tested proof SHA 8719ec49a53b371e60dc2c15b0afba696bbbbe6c
+Parser under test: host-visit.js from reviewed SHA 4688646861274d9b5c993e9c478628d84c700144
+Parser SHA-256: 1b4f8269acf4efef61894788eb9b1011d8b93b3818934b88c8f0be981770ba04
 
-Node.js v26.8.1
+The harness passed the first eight host checks, including the expired-ticket case. In the new case it fetched and verified an identity-bearing native transcript, then the real pinned-host authentication middleware returned HTTP 403 with a non-JSON body from accept-load. The old parser attempted response.json() before checking response.ok.
+
+Expected negative-control result: exit status 1 at the HTTP 403 classification assertion.
+
+Observed failure:
+- The parse error was recorded as transportFailure: `Unexpected token '<', "<!DOCTYPE "... is not valid JSON`.
+- Visual target was null, but `A expired-ticket edit by client two.` appeared in the browser chat array and rendered DOM.
+- The regression assertion failed: `the non-JSON 403 must be classified as a refusal`.
+
+This demonstrates the reviewed defect directly: the previous parser treated a host refusal as a transport failure and committed the refused snapshot. The corrected parser passes this same check, while the separate genuine abort check confirms native text loading, reply, and save remain available.
