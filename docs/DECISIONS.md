@@ -149,3 +149,8 @@ The new failed-observation refusal and completed-revocation proofs pass; inherit
 This supersedes the prior pending owner decisions for those exact expectations. It does not authorize clearing indeterminate intent, treating partial writes as clean aborts, relaxing root-rollback refusal, or describing test-fixture resets as host recovery. The original campaign results/assertions remain historical evidence; updated overlay assertions must prove the approved refusal, unchanged old records and restart behavior before continuing independent fault episodes.
 
 The re-review also authorizes the narrow browser-assertion correction, verification against current main and PR, and an external-before-local forward-only proof. It does not approve a production recovery service, merge PR #20, mark DYL-46 Done, unblock DYL-22/23, authorize M1.3/M2, or supply Gate A PASS.
+# Tracking record — 2026-10-15, DYL-47
+
+The owner-provided M1.2-M checkpoint authorization created [DYL-47](https://linear.app/devils17/issue/DYL-47/sillynovel-m12-m-decide-production-storage-architecture-and) after searching for an equivalent post-DYL-46 issue. It is In Review, blocked by completed DYL-46, and related to DYL-25, DYL-22, and DYL-23. The checkpoint is documented in [M1_STORAGE_ARCHITECTURE_CHECKPOINT.md](M1_STORAGE_ARCHITECTURE_CHECKPOINT.md).
+
+The document recommends an upstream host API with session-only fallback as **PROPOSED**. This tracking entry records no owner selection, upstream engagement/submission approval, production persistence approval, DYL-22/23 authorization, M1.3/M2 authorization, or Gate A verdict. All existing gates remain unchanged.
