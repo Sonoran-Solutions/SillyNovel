@@ -1,0 +1,9 @@
+{
+  "notes": [
+    "Development reconciliation completed 61 expected checkpoints before the frozen DataMaid guard correction; campaign bytes changed during that run, so it is not exact-head proof.",
+    "Development lifecycle stopped after 40 checkpoints: a rejected foreign DataMaid token left the other authenticated account pending. The inspected pre-loop malformed/missing/foreign token guards now attest clean abort; the final campaign verifies the foreign account remains authorized.",
+    "Development authority stopped after 32 checkpoints at malformed-header recovery: resetting only three protocol files preserved a registry seal for the old canonical inode after native atomic save. Full owned fixture isolation now restores the canonical inode plus both independent authorities between episodes. This is not host recovery.",
+    "No failed historical run is relabeled PASS. Legacy assertions remain selected when SN_DYL46 is absent. Approved overlay assertions prove pending/refusal and unchanged old records through restart before any full-fixture reset.",
+    "Receipt recovery is conditional, forward-only and host-owned. Root-only restoration never restores independent authority. Unknown unobserved in-place writes remain unsafe counterexamples."
+  ]
+}

@@ -125,3 +125,27 @@ The owner's pasted DYL-42 assignment authorizes one disposable pinned-host write
 ## Owner assignment — 2026-10-14, DYL-44
 
 The owner's pasted M1.2-J assignment authorizes only [DYL-44](https://linear.app/devils17/issue/DYL-44/sillynovel-m12-j-prove-host-owned-lifecycle-reservations-and-write): a disposable pinned-host lifecycle reservation/write-generation investigation and one OPEN/UNMERGED experimental PR. PR #17 is verified merged and DYL-43 Done; its REVISE outcome is retained. The store-wide reservation, conservative scope refusal, and generation binding in the [report](M1_NATIVE_LIFECYCLE_GENERATIONS.md) are bounded engineering choices, not approved production architecture. Unknown writers and whole-root restore remain outside the proven guarantee. No production persistence, permanent fork, upstream publication, recovery/re-enrollment policy, DYL-22/23 implementation, M1.3/M2 or Gate A verdict is authorized.
+
+
+## Owner assignment and experimental findings — 2026-10-14, DYL-46
+
+The pasted “SillyNovel M1.2-L: External Authority Reconciliation and Safe Failure Recovery” assignment authorizes this bounded investigation and one open/unmerged experimental PR after PR #19 merged / DYL-45 Done. [DYL-46 report](M1_EXTERNAL_AUTHORITY_RECONCILIATION.md) records forward-only clean-abort and coordinated read-revocation engineering choices, **not owner approval** of a release or replacement compatibility contract.
+
+Measured recommendation **REVISE; compatibility REQUEST CHANGES / HOLD**. The unchanged writer suite is fully passing; lifecycle and other predecessor campaigns retain documented failures and unreached suffixes. A failed observation with no durable external intent cannot survive unknown byte restoration plus restart. Owner decisions about durable failure evidence, scoped availability, writer exclusion and authority ownership remain open. No issue Done, merge, production persistence, DYL-22/23 unblock, M1.3/M2 authorization or Gate A verdict is inferred.
+
+
+## DYL-46 senior-review correction assignment — 2026-10-15
+
+The owner supplied the senior review of PR #20 head `20086abbdbe82087cd98ffef842faca8a8be8fb1`, requesting durable refusal evidence for failed observations and an explicit completed-revocation transition at verified post-revocation native failures. Those two experimental corrections remain within DYL-46 and PR #20. [Current correction record](M1_EXTERNAL_AUTHORITY_RECONCILIATION.md#pr-20-review-corrections--2026-10-15) distinguishes tested changes from owner verdicts.
+
+The chosen engineering contract journals identity-bearing seal validation in independent authority before inspecting canonical seals; unfinished validation refuses across restart and may sacrifice whole-store availability even for a healthy interrupted read. The explicit inspected pre-native throw after durable revocation may finalize VERIFIED_REVOCATION, never clean abort. Partial canonical writes and unclassified failures remain refused. These choices are not production policy approval, permission to reconstruct missing witness history, or a blanket waiver of old assertions.
+
+The new failed-observation refusal and completed-revocation proofs pass; inherited lifecycle still fails later at partial mutation, DYL-44/45 expectations remain unresolved, and unchanged Chromium is 23/24. Recommendation REVISE / compatibility HOLD. Keep PR #20 open/unmerged and DYL-46 In Review; downstream blockers and Gate A NOT_RUN remain.
+
+## Owner-approved DYL-46 replacement expectations — 2026-10-15
+
+**Approving owner:** explicit replies in the working chat, 2026-10-15. **Status: APPROVED for these experimental contracts only.** In response to the concrete reviewed PR #20 evidence, the owner answered “Approve conservative store-wide refusal” for a partially committed native rename, replacing DYL-43's scoped-refusal expectation with whole-store/restart refusal. The owner also answered “Approve both replacement expectations” for DYL-45: scoped 400 INVALID_TARGET after VERIFIED_REVOCATION, and forward clean-abort completion for the specifically inspected malformed JSONL header rejections.
+
+This supersedes the prior pending owner decisions for those exact expectations. It does not authorize clearing indeterminate intent, treating partial writes as clean aborts, relaxing root-rollback refusal, or describing test-fixture resets as host recovery. The original campaign results/assertions remain historical evidence; updated overlay assertions must prove the approved refusal, unchanged old records and restart behavior before continuing independent fault episodes.
+
+The re-review also authorizes the narrow browser-assertion correction, verification against current main and PR, and an external-before-local forward-only proof. It does not approve a production recovery service, merge PR #20, mark DYL-46 Done, unblock DYL-22/23, authorize M1.3/M2, or supply Gate A PASS.

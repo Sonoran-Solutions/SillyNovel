@@ -1,0 +1,14 @@
+✔ tests/m0.test.mjs (88.124018ms)
+✔ tests/m1-reader-source.test.mjs (83.715462ms)
+✔ tests/m1-scene-reducer.test.mjs (123.955634ms)
+✔ tests/m1-source-prefix.test.mjs (92.543104ms)
+✔ tests/probes/dyl19/owned-chat-probe.test.mjs (60.37792ms)
+✔ tests/probes/dyl19/source-anchor.test.mjs (72.183829ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 150.009001

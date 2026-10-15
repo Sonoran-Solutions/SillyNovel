@@ -1,0 +1,48 @@
+Provision inventory {"default-user":{"characters":[],"chats":[]},"dyl28-0cb65a1c-65e6-424d-95d3-8622693e1cd1":{"characters":[],"chats":[]}}
+PASS native create/save allocates host identity and sourceRevision 1 for A and B
+PASS delayed native A response after B: B transcript, DOM, identity and target stay current; A load token is stale
+PASS A-B-A with reordered native transcript responses: only latest A request and visit remain accepted
+PASS held native activation acknowledgement across A-B-A is discarded without restoring its visit
+PASS old A visual CAS held across native A-B-A is refused against the old visit
+PASS canonical edit during pending load: old revision 1 is not committed, a fresh revision 2 load is activated
+PASS two authenticated clients on one host process: source revision 2 shared, visit tokens distinct, one visual CAS wins without canonical mutation
+PASS expired load ticket after a concurrent native edit: the revision 3 snapshot is not committed, the screen keeps revision 2, and the reopen activates revision 3
+PASS identity-bearing transcript followed by the pinned host non-JSON HTTP 403 refusal: the snapshot is not committed and target stays null
+PASS activation acknowledgement timeout leaves visuals unavailable while native text and ordinary reply/save continue
+PASS native Temporary Chat transition revokes the persisted-chat visit
+PASS missing chat returns an empty native snapshot with no visual identity
+PASS native rename during pending load preserves chat ID/revision but refuses old locator-bound activation
+PASS different authenticated store and cookie session cannot reuse another client’s load identity
+PASS load request expires after the host TTL and cannot grant a visit
+PASS host restart recovers identity, source revision and visual record; old in-memory visit is rejected and a new visit is issued
+PASS DYL-45 identical participating save advances external/local generation and refuses old target
+PASS DYL-45 COUNTEREXAMPLE unknown in-place restore/copy still accepts old authority
+PASS DYL-45 explicit same-name same-card same-byte re-enrollment mints fresh IDs; copied metadata ignored; held old CAS/load refuse
+PASS DYL-45 explicit re-enrollment succeeds after restart under fresh identity
+PASS DYL-45 enrollment overlapping enrollment: one owner; loser refuses before mutation
+PASS DYL-45 enrollment overlapping rename: one owner; loser refuses before mutation
+PASS DYL-45 enrollment overlapping import: one owner; loser refuses before mutation
+PASS DYL-45 enrollment overlapping delete: one owner; loser refuses before mutation
+PASS DYL-45 native rename wins against enrollment; revoked identity never returns
+PASS DYL-45 F1 injected external write failure precedes native mutation
+PASS DYL-45 F1 real external-directory EACCES prevents native mutation
+PASS DYL-45 F2 durable unstarted receipt reconciles forward after restart, without native mutation
+PASS DYL-45 F3 external/local registry-finalize failure stays refused after restart
+PASS DYL-45 F3 external/local reservation-finalize failure stays refused after restart
+PASS DYL-45 F3 external/local finalize failure stays refused after restart
+PASS DYL-45 F2 native mutation fails after external advance; unchanged canonical bytes confer no authority
+PASS DYL-45 approved malformed-header clean abort preserves native error and permits later save after restart
+PASS DYL-45 F4 registry missing: no reconstruction, native text readable, enrollment refuses
+PASS DYL-45 F4 registry corrupt: no reconstruction, native text readable, enrollment refuses
+PASS DYL-45 F4 registry stale: no reconstruction, native text readable, enrollment refuses
+PASS DYL-45 F5 external missing: no reconstruction, native text readable, enrollment refuses
+PASS DYL-45 F5 external corrupt: no reconstruction, native text readable, enrollment refuses
+PASS DYL-45 F5 external stale: no reconstruction, native text readable, enrollment refuses
+PASS DYL-45 foreign authenticated store and changed same-handle account creation evidence refuse
+PASS DYL-45 F6 process stopped at enrollment barrier retains external/local intent after restart
+PASS DYL-45 failed enrollment finalization never publishes new or old authority
+PASS DYL-45 explicit enrollment refuses missing-card without granting authority
+PASS DYL-45 explicit enrollment refuses ambiguous-inventory without granting authority
+PASS DYL-45 explicit enrollment refuses client-owner without granting authority
+PASS DYL-45 user-root-only metadata-preserving rollback refuses old visuals through two restarts without adoption
+Completed 46 isolated DYL-28 checks; evidence saved in /tmp/dyl46-rereview-final-authority

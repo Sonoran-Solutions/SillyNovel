@@ -1,0 +1,11 @@
+{
+  "relativeFileLinksChecked": 96,
+  "losslessXZRoundTrips": 8,
+  "finalCampaigns": 5,
+  "allRunCleanupChecks": true,
+  "syntax": "node --check: runner, all changed campaigns and all four composed host modules passed before owned prep removal",
+  "whitespace": "git diff --check passes for source/docs; git -c core.whitespace=-blank-at-eol diff --check d40f637 HEAD passes for encoded patch. Four literal-space blank context lines are required unified-diff syntax.",
+  "hostedCI": "gh api repos/Sonoran-Solutions/SillyNovel/actions/runs returned total_count=0",
+  "mainVerification": "gh api repos/Sonoran-Solutions/SillyNovel/commits/main returned 104610632a58481a63d948005c2c0f7a2d07f431",
+  "afterProofChanges": "documentation and recorded evidence only"
+}

@@ -1,0 +1,16 @@
+{
+  "reviewedHead": "20086abbdbe82087cd98ffef842faca8a8be8fb1",
+  "protocolProofSha": "37cef930fcbde90ccbb20071fa4834a3dddc91b6",
+  "campaignProofSha": "b57257fde1190ca5b074ed276ba12591f40c7ec5",
+  "components": {
+    "tests/probes/dyl28/host-probe.mjs": "31ca01fe42bfb57a1c072f5b5e58e254934e1902b96cf1971baf8ba5f9c8072e",
+    "tests/probes/dyl46/host-reconciliation.patch": "48ef2ade7ac0d81e2b045dce30cd12102802e67e0e608ecd3942e790995e3a3f",
+    "tests/probes/dyl46/reconciliation-campaign.mjs": "108308d5dc26d6607aa39e26c6b4cb77e2dc01a401fdcd81ef9997c2153d9761"
+  },
+  "modules": {
+    "src/dyl27-storage.mjs": "58644831801c694ca63ac7a6c3ea555db0ff4d562a5f5e5b189054d51a2a7f8a",
+    "src/endpoints/chats.js": "3fcfb3a198b589db474b6961277b7d8f27f1cb46bd84b7d218f6a27e1ab41316",
+    "src/endpoints/characters.js": "6d62a3bc31ce2a8801a8410055aceba6654f9acb57a59ebae27c999351f50065",
+    "src/endpoints/data-maid.js": "01c704f5df3d06c043e66dc0da8778f6901c591921089176aab3308ed41e52a1"
+  }
+}

@@ -1,0 +1,60 @@
+Provision inventory {"default-user":{"characters":[],"chats":[]},"dyl28-687ec673-2ae1-451d-8b46-b2b4e0481e5a":{"characters":[],"chats":[]}}
+PASS native create/save allocates host identity and sourceRevision 1 for A and B
+PASS delayed native A response after B: B transcript, DOM, identity and target stay current; A load token is stale
+PASS A-B-A with reordered native transcript responses: only latest A request and visit remain accepted
+PASS held native activation acknowledgement across A-B-A is discarded without restoring its visit
+PASS old A visual CAS held across native A-B-A is refused against the old visit
+PASS canonical edit during pending load: old revision 1 is not committed, a fresh revision 2 load is activated
+PASS two authenticated clients on one host process: source revision 2 shared, visit tokens distinct, one visual CAS wins without canonical mutation
+PASS expired load ticket after a concurrent native edit: the revision 3 snapshot is not committed, the screen keeps revision 2, and the reopen activates revision 3
+PASS identity-bearing transcript followed by the pinned host non-JSON HTTP 403 refusal: the snapshot is not committed and target stays null
+PASS activation acknowledgement timeout leaves visuals unavailable while native text and ordinary reply/save continue
+PASS native Temporary Chat transition revokes the persisted-chat visit
+PASS missing chat returns an empty native snapshot with no visual identity
+PASS native rename during pending load preserves chat ID/revision but refuses old locator-bound activation
+PASS different authenticated store and cookie session cannot reuse another client’s load identity
+PASS load request expires after the host TTL and cannot grant a visit
+PASS host restart recovers identity, source revision and visual record; old in-memory visit is rejected and a new visit is issued
+PASS DYL-43 native browser rename with historical messages, moved directory, reused old name and independent stores
+PASS DYL-43 native delete/recreate same avatar and identical transcript does not inherit authority
+PASS DYL-43 native card duplicate copies forged metadata byte-for-byte but grants no scope/chat/visual identity
+PASS DYL-43 F1 EACCES rename refuses before canonical ownership changes
+PASS DYL-43 F1 EACCES delete refuses before canonical ownership changes
+AssertionError [ERR_ASSERTION]: /api/dyl27/cas: {"error":"IDENTITY_UNAVAILABLE"}
+
+409 !== 400
+
+    at request (file:///tmp/sillynovel-dyl46-worktree/tests/probes/dyl28/host-probe.mjs:157:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async revoked (file:///tmp/sillynovel-dyl46-worktree/tests/probes/dyl43/lifecycle-campaign.mjs:43:21)
+    at async run (file:///tmp/sillynovel-dyl46-worktree/tests/probes/dyl43/lifecycle-campaign.mjs:143:144)
+    at async file:///tmp/sillynovel-dyl46-worktree/tests/probes/dyl28/host-probe.mjs:836:9 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 409,
+  expected: 400,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: /api/dyl27/cas: {"error":"IDENTITY_UNAVAILABLE"}
+
+409 !== 400
+
+    at request (file:///tmp/sillynovel-dyl46-worktree/tests/probes/dyl28/host-probe.mjs:157:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async revoked (file:///tmp/sillynovel-dyl46-worktree/tests/probes/dyl43/lifecycle-campaign.mjs:43:21)
+    at async run (file:///tmp/sillynovel-dyl46-worktree/tests/probes/dyl43/lifecycle-campaign.mjs:143:144)
+    at async file:///tmp/sillynovel-dyl46-worktree/tests/probes/dyl28/host-probe.mjs:836:9 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 409,
+  expected: 400,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v26.8.1

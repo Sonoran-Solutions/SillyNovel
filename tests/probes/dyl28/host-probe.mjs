@@ -72,6 +72,31 @@ function actualState() {
     }
     return users;
 }
+// Test isolation only: restoring independent authority is NOT a host recovery API.
+function captureFixture(handle) {
+    assert.ok(process.env.SN_DYL46);
+    assert.equal(fs.readFileSync(path.join(data, '.dyl27-owned'), 'utf8'), runId);
+    const root = userRoot(handle), backup = path.join(owned, `isolated-fault-${randomUUID()}`);
+    function snapshot(from, to) {
+        fs.mkdirSync(to, { mode: fs.statSync(from).mode & 0o777 });
+        for (const entry of fs.readdirSync(from, { withFileTypes: true })) {
+            const sourceFile = path.join(from, entry.name), destination = path.join(to, entry.name);
+            if (entry.isDirectory()) snapshot(sourceFile, destination);
+            else { assert.ok(entry.isFile()); fs.linkSync(sourceFile, destination); }
+        }
+    }
+    snapshot(root, backup);
+    const key = `${hash(path.resolve(root))}.json`;
+    const independent = [path.join(authority, key), path.join(authority, 'validation', key)].map(file => [file, fs.readFileSync(file)]);
+    return { restore() {
+        assert.ok(child.exitCode !== null || child.signalCode !== null, 'stop owned host before fixture reset');
+        fs.rmSync(root, { recursive: true }); fs.renameSync(backup, root);
+        for (const [file, value] of independent) fs.writeFileSync(file, value);
+        (evidence.fixtureResets ??= []).push({ classification: 'SYNTHETIC_ISOLATION_ONLY', handle,
+            independentSha256: independent.map(([file, value]) => [path.relative(owned, file), hash(value)]),
+            hostRecovery: false });
+    } };
+}
 function canonicalHashes() {
     const result = {};
     for (const [handle, state] of Object.entries(actualState())) {
@@ -120,6 +145,27 @@ function session() {
     const cookies = new Map();
     let csrf;
     const request = async (route, body, expected = 200) => {
+        const trace = process.env.SN_DYL46_TRACE && (
+            route === '/api/characters/rename' && body?.new_name?.startsWith('Denied-')
+            || route === '/api/chats/import' && body instanceof FormData && body.get('file_type') === 'jsonl'
+                && (body.get('character_name') === 'BadHeader' || (await body.get('avatar')?.text()) === '{}'));
+        function captureFailureBoundary() {
+            const entries = {};
+            function walk(dir) {
+                if (!fs.existsSync(dir)) return;
+                for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+                    const file = path.join(dir, e.name);
+                    if (e.isDirectory()) walk(file);
+                    else if (e.isFile() && (file.includes('/sillynovel-dyl27/') || file.includes('/chats/')
+                        || file.includes('/characters/') || file.endsWith('sillynovel-dyl44-reservation.json') || dir === authority)) {
+                        const value = fs.readFileSync(file);
+                        entries[path.relative(owned, file)] = { base64: value.toString('base64'), sha256: hash(value) };
+                    }
+                }
+            }
+            walk(data); walk(authority); return entries;
+        }
+        const before = trace && captureFailureBoundary();
         const response = await fetch(`${base}${route}`, {
             method: body === undefined ? 'GET' : 'POST', signal: AbortSignal.timeout(15000),
             headers: { cookie: [...cookies].map(([key, value]) => `${key}=${value}`).join('; '),
@@ -131,6 +177,8 @@ function session() {
             cookies.set(pair.slice(0, equals), pair.slice(equals + 1));
         }
         const raw = await response.text();
+        if (trace) (evidence.failureBoundaries ??= []).push({ route, status: response.status, raw,
+            before, after: captureFailureBoundary() });
         assert.equal(response.status, expected, `${route}: ${raw.slice(0, 300)}`);
         try { return JSON.parse(raw); } catch { return raw; }
     };
@@ -286,6 +334,16 @@ try {
         evidence.files['owned-content-index.json'] = hash(fs.readFileSync(seedFile));
         fs.mkdirSync(authority, { mode: 0o700 });
         fs.writeFileSync(path.join(authority, '.owned'), runId, { flag: 'wx', mode: 0o600 });
+        if (process.env.SN_DYL46) {
+            fs.mkdirSync(path.join(authority, 'validation'), { mode: 0o700 });
+            fs.writeFileSync(path.join(authority, 'validation/.owned'), runId, { flag: 'wx', mode: 0o600 });
+        }
+    }
+    if (process.env.SN_DYL46) {
+        const patch = path.resolve(probeDir, '../dyl46/host-reconciliation.patch');
+        execFileSync('git', ['-C', host, 'apply', '--check', patch]);
+        execFileSync('git', ['-C', host, 'apply', patch]);
+        for (const file of ['host-reconciliation.patch', 'reconciliation-campaign.mjs']) evidence.files[`dyl46-${file}`] = hash(fs.readFileSync(path.resolve(probeDir, '../dyl46', file)));
     }
     evidence.files['applied-host-storage.mjs'] = hash(fs.readFileSync(path.join(host, 'src/dyl27-storage.mjs')));
     const settings = JSON.parse(fs.readFileSync(path.join(host, 'default/content/settings.json'), 'utf8'));
@@ -806,17 +864,22 @@ try {
         const { run } = await import('../dyl43/lifecycle-campaign.mjs');
         await run({ first: afterRestart, otherHandle, session, firstPage, registry, userRoot, visualFile, chatFile,
             checkpoint, evidence, runId, avatarA, avatarB, chatMessages, pageState, uiApi, startHost, stopHost,
-            browser, baseUrl: () => base, hash, clickCard });
+            browser, baseUrl: () => base, hash, clickCard, authority, captureFixture });
+    }
+    if (process.env.SN_DYL46 === '1') {
+        const { run } = await import('../dyl46/reconciliation-campaign.mjs');
+        await run({ first: afterRestart, otherHandle, session, firstPage, registry, userRoot, visualFile,
+            checkpoint, evidence, runId, chatMessages, startHost, stopHost, hash, authority, captureFixture });
     }
     if (process.env.SN_DYL45 === '1') {
         const { run } = await import('../dyl45/authority-campaign.mjs');
         await run({ first: afterRestart, otherHandle, session, firstPage, registry, userRoot, visualFile,
-            checkpoint, evidence, runId, chatMessages, startHost, stopHost, hash, authority });
+            checkpoint, evidence, runId, chatMessages, startHost, stopHost, hash, authority, captureFixture });
     }
     if (process.env.SN_DYL44 === '1') {
         const { run } = await import('../dyl44/generation-campaign.mjs');
         await run({ first: afterRestart, otherHandle, session, firstPage, registry, userRoot, visualFile,
-            checkpoint, evidence, runId, chatMessages, startHost, stopHost, hash });
+            checkpoint, evidence, runId, chatMessages, startHost, stopHost, hash, authority, captureFixture });
     }
     evidence.result = 'PASS_WITH_BOUNDED_CHARACTER_CHAT_LIMITS';
     evidence.recommendation = 'REVISE';

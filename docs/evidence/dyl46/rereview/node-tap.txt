@@ -1,0 +1,394 @@
+TAP version 13
+# Subtest: reads the active message and host author without inventing a durable identity
+ok 1 - reads the active message and host author without inventing a durable identity
+  ---
+  duration_ms: 2.286768
+  type: 'test'
+  ...
+# Subtest: chat switch to an empty chat is retained across source-less generation start
+ok 2 - chat switch to an empty chat is retained across source-less generation start
+  ---
+  duration_ms: 1.200877
+  type: 'test'
+  ...
+# Subtest: populated A to B to empty B to refreshed A always reads the active chat
+ok 3 - populated A to B to empty B to refreshed A always reads the active chat
+  ---
+  duration_ms: 0.902596
+  type: 'test'
+  ...
+# Subtest: observes normal and streaming lifecycle events without forwarding token text
+ok 4 - observes normal and streaming lifecycle events without forwarding token text
+  ---
+  duration_ms: 1.295645
+  type: 'test'
+  ...
+# Subtest: activation and repeated disposal own exactly one stage and one listener set
+ok 5 - activation and repeated disposal own exactly one stage and one listener set
+  ---
+  duration_ms: 2.816704
+  type: 'test'
+  ...
+# Subtest: invalid indices on indexed events never fall back to the last message
+ok 6 - invalid indices on indexed events never fall back to the last message
+  ---
+  duration_ms: 0.493197
+  type: 'test'
+  ...
+# Subtest: group author labels follow the host message, while duplicate-name card identity stays unresolved
+ok 7 - group author labels follow the host message, while duplicate-name card identity stays unresolved
+  ---
+  duration_ms: 0.330111
+  type: 'test'
+  ...
+# Subtest: host chat DOM changes clear stale sources when no lifecycle event fires and dispose cleanly
+ok 8 - host chat DOM changes clear stale sources when no lifecycle event fires and dispose cleanly
+  ---
+  duration_ms: 0.836912
+  type: 'test'
+  ...
+# Subtest: debug observer hashes host avatar fields without confusing duplicate labels
+ok 9 - debug observer hashes host avatar fields without confusing duplicate labels
+  ---
+  duration_ms: 4.158065
+  type: 'test'
+  ...
+# Subtest: missing required capability prevents mount and leaves host state untouched
+ok 10 - missing required capability prevents mount and leaves host state untouched
+  ---
+  duration_ms: 0.852132
+  type: 'test'
+  ...
+# Subtest: partial event registration failure removes listeners already attached
+ok 11 - partial event registration failure removes listeners already attached
+  ---
+  duration_ms: 0.30843
+  type: 'test'
+  ...
+# Subtest: observer distinguishes sanitized integer, string, missing, and invalid identities by chat scope
+ok 12 - observer distinguishes sanitized integer, string, missing, and invalid identities by chat scope
+  ---
+  duration_ms: 2.156564
+  type: 'test'
+  ...
+# Subtest: debug observer remains removable when the instrumented host lacks one event type
+ok 13 - debug observer remains removable when the instrumented host lacks one event type
+  ---
+  duration_ms: 1.5853
+  type: 'test'
+  ...
+# Subtest: head and reader cursor are independent; Next at latest stays pinned until Jump to Latest
+ok 14 - head and reader cursor are independent; Next at latest stays pinned until Jump to Latest
+  ---
+  duration_ms: 3.514916
+  type: 'test'
+  ...
+# Subtest: edits, continuations, same-length changes and author labels revise an immutable selected source
+ok 15 - edits, continuations, same-length changes and author labels revise an immutable selected source
+  ---
+  duration_ms: 0.529185
+  type: 'test'
+  ...
+# Subtest: insertions and deletions before a pinned source re-resolve only by transient source key
+ok 16 - insertions and deletions before a pinned source re-resolve only by transient source key
+  ---
+  duration_ms: 0.341301
+  type: 'test'
+  ...
+# Subtest: repeated identical text keeps distinct locators; replacing selected host object invalidates it
+ok 17 - repeated identical text keeps distinct locators; replacing selected host object invalidates it
+  ---
+  duration_ms: 1.591832
+  type: 'test'
+  ...
+# Subtest: swipes and group author changes update the same selected message revision
+ok 18 - swipes and group author changes update the same selected message revision
+  ---
+  duration_ms: 0.291037
+  type: 'test'
+  ...
+# Subtest: generation status ignores dry runs, preserves stop, and never infers success from end
+ok 19 - generation status ignores dry runs, preserves stop, and never infers success from end
+  ---
+  duration_ms: 0.341331
+  type: 'test'
+  ...
+# Subtest: normal generation stays unbound until a new assistant source appears
+ok 20 - normal generation stays unbound until a new assistant source appears
+  ---
+  duration_ms: 0.366389
+  type: 'test'
+  ...
+# Subtest: chat reactivation increments the epoch for A to B to A and starts each visit at latest
+ok 21 - chat reactivation increments the epoch for A to B to A and starts each visit at latest
+  ---
+  duration_ms: 0.267542
+  type: 'test'
+  ...
+# Subtest: empty history has an explicit no-source state
+ok 22 - empty history has an explicit no-source state
+  ---
+  duration_ms: 0.195648
+  type: 'test'
+  ...
+# Subtest: DOM-only first-message arrival and latest-object replacement reconcile through adapter and model
+ok 23 - DOM-only first-message arrival and latest-object replacement reconcile through adapter and model
+  ---
+  duration_ms: 2.829007
+  type: 'test'
+  ...
+# Subtest: a refresh after ambiguous history safely skips unavailable source records
+ok 24 - a refresh after ambiguous history safely skips unavailable source records
+  ---
+  duration_ms: 0.401585
+  type: 'test'
+  ...
+# Subtest: text scrolling has a separate snapshot contract from message-following mode
+ok 25 - text scrolling has a separate snapshot contract from message-following mode
+  ---
+  duration_ms: 0.218561
+  type: 'test'
+  ...
+# Subtest: adapter snapshots keep full labels and token signals coalesce into fresh canonical reads
+ok 26 - adapter snapshots keep full labels and token signals coalesce into fresh canonical reads
+  ---
+  duration_ms: 2.058489
+  type: 'test'
+  ...
+# Subtest: one-message middle insertion falls back to full history and preserves the pinned source
+ok 27 - one-message middle insertion falls back to full history and preserves the pinned source
+  ---
+  duration_ms: 0.81419
+  type: 'test'
+  ...
+# Subtest: reader navigation skips unavailable records instead of becoming stuck at a gap
+ok 28 - reader navigation skips unavailable records instead of becoming stuck at a gap
+  ---
+  duration_ms: 0.394141
+  type: 'test'
+  ...
+# Subtest: neutral schema, immutable inputs/output snapshots, deterministic output and revision rules
+ok 29 - neutral schema, immutable inputs/output snapshots, deterministic output and revision rules
+  ---
+  duration_ms: 12.056531
+  type: 'test'
+  ...
+# Subtest: background select, replace, clear, lock/release and forward projection at messages 3, 4, 7
+ok 30 - background select, replace, clear, lock/release and forward projection at messages 3, 4, 7
+  ---
+  duration_ms: 5.143207
+  type: 'test'
+  ...
+# Subtest: four logical members, duplicate labels, stable slots, move, explicit swap and replace
+ok 31 - four logical members, duplicate labels, stable slots, move, explicit swap and replace
+  ---
+  duration_ms: 7.182881
+  type: 'test'
+  ...
+# Subtest: presence and offstage are separate; presence release and slot lock release obey precedence
+ok 32 - presence and offstage are separate; presence release and slot lock release obey precedence
+  ---
+  duration_ms: 3.162234
+  type: 'test'
+  ...
+# Subtest: occupied-slot automatic replacement/swap checks every affected lock atomically
+ok 33 - occupied-slot automatic replacement/swap checks every affected lock atomically
+  ---
+  duration_ms: 3.269074
+  type: 'test'
+  ...
+# Subtest: outfit select, replace, default/clear, lock/release, compatibility and forward scope
+ok 34 - outfit select, replace, default/clear, lock/release, compatibility and forward scope
+  ---
+  duration_ms: 3.957338
+  type: 'test'
+  ...
+# Subtest: expressions select/replace/clear only on exact selected source and swipe; outfit resets to neutral
+ok 35 - expressions select/replace/clear only on exact selected source and swipe; outfit resets to neutral
+  ---
+  duration_ms: 3.049101
+  type: 'test'
+  ...
+# Subtest: unknown/malformed commands, unverified identities and missing authority cannot bypass locks
+ok 36 - unknown/malformed commands, unverified identities and missing authority cannot bypass locks
+  ---
+  duration_ms: 2.960394
+  type: 'test'
+  ...
+# Subtest: malformed/unsupported context and scenes safely refuse without modifying supplied objects
+ok 37 - malformed/unsupported context and scenes safely refuse without modifying supplied objects
+  ---
+  duration_ms: 2.56963
+  type: 'test'
+  ...
+# Subtest: stale session, selection, source, history, scene and catalog authority rejected
+ok 38 - stale session, selection, source, history, scene and catalog authority rejected
+  ---
+  duration_ms: 2.305944
+  type: 'test'
+  ...
+# Subtest: edit/continuation invalidates the affected suffix without transferring decisions
+ok 39 - edit/continuation invalidates the affected suffix without transferring decisions
+  ---
+  duration_ms: 2.017372
+  type: 'test'
+  ...
+# Subtest: deletion invalidates the affected suffix without transferring decisions
+ok 40 - deletion invalidates the affected suffix without transferring decisions
+  ---
+  duration_ms: 1.448102
+  type: 'test'
+  ...
+# Subtest: replacement invalidates the affected suffix without transferring decisions
+ok 41 - replacement invalidates the affected suffix without transferring decisions
+  ---
+  duration_ms: 1.344086
+  type: 'test'
+  ...
+# Subtest: insertion invalidates the affected suffix without transferring decisions
+ok 42 - insertion invalidates the affected suffix without transferring decisions
+  ---
+  duration_ms: 1.615616
+  type: 'test'
+  ...
+# Subtest: reorder invalidates the affected suffix without transferring decisions
+ok 43 - reorder invalidates the affected suffix without transferring decisions
+  ---
+  duration_ms: 1.632809
+  type: 'test'
+  ...
+# Subtest: historical deliberate correction invalidates later decisions; rejected correction stays atomic
+ok 44 - historical deliberate correction invalidates later decisions; rejected correction stays atomic
+  ---
+  duration_ms: 1.077796
+  type: 'test'
+  ...
+# Subtest: A → B → A resets session-only state; epochs and revisions remain monotonic
+ok 45 - A → B → A resets session-only state; epochs and revisions remain monotonic
+  ---
+  duration_ms: 1.004568
+  type: 'test'
+  ...
+# Subtest: fresh append retains prefix decisions; context revision failures and identity loss fail safely
+ok 46 - fresh append retains prefix decisions; context revision failures and identity loss fail safely
+  ---
+  duration_ms: 0.99527
+  type: 'test'
+  ...
+# Subtest: catalog refresh preserves requested immutable references with missing/incompatible fallbacks
+ok 47 - catalog refresh preserves requested immutable references with missing/incompatible fallbacks
+  ---
+  duration_ms: 1.586261
+  type: 'test'
+  ...
+# Subtest: deterministic replay of identical validated command histories; identical text has distinct sources
+ok 48 - deterministic replay of identical validated command histories; identical text has distinct sources
+  ---
+  duration_ms: 3.247334
+  type: 'test'
+  ...
+# Subtest: revision ceiling refuses instead of wrapping
+ok 49 - revision ceiling refuses instead of wrapping
+  ---
+  duration_ms: 0.754448
+  type: 'test'
+  ...
+# Subtest: malformed journal/catalog entries and sparse arrays refuse instead of throwing
+ok 50 - malformed journal/catalog entries and sparse arrays refuse instead of throwing
+  ---
+  duration_ms: 3.229099
+  type: 'test'
+  ...
+# Subtest: forward releases retain earlier locks, while expressions and layouts use their distinct scopes
+ok 51 - forward releases retain earlier locks, while expressions and layouts use their distinct scopes
+  ---
+  duration_ms: 2.313558
+  type: 'test'
+  ...
+# Subtest: non-data and cyclic malformed views are explainable refusals
+ok 52 - non-data and cyclic malformed views are explainable refusals
+  ---
+  duration_ms: 0.746333
+  type: 'test'
+  ...
+# Subtest: prefixes retain exact sn-source-v1 semantics through edits, insertion, deletion, reorder and owner changes
+ok 53 - prefixes retain exact sn-source-v1 semantics through edits, insertion, deletion, reorder and owner changes
+  ---
+  duration_ms: 12.039459
+  type: 'test'
+  ...
+# Subtest: unchanged history reuses hashes, tail edit hashes once, historical edit hashes its suffix
+ok 54 - unchanged history reuses hashes, tail edit hashes once, historical edit hashes its suffix
+  ---
+  duration_ms: 2.09068
+  type: 'test'
+  ...
+# Subtest: stale work cannot return a cache; size and elapsed-time ceilings refuse without truncation
+ok 55 - stale work cannot return a cache; size and elapsed-time ceilings refuse without truncation
+  ---
+  duration_ms: 26.085269
+  type: 'test'
+  ...
+# Subtest: a pre-existing owner record survives a collision refusal and cleanup
+ok 56 - a pre-existing owner record survives a collision refusal and cleanup
+  ---
+  duration_ms: 4.22452
+  type: 'test'
+  ...
+# Subtest: cleanup deletes only records whose create call completed successfully
+ok 57 - cleanup deletes only records whose create call completed successfully
+  ---
+  duration_ms: 0.540286
+  type: 'test'
+  ...
+# Subtest: a pre-existing asset survives a collision refusal and cleanup
+ok 58 - a pre-existing asset survives a collision refusal and cleanup
+  ---
+  duration_ms: 5.15052
+  type: 'test'
+  ...
+# Subtest: fixed field order gives a deterministic SHA-256 prefix
+ok 59 - fixed field order gives a deterministic SHA-256 prefix
+  ---
+  duration_ms: 1.674036
+  type: 'test'
+  ...
+# Subtest: repeated identical messages remain position-sensitive through ordered history
+ok 60 - repeated identical messages remain position-sensitive through ordered history
+  ---
+  duration_ms: 0.261191
+  type: 'test'
+  ...
+# Subtest: same-length text replacement changes the prefix digest without normalization
+ok 61 - same-length text replacement changes the prefix digest without normalization
+  ---
+  duration_ms: 0.249839
+  type: 'test'
+  ...
+# Subtest: branch copies share a verified prefix digest but retain different chat owners
+ok 62 - branch copies share a verified prefix digest but retain different chat owners
+  ---
+  duration_ms: 0.246203
+  type: 'test'
+  ...
+# Subtest: author, swipe, insertion, deletion, and continuation changes revise the prefix
+ok 63 - author, swipe, insertion, deletion, and continuation changes revise the prefix
+  ---
+  duration_ms: 0.394282
+  type: 'test'
+  ...
+# Subtest: ambiguous authors have an explicit unresolved representation and missing scope is refused
+ok 64 - ambiguous authors have an explicit unresolved representation and missing scope is refused
+  ---
+  duration_ms: 0.588586
+  type: 'test'
+  ...
+1..64
+# tests 64
+# suites 0
+# pass 64
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 177.152799

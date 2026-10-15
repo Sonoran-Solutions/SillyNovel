@@ -1,0 +1,15 @@
+{
+  "proofSha": "1ae869f6b289a71a490fedf15799073e559c1ac2",
+  "startingMain": "104610632a58481a63d948005c2c0f7a2d07f431",
+  "components": {
+    "tests/probes/dyl28/host-probe.mjs": "b3b4f5d195bb03392af565c254206127a20160532555cebdf00062dc1024c83d",
+    "tests/probes/dyl46/host-reconciliation.patch": "413fd81c3a2d7d0e9a73b042d007ade260bb3a746d6bffa39a95a09f02e99014",
+    "tests/probes/dyl46/reconciliation-campaign.mjs": "4b2b8c8d52432c31ad88328926c2dc9168dec623ce3c4e58f7db36d18bed5a17"
+  },
+  "appliedModules": {
+    "src/dyl27-storage.mjs": "decdc6c93e62acfe86cd15ca849070019f80c9ce4c11b3c204c0870cb409b4bf",
+    "src/endpoints/chats.js": "3fcfb3a198b589db474b6961277b7d8f27f1cb46bd84b7d218f6a27e1ab41316",
+    "src/endpoints/characters.js": "6d62a3bc31ce2a8801a8410055aceba6654f9acb57a59ebae27c999351f50065",
+    "src/endpoints/data-maid.js": "01c704f5df3d06c043e66dc0da8778f6901c591921089176aab3308ed41e52a1"
+  }
+}

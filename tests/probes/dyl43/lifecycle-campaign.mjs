@@ -54,6 +54,22 @@ export async function run(h) {
         first = h.session(); await first.login(owner);
         other = h.session(); await other.login(h.otherHandle);
     }
+    const isolatedFailures = new Set();
+    const authorityFile = h.authority && path.join(h.authority, `${h.hash(path.resolve(root))}.json`);
+    const authorityState = () => [registryFile, path.join(root, 'sillynovel-dyl44-reservation.json'), authorityFile,
+        path.join(h.authority, 'validation', path.basename(authorityFile))].map(file => [file, bytes(file)]);
+    async function wholeStoreFailure(x, isolation) {
+        const pending = authorityState();
+        const refusal = await revoked(x, first, 409, 'IDENTITY_UNAVAILABLE');
+        await restart(); assert.deepEqual(authorityState(), pending);
+        await revoked(x, first, 409, 'IDENTITY_UNAVAILABLE');
+        assert.equal((await first.request('/api/chats/save', { avatar_url: x.avatar, file_name: x.chatName,
+            chat: x.messages }, 503)).error, 'EXTERNAL_LOCAL_MISMATCH');
+        checkpoint('approved conservative failure remains whole-store refused through restart', { x, pending, refusal });
+        // End this fault episode. Restoring BOTH authorities is privileged test setup, not recovery.
+        await h.stopHost(); isolation.restore(); await restart(); isolatedFailures.add(x);
+        return refusal;
+    }
     async function upload(x, expected = 200) {
         const data = new FormData();
         data.set('avatar', new Blob([JSON.stringify({ spec: 'chara_card_v2', spec_version: '2.0',
@@ -143,6 +159,7 @@ export async function run(h) {
         checkpoint(`F2 ${operation} after durable revocation refuses old CAS/load despite unchanged canonical files`, { x, response, refusals: await revoked(x) });
     }
     const partial = await fixture('PartialRename');
+    const partialIsolation = process.env.SN_DYL46 && h.captureFixture(owner);
     const partialName = `PartialDestination-${h.runId}`;
     const undoPartial = flag('partial-rename'); let partialResponse;
     try { partialResponse = await first.request('/api/characters/rename', { avatar_url: partial.avatar, new_name: partialName }, 500); }
@@ -150,16 +167,17 @@ export async function run(h) {
     assert.ok(fs.existsSync(card(partial.avatar)) && fs.existsSync(card(`${partialName}.png`)));
     assert.equal(bytes(source(partial)), partial.canonical);
     checkpoint('F5 interrupted native rename after new card write leaves both cards and old chats without authority', {
-        partial, partialResponse, newCardSha256: h.hash(fs.readFileSync(card(`${partialName}.png`))), refusals: await revoked(partial) });
+        partial, partialResponse, newCardSha256: h.hash(fs.readFileSync(card(`${partialName}.png`))), refusals: partialIsolation ? await wholeStoreFailure(partial, partialIsolation) : await revoked(partial) });
 
     const partialDelete = await fixture('PartialDelete');
+    const deleteIsolation = process.env.SN_DYL46 && h.captureFixture(owner);
     fs.chmodSync(path.dirname(source(partialDelete)), 0o500); let deletePartialResponse;
     try { deletePartialResponse = await first.request('/api/characters/delete', { avatar_url: partialDelete.avatar, delete_chats: true }, 500); }
     finally { fs.chmodSync(path.dirname(source(partialDelete)), 0o700); }
     assert.equal(fs.existsSync(card(partialDelete.avatar)), false);
     assert.equal(bytes(source(partialDelete)), partialDelete.canonical);
     checkpoint('F5 native delete unlinks card then chat-removal EACCES leaves remaining chats revoked', {
-        partialDelete, deletePartialResponse, refusals: await revoked(partialDelete) });
+        partialDelete, deletePartialResponse, refusals: deleteIsolation ? await wholeStoreFailure(partialDelete, deleteIsolation) : await revoked(partialDelete) });
 
     const destination = await fixture('Destination');
     const incoming = await fixture('Incoming');
@@ -185,12 +203,18 @@ export async function run(h) {
     finally { fs.chmodSync(ns, 0o700); }
     assert.equal(bytes(registryFile), maidBefore); assert.equal(bytes(source(maid)), maid.canonical);
     await first.api('read', { target: maid.active.target });
+    const maidIsolation = process.env.SN_DYL46 && h.captureFixture(owner);
     // Real native unlink failure AFTER durable chat revocation.
     fs.chmodSync(path.dirname(source(maid)), 0o500); let maidF2;
     try { maidF2 = await first.request('/api/data-maid/delete', { token: report.token, hashes: [maidRow.hash] }, 500); }
     finally { fs.chmodSync(path.dirname(source(maid)), 0o700); }
     assert.equal(bytes(source(maid)), maid.canonical);
-    const maidRefusals = await revoked(maid);
+    const maidRefusals = maidIsolation ? await wholeStoreFailure(maid, maidIsolation) : await revoked(maid);
+    if (maidIsolation) {
+        const refreshed = await first.request('/api/data-maid/report', {});
+        report.token = refreshed.token;
+        maidRow.hash = refreshed.report.chats.find(row => row.parent === maid.avatar.replace('.png', '') && row.name === `${maid.chatName}.jsonl`).hash;
+    }
     const maidDeleted = await first.request('/api/data-maid/delete', { token: report.token, hashes: [maidRow.hash] }, 204);
     assert.equal(fs.existsSync(source(maid)), false);
     fs.writeFileSync(source(maid), maid.canonical, { flag: 'wx' }); // Explicit same-locator restore negative control.
@@ -241,7 +265,7 @@ export async function run(h) {
         replacement, importF1, imported, refusals: await revoked(replacement), replacementCardSha256: h.hash(fs.readFileSync(card(replacement.avatar))) });
 
     await restart();
-    for (const x of [rename, deletion, partial, partialDelete, maid, drift, replacement]) {
+    for (const x of [rename, deletion, partial, partialDelete, maid, drift, replacement].filter(x => !isolatedFailures.has(x))) {
         assert.equal((await load(x.avatar, x.chatName)).envelope.identity, null);
         // Persisted identity revocation is checked before the expired in-memory visit.
         await revoked(x);

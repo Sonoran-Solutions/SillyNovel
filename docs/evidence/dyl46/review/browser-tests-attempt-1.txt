@@ -1,0 +1,53 @@
+✔ actual entry mounts, updates, disposes and preserves canonical state (706.802887ms)
+✔ long ordinary Markdown is formatted, selectable and copied completely (339.230717ms)
+✔ unsafe HTML, encoded protocols, media and malformed markup never execute or lose raw text (330.886372ms)
+✔ Previous/Next pin the cursor; new messages stay bounded until Latest (493.497919ms)
+✔ streaming follows text bottom independently; scrolling up and selecting text survive updates (309.055684ms)
+✔ stop and continuation stay readable; disable does not stop generation (293.68785ms)
+✔ deleted/replaced pinned source is explicit and never silently retargeted (384.406588ms)
+✔ backlog never claims an exact match against a stale native revision (428.631295ms)
+✔ backlog re-resolves reordered objects, returns pinned selection and reports locator fallback (532.334692ms)
+✔ draft, caret, native composer node and focus survive repeated view transitions (465.386059ms)
+✔ missing capability and mount failure leave native chat usable (297.549981ms)
+✔ format exception releases stage/listeners, restores native feed and keeps exact draft (280.692532ms)
+✔ A to B to A discards queued old-epoch reads and starts each visit at latest (337.372893ms)
+✔ IME and editable-field key events remain unconsumed (286.358908ms)
+✔ empty and unresolved-author sources are explicit; narrow reduced-height composer remains reachable (298.147062ms)
+✔ session stage: four manual actors, duplicate names, stable slots, refusal, swap, replace and locks (1622.381918ms)
+✔ session stage: forward projection, selected-source expressions, outfits and incompatible/missing fallback (1267.900434ms)
+✔ session stage: temporary raster decode, replacement/reset/disable cleanup and stale delayed work (846.11525ms)
+✔ session stage: chat return, A to B to A, reload, narrow/keyboard layout and transparent fixtures (1168.582182ms)
+✖ session stage: delayed image cannot apply after same-source reset, manual override or unobserved source edit (505.532269ms)
+✔ session stage: denied subtle leaves a complete text reader (799.72944ms)
+✔ session stage: denied randomUUID leaves a complete text reader (762.225715ms)
+✔ session stage: delayed historical hashing neutralizes art before navigation and rejects obsolete work (529.139735ms)
+✔ session stage: history size refusal leaves neutral art and a usable text reader (475.20258ms)
+ℹ tests 24
+ℹ suites 0
+ℹ pass 23
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 14224.645925
+
+✖ failing tests:
+
+test at tests/m1-reader-browser.test.mjs:429:1
+✖ session stage: delayed image cannot apply after same-source reset, manual override or unobserved source edit (505.532269ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + undefined
+  - false
+  
+      at TestContext.<anonymous> (file:///tmp/sillynovel-dyl46-worktree/tests/m1-reader-browser.test.mjs:445:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

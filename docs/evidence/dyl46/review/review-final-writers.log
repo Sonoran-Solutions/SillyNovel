@@ -1,0 +1,40 @@
+Provision inventory {"default-user":{"characters":[],"chats":[]},"dyl28-b097561d-0752-4961-a959-6d778e5fd87a":{"characters":[],"chats":[]}}
+PASS native create/save allocates host identity and sourceRevision 1 for A and B
+PASS delayed native A response after B: B transcript, DOM, identity and target stay current; A load token is stale
+PASS A-B-A with reordered native transcript responses: only latest A request and visit remain accepted
+PASS held native activation acknowledgement across A-B-A is discarded without restoring its visit
+PASS old A visual CAS held across native A-B-A is refused against the old visit
+PASS canonical edit during pending load: old revision 1 is not committed, a fresh revision 2 load is activated
+PASS two authenticated clients on one host process: source revision 2 shared, visit tokens distinct, one visual CAS wins without canonical mutation
+PASS expired load ticket after a concurrent native edit: the revision 3 snapshot is not committed, the screen keeps revision 2, and the reopen activates revision 3
+PASS identity-bearing transcript followed by the pinned host non-JSON HTTP 403 refusal: the snapshot is not committed and target stays null
+locator.waitFor: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('#send_but') to be visible[22m
+[2m    62 × locator resolved to hidden <div tabindex="0" id="send_but" title="Send a message" data-i18n="[title]Send a message" class="fa-solid fa-paper-plane interactable displayNone"></div>[22m
+
+    at /tmp/sillynovel-dyl46-worktree/tests/probes/dyl28/host-probe.mjs:725:42 {
+  log: [
+    "  - waiting for locator('#send_but') to be visible",
+    '    62 × locator resolved to hidden <div tabindex="0" id="send_but" title="Send a message" data-i18n="[title]Send a message" class="fa-solid fa-paper-plane interactable displayNone"></div>'
+  ],
+  name: 'TimeoutError'
+}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.waitFor: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('#send_but') to be visible[22m
+[2m    62 × locator resolved to hidden <div tabindex="0" id="send_but" title="Send a message" data-i18n="[title]Send a message" class="fa-solid fa-paper-plane interactable displayNone"></div>[22m
+
+    at /tmp/sillynovel-dyl46-worktree/tests/probes/dyl28/host-probe.mjs:725:42 {
+  log: [
+    "  - waiting for locator('#send_but') to be visible",
+    '    62 × locator resolved to hidden <div tabindex="0" id="send_but" title="Send a message" data-i18n="[title]Send a message" class="fa-solid fa-paper-plane interactable displayNone"></div>'
+  ],
+  name: 'TimeoutError'
+}
+
+Node.js v26.8.1

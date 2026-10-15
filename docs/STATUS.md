@@ -158,3 +158,22 @@ Owner-assigned bounded investigation on verified main `ea6659d70813812617ac0869b
 ## DYL-45 external authority and explicit enrollment — 2026-10-14
 
 **REVISE.** [Contract, rollback comparison, failure/race matrices and exact evidence](M1_EXTERNAL_STORE_AUTHORITY.md). A test-owned authority outside the restorable root detects user-root rollback after a participating native write and retains refusal through restart. Explicit enrollment of a revoked/recreated character allocates fresh scope/chat IDs and independent visual records; old CAS/load authority stays refused. Unknown in-place writers remain a counterexample. The corrected overlay does not pass the complete unchanged inherited campaigns: conservative whole-store failure refusal and read-time digest drift require a reviewed recovery contract. No production runtime changed. DYL-22/23 blocked, DYL-24 session-only, M1.3/M2 unauthorized, Gate A NOT_RUN. Deliver one open/unmerged experimental PR; follow-up requires separate authorization.
+
+
+## DYL-46 external reconciliation experiment — 2026-10-14
+
+[Report and evidence](M1_EXTERNAL_AUTHORITY_RECONCILIATION.md): **REVISE; compatibility REQUEST CHANGES / HOLD**. Verified clean aborts for pre-write registry EACCES and malformed JSONL headers finalize forward; read-triggered revocation now owns an external/local reservation. New campaign completes 43 expected checkpoints (16 inherited + 27 new), including two unsafe negative controls; unchanged writers pass 33/33, lifecycle remains red after 21, generations after 27, authority after 32. No assertion weakened; unreached suffixes remain unproved. Node 64/64 and actual-entry Chromium 24/24. Production files unchanged.
+
+Independent root rollback/forged local fields remain refused, but a failed external observation followed by unknown canonical restore and restart has no durable witness. Owner review and another bounded proof are required; no production persistence, merge approval or human gate verdict. DYL-22/23 blocked; DYL-24 session-only; M1.3/M2 unauthorized; Gate A NOT_RUN.
+
+
+## DYL-46 review corrections — 2026-10-15
+
+[Current correction record](M1_EXTERNAL_AUTHORITY_RECONCILIATION.md#pr-20-review-corrections--2026-10-15) supersedes the original DYL-46 current-code findings above. A provisioned independent validation witness commits before canonical seal inspection and preserves refusal when external intent fails, including restored canonical bytes and two restarts. The exact inspected post-revocation/pre-native failure now completes VERIFIED_REVOCATION without re-enabling old authority. No production runtime or predecessor campaign assertions changed.
+
+Corrected campaign: 56 expected checkpoints (16 inherited + 40 new), ONE unsafe unobserved-writer control; the old lost-observation counterexample is now a refusal regression. Writer 33/33; lifecycle still FAIL after 23 at partial rename; generations FAIL after 27; authority FAIL after 31 at its old store-wide-refusal expectation. Node 64/64. Actual-entry Chromium remains FAIL 23/24 on both attempts at unchanged line 445 (undefined versus false for absent image src); not waived or reported green. **REVISE / compatibility HOLD** remains. PR #20 stays open/unmerged; DYL-46 In Review. Gate A and downstream authorization are unchanged.
+
+
+## DYL-46 re-review corrections — 2026-10-15
+
+[Current report, commands, revisions, hashes, raw evidence and limits](M1_EXTERNAL_AUTHORITY_RECONCILIATION.md#pr-20-re-review-corrections--2026-10-15). Approved contracts and forward-only undispatched receipt recovery now complete all inherited campaign suffixes: reconciliation 61 expected (ONE unsafe control), writers 33/33, lifecycle 41/41, generations 37/37, authority 46/46. Node 64/64; corrected Chromium 24/24 on both current main and PR. GO for bounded feasibility under approved contracts; merge HOLD for owner review. Unknown writers remain outside the guarantee. Production unchanged; PR #20 OPEN/unmerged, DYL-46 In Review; downstream gates unchanged.

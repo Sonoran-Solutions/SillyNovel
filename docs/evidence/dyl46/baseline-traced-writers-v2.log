@@ -1,0 +1,56 @@
+Provision inventory {"default-user":{"characters":[],"chats":[]},"dyl28-979fe6c7-7ca5-457b-88f6-b367fef32c74":{"characters":[],"chats":[]}}
+PASS native create/save allocates host identity and sourceRevision 1 for A and B
+PASS delayed native A response after B: B transcript, DOM, identity and target stay current; A load token is stale
+PASS A-B-A with reordered native transcript responses: only latest A request and visit remain accepted
+PASS held native activation acknowledgement across A-B-A is discarded without restoring its visit
+PASS old A visual CAS held across native A-B-A is refused against the old visit
+PASS canonical edit during pending load: old revision 1 is not committed, a fresh revision 2 load is activated
+PASS two authenticated clients on one host process: source revision 2 shared, visit tokens distinct, one visual CAS wins without canonical mutation
+PASS expired load ticket after a concurrent native edit: the revision 3 snapshot is not committed, the screen keeps revision 2, and the reopen activates revision 3
+PASS identity-bearing transcript followed by the pinned host non-JSON HTTP 403 refusal: the snapshot is not committed and target stays null
+PASS activation acknowledgement timeout leaves visuals unavailable while native text and ordinary reply/save continue
+PASS native Temporary Chat transition revokes the persisted-chat visit
+PASS missing chat returns an empty native snapshot with no visual identity
+PASS native rename during pending load preserves chat ID/revision but refuses old locator-bound activation
+PASS different authenticated store and cookie session cannot reuse another client’s load identity
+PASS load request expires after the host TTL and cannot grant a visit
+PASS host restart recovers identity, source revision and visual record; old in-memory visit is rejected and a new visit is issued
+PASS native JSONL imports: identical bytes, duplicate card labels and forged IDs allocate fresh scoped identities without visual inheritance
+PASS native browser importCharacterChat and openCharacterChat resolve the new imported transcript envelope
+PASS normal native import, malformed header refusal and forged owner fields remain authenticated-store scoped
+AssertionError [ERR_ASSERTION]: /api/chats/save: {"error":"EXTERNAL_LOCAL_MISMATCH"}
+
+503 !== 200
+
+    at Object.request (file:///tmp/sillynovel-dyl46-worktree/tests/probes/dyl28/host-probe.mjs:157:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async run (file:///tmp/sillynovel-dyl46-worktree/tests/probes/dyl42/writer-campaign.mjs:114:5)
+    at async file:///tmp/sillynovel-dyl46-worktree/tests/probes/dyl28/host-probe.mjs:830:9 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 503,
+  expected: 200,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: /api/chats/save: {"error":"EXTERNAL_LOCAL_MISMATCH"}
+
+503 !== 200
+
+    at Object.request (file:///tmp/sillynovel-dyl46-worktree/tests/probes/dyl28/host-probe.mjs:157:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async run (file:///tmp/sillynovel-dyl46-worktree/tests/probes/dyl42/writer-campaign.mjs:114:5)
+    at async file:///tmp/sillynovel-dyl46-worktree/tests/probes/dyl28/host-probe.mjs:830:9 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 503,
+  expected: 200,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v26.8.1
