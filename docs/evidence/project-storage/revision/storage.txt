@@ -1,0 +1,15 @@
+
+> sillynovel-storage@0.1.0 test
+> node --test test/*.test.mjs
+
+✔ owned projects, immutable PNGs, CAS, failed transaction and restart (107.78842ms)
+✔ PNG decode, CRC, unsupported formats and byte/dimension limits (26.194126ms)
+✔ unknown schema refuses without rewriting database (3.661149ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 240.019648
