@@ -1,5 +1,11 @@
 # M1 manual reader plan and UX contracts
 
+## Active project-storage direction — 2026-10-15
+
+[Independent project storage](M1_INDEPENDENT_PROJECT_STORAGE.md) supersedes the upstream-API implementation path and earlier chat-metadata persistence proposals for this bounded slice. The owner authorizes planning and the first independent-project implementation with an optional local plugin, explicit attachment and project-global state only. Production release is not approved. Source-specific history remains transient/gated; existing renderer, source, lock and native-composer safeguards remain applicable. No project data enters native metadata or browser persistence. [Implementation and tracking](M1_PROJECT_STORAGE_IMPLEMENTATION.md).
+
+DYL-48 is Done and PR #22 merged at `ca77bbf5e4ee5219e34e873b1680e8d644754149`. Upstream engagement is **ON HOLD / NOT_SUBMITTED**. DYL-22/23 retain Backlog and their blocker relations; DYL-24 remains supported; M1.3/M2 unauthorized and Gate A NOT_RUN. Earlier entries below retain their historical authorization/evidence scope and do not override this decision.
+
 **Ticket:** [DYL-15](https://linear.app/devils17/issue/DYL-15/sillynovel-m10-a-write-the-reader-plan-and-bounded-ux-contracts). **Project:** [SillyNovel](https://linear.app/devils17/project/sillynovel-3833ac2248e8). **Phase label:** M1. **Date:** 2026-10-12, America/Phoenix.
 
 **Historical DYL-16 authority:** planning and documentation. Owner decision recorded 2026-10-12 in DYL-16: M0 PASS for its explicitly documented scope and limits; L10 UNSUPPORTED / WAIVED; M1 defaults A–G approved with the clarifications below. Only DYL-17 and DYL-19 are authorized, in parallel as separate branches/PRs with coordinated file ownership. DYL-19 is a bounded proof only. DYL-18 and later implementation remain blocked pending prerequisites and separate authorization. Gate A is NOT_RUN; M2 is not authorized.
