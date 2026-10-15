@@ -1,6 +1,6 @@
 # Project status
 
-**Updated:** 2026-10-12. Historical M0.1 and planning handoffs are preserved below; the current DYL-18 implementation/evidence record is last. Owner approvals and technical evidence remain distinct.
+**Updated:** 2026-10-15. Historical M0.1 and planning handoffs are preserved below; the current storage architecture checkpoint is summarized first. Owner approvals and technical evidence remain distinct.
 
 ## Current state
 
@@ -17,6 +17,7 @@ The DYL-18 review branch now implements a complete text reader on the merged DYL
 | Missing-capability behavior | INSTRUMENTED_HOST_PASS; capability omission was injected, not a natural host failure |
 | M0 overall | OWNER APPROVED PASS for the explicitly documented scope and evidence limits; L10 is UNSUPPORTED / WAIVED |
 | M1 runtime | DYL-17/19 merged; separately owner-assigned DYL-18 text-reader review candidate IMPLEMENTED / HOST_TESTED. Later art/persistence work remains gated |
+| M1.2 storage | DYL-46 bounded feasibility is Done/merged at PR #20; production storage remains unsupported. DYL-47 architecture decision package is in review preparation; no production work authorized |
 | Gate A — reader feel | NOT_RUN |
 | M2 — automatic direction | NOT_STARTED |
 | Gate B — direction quality | NOT_RUN |
@@ -25,6 +26,12 @@ The DYL-18 review branch now implements a complete text reader on the merged DYL
 | Tested SillyTavern release and full SHA | 1.19.0 / `7e8663cd9c184a550b37238218bdd32c6efc68e9` |
 | Provider tests | Deterministic localhost OpenAI-compatible endpoint tested; real model/provider behavior NOT_TESTED |
 | License choice | OPEN |
+
+## Current storage architecture checkpoint — 2026-10-15, DYL-47
+
+[DYL-47](M1_STORAGE_ARCHITECTURE_CHECKPOINT.md) recommends a small upstream SillyTavern identity/lifecycle/targeted-CAS/asset capability, with the visibly session-only DYL-24 experience as fallback. This is **PROPOSED**, not an owner selection or production authorization. The recommendation is GO for owner architecture review only; durable persistence remains NO-GO until a supported host API and recovery/backup contract exist.
+
+PR #20 merged at `8b7e8e04f1218e73902f997d9018765a79f76128`; DYL-46 is Done. Final DYL-46 evidence is bounded to its documented patched-host writer and failure paths. Unknown/unobserved filesystem writers remain outside its guarantee. DYL-22/23 remain Blocked; DYL-24 remains accepted session-only; M1.3/M2 remain unauthorized; Gate A remains NOT_RUN. DYL-47 does not alter those gates.
 
 ## Historical M0 starting repository state
 
