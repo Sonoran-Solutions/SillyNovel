@@ -154,3 +154,10 @@ The re-review also authorizes the narrow browser-assertion correction, verificat
 The owner-provided M1.2-M checkpoint authorization created [DYL-47](https://linear.app/devils17/issue/DYL-47/sillynovel-m12-m-decide-production-storage-architecture-and) after searching for an equivalent post-DYL-46 issue. It is In Review, blocked by completed DYL-46, and related to DYL-25, DYL-22, and DYL-23. The checkpoint is documented in [M1_STORAGE_ARCHITECTURE_CHECKPOINT.md](M1_STORAGE_ARCHITECTURE_CHECKPOINT.md).
 
 The document recommends an upstream host API with session-only fallback as **PROPOSED**. This tracking entry records no owner selection, upstream engagement/submission approval, production persistence approval, DYL-22/23 authorization, M1.3/M2 authorization, or Gate A verdict. All existing gates remain unchanged.
+
+
+## Owner assignment and engineering recommendation — 2026-10-15, DYL-48
+
+The owner's pasted M1.2-N assignment authorizes preparing upstream proposal drafts for review only, after merged PR #21 and completed DYL-47. It does not select DYL-47's architecture or authorize upstream submission/contact, host source changes, API implementation, companion/plugin/service, production persistence, DYL-22/23, M1.3/M2 or Gate A changes.
+
+[Public draft](UPSTREAM_HOST_CAPABILITY_REQUEST.md) and [technical decision package](UPSTREAM_HOST_CAPABILITY_TECHNICAL.md) recommend leading with general authenticated identity/lifecycle/targeted conditional per-chat extension records. Assets and portability remain separately discussable. Existing upstream #5265 overlaps enough to recommend an initial contribution there after explicit owner approval, rather than automatically opening a duplicate; #5865/#6122 and asset request #5269 are related. This is a **PROPOSED engineering recommendation**, with no change to DYL-47's architecture ranking or production gates. **NOT_SUBMITTED**. Owner must approve wording, venue/message and commitments before any engagement. No new owner ruling on recovery, backup or release scope is inferred.

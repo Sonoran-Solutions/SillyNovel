@@ -17,7 +17,7 @@ The DYL-18 review branch now implements a complete text reader on the merged DYL
 | Missing-capability behavior | INSTRUMENTED_HOST_PASS; capability omission was injected, not a natural host failure |
 | M0 overall | OWNER APPROVED PASS for the explicitly documented scope and evidence limits; L10 is UNSUPPORTED / WAIVED |
 | M1 runtime | DYL-17/19 merged; separately owner-assigned DYL-18 text-reader review candidate IMPLEMENTED / HOST_TESTED. Later art/persistence work remains gated |
-| M1.2 storage | DYL-46 bounded feasibility is Done/merged at PR #20; production storage remains unsupported. DYL-47 architecture decision package is In Review; no production work authorized |
+| M1.2 storage | DYL-46 bounded feasibility is Done/merged at PR #20; production storage remains unsupported. DYL-47 architecture checkpoint is Done/merged at PR #21; DYL-48 upstream drafts are In Review / NOT_SUBMITTED; no production work authorized |
 | Gate A — reader feel | NOT_RUN |
 | M2 — automatic direction | NOT_STARTED |
 | Gate B — direction quality | NOT_RUN |
@@ -26,6 +26,12 @@ The DYL-18 review branch now implements a complete text reader on the merged DYL
 | Tested SillyTavern release and full SHA | 1.19.0 / `7e8663cd9c184a550b37238218bdd32c6efc68e9` |
 | Provider tests | Deterministic localhost OpenAI-compatible endpoint tested; real model/provider behavior NOT_TESTED |
 | License choice | OPEN |
+
+## Upstream proposal draft — 2026-10-15, DYL-48
+
+[Public request](UPSTREAM_HOST_CAPABILITY_REQUEST.md) and [technical support / owner recommendation](UPSTREAM_HOST_CAPABILITY_TECHNICAL.md) are complete for review. Starting fetched main `f3ff9a4b61fa31df3e57cf3367f0dcf4860f3fe6`; prerequisite PR #21 merged and DYL-47 Done verified. Current official release/staging source and related proposals were inspected read-only. Recommend coordinating first in existing upstream #5265 after explicit owner approval, leading with identity/lifecycle/conditional per-chat state and deferring assets. No supported complete foundation was found in the bounded research; adjacent proposals are acknowledged.
+
+**NOT_SUBMITTED.** Draft preparation is authorized; architecture selection, upstream engagement and implementation are not. DYL-22/23 remain Blocked; DYL-24 accepted session-only; production persistence, M1.3 and M2 unauthorized; Gate A NOT_RUN. [Documentation validation](TESTING.md#dyl-48-upstream-proposal-validation--2026-10-15) adds no runtime/host/provider/device evidence. DYL-48 stops In Review and its PR remains open/unmerged with auto-merge disabled.
 
 ## Current storage architecture checkpoint — 2026-10-15, DYL-47
 
