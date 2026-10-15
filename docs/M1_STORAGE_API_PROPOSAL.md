@@ -1,5 +1,7 @@
 # M1.2: Host Storage API Feasibility and Owner Decision Proposal
 
+> Historical research. Upstream engagement: **ON HOLD / NOT_SUBMITTED**. The [2026-10-15 owner decision](M1_INDEPENDENT_PROJECT_STORAGE.md) replaces the active implementation path; original findings below are preserved.
+
 **Status:** proposal for owner decision; no architecture selected or approved.
 
 **Scope:** documentation and host feasibility only. No production storage, SillyTavern changes, backend, browser-local persistence, or downstream implementation was started.

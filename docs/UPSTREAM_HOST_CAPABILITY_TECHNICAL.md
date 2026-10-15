@@ -1,5 +1,7 @@
 # Upstream host capability: technical support and owner decision package
 
+> Historical research. Upstream engagement: **ON HOLD / NOT_SUBMITTED**. The [2026-10-15 owner decision](M1_INDEPENDENT_PROJECT_STORAGE.md) replaces the active implementation path; original findings below are preserved.
+
 **DYL-48 / M1.2-N — PROPOSED; NOT_SUBMITTED.** Internal support for the [public request](UPSTREAM_HOST_CAPABILITY_REQUEST.md). Names and payloads in section C are **PROPOSED**, not SillyTavern APIs. No host implementation, production persistence or external engagement is authorized.
 
 Starting fetched SillyNovel main: `f3ff9a4b61fa31df3e57cf3367f0dcf4860f3fe6`. [PR #21](https://github.com/Sonoran-Solutions/SillyNovel/pull/21) merged 2026-10-15 at 18:57:13Z; Linear DYL-47 is Done. Its complete [architecture checkpoint](M1_STORAGE_ARCHITECTURE_CHECKPOINT.md) is the baseline; its In Review wording records its original handoff. Project-scoped upstream-task search found no equivalent; the assigned identifier is [DYL-48](https://linear.app/devils17/issue/DYL-48/sillynovel-m12-n-prepare-a-maintainer-ready-upstream-host-capability), with DYL-47 as completed prerequisite and DYL-25/22/23 related.
