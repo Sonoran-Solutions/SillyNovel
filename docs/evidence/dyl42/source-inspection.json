@@ -188,6 +188,10 @@
           "text": "import sanitize from 'sanitize-filename';\nimport { sync as writeFileAtomicSync } from 'write-file-atomic';\nimport yaml from 'yaml';\nimport _ from 'lodash';"
         },
         {
+          "line": 220,
+          "text": " */\nasync function writeCharacterData(inputFile, data, outputFile, request, crop = undefined) {\n    try {\n        // Reset the cache"
+        },
+        {
           "line": 259,
           "text": "\n        writeFileAtomicSync(outputImagePath, outputImage);\n        return true;\n    } catch (err) {"
         },
@@ -196,8 +200,16 @@
           "text": "    const fileText = fs.readFileSync(uploadPath, 'utf8');\n    fs.unlinkSync(uploadPath);\n    const yamlData = yaml.parse(fileText);\n    console.info('Importing from YAML');"
         },
         {
+          "line": 753,
+          "text": "    }, context.request.user.directories);\n    const result = await writeCharacterData(DEFAULT_AVATAR_PATH, JSON.stringify(char), fileName, context.request);\n    return result ? fileName : '';\n}"
+        },
+        {
           "line": 769,
           "text": "    const data = getArrayBufferSlice(fileBuffer);\n    fs.unlinkSync(uploadPath);\n\n    const parser = new CharXParser(data);"
+        },
+        {
+          "line": 799,
+          "text": "\n    const result = await writeCharacterData(avatar, JSON.stringify(processedCard), fileName, request);\n    return result ? fileName : '';\n}"
         },
         {
           "line": 822,
@@ -212,12 +224,36 @@
           "text": "            if (Buffer.isBuffer(icon.image)) {\n                writeFileAtomicSync(path.join(altImagesFolder, `${file}${extension}`), icon.image);\n                console.log(`Created ${file}${extension} alternate icon from BYAF import`);\n            }"
         },
         {
+          "line": 871,
+          "text": "\n    const result = await writeCharacterData(byafData.images[0].image, JSON.stringify(card), fileName, request);\n\n    return result ? fileName : '';"
+        },
+        {
           "line": 885,
           "text": "    const data = fs.readFileSync(uploadPath, 'utf8');\n    fs.unlinkSync(uploadPath);\n\n    let jsonData = JSON.parse(data);"
         },
         {
+          "line": 901,
+          "text": "        const char = JSON.stringify(jsonData);\n        const result = await writeCharacterData(DEFAULT_AVATAR_PATH, char, pngName, request);\n        return result ? pngName : '';\n    } else if (jsonData.name !== undefined) {"
+        },
+        {
+          "line": 927,
+          "text": "        let charJSON = JSON.stringify(char);\n        const result = await writeCharacterData(DEFAULT_AVATAR_PATH, charJSON, pngName, request);\n        return result ? pngName : '';\n    } else if (jsonData.char_name !== undefined) {"
+        },
+        {
+          "line": 954,
+          "text": "        const charJSON = JSON.stringify(char);\n        const result = await writeCharacterData(DEFAULT_AVATAR_PATH, charJSON, pngName, request);\n        return result ? pngName : '';\n    }"
+        },
+        {
+          "line": 987,
+          "text": "        const char = JSON.stringify(jsonData);\n        const result = await writeCharacterData(uploadPath, char, pngName, request);\n        fs.unlinkSync(uploadPath);\n        return result ? pngName : '';"
+        },
+        {
           "line": 988,
           "text": "        const result = await writeCharacterData(uploadPath, char, pngName, request);\n        fs.unlinkSync(uploadPath);\n        return result ? pngName : '';\n    } else if (jsonData.name !== undefined) {"
+        },
+        {
+          "line": 1014,
+          "text": "        const charJSON = JSON.stringify(char);\n        const result = await writeCharacterData(uploadPath, charJSON, pngName, request);\n        fs.unlinkSync(uploadPath);\n        return result ? pngName : '';"
         },
         {
           "line": 1015,
@@ -228,12 +264,32 @@
           "text": "\nrouter.post('/create', getFileNameValidationFunction('file_name'), async function (request, response) {\n    try {\n        if (!request.body) return response.sendStatus(400);"
         },
         {
+          "line": 1038,
+          "text": "        if (!request.file) {\n            await writeCharacterData(DEFAULT_AVATAR_PATH, char, internalName, request);\n            return response.send(avatarName);\n        } else {"
+        },
+        {
+          "line": 1043,
+          "text": "            const uploadPath = path.join(request.file.destination, request.file.filename);\n            await writeCharacterData(uploadPath, char, internalName, request, crop);\n            fs.unlinkSync(uploadPath);\n            return response.send(avatarName);"
+        },
+        {
           "line": 1044,
           "text": "            await writeCharacterData(uploadPath, char, internalName, request, crop);\n            fs.unlinkSync(uploadPath);\n            return response.send(avatarName);\n        }"
         },
         {
           "line": 1053,
           "text": "\nrouter.post('/rename', validateAvatarUrlMiddleware, async function (request, response) {\n    if (!request.body.avatar_url || !request.body.new_name) {\n        return response.sendStatus(400);"
+        },
+        {
+          "line": 1080,
+          "text": "        // Write data to new location\n        await writeCharacterData(oldAvatarPath, newData, newInternalName, request);\n\n        // Rename chats folder"
+        },
+        {
+          "line": 1086,
+          "text": "            // https://github.com/nodejs/node/issues/63970\n            fs.cpSync(oldChatsPath, newChatsPath, { recursive: true, filter: () => true });\n            fs.rmSync(oldChatsPath, { recursive: true, force: true });\n        }"
+        },
+        {
+          "line": 1087,
+          "text": "            fs.cpSync(oldChatsPath, newChatsPath, { recursive: true, filter: () => true });\n            fs.rmSync(oldChatsPath, { recursive: true, force: true });\n        }\n"
         },
         {
           "line": 1091,
@@ -244,6 +300,14 @@
           "text": "\nrouter.post('/edit', validateAvatarUrlMiddleware, async function (request, response) {\n    if (!request.body) {\n        console.warn('Error: no response body detected');"
         },
         {
+          "line": 1123,
+          "text": "            const avatarPath = path.join(request.user.directories.characters, request.body.avatar_url);\n            await writeCharacterData(avatarPath, char, targetFile, request);\n        } else {\n            const crop = tryParse(request.query.crop);"
+        },
+        {
+          "line": 1128,
+          "text": "            invalidateThumbnail(request.user.directories, 'avatar', request.body.avatar_url);\n            await writeCharacterData(newAvatarPath, char, targetFile, request, crop);\n            fs.unlinkSync(newAvatarPath);\n"
+        },
+        {
           "line": 1129,
           "text": "            await writeCharacterData(newAvatarPath, char, targetFile, request, crop);\n            fs.unlinkSync(newAvatarPath);\n\n            // Bust cache to reload the new avatar"
         },
@@ -252,12 +316,24 @@
           "text": "\nrouter.post('/edit-avatar', validateAvatarUrlMiddleware, async function (request, response) {\n    try {\n        if (!request.file) {"
         },
         {
+          "line": 1167,
+          "text": "        const fileName = request.body.avatar_url.replace('.png', '');\n        await writeCharacterData(uploadPath, data, fileName, request, crop);\n\n        // Remove uploaded temp file"
+        },
+        {
           "line": 1170,
           "text": "        // Remove uploaded temp file\n        fs.unlinkSync(uploadPath);\n\n        // Reset images caches"
         },
         {
           "line": 1193,
           "text": " */\nrouter.post('/edit-attribute', validateAvatarUrlMiddleware, async function (request, response) {\n    console.debug(request.body);\n    if (!request.body) {"
+        },
+        {
+          "line": 1226,
+          "text": "        const targetFile = (request.body.avatar_url).replace('.png', '');\n        await writeCharacterData(avatarPath, newCharJSON, targetFile, request);\n        return response.sendStatus(200);\n    } catch (err) {"
+        },
+        {
+          "line": 1302,
+          "text": "    const targetImg = avatar.replace('.png', '');\n    await writeCharacterData(avatarPath, JSON.stringify(character), targetImg, request);\n    return { ok: true };\n}"
         },
         {
           "line": 1328,
@@ -270,6 +346,10 @@
         {
           "line": 1431,
           "text": "\n    fs.unlinkSync(avatarPath);\n    invalidateThumbnail(request.user.directories, 'avatar', request.body.avatar_url);\n    let dir_name = (request.body.avatar_url.replace('.png', ''));"
+        },
+        {
+          "line": 1442,
+          "text": "        try {\n            await fs.promises.rm(path.join(request.user.directories.chats, sanitize(dir_name)), { recursive: true, force: true });\n        } catch (err) {\n            console.error(err);"
         },
         {
           "line": 1466,
@@ -338,6 +418,34 @@
           "text": "                const pathToFile = path.join(uploadsPath, file);\n                fs.unlinkSync(pathToFile);\n            });\n        }"
         },
         {
+          "line": 401,
+          "text": "                // Copy the file to the new location\n                fs.cpSync(migration.old, migration.new, { force: true });\n                // Move the file to the backup location\n                fs.cpSync("
+        },
+        {
+          "line": 403,
+          "text": "                // Move the file to the backup location\n                fs.cpSync(\n                    migration.old,\n                    path.join(backupDirectory, path.basename(migration.old)),"
+        },
+        {
+          "line": 408,
+          "text": "                );\n                fs.rmSync(migration.old, { recursive: true, force: true });\n            } else {\n                // Copy the directory to the new location"
+        },
+        {
+          "line": 411,
+          "text": "                // Copy the directory to the new location\n                fs.cpSync(migration.old, migration.new, { recursive: true, force: true });\n                // Move the directory to the backup location\n                fs.cpSync("
+        },
+        {
+          "line": 413,
+          "text": "                // Move the directory to the backup location\n                fs.cpSync(\n                    migration.old,\n                    path.join(backupDirectory, path.basename(migration.old)),"
+        },
+        {
+          "line": 418,
+          "text": "                );\n                fs.rmSync(migration.old, { recursive: true, force: true });\n            }\n        } catch (error) {"
+        },
+        {
+          "line": 466,
+          "text": "                        const backupPath = path.join(backupsPath, `${instructData.name}.json`);\n                        fs.cpSync(instructPath, backupPath, { force: true });\n                        const syspromptData = { name: instructData.name, content: instructData.system_prompt };\n                        migratedPrompts.push(syspromptData);"
+        },
+        {
           "line": 470,
           "text": "                        delete instructData.system_prompt;\n                        writeFileAtomicSync(instructPath, JSON.stringify(instructData, null, 4));\n                    }\n                }"
         },
@@ -348,6 +456,10 @@
         {
           "line": 484,
           "text": "            }\n            writeFileAtomicSync(migrateMarker, '');\n        } catch (error) {\n            console.error('Error migrating system prompts:', error);"
+        },
+        {
+          "line": 522,
+          "text": "                fs.mkdirSync(path.dirname(newPath), { recursive: true });\n                fs.cpSync(oldPath, newPath, { force: true });\n                fs.unlinkSync(oldPath);\n                setPermissionsSync(newPath);"
         },
         {
           "line": 523,
@@ -604,6 +716,10 @@
           "text": "\nrouter.post('/reset-settings', async (request, response) => {\n    try {\n        const password = request.body.password;"
         },
         {
+          "line": 194,
+          "text": "        const pathToFile = path.join(request.user.directories.root, SETTINGS_FILE);\n        await fsPromises.rm(pathToFile, { force: true });\n        await checkForNewContent([request.user.directories], [CONTENT_TYPES.SETTINGS]);\n"
+        },
+        {
           "line": 204,
           "text": "\nrouter.post('/change-name', async (request, response) => {\n    try {\n        if (!request.body.name || !request.body.handle) {"
         },
@@ -614,6 +730,10 @@
         {
           "line": 261,
           "text": "\nrouter.post('/reset-step2', async (request, response) => {\n    try {\n        if (!request.body.code) {"
+        },
+        {
+          "line": 289,
+          "text": "        console.info('Resetting account data:', request.user.profile.handle);\n        await fsPromises.rm(request.user.directories.root, { recursive: true, force: true });\n\n        await ensurePublicDirectoriesExist();"
         }
       ]
     },
@@ -647,6 +767,10 @@
         {
           "line": 219,
           "text": "\nrouter.post('/delete', requireAdminMiddleware, async (request, response) => {\n    try {\n        if (!request.body.handle) {"
+        },
+        {
+          "line": 241,
+          "text": "            console.info('Deleting data directories for', request.body.handle);\n            await fsPromises.rm(directories.root, { recursive: true, force: true });\n        }\n"
         },
         {
           "line": 251,

@@ -16,7 +16,7 @@ for (const file of files) {
     assert.deepEqual(bytes, execFileSync('git', ['-C', root, 'show', `${sha}:${file}`], { maxBuffer: 8e6 }));
     const lines = bytes.toString().split('\n');
     result.files[file] = { sha256: createHash('sha256').update(bytes).digest('hex'), locations: lines.flatMap((line, i) =>
-        /router.post|writeFile|copyFile|renameSync|unlinkSync|trySaveChat|tryDeleteFile|api\/chats|api\/groups|function (importChat|createBranch|branchChat|saveChat|saveGroup|createNewGroup|openGroup|Generate|swipe|renameChat)|request.user =/.test(line)
+        /router.post|writeFile|writeCharacterData|copyFile|cpSync|renameSync|unlinkSync|rmSync|fsPromises.rm|fs.promises.rm|trySaveChat|tryDeleteFile|api\/chats|api\/groups|function (importChat|createBranch|branchChat|saveChat|saveGroup|createNewGroup|openGroup|Generate|swipe|renameChat)|request.user =/.test(line)
             ? [{ line: i + 1, text: lines.slice(Math.max(0, i - 1), i + 3).join('\n') }] : []) };
 }
 console.log(JSON.stringify(result, null, 2));
