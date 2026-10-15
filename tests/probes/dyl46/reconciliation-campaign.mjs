@@ -90,7 +90,9 @@ export async function run(h) {
             cardBase64: cardBytes.toString('base64'), cardSha256: h.hash(cardBytes) });
     }
     for (const operation of ['rename', 'delete', 'import']) {
-        const x = await fixture(`CommittedRevocation-${operation}`); const before = capture();
+        const x = await fixture(`CommittedRevocation-${operation}`);
+        const untouched = operation === 'import' ? null : await fixture(`UnaffectedRevocation-${operation}`);
+        const before = capture();
         const card = path.join(root, 'characters', x.avatar), originalCard = fs.readFileSync(card);
         const undo = flag('dyl43-after-revoke'); let response;
         try {
@@ -107,10 +109,11 @@ export async function run(h) {
         assert.deepEqual(fs.readFileSync(card), originalCard); assert.equal(bytes(x.file), x.canonical);
         assert.equal((await oldCas(x, 400)).error, 'INVALID_TARGET');
         assert.equal((await first.api('accept-load', x.ticket.request, 400)).error, 'INVALID_TARGET');
-        if (operation !== 'import') await first.api('read', { target: healthy.active.target });
+        if (untouched) await first.api('read', { target: untouched.active.target });
         cp(`post-revocation ${operation} inspected failure finalizes VERIFIED_REVOCATION, never clean abort`, { x, before, response });
         await restart(); assert.equal((await load(x)).envelope.identity, null);
         assert.equal((await oldCas(x, 400)).error, 'INVALID_TARGET'); assert.equal(bytes(x.visualFile), x.visual);
+        if (untouched) assert.ok((await load(untouched)).target);
         // Multipart import deliberately revokes all scopes. Fresh unrelated authority remains possible.
         const next = await fixture(`AfterRevocation-${operation}`); assert.ok((await load(next)).target);
         cp(`post-revocation ${operation} restart retains revocation and permits healthy native/visual work`, { x, next });
