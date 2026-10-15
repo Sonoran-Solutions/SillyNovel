@@ -1,0 +1,20 @@
+{
+  "testedProofSha": "1291fe610fe1a6700c4779b67fa4f4165df1fa49",
+  "files": {
+    "host-storage.mjs": "77c5397c402e40bbc1580eb55e9f6df1559d1eaa7ab9ad5178e2ba86d4bd722a",
+    "host-visit.js": "dd18e8e1b71aa3dc60e2e9e1c3e22f43064edab5f8435f5643acf0c24b2f9287",
+    "host-envelope.patch": "e73905b37c59b20a6f9844050a4152e7c25a02d1bb6ccaa9e908968ae665996d",
+    "host-probe.mjs": "aa0909524fd054f39dca2f1d29f530493db7f90a4ba21f24a0211c7da455e3d0",
+    "dyl27-host-mount.patch": "a30ddf37b47c99d3db0e575df339e8fe3411b97914551a1351f9d0d6e312c6aa",
+    "dyl42-host-writers.patch": "af14a89522f954345914f71762b436f9ff4d9db2d3f1b22557eafd9b3d6f3b83",
+    "dyl42-writer-campaign.mjs": "210ecf940952bb2331d5e616eee6efc4317e2ad8d6c787aa9b85c5290a51fec7",
+    "dyl43-host-lifecycle.patch": "232f3cef407229df54ad41e9026bde3fcc8076419dd1ac33f616c13fffd420c7",
+    "dyl43-lifecycle-campaign.mjs": "05fceb5eb74b4eaa4a6045a99ca9a4a9b155246d0eb59a998838f8423f0b9571",
+    "dyl44-host-generations.patch": "e4dae9a1a5d6f98db8bea0cabf589f80245dde1b150fe9c2981c7fd12770f5ce",
+    "dyl44-generation-campaign.mjs": "66b5d35a6b99dbeb8514bce68d80941836139507549fd4412fcd02e72d51ed1f",
+    "dyl45-host-authority.patch": "bb13288e7828b8551bf879a8674a94f2814866e674f4c7f208126e3222414497",
+    "dyl45-authority-campaign.mjs": "127e3945eb1a27895b34999d92f45f8903401aa995b1bb15826ae88119584052",
+    "owned-content-index.json": "3573dde3fda762bd77bda4464fbf250b309164475e45d61548275eeb65d5c2d6",
+    "applied-host-storage.mjs": "3908cef7d8f341061ffb0b79cfcf26e406c788839ce3560ed5cde840550f15b2"
+  }
+}
