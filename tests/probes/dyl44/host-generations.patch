@@ -1,0 +1,262 @@
+--- a/src/dyl27-storage.mjs
++++ b/src/dyl27-storage.mjs
+@@ -1,6 +1,7 @@
+ // DYL-27 registry plus DYL-28 load-envelope proof; copied into a disposable host only.
+ import fs from 'node:fs';
+ import path from 'node:path';
++import { AsyncLocalStorage } from 'node:async_hooks';
+ import { createHash, randomUUID } from 'node:crypto';
+ 
+ export const namespace = 'sillynovel-dyl27';
+@@ -56,12 +57,93 @@
+         const relativePath = path.relative(userRoot, file);
+         for (const chat of catalog.chats) if (chat.relativePath === relativePath) chat.disabled = true;
+     } else {
+-        for (const scope of catalog.scopes) if (avatars === null || avatars.includes(scope.avatar)) scope.disabled = true;
++        for (const scope of catalog.scopes) if (avatars === null || avatars.includes(scope.avatar)) { scope.disabled = true; scope.incarnation++; }
+     }
+     persist(userRoot, catalog); // Failure propagates BEFORE canonical mutation.
+     if (fs.existsSync(path.join(rootFor(userRoot), 'dyl43-after-revoke'))) fail('INJECTED_AFTER_REVOCATION', 503);
+ }
++// DYL-44: a store-wide lock reserves every source/destination locator before routing.
++// ponytail: one process, participating routes only; no external-writer or power-loss guarantee.
++const writers = new AsyncLocalStorage();
++const activeWriters = new Map();
++const writerRoutes = new Set([
++    '/api/characters/create', '/api/characters/rename', '/api/characters/delete',
++    '/api/characters/import', '/api/characters/edit-avatar',
++    '/api/chats/save', '/api/chats/import', '/api/chats/rename', '/api/chats/delete',
++    '/api/data-maid/delete',
++]);
++const reservationFile = root => path.join(root, 'sillynovel-dyl44-reservation.json');
++function reservation(root) {
++    const state = JSON.parse(fs.readFileSync(reservationFile(root), 'utf8'));
++    if (!uuid(state.storeIncarnation) || !Number.isSafeInteger(state.serial) || state.serial < 0
++        || !(state.pending === null || (uuid(state.pending.operationId) && typeof state.pending.operation === 'string'))) fail('RESERVATION_UNAVAILABLE', 503);
++    return state;
++}
++function assertWriter(root) {
++    const owned = writers.getStore();
++    const state = reservation(root);
++    if (!owned || owned.root !== root || activeWriters.get(root) !== owned
++        || state.pending?.operationId !== owned.operationId) fail('STALE_RESERVATION', 409);
++}
++export async function lifecycleBarrier(root, point) {
++    assertWriter(root);
++    const arm = path.join(rootFor(root), `dyl44-barrier-${point}`);
++    if (!fs.existsSync(arm)) return;
++    fs.writeFileSync(`${arm}.entered`, writers.getStore().operationId);
++    const deadline = Date.now() + 10000;
++    while (fs.existsSync(arm)) {
++        if (Date.now() > deadline) fail('BARRIER_TIMEOUT', 503);
++        await new Promise(resolve => setTimeout(resolve, 10));
++    }
++    assertWriter(root); // Cancellation or waiting alone cannot confer ownership.
++}
++function generation(root, catalog, chat) {
++    const state = reservation(root);
++    if (state.pending) fail('IDENTITY_UNAVAILABLE', 409);
++    const scope = catalog.scopes.find(s => s.scopeId === chat.scopeId);
++    if (!uuid(chat.incarnation) || !Number.isSafeInteger(chat.writeGeneration) || chat.writeGeneration < 1
++        || !Number.isSafeInteger(scope?.incarnation) || scope.incarnation < 1) fail('IDENTITY_UNAVAILABLE', 409);
++    return JSON.stringify([state.storeIncarnation, scope.incarnation, chat.incarnation, chat.writeGeneration]);
++}
++function installReservations(app) {
++    app.use((req, res, next) => {
++        const route = req.path.replace(/\/+$/, '').toLowerCase();
++        if (req.method !== 'POST' || !writerRoutes.has(route)) return next();
++        const root = req.user.directories.root;
++        let state;
++        try {
++            if (activeWriters.has(root)) fail('RESERVATION_BUSY', 409);
++            if (!fs.existsSync(reservationFile(root)) && !fs.existsSync(rootFor(root))) {
++                atomic(reservationFile(root), { storeIncarnation: randomUUID(), serial: 0, pending: null });
++            }
++            state = reservation(root);
++            if (state.pending) fail('UNRESOLVED_RESERVATION', 503);
++            if (state.serial === Number.MAX_SAFE_INTEGER) fail('GENERATION_LIMIT', 503);
++            state.serial++;
++            state.pending = { operationId: randomUUID(), operation: route, reservedLocators: ['*'] };
++            if (fs.existsSync(path.join(rootFor(root), 'dyl44-reserve-failure'))) fail('RESERVATION_PERSIST_FAILED', 503);
++            atomic(reservationFile(root), state); // Synchronous durable intent before next/native mutation.
++        } catch (error) { return res.status(error.status ?? 503).json({ error: error.code ?? 'RESERVATION_UNAVAILABLE' }); }
++        const owned = { root, operationId: state.pending.operationId };
++        activeWriters.set(root, owned);
++        const end = res.end;
++        res.end = function (...args) {
++            try {
++                assertWriter(root);
++                if (fs.existsSync(path.join(rootFor(root), 'dyl44-finalize-failure'))) fail('FINALIZATION_FAILED', 503);
++                // Failed native operations retain their scoped tombstones/pending registry.
++                // Clearing the route lock never restores any identity or visual record.
++                atomic(reservationFile(root), { ...state, pending: null });
++            } catch { /* Disk intent remains: all visual authority and participating writers refuse after restart. */ }
++            activeWriters.delete(root);
++            return end.apply(this, args);
++        };
++        // No close/abort release: an abandoned request cannot reopen an unfinished mutation.
++        writers.run(owned, next);
++    });
++}
+ export function scopeCreated(userRoot, avatar) {
++    assertWriter(userRoot);
+     const root = rootFor(userRoot);
+     if (!fs.existsSync(root)) {
+         fs.mkdirSync(root);
+@@ -71,12 +153,13 @@
+     if (catalog.pending) return;
+     const existing = catalog.scopes.find(s => s.avatar === avatar);
+     if (existing) { existing.disabled = true; persist(userRoot, catalog); return; }
+-    catalog.scopes.push({ avatar, scopeId: randomUUID() });
++    catalog.scopes.push({ avatar, scopeId: randomUUID(), incarnation: 1 });
+     persist(userRoot, catalog);
+ }
+ // ponytail: single-process, newly created character scopes only. A pending transaction
+ // refuses visual access after restart; recovery/adoption needs a reviewed host protocol.
+ export function nativeMutation(userRoot, file, operation, action, destination) {
++    if (!file.includes(`${path.sep}group chats${path.sep}`)) assertWriter(userRoot);
+     let catalog, chat;
+     try {
+         catalog = load(userRoot);
+@@ -98,7 +181,7 @@
+         catalog.pending = { operation, relativePath, destination: destination && path.relative(userRoot, destination) };
+         try { persist(userRoot, catalog); } catch { fail('MUTATION_INVALIDATION_FAILED', 503); }
+         if (!chat) {
+-            chat = { relativePath, scopeId: scope.scopeId, chatId: randomUUID() };
++            chat = { relativePath, scopeId: scope.scopeId, chatId: randomUUID(), incarnation: randomUUID(), writeGeneration: 0 };
+             catalog.chats.push(chat);
+         }
+     } catch (error) {
+@@ -111,6 +194,8 @@
+     if (catalog) {
+         if (process.env.SN_DYL27_INTERRUPT === operation) return result;
+         try {
++            if (!Number.isSafeInteger(chat.writeGeneration) || chat.writeGeneration === Number.MAX_SAFE_INTEGER) return result;
++            chat.writeGeneration++;
+             if (operation === 'delete') chat.deleted = true;
+             else {
+                 if (destination) chat.relativePath = path.relative(userRoot, destination);
+@@ -145,6 +230,7 @@
+         || fs.readFileSync(path.join(dataRoot, '.dyl27-owned'), 'utf8') !== runId) {
+         throw new Error('DYL27 requires an explicitly owned disposable data root');
+     }
++    installReservations(app);
+     const clients = new Map();
+     const loadRequests = new Map();
+     // Multipart routes run before field parsing here: revoke all existing scopes.
+@@ -163,6 +249,8 @@
+         try { catalog = JSON.parse(fs.readFileSync(path.join(root, 'identities.json'), 'utf8')); }
+         catch { fail('IDENTITY_UNAVAILABLE', 409); }
+         if (catalog.pending || !uuid(catalog.storeId) || !Array.isArray(catalog.chats) || !Array.isArray(catalog.scopes)) fail('IDENTITY_UNAVAILABLE', 409);
++        try { if (reservation(userRoot).pending) fail('IDENTITY_UNAVAILABLE', 409); }
++        catch { fail('IDENTITY_UNAVAILABLE', 409); }
+         return { userRoot, root, catalog };
+     }
+     function clientFor(req, clientId) {
+@@ -177,11 +265,13 @@
+         client.sourceRevision = null;
+     }
+     function supersedeLoads(clientId) {
+-        for (const load of loadRequests.values()) if (load.clientId === clientId && !load.consumed) load.superseded = true;
++        for (const [id, load] of loadRequests) if (load.clientId === clientId) {
++            if (load.consumed) loadRequests.delete(id); else load.superseded = true;
++        }
+     }
+     function pruneLoadRequests() {
+         const now = Date.now();
+-        for (const [id, load] of loadRequests) if (load.expiresAt <= now) loadRequests.delete(id);
++        for (const [id, load] of loadRequests) if (load.expiresAt <= now && !load.consumed) loadRequests.delete(id);
+         if (loadRequests.size >= 256) fail('LOAD_CAPACITY', 429);
+     }
+     function chatFor(context, chatId) {
+@@ -213,6 +303,8 @@
+         if (chat.sourceRevision !== target.sourceRevision) fail('SOURCE_REVISION_MISMATCH', 409);
+         if (client.chatId !== target.chatId || client.viewToken !== target.viewToken
+             || client.loadRequestId !== target.loadRequestId || client.sourceRevision !== target.sourceRevision) fail('STALE_VIEW', 409);
++        const accepted = loadRequests.get(target.loadRequestId);
++        if (!accepted || accepted.generation !== generation(context.userRoot, context.catalog, chat)) fail('WRITE_GENERATION_MISMATCH', 409);
+         return { ...context, chat, client, file: path.join(context.root, `${chat.chatId}.json`) };
+     }
+     function read(context) {
+@@ -281,7 +373,7 @@
+             const identity = { storeId: context.catalog.storeId, scopeId: chat.scopeId, chatId: chat.chatId };
+             loadRequests.set(loadRequestId, { loadRequestId, clientId, session: req.session.dyl27Session,
+                 user: req.user.profile.handle, sequence, relativePath, identity, sourceRevision: chat.sourceRevision,
+-                sourceSha256: chat.seal.sha256, expiresAt: Date.now() + 30000, consumed: false, superseded: false });
++                generation: generation(context.userRoot, context.catalog, chat), sourceSha256: chat.seal.sha256, expiresAt: Date.now() + 30000, consumed: false, superseded: false });
+             client.loadRequestId = loadRequestId;
+             envelope.identity = identity;
+             envelope.sourceRevision = chat.sourceRevision;
+@@ -306,6 +398,7 @@
+         const chat = chatFor(context, load.identity.chatId);
+         if (chat.relativePath !== load.relativePath) fail('STALE_LOAD', 409);
+         if (chat.sourceRevision !== load.sourceRevision || chat.seal.sha256 !== load.sourceSha256) fail('SOURCE_REVISION_MISMATCH', 409);
++        if (load.generation !== generation(context.userRoot, context.catalog, chat)) fail('WRITE_GENERATION_MISMATCH', 409);
+         load.consumed = true;
+         client.chatId = chat.chatId;
+         client.sourceRevision = chat.sourceRevision;
+@@ -320,6 +413,8 @@
+         const context = catalogFor(req);
+         const chat = chatFor(context, client.chatId);
+         if (chat.sourceRevision !== client.sourceRevision) fail('SOURCE_REVISION_MISMATCH', 409);
++        const accepted = loadRequests.get(client.loadRequestId);
++        if (!accepted || accepted.generation !== generation(context.userRoot, context.catalog, chat)) fail('WRITE_GENERATION_MISMATCH', 409);
+         return { storeId: context.catalog.storeId, scopeId: chat.scopeId, chatId: chat.chatId,
+             clientId: req.body.clientId, viewToken: client.viewToken,
+             loadRequestId: client.loadRequestId, sourceRevision: client.sourceRevision };
+--- a/src/endpoints/characters.js
++++ b/src/endpoints/characters.js
+@@ -1,4 +1,4 @@
+-import { scopeCreated, revokeLifecycle } from '../dyl27-storage.mjs';
++import { scopeCreated, revokeLifecycle, lifecycleBarrier } from '../dyl27-storage.mjs';
+ import path from 'node:path';
+ import fs from 'node:fs';
+ import { promises as fsPromises } from 'node:fs';
+@@ -252,6 +252,7 @@
+         }
+ 
+         const inputImage = await getInputImage();
++        if (process.env.SN_DYL27_RUN && ['/api/characters/create', '/api/characters/rename', '/api/characters/import', '/api/characters/edit-avatar'].includes(request.originalUrl.split('?')[0])) await lifecycleBarrier(request.user.directories.root, 'card-write');
+ 
+         // Get the chunks
+         const outputImage = write(inputImage, data);
+@@ -1033,6 +1034,7 @@
+         const avatarName = `${internalName}.png`;
+         const chatsPath = path.join(request.user.directories.chats, internalName);
+ 
++        if (process.env.SN_DYL27_RUN) revokeLifecycle(request.user.directories.root, [avatarName]);
+         if (!fs.existsSync(chatsPath)) fs.mkdirSync(chatsPath);
+ 
+         if (!request.file) {
+@@ -1075,6 +1077,7 @@
+         const rawOldData = await readCharacterData(oldAvatarPath);
+         if (rawOldData === undefined) throw new Error('Failed to read character file');
+ 
++        if (process.env.SN_DYL27_RUN) await lifecycleBarrier(request.user.directories.root, 'rename-read');
+         const oldData = getCharaCardV2(JSON.parse(rawOldData), request.user.directories);
+         _.set(oldData, 'data.name', newName);
+         _.set(oldData, 'name', newName);
+@@ -1448,6 +1451,7 @@
+ 
+     if (request.body.delete_chats == true) {
+         try {
++            if (process.env.SN_DYL27_RUN) await lifecycleBarrier(request.user.directories.root, 'delete-cleanup');
+             await fs.promises.rm(path.join(request.user.directories.chats, sanitize(dir_name)), { recursive: true, force: true });
+         } catch (err) {
+             console.error(err);
+--- a/src/endpoints/data-maid.js
++++ b/src/endpoints/data-maid.js
+@@ -1,4 +1,4 @@
+-import { revokeLifecycle } from '../dyl27-storage.mjs';
++import { revokeLifecycle, lifecycleBarrier } from '../dyl27-storage.mjs';
+ import crypto from 'node:crypto';
+ import fs from 'node:fs';
+ import path from 'node:path';
+@@ -807,6 +807,7 @@
+             }
+ 
+             if (process.env.SN_DYL27_RUN) revokeLifecycle(req.user.directories.root, null, pathToFile);
++            if (process.env.SN_DYL27_RUN) await lifecycleBarrier(req.user.directories.root, 'maid-unlink');
+             await fs.promises.unlink(pathToFile);
+         }
+ 

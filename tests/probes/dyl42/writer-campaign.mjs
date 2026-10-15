@@ -114,7 +114,8 @@ export async function run(h) {
     await first.request('/api/chats/save', { avatar_url: avatarA, file_name: parentName, chat: messages });
     assert.equal(raw(parent), unchanged);
     assert.equal(entry(avatarA, parentName).sourceRevision, 1);
-    await first.api('read', { target: beforeNoop.target });
+    if (process.env.SN_DYL44) assert.equal((await first.api('read', { target: beforeNoop.target }, 409)).error, 'WRITE_GENERATION_MISMATCH');
+    else await first.api('read', { target: beforeNoop.target });
     const editLoad = await load(avatarA, parentName);
     const ticketClient = (await first.api('client')).clientId;
     const ticket = await first.request('/api/chats/get', { avatar_url: avatarA, file_name: parentName,
