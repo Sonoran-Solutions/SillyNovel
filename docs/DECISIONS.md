@@ -132,3 +132,12 @@ The owner's pasted M1.2-J assignment authorizes only [DYL-44](https://linear.app
 The pasted “SillyNovel M1.2-L: External Authority Reconciliation and Safe Failure Recovery” assignment authorizes this bounded investigation and one open/unmerged experimental PR after PR #19 merged / DYL-45 Done. [DYL-46 report](M1_EXTERNAL_AUTHORITY_RECONCILIATION.md) records forward-only clean-abort and coordinated read-revocation engineering choices, **not owner approval** of a release or replacement compatibility contract.
 
 Measured recommendation **REVISE; compatibility REQUEST CHANGES / HOLD**. The unchanged writer suite is fully passing; lifecycle and other predecessor campaigns retain documented failures and unreached suffixes. A failed observation with no durable external intent cannot survive unknown byte restoration plus restart. Owner decisions about durable failure evidence, scoped availability, writer exclusion and authority ownership remain open. No issue Done, merge, production persistence, DYL-22/23 unblock, M1.3/M2 authorization or Gate A verdict is inferred.
+
+
+## DYL-46 senior-review correction assignment — 2026-10-15
+
+The owner supplied the senior review of PR #20 head `20086abbdbe82087cd98ffef842faca8a8be8fb1`, requesting durable refusal evidence for failed observations and an explicit completed-revocation transition at verified post-revocation native failures. Those two experimental corrections remain within DYL-46 and PR #20. [Current correction record](M1_EXTERNAL_AUTHORITY_RECONCILIATION.md#pr-20-review-corrections--2026-10-15) distinguishes tested changes from owner verdicts.
+
+The chosen engineering contract journals identity-bearing seal validation in independent authority before inspecting canonical seals; unfinished validation refuses across restart and may sacrifice whole-store availability even for a healthy interrupted read. The explicit inspected pre-native throw after durable revocation may finalize VERIFIED_REVOCATION, never clean abort. Partial canonical writes and unclassified failures remain refused. These choices are not production policy approval, permission to reconstruct missing witness history, or a blanket waiver of old assertions.
+
+The new failed-observation refusal and completed-revocation proofs pass; inherited lifecycle still fails later at partial mutation, DYL-44/45 expectations remain unresolved, and unchanged Chromium is 23/24. Recommendation REVISE / compatibility HOLD. Keep PR #20 open/unmerged and DYL-46 In Review; downstream blockers and Gate A NOT_RUN remain.

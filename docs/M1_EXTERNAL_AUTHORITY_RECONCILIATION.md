@@ -1,5 +1,97 @@
 # DYL-46: External authority reconciliation
 
+## PR #20 review corrections — 2026-10-15
+
+**Feasibility: REVISE. Compatibility/merge recommendation: REQUEST CHANGES / HOLD.** The two reviewed boundaries now have direct replacement proofs: the failed-observation history survives restart, and the inspected post-revocation/pre-native failure completes as VERIFIED_REVOCATION. Complete inherited compatibility remains unresolved, and the unchanged Chromium suite currently has a failing assertion. PR #20 remains open/unmerged; DYL-46 remains In Review. No owner verdict or replacement-contract approval is inferred.
+
+The owner supplied the senior review of head `20086abbdbe82087cd98ffef842faca8a8be8fb1`, authorizing these corrections within the existing experimental PR. Starting main remains `104610632a58481a63d948005c2c0f7a2d07f431`; pinned SillyTavern 1.19.0 remains `7e8663cd9c184a550b37238218bdd32c6efc68e9`. The supplied checkout at `4688646861274d9b5c993e9c478628d84c700144` and all production extension files remain unchanged. DYL-42 through DYL-45 campaign assertions and the actual-entry Chromium test file are unchanged.
+
+Protocol proof is `37cef930fcbde90ccbb20071fa4834a3dddc91b6`. Final reconciliation/writer proofs and Node/Chromium runs use `b57257fde1190ca5b074ed276ba12591f40c7ec5`; the intervening commit changes only a test fixture's expired-client reuse. Host patch, runner and composed host module bytes are identical at both proofs. [Per-run revisions and inputs](evidence/dyl46/review/runs.json) and [all module/input hashes](evidence/dyl46/review/proof-hashes.json) retain that distinction. Final pushed head belongs in the PR/Linear handoff.
+
+### Durable validation witness
+
+A process-local drift map is insufficient. The correction removes it and journals **each identity-bearing canonical seal validation before inspecting that seal**. The provisioned witness file lives under `host-authority/validation/<host-root-digest>.json`, outside the entire restorable user data root. Its root, authenticated-account binding, store instance and trusted incarnation must match independent authority. A pending witness contains a host UUID, chat UUID, starting external generation and finalized registry digest. Clients cannot create, choose, clear or replay that capability.
+
+Ordering is:
+
+1. Authenticate and verify independent external/local authority, exact registry digest and a healthy provisioned witness.
+2. Atomically persist pending validation with file fsync/rename. If this fails, do not inspect the canonical seal or authorize visuals.
+3. Inspect the seal synchronously. A matching source clears only its owned validation witness before returning authority; failure to clear refuses and retains the witness.
+4. A mismatch retains the witness while the internal revocation transaction uses its private validation UUID to acquire the existing external/local reservation. Ordinary readers, writers and enrollment cannot bypass pending validation.
+5. Advance external intent before local revocation as before; disable only the observed chat, finalize local/external state, then clear the same owned witness. No await occurs during the final writes.
+6. Any incomplete witness/transition stays refused across restart. There is no automatic replay, clearing, timeout, digest repair or reconstruction.
+
+The known external-parent EACCES fault cannot erase the witness: its pre-created child directory has its own write permission. If the witness directory itself cannot be written, validation refuses **before a seal comparison**. This is an ordering guarantee, not an assumption that a second attempted write always succeeds. Both are in the same independently controlled host-authority trust boundary and must be retained together outside root snapshots. Host-authority rollback or hostile control of that boundary is still unsupported.
+
+The former unsafe sequence is now a positive refusal regression: observed drift → external intent failure → exact canonical-byte restoration → restart twice → native text readable, old visual read/CAS and enrollment refused. The witness bytes remain identical. Actual external-directory EACCES, injected external-intent failure, witness begin/finalize failure, missing/corrupt/wrong-binding witness, process interruption, native/read concurrency and competing enrollment are included. Missing witnesses are never initialized from populated roots.
+
+Native text loading alone may read ordinary transcript bytes before the visual envelope is built; it grants no identity. The journal precedes the identity-authorizing seal comparison. Unknown writes that are restored **before any successful observed validation** remain the separately retained unknown-writer counterexample.
+
+This deliberately trades availability for durable refusal: an interrupted healthy validation may strand the whole store too. No production performance claim is made; the experimental synchronous per-validation fsync/rename ceiling is explicit in the patch. No multi-process, power-loss or parent-directory-fsync guarantee is added.
+
+### Completed post-revocation outcome
+
+The shared revocation helper can attest the exact inspected `dyl43-after-revoke` failure boundary: registry revocation was persisted, and the native caller has not resumed. It captures that committed registry digest under the current reservation owner. Response finalization checks ownership, serial/incarnation, no entered canonical boundary, the exact committed revocation digest and no inner pending registry before completing **VERIFIED_REVOCATION** at the advanced generation.
+
+This is not VERIFIED_CLEAN_ABORT: scope/chat authority has changed and remains revoked. Native error status is preserved; held old CAS/load tickets refuse with INVALID_TARGET, while unaffected scoped authority remains usable. Rename/delete and multipart import are tested before and after restart. Multipart import deliberately revokes all existing scopes, so it cannot promise those old scopes remain usable; fresh unrelated native/visual work does succeed. Reservation/external-finalization faults retain pending refusal instead of restoring an old generation.
+
+The attestation is restricted to the known pre-native failure site. Generic errors and partial canonical operations are not inferred safe from unchanged transcript bytes. A rename that already wrote a new card remains INDETERMINATE and refused. No arbitrary pending intent is cleared to obtain a passing suite.
+
+### Current measured disposition
+
+| Campaign | Reviewed submission | Corrected overlay | Disposition |
+| --- | --- | --- | --- |
+| New reconciliation | 43 expected, 2 unsafe controls | **56/56 expected = 16 inherited + 40 new; ONE unsafe control** | Lost-observation case now proves durable refusal; unobserved unknown writer remains unsafe |
+| Unchanged DYL-42 writers | 33/33 | **33/33 complete** | Retained pass; an earlier common-setup timeout is preserved separately |
+| Unchanged DYL-43 lifecycle | FAIL after 21 | **FAIL after 23** | Reviewed post-revocation rename/delete cases pass; next partial rename at `lifecycle-campaign.mjs:153` → `revoked:43` expects 400 INVALID_TARGET, actual 409 IDENTITY_UNAVAILABLE. Still blocks full compatibility |
+| Unchanged DYL-44 generations | FAIL after 27 | **FAIL after 27** | External intent precedes local reservation-parent EACCES; next fixture create at line 177 receives EXTERNAL_LOCAL_MISMATCH. Conservative refusal unchanged |
+| Unchanged DYL-45 authority | FAIL after 32 | **FAIL after 31** | Line 157 → `unavailable:50` expects store-wide 409 after the inspected post-revocation failure; new completed revocation correctly gives scoped 400. Malformed-header pending expectation at line 164 is now NOT_REACHED, still an intentional contract difference |
+| Node TAP | 64/64 | **64/64** | No failures/skips |
+| Actual-entry Chromium | 24/24 | **23/24 on both attempts** | Unchanged line 445 expects false, actual undefined from absent-source optional chaining. Test remains red; no assertion or production fix included |
+
+Counts overlap. Passing prefixes are not full campaigns. No inherited assertion has been weakened, skipped or silently replaced. The reviewed lifecycle regression is fixed, but a full inherited pass is still unavailable; the new campaign explicitly proves partial-write refusal and finalization faults. Owner review is still required for the remaining scoped-versus-whole-store refusal contract and DYL-45's changed expectations. The requested implementation correction is not a blanket waiver of those assertions.
+
+The Chromium result is separate from host reconciliation. Its assertion chains `getAttribute('src')` through `x?.startsWith('blob:')`; an absent source yields undefined although no stale blob source is present. This explains the assertion mismatch, but **does not convert either run to PASS**. The original test and runtime remain unchanged. The writer timeout occurred in the common provider UI setup before its new campaign; the successful retry does not erase that unsuccessful run or establish its cause.
+
+### Safety and evidence comparison
+
+| Boundary | Persisted evidence and result |
+| --- | --- |
+| External intent cannot persist after drift | Validation witness already committed; local registry/reservation and main external authority unchanged; restored canonical bytes and restart cannot release it |
+| Validation witness cannot begin | No canonical seal comparison; no visual authorization; prior bytes preserved |
+| Healthy validation cannot finalize witness | Pending witness survives restart; no authority returned |
+| Witness missing/corrupt/account binding wrong | Refuse without reconstruction; native text remains readable in the tested file-level faults |
+| Completed inspected post-revocation failure | Forward VERIFIED_REVOCATION; revoked identity never reenabled; healthy unrelated work resumes |
+| Revocation finalization fails | Local or external pending remains; restart cannot apply the volatile attestation |
+| Partial native rename | Both cards can exist with unchanged old transcript; never classified clean abort or completed revocation |
+| Root-only rollback / forged local fields | Prior generation/digest checks remain intact; witness ownership cannot bypass them; old record bytes remain unchanged |
+| Concurrent native/read/enrollment transitions | Shared reservation plus pending validation excludes losers; no nested reservation or competing mutation |
+| Unobserved in-place write/restore | ONE retained unsafe counterexample; no new unknown-writer-exclusion claim |
+
+[Transition bytes](evidence/dyl46/review/transition-bytes.json) include actual witness, external, reservation, registry, canonical and visual bytes/hashes for these cases. Complete raw JSON is losslessly XZ-compressed alongside the [run index](evidence/dyl46/review/runs.json). The previous submission's [run index](evidence/dyl46/runs.json), both unsafe controls and all old failed runs remain unchanged. All nine new host attempts, including development/failures, verify owned process shutdown, owned-root removal and unchanged pinned source checkout. [Preparation cleanup](evidence/dyl46/review/preparation-cleanup.json) is separate. [New checksums](evidence/dyl46/review/SHA256SUMS) and the original checksums both verify their respective evidence sets.
+
+| Corrected proof input | SHA-256 |
+| --- | --- |
+| `tests/probes/dyl28/host-probe.mjs` | `31ca01fe42bfb57a1c072f5b5e58e254934e1902b96cf1971baf8ba5f9c8072e` |
+| `tests/probes/dyl46/host-reconciliation.patch` | `48ef2ade7ac0d81e2b045dce30cd12102802e67e0e608ecd3942e790995e3a3f` |
+| `tests/probes/dyl46/reconciliation-campaign.mjs` | `108308d5dc26d6607aa39e26c6b4cb77e2dc01a401fdcd81ef9997c2153d9761` |
+| `src/dyl27-storage.mjs` | `58644831801c694ca63ac7a6c3ea555db0ff4d562a5f5e5b189054d51a2a7f8a` |
+| `src/endpoints/chats.js` | `3fcfb3a198b589db474b6961277b7d8f27f1cb46bd84b7d218f6a27e1ab41316` |
+| `src/endpoints/characters.js` | `6d62a3bc31ce2a8801a8410055aceba6654f9acb57a59ebae27c999351f50065` |
+| `src/endpoints/data-maid.js` | `01c704f5df3d06c043e66dc0da8778f6901c591921089176aab3308ed41e52a1` |
+
+
+Exact new host commands and output paths are recorded per run in the index. They use the original owned DYL-28 runner, pinned host and installed Playwright dependencies, with `SN_DYL46_TRACE=1`; reconciliation enables `SN_DYL46=1 SN_DYL44=baseline SN_DYL45=baseline`, while inherited comparisons apply `SN_DYL46=baseline` and select their original campaign. No dependency install, real provider, paid service, installed host/profile or production extension change occurred. Syntax of all composed changed host modules, Node/Chromium output, doc-link and whitespace checks, lossless XZ round trips, exact input hashes and owned cleanup are recorded. No hosted CI pass is claimed.
+
+**Remaining decisions and smallest next step:** keep REVISE / HOLD. Review the partial-native-operation refusal contract and the DYL-44/45 replacement expectations, and separately resolve the unchanged browser assertion before claiming complete regression compatibility. A durable witness recovery/migration service, unknown-writer enforcement and production persistence remain out of scope. DYL-22/23 blocked; DYL-24 session-only; M1.3/M2 unauthorized; Gate A NOT_RUN. No merge, Done status or further implementation follows automatically.
+
+---
+
+## Historical original submission — reviewed head 20086ab
+
+The remainder records the original 2026-10-14 experiment. Its current-code descriptions, counts and known lost-observation limit are historical and superseded by the correction record above; the underlying evidence remains preserved.
+
+
 **Feasibility: REVISE. Compatibility/merge recommendation: REQUEST CHANGES / HOLD.** The experiment recovers forward after specifically attested non-mutating failures and coordinates observed drift revocation with independent authority. It does not establish general failure recovery or complete inherited compatibility. No owner approval of a replacement contract is inferred.
 
 The answer is **yes for the demonstrated clean-abort and completed revocation paths, with the independent authority intact; not for every failure history required by the broader contract**. Pending, partial and rolled-back stores remain refused. An unwritable external intent followed by unknown byte restoration and process restart has no durable observation history; the negative control demonstrates that limit rather than counting it as safety.
