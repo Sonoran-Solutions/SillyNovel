@@ -116,3 +116,8 @@ The [spike report](M1_HOST_STORAGE_SPIKE.md) distinguishes experimental identity
 ## Owner assignment — 2026-10-12, DYL-27
 
 The owner's pasted DYL-27 assignment authorizes one native identity/activation feasibility experiment after merged PR #13, using a disposable pinned SillyTavern checkout and fresh synthetic data. It authorizes one open/unmerged PR only; no installed-host changes, permanent fork, production persistence, upstream publication, required plugin, DYL-22/23, M1.3, Gate A or M2. The [DYL-27 report](M1_NATIVE_IDENTITY_ACTIVATION.md) records engineering findings and bounded design choices, **not owner approval** of the registry, migration or release architecture. Recommendation remains REVISE; subsequent work needs its own authorization.
+
+
+## Owner assignment and bounded engineering findings — 2026-10-14, DYL-42
+
+The owner's pasted DYL-42 assignment authorizes one disposable pinned-host writer-coverage proof and one focused open/unmerged PR, after PR #15 merged and DYL-28 became Done. It does not authorize production persistence, migration/recovery, upstream publication, a permanent fork, a required plugin or later milestones. The [writer report](M1_NATIVE_WRITER_COVERAGE.md) records fresh-import enrollment, no-op source revisions, conservative collision/pending refusal and blanket group visual refusal as **experimental engineering choices**, not owner-approved release policy. Recommendation: REVISE; no new human gate verdict. DYL-22/23 blockers remain, DYL-24 stays session-only, M1.3 remains unauthorized and Gate A NOT_RUN.

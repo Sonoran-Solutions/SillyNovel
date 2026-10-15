@@ -60,6 +60,7 @@ The image plan therefore includes manual prompt/reference export and result impo
 | [Roadmap](docs/ROADMAP.md) | Small implementation slices and human acceptance gates |
 | [Transient manual stage](docs/M1_TRANSIENT_STAGE.md) | M1.2-D0 unsaved prototype, fixture hashes, installation and host evidence |
 | [M1 reader plan](docs/M1_PLAN.md) | DYL-15 interaction designs, component contracts, dependencies, and pending owner decisions |
+| [Native writer coverage](docs/M1_NATIVE_WRITER_COVERAGE.md) | DYL-42 disposable import/group/branch proof, explicit refusals and remaining gaps |
 | [Testing](docs/TESTING.md) | Regression matrix and evidence requirements |
 | [M0 compatibility](docs/M0_COMPATIBILITY.md) | Pinned host source, smoke results, lifecycle limits, and open integration seams |
 | [Decisions](docs/DECISIONS.md) | User-stated scope, proposed defaults, and unresolved decisions |

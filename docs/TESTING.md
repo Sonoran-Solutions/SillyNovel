@@ -317,3 +317,10 @@ This is an **EXPERIMENTAL_HOST** storage/API test, not a native UI lifecycle tes
 ## DYL-27 native lifecycle experiment — 2026-10-12
 
 [Report, exact commands, hashes and classifications](M1_NATIVE_IDENTITY_ACTIVATION.md). The runner in `tests/probes/dyl27/host-probe.mjs` owns a disposable pinned host, synthetic accounts/cards/transcripts, browser context and deterministic loopback responder. It distinguishes native UI selection/editor/send, direct native browser-function calls, actual native endpoints, fault injection and synthetic regressions. Do not use its experimental API or patch as production persistence. Existing transcript adoption/import allocation, complete group/card lifecycle, reordered canonical load responses and automatic interrupted-update recovery remain blocked or untested. Gate A stays NOT_RUN.
+
+
+## DYL-42 native writers — 2026-10-14
+
+[Complete report and reproduction](M1_NATIVE_WRITER_COVERAGE.md). Set `SN_DYL42=1` when running `tests/probes/dyl28/host-probe.mjs` to apply the additional test-only writer patch and invoke `tests/probes/dyl42/writer-campaign.mjs` after all inherited checks. Use only a disposable pristine pinned host and a new evidence directory. Source inspection covers all listed native writers including startup migration, Data Maid, account reset/delete and BYAF import; inspection never certifies runtime support.
+
+The campaign distinguishes native browser-function invocations, clicked native controls, actual authenticated multipart/JSON endpoints and fault injection. It checks fresh/forged/identical imports, no-op versus changed source revisions, stale CAS/tickets, native copy/two branches and independent edits, four-member duplicate-label groups with explicit visual refusal, collision revocation before byte restoration, actual canonical and registry permission failures, malformed/corrupt/unknown state, restart and owned cleanup. Production stage/reader/reducer bytes remain unchanged. Full results/counts/hashes are in the linked report; Gate A stays NOT_RUN.
