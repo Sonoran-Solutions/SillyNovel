@@ -228,10 +228,49 @@ export async function run(h) {
         const before = capture(); const undo = flag(`dyl45-${point}-failure`);
         const response = await malformed(faulted, first, point === 'local-begin' ? 503 : 200); undo();
         assert.ok(external().pending); const pending = capture(); await restart();
-        const refusal = await refused(faulted); assert.deepEqual(capture(), pending);
-        cp(`clean-abort ${point} fault never releases pending evidence on restart`, { before, pending, response, refusal }, 'SYNTHETIC + EXPERIMENTAL_HOST');
+        if (point === 'local-begin') {
+            assert.ok(external().unstarted); const recovered = await load(faulted); assert.ok(recovered.target);
+            assert.equal(external().outcome, 'VERIFIED_CLEAN_ABORT'); assert.equal(external().pending, null);
+            assert.equal(bytes(registryFile), before[2][1]); assert.equal(bytes(faulted.file), faulted.canonical);
+            assert.equal(bytes(faulted.visualFile), faulted.visual);
+            cp('external-before-local durable receipt reconciles forward on authenticated load after restart', { before, pending, response, recovered });
+        } else {
+            const refusal = await refused(faulted); assert.deepEqual(capture(), pending);
+            cp('clean-abort finalize fault never releases pending evidence on restart', { before, pending, response, refusal }, 'SYNTHETIC + EXPERIMENTAL_HOST');
+        }
         reset(before);
     }
+    const unstarted = await fixture('UnstartedEACCES'); const unstartedBefore = capture();
+    fs.chmodSync(root, 0o500); let deniedBegin;
+    try { deniedBegin = await save(unstarted, 503); } finally { fs.chmodSync(root, 0o700); }
+    const receipt = external().unstarted; assert.ok(receipt); assert.equal(external().pending, receipt.operationId);
+    assert.equal(receipt.localDigest, h.hash(unstartedBefore[1][1])); assert.equal(bytes(localFile), unstartedBefore[1][1]);
+    assert.equal(bytes(registryFile), unstartedBefore[2][1]); assert.equal(bytes(unstarted.file), unstarted.canonical);
+    const durableIntent = bytes(authorityFile); await restart(); assert.equal(bytes(authorityFile), durableIntent);
+    const recovered = await load(unstarted); assert.ok(recovered.target); assert.equal(external().pending, null);
+    assert.equal(external().generation, JSON.parse(unstartedBefore[0][1]).generation + 1); assert.equal(local().serial, external().generation);
+    assert.equal(external().outcome, 'VERIFIED_CLEAN_ABORT'); assert.equal(bytes(registryFile), unstartedBefore[2][1]);
+    assert.equal((await first.api('read', { target: recovered.target })).revision, 1); await save(unstarted);
+    assert.equal(bytes(unstarted.file), unstarted.canonical); assert.equal(bytes(unstarted.visualFile), unstarted.visual);
+    cp('real local-parent EACCES: exact independently persisted unstarted receipt permits forward recovery and next native save', { unstarted, unstartedBefore, deniedBegin, receipt, durableIntent, recovered });
+
+    for (const point of ['local', 'finalize']) {
+        const x = await fixture(`Recovery-${point}`), before = capture(); const undoBegin = flag('dyl45-local-begin-failure');
+        await save(x, 503); undoBegin(); const undoRecovery = flag(`dyl46-recovery-${point}-failure`);
+        await save(x, 503); const pending = capture(); await restart(); await refused(x);
+        assert.deepEqual(capture(), pending); undoRecovery();
+        if (point === 'local') { const fresh = await load(x); assert.ok(fresh.target); }
+        else { await refused(x); assert.deepEqual(capture(), pending); }
+        cp(`forward recovery ${point} persistence failure never adopts incomplete state`, { x, before, pending }, 'SYNTHETIC + EXPERIMENTAL_HOST');
+        reset(before);
+    }
+    const noDispatch = await fixture('DispatchFence'), fenceBefore = capture(); const undoFence = flag('dyl45-route-failure');
+    await save(noDispatch, 503); undoFence(); assert.ok(external().unstarted); assert.ok(local().pending);
+    const fenced = capture(); await restart(); await refused(noDispatch); assert.deepEqual(capture(), fenced);
+    assert.equal(bytes(noDispatch.file), noDispatch.canonical);
+    cp('receipt cannot be blindly cleared when local reservation already committed and dispatch fence failed', { noDispatch, fenceBefore, fenced }, 'SYNTHETIC + EXPERIMENTAL_HOST');
+    reset(fenceBefore);
+
     for (const fault of ['missing', 'corrupt', 'wrong-account']) {
         const before = capture();
         if (fault === 'missing') fs.unlinkSync(authorityFile);
@@ -339,6 +378,8 @@ export async function run(h) {
     assert.equal(bytes(authorityFile), advancedAuthority); assert.equal(bytes(registryFile), beforeRollback[2][1]);
     const restored = capture();
     await malformed(rollback, first, 503); // Clean-abort hook is unreachable from an untrusted root.
+    await first.request('/api/chats/save', { avatar_url: rollback.avatar, file_name: rollback.chatName, chat: rollback.messages,
+        unstarted: receipt, generation: external().generation, operationId: receipt.operationId }, 503);
     fs.appendFileSync(rollback.file, '\n'); const rollbackRead = await load(rollback); assert.equal(rollbackRead.envelope.identity, null);
     fs.writeFileSync(rollback.file, rollback.canonical); // Attacker restores canonical bytes; no authority transition.
     await first.api('reenroll', { avatar: rollback.avatar }, 503); const rollbackRefusal = await refused(rollback);

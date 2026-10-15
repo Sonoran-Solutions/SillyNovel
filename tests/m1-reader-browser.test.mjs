@@ -433,7 +433,7 @@ test('session stage: delayed image cannot apply after same-source reset, manual 
         await field(page,'Temporary raster file').setInputFiles(resolve(root,'tests/fixtures/m12-stage/forest.png'));
         await page.waitForFunction(()=>window.delayedReady);
     };
-    const finish=()=>page.evaluate(()=>{completeImage();Image.prototype.decode=baseDecode;});
+    const finish=()=>page.evaluate(async()=>{await completeImage();Image.prototype.decode=baseDecode;});
     await delay();await button(page,'Reset transient visuals').click();await finish();
     await page.waitForFunction(()=>document.querySelector('.sillynovel-visual-status').textContent.includes('Nothing was saved'));
     assert.equal(await page.locator('.sillynovel-art__background').isVisible(),false);
@@ -442,7 +442,10 @@ test('session stage: delayed image cannot apply after same-source reset, manual 
     assert.match(await page.locator('.sillynovel-art__background').getAttribute('src'),/tavern.png/);
     await delay();await page.evaluate(()=>{fixture.context.chat[1].mes='canonical edit without a lifecycle event';});await finish();
     await page.waitForFunction(()=>document.querySelector('.sillynovel-visual-status').textContent.includes('STALE_SOURCE'));
-    assert.equal(await page.locator('.sillynovel-art__background').getAttribute('src')?.then(x=>x?.startsWith('blob:')),false);
+    const background=page.locator('.sillynovel-art__background');
+    const src=await background.getAttribute('src');
+    assert.equal(Boolean(src?.startsWith('blob:')),false);
+    assert.equal(await background.isVisible(),false);
 });
 
 for (const capability of ['subtle','randomUUID']) test(`session stage: denied ${capability} leaves a complete text reader`,async t=> {

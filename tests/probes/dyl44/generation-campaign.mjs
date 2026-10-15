@@ -53,6 +53,16 @@ export async function run(h) {
     async function restart() {
         await h.stopHost(); await h.startHost(); first = h.session(); await first.login(owner);
     }
+    const authorityFile = h.authority && path.join(h.authority, `${h.hash(path.resolve(root))}.json`);
+    const authorityState = () => [registryFile, stateFile, authorityFile,
+        path.join(h.authority, 'validation', path.basename(authorityFile))].map(file => [file, bytes(file)]);
+    async function partialFailure(x, isolation) {
+        const pending = authorityState(); await stale(x, 409, 'IDENTITY_UNAVAILABLE');
+        await restart(); assert.deepEqual(authorityState(), pending); await stale(x, 409, 'IDENTITY_UNAVAILABLE');
+        assert.equal((await save(x, 503)).error, 'EXTERNAL_LOCAL_MISMATCH');
+        cp('approved partial native failure retains whole-store refusal through restart', { x, pending });
+        await h.stopHost(); isolation.restore(); await restart();
+    }
     async function cardImport(x, expected = 200) {
         const data = new FormData();
         data.set('avatar', new Blob([JSON.stringify({ name: x.name, first_mes: 'Imported synthetic fixture.' })], { type: 'application/json' }), 'synthetic.json');
@@ -179,10 +189,11 @@ export async function run(h) {
     assert.equal(bytes(f2.file), f2.canonical); await stale(f2); await restart(); await stale(f2);
     cp('F2 committed reservation then native failure retains durable scope revocation', { f2 }, 'SYNTHETIC fault + EXPERIMENTAL_HOST');
     const f5 = await fixture('F5'), f5flag = path.join(ns, 'dyl43-partial-rename'), f5dest = `Partial-${h.runId}`;
+    const partialIsolation = process.env.SN_DYL46 && h.captureFixture(owner);
     fs.writeFileSync(f5flag, h.runId);
     await first.request('/api/characters/rename', { avatar_url: f5.avatar, new_name: f5dest }, 500); fs.unlinkSync(f5flag);
     assert.ok(fs.existsSync(path.join(root, 'characters', f5.avatar))); assert.ok(fs.existsSync(path.join(root, 'characters', `${f5dest}.png`)));
-    await stale(f5); cp('F5 partial native multi-file rename exposes no committed visual identity', { f5 }, 'SYNTHETIC fault + EXPERIMENTAL_HOST');
+    if (partialIsolation) await partialFailure(f5, partialIsolation); else await stale(f5); cp('F5 partial native multi-file rename exposes no committed visual identity', { f5 }, 'SYNTHETIC fault + EXPERIMENTAL_HOST');
 
     const unknown = await fixture('Unknown'); fs.appendFileSync(unknown.file, '\n'); fs.writeFileSync(unknown.file, unknown.canonical);
     await first.api('read', { target: unknown.active.target });
@@ -208,6 +219,7 @@ export async function run(h) {
         cp(`F4 ${corrupt ? 'corrupt' : 'missing'} reservation state refuses after restart while native text loads`, { rawFault, native, rejected }, 'SYNTHETIC fault + EXPERIMENTAL_HOST');
     }
     const restore = await fixture('RootRestore');
+    const rollbackIsolation = process.env.SN_DYL46 && h.captureFixture(owner);
     const backupRoot = path.join(path.dirname(root), `dyl44-root-backup-${h.runId}`);
     assert.equal(fs.existsSync(backupRoot), false);
     await h.stopHost();
@@ -235,6 +247,13 @@ export async function run(h) {
     const restored = await load(restore), restoredEntry = h.registry(owner).chats.find(c => c.chatId === restore.entry.chatId);
     assert.equal(bytes(stateFile), beforeRestore);
     assert.equal(restoredEntry.writeGeneration, restore.entry.writeGeneration);
+    if (process.env.SN_DYL46) {
+        assert.equal(restored.target, null); assert.ok(restored.envelope.messages.length);
+        await stale(restore, 409, 'IDENTITY_UNAVAILABLE'); await restart(); await stale(restore, 409, 'IDENTITY_UNAVAILABLE');
+        assert.equal(bytes(restore.visualFile), restore.visual);
+        cp('external authority refuses root-only rollback through two restarts without adoption', { restore, advanced, restoredEntry, restored, beforeRestore, external: bytes(authorityFile) }, 'SYNTHETIC restore + EXPERIMENTAL_HOST');
+        await h.stopHost(); rollbackIsolation.restore(); await restart();
+    } else {
     assert.ok(restored.target, JSON.stringify(restored.envelope));
     assert.equal(restored.target.chatId, restore.entry.chatId);
     assert.equal((await first.api('read', { target: restored.target })).revision, 1);
@@ -243,8 +262,11 @@ export async function run(h) {
         limitation: 'A separately trusted host incarnation or mandatory explicit re-enrollment is required; ordinary restart does not prove restore safety.',
     }, 'SYNTHETIC restore + EXPERIMENTAL_HOST');
 
+    }
+
     const interrupted = await fixture('InterruptedReservation');
     const cleanReservation = bytes(stateFile);
+    const interruptedIsolation = process.env.SN_DYL46 && h.captureFixture(owner);
     const crashBarrier = await arm('rename-read');
     // Stop the owned process with native rename awaiting its barrier. Observe the transport rejection.
     const interruptedRequest = first.request('/api/characters/rename', { avatar_url: interrupted.avatar, new_name: `Interrupted-${h.runId}` })
@@ -254,19 +276,20 @@ export async function run(h) {
     assert.ok(transport.transportError); assert.equal(bytes(stateFile), pendingBeforeStop);
     assert.equal(bytes(interrupted.file), interrupted.canonical);
     await stale(interrupted, 409, 'IDENTITY_UNAVAILABLE');
-    assert.equal((await save(interrupted, 503)).error, 'UNRESOLVED_RESERVATION');
+    assert.equal((await save(interrupted, 503)).error, process.env.SN_DYL46 ? 'EXTERNAL_LOCAL_MISMATCH' : 'UNRESOLVED_RESERVATION');
     cp('process stop while native rename awaits leaves unresolved reservation; restart cannot reopen writers', {
         interrupted, pendingBeforeStop, transport,
     }, 'SYNTHETIC process stop + EXPERIMENTAL_HOST');
     // Isolate the next failure injection only. No endpoint implements this manual test reset.
-    fs.writeFileSync(stateFile, cleanReservation); crashBarrier.release();
+    if (interruptedIsolation) { await h.stopHost(); interruptedIsolation.restore(); await restart(); }
+    else { fs.writeFileSync(stateFile, cleanReservation); crashBarrier.release(); }
 
     const f3 = await fixture('F3'); const finalFault = path.join(ns, 'dyl44-finalize-failure'); fs.writeFileSync(finalFault, h.runId);
     await save(f3); fs.unlinkSync(finalFault); const unresolved = bytes(stateFile);
     assert.ok(state().pending); assert.equal(bytes(f3.file), f3.canonical);
     await stale(f3, 409, 'IDENTITY_UNAVAILABLE'); await restart();
     assert.equal(bytes(stateFile), unresolved); await stale(f3, 409, 'IDENTITY_UNAVAILABLE');
-    assert.equal((await save(f3, 503)).error, 'UNRESOLVED_RESERVATION');
+    assert.equal((await save(f3, 503)).error, process.env.SN_DYL46 ? 'EXTERNAL_LOCAL_MISMATCH' : 'UNRESOLVED_RESERVATION');
     const native = await load(f3); assert.equal(native.envelope.identity, null); assert.ok(native.envelope.messages.length);
     cp('F3 committed identical canonical write plus failed finalization remains durably unresolved across restart', { f3, unresolved, native }, 'SYNTHETIC fault + EXPERIMENTAL_HOST');
 

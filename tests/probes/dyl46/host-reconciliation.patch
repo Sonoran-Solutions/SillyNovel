@@ -18,14 +18,19 @@
  }
  // DYL-45 test-only external authority; never mounted in an installed host.
  const externalDirectory = () => path.resolve(process.env.SN_DYL45_AUTHORITY);
-@@ -76,12 +83,42 @@
+@@ -76,12 +83,46 @@
          || !(value.pending === null || uuid(value.pending))) fail('EXTERNAL_UNAVAILABLE', 503);
      return value;
  }
 -function trusted(root, req) {
+-    const authority = external(root), local = reservation(root);
 +function trusted(root, req, validationId) {
-     const authority = external(root), local = reservation(root);
++    let authority = external(root), local = reservation(root);
      if (req && authority.account !== JSON.stringify([req.user.profile.handle, req.user.profile.created])) fail('ACCOUNT_INSTANCE_MISMATCH', 403);
++    if (req && authority.pending && authority.unstarted && !activeWriters.has(root)) {
++        reconcileUnstarted(root, authority, local);
++        authority = external(root); local = reservation(root);
++    }
      if (authority.pending || local.pending || authority.trustedIncarnation !== local.storeIncarnation
          || authority.generation !== local.serial || authority.registryDigest !== registryDigest(root)) fail('EXTERNAL_LOCAL_MISMATCH', 503);
 +    const witness = validationWitness(root, authority);
@@ -62,7 +67,7 @@
  }
  function externalFault(root, point) {
      if (fs.existsSync(path.join(rootFor(root), `dyl45-${point}-failure`))) fail('EXTERNAL_TRANSITION_FAILED', 503);
-@@ -94,6 +131,8 @@
+@@ -94,6 +135,8 @@
      const authority = { root: path.resolve(root), account: JSON.stringify([req.user.profile.handle, req.user.profile.created]),
          storeInstanceId: randomUUID(), trustedIncarnation: randomUUID(), generation: 0, pending: null, registryDigest: null };
      atomic(externalFile(root), authority); // A partial provision is never retried automatically.
@@ -71,7 +76,7 @@
      atomic(reservationFile(root), { storeIncarnation: authority.trustedIncarnation, serial: 0, pending: null });
      return { provisioned: true };
  }
-@@ -187,52 +226,100 @@
+@@ -187,52 +230,123 @@
          || !Number.isSafeInteger(scope?.incarnation) || scope.incarnation < 1) fail('IDENTITY_UNAVAILABLE', 409);
      return JSON.stringify([state.storeIncarnation, scope.incarnation, chat.incarnation, chat.writeGeneration]);
  }
@@ -88,6 +93,23 @@
 +    owned.mutationStarted = true;
 +    owned.cleanAbort = false;
 +}
++// Receipt is persisted before local begin and removed durably BEFORE native routing.
++// Only an exact pre-operation local state may roll forward; never infer from serials alone.
++function reconcileUnstarted(root, authority, local) {
++    const receipt = authority.unstarted;
++    if (!exact(receipt, ['operationId', 'fromSerial', 'localDigest', 'registryDigest'])
++        || receipt.operationId !== authority.pending || !uuid(receipt.operationId)
++        || !Number.isSafeInteger(receipt.fromSerial) || receipt.fromSerial < 0
++        || authority.generation !== receipt.fromSerial + 1 || local.serial !== receipt.fromSerial || local.pending
++        || local.storeIncarnation !== authority.trustedIncarnation
++        || hash(fs.readFileSync(reservationFile(root))) !== receipt.localDigest
++        || receipt.registryDigest !== authority.registryDigest || registryDigest(root) !== receipt.registryDigest
++        || validationWitness(root, authority).pending) fail('EXTERNAL_LOCAL_MISMATCH', 503);
++    if (fs.existsSync(path.join(rootFor(root), 'dyl46-recovery-local-failure'))) fail('RECOVERY_INCOMPLETE', 503);
++    atomic(reservationFile(root), { ...local, serial: authority.generation, pending: null });
++    if (fs.existsSync(path.join(rootFor(root), 'dyl46-recovery-finalize-failure'))) fail('RECOVERY_INCOMPLETE', 503);
++    atomic(externalFile(root), { ...authority, pending: null, unstarted: null, outcome: 'VERIFIED_CLEAN_ABORT' });
++}
 +function beginOperation(req, operation, validationId) {
 +    const root = req.user.directories.root;
 +    if (activeWriters.has(root)) fail('RESERVATION_BUSY', 409);
@@ -97,9 +119,15 @@
 +    state.pending = { operationId: randomUUID(), operation, reservedLocators: ['*'] };
 +    if (fs.existsSync(path.join(rootFor(root), 'dyl44-reserve-failure'))) fail('RESERVATION_PERSIST_FAILED', 503);
 +    externalFault(root, 'begin');
-+    atomic(externalFile(root), { ...authority, generation: state.serial, pending: state.pending.operationId });
++    const intent = { ...authority, generation: state.serial, pending: state.pending.operationId,
++        unstarted: { operationId: state.pending.operationId, fromSerial: authority.generation,
++            localDigest: hash(fs.readFileSync(reservationFile(root))), registryDigest: authority.registryDigest } };
++    atomic(externalFile(root), intent);
 +    externalFault(root, 'local-begin');
 +    atomic(reservationFile(root), state);
++    // If clearing this receipt fails, do not route the native operation.
++    externalFault(root, 'route');
++    atomic(externalFile(root), { ...intent, unstarted: null });
 +    const owned = { root, operationId: state.pending.operationId, state, beforeDigest: authority.registryDigest,
 +        mutationStarted: false, cleanAbort: false };
 +    activeWriters.set(root, owned);
@@ -204,7 +232,7 @@
          writers.run(owned, next);
      });
  }
-@@ -267,13 +354,13 @@
+@@ -267,13 +381,13 @@
              // Refuse the entire affected scope before that writer can preserve an old seal.
              scope.disabled = true;
              try { persist(userRoot, catalog); }
@@ -220,7 +248,7 @@
          if (!chat) {
              chat = { relativePath, scopeId: scope.scopeId, chatId: randomUUID(), incarnation: randomUUID(), writeGeneration: 0 };
              catalog.chats.push(chat);
-@@ -284,7 +371,8 @@
+@@ -284,7 +398,8 @@
          if (['IMPORT_INVALIDATION_FAILED', 'MUTATION_INVALIDATION_FAILED'].includes(error.code)) throw error;
          catalog = null;
      }
@@ -230,7 +258,7 @@
      if (catalog) {
          if (process.env.SN_DYL27_INTERRUPT === operation) return result;
          try {
-@@ -327,6 +415,7 @@
+@@ -327,6 +442,7 @@
      const authorityRoot = externalDirectory();
      if (authorityRoot.startsWith(dataRoot + path.sep) || authorityRoot === dataRoot
          || fs.readFileSync(path.join(authorityRoot, '.owned'), 'utf8') !== runId) throw new Error('DYL45 external ownership boundary required');
@@ -238,7 +266,7 @@
      app.post('/api/dyl27/provision', (req, res) => {
          try { res.json(provision(req)); } catch (e) { res.status(e.status ?? 503).json({ error: e.code ?? 'EXTERNAL_UNAVAILABLE' }); }
      });
-@@ -381,14 +470,16 @@
+@@ -381,14 +497,16 @@
          if (!Number.isSafeInteger(chat.sourceRevision) || chat.sourceRevision < 1) fail('INVALID_TARGET');
          const file = path.resolve(context.userRoot, chat.relativePath);
          if (!file.startsWith(`${context.userRoot}${path.sep}`)) fail('INVALID_TARGET');
@@ -258,7 +286,7 @@
          return chat;
      }
      function validate(req, target) {
-@@ -422,7 +513,13 @@
+@@ -422,7 +540,13 @@
          app.post(`/api/dyl27/${name}`, async (req, res) => {
              res.set('Cache-Control', 'no-store');
              try { res.json(await handler(req)); }
@@ -273,7 +301,7 @@
          });
      }
      route('reenroll', reenroll);
-@@ -449,7 +546,7 @@
+@@ -449,7 +573,7 @@
          if (req.body.locator === null) return { inactive: true };
          fail('LOAD_REQUIRED', 409);
      });
@@ -282,7 +310,7 @@
          if (!uuid(clientId) || !Number.isSafeInteger(sequence) || sequence < 1 || !Array.isArray(messages)
              || typeof sourceText !== 'string') fail('INVALID_INPUT');
          pruneLoadRequests();
-@@ -479,6 +576,10 @@
+@@ -479,6 +603,10 @@
              envelope.identity = identity;
              envelope.sourceRevision = chat.sourceRevision;
          } catch (error) {

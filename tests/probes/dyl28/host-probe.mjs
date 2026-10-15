@@ -72,6 +72,31 @@ function actualState() {
     }
     return users;
 }
+// Test isolation only: restoring independent authority is NOT a host recovery API.
+function captureFixture(handle) {
+    assert.ok(process.env.SN_DYL46);
+    assert.equal(fs.readFileSync(path.join(data, '.dyl27-owned'), 'utf8'), runId);
+    const root = userRoot(handle), backup = path.join(owned, `isolated-fault-${randomUUID()}`);
+    function snapshot(from, to) {
+        fs.mkdirSync(to, { mode: fs.statSync(from).mode & 0o777 });
+        for (const entry of fs.readdirSync(from, { withFileTypes: true })) {
+            const sourceFile = path.join(from, entry.name), destination = path.join(to, entry.name);
+            if (entry.isDirectory()) snapshot(sourceFile, destination);
+            else { assert.ok(entry.isFile()); fs.linkSync(sourceFile, destination); }
+        }
+    }
+    snapshot(root, backup);
+    const key = `${hash(path.resolve(root))}.json`;
+    const independent = [path.join(authority, key), path.join(authority, 'validation', key)].map(file => [file, fs.readFileSync(file)]);
+    return { restore() {
+        assert.ok(child.exitCode !== null || child.signalCode !== null, 'stop owned host before fixture reset');
+        fs.rmSync(root, { recursive: true }); fs.renameSync(backup, root);
+        for (const [file, value] of independent) fs.writeFileSync(file, value);
+        (evidence.fixtureResets ??= []).push({ classification: 'SYNTHETIC_ISOLATION_ONLY', handle,
+            independentSha256: independent.map(([file, value]) => [path.relative(owned, file), hash(value)]),
+            hostRecovery: false });
+    } };
+}
 function canonicalHashes() {
     const result = {};
     for (const [handle, state] of Object.entries(actualState())) {
@@ -839,7 +864,7 @@ try {
         const { run } = await import('../dyl43/lifecycle-campaign.mjs');
         await run({ first: afterRestart, otherHandle, session, firstPage, registry, userRoot, visualFile, chatFile,
             checkpoint, evidence, runId, avatarA, avatarB, chatMessages, pageState, uiApi, startHost, stopHost,
-            browser, baseUrl: () => base, hash, clickCard });
+            browser, baseUrl: () => base, hash, clickCard, authority, captureFixture });
     }
     if (process.env.SN_DYL46 === '1') {
         const { run } = await import('../dyl46/reconciliation-campaign.mjs');
@@ -854,7 +879,7 @@ try {
     if (process.env.SN_DYL44 === '1') {
         const { run } = await import('../dyl44/generation-campaign.mjs');
         await run({ first: afterRestart, otherHandle, session, firstPage, registry, userRoot, visualFile,
-            checkpoint, evidence, runId, chatMessages, startHost, stopHost, hash });
+            checkpoint, evidence, runId, chatMessages, startHost, stopHost, hash, authority, captureFixture });
     }
     evidence.result = 'PASS_WITH_BOUNDED_CHARACTER_CHAT_LIMITS';
     evidence.recommendation = 'REVISE';
