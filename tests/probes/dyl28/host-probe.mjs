@@ -53,6 +53,7 @@ function actualState() {
         const catalog = JSON.parse(rawRegistry);
         users[handle] = {
             registry: rawRegistry,
+            registrySha256: hash(rawRegistry),
             storeId: catalog.storeId,
             chats: catalog.chats.map(chat => {
                 const sourceFile = path.join(userRoot(handle), chat.relativePath);
@@ -63,6 +64,7 @@ function actualState() {
                     sourceText: fs.existsSync(sourceFile) ? fs.readFileSync(sourceFile, 'utf8') : null,
                     sourceSha256: fs.existsSync(sourceFile) ? hash(fs.readFileSync(sourceFile)) : null,
                     visualRecord: fs.existsSync(visualRecord) ? fs.readFileSync(visualRecord, 'utf8') : null,
+                    visualSha256: fs.existsSync(visualRecord) ? hash(fs.readFileSync(visualRecord)) : null,
                 };
             }),
         };
@@ -101,7 +103,7 @@ async function startHost() {
     child = spawn(process.execPath, [path.join(host, 'server.js'), '--configPath', config, '--port', String(port),
         '--listen', 'false', '--enableIPv4', 'true', '--enableIPv6', 'false', '--listenAddressIPv4', '127.0.0.1',
         '--browserLaunchEnabled', 'false', '--whitelist', 'false', '--dataRoot', data], {
-        cwd: host, env: { ...process.env, SN_DYL27_RUN: runId, SN_DYL27_INTERRUPT: '' },
+        cwd: host, env: { ...process.env, SN_DYL27_RUN: runId, SN_DYL27_INTERRUPT: '', ...(process.env.SN_DYL42 === '1' ? { SN_DYL42_IMPORT_TIME: '1700000000000' } : {}) },
         stdio: ['ignore', 'pipe', 'pipe'],
     });
     child.stdout.on('data', bytes => { logs += bytes; });
@@ -120,8 +122,8 @@ function session() {
         const response = await fetch(`${base}${route}`, {
             method: body === undefined ? 'GET' : 'POST', signal: AbortSignal.timeout(15000),
             headers: { cookie: [...cookies].map(([key, value]) => `${key}=${value}`).join('; '),
-                ...(csrf ? { 'x-csrf-token': csrf } : {}), 'content-type': 'application/json' },
-            ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+                ...(csrf ? { 'x-csrf-token': csrf } : {}), ...(body instanceof FormData ? {} : { 'content-type': 'application/json' }) },
+            ...(body === undefined ? {} : { body: body instanceof FormData ? body : JSON.stringify(body) }),
         });
         for (const cookie of response.headers.getSetCookie()) {
             const [pair] = cookie.split(';'); const equals = pair.indexOf('=');
@@ -247,6 +249,15 @@ try {
     fs.copyFileSync(path.join(probeDir, 'host-visit.js'), path.join(host, 'public/scripts/dyl27-visit.js'), fs.constants.COPYFILE_EXCL);
     execFileSync('git', ['-C', host, 'apply', '--check', envelopePatch], { stdio: 'pipe' });
     execFileSync('git', ['-C', host, 'apply', envelopePatch], { stdio: 'pipe' });
+    if (process.env.SN_DYL42 === '1') {
+        const writersPatch = path.resolve(probeDir, '../dyl42/host-writers.patch');
+        execFileSync('git', ['-C', host, 'apply', '--check', writersPatch], { stdio: 'pipe' });
+        execFileSync('git', ['-C', host, 'apply', writersPatch], { stdio: 'pipe' });
+        for (const file of ['host-writers.patch', 'writer-campaign.mjs']) {
+            evidence.files[`dyl42-${file}`] = hash(fs.readFileSync(path.resolve(probeDir, '../dyl42', file)));
+        }
+        evidence.files['applied-host-storage.mjs'] = hash(fs.readFileSync(path.join(host, 'src/dyl27-storage.mjs')));
+    }
     const settings = JSON.parse(fs.readFileSync(path.join(host, 'default/content/settings.json'), 'utf8'));
     provider = createServer(async (request, response) => {
         if (request.url === '/v1/models') return response.end(JSON.stringify({ data: [{ id: 'dyl28-loopback' }] }));
@@ -750,6 +761,12 @@ try {
     checkpoint('host restart recovers identity, source revision and visual record; old in-memory visit is rejected and a new visit is issued', 'EXPERIMENTAL_HOST + NATIVE_HOST_UI', {
         persistedChat: persistedA, persistedVisualRecord: persistedVisual, recovered: await pageState(firstPage),
     });
+    if (process.env.SN_DYL42 === '1') {
+        const { run } = await import('../dyl42/writer-campaign.mjs');
+        await run({ first: afterRestart, otherHandle, session, firstPage, registry, userRoot, visualFile, chatFile,
+            checkpoint, evidence, runId, avatarA, avatarB, chatMessages, pageState, uiApi, startHost, stopHost,
+            browser, baseUrl: () => base, hash });
+    }
     evidence.result = 'PASS_WITH_BOUNDED_CHARACTER_CHAT_LIMITS';
     evidence.recommendation = 'REVISE';
 } catch (error) {

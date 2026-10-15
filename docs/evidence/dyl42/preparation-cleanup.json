@@ -1,0 +1,7 @@
+{
+  "path": "/tmp/dyl42-patch-host",
+  "head": "68882e5b07da03a2ffbcc97f0d6ddd170d1afa84",
+  "origin": "/tmp/SillyTavern-m12-review",
+  "status": " M src/dyl27-storage.mjs\n M src/endpoints/chats.js\n",
+  "removed": true
+}

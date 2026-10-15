@@ -1,0 +1,93 @@
+diff --git a/src/dyl27-storage.mjs b/src/dyl27-storage.mjs
+index 03d6f75..952af00 100644
+--- a/src/dyl27-storage.mjs
++++ b/src/dyl27-storage.mjs
+@@ -66,15 +66,28 @@ export function nativeMutation(userRoot, file, operation, action, destination) {
+         const scope = catalog.scopes.find(s => relativePath.startsWith(`chats/${s.avatar.replace('.png', '')}/`));
+         if (!scope || scope.disabled) throw new Error('unresolved scope');
+         chat = catalog.chats.find(c => !c.deleted && c.relativePath === relativePath);
++        if (operation === 'import' && fs.existsSync(file)) {
++            // Native imports may overwrite a timestamp collision, even with identical bytes.
++            // Refuse the entire affected scope before that writer can preserve an old seal.
++            scope.disabled = true;
++            try { persist(userRoot, catalog); }
++            catch { fail('IMPORT_INVALIDATION_FAILED', 503); }
++            throw new Error('import collision');
++        }
+         if (chat && JSON.stringify(seal(file)) !== JSON.stringify(chat.seal)) throw new Error('external drift');
+-        if (!chat && (operation !== 'save' || fs.existsSync(file))) throw new Error('adoption refused');
++        if (!chat && (!['save', 'import'].includes(operation) || fs.existsSync(file))) throw new Error('adoption refused');
+         catalog.pending = { operation, relativePath, destination: destination && path.relative(userRoot, destination) };
+         persist(userRoot, catalog);
+         if (!chat) {
+             chat = { relativePath, scopeId: scope.scopeId, chatId: randomUUID() };
+             catalog.chats.push(chat);
+         }
+-    } catch { catalog = null; }
++    } catch (error) {
++        // An identical import overwrite cannot be detected by the byte seal. If
++        // durable revocation failed, leave the original canonical file untouched.
++        if (error.code === 'IMPORT_INVALIDATION_FAILED') throw error;
++        catalog = null;
++    }
+     const result = action(); // Native chat operation remains usable when visual identity is unresolved.
+     if (catalog) {
+         if (process.env.SN_DYL27_INTERRUPT === operation) return result;
+@@ -82,8 +95,16 @@ export function nativeMutation(userRoot, file, operation, action, destination) {
+             if (operation === 'delete') chat.deleted = true;
+             else {
+                 if (destination) chat.relativePath = path.relative(userRoot, destination);
++                const previousHash = chat.seal?.sha256;
+                 chat.seal = seal(destination || file);
+-                if (operation === 'save') {
++                if (operation === 'import') {
++                    const lines = fs.readFileSync(file, 'utf8').split('\n').filter(line => line.trim());
++                    if (!lines.length || lines.some(line => {
++                        const value = JSON.parse(line);
++                        return !value || typeof value !== 'object' || Array.isArray(value);
++                    })) throw new Error('invalid imported transcript');
++                }
++                if (['save', 'import'].includes(operation) && previousHash !== chat.seal.sha256) {
+                     const revision = Number.isSafeInteger(chat.sourceRevision) ? chat.sourceRevision : 0;
+                     if (revision === Number.MAX_SAFE_INTEGER) return result;
+                     chat.sourceRevision = revision + 1;
+diff --git a/src/endpoints/chats.js b/src/endpoints/chats.js
+index c69310c..22c530e 100644
+--- a/src/endpoints/chats.js
++++ b/src/endpoints/chats.js
+@@ -833,10 +833,11 @@ router.post('/import', validateAvatarUrlMiddleware, function (request, response)
+             }
+ 
+             const handleChat = (chat) => {
+-                const fileName = `${characterName} - ${humanizedDateTime()} imported.jsonl`;
++                const fileName = `${characterName} - ${humanizedDateTime(process.env.SN_DYL42_IMPORT_TIME ? Number(process.env.SN_DYL42_IMPORT_TIME) : undefined)} imported.jsonl`;
+                 const filePath = path.join(directoryPath, fileName);
+                 fileNames.push(fileName);
+-                writeFileAtomicSync(filePath, chat, 'utf8');
++                if (process.env.SN_DYL27_RUN) nativeMutation(request.user.directories.root, filePath, 'import', () => writeFileAtomicSync(filePath, chat, 'utf8'));
++                else writeFileAtomicSync(filePath, chat, 'utf8');
+             };
+ 
+             const chat = importFunc(userName, characterName, jsonData);
+@@ -872,14 +873,15 @@ router.post('/import', validateAvatarUrlMiddleware, function (request, response)
+                 console.warn('Failed to flatten Chub Chat data: ', error);
+             }
+ 
+-            const fileName = `${characterName} - ${humanizedDateTime()} imported.jsonl`;
++            const fileName = `${characterName} - ${humanizedDateTime(process.env.SN_DYL42_IMPORT_TIME ? Number(process.env.SN_DYL42_IMPORT_TIME) : undefined)} imported.jsonl`;
+             const filePath = path.join(directoryPath, fileName);
+             fileNames.push(fileName);
+-            if (flattenedChat !== data) {
+-                writeFileAtomicSync(filePath, flattenedChat, 'utf8');
+-            } else {
+-                fs.copyFileSync(pathToUpload, filePath);
+-            }
++            const commitImport = () => {
++                if (flattenedChat !== data) writeFileAtomicSync(filePath, flattenedChat, 'utf8');
++                else fs.copyFileSync(pathToUpload, filePath);
++            };
++            if (process.env.SN_DYL27_RUN) nativeMutation(request.user.directories.root, filePath, 'import', commitImport);
++            else commitImport();
+             fs.unlinkSync(pathToUpload);
+             response.send({ res: true, fileNames });
+         }
