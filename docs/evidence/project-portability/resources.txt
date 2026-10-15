@@ -1,0 +1,19 @@
+{
+  "node": "v26.8.1",
+  "pixels": 4194304,
+  "pngBytes": 2664581,
+  "bundleBytes": 3553148,
+  "sha256": "dd8e9ef38d9b0f85ecea911a1ea75e7fe9b10047a111a003f452e8e510e1afe2",
+  "exportMs": 327.59791700000005,
+  "importMs": 305.6303240000001,
+  "peakRSS": 250945536,
+  "eventLoopDelayMaxMs": 12.328959
+}
+{
+  "scenario": "maximum encoded bytes",
+  "pngBytes": 6291456,
+  "pixels": 4192257,
+  "bundleBytes": 8389367,
+  "roundtripMs": 691.1823740000002,
+  "maxRSS": 333410304
+}

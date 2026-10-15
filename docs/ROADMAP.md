@@ -118,3 +118,7 @@ Each expansion needs its own bounded acceptance criteria. Do not add a full game
 Before an installable release: choose the repository license, include properly licensed demo assets or clear import instructions, verify the installation procedure from a fresh checkout, document tested host versions, publish privacy/provider behavior, and provide data export/recovery instructions.
 
 Release claims must correspond to tested features on an exact candidate. A provider, host version, or device not exercised is **NOT_TESTED**, not “probably supported.”
+
+## Bounded project portability — 2026-10-15
+
+The owner separately authorizes DYL-57 portable global-project bundles under DYL-55 after merged PR #24. [Contract](M1_PROJECT_PORTABILITY.md) and [implementation/evidence](M1_PROJECT_PORTABILITY_IMPLEMENTATION.md). This independent-project copy lane does not start message-scoped M1.3 or M2. DYL-58 database backup/recovery/migrations follows portability review; DYL-59 unused-asset cleanup follows those policies. Both remain Backlog and require separate implementation authorization. DYL-55 remains unfinished, DYL-56 Backlog, DYL-22/23 blocked and Gate A NOT_RUN.

@@ -1,6 +1,6 @@
 # DYL-57 portability implementation and evidence
 
-Owner-authorized bounded portable-project slice under DYL-55. **GO for senior review** only when the frozen evidence below passes. Production/live installation, whole-database recovery, cleanup, associations, M1.3/M2 and owner Gate A are excluded. [Format/API/security/limits contract](M1_PROJECT_PORTABILITY.md). One focused implementation PR is to remain OPEN/UNMERGED.
+Owner-authorized bounded portable-project slice under DYL-55. **GO for bounded senior review**: the frozen evidence below passes. Production/live installation, whole-database recovery, cleanup, associations, M1.3/M2 and owner Gate A are excluded. [Format/API/security/limits contract](M1_PROJECT_PORTABILITY.md). One focused implementation PR is to remain OPEN/UNMERGED.
 
 ## Baseline and tracking
 
@@ -10,7 +10,7 @@ Searches for bundle, backup and unreferenced work found no equivalent child issu
 
 | Issue | Scope / dependency | Handoff state |
 |---|---|---|
-| [DYL-57](https://linear.app/devils17/issue/DYL-57) | Portable bundles, child of DYL-55 | In Progress until frozen acceptance completes; then In Review |
+| [DYL-57](https://linear.app/devils17/issue/DYL-57) | Portable bundles, child of DYL-55 | In Review after frozen acceptance |
 | [DYL-58](https://linear.app/devils17/issue/DYL-58) | Database backup/recovery/migrations, after DYL-57 | Backlog, unimplemented |
 | [DYL-59](https://linear.app/devils17/issue/DYL-59) | Explicit unused-asset cleanup, after DYL-57/DYL-58 | Backlog, unimplemented |
 
@@ -65,4 +65,12 @@ The first host-harness syntax check caught a reused `original` variable in the a
 
 ## Frozen evidence and final handoff
 
-Pending final exact-candidate campaign. Final pushed head and OPEN/UNMERGED PR will be recorded here and in Linear; no self-referential commit SHA is invented. Remaining work after review: DYL-58 consistent backup/journals/restore/migrations/account recovery; DYL-59 explicit reference-safe cleanup/concurrency/quota recovery. Portable import alone does not accept DYL-55 or production disaster recovery.
+Frozen tested implementation: `770932811430dbd85bee79182be75ee3c22b7370`. [Host JSON](evidence/project-portability/host.json) and [host checkpoint output](evidence/project-portability/host-run.txt) record **12/12 PASS**, Node v26.8.1, Chromium 151.0.7922.34, pinned host `7e8663cd9c184a550b37238218bdd32c6efc68e9`. [Node regressions](evidence/project-portability/node.txt): **70/70 PASS**; [storage/bundle tests](evidence/project-portability/storage.txt): **37/37 PASS**, including nested malformed/rollback cases; [actual-entry Chromium](evidence/project-portability/browser.txt): **31/31 PASS**. Zero failures, cancellations, skips or todos in those final suites. [npm test](evidence/project-portability/package.txt) additionally passes both test modules; its module totals are not added to the assertion count. All runtime/tests were committed and the checkout was clean before this campaign. Later handoff commits contain evidence/documentation only; final pushed head is recorded in the PR/Linear handoff because it cannot be embedded in its own commit.
+
+Disposable evidence root `/tmp/sn-portability-host-EZUyUq`; copied plugin clean npm ci was successful inside that owned host. The JSON records exact host-source SHA-256s, forest/mira-a/rowan fixture hashes, bundle digest/length, all named native file hashes before/after, complete project rows and asset ID/project/hash/length inventory around injected HTTP failures. Committed database inventory remained **4 projects / 7 assets** through all three HTTP write faults; local store tests additionally cover deferred COMMIT failure and full BLOB equality. Concurrent import HTTP statuses were 201 and 429; the explicit retry committed a second, distinct project. The original was unchanged across portable copy creation. [Explicitly reopened scene](evidence/project-portability/restored.png) visually shows the restored background/two sprites and locks in the native host.
+
+[Resource evidence](evidence/project-portability/resources.txt) on the same candidate: exact 4,194,304 pixels, PNG 2,664,581 bytes, bundle 3,553,148 bytes; export 327.60 ms, import 305.63 ms, maximum main-event-loop delay 12.33 ms, sampled peak RSS 250,945,536 bytes. The separate near-max-pixel/max-byte case contains exactly 6,291,456 PNG bytes and a 8,389,367-byte bundle; encode/decode 691.18 ms, process high-water RSS **333,410,304 bytes (~318 MiB)** including retained fixture-generation inputs. This is a measured maximum for this run, not a bound on host RSS or a production budget. Raising limits is not authorized here. No archive/parser dependency was added; standard JSON/Buffer and existing pngjs 7.0.0 only.
+
+`git diff --check`, seven targeted module syntax checks, package/lock dependency agreement, and the initial 122 relative Markdown file links/fence check passed. After evidence links were added, documentation/checksum validation was repeated and its final result is recorded in the handoff. No hosted CI/build artifact is claimed. No power-loss, hostile throughput, other Node versions/platforms/browsers, physical device, account recreation, administrative restore or owner-experience testing was performed. Gate A remains NOT_RUN.
+
+**GO for senior review of DYL-57**, not production or parent acceptance. Keep the PR OPEN/UNMERGED and DYL-57 In Review. Remaining work after review: DYL-58 consistent backup/journals/restore/migrations/account recovery; DYL-59 explicit reference-safe cleanup/concurrency/quota recovery. Portable import alone does not accept DYL-55 or production disaster recovery.
