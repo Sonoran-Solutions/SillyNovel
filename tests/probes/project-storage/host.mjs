@@ -57,7 +57,8 @@ try {
  execFileSync('git',['clone','--shared',source,host],{stdio:'pipe'});
  execFileSync('git',['-C',host,'checkout','--detach',PIN],{stdio:'pipe'});
  execFileSync('cp',['-a','--reflink=auto',join(source,'node_modules'),join(host,'node_modules')]);
- await mkdir(join(host,'plugins'),{recursive:true});await symlink(join(repo,'plugins/sillynovel-storage'),join(host,'plugins/sillynovel-storage'));
+ await mkdir(join(host,'plugins'),{recursive:true});execFileSync('cp',['-a',join(repo,'plugins/sillynovel-storage'),join(host,'plugins/sillynovel-storage')]);
+ execFileSync('npm',['ci','--prefix',join(host,'plugins/sillynovel-storage'),'--ignore-scripts','--no-audit','--no-fund'],{stdio:'pipe'});
  await mkdir(join(host,'public/scripts/extensions/third-party'),{recursive:true});await symlink(repo,join(host,'public/scripts/extensions/third-party/SillyNovel'));
  await mkdir(join(data,'default-user'),{recursive:true});
  const settings=JSON.parse(await readFile(join(host,'default/content/settings.json')));settings.firstRun=false;
