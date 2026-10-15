@@ -290,6 +290,19 @@ export async function run(h) {
     assert.equal(recordBytes(collisionEntry), collisionVisual);
     checkpoint('native timestamp import collision with identical bytes invalidates scope before overwrite; old CAS cannot inherit or alter visual record', 'EXPERIMENTAL_HOST', { collisionLoad, collisionEntry });
 
+    const driftAvatar = await first.request('/api/characters/create', { ch_name: `Drift-${runId}` });
+    const driftName = await imported(driftAvatar, 'DriftCollision', text);
+    const driftEntry = entry(driftAvatar, driftName);
+    const driftLoad = await load(driftAvatar, driftName);
+    const driftVisual = recordBytes(driftEntry);
+    fs.appendFileSync(chatFile(owner, driftEntry.relativePath), '\n'); // Deliberate test-only unknown-writer drift.
+    assert.equal((await load(driftAvatar, driftName)).envelope.identity, null);
+    assert.equal(await imported(driftAvatar, 'DriftCollision', text), driftName);
+    assert.equal(raw(driftEntry), text);
+    await refuseCas(driftLoad.target);
+    assert.equal(recordBytes(driftEntry), driftVisual);
+    checkpoint('native collision restoring pre-drift identical bytes cannot resurrect old visual authority', 'EXPERIMENTAL_HOST', { driftLoad, driftEntry });
+
     // Native delete/recreate gives a fresh ID; retained record never becomes the new record.
     const deletion = await load(avatarA, normalName);
     const oldEntry = entry(avatarA, normalName);

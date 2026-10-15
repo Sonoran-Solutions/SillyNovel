@@ -1,12 +1,11 @@
 diff --git a/src/dyl27-storage.mjs b/src/dyl27-storage.mjs
-index 03d6f75..82b0b36 100644
+index 03d6f75..952af00 100644
 --- a/src/dyl27-storage.mjs
 +++ b/src/dyl27-storage.mjs
-@@ -67,14 +67,27 @@ export function nativeMutation(userRoot, file, operation, action, destination) {
+@@ -66,15 +66,28 @@ export function nativeMutation(userRoot, file, operation, action, destination) {
+         const scope = catalog.scopes.find(s => relativePath.startsWith(`chats/${s.avatar.replace('.png', '')}/`));
          if (!scope || scope.disabled) throw new Error('unresolved scope');
          chat = catalog.chats.find(c => !c.deleted && c.relativePath === relativePath);
-         if (chat && JSON.stringify(seal(file)) !== JSON.stringify(chat.seal)) throw new Error('external drift');
--        if (!chat && (operation !== 'save' || fs.existsSync(file))) throw new Error('adoption refused');
 +        if (operation === 'import' && fs.existsSync(file)) {
 +            // Native imports may overwrite a timestamp collision, even with identical bytes.
 +            // Refuse the entire affected scope before that writer can preserve an old seal.
@@ -15,6 +14,8 @@ index 03d6f75..82b0b36 100644
 +            catch { fail('IMPORT_INVALIDATION_FAILED', 503); }
 +            throw new Error('import collision');
 +        }
+         if (chat && JSON.stringify(seal(file)) !== JSON.stringify(chat.seal)) throw new Error('external drift');
+-        if (!chat && (operation !== 'save' || fs.existsSync(file))) throw new Error('adoption refused');
 +        if (!chat && (!['save', 'import'].includes(operation) || fs.existsSync(file))) throw new Error('adoption refused');
          catalog.pending = { operation, relativePath, destination: destination && path.relative(userRoot, destination) };
          persist(userRoot, catalog);
