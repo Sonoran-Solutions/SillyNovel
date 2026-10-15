@@ -6,14 +6,14 @@ The owner-approved [architecture pivot](M1_INDEPENDENT_PROJECT_STORAGE.md) autho
 
 ## Linear chain
 
-| Issue | Scope | Depends on | Initial status |
+| Issue | Scope | Depends on | Current status |
 |---|---|---|---|
-| [DYL-49](https://linear.app/devils17/issue/DYL-49) | Architecture/docs | — | In Progress; In Review at docs handoff |
-| [DYL-50](https://linear.app/devils17/issue/DYL-50) | Optional authenticated plugin | DYL-49 | Backlog; start after docs PR |
-| [DYL-51](https://linear.app/devils17/issue/DYL-51) | Versioned project store/CAS | DYL-50 | Backlog |
-| [DYL-52](https://linear.app/devils17/issue/DYL-52) | Immutable PNG assets | DYL-50 | Backlog |
-| [DYL-53](https://linear.app/devils17/issue/DYL-53) | Explicit project stage | DYL-51, DYL-52 | Backlog |
-| [DYL-54](https://linear.app/devils17/issue/DYL-54) | Safety/host acceptance | DYL-53 | Backlog |
+| [DYL-49](https://linear.app/devils17/issue/DYL-49) | Architecture/docs | — | In Review |
+| [DYL-50](https://linear.app/devils17/issue/DYL-50) | Optional authenticated plugin | DYL-49 | In Review |
+| [DYL-51](https://linear.app/devils17/issue/DYL-51) | Versioned project store/CAS | DYL-50 | In Review |
+| [DYL-52](https://linear.app/devils17/issue/DYL-52) | Immutable PNG assets | DYL-50 | In Review |
+| [DYL-53](https://linear.app/devils17/issue/DYL-53) | Explicit project stage | DYL-51, DYL-52 | In Review |
+| [DYL-54](https://linear.app/devils17/issue/DYL-54) | Safety/host acceptance | DYL-53 | In Review |
 | [DYL-55](https://linear.app/devils17/issue/DYL-55) | Export/import/backup | DYL-54 | Backlog; separate authorization |
 | [DYL-56](https://linear.app/devils17/issue/DYL-56) | Remembered association hints | DYL-54 | Backlog; separate authorization |
 
@@ -48,3 +48,15 @@ No actual first-slice runtime pass is claimed by this plan. Host/provider/device
 ## Maintenance and release blockers
 
 Unsandboxed plugin privileges, host/runtime drift, account recreation, migrations, administrative recovery and backup ownership need documented policies and evidence. Export/import, verified backup/restore and migrations belong to DYL-55; explicit new IDs and no autoattachment are mandatory. Duplication, JPEG/WebP, groups, historical expressions, automated associations, cross-host sync, director/generation and production distribution are excluded. Never install on the owner's live host. Smallest authorized next work is DYL-50 foundation followed by only the APIs/UI/tests needed for the first slice.
+
+## First-slice handoff — 2026-10-15
+
+Documentation [PR #23](https://github.com/Sonoran-Solutions/SillyNovel/pull/23) and implementation [PR #24](https://github.com/Sonoran-Solutions/SillyNovel/pull/24) are OPEN/UNMERGED. DYL-49–54 are In Review; DYL-55/56 remain Backlog and separately authorized future work. Dependencies in the table above are installed in Linear. DYL-22/23 remain Backlog with the original blockers and explanatory comments only; DYL-24 remains Done.
+
+Implementation pushed head `fd6cab6289779225d03ba0001cae5fff14b4e8b4`; actual clean-install host candidate `fa3ee1a452e6a2aa4eeac66c80508465820299f7`; Node/browser candidate `96b5144582fbf7b58f301fa3f89ffd0e4f287d1e` has identical runtime. The final implementation commit adds evidence/docs only. See PR #24's `docs/M1_PROJECT_STORAGE_SLICE.md` and `docs/evidence/project-storage/host.json` for exact commands, source/fixture hashes, limitations and failed-harness history.
+
+Demonstrated create → background/two PNG sprites → arrange → save → reload → explicitly reopen with the same arrangement. 67/67 Node regressions, 3/3 storage checks, 24/24 actual-entry Chromium and eight disposable-host checkpoint groups PASS. Real authenticated two-user isolation, CSRF refusal, two-client CAS, rollback, missing/corrupt art, delayed receipt rejection, A→B→A detachment, native chatting, restart and disabled-plugin fallback were exercised. Exact hashes of 33 enumerated synthetic native files matched across project save/reload/reopen; no global non-mutation claim.
+
+Selected package `plugins/sillynovel-storage`, built-in SQLite with immutable BLOBs and pure-JavaScript pngjs 7.0.0. Requires Node >=22.13 and a signed-in host account with CSRF; tested only Node 26.8.1, Linux, Chromium 151.0.7922.34 and SillyTavern 1.19.0 `7e8663cd9c184a550b37238218bdd32c6efc68e9`. Accounts-disabled persistence is refused because that host's implicit default creation timestamp changes across process restarts. These runtime/account choices need senior review and are not new owner-approved release defaults.
+
+Recommendation: **GO for bounded senior review**, not production release. Smallest next step is reviewing the two PRs and runtime/account prerequisites. Export/import/backup, migration/account recovery, broader platforms, groups and message history remain release blockers or separately authorized work. M1.3/M2 unauthorized, Gate A NOT_RUN. No upstream contact or live-host installation occurred. Measured work interval 19:29:52–19:51:12 UTC was 21m20s; initial inspection and later handoff were additional, not separately timed.
