@@ -1,3 +1,5 @@
+import { createProjectClient } from './project-client.mjs';
+import { createProjectScene } from './project-scene.mjs';
 import { createTransientScene, TEST_ACTORS, evidenceStamp } from './transient-scene.mjs';
 
 export function mountVisualStage({ document, stage, actions }) {
@@ -23,13 +25,16 @@ export function mountVisualStage({ document, stage, actions }) {
     const summary=make('summary','','Manual scene controls');
     const panel=make('div','sillynovel-controls__panel');
     const help=make('p','','All art and actors disappear on reload, disable or chat reactivation. Actors are manual session identities, with no SillyTavern card binding. Background, presence and outfit apply forward; expressions apply only to this source/swipe. Historical corrections invalidate later choices.');
+    const transientHelp=help.textContent;
     const feedback=make('p','sillynovel-visual-status');feedback.setAttribute('role','status');
     const cast=make('p','sillynovel-cast');
     const controls=[], removers=[];
     let disposed=false,lastStamp=null;
-    const model=createTransientScene(actions,render);
+    let model=createTransientScene(actions,render);
+    let projectEpoch=0,activation=actions.getSnapshot().sessionEpoch,capable=false,projectBusy=false,unavailable='Plugin unavailable · session visuals remain unsaved.';
+    const client=createProjectClient(()=>actions.getRequestHeaders?.() ?? {});
     const listen=(el,type,cb)=>{el.addEventListener(type,cb);removers.push(()=>el.removeEventListener(type,cb));};
-    function run(fn) { Promise.resolve().then(fn).catch(error=> { if(!disposed)feedback.textContent='Visual controls unavailable: '+error.message; }); }
+    function run(fn) { const captured=model,epoch=actions.getSnapshot().sessionEpoch;Promise.resolve().then(fn).catch(error=> { if(!disposed && model===captured && actions.getSnapshot().sessionEpoch===epoch)feedback.textContent='Visual controls unavailable: '+error.message; }); }
     const button=(text,fn)=> {const e=make('button','menu_button sillynovel-button',text);e.type='button';listen(e,'click',()=>run(fn));panel.append(e);controls.push(e);return e;};
     const field=(name,tag='select')=> { const label=make('label','sillynovel-control',name);const e=make(tag,'');e.setAttribute('aria-label',name);label.append(e);panel.append(label);controls.push(e);return e;};
     function options(select,items) {
@@ -41,13 +46,43 @@ export function mountVisualStage({ document, stage, actions }) {
     }
     details.append(summary,panel);panel.append(help);
     stage.querySelector('header').after(unsaved,details,art,cast,feedback);
+    const projectName=field('Project name','input');projectName.maxLength=80;
+    const projectList=field('Saved project');
+    const projectStatus=make('p','sillynovel-project-status','Checking optional project storage…');projectStatus.setAttribute('role','status');panel.append(projectStatus);
+    const projectButtons=[];
+    const projectButton=(text,fn)=>{const b=button(text,fn);projectButtons.push(b);return b;};
+    async function openProject(create=false) {
+        if(!capable||projectBusy)return;
+        if(model.project && model.status().dirty && !globalThis.confirm('Discard unsaved project changes and open another project?'))return;
+        const token=++projectEpoch,epoch=actions.getSceneEvidence().snapshot.sessionEpoch;
+        if(actions.getSnapshot().owner?.scope !== 'character')throw Error('Projects currently support single-character chats only.');
+        const current=()=>!disposed&&token===projectEpoch&&actions.getSnapshot().sessionEpoch===epoch;
+        projectBusy=true;render();
+        let candidate,installed=false;
+        try {
+            const record=await(create?client.create(projectName.value.trim()):client.load(projectList.value));
+            if(!current())return;
+            candidate=await createProjectScene(record,client,actions,render,current);
+            if(!current()){candidate.dispose();return;}
+            model.dispose();model=candidate;installed=true;render();
+            const list=await client.list();if(current())options(projectList,list.map(p=>[p.projectId,p.name]));
+        } finally {if(token===projectEpoch){if(!installed)projectEpoch--;projectBusy=false;}if(!disposed)render();}
+    }
+    projectButton('Create project and use with this chat',()=>openProject(true));
+    projectButton('Open project and use with this chat',()=>openProject(false));
+    const save=projectButton('Save project',()=>model.project&&model.save());
+    const detach=projectButton('Detach project',()=>{
+        if(model.project&&model.status().dirty&&!globalThis.confirm('Discard unsaved changes and detach this project?'))return;
+        projectEpoch++;model.dispose();model=createTransientScene(actions,render);return model.sync();
+    });
+    run(async()=>{try{const cap=await client.capabilities();if(disposed)return;if(cap.apiVersion!==1||cap.schemaVersion!==1)throw Error('Incompatible storage');const list=await client.list();if(disposed)return;capable=true;options(projectList,list.map(p=>[p.projectId,p.name]));}catch(error){if(disposed)return;capable=false;if(error.message==='AUTHENTICATED_ACCOUNT_REQUIRED')unavailable='Project storage requires a signed-in SillyTavern account. Session visuals remain available.';else if(error.message==='CSRF_REQUIRED')unavailable='Project storage requires host CSRF protection. Session visuals remain available.';}render();});
     const bg=field('Background');
     button('Apply background',()=>model.dispatch(bg.value ? {type:'setBackground',assetId:bg.value}:{type:'clearBackground'}));
     const preset=field('Test actor art');options(preset,[['','No art · manual actor'],...TEST_ACTORS.map(a=>[a.preset,a.description])]);preset.value='mira-a';
     const name=field('Session actor name','input');name.value='Mira';name.maxLength=80;
     listen(preset,'change',()=>{ name.value=TEST_ACTORS.find(a=>a.preset===preset.value)?.label ?? ''; });
     const actor=field('Session actor');
-    button('Register session actor',async()=>{const key=await model.register(preset.value,name.value);if(key){actor.value=key;render();}});
+    const registerActor=button('Register session actor',async()=>{const key=await model.register(preset.value,name.value);if(key){actor.value=key;render();}});
     const presence=field('Presence');options(presence,[['true','Present'],['false','Absent']]);
     button('Apply presence',()=>model.dispatch({type:'setPresence',characterKey:actor.value,present:presence.value==='true'}));
     const slot=field('Position');options(slot,[['','Offstage'],['left','Left'],['center','Center'],['right','Right']]);
@@ -56,7 +91,7 @@ export function mountVisualStage({ document, stage, actions }) {
     const outfit=field('Outfit');
     button('Apply outfit',()=>model.dispatch(outfit.value?{type:'setOutfit',characterKey:actor.value,assetId:outfit.value}:{type:'clearOutfit',characterKey:actor.value}));
     const expression=field('Expression · selected source only');
-    button('Apply expression',()=>model.dispatch(expression.value?{type:'setExpression',characterKey:actor.value,assetId:expression.value}:{type:'clearExpression',characterKey:actor.value}));
+    const applyExpression=button('Apply expression',()=>model.dispatch(expression.value?{type:'setExpression',characterKey:actor.value,assetId:expression.value}:{type:'clearExpression',characterKey:actor.value}));
     const lockField=field('Lock field');options(lockField,['background','presence','slot','outfit'].map(x=>[x,x]));
     for(const type of ['lock','release'])button(type==='lock'?'Lock choice':'Release lock',()=>model.dispatch({type,field:lockField.value,...(lockField.value==='background'?{}:{characterKey:actor.value})}));
     const fileKind=field('Temporary image use');options(fileKind,[['background','Background'],['outfit','Selected actor outfit']]);
@@ -101,8 +136,24 @@ export function mountVisualStage({ document, stage, actions }) {
         }
         const ready=Boolean(verified && scene?.context.selectedSourceKey);
         for(const e of controls)e.disabled=e===reset ? false : !ready;
+        const state=model.project?model.status():null;
+        unsaved.textContent=state?(state.dirty?'Unsaved project changes':'Saved project layout'):'Unsaved session visuals';
+        projectStatus.textContent=!capable?unavailable:state?state.name+' · revision '+state.revision+(state.busy?' · saving…':state.dirty?' · unsaved changes':' · saved'):'No project attached. Select one explicitly for this chat.';
+        for(const e of [projectName,projectList,...projectButtons])e.disabled=!capable||projectBusy||!ready||actions.getSnapshot().owner?.scope!=='character';
+        save.disabled=save.disabled||!state||state.busy;detach.disabled=!state;
+        if(state){reset.disabled=true;preset.disabled=true;expression.disabled=true;file.accept='image/png';help.textContent='This project stores global layout, presence, outfits and locks. Message expressions are not saved. Switching chats detaches the project; explicitly reopen after reload.';}
+        else {file.accept='image/png,image/jpeg,image/webp';help.textContent=transientHelp;}
+        for(const [control,sessionName,projectLabel] of [[name,'Session actor name','Project actor name'],[actor,'Session actor','Project actor'],[fileKind,'Temporary image use','Project image use'],[file,'Temporary raster file','Project PNG file']]){
+            const text=state?projectLabel:sessionName;control.setAttribute('aria-label',text);control.parentElement.firstChild.textContent=text;
+        }
+        registerActor.textContent=state?'Register project actor':'Register session actor';
+        preset.parentElement.hidden=Boolean(state);expression.parentElement.hidden=Boolean(state);applyExpression.hidden=Boolean(state);
     }
     function update(snapshot) {
+        if(snapshot.sessionEpoch!==activation){
+            activation=snapshot.sessionEpoch;projectEpoch++;projectBusy=false;
+            if(model.project){model.dispose();model=createTransientScene(actions,render);}
+        }
         const stamp=evidenceStamp(snapshot);
         if(stamp===lastStamp)return;
         lastStamp=stamp;
@@ -113,5 +164,5 @@ export function mountVisualStage({ document, stage, actions }) {
         run(()=>model.sync(false));
     }
     render();update(actions.getSnapshot());
-    return {update,dispose(){disposed=true;for(const remove of removers)remove();model.dispose();}};
+    return {update,dispose(){disposed=true;projectEpoch++;for(const remove of removers)remove();model.dispose();}};
 }
