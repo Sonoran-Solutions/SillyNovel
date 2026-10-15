@@ -1,0 +1,10 @@
+{
+  "name": "sillynovel-storage",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "index.mjs",
+  "engines": { "node": ">=22.13.0" },
+  "dependencies": { "pngjs": "7.0.0" },
+  "scripts": { "test": "node --test test/*.test.mjs" }
+}

@@ -93,3 +93,7 @@ The behavioral browser check runs the actual entry and renderer. Its external Pl
 ## License and attribution
 
 A repository license has not been selected in this starter. Choose one before publishing an installable release. Record licenses and attribution for any reused code or bundled assets; a public repository is not a substitute for a license decision. This documentation imports no third-party extension code or art.
+
+## Optional project persistence review candidate
+
+The owner-authorized independent-project slice is documented in [the implementation report](docs/M1_PROJECT_STORAGE_SLICE.md). The optional local plugin saves global layouts and static PNG assets; explicit project selection is required after reload and native chat switches detach it. This is an experimental review candidate, not production acceptance. The existing reader/manual stage remains session-only without a compatible plugin. See the [separate plugin installation and limitations](plugins/sillynovel-storage/README.md); no live-host installation is implied.

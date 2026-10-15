@@ -14,7 +14,7 @@ const files = new Map([
     ['/', resolve(root, 'tests/fixtures/reader-browser.html')],
     ['/vendor/showdown.js', resolve(hostRoot, 'node_modules/showdown/dist/showdown.js')],
     ['/vendor/purify.js', resolve(hostRoot, 'node_modules/dompurify/dist/purify.js')],
-    ...['index.js', 'style.css', 'src/shell.mjs', 'src/reader-view.mjs', 'src/reader-source-model.mjs', 'src/host-adapter.mjs', 'src/stage-view.mjs', 'src/transient-scene.mjs', 'src/source-prefix.mjs', 'src/scene-reducer.mjs'].map(path => ['/' + path, resolve(root, path)]),
+    ...['index.js', 'style.css', 'src/shell.mjs', 'src/reader-view.mjs', 'src/reader-source-model.mjs', 'src/host-adapter.mjs', 'src/stage-view.mjs', 'src/transient-scene.mjs', 'src/source-prefix.mjs', 'src/scene-reducer.mjs', 'src/project-client.mjs', 'src/project-scene.mjs', 'plugins/sillynovel-storage/schema.mjs'].map(path => ['/' + path, resolve(root, path)]),
 ]);
 for (const asset of JSON.parse(await readFile(resolve(root,'tests/fixtures/m12-stage/manifest.json')))) files.set('/tests/fixtures/m12-stage/'+asset.file,resolve(root,'tests/fixtures/m12-stage',asset.file));
 before(async () => {
@@ -527,4 +527,45 @@ test('session stage: history size refusal leaves neutral art and a usable text r
     await button(page,'Back to Chat').click();
     assert.equal(await page.locator('#chat').isVisible(),true);
     assert.equal(await page.locator('#send_textarea').inputValue(),'Text still usable');
+});
+
+for (const fail of [false,true]) test(`project replacement pauses all visual mutations and ${fail?'failure preserves':'success replaces'} the original scene`,async t=>{
+    const page=await fixture(t);
+    await page.locator('#sillynovel-enabled').uncheck();
+    await page.evaluate(()=>{fixture.context.getRequestHeaders=()=>({});});
+    const first={schemaVersion:1,projectId:'11111111-1111-4111-8111-111111111111',name:'First',revision:0,scene:{backgroundAssetId:null,backgroundLocked:true,actors:[]}};
+    const second={...first,projectId:'22222222-2222-4222-8222-222222222222',name:'Second'};
+    let release,started;
+    const requested=new Promise(r=>started=r),gate=new Promise(r=>release=r);
+    await page.route('**/api/plugins/sillynovel-storage/**',async route=>{
+        const path=new URL(route.request().url()).pathname;
+        if(path.endsWith('/'+second.projectId)){
+            started();await gate;
+            await route.fulfill({status:fail?500:200,json:fail?{code:'LOAD_FAILED'}:second});return;
+        }
+        await route.fulfill({json:path.endsWith('/capabilities')?{apiVersion:1,schemaVersion:1}:path.endsWith('/projects')?[first,second]:first});
+    });
+    await page.locator('#sillynovel-enabled').check();
+    await page.locator('.sillynovel-controls summary').click();
+    await button(page,'Open project and use with this chat').click();
+    await page.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('First · revision'));
+    await page.getByLabel('Project actor name',{exact:true}).fill('Keep me');
+    await button(page,'Register project actor').click();
+    page.on('dialog',dialog=>dialog.accept());
+    await page.getByLabel('Saved project',{exact:true}).selectOption(second.projectId);
+    await button(page,'Open project and use with this chat').click();await requested;
+    assert.equal(await button(page,'Register project actor').isDisabled(),true);
+    assert.equal(await button(page,'Apply background').isDisabled(),true);
+    assert.equal(await button(page,'Detach project').isDisabled(),true);
+    assert.equal(await page.getByLabel('Project PNG file',{exact:true}).isDisabled(),true);
+    assert.equal(await page.locator('#send_textarea').isEnabled(),true);
+    // Even a queued/synthetic click cannot bypass the mutation gate.
+    await button(page,'Register project actor').dispatchEvent('click');
+    assert.equal(await page.locator('.sillynovel-cast').getAttribute('data-count'),'1');
+    release();
+    await page.waitForFunction(name=>document.querySelector('.sillynovel-project-status').textContent.includes(name+' · revision'),fail?'First':'Second');
+    assert.equal(await button(page,'Register project actor').isEnabled(),true);
+    assert.equal(await page.locator('.sillynovel-cast').getAttribute('data-count'),fail?'1':'0');
+    assert.match(await page.locator('.sillynovel-visual-status').textContent(),/Background locked|LOAD_FAILED/);
+    if(fail){await button(page,'Register project actor').click();assert.equal(await page.locator('.sillynovel-cast').getAttribute('data-count'),'2');}
 });
