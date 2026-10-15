@@ -45,7 +45,9 @@ export async function run(h) {
     await first.request('/api/chats/save', { avatar_url: avatarA, file_name: parentName, chat: messages });
     const parent = entry(avatarA, parentName);
     const p = await load(avatarA, parentName);
+    const parentSourceBeforeVisual = raw(parent);
     const parentVisual = await first.api('cas', { target: p.target, expectedRevision: 0, record: { background: 'tavern' } });
+    assert.equal(raw(parent), parentSourceBeforeVisual);
     const forged = JSON.parse(JSON.stringify(messages));
     Object.assign(forged[0].chat_metadata, { chatId: parent.chatId, storeId: p.target.storeId, sourceRevision: 900,
         main_chat: '../../forged-parent', sillynovel: { target: p.target } });
@@ -65,11 +67,31 @@ export async function run(h) {
         assert.equal(loaded.target.chatId, c.chatId);
         assert.equal(loaded.target.sourceRevision, 1);
         assert.equal(loaded.envelope.messages[0].chat_metadata.sourceRevision, 900);
+        const sourceBeforeVisual = raw(c);
+        const saved = await first.api('cas', { target: loaded.target, expectedRevision: 0, record: { background: 'forest' } });
+        assert.equal(saved.revision, 1);
+        assert.equal(raw(c), sourceBeforeVisual);
+        assert.equal(entry(index === 2 ? avatarB : avatarA, [i1, i2, i3][index]).sourceRevision, 1);
         assert.deepEqual(await first.api('cas', { target: { ...p.target, scopeId: c.scopeId, chatId: c.chatId }, expectedRevision: 0,
             record: { background: 'forest' } }, 409), { error: 'STALE_VIEW' });
     }
     assert.equal(JSON.parse(recordBytes(parent)).revision, parentVisual.revision);
     checkpoint('native JSONL imports: identical bytes, duplicate card labels and forged IDs allocate fresh scoped identities without visual inheritance', 'EXPERIMENTAL_HOST', { imports, forgedMetadata: forged[0], originalTarget: p.target });
+
+    const browserImport = await page.evaluate(async ({ avatar, text }) => {
+        const form = new FormData();
+        form.set('avatar', new Blob([text]), 'synthetic-browser.jsonl');
+        form.set('avatar_url', avatar); form.set('file_type', 'jsonl');
+        form.set('character_name', 'BrowserImport'); form.set('user_name', 'Synthetic');
+        const host = await import('/script.js');
+        const names = await host.importCharacterChat(form, { refresh: false });
+        await host.openCharacterChat(names[0].replace(/\.jsonl$/, ''));
+        return names;
+    }, { avatar: avatarA, text });
+    assert.equal(browserImport.length, 1);
+    assert.equal((await pageState(page)).target.chatId,
+        entry(avatarA, browserImport[0].replace(/\.jsonl$/, '')).chatId);
+    checkpoint('native browser importCharacterChat and openCharacterChat resolve the new imported transcript envelope', 'NATIVE_HOST_UI', { browserImport, page: await pageState(page) });
 
     const normalName = await imported(avatarA, 'NormalImport', messages.map(m => JSON.stringify(m)).join('\n'));
     assert.equal((await load(avatarA, normalName)).target.sourceRevision, 1);
@@ -124,7 +146,11 @@ export async function run(h) {
     const branches = [];
     for (let n = 0; n < 2; n++) {
         await page.evaluate(async name => (await import('/script.js')).openCharacterChat(name), parentName);
+        const parentVisit = (await pageState(page)).target;
         const name = await page.evaluate(async () => (await import('/scripts/bookmarks.js')).branchChat(1));
+        const parentRefusal = await h.uiApi(page, 'cas', { target: parentVisit, expectedRevision: parentVisual.revision,
+            record: { background: 'forest' } }, 409);
+        assert.ok(['STALE_VIEW', 'SOURCE_REVISION_MISMATCH'].includes(parentRefusal.error));
         assert.ok(name);
         const c = entry(avatarA, name);
         assert.ok(c); assert.notEqual(c.chatId, parent.chatId); assert.equal(c.sourceRevision, 1);
@@ -150,9 +176,46 @@ export async function run(h) {
     assert.equal((await pageState(page)).target.chatId, parent.chatId);
     assert.equal(entry(avatarA, parentName).sourceRevision, parentRevision);
     const copiedLoad = await load(avatarA, copyName);
-    assert.deepEqual(await first.api('cas', { target: { ...currentParent.target, chatId: copy.chatId }, expectedRevision: 0,
+    assert.deepEqual(await first.api('cas', { target: { ...currentParent.target, chatId: copy.chatId, sourceRevision: copy.sourceRevision }, expectedRevision: 0,
         record: { background: 'forest' } }, 409), { error: 'STALE_VIEW' });
     checkpoint('native save-as identical copy and two older-message branches: unique IDs, collision suffixes, independent edits and parent navigation', 'NATIVE_HOST_UI', { copy, branches, parentTarget: currentParent.target, copiedTarget: copiedLoad.target, page: await pageState(page) });
+
+    // Real native generation/swipe functions use the deterministic loopback provider.
+    await page.locator('#API-status-top').click();
+    await page.locator('#api_button_openai').click();
+    await page.locator('#send_but').waitFor({ state: 'visible' });
+    await page.locator('#API-status-top').click();
+    for (const type of ['swipe', 'continue', 'regenerate']) {
+        const before = entry(avatarA, parentName);
+        const beforeBytes = raw(before);
+        const beforeVisit = (await pageState(page)).target;
+        await page.evaluate(async type => {
+            const host = await import('/script.js');
+            await host.Generate(type); await host.saveChat();
+        }, type);
+        const after = entry(avatarA, parentName);
+        assert.match(raw(after), /Synthetic DYL28 reply/);
+        assert.notEqual(raw(after), beforeBytes);
+        assert.ok(after.sourceRevision > before.sourceRevision);
+        assert.deepEqual(await h.uiApi(page, 'cas', { target: beforeVisit, expectedRevision: parentVisual.revision,
+            record: { background: 'forest' } }, 409), { error: 'SOURCE_REVISION_MISMATCH' });
+        await page.evaluate(async () => (await import('/script.js')).getChat());
+        assert.equal((await pageState(page)).target.sourceRevision, after.sourceRevision);
+        checkpoint(`native ${type} commits changed canonical bytes and refuses the previous source visit`, 'NATIVE_HOST_UI', {
+            beforeSha256: hash(beforeBytes), beforeRevision: before.sourceRevision, afterSha256: hash(raw(after)),
+            afterRevision: after.sourceRevision, page: await pageState(page) });
+    }
+    const beforeSwipe = entry(avatarA, parentName);
+    const beforeSwipeBytes = raw(beforeSwipe);
+    await page.evaluate(async () => {
+        const host = await import('/script.js');
+        await host.swipe_left(null); await host.saveChat(); await host.getChat();
+    });
+    const afterSwipe = entry(avatarA, parentName);
+    assert.equal(afterSwipe.sourceRevision > beforeSwipe.sourceRevision, raw(afterSwipe) !== beforeSwipeBytes);
+    checkpoint('native selected-swipe save revision follows actual committed byte change', 'NATIVE_HOST_UI', {
+        beforeRevision: beforeSwipe.sourceRevision, afterRevision: afterSwipe.sourceRevision,
+        changed: raw(afterSwipe) !== beforeSwipeBytes, page: await pageState(page) });
 
     // Native group data and transcript paths keep working; no group identities are allocated.
     const members = [avatarA, avatarB];
@@ -162,6 +225,7 @@ export async function run(h) {
     const groupMessages = chatMessages('Group canonical transcript.');
     await first.request('/api/chats/group/save', { id: group.chat_id, chat: groupMessages });
     assert.deepEqual(await first.request('/api/chats/group/get', { id: group.chat_id }), groupMessages);
+    assert.deepEqual(await other.request('/api/chats/group/get', { id: group.chat_id }), []);
     const groupPath = path.join(userRoot(owner), 'group chats', `${group.chat_id}.jsonl`);
     assert.ok(fs.existsSync(groupPath));
     const groupBefore = hash(fs.readFileSync(groupPath));
@@ -226,15 +290,22 @@ export async function run(h) {
     // Corrupt/unknown registry and failed canonical write remain explicitly unavailable; no recovery guessed.
     const registryFile = path.join(userRoot(owner), 'sillynovel-dyl27', 'identities.json');
     const cleanRegistry = fs.readFileSync(registryFile, 'utf8');
+    const expectedCanonical = raw(entry(avatarA, parentName)).split('\n').map(line => JSON.parse(line));
     for (const state of ['{broken', JSON.stringify({ storeId: 'unknown' })]) {
         fs.writeFileSync(registryFile, state);
         const result = await load(avatarA, parentName);
         assert.equal(result.envelope.identity, null);
-        assert.equal(result.envelope.messages.length, 4);
+        assert.deepEqual(result.envelope.messages, expectedCanonical);
         fs.writeFileSync(registryFile, cleanRegistry); // Test fault restoration, never an automatic recovery path.
     }
+    const invalidBodyName = await imported(avatarA, 'MalformedBody', '{"chat_metadata":{}}\nnull', other);
+    const invalidBody = await load(avatarA, invalidBodyName, other);
+    assert.equal(invalidBody.envelope.identity, null);
+    assert.ok(registry(h.otherHandle).pending);
+    checkpoint('native importer accepts malformed trailing record but visual registry stays pending and refuses authority', 'EXPERIMENTAL_HOST', { invalidBody });
     const failureAvatar = await first.request('/api/characters/create', { ch_name: `Failure-${runId}` });
     const failureDir = path.join(userRoot(owner), 'chats', failureAvatar.replace('.png', ''));
+    assert.notEqual(process.getuid?.(), 0, 'EACCES control requires a non-root runner');
     fs.mkdirSync(failureDir, { recursive: true }); fs.chmodSync(failureDir, 0o500);
     let partial;
     try { partial = await upload(first, '/api/chats/import', failureAvatar, 'CannotWrite', text); }

@@ -8,7 +8,8 @@ const root = process.argv[2];
 assert.equal(execFileSync('git', ['-C', root, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(), sha);
 const files = ['src/endpoints/chats.js', 'src/endpoints/groups.js', 'src/endpoints/characters.js', 'src/util.js',
     'src/users.js', 'src/server-main.js', 'public/script.js', 'public/scripts/bookmarks.js',
-    'public/scripts/chats.js', 'public/scripts/group-chats.js'];
+    'public/scripts/chats.js', 'public/scripts/group-chats.js', 'src/endpoints/data-maid.js',
+    'src/endpoints/users-private.js', 'src/endpoints/users-admin.js', 'public/scripts/data-maid.js', 'public/scripts/user.js'];
 const result = { sha, classification: 'SOURCE_INSPECTION', files: {} };
 for (const file of files) {
     const bytes = fs.readFileSync(path.join(root, file));

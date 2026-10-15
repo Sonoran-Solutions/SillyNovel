@@ -53,6 +53,7 @@ function actualState() {
         const catalog = JSON.parse(rawRegistry);
         users[handle] = {
             registry: rawRegistry,
+            registrySha256: hash(rawRegistry),
             storeId: catalog.storeId,
             chats: catalog.chats.map(chat => {
                 const sourceFile = path.join(userRoot(handle), chat.relativePath);
@@ -63,6 +64,7 @@ function actualState() {
                     sourceText: fs.existsSync(sourceFile) ? fs.readFileSync(sourceFile, 'utf8') : null,
                     sourceSha256: fs.existsSync(sourceFile) ? hash(fs.readFileSync(sourceFile)) : null,
                     visualRecord: fs.existsSync(visualRecord) ? fs.readFileSync(visualRecord, 'utf8') : null,
+                    visualSha256: fs.existsSync(visualRecord) ? hash(fs.readFileSync(visualRecord)) : null,
                 };
             }),
         };
