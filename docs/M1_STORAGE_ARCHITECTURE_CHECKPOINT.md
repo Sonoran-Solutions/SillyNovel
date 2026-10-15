@@ -2,7 +2,7 @@
 
 **Status:** owner decision package; all choices below are **PROPOSED** unless an earlier owner decision is explicitly cited. No production storage is authorized.
 
-**Tracking:** [DYL-47](https://linear.app/devils17/issue/DYL-47/sillynovel-m12-m-decide-production-storage-architecture-and) (In Progress), prerequisite [DYL-46](https://linear.app/devils17/issue/DYL-46/sillynovel-m12-l-prove-safe-external-authority-reconciliation-after) (Done), related [DYL-25](https://linear.app/devils17/issue/DYL-25/sillynovel-m12-decide-supported-storage-architecture-and-host-api), [DYL-22](https://linear.app/devils17/issue/DYL-22/sillynovel-m12-c-import-and-register-a-small-approved-raster-asset), and [DYL-23](https://linear.app/devils17/issue/DYL-23/sillynovel-m12-d-render-stable-manual-scenes-and-source-scoped).
+**Tracking:** [DYL-47](https://linear.app/devils17/issue/DYL-47/sillynovel-m12-m-decide-production-storage-architecture-and) (In Review), prerequisite [DYL-46](https://linear.app/devils17/issue/DYL-46/sillynovel-m12-l-prove-safe-external-authority-reconciliation-after) (Done), related [DYL-25](https://linear.app/devils17/issue/DYL-25/sillynovel-m12-decide-supported-storage-architecture-and-host-api), [DYL-22](https://linear.app/devils17/issue/DYL-22/sillynovel-m12-c-import-and-register-a-small-approved-raster-asset), and [DYL-23](https://linear.app/devils17/issue/DYL-23/sillynovel-m12-d-render-stable-manual-scenes-and-source-scoped).
 
 **Repository starting point:** fetched `main` at `8b7e8e04f1218e73902f997d9018765a79f76128`, the merge commit for PR #20. The inspected SillyTavern target used throughout the experiments is 1.19.0 at `7e8663cd9c184a550b37238218bdd32c6efc68e9`; it is an experimental test host, not an approved production support floor.
 
