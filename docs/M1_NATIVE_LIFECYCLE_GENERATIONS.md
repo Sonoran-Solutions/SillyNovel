@@ -1,6 +1,6 @@
 # DYL-44: Host-owned lifecycle reservations and write generations
 
-**Recommendation: REVISE.** This test-only contract reserves all participating native writers in one authenticated store before routing, conservatively refuses competing operations, and separates canonical write generations from content revisions. It does not provide production persistence, automatic re-enrollment of revoked character scopes, unknown-writer exclusion, or a separately trusted store incarnation. Runtime results and frozen evidence are recorded below after validation.
+**Recommendation: REVISE.** This test-only contract reserves all participating native writers in one authenticated store before routing, conservatively refuses competing operations, and separates canonical write generations from content revisions. It does not provide production persistence, automatic re-enrollment of revoked character scopes, unknown-writer exclusion, or a separately trusted store incarnation. The frozen generation campaign completed 36 checkpoints, including two explicitly unsafe negative controls; exact evidence follows.
 
 ## Baseline and authorization
 
@@ -105,3 +105,75 @@ The DYL-28 harness applies mount/envelope, DYL-42 writers, DYL-43 invalidation, 
 The owner must decide whether store-wide writer contention and permanent visual refusal are an acceptable basis for another proof; what explicit re-enrollment/recovery should mean; which supported host integration can guarantee writer participation; and who owns a non-restorable store-incarnation authority. No such approval is inferred here.
 
 Recommend one separately authorized proof of explicit re-enrollment for a revoked/recreated character scope under the same reservation, with host-approved source/destination semantics and an external store-incarnation contract. Do not expand into assets, groups, production storage, upstream publication or the rest of the roadmap. Technical feasibility for the exercised participating operations does not resolve these release blockers; the overall recommendation remains **REVISE**.
+
+## Exact validation record
+
+All commands below ran from `/home/dq/.codex/worktrees/lifecycle-generations/SillyNovel`. Host and Chromium commands used reviewed elevated execution for owned child processes/loopback listeners. No dependency installation or hosted CI claim is made.
+
+```sh
+git fetch origin main
+git rev-parse origin/main
+gh pr view 17 --json state,mergedAt,mergeCommit,url
+node tests/probes/dyl42/source-inspection.mjs /tmp/SillyTavern-m12-review > docs/evidence/dyl44/source-inspection.json
+node --check tests/probes/dyl28/host-probe.mjs
+node --check tests/probes/dyl42/writer-campaign.mjs
+node --check tests/probes/dyl44/generation-campaign.mjs
+node --check /tmp/dyl44-patch-host/src/dyl27-storage.mjs
+SN_DYL44=1 SN_PLAYWRIGHT_MODULE=/home/dq/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs node tests/probes/dyl28/host-probe.mjs /tmp/SillyTavern-m12-review /tmp/dyl44-final-generation-v2
+SN_DYL44=baseline SN_DYL43=1 SN_PLAYWRIGHT_MODULE=/home/dq/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs node tests/probes/dyl28/host-probe.mjs /tmp/SillyTavern-m12-review /tmp/dyl44-final-lifecycle
+SN_DYL44=baseline SN_DYL42=1 SN_PLAYWRIGHT_MODULE=/home/dq/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs node tests/probes/dyl28/host-probe.mjs /tmp/SillyTavern-m12-review /tmp/dyl44-final-writers
+node --test tests/m0.test.mjs tests/m1-reader-source.test.mjs tests/m1-scene-reducer.test.mjs tests/m1-source-prefix.test.mjs tests/probes/dyl19/*.test.mjs > docs/evidence/dyl44/node-tests.txt 2>&1
+SN_PLAYWRIGHT_MODULE=/home/dq/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs SILLYTAVERN_ROOT=/tmp/SillyTavern-m12-review node --test tests/m1-reader-browser.test.mjs > docs/evidence/dyl44/browser-tests.txt 2>&1
+git diff origin/main --check -- . ':!tests/probes/dyl44/host-generations.patch'
+git -c core.whitespace=-blank-at-eol,-blank-at-eof diff origin/main --check -- tests/probes/dyl44/host-generations.patch
+```
+
+Select a new nonexistent output directory when reproducing. The unified patch encodes intentional blank context lines; only that file uses the whitespace exemption. All other changed files receive ordinary whitespace checks.
+
+Inherited lifecycle: **38/38** checkpoints (16 DYL-28 + 22 DYL-43). Inherited writers: **33/33** (16 DYL-28 + 17 DYL-42). Both ran at `006647dff4debbd17e7025781c3d659bf5cde105` with DYL-44 reservations/generation enforcement active. The one inherited expectation change explicitly requires `WRITE_GENERATION_MISMATCH` after an identical save under DYL-44; source revision and incarnation still remain unchanged. Original DYL-42 behavior is retained when DYL-44 is absent. No other inherited assertion was weakened.
+
+Node: **64/64**, Chromium: **24/24**, zero failures/skips, on the same unchanged production files. Runtime Node v26.8.1, Linux, headless Chromium 151.0.7922.34. Only a deterministic loopback responder; real providers, physical devices, other browsers/hosts and multi-process/power-loss behavior remain NOT_TESTED.
+
+[Inherited lifecycle records](evidence/dyl44/inherited-lifecycle.json), [inherited writer records](evidence/dyl44/inherited-writers.json), [Node output](evidence/dyl44/node-tests.txt), [Chromium output](evidence/dyl44/browser-tests.txt), [pinned source inventory](evidence/dyl44/source-inspection.json), [development attempts](evidence/dyl44/development-runs.json).
+
+Development history: `dyl44-dev-1` failed patch application because the overlay was applied before its DYL-43 prerequisite; fixed the harness order. `dyl44-dev-2` passed 35 checkpoints while sources were still being refined, so it is not frozen evidence. Development inherited lifecycle/writer runs passed 38/33. The first frozen generation run (`dyl44-final-generation`) passed 33 checkpoints, then failed the restore fixture: ordinary copy changed inode/birth identity, correctly causing refusal. The corrected fixture stops the owned process, makes a hardlink snapshot of only its regular generated files, resumes native atomic writes, stops again, and restores the snapshot directory. This preserves original canonical file identities without editing registry seals; it models metadata-preserving rollback, not a supported backup product. The final campaign-only correction is frozen at `eb44b7da6222a8b6aba07adb7eea346de6a83de1`. The host patch/module and inherited runners did not change between those SHAs, so the inherited frozen results remain applicable to those exact bytes.
+
+
+Final generation campaign: **36/36 expected checkpoints** at `eb44b7da6222a8b6aba07adb7eea346de6a83de1`: 16 inherited + **20 new**, of which **2 are counterexamples, not safety passes**. The 38-check lifecycle and 33-check writer totals overlap on the same 16 inherited checks and must not be summed as independent scenarios. [Final raw results](evidence/dyl44/results.json) retain actual registry/canonical/visual bytes, host IDs, pending reservations, and SHA-256 snapshots.
+
+The corrected rollback control preserved original canonical inode/birth identity with a test-owned hardlink snapshot, restored the original registry and reservation file, and recovered the old write generation and visual revision through a fresh activation. Old in-memory tokens still expire at restart; that does not stop resurrection of the older durable identity/record under a new visit. This is the concrete reason the local store-incarnation UUID is insufficient. No external authority prototype or production restore tooling is claimed.
+
+The interrupted-rename control stopped the actual owned process while a native operation awaited its barrier. The exact pending reservation bytes survived restart; old visual authority and subsequent participating writes refused. Failed post-write finalization likewise retained pending intent after an identical canonical write. Both are process-restart proofs, not power-loss claims.
+
+All final campaigns report `ownedRootRemoved`, `hostStopped`, `sourceCheckoutPresent`, and `sourceStatusUnchanged` true. The never-launched preparation clone was separately pinned/hash-verified and removed; see [preparation cleanup](evidence/dyl44/preparation-cleanup.json). No pre-existing temporary directory was deleted.
+
+### Frozen proof SHA-256
+
+[All applied/run proof hashes](evidence/dyl44/proof-hashes.json) and [checksum manifest](evidence/dyl44/SHA256SUMS) cover reproducibility. The composed module hash includes all predecessor overlays.
+
+| Component | SHA-256 |
+| --- | --- |
+| `host-storage.mjs` | `77c5397c402e40bbc1580eb55e9f6df1559d1eaa7ab9ad5178e2ba86d4bd722a` |
+| `host-visit.js` | `dd18e8e1b71aa3dc60e2e9e1c3e22f43064edab5f8435f5643acf0c24b2f9287` |
+| `host-envelope.patch` | `e73905b37c59b20a6f9844050a4152e7c25a02d1bb6ccaa9e908968ae665996d` |
+| `host-probe.mjs` | `bee02ddbb3c37168ac2928d642e36182eb220e3f20b814094e7abe5cd5d8276f` |
+| `dyl27-host-mount.patch` | `a30ddf37b47c99d3db0e575df339e8fe3411b97914551a1351f9d0d6e312c6aa` |
+| `dyl42-host-writers.patch` | `af14a89522f954345914f71762b436f9ff4d9db2d3f1b22557eafd9b3d6f3b83` |
+| `dyl42-writer-campaign.mjs` | `210ecf940952bb2331d5e616eee6efc4317e2ad8d6c787aa9b85c5290a51fec7` |
+| `dyl43-host-lifecycle.patch` | `232f3cef407229df54ad41e9026bde3fcc8076419dd1ac33f616c13fffd420c7` |
+| `dyl43-lifecycle-campaign.mjs` | `05fceb5eb74b4eaa4a6045a99ca9a4a9b155246d0eb59a998838f8423f0b9571` |
+| `dyl44-host-generations.patch` | `e4dae9a1a5d6f98db8bea0cabf589f80245dde1b150fe9c2981c7fd12770f5ce` |
+| `dyl44-generation-campaign.mjs` | `66b5d35a6b99dbeb8514bce68d80941836139507549fd4412fcd02e72d51ed1f` |
+| `applied-host-storage.mjs` | `0b8b8ad346cd064c4aeebbbbd40014ca3bcfb3e829b56668198cd2f6936adc8d` |
+
+### Representative actual evidence
+
+Identical native save: chat `a7e73f88-5ace-45b0-b95b-7907cd7fc9fc`, incarnation `7a00ff4a-e275-40b0-8f42-5467c2fcfddb`, write generation **1 → 2**, source revision **1 → 1**, canonical SHA-256 `d8533260972c82a4de4f254f5de4937b8676cb53659cc1828a7719f7da862f39` unchanged. Old load and CAS returned `WRITE_GENERATION_MISMATCH`; a fresh load retained the chat identity.
+
+Concurrent rename reservation `bcf94d30-d417-4255-b0a5-075612588a2d` persisted before the native read barrier. The competing request returned `RESERVATION_BUSY` without changing its canonical transcript or the pending reservation. The winner returned native avatar `ClaimDestination-2a3d567f-9e44-4c7e-976f-1835fb81cede.png`; its old scope remained refused. Full pending bytes:
+
+```json
+{"storeIncarnation":"f421dfaf-5905-4166-8fcd-da7732e20ffe","serial":28,"pending":{"operationId":"bcf94d30-d417-4255-b0a5-075612588a2d","operation":"/api/characters/rename","reservedLocators":["*"]}}
+```
+
+Whole-root rollback counterexample: write generation **1 → 2 → 1**, chat identity `ccdc2cfd-c90a-4439-960a-8f439938a2d9` and visual revision 1 accepted under a new visit after rollback. This is **BLOCKED** for restore safety.

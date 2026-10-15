@@ -1,0 +1,137 @@
+[
+  {
+    "runId": "cd370f31-ca07-4a80-8eac-7a228c8b5eac",
+    "testedSillyNovelSha": "72314090ed74c90b1317745bf83f4838723e2dc2",
+    "result": "FAIL",
+    "failure": "Error: Command failed: git -C /tmp/sillynovel-dyl28-sMuEFn/host apply --check /home/dq/.codex/worktrees/lifecycle-generations/SillyNovel/tests/probes/dyl44/host-generations.patch\nerror: patch failed: src/dyl27-storage.mjs:56\nerror: src/dyl27-storage.mjs: patch does not apply\nerror: patch failed: src/endpoints/characters.js:1\nerror: src/endpoints/characters.js: patch does not apply\nerror: patch failed: src/endpoints/data-maid.js:1\nerror: src/endpoints/data-maid.js: patch does not apply\n\n    at genericNodeError (node:internal/errors:999:15)\n    at wrappedFn (node:internal/errors:544:14)\n    at checkExecSyncError (node:child_process:942:11)\n    at execFileSync (node:child_process:978:15)\n    at file:///home/dq/.codex/worktrees/lifecycle-generations/SillyNovel/tests/probes/dyl28/host-probe.mjs:261:9\n    at ModuleJob.run (node:internal/modules/esm/module_job:569:25)\n    at async node:internal/modules/esm/loader:650:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)",
+    "files": {
+      "host-storage.mjs": "77c5397c402e40bbc1580eb55e9f6df1559d1eaa7ab9ad5178e2ba86d4bd722a",
+      "host-visit.js": "dd18e8e1b71aa3dc60e2e9e1c3e22f43064edab5f8435f5643acf0c24b2f9287",
+      "host-envelope.patch": "e73905b37c59b20a6f9844050a4152e7c25a02d1bb6ccaa9e908968ae665996d",
+      "host-probe.mjs": "c6ee3deca69f32dc8ddd57600e399ea9c8b571d7e00669d7f0395f7370d3d15a",
+      "dyl27-host-mount.patch": "a30ddf37b47c99d3db0e575df339e8fe3411b97914551a1351f9d0d6e312c6aa",
+      "dyl42-host-writers.patch": "af14a89522f954345914f71762b436f9ff4d9db2d3f1b22557eafd9b3d6f3b83",
+      "dyl42-writer-campaign.mjs": "f436e5b4932fda523cfa3b03c060834a78de2f0c18cfbadc6510ab91e193e9fd"
+    },
+    "cleanup": {
+      "ownedRootRemoved": true,
+      "hostStopped": true,
+      "sourceCheckoutPresent": true,
+      "sourceStatusUnchanged": true
+    },
+    "outputDirectory": "/tmp/dyl44-dev-1",
+    "completedCheckpoints": 0
+  },
+  {
+    "runId": "08eb2a5b-b28b-4e22-bdcf-880aef2d3454",
+    "testedSillyNovelSha": "72314090ed74c90b1317745bf83f4838723e2dc2",
+    "result": "PASS_WITH_BOUNDED_CHARACTER_CHAT_LIMITS",
+    "failure": null,
+    "files": {
+      "host-storage.mjs": "77c5397c402e40bbc1580eb55e9f6df1559d1eaa7ab9ad5178e2ba86d4bd722a",
+      "host-visit.js": "dd18e8e1b71aa3dc60e2e9e1c3e22f43064edab5f8435f5643acf0c24b2f9287",
+      "host-envelope.patch": "e73905b37c59b20a6f9844050a4152e7c25a02d1bb6ccaa9e908968ae665996d",
+      "host-probe.mjs": "dcf62e1b3f1a72bcc670e4be61083aa84dcfe6c760737889a4095cd7a4147009",
+      "dyl27-host-mount.patch": "a30ddf37b47c99d3db0e575df339e8fe3411b97914551a1351f9d0d6e312c6aa",
+      "dyl42-host-writers.patch": "af14a89522f954345914f71762b436f9ff4d9db2d3f1b22557eafd9b3d6f3b83",
+      "dyl42-writer-campaign.mjs": "f436e5b4932fda523cfa3b03c060834a78de2f0c18cfbadc6510ab91e193e9fd",
+      "applied-host-storage.mjs": "6e737dfafd07031820346ac9b8e0604746beb44c7923733989e480161b7e6ac8",
+      "dyl43-host-lifecycle.patch": "232f3cef407229df54ad41e9026bde3fcc8076419dd1ac33f616c13fffd420c7",
+      "dyl43-lifecycle-campaign.mjs": "05fceb5eb74b4eaa4a6045a99ca9a4a9b155246d0eb59a998838f8423f0b9571",
+      "dyl44-host-generations.patch": "3c25b3c2d0bb9a57f613177ac9e92dce02089ef66e9009919734599bbd09ebe7",
+      "dyl44-generation-campaign.mjs": "bc1edd00b1af1bc3eba9db9a501b9d65a72934aa0926017d4829a3737099f069"
+    },
+    "cleanup": {
+      "ownedRootRemoved": true,
+      "hostStopped": true,
+      "sourceCheckoutPresent": true,
+      "sourceStatusUnchanged": true
+    },
+    "outputDirectory": "/tmp/dyl44-dev-2",
+    "completedCheckpoints": 35
+  },
+  {
+    "runId": "a2755aeb-a4c9-4b57-a369-e8b876c3a49b",
+    "testedSillyNovelSha": "72314090ed74c90b1317745bf83f4838723e2dc2",
+    "result": "PASS_WITH_BOUNDED_CHARACTER_CHAT_LIMITS",
+    "failure": null,
+    "files": {
+      "host-storage.mjs": "77c5397c402e40bbc1580eb55e9f6df1559d1eaa7ab9ad5178e2ba86d4bd722a",
+      "host-visit.js": "dd18e8e1b71aa3dc60e2e9e1c3e22f43064edab5f8435f5643acf0c24b2f9287",
+      "host-envelope.patch": "e73905b37c59b20a6f9844050a4152e7c25a02d1bb6ccaa9e908968ae665996d",
+      "host-probe.mjs": "dcf62e1b3f1a72bcc670e4be61083aa84dcfe6c760737889a4095cd7a4147009",
+      "dyl27-host-mount.patch": "a30ddf37b47c99d3db0e575df339e8fe3411b97914551a1351f9d0d6e312c6aa",
+      "dyl42-host-writers.patch": "af14a89522f954345914f71762b436f9ff4d9db2d3f1b22557eafd9b3d6f3b83",
+      "dyl42-writer-campaign.mjs": "210ecf940952bb2331d5e616eee6efc4317e2ad8d6c787aa9b85c5290a51fec7",
+      "applied-host-storage.mjs": "0b8b8ad346cd064c4aeebbbbd40014ca3bcfb3e829b56668198cd2f6936adc8d",
+      "dyl43-host-lifecycle.patch": "232f3cef407229df54ad41e9026bde3fcc8076419dd1ac33f616c13fffd420c7",
+      "dyl43-lifecycle-campaign.mjs": "05fceb5eb74b4eaa4a6045a99ca9a4a9b155246d0eb59a998838f8423f0b9571",
+      "dyl44-host-generations.patch": "e4dae9a1a5d6f98db8bea0cabf589f80245dde1b150fe9c2981c7fd12770f5ce",
+      "dyl44-generation-campaign.mjs": "ab6ba802f7870b0d55aec1f5df7721672b2ce84ac01401a52d7a2c3984902f2a"
+    },
+    "cleanup": {
+      "ownedRootRemoved": true,
+      "hostStopped": true,
+      "sourceCheckoutPresent": true,
+      "sourceStatusUnchanged": true
+    },
+    "outputDirectory": "/tmp/dyl44-dev-lifecycle",
+    "completedCheckpoints": 38
+  },
+  {
+    "runId": "f97f9403-2c55-4281-b2aa-66b76114e1f0",
+    "testedSillyNovelSha": "72314090ed74c90b1317745bf83f4838723e2dc2",
+    "result": "PASS_WITH_BOUNDED_CHARACTER_CHAT_LIMITS",
+    "failure": null,
+    "files": {
+      "host-storage.mjs": "77c5397c402e40bbc1580eb55e9f6df1559d1eaa7ab9ad5178e2ba86d4bd722a",
+      "host-visit.js": "dd18e8e1b71aa3dc60e2e9e1c3e22f43064edab5f8435f5643acf0c24b2f9287",
+      "host-envelope.patch": "e73905b37c59b20a6f9844050a4152e7c25a02d1bb6ccaa9e908968ae665996d",
+      "host-probe.mjs": "dcf62e1b3f1a72bcc670e4be61083aa84dcfe6c760737889a4095cd7a4147009",
+      "dyl27-host-mount.patch": "a30ddf37b47c99d3db0e575df339e8fe3411b97914551a1351f9d0d6e312c6aa",
+      "dyl42-host-writers.patch": "af14a89522f954345914f71762b436f9ff4d9db2d3f1b22557eafd9b3d6f3b83",
+      "dyl42-writer-campaign.mjs": "210ecf940952bb2331d5e616eee6efc4317e2ad8d6c787aa9b85c5290a51fec7",
+      "applied-host-storage.mjs": "0b8b8ad346cd064c4aeebbbbd40014ca3bcfb3e829b56668198cd2f6936adc8d",
+      "dyl43-host-lifecycle.patch": "232f3cef407229df54ad41e9026bde3fcc8076419dd1ac33f616c13fffd420c7",
+      "dyl43-lifecycle-campaign.mjs": "05fceb5eb74b4eaa4a6045a99ca9a4a9b155246d0eb59a998838f8423f0b9571",
+      "dyl44-host-generations.patch": "e4dae9a1a5d6f98db8bea0cabf589f80245dde1b150fe9c2981c7fd12770f5ce",
+      "dyl44-generation-campaign.mjs": "ab6ba802f7870b0d55aec1f5df7721672b2ce84ac01401a52d7a2c3984902f2a"
+    },
+    "cleanup": {
+      "ownedRootRemoved": true,
+      "hostStopped": true,
+      "sourceCheckoutPresent": true,
+      "sourceStatusUnchanged": true
+    },
+    "outputDirectory": "/tmp/dyl44-dev-writers",
+    "completedCheckpoints": 33
+  },
+  {
+    "runId": "08414094-e8bf-479b-8576-3af576ec07d8",
+    "testedSillyNovelSha": "006647dff4debbd17e7025781c3d659bf5cde105",
+    "result": "FAIL",
+    "failure": "TypeError: Cannot read properties of null (reading 'chatId')\n    at run (file:///home/dq/.codex/worktrees/lifecycle-generations/SillyNovel/tests/probes/dyl44/generation-campaign.mjs:227:34)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///home/dq/.codex/worktrees/lifecycle-generations/SillyNovel/tests/probes/dyl28/host-probe.mjs:794:9",
+    "files": {
+      "host-storage.mjs": "77c5397c402e40bbc1580eb55e9f6df1559d1eaa7ab9ad5178e2ba86d4bd722a",
+      "host-visit.js": "dd18e8e1b71aa3dc60e2e9e1c3e22f43064edab5f8435f5643acf0c24b2f9287",
+      "host-envelope.patch": "e73905b37c59b20a6f9844050a4152e7c25a02d1bb6ccaa9e908968ae665996d",
+      "host-probe.mjs": "bee02ddbb3c37168ac2928d642e36182eb220e3f20b814094e7abe5cd5d8276f",
+      "dyl27-host-mount.patch": "a30ddf37b47c99d3db0e575df339e8fe3411b97914551a1351f9d0d6e312c6aa",
+      "dyl42-host-writers.patch": "af14a89522f954345914f71762b436f9ff4d9db2d3f1b22557eafd9b3d6f3b83",
+      "dyl42-writer-campaign.mjs": "210ecf940952bb2331d5e616eee6efc4317e2ad8d6c787aa9b85c5290a51fec7",
+      "dyl43-host-lifecycle.patch": "232f3cef407229df54ad41e9026bde3fcc8076419dd1ac33f616c13fffd420c7",
+      "dyl43-lifecycle-campaign.mjs": "05fceb5eb74b4eaa4a6045a99ca9a4a9b155246d0eb59a998838f8423f0b9571",
+      "dyl44-host-generations.patch": "e4dae9a1a5d6f98db8bea0cabf589f80245dde1b150fe9c2981c7fd12770f5ce",
+      "dyl44-generation-campaign.mjs": "cbcd7565598f3e76114129714bea1103547b6df32da9e629d04c2d53bb366f0a",
+      "applied-host-storage.mjs": "0b8b8ad346cd064c4aeebbbbd40014ca3bcfb3e829b56668198cd2f6936adc8d"
+    },
+    "cleanup": {
+      "ownedRootRemoved": true,
+      "hostStopped": true,
+      "sourceCheckoutPresent": true,
+      "sourceStatusUnchanged": true
+    },
+    "outputDirectory": "/tmp/dyl44-final-generation",
+    "completedCheckpoints": 33
+  }
+]
