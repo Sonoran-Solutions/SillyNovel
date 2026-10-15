@@ -5,6 +5,7 @@
     "review-final started at protocol commit 37cef930 while the campaign fixture was corrected before its dynamic import. Its successful 56-check result is preserved as development only; review-final-v2 reruns the frozen corrected campaign at b57257f.",
     "review-final-writers timed out before the writer campaign: the common native provider UI send button remained hidden at host-probe.mjs:725. The unchanged retry completed 33/33. The initial failure is preserved, not attributed to a proven cause.",
     "Both Chromium attempts remain FAIL 23/24 at tests/m1-reader-browser.test.mjs:445 (expected false, actual undefined from absent src optional chaining). Production and browser-test files are unchanged. No waived or passing-browser claim is made.",
-    "DYL-43/44/45 assertions are unchanged. Their failing prefixes and NOT_REACHED suffixes are not reported as full passes."
+    "DYL-43/44/45 assertions are unchanged. Their failing prefixes and NOT_REACHED suffixes are not reported as full passes.",
+    "The staged ordinary whitespace check flagged four space-only lines emitted by the failed Chromium reporter. Raw evidence remains byte-identical; these two logs are separately checked with blank-at-eol disabled, like encoded patch context. Ordinary source/doc whitespace checks pass."
   ]
 }

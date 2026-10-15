@@ -83,6 +83,14 @@ The Chromium result is separate from host reconciliation. Its assertion chains `
 
 Exact new host commands and output paths are recorded per run in the index. They use the original owned DYL-28 runner, pinned host and installed Playwright dependencies, with `SN_DYL46_TRACE=1`; reconciliation enables `SN_DYL46=1 SN_DYL44=baseline SN_DYL45=baseline`, while inherited comparisons apply `SN_DYL46=baseline` and select their original campaign. No dependency install, real provider, paid service, installed host/profile or production extension change occurred. Syntax of all composed changed host modules, Node/Chromium output, doc-link and whitespace checks, lossless XZ round trips, exact input hashes and owned cleanup are recorded. No hosted CI pass is claimed.
 
+Whitespace verification preserves the original failed Chromium terminal output byte-for-byte. Its four blank lines containing spaces are checked separately with `core.whitespace=-blank-at-eol`; the unified patch retains its existing encoded-context exception. All other files use the ordinary check. Exact commands run:
+
+```sh
+git diff origin/main --check -- . ':!tests/probes/dyl46/host-reconciliation.patch' ':!docs/evidence/dyl46/review/browser-tests-attempt-1.txt' ':!docs/evidence/dyl46/review/browser-tests-attempt-2.txt'
+git -c core.whitespace=-blank-at-eol diff origin/main --check -- docs/evidence/dyl46/review/browser-tests-attempt-1.txt docs/evidence/dyl46/review/browser-tests-attempt-2.txt
+git -c core.whitespace=-blank-at-eol,-blank-at-eof diff origin/main --check -- tests/probes/dyl46/host-reconciliation.patch
+```
+
 **Remaining decisions and smallest next step:** keep REVISE / HOLD. Review the partial-native-operation refusal contract and the DYL-44/45 replacement expectations, and separately resolve the unchanged browser assertion before claiming complete regression compatibility. A durable witness recovery/migration service, unknown-writer enforcement and production persistence remain out of scope. DYL-22/23 blocked; DYL-24 session-only; M1.3/M2 unauthorized; Gate A NOT_RUN. No merge, Done status or further implementation follows automatically.
 
 ---
