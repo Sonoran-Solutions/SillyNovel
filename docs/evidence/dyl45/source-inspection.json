@@ -1,0 +1,790 @@
+{
+  "sha": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
+  "classification": "SOURCE_INSPECTION",
+  "files": {
+    "src/endpoints/chats.js": {
+      "sha256": "40012ebc71a75357e62f7532e5b20def0d8b6c132bb6ab48f662993cc97b9063",
+      "locations": [
+        {
+          "line": 9,
+          "text": "import sanitize from 'sanitize-filename';\nimport { sync as writeFileAtomicSync } from 'write-file-atomic';\nimport _ from 'lodash';\n"
+        },
+        {
+          "line": 22,
+          "text": "    tryReadFileSync,\n    tryDeleteFile,\n    readFirstLine,\n    isPathUnderParent,"
+        },
+        {
+          "line": 532,
+          "text": " */\nexport async function trySaveChat(chatData, filePath, skipIntegrityCheck = false, handle, cardName, backupDirectory) {\n    const jsonlData = chatData?.map(m => JSON.stringify(m)).join('\\n');\n"
+        },
+        {
+          "line": 545,
+          "text": "\nrouter.post('/save', validateAvatarUrlMiddleware, async function (request, response) {\n    try {\n        const handle = request.user.profile.handle;"
+        },
+        {
+          "line": 557,
+          "text": "        if (Array.isArray(chatData)) {\n            await trySaveChat(chatData, chatFilePath, request.body.force, handle, cardName, request.user.directories.backups);\n            return response.send({ ok: true });\n        } else {"
+        },
+        {
+          "line": 592,
+          "text": "\nrouter.post('/get', validateAvatarUrlMiddleware, function (request, response) {\n    try {\n        const dirName = String(request.body.avatar_url).replace('.png', '');"
+        },
+        {
+          "line": 621,
+          "text": "\nrouter.post('/rename', validateAvatarUrlMiddleware, async function (request, response) {\n    try {\n        if (!request.body || !request.body.original_file || !request.body.renamed_file) {"
+        },
+        {
+          "line": 644,
+          "text": "\n        fs.copyFileSync(pathToOriginalFile, pathToRenamedFile);\n        fs.unlinkSync(pathToOriginalFile);\n        console.info('Successfully renamed chat file.');"
+        },
+        {
+          "line": 645,
+          "text": "        fs.copyFileSync(pathToOriginalFile, pathToRenamedFile);\n        fs.unlinkSync(pathToOriginalFile);\n        console.info('Successfully renamed chat file.');\n        return response.send({ ok: true, sanitizedFileName });"
+        },
+        {
+          "line": 654,
+          "text": "\nrouter.post('/delete', validateAvatarUrlMiddleware, function (request, response) {\n    try {\n        if (!path.extname(request.body.chatfile)) {"
+        },
+        {
+          "line": 667,
+          "text": "        //Return success if the file was deleted.\n        if (tryDeleteFile(chatFilePath)) {\n            return response.send({ ok: true });\n        } else {"
+        },
+        {
+          "line": 679,
+          "text": "\nrouter.post('/export', validateAvatarUrlMiddleware, async function (request, response) {\n    if (!request.body.file || (!request.body.avatar_url && request.body.is_group === false)) {\n        return response.sendStatus(400);"
+        },
+        {
+          "line": 751,
+          "text": "\nrouter.post('/group/import', function (request, response) {\n    try {\n        const filedata = request.file;"
+        },
+        {
+          "line": 762,
+          "text": "        const pathToNewFile = path.join(request.user.directories.groupChats, `${chatname}.jsonl`);\n        fs.copyFileSync(pathToUpload, pathToNewFile);\n        fs.unlinkSync(pathToUpload);\n        return response.send({ res: chatname });"
+        },
+        {
+          "line": 763,
+          "text": "        fs.copyFileSync(pathToUpload, pathToNewFile);\n        fs.unlinkSync(pathToUpload);\n        return response.send({ res: chatname });\n    } catch (error) {"
+        },
+        {
+          "line": 771,
+          "text": "\nrouter.post('/import', validateAvatarUrlMiddleware, function (request, response) {\n    if (!request.body) return response.sendStatus(400);\n"
+        },
+        {
+          "line": 794,
+          "text": "        if (format === 'json') {\n            fs.unlinkSync(pathToUpload);\n            const jsonData = JSON.parse(data);\n"
+        },
+        {
+          "line": 819,
+          "text": "                fileNames.push(fileName);\n                writeFileAtomicSync(filePath, chat, 'utf8');\n            };\n"
+        },
+        {
+          "line": 859,
+          "text": "            if (flattenedChat !== data) {\n                writeFileAtomicSync(filePath, flattenedChat, 'utf8');\n            } else {\n                fs.copyFileSync(pathToUpload, filePath);"
+        },
+        {
+          "line": 861,
+          "text": "            } else {\n                fs.copyFileSync(pathToUpload, filePath);\n            }\n            fs.unlinkSync(pathToUpload);"
+        },
+        {
+          "line": 863,
+          "text": "            }\n            fs.unlinkSync(pathToUpload);\n            response.send({ res: true, fileNames });\n        }"
+        },
+        {
+          "line": 872,
+          "text": "\nrouter.post('/group/get', (request, response) => {\n    if (!request.body || !request.body.id) {\n        return response.sendStatus(400);"
+        },
+        {
+          "line": 883,
+          "text": "\nrouter.post('/group/info', async (request, response) => {\n    try {\n        if (!request.body || !request.body.id) {"
+        },
+        {
+          "line": 900,
+          "text": "\nrouter.post('/group/delete', (request, response) => {\n    try {\n        if (!request.body || !request.body.id) {"
+        },
+        {
+          "line": 910,
+          "text": "        //Return success if the file was deleted.\n        if (tryDeleteFile(chatFilePath)) {\n            return response.send({ ok: true });\n        } else {"
+        },
+        {
+          "line": 922,
+          "text": "\nrouter.post('/group/save', async function (request, response) {\n    try {\n        if (!request.body || !request.body.id) {"
+        },
+        {
+          "line": 934,
+          "text": "        if (Array.isArray(chatData)) {\n            await trySaveChat(chatData, chatFilePath, request.body.force, handle, String(id), request.user.directories.backups);\n            return response.send({ ok: true });\n        } else {"
+        },
+        {
+          "line": 949,
+          "text": "\nrouter.post('/search', validateAvatarUrlMiddleware, async function (request, response) {\n    try {\n        const { query, avatar_url, group_id } = request.body;"
+        },
+        {
+          "line": 1054,
+          "text": "\nrouter.post('/recent', async function (request, response) {\n    try {\n        /** @typedef {{pngFile?: string, groupId?: string, filePath: string, mtime: number}} ChatFile */"
+        }
+      ]
+    },
+    "src/endpoints/groups.js": {
+      "sha256": "c5b956f8b4a2809b554229fed24588ed37163f1e73c129d4270ac6832438612b",
+      "locations": [
+        {
+          "line": 7,
+          "text": "import sanitize from 'sanitize-filename';\nimport { sync as writeFileAtomicSync, default as writeFileAtomic } from 'write-file-atomic';\n\nimport { color, tryParse } from '../util.js';"
+        },
+        {
+          "line": 57,
+          "text": "                    }\n                    await fsPromises.copyFile(groupFilePath, path.join(backupPath, groupFile.name));\n                    const allMetadata = {\n                        ...(groupData.past_metadata || {}),"
+        },
+        {
+          "line": 83,
+          "text": "                            }\n                            await fsPromises.copyFile(chatFilePath, path.join(backupPath, chatFileName));\n                            const chatHeader = { chat_metadata: chatMetadata, user_name: 'unused', character_name: 'unused' };\n                            const newChatData = [chatHeader, ...chatData];"
+        },
+        {
+          "line": 87,
+          "text": "                            const newChatDataRaw = newChatData.map(entry => JSON.stringify(entry)).join('\\n');\n                            await writeFileAtomic(chatFilePath, newChatDataRaw, 'utf8');\n                            console.log(`Updated group chat data format for ${chatId}`);\n                            anyDataMigrated = true;"
+        },
+        {
+          "line": 96,
+          "text": "                    delete groupData.past_metadata;\n                    await writeFileAtomic(groupFilePath, JSON.stringify(groupData, null, 4), 'utf8');\n                    console.log(`Migrated group chats metadata for group: ${groupData.id}`);\n                    anyDataMigrated = true;"
+        },
+        {
+          "line": 113,
+          "text": "\nrouter.post('/all', (request, response) => {\n    const groups = [];\n"
+        },
+        {
+          "line": 156,
+          "text": "\nrouter.post('/create', (request, response) => {\n    if (!request.body) {\n        return response.sendStatus(400);"
+        },
+        {
+          "line": 186,
+          "text": "\n    writeFileAtomicSync(pathToFile, fileData);\n    return response.send(groupMetadata);\n});"
+        },
+        {
+          "line": 190,
+          "text": "\nrouter.post('/edit', getFileNameValidationFunction('id'), (request, response) => {\n    if (!request.body || !request.body.id) {\n        return response.sendStatus(400);"
+        },
+        {
+          "line": 199,
+          "text": "\n    writeFileAtomicSync(pathToFile, fileData);\n    return response.send({ ok: true });\n});"
+        },
+        {
+          "line": 203,
+          "text": "\nrouter.post('/delete', getFileNameValidationFunction('id'), async (request, response) => {\n    if (!request.body || !request.body.id) {\n        return response.sendStatus(400);"
+        },
+        {
+          "line": 221,
+          "text": "                if (fs.existsSync(pathToFile)) {\n                    fs.unlinkSync(pathToFile);\n                }\n            }"
+        },
+        {
+          "line": 230,
+          "text": "    if (fs.existsSync(pathToGroup)) {\n        fs.unlinkSync(pathToGroup);\n    }\n"
+        }
+      ]
+    },
+    "src/endpoints/characters.js": {
+      "sha256": "3235555529e9ff17ecc2ebe9168b0af77fe6ef5947f3d1f7de3df6d5f2567d89",
+      "locations": [
+        {
+          "line": 8,
+          "text": "import sanitize from 'sanitize-filename';\nimport { sync as writeFileAtomicSync } from 'write-file-atomic';\nimport yaml from 'yaml';\nimport _ from 'lodash';"
+        },
+        {
+          "line": 220,
+          "text": " */\nasync function writeCharacterData(inputFile, data, outputFile, request, crop = undefined) {\n    try {\n        // Reset the cache"
+        },
+        {
+          "line": 259,
+          "text": "\n        writeFileAtomicSync(outputImagePath, outputImage);\n        return true;\n    } catch (err) {"
+        },
+        {
+          "line": 733,
+          "text": "    const fileText = fs.readFileSync(uploadPath, 'utf8');\n    fs.unlinkSync(uploadPath);\n    const yamlData = yaml.parse(fileText);\n    console.info('Importing from YAML');"
+        },
+        {
+          "line": 753,
+          "text": "    }, context.request.user.directories);\n    const result = await writeCharacterData(DEFAULT_AVATAR_PATH, JSON.stringify(char), fileName, context.request);\n    return result ? fileName : '';\n}"
+        },
+        {
+          "line": 769,
+          "text": "    const data = getArrayBufferSlice(fileBuffer);\n    fs.unlinkSync(uploadPath);\n\n    const parser = new CharXParser(data);"
+        },
+        {
+          "line": 799,
+          "text": "\n    const result = await writeCharacterData(avatar, JSON.stringify(processedCard), fileName, request);\n    return result ? fileName : '';\n}"
+        },
+        {
+          "line": 822,
+          "text": "            if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });\n            writeFileAtomicSync(filePath, ByafParser.getChatFromScenario(scenario, request.body.user_name, card.name, byafData.chatBackgrounds), 'utf8');\n            console.log(`Created ${chatName} chat from BYAF import`);\n            return chatName;"
+        },
+        {
+          "line": 836,
+          "text": "                const newFile = `${file}${extension}`;\n                writeFileAtomicSync(path.join(filePath, newFile), bg.data);\n                bg.name = clientRelativePath(request.user.directories.root, path.join(filePath, newFile)); // Update background name to the new file\n                console.log(`Created ${newFile} background from BYAF import`);"
+        },
+        {
+          "line": 865,
+          "text": "            if (Buffer.isBuffer(icon.image)) {\n                writeFileAtomicSync(path.join(altImagesFolder, `${file}${extension}`), icon.image);\n                console.log(`Created ${file}${extension} alternate icon from BYAF import`);\n            }"
+        },
+        {
+          "line": 871,
+          "text": "\n    const result = await writeCharacterData(byafData.images[0].image, JSON.stringify(card), fileName, request);\n\n    return result ? fileName : '';"
+        },
+        {
+          "line": 885,
+          "text": "    const data = fs.readFileSync(uploadPath, 'utf8');\n    fs.unlinkSync(uploadPath);\n\n    let jsonData = JSON.parse(data);"
+        },
+        {
+          "line": 901,
+          "text": "        const char = JSON.stringify(jsonData);\n        const result = await writeCharacterData(DEFAULT_AVATAR_PATH, char, pngName, request);\n        return result ? pngName : '';\n    } else if (jsonData.name !== undefined) {"
+        },
+        {
+          "line": 927,
+          "text": "        let charJSON = JSON.stringify(char);\n        const result = await writeCharacterData(DEFAULT_AVATAR_PATH, charJSON, pngName, request);\n        return result ? pngName : '';\n    } else if (jsonData.char_name !== undefined) {"
+        },
+        {
+          "line": 954,
+          "text": "        const charJSON = JSON.stringify(char);\n        const result = await writeCharacterData(DEFAULT_AVATAR_PATH, charJSON, pngName, request);\n        return result ? pngName : '';\n    }"
+        },
+        {
+          "line": 987,
+          "text": "        const char = JSON.stringify(jsonData);\n        const result = await writeCharacterData(uploadPath, char, pngName, request);\n        fs.unlinkSync(uploadPath);\n        return result ? pngName : '';"
+        },
+        {
+          "line": 988,
+          "text": "        const result = await writeCharacterData(uploadPath, char, pngName, request);\n        fs.unlinkSync(uploadPath);\n        return result ? pngName : '';\n    } else if (jsonData.name !== undefined) {"
+        },
+        {
+          "line": 1014,
+          "text": "        const charJSON = JSON.stringify(char);\n        const result = await writeCharacterData(uploadPath, charJSON, pngName, request);\n        fs.unlinkSync(uploadPath);\n        return result ? pngName : '';"
+        },
+        {
+          "line": 1015,
+          "text": "        const result = await writeCharacterData(uploadPath, charJSON, pngName, request);\n        fs.unlinkSync(uploadPath);\n        return result ? pngName : '';\n    }"
+        },
+        {
+          "line": 1024,
+          "text": "\nrouter.post('/create', getFileNameValidationFunction('file_name'), async function (request, response) {\n    try {\n        if (!request.body) return response.sendStatus(400);"
+        },
+        {
+          "line": 1038,
+          "text": "        if (!request.file) {\n            await writeCharacterData(DEFAULT_AVATAR_PATH, char, internalName, request);\n            return response.send(avatarName);\n        } else {"
+        },
+        {
+          "line": 1043,
+          "text": "            const uploadPath = path.join(request.file.destination, request.file.filename);\n            await writeCharacterData(uploadPath, char, internalName, request, crop);\n            fs.unlinkSync(uploadPath);\n            return response.send(avatarName);"
+        },
+        {
+          "line": 1044,
+          "text": "            await writeCharacterData(uploadPath, char, internalName, request, crop);\n            fs.unlinkSync(uploadPath);\n            return response.send(avatarName);\n        }"
+        },
+        {
+          "line": 1053,
+          "text": "\nrouter.post('/rename', validateAvatarUrlMiddleware, async function (request, response) {\n    if (!request.body.avatar_url || !request.body.new_name) {\n        return response.sendStatus(400);"
+        },
+        {
+          "line": 1080,
+          "text": "        // Write data to new location\n        await writeCharacterData(oldAvatarPath, newData, newInternalName, request);\n\n        // Rename chats folder"
+        },
+        {
+          "line": 1086,
+          "text": "            // https://github.com/nodejs/node/issues/63970\n            fs.cpSync(oldChatsPath, newChatsPath, { recursive: true, filter: () => true });\n            fs.rmSync(oldChatsPath, { recursive: true, force: true });\n        }"
+        },
+        {
+          "line": 1087,
+          "text": "            fs.cpSync(oldChatsPath, newChatsPath, { recursive: true, filter: () => true });\n            fs.rmSync(oldChatsPath, { recursive: true, force: true });\n        }\n"
+        },
+        {
+          "line": 1091,
+          "text": "        // Remove the old character file\n        fs.unlinkSync(oldAvatarPath);\n\n        // Return new avatar name to ST"
+        },
+        {
+          "line": 1101,
+          "text": "\nrouter.post('/edit', validateAvatarUrlMiddleware, async function (request, response) {\n    if (!request.body) {\n        console.warn('Error: no response body detected');"
+        },
+        {
+          "line": 1123,
+          "text": "            const avatarPath = path.join(request.user.directories.characters, request.body.avatar_url);\n            await writeCharacterData(avatarPath, char, targetFile, request);\n        } else {\n            const crop = tryParse(request.query.crop);"
+        },
+        {
+          "line": 1128,
+          "text": "            invalidateThumbnail(request.user.directories, 'avatar', request.body.avatar_url);\n            await writeCharacterData(newAvatarPath, char, targetFile, request, crop);\n            fs.unlinkSync(newAvatarPath);\n"
+        },
+        {
+          "line": 1129,
+          "text": "            await writeCharacterData(newAvatarPath, char, targetFile, request, crop);\n            fs.unlinkSync(newAvatarPath);\n\n            // Bust cache to reload the new avatar"
+        },
+        {
+          "line": 1142,
+          "text": "\nrouter.post('/edit-avatar', validateAvatarUrlMiddleware, async function (request, response) {\n    try {\n        if (!request.file) {"
+        },
+        {
+          "line": 1167,
+          "text": "        const fileName = request.body.avatar_url.replace('.png', '');\n        await writeCharacterData(uploadPath, data, fileName, request, crop);\n\n        // Remove uploaded temp file"
+        },
+        {
+          "line": 1170,
+          "text": "        // Remove uploaded temp file\n        fs.unlinkSync(uploadPath);\n\n        // Reset images caches"
+        },
+        {
+          "line": 1193,
+          "text": " */\nrouter.post('/edit-attribute', validateAvatarUrlMiddleware, async function (request, response) {\n    console.debug(request.body);\n    if (!request.body) {"
+        },
+        {
+          "line": 1226,
+          "text": "        const targetFile = (request.body.avatar_url).replace('.png', '');\n        await writeCharacterData(avatarPath, newCharJSON, targetFile, request);\n        return response.sendStatus(200);\n    } catch (err) {"
+        },
+        {
+          "line": 1302,
+          "text": "    const targetImg = avatar.replace('.png', '');\n    await writeCharacterData(avatarPath, JSON.stringify(character), targetImg, request);\n    return { ok: true };\n}"
+        },
+        {
+          "line": 1328,
+          "text": " */\nrouter.post('/merge-attributes', getFileNameValidationFunction('avatar'), async function (request, response) {\n    try {\n        // ── Bulk mode: avatars array is present ──────────────────"
+        },
+        {
+          "line": 1416,
+          "text": "\nrouter.post('/delete', validateAvatarUrlMiddleware, async function (request, response) {\n    if (!request.body || !request.body.avatar_url) {\n        return response.sendStatus(400);"
+        },
+        {
+          "line": 1431,
+          "text": "\n    fs.unlinkSync(avatarPath);\n    invalidateThumbnail(request.user.directories, 'avatar', request.body.avatar_url);\n    let dir_name = (request.body.avatar_url.replace('.png', ''));"
+        },
+        {
+          "line": 1442,
+          "text": "        try {\n            await fs.promises.rm(path.join(request.user.directories.chats, sanitize(dir_name)), { recursive: true, force: true });\n        } catch (err) {\n            console.error(err);"
+        },
+        {
+          "line": 1466,
+          "text": " */\nrouter.post('/all', async function (request, response) {\n    try {\n        const files = fs.readdirSync(request.user.directories.characters);"
+        },
+        {
+          "line": 1480,
+          "text": "\nrouter.post('/get', validateAvatarUrlMiddleware, async function (request, response) {\n    try {\n        if (!request.body) return response.sendStatus(400);"
+        },
+        {
+          "line": 1499,
+          "text": "\nrouter.post('/chats', validateAvatarUrlMiddleware, async function (request, response) {\n    try {\n        if (!request.body) return response.sendStatus(400);"
+        },
+        {
+          "line": 1560,
+          "text": "\nrouter.post('/import', async function (request, response) {\n    if (!request.body || !request.file) return response.sendStatus(400);\n"
+        },
+        {
+          "line": 1601,
+          "text": "\nrouter.post('/duplicate', validateAvatarUrlMiddleware, async function (request, response) {\n    try {\n        if (!request.body.avatar_url) {"
+        },
+        {
+          "line": 1637,
+          "text": "\n        fs.copyFileSync(filename, newFilename);\n        console.info(`${filename} was copied to ${newFilename}`);\n        response.send({ path: path.parse(newFilename).base });"
+        },
+        {
+          "line": 1646,
+          "text": "\nrouter.post('/export', validateAvatarUrlMiddleware, async function (request, response) {\n    try {\n        if (!request.body.format || !request.body.avatar_url) {"
+        }
+      ]
+    },
+    "src/util.js": {
+      "sha256": "d33d67234af4e188bb7fcfac9c3ca7952c19e8c58791e96b19f9ad748dd168cd",
+      "locations": [
+        {
+          "line": 23,
+          "text": "import { serverDirectory } from './server-directory.js';\nimport { sync as writeFileAtomicSync } from 'write-file-atomic';\nimport { isFirefox } from './express-common.js';\n"
+        },
+        {
+          "line": 670,
+          "text": "\n            fs.unlinkSync(oldest);\n        }\n    }"
+        },
+        {
+          "line": 1520,
+          "text": "    }\n    writeFileAtomicSync(filePath, data, 'utf8');\n}\n"
+        },
+        {
+          "line": 1544,
+          "text": "*/\nexport function tryDeleteFile(filePath) {\n    if (fs.existsSync(filePath)) {\n        fs.unlinkSync(filePath);"
+        },
+        {
+          "line": 1546,
+          "text": "    if (fs.existsSync(filePath)) {\n        fs.unlinkSync(filePath);\n        console.info(`Deleted file: ${filePath}`);\n        return true;"
+        }
+      ]
+    },
+    "src/users.js": {
+      "sha256": "3100591d000a28f6d3a548242c9de69060c2fd4777c170b13f38a99bc67f3476",
+      "locations": [
+        {
+          "line": 15,
+          "text": "import _ from 'lodash';\nimport { sync as writeFileAtomicSync } from 'write-file-atomic';\nimport sanitize from 'sanitize-filename';\nimport ipMatching from 'ip-matching';"
+        },
+        {
+          "line": 211,
+          "text": "                const pathToFile = path.join(uploadsPath, file);\n                fs.unlinkSync(pathToFile);\n            });\n        }"
+        },
+        {
+          "line": 401,
+          "text": "                // Copy the file to the new location\n                fs.cpSync(migration.old, migration.new, { force: true });\n                // Move the file to the backup location\n                fs.cpSync("
+        },
+        {
+          "line": 403,
+          "text": "                // Move the file to the backup location\n                fs.cpSync(\n                    migration.old,\n                    path.join(backupDirectory, path.basename(migration.old)),"
+        },
+        {
+          "line": 408,
+          "text": "                );\n                fs.rmSync(migration.old, { recursive: true, force: true });\n            } else {\n                // Copy the directory to the new location"
+        },
+        {
+          "line": 411,
+          "text": "                // Copy the directory to the new location\n                fs.cpSync(migration.old, migration.new, { recursive: true, force: true });\n                // Move the directory to the backup location\n                fs.cpSync("
+        },
+        {
+          "line": 413,
+          "text": "                // Move the directory to the backup location\n                fs.cpSync(\n                    migration.old,\n                    path.join(backupDirectory, path.basename(migration.old)),"
+        },
+        {
+          "line": 418,
+          "text": "                );\n                fs.rmSync(migration.old, { recursive: true, force: true });\n            }\n        } catch (error) {"
+        },
+        {
+          "line": 466,
+          "text": "                        const backupPath = path.join(backupsPath, `${instructData.name}.json`);\n                        fs.cpSync(instructPath, backupPath, { force: true });\n                        const syspromptData = { name: instructData.name, content: instructData.system_prompt };\n                        migratedPrompts.push(syspromptData);"
+        },
+        {
+          "line": 470,
+          "text": "                        delete instructData.system_prompt;\n                        writeFileAtomicSync(instructPath, JSON.stringify(instructData, null, 4));\n                    }\n                }"
+        },
+        {
+          "line": 481,
+          "text": "                const syspromptPath = path.join(directory.sysprompt, `${sysPromptData.name}.json`);\n                writeFileAtomicSync(syspromptPath, JSON.stringify(sysPromptData, null, 4));\n                console.log(`Migrated system prompt ${sysPromptData.name} for ${directory.root.split(path.sep).pop()}`);\n            }"
+        },
+        {
+          "line": 484,
+          "text": "            }\n            writeFileAtomicSync(migrateMarker, '');\n        } catch (error) {\n            console.error('Error migrating system prompts:', error);"
+        },
+        {
+          "line": 522,
+          "text": "                fs.mkdirSync(path.dirname(newPath), { recursive: true });\n                fs.cpSync(oldPath, newPath, { force: true });\n                fs.unlinkSync(oldPath);\n                setPermissionsSync(newPath);"
+        },
+        {
+          "line": 523,
+          "text": "                fs.cpSync(oldPath, newPath, { force: true });\n                fs.unlinkSync(oldPath);\n                setPermissionsSync(newPath);\n                console.log(`Migrated ${path.basename(oldPath)} to data root.`);"
+        },
+        {
+          "line": 590,
+          "text": "        console.log('Migrating cookie secret from config.yaml...');\n        writeFileAtomicSync(cookieSecretPath, oldSecret, { encoding: 'utf8' });\n        return oldSecret;\n    }"
+        },
+        {
+          "line": 596,
+          "text": "    const secret = crypto.randomBytes(64).toString('base64');\n    writeFileAtomicSync(cookieSecretPath, secret, { encoding: 'utf8' });\n    return secret;\n}"
+        },
+        {
+          "line": 960,
+          "text": "        const directories = getUserDirectories(handle);\n        request.user = {\n            profile: DEFAULT_USER,\n            directories: directories,"
+        },
+        {
+          "line": 1008,
+          "text": "    const directories = getUserDirectories(handle);\n    request.user = {\n        profile: user,\n        directories: directories,"
+        }
+      ]
+    },
+    "src/server-main.js": {
+      "sha256": "567d8a9d52e70816e74f119409933f2b42ad03132d7ef01f8db3ae145c2fe7bf",
+      "locations": [
+        {
+          "line": 406,
+          "text": "            try {\n                fs.writeFileSync(heartbeatPath, JSON.stringify({ timestamp: Date.now() }));\n            } catch (err) {\n                console.error(`Failed to write heartbeat file at ${color.green(heartbeatPath)}:`, err.message);"
+        }
+      ]
+    },
+    "public/script.js": {
+      "sha256": "955c603d0bad84bac5a716f0818d85c2543e44d4c43878e0d63ef1e55ca91855",
+      "locations": [
+        {
+          "line": 1339,
+          "text": "async function delChat(chatfile) {\n    const response = await fetch('/api/chats/delete', {\n        method: 'POST',\n        headers: getRequestHeaders(),"
+        },
+        {
+          "line": 1375,
+          "text": "\n    const response = await fetch('/api/chats/delete', {\n        method: 'POST',\n        headers: getRequestHeaders(),"
+        },
+        {
+          "line": 4290,
+          "text": " */\nexport async function Generate(type, { automatic_trigger, force_name2, quiet_prompt, quietToLoud, skipWIAN, force_chid, signal, quietImage, quietName, jsonSchema = null, depth = 0 } = {}, dryRun = false) {\n    console.log('Generate entered');\n    setGenerationProgress(0);"
+        },
+        {
+          "line": 5572,
+          "text": "\n        console.debug('/api/chats/save called by /Generate');\n        await saveChatConditional();\n        unblockGeneration(type);"
+        },
+        {
+          "line": 7311,
+          "text": "            const fileNameWithoutExtension = file_name.replace('.jsonl', '');\n            const getChatResponse = await fetch('/api/chats/get', {\n                method: 'POST',\n                headers: getRequestHeaders(),"
+        },
+        {
+          "line": 7348,
+          "text": "                });\n                const saveChatResponse = await fetch('/api/chats/save', saveChatRequest);\n\n                if (!saveChatResponse.ok) {"
+        },
+        {
+          "line": 7361,
+          "text": "\nexport function saveChatDebounced() {\n    const chid = this_chid;\n    const selectedGroup = selected_group;"
+        },
+        {
+          "line": 7395,
+          "text": " */\nexport async function saveChat({ chatName, withMetadata, mesId, force = false, chatData = undefined } = {}) {\n    if (selected_group) {\n        toastr.error(t`Operation was aborted to prevent data corruption.`, t`saveChat called for a group chat`);"
+        },
+        {
+          "line": 7447,
+          "text": "        });\n        const result = await fetch('/api/chats/save', saveChatRequest);\n\n        if (result.ok) {"
+        },
+        {
+          "line": 7638,
+          "text": "\n        const response = await fetch('/api/chats/get', {\n            method: 'POST',\n            headers: getRequestHeaders(),"
+        },
+        {
+          "line": 8455,
+          "text": "            try {\n                const endpoint = isGroupChat ? '/api/chats/group/get' : '/api/chats/get';\n                const requestBody = isGroupChat\n                    ? JSON.stringify({ id: file_name })"
+        },
+        {
+          "line": 8583,
+          "text": "    try {\n        const response = await fetch('/api/chats/search', {\n            method: 'POST',\n            headers: getRequestHeaders(),"
+        },
+        {
+          "line": 9412,
+          "text": "\nexport async function saveChatConditional() {\n    try {\n        await waitUntilCondition(() => !isChatSaving, DEFAULT_SAVE_EDIT_TIMEOUT, 100);"
+        },
+        {
+          "line": 9449,
+          "text": "export async function importCharacterChat(formData, { refresh = true } = {}) {\n    const fetchResult = await fetch('/api/chats/import', {\n        method: 'POST',\n        body: formData,"
+        },
+        {
+          "line": 9954,
+          "text": " */\nexport async function swipe(event, direction, { source, repeated, message = chat[chat.length - 1], forceMesId, forceSwipeId, forceDuration } = {}) {\n    if (chat.length === 0) {\n        console.warn('Swipe was called on an empty chat.');"
+        },
+        {
+          "line": 10437,
+          "text": " */\nexport async function swipe_left(event, { source, repeated, message } = {}) {\n    await swipe.call(this, event, SWIPE_DIRECTION.LEFT, { source: source, repeated: repeated, message: message });\n}"
+        },
+        {
+          "line": 10451,
+          "text": "//MARK: swipe_right\nexport async function swipe_right(event = null, { source, repeated, message } = {}) {\n    await swipe.call(this, event, SWIPE_DIRECTION.RIGHT, { source: source, repeated: repeated, message: message });\n}"
+        },
+        {
+          "line": 10684,
+          "text": "    try {\n        const response = await fetch('/api/chats/rename', {\n            method: 'POST',\n            body: JSON.stringify(body),"
+        },
+        {
+          "line": 10731,
+          "text": " */\nexport async function renameChat(oldFileName, newName) {\n    return await renameGroupOrCharacterChat({\n        characterId: this_chid,"
+        },
+        {
+          "line": 11517,
+          "text": "        try {\n            const response = await fetch('/api/chats/export', {\n                method: 'POST',\n                body: JSON.stringify(body),"
+        }
+      ]
+    },
+    "public/scripts/bookmarks.js": {
+      "sha256": "5c3a68aa82e58c0d82777065b8466572fc1b202cad98a92ba4daa852c386ad1b",
+      "locations": [
+        {
+          "line": 187,
+          "text": "// Export is used by Timelines extension. Do not remove.\nexport async function createBranch(mesId, { swipeId = null } = {}) {\n    if (!chat.length) {\n        toastr.warning('The chat is empty.', 'Branch creation failed');"
+        },
+        {
+          "line": 381,
+          "text": "\n    const createGroupResponse = await fetch('/api/groups/create', {\n        method: 'POST',\n        headers: getRequestHeaders(),"
+        },
+        {
+          "line": 431,
+          "text": "    });\n    const createChatResponse = await fetch('/api/chats/group/save', createChatRequest);\n\n    if (!createChatResponse.ok) {"
+        },
+        {
+          "line": 452,
+          "text": " */\nexport async function branchChat(mesId, { swipeId = null } = {}) {\n    if (this_chid === undefined && !selected_group) {\n        toastr.info('No character selected.', 'Create Branch');"
+        }
+      ]
+    },
+    "public/scripts/chats.js": {
+      "sha256": "2b870d44c55f99c622b5afcd7b1fd563219b9444bc70e8653611327d6e7f7be6",
+      "locations": []
+    },
+    "public/scripts/group-chats.js": {
+      "sha256": "862eb24dfe1f596a2bd6d039a69397667829e0fc34471d22d2028d7781a5c73c",
+      "locations": [
+        {
+          "line": 156,
+          "text": "async function _save(group, reload = true) {\n    await fetch('/api/groups/edit', {\n        method: 'POST',\n        headers: getRequestHeaders(),"
+        },
+        {
+          "line": 196,
+          "text": "async function loadGroupChat(chatId) {\n    const response = await fetch('/api/chats/group/get', {\n        method: 'POST',\n        headers: getRequestHeaders(),"
+        },
+        {
+          "line": 623,
+          "text": " */\nasync function saveGroupChat(groupId, shouldSaveGroup, force = false) {\n    const group = groups.find(x => x.id == groupId);\n    if (!group) {"
+        },
+        {
+          "line": 642,
+          "text": "    });\n    const response = await fetch('/api/chats/group/save', saveGroupChatRequest);\n\n    if (!response.ok) {"
+        },
+        {
+          "line": 738,
+          "text": "                        });\n                        const saveChatResponse = await fetch('/api/chats/group/save', saveChatRequest);\n\n                        if (!saveChatResponse.ok) {"
+        },
+        {
+          "line": 759,
+          "text": "async function getGroups() {\n    const response = await fetch('/api/groups/all', {\n        method: 'POST',\n        headers: getRequestHeaders({ omitContentType: true }),"
+        },
+        {
+          "line": 1326,
+          "text": "\n    const response = await fetch('/api/groups/delete', {\n        method: 'POST',\n        headers: getRequestHeaders(),"
+        },
+        {
+          "line": 2018,
+          "text": " */\nexport async function openGroupById(groupId) {\n    if (isChatSaving) {\n        toastr.info(t`Please wait until the chat is saved before switching characters.`, t`Your chat is still saving...`);"
+        },
+        {
+          "line": 2120,
+          "text": "\n    const createGroupResponse = await fetch('/api/groups/create', {\n        method: 'POST',\n        headers: getRequestHeaders(),"
+        },
+        {
+          "line": 2140,
+          "text": " */\nexport async function createNewGroupChat(groupId) {\n    const group = groups.find(x => x.id === groupId);\n"
+        },
+        {
+          "line": 2173,
+          "text": "        for (const chatId of group.chats) {\n            const response = await fetch('/api/chats/group/info', {\n                method: 'POST',\n                headers: getRequestHeaders(),"
+        },
+        {
+          "line": 2195,
+          "text": " */\nexport async function openGroupChat(groupId, chatId) {\n    await waitUntilCondition(() => !isChatSaving, debounce_timeout.extended, 10);\n    const group = groups.find(x => x.id === groupId);"
+        },
+        {
+          "line": 2250,
+          "text": "\n    const response = await fetch('/api/chats/group/delete', {\n        method: 'POST',\n        headers: getRequestHeaders(),"
+        },
+        {
+          "line": 2293,
+          "text": "\n    const response = await fetch('/api/chats/group/delete', {\n        method: 'POST',\n        headers: getRequestHeaders(),"
+        },
+        {
+          "line": 2320,
+          "text": "export async function importGroupChat(formData, { refresh = true } = {}) {\n    const fetchResult = await fetch('/api/chats/group/import', {\n        method: 'POST',\n        headers: getRequestHeaders({ omitContentType: true }),"
+        },
+        {
+          "line": 2359,
+          "text": " */\nexport async function saveGroupBookmarkChat(groupId, name, metadata, mesId, chatData = undefined) {\n    const group = groups.find(x => x.id === groupId);\n"
+        },
+        {
+          "line": 2389,
+          "text": "    });\n    const response = await fetch('/api/chats/group/save', saveChatRequest);\n\n    if (!response.ok) {"
+        }
+      ]
+    },
+    "src/endpoints/data-maid.js": {
+      "sha256": "19b3473a1e4ff837b72bf64c305b3bdd1e225d0967e3131b5a34518df862815a",
+      "locations": [
+        {
+          "line": 673,
+          "text": "\nrouter.post('/report', async (req, res) => {\n    try {\n        if (!req.user || !req.user.directories) {"
+        },
+        {
+          "line": 692,
+          "text": "\nrouter.post('/finalize', async (req, res) => {\n    try {\n        if (!req.user || !req.user.directories) {"
+        },
+        {
+          "line": 770,
+          "text": "\nrouter.post('/delete', async (req, res) => {\n    try {\n        if (!req.user || !req.user.directories) {"
+        }
+      ]
+    },
+    "src/endpoints/users-private.js": {
+      "sha256": "1b32ecd4a0796b5694e881aee0b60cd9ca5471d576571cf7ba91eb99a6af8801",
+      "locations": [
+        {
+          "line": 27,
+          "text": "\nrouter.post('/logout', async (request, response) => {\n    try {\n        if (!request.session) {"
+        },
+        {
+          "line": 68,
+          "text": "\nrouter.post('/change-avatar', async (request, response) => {\n    try {\n        if (!request.body.handle) {"
+        },
+        {
+          "line": 103,
+          "text": "\nrouter.post('/change-password', async (request, response) => {\n    try {\n        if (!request.body.handle) {"
+        },
+        {
+          "line": 156,
+          "text": "\nrouter.post('/backup', async (request, response) => {\n    try {\n        const allowFullDataBackup = !!getConfigValue('backups.allowFullDataBackup', true, 'boolean');"
+        },
+        {
+          "line": 184,
+          "text": "\nrouter.post('/reset-settings', async (request, response) => {\n    try {\n        const password = request.body.password;"
+        },
+        {
+          "line": 194,
+          "text": "        const pathToFile = path.join(request.user.directories.root, SETTINGS_FILE);\n        await fsPromises.rm(pathToFile, { force: true });\n        await checkForNewContent([request.user.directories], [CONTENT_TYPES.SETTINGS]);\n"
+        },
+        {
+          "line": 204,
+          "text": "\nrouter.post('/change-name', async (request, response) => {\n    try {\n        if (!request.body.name || !request.body.handle) {"
+        },
+        {
+          "line": 234,
+          "text": "\nrouter.post('/reset-step1', async (request, response) => {\n    try {\n        const ip = getIpAddress(request, PREFER_REAL_IP_HEADER);"
+        },
+        {
+          "line": 261,
+          "text": "\nrouter.post('/reset-step2', async (request, response) => {\n    try {\n        if (!request.body.code) {"
+        },
+        {
+          "line": 289,
+          "text": "        console.info('Resetting account data:', request.user.profile.handle);\n        await fsPromises.rm(request.user.directories.root, { recursive: true, force: true });\n\n        await ensurePublicDirectoriesExist();"
+        }
+      ]
+    },
+    "src/endpoints/users-admin.js": {
+      "sha256": "682cf8df991b7a9339b2061901a4178193a193202e827d6a0677a3187de6b579",
+      "locations": [
+        {
+          "line": 36,
+          "text": "\nrouter.post('/get', requireAdminMiddleware, async (_request, response) => {\n    try {\n        /** @type {import('../users.js').User[]} */"
+        },
+        {
+          "line": 66,
+          "text": "\nrouter.post('/disable', requireAdminMiddleware, async (request, response) => {\n    try {\n        if (!request.body.handle) {"
+        },
+        {
+          "line": 95,
+          "text": "\nrouter.post('/enable', requireAdminMiddleware, async (request, response) => {\n    try {\n        if (!request.body.handle) {"
+        },
+        {
+          "line": 119,
+          "text": "\nrouter.post('/promote', requireAdminMiddleware, async (request, response) => {\n    try {\n        if (!request.body.handle) {"
+        },
+        {
+          "line": 143,
+          "text": "\nrouter.post('/demote', requireAdminMiddleware, async (request, response) => {\n    try {\n        if (!request.body.handle) {"
+        },
+        {
+          "line": 172,
+          "text": "\nrouter.post('/create', requireAdminMiddleware, async (request, response) => {\n    try {\n        if (!request.body.handle || !request.body.name) {"
+        },
+        {
+          "line": 219,
+          "text": "\nrouter.post('/delete', requireAdminMiddleware, async (request, response) => {\n    try {\n        if (!request.body.handle) {"
+        },
+        {
+          "line": 241,
+          "text": "            console.info('Deleting data directories for', request.body.handle);\n            await fsPromises.rm(directories.root, { recursive: true, force: true });\n        }\n"
+        },
+        {
+          "line": 251,
+          "text": "\nrouter.post('/slugify', requireAdminMiddleware, async (request, response) => {\n    try {\n        if (!request.body.text) {"
+        }
+      ]
+    },
+    "public/scripts/data-maid.js": {
+      "sha256": "8b55769784adb4cbfa104be17fa066fff6c9d1d51565bfe54280c5e1ead8a09e",
+      "locations": []
+    },
+    "public/scripts/user.js": {
+      "sha256": "d4e29b231527dd375034bb36699e308650d5ce16a47c8a8f15dcb5adb3af4b39",
+      "locations": []
+    }
+  }
+}

@@ -1,0 +1,350 @@
+{
+  "src/users.js": {
+    "sha256": "3100591d000a28f6d3a548242c9de69060c2fd4777c170b13f38a99bc67f3476",
+    "excerpts": [
+      {
+        "line": 121,
+        "text": "    const directoriesList = userHandles.map(handle => getUserDirectories(handle));"
+      },
+      {
+        "line": 223,
+        "text": "export async function getUserDirectoriesList() {"
+      },
+      {
+        "line": 225,
+        "text": "    const directoriesList = userHandles.map(handle => getUserDirectories(handle));"
+      },
+      {
+        "line": 256,
+        "text": "    const userDirectories = getUserDirectories(DEFAULT_USER.handle);"
+      },
+      {
+        "line": 447,
+        "text": "    const directories = await getUserDirectoriesList();"
+      },
+      {
+        "line": 538,
+        "text": "export function toKey(handle) {"
+      },
+      {
+        "line": 552,
+        "text": " * Initializes the user storage."
+      },
+      {
+        "line": 558,
+        "text": "    await storage.init({"
+      },
+      {
+        "line": 568,
+        "text": "        await storage.setItem(toKey(DEFAULT_USER.handle), DEFAULT_USER);"
+      },
+      {
+        "line": 649,
+        "text": " * Get the CSRF secret from the storage."
+      },
+      {
+        "line": 654,
+        "text": "    if (!request || !request.user) {"
+      },
+      {
+        "line": 658,
+        "text": "    let csrfSecret = readSecret(request.user.directories, STORAGE_KEYS.csrfSecret);"
+      },
+      {
+        "line": 662,
+        "text": "        writeSecret(request.user.directories, STORAGE_KEYS.csrfSecret, csrfSecret);"
+      },
+      {
+        "line": 673,
+        "text": "    const keys = await storage.keys(x => x.key.startsWith(KEY_PREFIX));"
+      },
+      {
+        "line": 683,
+        "text": "export function getUserDirectories(handle) {"
+      },
+      {
+        "line": 708,
+        "text": "        const avatar = await storage.getItem(avatarKey);"
+      },
+      {
+        "line": 715,
+        "text": "        const directory = getUserDirectories(handle);"
+      },
+      {
+        "line": 741,
+        "text": "    return ENABLE_ACCOUNTS && !request.user;"
+      },
+      {
+        "line": 752,
+        "text": "    if (!ENABLE_ACCOUNTS || request.user || !request.session) {"
+      },
+      {
+        "line": 789,
+        "text": "        const user = await storage.getItem(toKey(userHandles[0]));"
+      },
+      {
+        "line": 884,
+        "text": "            const user = await storage.getItem(toKey(userHandle));"
+      },
+      {
+        "line": 925,
+        "text": "            const user = await storage.getItem(toKey(userHandle));"
+      },
+      {
+        "line": 959,
+        "text": "        const directories = getUserDirectories(handle);"
+      },
+      {
+        "line": 960,
+        "text": "        request.user = {"
+      },
+      {
+        "line": 961,
+        "text": "            profile: DEFAULT_USER,"
+      },
+      {
+        "line": 981,
+        "text": "    const user = await storage.getItem(toKey(handle));"
+      },
+      {
+        "line": 1007,
+        "text": "    const directories = getUserDirectories(handle);"
+      },
+      {
+        "line": 1008,
+        "text": "    request.user = {"
+      },
+      {
+        "line": 1009,
+        "text": "        profile: user,"
+      },
+      {
+        "line": 1028,
+        "text": "    if (!request.user) {"
+      },
+      {
+        "line": 1130,
+        "text": "    if (!request.user) {"
+      },
+      {
+        "line": 1134,
+        "text": "    if (request.user.profile.admin) {"
+      },
+      {
+        "line": 1149,
+        "text": "    const directories = getUserDirectories(handle);"
+      },
+      {
+        "line": 1196,
+        "text": "    const users = await storage.values();"
+      }
+    ]
+  },
+  "src/endpoints/users-admin.js": {
+    "sha256": "682cf8df991b7a9339b2061901a4178193a193202e827d6a0677a3187de6b579",
+    "excerpts": [
+      {
+        "line": 15,
+        "text": "    getUserDirectories,"
+      },
+      {
+        "line": 39,
+        "text": "        const users = await storage.values(x => x.key.startsWith(KEY_PREFIX));"
+      },
+      {
+        "line": 51,
+        "text": "                        created: user.created,"
+      },
+      {
+        "line": 73,
+        "text": "        if (request.body.handle === request.user.profile.handle) {"
+      },
+      {
+        "line": 79,
+        "text": "        const user = await storage.getItem(toKey(request.body.handle));"
+      },
+      {
+        "line": 87,
+        "text": "        await storage.setItem(toKey(request.body.handle), user);"
+      },
+      {
+        "line": 103,
+        "text": "        const user = await storage.getItem(toKey(request.body.handle));"
+      },
+      {
+        "line": 111,
+        "text": "        await storage.setItem(toKey(request.body.handle), user);"
+      },
+      {
+        "line": 127,
+        "text": "        const user = await storage.getItem(toKey(request.body.handle));"
+      },
+      {
+        "line": 135,
+        "text": "        await storage.setItem(toKey(request.body.handle), user);"
+      },
+      {
+        "line": 150,
+        "text": "        if (request.body.handle === request.user.profile.handle) {"
+      },
+      {
+        "line": 156,
+        "text": "        const user = await storage.getItem(toKey(request.body.handle));"
+      },
+      {
+        "line": 164,
+        "text": "        await storage.setItem(toKey(request.body.handle), user);"
+      },
+      {
+        "line": 198,
+        "text": "            created: Date.now(),"
+      },
+      {
+        "line": 205,
+        "text": "        await storage.setItem(toKey(handle), newUser);"
+      },
+      {
+        "line": 210,
+        "text": "        const directories = getUserDirectories(newUser.handle);"
+      },
+      {
+        "line": 226,
+        "text": "        if (request.body.handle === request.user.profile.handle) {"
+      },
+      {
+        "line": 236,
+        "text": "        await storage.removeItem(toKey(request.body.handle));"
+      },
+      {
+        "line": 239,
+        "text": "            const directories = getUserDirectories(request.body.handle);"
+      },
+      {
+        "line": 241,
+        "text": "            await fsPromises.rm(directories.root, { recursive: true, force: true });"
+      }
+    ]
+  },
+  "src/endpoints/users-private.js": {
+    "sha256": "1b32ecd4a0796b5694e881aee0b60cd9ca5471d576571cf7ba91eb99a6af8801",
+    "excerpts": [
+      {
+        "line": 47,
+        "text": "        if (!request.user) {"
+      },
+      {
+        "line": 51,
+        "text": "        const user = request.user.profile;"
+      },
+      {
+        "line": 58,
+        "text": "            created: user.created,"
+      },
+      {
+        "line": 75,
+        "text": "        if (request.body.handle !== request.user.profile.handle && !request.user.profile.admin) {"
+      },
+      {
+        "line": 87,
+        "text": "        const user = await storage.getItem(toKey(request.body.handle));"
+      },
+      {
+        "line": 94,
+        "text": "        await storage.setItem(toAvatarKey(request.body.handle), request.body.avatar);"
+      },
+      {
+        "line": 110,
+        "text": "        if (request.body.handle !== request.user.profile.handle && !request.user.profile.admin) {"
+      },
+      {
+        "line": 116,
+        "text": "        const user = await storage.getItem(toKey(request.body.handle));"
+      },
+      {
+        "line": 128,
+        "text": "        if (!request.user.profile.admin && user.password && user.password !== getPasswordHash(request.body.oldPassword, user.salt)) {"
+      },
+      {
+        "line": 142,
+        "text": "        await storage.setItem(toKey(request.body.handle), user);"
+      },
+      {
+        "line": 172,
+        "text": "        if (handle !== request.user.profile.handle && !request.user.profile.admin) {"
+      },
+      {
+        "line": 188,
+        "text": "        if (request.user.profile.password && request.user.profile.password !== getPasswordHash(password, request.user.profile.salt)) {"
+      },
+      {
+        "line": 193,
+        "text": "        const pathToFile = path.join(request.user.directories.root, SETTINGS_FILE);"
+      },
+      {
+        "line": 194,
+        "text": "        await fsPromises.rm(pathToFile, { force: true });"
+      },
+      {
+        "line": 195,
+        "text": "        await checkForNewContent([request.user.directories], [CONTENT_TYPES.SETTINGS]);"
+      },
+      {
+        "line": 211,
+        "text": "        if (request.body.handle !== request.user.profile.handle && !request.user.profile.admin) {"
+      },
+      {
+        "line": 217,
+        "text": "        const user = await storage.getItem(toKey(request.body.handle));"
+      },
+      {
+        "line": 225,
+        "text": "        await storage.setItem(toKey(request.body.handle), user);"
+      },
+      {
+        "line": 246,
+        "text": "        console.log(color.magenta(`${request.user.profile.name}, your account reset code is: `) + color.red(resetCode));"
+      },
+      {
+        "line": 248,
+        "text": "        RESET_CACHE.set(request.user.profile.handle, resetCode);"
+      },
+      {
+        "line": 261,
+        "text": "router.post('/reset-step2', async (request, response) => {"
+      },
+      {
+        "line": 268,
+        "text": "        if (request.user.profile.password && request.user.profile.password !== getPasswordHash(request.body.password, request.user.profile.salt)) {"
+      },
+      {
+        "line": 280,
+        "text": "        const code = RESET_CACHE.get(request.user.profile.handle);"
+      },
+      {
+        "line": 288,
+        "text": "        console.info('Resetting account data:', request.user.profile.handle);"
+      },
+      {
+        "line": 289,
+        "text": "        await fsPromises.rm(request.user.directories.root, { recursive: true, force: true });"
+      },
+      {
+        "line": 292,
+        "text": "        await checkForNewContent([request.user.directories]);"
+      },
+      {
+        "line": 295,
+        "text": "        RESET_CACHE.remove(request.user.profile.handle);"
+      }
+    ]
+  },
+  "src/constants.js": {
+    "sha256": "a8e507bf5f9e335810247476b28428e6e44f1b0a371df41cea748b36e70d29a7",
+    "excerpts": [
+      {
+        "line": 57,
+        "text": "    created: Date.now(),"
+      }
+    ]
+  }
+}

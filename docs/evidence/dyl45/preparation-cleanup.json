@@ -1,0 +1,7 @@
+{
+  "path": "/tmp/dyl45-prep",
+  "createdBy": "/tmp/dyl45-prepare.py; asserted nonexistent before cloning",
+  "verifiedHostSha": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
+  "verifiedModuleSha256": "3908cef7d8f341061ffb0b79cfcf26e406c788839ce3560ed5cde840550f15b2",
+  "removed": true
+}
