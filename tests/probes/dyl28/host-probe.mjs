@@ -249,12 +249,21 @@ try {
     fs.copyFileSync(path.join(probeDir, 'host-visit.js'), path.join(host, 'public/scripts/dyl27-visit.js'), fs.constants.COPYFILE_EXCL);
     execFileSync('git', ['-C', host, 'apply', '--check', envelopePatch], { stdio: 'pipe' });
     execFileSync('git', ['-C', host, 'apply', envelopePatch], { stdio: 'pipe' });
-    if (process.env.SN_DYL42 === '1') {
+    if (process.env.SN_DYL42 === '1' || process.env.SN_DYL43 === '1') {
         const writersPatch = path.resolve(probeDir, '../dyl42/host-writers.patch');
         execFileSync('git', ['-C', host, 'apply', '--check', writersPatch], { stdio: 'pipe' });
         execFileSync('git', ['-C', host, 'apply', writersPatch], { stdio: 'pipe' });
         for (const file of ['host-writers.patch', 'writer-campaign.mjs']) {
             evidence.files[`dyl42-${file}`] = hash(fs.readFileSync(path.resolve(probeDir, '../dyl42', file)));
+        }
+        evidence.files['applied-host-storage.mjs'] = hash(fs.readFileSync(path.join(host, 'src/dyl27-storage.mjs')));
+    }
+    if (['1', 'baseline'].includes(process.env.SN_DYL43)) {
+        const patch = path.resolve(probeDir, '../dyl43/host-lifecycle.patch');
+        execFileSync('git', ['-C', host, 'apply', '--check', patch], { stdio: 'pipe' });
+        execFileSync('git', ['-C', host, 'apply', patch], { stdio: 'pipe' });
+        for (const file of ['host-lifecycle.patch', 'lifecycle-campaign.mjs']) {
+            evidence.files[`dyl43-${file}`] = hash(fs.readFileSync(path.resolve(probeDir, '../dyl43', file)));
         }
         evidence.files['applied-host-storage.mjs'] = hash(fs.readFileSync(path.join(host, 'src/dyl27-storage.mjs')));
     }
@@ -766,6 +775,12 @@ try {
         await run({ first: afterRestart, otherHandle, session, firstPage, registry, userRoot, visualFile, chatFile,
             checkpoint, evidence, runId, avatarA, avatarB, chatMessages, pageState, uiApi, startHost, stopHost,
             browser, baseUrl: () => base, hash });
+    }
+    if (process.env.SN_DYL43 === '1') {
+        const { run } = await import('../dyl43/lifecycle-campaign.mjs');
+        await run({ first: afterRestart, otherHandle, session, firstPage, registry, userRoot, visualFile, chatFile,
+            checkpoint, evidence, runId, avatarA, avatarB, chatMessages, pageState, uiApi, startHost, stopHost,
+            browser, baseUrl: () => base, hash, clickCard });
     }
     evidence.result = 'PASS_WITH_BOUNDED_CHARACTER_CHAT_LIMITS';
     evidence.recommendation = 'REVISE';
