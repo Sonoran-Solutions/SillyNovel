@@ -1,5 +1,7 @@
 # M1.2-M: Storage Architecture Decision and Readiness Checkpoint
 
+> Historical research. Upstream engagement: **ON HOLD / NOT_SUBMITTED**. The [2026-10-15 owner decision](M1_INDEPENDENT_PROJECT_STORAGE.md) replaces the active implementation path; original findings below are preserved.
+
 **Status:** owner decision package; all choices below are **PROPOSED** unless an earlier owner decision is explicitly cited. No production storage is authorized.
 
 **Tracking:** [DYL-47](https://linear.app/devils17/issue/DYL-47/sillynovel-m12-m-decide-production-storage-architecture-and) (In Review), prerequisite [DYL-46](https://linear.app/devils17/issue/DYL-46/sillynovel-m12-l-prove-safe-external-authority-reconciliation-after) (Done), related [DYL-25](https://linear.app/devils17/issue/DYL-25/sillynovel-m12-decide-supported-storage-architecture-and-host-api), [DYL-22](https://linear.app/devils17/issue/DYL-22/sillynovel-m12-c-import-and-register-a-small-approved-raster-asset), and [DYL-23](https://linear.app/devils17/issue/DYL-23/sillynovel-m12-d-render-stable-manual-scenes-and-source-scoped).

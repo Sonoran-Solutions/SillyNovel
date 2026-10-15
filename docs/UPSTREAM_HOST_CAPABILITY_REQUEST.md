@@ -1,5 +1,7 @@
 # Proposal: Supported per-chat extension state with durable identity and targeted updates
 
+> Historical research. Upstream engagement: **ON HOLD / NOT_SUBMITTED**. The [2026-10-15 owner decision](M1_INDEPENDENT_PROJECT_STORAGE.md) replaces the active implementation path; original findings below are preserved.
+
 **Draft for owner review — NOT_SUBMITTED.** This is a request for architectural feedback, not an accepted design or scheduled upstream work. Research checked 2026-10-15; supporting evidence and illustrative contracts are in the [internal technical appendix](UPSTREAM_HOST_CAPABILITY_TECHNICAL.md).
 
 ## Problem
