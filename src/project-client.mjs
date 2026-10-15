@@ -5,7 +5,16 @@ export function createProjectClient(getHeaders) {
         if(!response.ok){let code='STORAGE_UNAVAILABLE';try{code=(await response.json()).code||code;}catch{}throw Error(code);}
         return response.json();
     }
-    return {capabilities:()=>request('/capabilities'),list:()=>request('/projects'),create:name=>request('/projects','POST',{name}),
+    async function bundle(path,method='GET',file) {
+        const limit=8*1024*1024+32768;
+        if(file && (!file.name.endsWith('.sillynovel') || file.size>limit))throw Error('Select a .sillynovel bundle up to 8 MiB + 32 KiB.');
+        const response=await fetch(ROOT+path,{method,credentials:'same-origin',headers:{...getHeaders(),...(file?{'Content-Type':'application/vnd.sillynovel.bundle'}:{})},body:file});
+        if(!response.ok){let code='STORAGE_UNAVAILABLE';try{code=(await response.json()).code||code;}catch{}throw Error(code);}
+        if(file)return response.json();
+        if(response.headers.get('Content-Type')?.split(';')[0]!=='application/vnd.sillynovel.bundle')throw Error('INVALID_BUNDLE_DOWNLOAD');
+        const blob=await response.blob();if(!blob.size||blob.size>limit)throw Error('INVALID_BUNDLE_DOWNLOAD');return blob;
+    }
+    return {exportBundle:id=>bundle('/projects/'+encodeURIComponent(id)+'/export'),importBundle:file=>bundle('/projects/import','POST',file),capabilities:()=>request('/capabilities'),list:()=>request('/projects'),create:name=>request('/projects','POST',{name}),
         load:id=>request('/projects/'+encodeURIComponent(id)),save:(id,body)=>request('/projects/'+encodeURIComponent(id),'PUT',body),
         upload:(id,file)=>request('/projects/'+encodeURIComponent(id)+'/assets','POST',file),
         async asset(project,id){

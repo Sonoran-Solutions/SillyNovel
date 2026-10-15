@@ -2,6 +2,7 @@ import { DatabaseSync } from 'node:sqlite';
 import { randomUUID } from 'node:crypto';
 import { demand, exact, label, validId, validateScene, emptyScene } from './schema.mjs';
 import { decodePNG, digest } from './png.mjs';
+import { bundleJob, references, ASSET_BYTES } from './bundle.mjs';
 
 export function openStore(filename) {
     const db = new DatabaseSync(filename, { allowExtension: false });
@@ -66,6 +67,37 @@ export function openStore(filename) {
                 const result = db.prepare('UPDATE projects SET name=?,scene=?,revision=revision+1 WHERE id=? AND owner=? AND revision=?')
                     .run(body.name,JSON.stringify(body.scene),id,owner,body.expectedRevision);
                 demand(result.changes === 1, 'REVISION_CONFLICT', 409);
+                return load(owner,id);
+            });
+        },
+        async exportBundle(owner,id) {
+            // Snapshot all rows before yielding; concurrent clients see one commit.
+            const snapshot=transaction(()=>{
+                const project=load(owner,id); let total=0;
+                const assets=references(project.scene).map(ref=>{
+                    const size=db.prepare('SELECT length(bytes) AS n FROM assets WHERE project=? AND id=?').get(id,ref);
+                    demand(size,'CORRUPT_ASSET',503);total+=size.n;
+                    demand(total<=ASSET_BYTES,'BUNDLE_LIMIT',413);
+                    return asset(owner,id,ref);
+                });
+                return {name:project.name,scene:project.scene,assets};
+            });
+            return Buffer.from(await bundleJob('encode',snapshot));
+        },
+        async importBundle(owner,bytes) {
+            demand(typeof owner === 'string' && owner.length > 0, 'UNAUTHORIZED', 401);
+            const bundle=await bundleJob('decode',bytes);
+            return transaction(()=>{
+                demand(db.prepare('SELECT count(*) AS n FROM projects WHERE owner=?').get(owner).n < 100,'PROJECT_LIMIT',413);
+                const total=bundle.assets.reduce((sum,a)=>sum+a.bytes.length,0);
+                demand(db.prepare('SELECT coalesce(sum(length(bytes)),0) AS n FROM assets JOIN projects ON assets.project=projects.id WHERE projects.owner=?').get(owner).n+total<=100*1024*1024,'ASSET_QUOTA',413);
+                const id=randomUUID(), remap=new Map(bundle.assets.map(a=>[a.assetId,randomUUID()]));
+                const scene={...bundle.scene,backgroundAssetId:remap.get(bundle.scene.backgroundAssetId)??null,
+                    actors:bundle.scene.actors.map(a=>({...a,actorId:randomUUID(),spriteAssetId:remap.get(a.spriteAssetId)??null}))};
+                validateScene(scene);
+                db.prepare('INSERT INTO projects VALUES (?,?,?,0,?)').run(id,owner,bundle.name,JSON.stringify(emptyScene()));
+                for(const a of bundle.assets) db.prepare('INSERT INTO assets VALUES (?,?,?,?,?,?)').run(remap.get(a.assetId),id,a.sha256,a.width,a.height,Buffer.from(a.bytes));
+                db.prepare('UPDATE projects SET scene=? WHERE id=? AND owner=?').run(JSON.stringify(scene),id,owner);
                 return load(owner,id);
             });
         },

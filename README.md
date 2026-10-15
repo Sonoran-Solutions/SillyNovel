@@ -97,3 +97,5 @@ A repository license has not been selected in this starter. Choose one before pu
 ## Optional project persistence review candidate
 
 The owner-authorized independent-project slice is documented in [the implementation report](docs/M1_PROJECT_STORAGE_SLICE.md). The optional local plugin saves global layouts and static PNG assets; explicit project selection is required after reload and native chat switches detach it. This is an experimental review candidate, not production acceptance. The existing reader/manual stage remains session-only without a compatible plugin. See the [separate plugin installation and limitations](plugins/sillynovel-storage/README.md); no live-host installation is implied.
+
+The bounded [portable project bundle candidate](docs/M1_PROJECT_PORTABILITY.md) adds explicit export/import of saved projects and PNGs, creating fresh identities and requiring explicit reopen. [Validation and review handoff](docs/M1_PROJECT_PORTABILITY_IMPLEMENTATION.md). Whole-database recovery and unused-asset cleanup remain separate future work; production and human gates are unchanged.

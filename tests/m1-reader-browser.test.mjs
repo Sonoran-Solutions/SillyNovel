@@ -569,3 +569,52 @@ for (const fail of [false,true]) test(`project replacement pauses all visual mut
     assert.match(await page.locator('.sillynovel-visual-status').textContent(),/Background locked|LOAD_FAILED/);
     if(fail){await button(page,'Register project actor').click();assert.equal(await page.locator('.sillynovel-cast').getAttribute('data-count'),'2');}
 });
+
+for(const outcome of ['success','failure','chat switch','project replacement'])test('portable bundle import preserves current visuals: '+outcome,async t=>{
+ const page=await fixture(t);page.setDefaultTimeout(5000);await page.locator('#sillynovel-enabled').uncheck();await page.evaluate(()=>{fixture.context.getRequestHeaders=()=>({});});
+ const first={schemaVersion:1,projectId:'11111111-1111-4111-8111-111111111111',name:'First',revision:0,scene:{backgroundAssetId:null,backgroundLocked:true,actors:[]}};
+ const imported={...first,projectId:'22222222-2222-4222-8222-222222222222',name:'Imported'};
+ let release,started;const gate=new Promise(r=>release=r),seen=new Promise(r=>started=r);let done=false;
+ await page.route('**/api/plugins/sillynovel-storage/**',async route=>{
+  const path=new URL(route.request().url()).pathname;
+  if(path.endsWith('/import')){started();await gate;done=true;return route.fulfill({status:outcome==='failure'?400:201,json:outcome==='failure'?{code:'INVALID_BUNDLE'}:imported});}
+  await route.fulfill({json:path.endsWith('/capabilities')?{apiVersion:1,schemaVersion:1,bundleVersion:1}:path.endsWith('/projects')?(done?[first,imported]:[first]):first});
+ });
+ await page.locator('#sillynovel-enabled').check();await page.locator('.sillynovel-controls summary').click();
+ await button(page,'Open project and use with this chat').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('First · revision'));
+ await page.getByLabel('Project actor name',{exact:true}).fill('Unsaved actor');await button(page,'Register project actor').click();
+ await page.getByLabel('Import project bundle',{exact:true}).setInputFiles({name:'copy.sillynovel',mimeType:'application/vnd.sillynovel.bundle',buffer:Buffer.from('{}')});await seen;
+ assert.equal(await page.locator('#send_textarea').isEnabled(),true);assert.equal(await page.getByLabel('Import project bundle',{exact:true}).isDisabled(),true);
+ if(outcome==='chat switch')await page.evaluate(()=>{fixture.context.chatId='B';fixture.emit('CHAT_CHANGED');});
+ if(outcome==='project replacement'){
+  page.on('dialog',d=>d.accept());await button(page,'Open project and use with this chat').click();
+  await page.waitForFunction(()=>document.querySelector('.sillynovel-cast').dataset.count==='0');
+ }
+ const received=page.waitForResponse(r=>r.url().endsWith('/projects/import'));release();await received;await page.waitForTimeout(100);
+ if(outcome==='success'){
+  await page.waitForFunction(()=>document.querySelector('.sillynovel-bundle-status').textContent.includes('Not attached'));
+  assert.equal(await page.getByLabel('Saved project',{exact:true}).inputValue(),first.projectId);
+  assert.equal(await page.getByLabel('Saved project',{exact:true}).locator('option').count(),2);
+ }
+ if(outcome==='failure')assert.match(await page.locator('.sillynovel-bundle-status').innerText(),/Import failed: INVALID_BUNDLE/);
+ if(['success','failure'].includes(outcome)){
+  assert.equal(await page.locator('.sillynovel-cast').getAttribute('data-count'),'1');assert.match(await page.locator('.sillynovel-unsaved').innerText(),/Unsaved project changes/);
+ }else {assert.equal(await page.locator('.sillynovel-cast').getAttribute('data-count'),'0');assert.doesNotMatch(await page.locator('.sillynovel-bundle-status').innerText(),/Imported Imported/);}
+ assert.equal(await page.locator('.sillynovel-sprite:visible').count(),0);
+});
+test('portable export downloads only a successful bundle, with explicit errors and size refusal',async t=>{
+ const page=await fixture(t);await page.locator('#sillynovel-enabled').uncheck();await page.evaluate(()=>{fixture.context.getRequestHeaders=()=>({});});let fail=false;
+ const id='11111111-1111-4111-8111-111111111111';
+ await page.route('**/api/plugins/sillynovel-storage/**',async route=>{
+  const path=new URL(route.request().url()).pathname;
+  if(path.endsWith('/export'))return route.fulfill(fail?{status:503,json:{code:'CORRUPT_ASSET'}}:{contentType:'application/vnd.sillynovel.bundle',body:'{"format":"test-only"}'});
+  await route.fulfill({json:path.endsWith('/capabilities')?{apiVersion:1,schemaVersion:1,bundleVersion:1}:[{projectId:id,name:'Saved'}]});
+ });
+ await page.locator('#sillynovel-enabled').check();await page.locator('.sillynovel-controls summary').click();
+ const download=page.waitForEvent('download');await button(page,'Export project').click();assert.equal((await download).suggestedFilename(),'project.sillynovel');
+ fail=true;let downloads=0;page.on('download',()=>downloads++);await button(page,'Export project').click();
+ await page.waitForFunction(()=>document.querySelector('.sillynovel-bundle-status').textContent.includes('CORRUPT_ASSET'));assert.equal(downloads,0);
+ await page.getByLabel('Import project bundle',{exact:true}).setInputFiles({name:'large.sillynovel',mimeType:'application/vnd.sillynovel.bundle',buffer:Buffer.alloc(8*1024*1024+32769)});
+ await page.waitForFunction(()=>document.querySelector('.sillynovel-bundle-status').textContent.includes('up to 8 MiB'));
+ assert.equal(await page.locator('#send_textarea').isEnabled(),true);
+});

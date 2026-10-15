@@ -31,7 +31,7 @@ export function mountVisualStage({ document, stage, actions }) {
     const controls=[], removers=[];
     let disposed=false,lastStamp=null;
     let model=createTransientScene(actions,render);
-    let projectEpoch=0,activation=actions.getSnapshot().sessionEpoch,capable=false,projectBusy=false,unavailable='Plugin unavailable · session visuals remain unsaved.';
+    let projectEpoch=0,activation=actions.getSnapshot().sessionEpoch,capable=false,bundleCapable=false,bundleBusy=false,projectBusy=false,unavailable='Plugin unavailable · session visuals remain unsaved.';
     const client=createProjectClient(()=>actions.getRequestHeaders?.() ?? {});
     const listen=(el,type,cb)=>{el.addEventListener(type,cb);removers.push(()=>el.removeEventListener(type,cb));};
     function run(fn,mutation=false) { const captured=model,epoch=actions.getSnapshot().sessionEpoch;Promise.resolve().then(()=>{if(mutation&&(projectBusy||model.project&&model.status().importing))return;return fn();}).catch(error=> { if(!disposed && model===captured && actions.getSnapshot().sessionEpoch===epoch)feedback.textContent='Visual controls unavailable: '+error.message; }); }
@@ -54,6 +54,7 @@ export function mountVisualStage({ document, stage, actions }) {
     async function openProject(create=false) {
         if(!capable||projectBusy||model.project&&model.status().importing)return;
         if(model.project && model.status().dirty && !globalThis.confirm('Discard unsaved project changes and open another project?'))return;
+        bundleStatus.textContent='';
         const token=++projectEpoch,epoch=actions.getSceneEvidence().snapshot.sessionEpoch;
         if(actions.getSnapshot().owner?.scope !== 'character')throw Error('Projects currently support single-character chats only.');
         const current=()=>!disposed&&token===projectEpoch&&actions.getSnapshot().sessionEpoch===epoch;
@@ -65,7 +66,7 @@ export function mountVisualStage({ document, stage, actions }) {
             candidate=await createProjectScene(record,client,actions,render,current);
             if(!current()){candidate.dispose();return;}
             model.dispose();model=candidate;installed=true;render();
-            const list=await client.list();if(current())options(projectList,list.map(p=>[p.projectId,p.name]));
+            const list=await client.list();if(current())options(projectList,list.map(p=>[p.projectId,p.name+' · '+p.projectId.slice(0,8)]));
         } finally {if(token===projectEpoch){if(!installed)projectEpoch--;projectBusy=false;}if(!disposed)render();}
     }
     projectButton('Create project and use with this chat',()=>openProject(true));
@@ -73,9 +74,34 @@ export function mountVisualStage({ document, stage, actions }) {
     const save=projectButton('Save project',()=>model.project&&model.save());
     const detach=projectButton('Detach project',()=>{
         if(model.project&&model.status().dirty&&!globalThis.confirm('Discard unsaved changes and detach this project?'))return;
-        projectEpoch++;model.dispose();model=createTransientScene(actions,render);return model.sync();
+        bundleStatus.textContent='';projectEpoch++;model.dispose();model=createTransientScene(actions,render);return model.sync();
     });
-    run(async()=>{try{const cap=await client.capabilities();if(disposed)return;if(cap.apiVersion!==1||cap.schemaVersion!==1)throw Error('Incompatible storage');const list=await client.list();if(disposed)return;capable=true;options(projectList,list.map(p=>[p.projectId,p.name]));}catch(error){if(disposed)return;capable=false;if(error.message==='AUTHENTICATED_ACCOUNT_REQUIRED')unavailable='Project storage requires a signed-in SillyTavern account. Session visuals remain available.';else if(error.message==='CSRF_REQUIRED')unavailable='Project storage requires host CSRF protection. Session visuals remain available.';}render();});
+    listen(projectList,'change',render);
+    const bundleStatus=make('p','sillynovel-bundle-status');bundleStatus.setAttribute('role','status');panel.append(bundleStatus);
+    async function portable(file) {
+        if(!bundleCapable||bundleBusy||projectBusy||model.project&&model.status().importing)return;
+        const token=projectEpoch,epoch=actions.getSnapshot().sessionEpoch,captured=model,id=projectList.value;
+        if(!file&&!id)throw Error('Select a saved project to export.');
+        const current=()=>!disposed&&projectEpoch===token&&model===captured&&actions.getSnapshot().sessionEpoch===epoch;
+        bundleBusy=true;bundleStatus.textContent=file?'Importing project bundle…':'Exporting saved project layout…';render();
+        try {
+            if(file) {
+                const imported=await client.importBundle(file);if(!current())return;
+                const list=await client.list();if(!current())return;
+                options(projectList,list.map(p=>[p.projectId,p.name+' · '+p.projectId.slice(0,8)]));
+                bundleStatus.textContent='Imported '+imported.name+' · '+imported.projectId+'. Not attached to this conversation. Select it and choose Open project and use with this chat. Current visuals and unsaved changes are preserved.';
+            } else {
+                const blob=await client.exportBundle(id);if(!current()||projectList.value!==id)return;
+                const url=URL.createObjectURL(blob),link=make('a','');link.href=url;link.download='project.sillynovel';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+                bundleStatus.textContent='Exported saved project layout. Unsaved changes are excluded.';
+            }
+        } catch(error){if(current())bundleStatus.textContent=(file?'Import':'Export')+' failed: '+error.message;}
+        finally{bundleBusy=false;if(!disposed)render();}
+    }
+    const exportProject=projectButton('Export project',()=>portable());
+    const bundleFile=field('Import project bundle','input');bundleFile.type='file';bundleFile.accept='.sillynovel';
+    listen(bundleFile,'change',()=>{const selected=bundleFile.files[0];bundleFile.value='';if(selected)run(()=>portable(selected));});
+    run(async()=>{try{const cap=await client.capabilities();if(disposed)return;if(cap.apiVersion!==1||cap.schemaVersion!==1)throw Error('Incompatible storage');const list=await client.list();if(disposed)return;capable=true;bundleCapable=cap.bundleVersion===1;if(!bundleCapable)bundleStatus.textContent='Project bundles require an updated compatible storage plugin.';options(projectList,list.map(p=>[p.projectId,p.name+' · '+p.projectId.slice(0,8)]));}catch(error){if(disposed)return;capable=false;if(error.message==='AUTHENTICATED_ACCOUNT_REQUIRED')unavailable='Project storage requires a signed-in SillyTavern account. Session visuals remain available.';else if(error.message==='CSRF_REQUIRED')unavailable='Project storage requires host CSRF protection. Session visuals remain available.';}render();});
     const bg=field('Background');
     button('Apply background',()=>model.dispatch(bg.value ? {type:'setBackground',assetId:bg.value}:{type:'clearBackground'}));
     const preset=field('Test actor art');options(preset,[['','No art · manual actor'],...TEST_ACTORS.map(a=>[a.preset,a.description])]);preset.value='mira-a';
@@ -141,6 +167,7 @@ export function mountVisualStage({ document, stage, actions }) {
         unsaved.textContent=state?(state.dirty?'Unsaved project changes':'Saved project layout'):'Unsaved session visuals';
         projectStatus.textContent=projectBusy?'Opening project · visual edits paused…':!capable?unavailable:state?state.name+' · revision '+state.revision+(state.importing?' · importing PNG…':state.busy?' · saving…':state.dirty?' · unsaved changes':' · saved'):'No project attached. Select one explicitly for this chat.';
         for(const e of [projectName,projectList,...projectButtons])e.disabled=!capable||paused||!ready||actions.getSnapshot().owner?.scope!=='character';
+        exportProject.disabled=exportProject.disabled||!bundleCapable||bundleBusy||!projectList.value;bundleFile.disabled=!bundleCapable||bundleBusy||paused;
         save.disabled=save.disabled||!state||state.busy;detach.disabled=detach.disabled||!state;
         if(state){reset.disabled=true;preset.disabled=true;expression.disabled=true;file.accept='image/png';help.textContent='This project stores global layout, presence, outfits and locks. Message expressions are not saved. Switching chats detaches the project; explicitly reopen after reload.';}
         else {file.accept='image/png,image/jpeg,image/webp';help.textContent=transientHelp;}
@@ -152,7 +179,7 @@ export function mountVisualStage({ document, stage, actions }) {
     }
     function update(snapshot) {
         if(snapshot.sessionEpoch!==activation){
-            activation=snapshot.sessionEpoch;projectEpoch++;projectBusy=false;
+            activation=snapshot.sessionEpoch;projectEpoch++;projectBusy=false;bundleStatus.textContent='';
             if(model.project){model.dispose();model=createTransientScene(actions,render);}
         }
         const stamp=evidenceStamp(snapshot);

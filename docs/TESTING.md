@@ -384,3 +384,7 @@ Manual editorial review: every illustrative API is explicitly PROPOSED; unsuppor
 ## Independent project storage validation plan — 2026-10-15
 
 [DYL-49–56 plan](M1_PROJECT_STORAGE_IMPLEMENTATION.md) adds a separate project persistence matrix: strict schema/ownership, CAS and failed writes, restart, decoded PNG bounds/hash/foreign access, explicit reopen and A→B→A detachment, stale responses, plugin absence, two authenticated users/two clients, native composer/navigation regressions, and exact named canonical-file hash comparisons. Documentation-only checks do not count as runtime evidence. Earlier overlays remain historical; no new production compatibility or Gate A verdict is implied.
+
+## DYL-57 project portability — 2026-10-15
+
+[Contract](M1_PROJECT_PORTABILITY.md) and [exact implementation evidence](M1_PROJECT_PORTABILITY_IMPLEMENTATION.md). Regression matrix: complete saved-scene roundtrip/fresh project-actor-asset IDs; same-name independence; strict malformed container/image/ownership/limits; inspected rollback at creation/asset/final-scene/COMMIT; quotas; consistent export/save; real account/CSRF refusal; two-client imports; UI dirty-state preservation, explicit open, delayed native switch/replacement; restart; absent plugin; enumerated native file hashes. Resource probe separately measures full aggregate-pixel decoding off the main event loop. Earlier DYL-54 counts remain historical. Gate A NOT_RUN.
