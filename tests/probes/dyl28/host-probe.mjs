@@ -568,6 +568,49 @@ try {
         staleScreen, refusedState, reopened, sourceAfter: fs.readFileSync(chatFile('default-user', a.relativePath), 'utf8'),
     });
 
+    // A real authenticated transcript response is followed by the pinned host's non-JSON auth refusal.
+    const refusedMarker = 'A expired-ticket edit by client two.';
+    await clickCard(firstPage, avatarB); await waitForTarget(firstPage, avatarB, b.chatId, 1);
+    let refusedEnvelope;
+    let cookiesBeforeRefusal;
+    const expireAuthAfterSnapshot = async route => {
+        const response = await route.fetch();
+        const text = await response.text();
+        refusedEnvelope = { status: response.status(), body: JSON.parse(text) };
+        cookiesBeforeRefusal = await firstContext.cookies();
+        await firstContext.clearCookies();
+        await route.fulfill({ response, body: text });
+    };
+    await firstPage.route('**/api/chats/get', expireAuthAfterSnapshot);
+    const refusalHistoryIndex = await firstPage.evaluate(() => window.dyl28.history.length);
+    const refusalResponsePromise = firstPage.waitForResponse(response => response.url().endsWith('/api/dyl27/accept-load'));
+    await clickCard(firstPage, avatarA);
+    const refusalResponse = await Promise.race([refusalResponsePromise,
+        sleep(12000).then(() => { throw new Error('non-JSON 403 activation response timeout'); })]);
+    const refusalBody = await refusalResponse.text();
+    assert.equal(refusedEnvelope.status, 200);
+    assert.equal(refusedEnvelope.body.dyl28Envelope, true);
+    assert.equal(refusedEnvelope.body.identity.chatId, a.chatId);
+    assert.equal(refusedEnvelope.body.sourceRevision, 3);
+    assert.ok(refusedEnvelope.body.messages.some(message => message.mes === refusedMarker));
+    assert.equal(refusalResponse.status(), 403);
+    assert.doesNotMatch(refusalResponse.headers()['content-type'] ?? '', /application\/json/i);
+    assert.throws(() => JSON.parse(refusalBody));
+    await firstPage.waitForFunction(index => window.dyl28?.history.length > index, refusalHistoryIndex, { timeout: 10000 });
+    await firstPage.unroute('**/api/chats/get', expireAuthAfterSnapshot);
+    await firstContext.addCookies(cookiesBeforeRefusal);
+    const nonJsonRefusedState = await pageState(firstPage);
+    assert.equal(nonJsonRefusedState.target, null);
+    assert.ok(nonJsonRefusedState.history.some(entry => entry.refused === 'HTTP_403'),
+        `the non-JSON 403 must be classified as a refusal: ${JSON.stringify(nonJsonRefusedState)}`);
+    assert.equal(nonJsonRefusedState.messages.includes(refusedMarker), false,
+        `the refused snapshot must not enter canonical chat state: ${JSON.stringify(nonJsonRefusedState)}`);
+    assert.equal(nonJsonRefusedState.dom.some(text => text.includes(refusedMarker)), false,
+        `the refused snapshot must not render: ${JSON.stringify(nonJsonRefusedState)}`);
+    checkpoint('identity-bearing transcript followed by the pinned host non-JSON HTTP 403 refusal: the snapshot is not committed and target stays null',
+        'NATIVE_HOST_UI with real auth middleware refusal after response barrier', { refusedEnvelope, refusalStatus: refusalResponse.status(),
+            refusalContentType: refusalResponse.headers()['content-type'], refusalBody, refusedState: nonJsonRefusedState });
+
     // An activation transport failure does not stop the native conversation from loading or replying.
     // Start from B so the timed A load's own revision 3 text is what must appear on screen afterwards.
     await clickCard(firstPage, avatarB); await waitForTarget(firstPage, avatarB, b.chatId, 1);

@@ -13,18 +13,24 @@ async function api(name, body, headers, timeout = 5000) {
     } catch (error) {
         throw error; // transport failure (network, abort, timeout); keep it distinct from a server refusal
     }
-    let value;
-    try {
-        value = await response.json();
-    } catch (error) {
-        throw error; // an unreadable body is a transport failure too
-    }
     if (!response.ok) {
-        const refusal = new Error(value.error);
+        let value;
+        try { value = await response.json(); } catch { /* status already proves the host answered */ }
+        const code = typeof value?.error === 'string' && value.error ? value.error : `HTTP_${response.status}`;
+        const refusal = new Error(code);
+        refusal.code = code;
         refusal.server = true; // the host answered; this is a refusal, not a transport failure
         throw refusal;
     }
-    return value;
+    try {
+        return await response.json();
+    } catch (error) {
+        if (!(error instanceof SyntaxError)) throw error; // body transport failures remain transport failures
+        const refusal = new Error('INVALID_JSON_RESPONSE');
+        refusal.code = refusal.message;
+        refusal.server = true;
+        throw refusal;
+    }
 }
 
 function client(headers) {
