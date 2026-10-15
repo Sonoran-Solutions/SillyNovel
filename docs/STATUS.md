@@ -17,7 +17,7 @@ The DYL-18 review branch now implements a complete text reader on the merged DYL
 | Missing-capability behavior | INSTRUMENTED_HOST_PASS; capability omission was injected, not a natural host failure |
 | M0 overall | OWNER APPROVED PASS for the explicitly documented scope and evidence limits; L10 is UNSUPPORTED / WAIVED |
 | M1 runtime | DYL-17/19 merged; separately owner-assigned DYL-18 text-reader review candidate IMPLEMENTED / HOST_TESTED. Later art/persistence work remains gated |
-| M1.2 storage | DYL-46 bounded feasibility is Done/merged at PR #20; production storage remains unsupported. DYL-47 architecture decision package is in review preparation; no production work authorized |
+| M1.2 storage | DYL-46 bounded feasibility is Done/merged at PR #20; production storage remains unsupported. DYL-47 architecture decision package is In Review; no production work authorized |
 | Gate A — reader feel | NOT_RUN |
 | M2 — automatic direction | NOT_STARTED |
 | Gate B — direction quality | NOT_RUN |
