@@ -1,8 +1,8 @@
 diff --git a/src/dyl27-storage.mjs b/src/dyl27-storage.mjs
-index 03d6f75..d1423b1 100644
+index 03d6f75..82b0b36 100644
 --- a/src/dyl27-storage.mjs
 +++ b/src/dyl27-storage.mjs
-@@ -67,7 +67,13 @@ export function nativeMutation(userRoot, file, operation, action, destination) {
+@@ -67,14 +67,27 @@ export function nativeMutation(userRoot, file, operation, action, destination) {
          if (!scope || scope.disabled) throw new Error('unresolved scope');
          chat = catalog.chats.find(c => !c.deleted && c.relativePath === relativePath);
          if (chat && JSON.stringify(seal(file)) !== JSON.stringify(chat.seal)) throw new Error('external drift');
@@ -10,14 +10,29 @@ index 03d6f75..d1423b1 100644
 +        if (operation === 'import' && fs.existsSync(file)) {
 +            // Native imports may overwrite a timestamp collision, even with identical bytes.
 +            // Refuse the entire affected scope before that writer can preserve an old seal.
-+            scope.disabled = true; persist(userRoot, catalog);
++            scope.disabled = true;
++            try { persist(userRoot, catalog); }
++            catch { fail('IMPORT_INVALIDATION_FAILED', 503); }
 +            throw new Error('import collision');
 +        }
 +        if (!chat && (!['save', 'import'].includes(operation) || fs.existsSync(file))) throw new Error('adoption refused');
          catalog.pending = { operation, relativePath, destination: destination && path.relative(userRoot, destination) };
          persist(userRoot, catalog);
          if (!chat) {
-@@ -82,8 +88,16 @@ export function nativeMutation(userRoot, file, operation, action, destination) {
+             chat = { relativePath, scopeId: scope.scopeId, chatId: randomUUID() };
+             catalog.chats.push(chat);
+         }
+-    } catch { catalog = null; }
++    } catch (error) {
++        // An identical import overwrite cannot be detected by the byte seal. If
++        // durable revocation failed, leave the original canonical file untouched.
++        if (error.code === 'IMPORT_INVALIDATION_FAILED') throw error;
++        catalog = null;
++    }
+     const result = action(); // Native chat operation remains usable when visual identity is unresolved.
+     if (catalog) {
+         if (process.env.SN_DYL27_INTERRUPT === operation) return result;
+@@ -82,8 +95,16 @@ export function nativeMutation(userRoot, file, operation, action, destination) {
              if (operation === 'delete') chat.deleted = true;
              else {
                  if (destination) chat.relativePath = path.relative(userRoot, destination);

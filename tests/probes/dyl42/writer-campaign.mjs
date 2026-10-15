@@ -270,6 +270,19 @@ export async function run(h) {
     const collisionEntry = entry(collisionAvatar, collisionName);
     const collisionLoad = await load(collisionAvatar, collisionName);
     const collisionVisual = recordBytes(collisionEntry);
+    const namespaceRoot = path.dirname(visualFile(owner, collisionEntry.chatId));
+    const collisionRegistryBefore = fs.readFileSync(path.join(namespaceRoot, 'identities.json'), 'utf8');
+    assert.notEqual(process.getuid?.(), 0, 'invalidation EACCES requires a non-root runner');
+    fs.chmodSync(namespaceRoot, 0o500);
+    let failedInvalidation;
+    try { failedInvalidation = await upload(first, '/api/chats/import', collisionAvatar, 'Collision', text); }
+    finally { fs.chmodSync(namespaceRoot, 0o700); }
+    assert.equal(failedInvalidation.error, true);
+    assert.equal(fs.readFileSync(path.join(namespaceRoot, 'identities.json'), 'utf8'), collisionRegistryBefore);
+    assert.equal(raw(collisionEntry), text);
+    assert.equal(recordBytes(collisionEntry), collisionVisual);
+    await first.api('read', { target: collisionLoad.target }); // Original instance remains valid; no import committed.
+    checkpoint('EACCES persisting collision invalidation refuses native overwrite before any source or registry change', 'EXPERIMENTAL_HOST', { failedInvalidation, originalInstance: collisionLoad });
     assert.equal(await imported(collisionAvatar, 'Collision', text), collisionName);
     assert.equal(raw(collisionEntry), text);
     assert.equal((await load(collisionAvatar, collisionName)).envelope.identity, null);
