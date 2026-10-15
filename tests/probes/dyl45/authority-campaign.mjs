@@ -138,8 +138,9 @@ export async function run(h) {
     try { permission = await save(x, 503); } finally { fs.chmodSync(h.authority, 0o700); }
     assert.deepEqual(capture(), clean); assert.equal(bytes(x.file), x.canonical);
     cp('F1 real external-directory EACCES prevents native mutation', { permission });
-    for (const point of ['local-begin', 'finalize']) {
-        const flag = path.join(ns, `dyl45-${point}-failure`); fs.writeFileSync(flag, h.runId);
+    for (const point of ['local-begin', 'registry-finalize', 'reservation-finalize', 'finalize']) {
+        const flag = path.join(ns, point === 'registry-finalize' ? 'dyl43-finalize-failure'
+            : point === 'reservation-finalize' ? 'dyl44-finalize-failure' : `dyl45-${point}-failure`); fs.writeFileSync(flag, h.runId);
         const result = await save(x, point === 'local-begin' ? 503 : 200); fs.unlinkSync(flag);
         assert.ok(external().pending); const pending = bytes(authorityFile);
         await restart(); assert.equal(bytes(authorityFile), pending);
