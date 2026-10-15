@@ -158,6 +158,7 @@ export async function run(h) {
     cp('F2 native mutation fails after external advance; unchanged canonical bytes confer no authority', { nativeFailure, nativeRefusal }, 'SYNTHETIC'); reset(clean);
 
     const malformed = new FormData(); malformed.set('file_type', 'jsonl'); malformed.set('avatar_url', x.avatar);
+    malformed.set('character_name', 'Synthetic'); malformed.set('user_name', 'Synthetic');
     malformed.set('avatar', new Blob(['{}']), 'malformed.jsonl');
     const nativeLogicalFailure = await first.request('/api/chats/import', malformed);
     assert.equal(nativeLogicalFailure.error, true); assert.ok(external().pending);
