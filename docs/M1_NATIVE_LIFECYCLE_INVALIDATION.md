@@ -143,8 +143,11 @@ SN_DYL43=1 SN_PLAYWRIGHT_MODULE=/home/dq/.cache/codex-runtimes/codex-primary-run
 SN_DYL42=1 SN_DYL43=baseline SN_PLAYWRIGHT_MODULE=/home/dq/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs node tests/probes/dyl28/host-probe.mjs /tmp/SillyTavern-m12-review /tmp/dyl43-final-inherited
 node --test tests/m0.test.mjs tests/m1-reader-source.test.mjs tests/m1-scene-reducer.test.mjs tests/m1-source-prefix.test.mjs tests/probes/dyl19/*.test.mjs > docs/evidence/dyl43/node-tests.txt 2>&1
 SN_PLAYWRIGHT_MODULE=/home/dq/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs SILLYTAVERN_ROOT=/tmp/SillyTavern-m12-review node --test tests/m1-reader-browser.test.mjs > docs/evidence/dyl43/browser-tests.txt 2>&1
-git diff --check
+git diff origin/main --check -- . ':!tests/probes/dyl43/host-lifecycle.patch'
+git -c core.whitespace=-blank-at-eol,-blank-at-eof diff origin/main --check -- tests/probes/dyl43/host-lifecycle.patch
 ```
+
+The full-branch default whitespace check flags the unified patch’s intentional single-space blank context lines and final blank context. The two exact diff checks above check ordinary files normally and exempt only those encoded patch blank-context rules; patch bytes remain identical to the frozen runtime evidence.
 
 Final lifecycle: **38/38 checkpoints** (16 inherited DYL-28 + 22 new lifecycle checkpoints). Final inherited writers: **33/33** (16 DYL-28 + 17 DYL-42). These overlap and are not 71 independent lifecycle scenarios. Node **64/64** and actual-entry Chromium **24/24**, zero failed/skipped. Syntax, pinned source verification and diff checks pass. Runtime: Node v26.8.1 on Linux; headless Chromium 151.0.7922.34. Deterministic loopback provider only; no CI/provider/device/owner-experience claim.
 
