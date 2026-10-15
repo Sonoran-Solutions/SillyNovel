@@ -210,7 +210,19 @@ export async function run(h) {
     const restore = await fixture('RootRestore');
     const backupRoot = path.join(path.dirname(root), `dyl44-root-backup-${h.runId}`);
     assert.equal(fs.existsSync(backupRoot), false);
-    fs.cpSync(root, backupRoot, { recursive: true });
+    await h.stopHost();
+    // Test-owned hardlink snapshot preserves inode/birth identity while native atomic
+    // writes replace their paths. This models metadata-preserving rollback, not a backup product.
+    function snapshot(from, to) {
+        fs.mkdirSync(to);
+        for (const entry of fs.readdirSync(from, { withFileTypes: true })) {
+            const source = path.join(from, entry.name), destination = path.join(to, entry.name);
+            if (entry.isDirectory()) snapshot(source, destination);
+            else { assert.ok(entry.isFile(), 'snapshot contains only owned regular files'); fs.linkSync(source, destination); }
+        }
+    }
+    snapshot(root, backupRoot);
+    await h.startHost(); first = h.session(); await first.login(owner);
     const beforeRestore = bytes(stateFile);
     await save(restore);
     const advanced = h.registry(owner).chats.find(c => c.chatId === restore.entry.chatId);
@@ -218,12 +230,12 @@ export async function run(h) {
     await h.stopHost();
     // Both roots belong to this harness UUID; whole-root replacement is synthetic, not a native restore API.
     assert.equal(path.basename(path.dirname(root)), `sillynovel-dyl27-${h.runId}`);
-    fs.rmSync(root, { recursive: true }); fs.cpSync(backupRoot, root, { recursive: true });
-    fs.rmSync(backupRoot, { recursive: true });
+    fs.rmSync(root, { recursive: true }); fs.renameSync(backupRoot, root);
     await h.startHost(); first = h.session(); await first.login(owner);
     const restored = await load(restore), restoredEntry = h.registry(owner).chats.find(c => c.chatId === restore.entry.chatId);
     assert.equal(bytes(stateFile), beforeRestore);
     assert.equal(restoredEntry.writeGeneration, restore.entry.writeGeneration);
+    assert.ok(restored.target, JSON.stringify(restored.envelope));
     assert.equal(restored.target.chatId, restore.entry.chatId);
     assert.equal((await first.api('read', { target: restored.target })).revision, 1);
     cp('BLOCKED whole-root restore rolls back local generations and restores durable visual identity under a new visit', {
