@@ -65,7 +65,7 @@ export async function run(h) {
         assert.equal(loaded.target.chatId, c.chatId);
         assert.equal(loaded.target.sourceRevision, 1);
         assert.equal(loaded.envelope.messages[0].chat_metadata.sourceRevision, 900);
-        assert.deepEqual(await first.api('cas', { target: { ...p.target, chatId: c.chatId }, expectedRevision: 0,
+        assert.deepEqual(await first.api('cas', { target: { ...p.target, scopeId: c.scopeId, chatId: c.chatId }, expectedRevision: 0,
             record: { background: 'forest' } }, 409), { error: 'STALE_VIEW' });
     }
     assert.equal(JSON.parse(recordBytes(parent)).revision, parentVisual.revision);
