@@ -1,0 +1,63 @@
+Provision inventory {"default-user":{"characters":[],"chats":[]},"dyl28-c01f7270-c8ba-4fd5-aa35-67b610a60229":{"characters":[],"chats":[]}}
+PASS native create/save allocates host identity and sourceRevision 1 for A and B
+PASS delayed native A response after B: B transcript, DOM, identity and target stay current; A load token is stale
+PASS A-B-A with reordered native transcript responses: only latest A request and visit remain accepted
+PASS held native activation acknowledgement across A-B-A is discarded without restoring its visit
+PASS old A visual CAS held across native A-B-A is refused against the old visit
+PASS canonical edit during pending load: old revision 1 is not committed, a fresh revision 2 load is activated
+PASS two authenticated clients on one host process: source revision 2 shared, visit tokens distinct, one visual CAS wins without canonical mutation
+PASS expired load ticket after a concurrent native edit: the revision 3 snapshot is not committed, the screen keeps revision 2, and the reopen activates revision 3
+PASS identity-bearing transcript followed by the pinned host non-JSON HTTP 403 refusal: the snapshot is not committed and target stays null
+PASS activation acknowledgement timeout leaves visuals unavailable while native text and ordinary reply/save continue
+PASS native Temporary Chat transition revokes the persisted-chat visit
+PASS missing chat returns an empty native snapshot with no visual identity
+PASS native rename during pending load preserves chat ID/revision but refuses old locator-bound activation
+PASS different authenticated store and cookie session cannot reuse another client’s load identity
+PASS load request expires after the host TTL and cannot grant a visit
+PASS host restart recovers identity, source revision and visual record; old in-memory visit is rejected and a new visit is issued
+PASS DYL-46 EACCES rename: verified pre-native guard failure reconciles forward
+PASS DYL-46 EACCES delete: verified pre-native guard failure reconciles forward
+PASS DYL-46 post-revocation rename inspected failure finalizes VERIFIED_REVOCATION, never clean abort
+PASS DYL-46 post-revocation rename restart retains revocation and permits healthy native/visual work
+PASS DYL-46 post-revocation delete inspected failure finalizes VERIFIED_REVOCATION, never clean abort
+PASS DYL-46 post-revocation delete restart retains revocation and permits healthy native/visual work
+PASS DYL-46 post-revocation import inspected failure finalizes VERIFIED_REVOCATION, never clean abort
+PASS DYL-46 post-revocation import restart retains revocation and permits healthy native/visual work
+PASS DYL-46 post-revocation reservation finalization failure remains durably refused
+PASS DYL-46 post-revocation external finalization failure remains durably refused
+PASS DYL-46 malformed-header HTTP 200 error attests clean abort before import commit
+PASS DYL-46 ordinary native save and restart work after malformed-header clean abort
+PASS DYL-46 completed revocation plus unrelated clean abort permits fresh enrollment without visual inheritance
+PASS DYL-46 F5/F6 read revocation owns reservation; competing save/read/enrollment never mutates; restored bytes stay revoked
+PASS DYL-46 eligible enrollment loses during revocation and succeeds with fresh scope after completion
+PASS DYL-46 completed scoped revocation persists through restart; unrelated native and visual operations resume
+PASS DYL-46 F5 native writer first: read refuses, no nested reservation/deadlock, later observation revokes
+PASS DYL-46 F1 real external-directory EACCES leaves durable validation refusal after restored bytes and restart
+PASS DYL-46 F1 external intent failure persists validation refusal despite restored bytes and restart
+PASS DYL-46 F2 reconciliation local-begin failure remains pending across restart
+PASS DYL-46 F3 reconciliation finalize failure remains pending across restart
+PASS DYL-46 F4 owned process stops at revocation barrier; durable pending intent survives restart
+PASS DYL-46 external-before-local durable receipt reconciles forward on authenticated load after restart
+PASS DYL-46 clean-abort finalize fault never releases pending evidence on restart
+PASS DYL-46 real local-parent EACCES: exact independently persisted unstarted receipt permits forward recovery and next native save
+PASS DYL-46 same-process authenticated visual read recovers unstarted intent without replacing its prior visit
+PASS DYL-46 forward recovery local persistence failure never adopts incomplete state
+PASS DYL-46 forward recovery finalize persistence failure never adopts incomplete state
+PASS DYL-46 receipt cannot be blindly cleared when local reservation already committed and dispatch fence failed
+PASS DYL-46 AUTHORITY_UNAVAILABLE missing: no local reconstruction or clean-abort bypass
+PASS DYL-46 AUTHORITY_UNAVAILABLE corrupt: no local reconstruction or clean-abort bypass
+PASS DYL-46 AUTHORITY_UNAVAILABLE wrong-account: no local reconstruction or clean-abort bypass
+PASS DYL-46 F7 partial native card write is INDETERMINATE; matching transcript cannot attest abort
+PASS DYL-46 F8 two authenticated accounts: submitted store/generation/target cannot select foreign authority
+PASS DYL-46 healthy read revocation, explicit fresh enrollment and old held CAS/load remain isolated
+PASS DYL-46 fresh enrolled authority persists across restart
+PASS DYL-46 COUNTEREXAMPLE unknown in-place restore still accepts old authority
+PASS DYL-46 review regression: failed external intent plus unknown byte restore refuses old identity through two restarts
+PASS DYL-46 validation witness begin failure never grants authority or invents history
+PASS DYL-46 validation witness finalize failure never grants authority or invents history
+PASS DYL-46 validation witness missing is never reconstructed or adopted
+PASS DYL-46 validation witness corrupt is never reconstructed or adopted
+PASS DYL-46 validation witness binding is never reconstructed or adopted
+PASS DYL-46 root rollback refuses every recovery entry and enrollment through two restarts without adoption
+PASS DYL-46 forged local serial/incarnation/store UUID without finalized registry history remains refused
+Completed 61 isolated DYL-28 checks; evidence saved in /tmp/dyl46-rereview-dev-reconciliation

@@ -1,0 +1,21 @@
+{
+  "reviewedHead": "d40f637aa86f8eea1872ed368355570c9470d999",
+  "proofSha": "59acdbc0c66cb58ed616351947cd1c83ddc85ae7",
+  "mainSha": "104610632a58481a63d948005c2c0f7a2d07f431",
+  "hostSha": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
+  "components": {
+    "tests/m1-reader-browser.test.mjs": "a22111779387099f09ecc5d35a3704ac8901ab47d622e5d3189620fae7627b1d",
+    "tests/probes/dyl28/host-probe.mjs": "e4d61e24d0c103578d8637b4d70d60bee946f33e82ac02618cb03d4072148110",
+    "tests/probes/dyl43/lifecycle-campaign.mjs": "4adb41dc3ab20755dc41e22e47e85ec35b60eafaffa4ece68e6f7e906c2b39dd",
+    "tests/probes/dyl44/generation-campaign.mjs": "9051d1407cb97f830c95589c5a9b179102124a345f44b8d4523dc3b5ee118ab2",
+    "tests/probes/dyl45/authority-campaign.mjs": "4d4158636fb083949585b7024e76deee167e95f802e18378d7a3e4752dd571ea",
+    "tests/probes/dyl46/host-reconciliation.patch": "1e45477101018377f51a63f675252950b62aa4a5f9941cafcee2315f3f69e231",
+    "tests/probes/dyl46/reconciliation-campaign.mjs": "d5ec789a9b0533880ed63aa775c782aa8b1724b0f427f655623962a05183156c"
+  },
+  "modules": {
+    "src/dyl27-storage.mjs": "3db88d802ef99a1fcdadeac112863c3a0251fc0e25cdd3d7dd89b6d54dd21961",
+    "src/endpoints/chats.js": "3fcfb3a198b589db474b6961277b7d8f27f1cb46bd84b7d218f6a27e1ab41316",
+    "src/endpoints/characters.js": "6d62a3bc31ce2a8801a8410055aceba6654f9acb57a59ebae27c999351f50065",
+    "src/endpoints/data-maid.js": "8c957df11ff7657ccef2d867d15bd17b95022b485dfbb2fe912014e66ddcb7cf"
+  }
+}

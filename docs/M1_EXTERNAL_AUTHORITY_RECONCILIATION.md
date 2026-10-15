@@ -1,5 +1,54 @@
 # DYL-46: External authority reconciliation
 
+## PR #20 re-review corrections — 2026-10-15
+
+**Recommendation: GO for bounded feasibility under the explicitly approved replacement contracts. Compatibility: complete for the tested overlay and declared participating writers. Merge: HOLD for owner review; PR #20 stays OPEN/unmerged and DYL-46 In Review.** This does not authorize production persistence or claim exclusion of unknown writers.
+
+This section supersedes the current-result statements in the historical review/submission records below; their raw evidence remains unchanged. The re-reviewed head was `d40f637aa86f8eea1872ed368355570c9470d999`. Frozen tested proof is `59acdbc0c66cb58ed616351947cd1c83ddc85ae7`. Verified main is `104610632a58481a63d948005c2c0f7a2d07f431`; disposable SillyTavern 1.19.0 is pinned at `7e8663cd9c184a550b37238218bdd32c6efc68e9`. The supplied checkout remains clean at `4688646861274d9b5c993e9c478628d84c700144`. Final pushed head is recorded in the PR/Linear handoff. All implementation changes are browser tests or disposable-host probe overlays; production extension files remain unchanged.
+
+### Explicit owner decisions and complete regressions
+
+The owner explicitly approved conservative whole-store/restart refusal after a partially committed native rename, scoped 400 INVALID_TARGET after VERIFIED_REVOCATION, and forward clean-abort completion for the inspected malformed JSONL header rejections. [Exact decision and limits](DECISIONS.md#owner-approved-dyl-46-replacement-expectations--2026-10-15). These replace the relevant inherited expectations; this is not a claim that the old campaigns passed unchanged.
+
+| Frozen proof campaign | Complete result | Interpretation |
+| --- | --- | --- |
+| DYL-46 reconciliation | 61 expected checkpoints | 16 inherited + 45 new; includes ONE unsafe unknown-writer control |
+| DYL-42 writers | 33/33 | Unchanged writer campaign reaches complete suffix |
+| DYL-43 lifecycle | 41/41 | Approved whole-store refusal proved before independent fault-episode reset; complete suffix reached |
+| DYL-44 generations | 37/37 | External-before-local EACCES now permits later native work; partial-write and root-rollback refusal retained |
+| DYL-45 authority | 46/46 | Approved revocation/malformed expectations; enrollment/fault/account/rollback suffix complete; includes unsafe unknown-writer control |
+| Node TAP | 64/64 | No failures/skips |
+| Actual-entry Chromium, PR proof | 24/24 | Corrected missing-src assertion plus independent visibility check |
+| Actual-entry Chromium, current main + identical test correction | 24/24 | Same test SHA-256; main runtime unchanged |
+
+Counts overlap and must not be summed as independent safety guarantees. DYL-44 also preserves its unsafe unknown-write control; its root-only rollback control is now a positive refusal regression under independent authority. [Per-run commands, outcomes, input revisions and cleanup](evidence/dyl46/rereview/runs.json), [browser/main and Node commands](evidence/dyl46/rereview/regressions.json), [input/module hashes](evidence/dyl46/rereview/proof-hashes.json), [representative transition bytes](evidence/dyl46/rereview/transition-bytes.json). Complete raw records are losslessly XZ-compressed alongside the index. The three development attempts, including both failed suffixes, remain separate with [explanations](evidence/dyl46/rereview/development-notes.json).
+
+For indeterminate operations, the campaigns first prove unchanged old visual records, refused old CAS/load and native writes, unchanged pending authorities across restart, and no automatic repair. A partial rename already wrote its new card and is never called a clean abort. To continue testing independent later failures, the harness then stops its owned host and restores a complete synthetic fixture including BOTH independent authority files. These privileged resets are explicitly recorded as SYNTHETIC_ISOLATION_ONLY with hostRecovery=false. They are not a host recovery mechanism or a user-root-only rollback. Previous end-of-campaign repeated checks for isolated cases run at the stronger pending/restart boundary before that fixture is reset; they are not silently dropped. Other indeterminate delete/unlink failures likewise retain refusal.
+
+A complete suffix exposed one additional guard: rejected missing/malformed/foreign DataMaid token input occurs before the canonical deletion loop. Those exact authenticated guards now attest clean abort, preserving the native 400/403 status. The lifecycle campaign's foreign-token rejection and final second-account load prove that it cannot strand the unrelated account. This does not classify arbitrary HTTP 403/500 responses or partial loop failures as harmless.
+
+### Durable proof that native dispatch never occurred
+
+External intent now carries a host-owned `unstarted` receipt containing the operation UUID, prior serial, SHA-256 of the exact prior local reservation bytes, and finalized registry digest. It is written atomically with external generation N+1 **before** local begin. After local pending is persisted, the receipt is cleared durably **before** native code can run. There is no await between these steps; an error at either write cannot enter native routing.
+
+Only an authenticated, matching account with no active writer may reconcile that receipt. It must have the exact receipt shape/UUID, external generation N+1, local serial N without pending, matching incarnation, exact prior reservation bytes, matching independent/current registry digests, and a valid non-pending independently provisioned validation witness. Recovery writes local serial forward to N+1, then finalizes external VERIFIED_CLEAN_ABORT and removes the receipt. It never decreases the external generation, recomputes a trusted registry digest from untrusted root state, grants a client-selected receipt, or reconstructs missing authority.
+
+This closes the real local reservation-parent EACCES boundary: after permissions are restored, the unchanged prior local state can advance from the durable undispatched receipt. Same-process and restart recovery, unchanged canonical/visual bytes, fresh visual read, and subsequent ordinary native save are directly checked. A failed recovery-local write retains the receipt and can retry after the actual fault is removed. If local recovery already committed but external finalization failed, exact prior-state validation no longer holds and the store stays refused. A dispatch-fence failure after local pending likewise stays refused. No timeout or generic pending reset exists.
+
+The prior reviewed defenses remain: pending validation witnesses survive failed external writes plus byte restoration and two restarts; interrupted read-revocation cannot use an undispatched receipt to erase its witness; partial native operations retain unresolved intent; old CAS/load tokens cannot recover authority; root-only rollback and forged local serial/incarnation/store/receipt fields remain refused without adoption or enrollment. Native text remains readable in the tested refusal paths. Independent authority and its validation witness must both remain outside restorable user roots.
+
+### Browser correction and exact inputs
+
+The test now converts the optional blob-prefix expression to Boolean and separately asserts that the background is not visible. The delayed-decode fixture waits for its own decode completion before resetting the Image prototype, preventing its asynchronous continuation from escaping the fixture. The same corrected test bytes were run against current main and the frozen PR proof. [Main-only test diff](evidence/dyl46/rereview/browser-main-test.patch) makes that comparison reproducible. No renderer behavior changed. Browser: headless Chromium 151.0.7922.34, Node v26.8.1, Linux, installed pinned host libraries; synthetic local provider only.
+
+### Limits and handoff
+
+The answer to the assigned feasibility question is **yes for specifically attested non-mutation, coordinated observed-drift revocation, and the approved conservative refusal outcomes on this pinned single-process host**. Complete compatible suffixes now have direct evidence under the approved contracts. Unknown unobserved in-place writes/restores still accept obsolete authority and remain an explicit unsafe control; no universal writer coverage is established. A local advance followed by external-finalization failure, partial native effects, and interrupted validation can still require whole-store refusal. There is no production repair service, account migration, independent-authority rollback support, multi-process, power-loss/parent-directory-fsync, physical-device, real-provider or owner-experience proof. No hosted CI result is claimed.
+
+All eight new host attempts report owned-process shutdown, owned-root removal and unchanged supplied pin. [Preparation cleanup](evidence/dyl46/rereview/preparation-cleanup.json) additionally records removal of the owned preparation and main-browser worktree; the supplied project checkout stays clean. Syntax checks pass. Whitespace checks exclude the four required single-space unified-diff context lines in the encoded host patch; they are patch syntax, not applied-source trailing whitespace.
+
+Smallest next step: owner/senior review of this bounded proof and approved-contract campaign changes. Do not implement a production protocol or broaden writer coverage without separate authorization. DYL-22/23 remain Blocked, DYL-24 session-only, M1.3/M2 unauthorized, Gate A NOT_RUN. [Checksums](evidence/dyl46/rereview/SHA256SUMS) cover only this new evidence set; earlier evidence/checksums are preserved.
+
 ## PR #20 review corrections — 2026-10-15
 
 **Feasibility: REVISE. Compatibility/merge recommendation: REQUEST CHANGES / HOLD.** The two reviewed boundaries now have direct replacement proofs: the failed-observation history survives restart, and the inspected post-revocation/pre-native failure completes as VERIFIED_REVOCATION. Complete inherited compatibility remains unresolved, and the unchanged Chromium suite currently has a failing assertion. PR #20 remains open/unmerged; DYL-46 remains In Review. No owner verdict or replacement-contract approval is inferred.

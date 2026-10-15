@@ -1,0 +1,2323 @@
+{
+  "rereview-dev-reconciliation": {
+    "runId": "c01f7270-c8ba-4fd5-aa35-67b610a60229",
+    "testedSillyNovelSha": "b8d71f83d2f776cb7f832668abbd76b79f855416",
+    "sourceHostSha": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
+    "initialMainSha": "b8d71f83d2f776cb7f832668abbd76b79f855416",
+    "node": "v26.8.1",
+    "browser": "151.0.7922.34",
+    "result": "PASS_WITH_BOUNDED_CHARACTER_CHAT_LIMITS",
+    "failure": null,
+    "cleanup": {
+      "ownedRootRemoved": true,
+      "hostStopped": true,
+      "sourceCheckoutPresent": true,
+      "sourceStatusUnchanged": true
+    },
+    "files": {
+      "host-storage.mjs": "77c5397c402e40bbc1580eb55e9f6df1559d1eaa7ab9ad5178e2ba86d4bd722a",
+      "host-visit.js": "dd18e8e1b71aa3dc60e2e9e1c3e22f43064edab5f8435f5643acf0c24b2f9287",
+      "host-envelope.patch": "e73905b37c59b20a6f9844050a4152e7c25a02d1bb6ccaa9e908968ae665996d",
+      "host-probe.mjs": "c10676e4144c9ebc273b1ee39dff1c377aea317fb1b2752639a59ec849897539",
+      "dyl27-host-mount.patch": "a30ddf37b47c99d3db0e575df339e8fe3411b97914551a1351f9d0d6e312c6aa",
+      "dyl42-host-writers.patch": "af14a89522f954345914f71762b436f9ff4d9db2d3f1b22557eafd9b3d6f3b83",
+      "dyl42-writer-campaign.mjs": "210ecf940952bb2331d5e616eee6efc4317e2ad8d6c787aa9b85c5290a51fec7",
+      "dyl43-host-lifecycle.patch": "232f3cef407229df54ad41e9026bde3fcc8076419dd1ac33f616c13fffd420c7",
+      "dyl43-lifecycle-campaign.mjs": "4adb41dc3ab20755dc41e22e47e85ec35b60eafaffa4ece68e6f7e906c2b39dd",
+      "dyl44-host-generations.patch": "e4dae9a1a5d6f98db8bea0cabf589f80245dde1b150fe9c2981c7fd12770f5ce",
+      "dyl44-generation-campaign.mjs": "9051d1407cb97f830c95589c5a9b179102124a345f44b8d4523dc3b5ee118ab2",
+      "dyl45-host-authority.patch": "bb13288e7828b8551bf879a8674a94f2814866e674f4c7f208126e3222414497",
+      "dyl45-authority-campaign.mjs": "951385bea5e85bf43a92a5e7314eaed263f72440d08e723e4eb88bcfa55b246b",
+      "owned-content-index.json": "3573dde3fda762bd77bda4464fbf250b309164475e45d61548275eeb65d5c2d6",
+      "dyl46-host-reconciliation.patch": "5a1fb552f84d2c5ec1471b726f1f7a712ffe8646426cde70f2d463c0636f8f87",
+      "dyl46-reconciliation-campaign.mjs": "61c9854bd5b4f0c696d66db651e1a68a530953ebef834deb6b7dfc5ecda528fe",
+      "applied-host-storage.mjs": "3db88d802ef99a1fcdadeac112863c3a0251fc0e25cdd3d7dd89b6d54dd21961"
+    },
+    "fixtureResets": null,
+    "classification": "DEVELOPMENT_OR_FAILED_ATTEMPT",
+    "checkpoints": 61,
+    "rawFile": "rereview-dev-reconciliation.json.xz",
+    "rawSha256": "2a1971d0e46e337afa01d5e15b73736d14d5931a6c9c4787b706451b0324b053",
+    "compressedSha256": "2e33d3c87dcab5f4ddf795caa499fdcf6f900b18c2262d7788c9925a4128cdc4",
+    "command": "SN_DYL46_TRACE=1 SN_DYL46=1 SN_DYL44=baseline SN_DYL45=baseline SN_PLAYWRIGHT_MODULE=/home/dq/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs node tests/probes/dyl28/host-probe.mjs /tmp/SillyTavern-m12-review /tmp/dyl46-rereview-dev-reconciliation > /tmp/dyl46-rereview-dev-reconciliation.log 2>&1",
+    "checks": [
+      {
+        "name": "native create/save allocates host identity and sourceRevision 1 for A and B",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "delayed native A response after B: B transcript, DOM, identity and target stay current; A load token is stale",
+        "classification": "NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "A-B-A with reordered native transcript responses: only latest A request and visit remain accepted",
+        "classification": "NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "held native activation acknowledgement across A-B-A is discarded without restoring its visit",
+        "classification": "NATIVE_HOST_UI with response barrier",
+        "result": "PASS"
+      },
+      {
+        "name": "old A visual CAS held across native A-B-A is refused against the old visit",
+        "classification": "NATIVE_HOST_UI + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "canonical edit during pending load: old revision 1 is not committed, a fresh revision 2 load is activated",
+        "classification": "NATIVE_HOST_UI + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "two authenticated clients on one host process: source revision 2 shared, visit tokens distinct, one visual CAS wins without canonical mutation",
+        "classification": "EXPERIMENTAL_HOST + NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "expired load ticket after a concurrent native edit: the revision 3 snapshot is not committed, the screen keeps revision 2, and the reopen activates revision 3",
+        "classification": "NATIVE_HOST_UI with request barrier + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "identity-bearing transcript followed by the pinned host non-JSON HTTP 403 refusal: the snapshot is not committed and target stays null",
+        "classification": "NATIVE_HOST_UI with real auth middleware refusal after response barrier",
+        "result": "PASS"
+      },
+      {
+        "name": "activation acknowledgement timeout leaves visuals unavailable while native text and ordinary reply/save continue",
+        "classification": "NATIVE_HOST_UI with response abort + deterministic loopback responder",
+        "result": "PASS"
+      },
+      {
+        "name": "native Temporary Chat transition revokes the persisted-chat visit",
+        "classification": "NATIVE_HOST_UI via host functions",
+        "result": "PASS"
+      },
+      {
+        "name": "missing chat returns an empty native snapshot with no visual identity",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "native rename during pending load preserves chat ID/revision but refuses old locator-bound activation",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "different authenticated store and cookie session cannot reuse another client\u2019s load identity",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "load request expires after the host TTL and cannot grant a visit",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "host restart recovers identity, source revision and visual record; old in-memory visit is rejected and a new visit is issued",
+        "classification": "EXPERIMENTAL_HOST + NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 EACCES rename: verified pre-native guard failure reconciles forward",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 EACCES delete: verified pre-native guard failure reconciles forward",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 post-revocation rename inspected failure finalizes VERIFIED_REVOCATION, never clean abort",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 post-revocation rename restart retains revocation and permits healthy native/visual work",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 post-revocation delete inspected failure finalizes VERIFIED_REVOCATION, never clean abort",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 post-revocation delete restart retains revocation and permits healthy native/visual work",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 post-revocation import inspected failure finalizes VERIFIED_REVOCATION, never clean abort",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 post-revocation import restart retains revocation and permits healthy native/visual work",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 post-revocation reservation finalization failure remains durably refused",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 post-revocation external finalization failure remains durably refused",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 malformed-header HTTP 200 error attests clean abort before import commit",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 ordinary native save and restart work after malformed-header clean abort",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 completed revocation plus unrelated clean abort permits fresh enrollment without visual inheritance",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 F5/F6 read revocation owns reservation; competing save/read/enrollment never mutates; restored bytes stay revoked",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 eligible enrollment loses during revocation and succeeds with fresh scope after completion",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 completed scoped revocation persists through restart; unrelated native and visual operations resume",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 F5 native writer first: read refuses, no nested reservation/deadlock, later observation revokes",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 F1 real external-directory EACCES leaves durable validation refusal after restored bytes and restart",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 F1 external intent failure persists validation refusal despite restored bytes and restart",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 F2 reconciliation local-begin failure remains pending across restart",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 F3 reconciliation finalize failure remains pending across restart",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 F4 owned process stops at revocation barrier; durable pending intent survives restart",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 external-before-local durable receipt reconciles forward on authenticated load after restart",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 clean-abort finalize fault never releases pending evidence on restart",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 real local-parent EACCES: exact independently persisted unstarted receipt permits forward recovery and next native save",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 same-process authenticated visual read recovers unstarted intent without replacing its prior visit",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 forward recovery local persistence failure never adopts incomplete state",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 forward recovery finalize persistence failure never adopts incomplete state",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 receipt cannot be blindly cleared when local reservation already committed and dispatch fence failed",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 AUTHORITY_UNAVAILABLE missing: no local reconstruction or clean-abort bypass",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 AUTHORITY_UNAVAILABLE corrupt: no local reconstruction or clean-abort bypass",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 AUTHORITY_UNAVAILABLE wrong-account: no local reconstruction or clean-abort bypass",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 F7 partial native card write is INDETERMINATE; matching transcript cannot attest abort",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 F8 two authenticated accounts: submitted store/generation/target cannot select foreign authority",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 healthy read revocation, explicit fresh enrollment and old held CAS/load remain isolated",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 fresh enrolled authority persists across restart",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 COUNTEREXAMPLE unknown in-place restore still accepts old authority",
+        "classification": "SYNTHETIC",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 review regression: failed external intent plus unknown byte restore refuses old identity through two restarts",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 validation witness begin failure never grants authority or invents history",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 validation witness finalize failure never grants authority or invents history",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 validation witness missing is never reconstructed or adopted",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 validation witness corrupt is never reconstructed or adopted",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 validation witness binding is never reconstructed or adopted",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 root rollback refuses every recovery entry and enrollment through two restarts without adoption",
+        "classification": "SYNTHETIC restore + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 forged local serial/incarnation/store UUID without finalized registry history remains refused",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      }
+    ]
+  },
+  "rereview-dev-lifecycle": {
+    "runId": "cab34e8a-1693-4080-b691-249347b351f8",
+    "testedSillyNovelSha": "b8d71f83d2f776cb7f832668abbd76b79f855416",
+    "sourceHostSha": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
+    "initialMainSha": "b8d71f83d2f776cb7f832668abbd76b79f855416",
+    "node": "v26.8.1",
+    "browser": "151.0.7922.34",
+    "result": "FAIL",
+    "failure": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok((await load(otherAvatar, otherName, other)).target)\n\n    at run (file:///tmp/sillynovel-dyl46-worktree/tests/probes/dyl43/lifecycle-campaign.mjs:314:12)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///tmp/sillynovel-dyl46-worktree/tests/probes/dyl28/host-probe.mjs:865:9",
+    "cleanup": {
+      "ownedRootRemoved": true,
+      "hostStopped": true,
+      "sourceCheckoutPresent": true,
+      "sourceStatusUnchanged": true
+    },
+    "files": {
+      "host-storage.mjs": "77c5397c402e40bbc1580eb55e9f6df1559d1eaa7ab9ad5178e2ba86d4bd722a",
+      "host-visit.js": "dd18e8e1b71aa3dc60e2e9e1c3e22f43064edab5f8435f5643acf0c24b2f9287",
+      "host-envelope.patch": "e73905b37c59b20a6f9844050a4152e7c25a02d1bb6ccaa9e908968ae665996d",
+      "host-probe.mjs": "c10676e4144c9ebc273b1ee39dff1c377aea317fb1b2752639a59ec849897539",
+      "dyl27-host-mount.patch": "a30ddf37b47c99d3db0e575df339e8fe3411b97914551a1351f9d0d6e312c6aa",
+      "dyl42-host-writers.patch": "af14a89522f954345914f71762b436f9ff4d9db2d3f1b22557eafd9b3d6f3b83",
+      "dyl42-writer-campaign.mjs": "210ecf940952bb2331d5e616eee6efc4317e2ad8d6c787aa9b85c5290a51fec7",
+      "dyl43-host-lifecycle.patch": "232f3cef407229df54ad41e9026bde3fcc8076419dd1ac33f616c13fffd420c7",
+      "dyl43-lifecycle-campaign.mjs": "4adb41dc3ab20755dc41e22e47e85ec35b60eafaffa4ece68e6f7e906c2b39dd",
+      "dyl44-host-generations.patch": "e4dae9a1a5d6f98db8bea0cabf589f80245dde1b150fe9c2981c7fd12770f5ce",
+      "dyl44-generation-campaign.mjs": "9051d1407cb97f830c95589c5a9b179102124a345f44b8d4523dc3b5ee118ab2",
+      "dyl45-host-authority.patch": "bb13288e7828b8551bf879a8674a94f2814866e674f4c7f208126e3222414497",
+      "dyl45-authority-campaign.mjs": "951385bea5e85bf43a92a5e7314eaed263f72440d08e723e4eb88bcfa55b246b",
+      "owned-content-index.json": "3573dde3fda762bd77bda4464fbf250b309164475e45d61548275eeb65d5c2d6",
+      "dyl46-host-reconciliation.patch": "5a1fb552f84d2c5ec1471b726f1f7a712ffe8646426cde70f2d463c0636f8f87",
+      "dyl46-reconciliation-campaign.mjs": "61c9854bd5b4f0c696d66db651e1a68a530953ebef834deb6b7dfc5ecda528fe",
+      "applied-host-storage.mjs": "3db88d802ef99a1fcdadeac112863c3a0251fc0e25cdd3d7dd89b6d54dd21961"
+    },
+    "fixtureResets": [
+      {
+        "classification": "SYNTHETIC_ISOLATION_ONLY",
+        "handle": "default-user",
+        "independentSha256": [
+          [
+            "host-authority/6298b3c7619c17e6fa025a59bd6a7d83ced340719adfde597dbe9f010a031572.json",
+            "7d7e551cd9d62d8192940113c24936646069fb77b668fa5dbc352856d0c1d772"
+          ],
+          [
+            "host-authority/validation/6298b3c7619c17e6fa025a59bd6a7d83ced340719adfde597dbe9f010a031572.json",
+            "1dc553a0f209ae0a788ab45f443cb7414ce1fc03b3b27c4c6a6d46d16ba0cd32"
+          ]
+        ],
+        "hostRecovery": false
+      },
+      {
+        "classification": "SYNTHETIC_ISOLATION_ONLY",
+        "handle": "default-user",
+        "independentSha256": [
+          [
+            "host-authority/6298b3c7619c17e6fa025a59bd6a7d83ced340719adfde597dbe9f010a031572.json",
+            "c62f2e05046dd76bd8155c6720072336597a5aa475881cec1b934c7c93fd5f6f"
+          ],
+          [
+            "host-authority/validation/6298b3c7619c17e6fa025a59bd6a7d83ced340719adfde597dbe9f010a031572.json",
+            "1dc553a0f209ae0a788ab45f443cb7414ce1fc03b3b27c4c6a6d46d16ba0cd32"
+          ]
+        ],
+        "hostRecovery": false
+      },
+      {
+        "classification": "SYNTHETIC_ISOLATION_ONLY",
+        "handle": "default-user",
+        "independentSha256": [
+          [
+            "host-authority/6298b3c7619c17e6fa025a59bd6a7d83ced340719adfde597dbe9f010a031572.json",
+            "f715dc92923fe51c0d30033125d455386e984e6667d08e62d72cb9665d17a0d1"
+          ],
+          [
+            "host-authority/validation/6298b3c7619c17e6fa025a59bd6a7d83ced340719adfde597dbe9f010a031572.json",
+            "1dc553a0f209ae0a788ab45f443cb7414ce1fc03b3b27c4c6a6d46d16ba0cd32"
+          ]
+        ],
+        "hostRecovery": false
+      }
+    ],
+    "classification": "DEVELOPMENT_OR_FAILED_ATTEMPT",
+    "checkpoints": 40,
+    "rawFile": "rereview-dev-lifecycle.json.xz",
+    "rawSha256": "dcb6df2dcf4b470f325ae0e20f23de6d0fb7872423ed85b242fc836fa821b6df",
+    "compressedSha256": "20dfa02acf7b9995e77dbf178aadf60f26c3f10d3429ee4854982a074c50125e",
+    "command": "SN_DYL46_TRACE=1 SN_DYL46=baseline SN_DYL44=baseline SN_DYL45=baseline SN_DYL43=1 SN_PLAYWRIGHT_MODULE=/home/dq/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs node tests/probes/dyl28/host-probe.mjs /tmp/SillyTavern-m12-review /tmp/dyl46-rereview-dev-lifecycle > /tmp/dyl46-rereview-dev-lifecycle.log 2>&1",
+    "checks": [
+      {
+        "name": "native create/save allocates host identity and sourceRevision 1 for A and B",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "delayed native A response after B: B transcript, DOM, identity and target stay current; A load token is stale",
+        "classification": "NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "A-B-A with reordered native transcript responses: only latest A request and visit remain accepted",
+        "classification": "NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "held native activation acknowledgement across A-B-A is discarded without restoring its visit",
+        "classification": "NATIVE_HOST_UI with response barrier",
+        "result": "PASS"
+      },
+      {
+        "name": "old A visual CAS held across native A-B-A is refused against the old visit",
+        "classification": "NATIVE_HOST_UI + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "canonical edit during pending load: old revision 1 is not committed, a fresh revision 2 load is activated",
+        "classification": "NATIVE_HOST_UI + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "two authenticated clients on one host process: source revision 2 shared, visit tokens distinct, one visual CAS wins without canonical mutation",
+        "classification": "EXPERIMENTAL_HOST + NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "expired load ticket after a concurrent native edit: the revision 3 snapshot is not committed, the screen keeps revision 2, and the reopen activates revision 3",
+        "classification": "NATIVE_HOST_UI with request barrier + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "identity-bearing transcript followed by the pinned host non-JSON HTTP 403 refusal: the snapshot is not committed and target stays null",
+        "classification": "NATIVE_HOST_UI with real auth middleware refusal after response barrier",
+        "result": "PASS"
+      },
+      {
+        "name": "activation acknowledgement timeout leaves visuals unavailable while native text and ordinary reply/save continue",
+        "classification": "NATIVE_HOST_UI with response abort + deterministic loopback responder",
+        "result": "PASS"
+      },
+      {
+        "name": "native Temporary Chat transition revokes the persisted-chat visit",
+        "classification": "NATIVE_HOST_UI via host functions",
+        "result": "PASS"
+      },
+      {
+        "name": "missing chat returns an empty native snapshot with no visual identity",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "native rename during pending load preserves chat ID/revision but refuses old locator-bound activation",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "different authenticated store and cookie session cannot reuse another client\u2019s load identity",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "load request expires after the host TTL and cannot grant a visit",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "host restart recovers identity, source revision and visual record; old in-memory visit is rejected and a new visit is issued",
+        "classification": "EXPERIMENTAL_HOST + NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 native browser rename with historical messages, moved directory, reused old name and independent stores",
+        "classification": "NATIVE_HOST_UI + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 native delete/recreate same avatar and identical transcript does not inherit authority",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 native card duplicate copies forged metadata byte-for-byte but grants no scope/chat/visual identity",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 F1 EACCES rename refuses before canonical ownership changes",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 F1 EACCES delete refuses before canonical ownership changes",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 F2 rename after durable revocation refuses old CAS/load despite unchanged canonical files",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 F2 delete after durable revocation refuses old CAS/load despite unchanged canonical files",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 approved conservative failure remains whole-store refused through restart",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 F5 interrupted native rename after new card write leaves both cards and old chats without authority",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 approved conservative failure remains whole-store refused through restart",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 F5 native delete unlinks card then chat-removal EACCES leaves remaining chats revoked",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 native rename into an orphan registered destination revokes both scopes even when native directory move is skipped",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 approved conservative failure remains whole-store refused through restart",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 Data Maid native report/delete token isolation, F1 EACCES, F2 unlink EACCES and identical-byte recreation refusal",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 unhooked chat unlink observed at host boundary remains revoked after identical-byte restoration",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 observed unknown write latches chat revocation; restored pre-drift bytes cannot resurrect",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 BLOCKING negative control: unobserved in-place write/restoration preserves old seal and authority",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 F2 card import refused after durable all-scope revocation without restoring authority",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 real native JSON card replacement with copied metadata, F1 refusal and conservative all-scope invalidation",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 F3 process restart retains permanent lifecycle tombstones without finalization or automatic recovery",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 F4 missing registry across restart keeps native transcript readable and visual authority unavailable",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 F4 corrupt registry across restart keeps native transcript readable and visual authority unavailable",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 F1 native save cannot swallow pending-intent EACCES and mutate canonical bytes",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 F3 native save finalization fault leaves durable whole-store pending refusal after restart",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      }
+    ]
+  },
+  "rereview-dev-authority": {
+    "runId": "76505a59-7c03-4e1e-a9fd-49d97f2c2f1f",
+    "testedSillyNovelSha": "b8d71f83d2f776cb7f832668abbd76b79f855416",
+    "sourceHostSha": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
+    "initialMainSha": "b8d71f83d2f776cb7f832668abbd76b79f855416",
+    "node": "v26.8.1",
+    "browser": "151.0.7922.34",
+    "result": "FAIL",
+    "failure": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(logicalRecovery.target)\n\n    at run (file:///tmp/sillynovel-dyl46-worktree/tests/probes/dyl45/authority-campaign.mjs:183:72)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///tmp/sillynovel-dyl46-worktree/tests/probes/dyl28/host-probe.mjs:876:9",
+    "cleanup": {
+      "ownedRootRemoved": true,
+      "hostStopped": true,
+      "sourceCheckoutPresent": true,
+      "sourceStatusUnchanged": true
+    },
+    "files": {
+      "host-storage.mjs": "77c5397c402e40bbc1580eb55e9f6df1559d1eaa7ab9ad5178e2ba86d4bd722a",
+      "host-visit.js": "dd18e8e1b71aa3dc60e2e9e1c3e22f43064edab5f8435f5643acf0c24b2f9287",
+      "host-envelope.patch": "e73905b37c59b20a6f9844050a4152e7c25a02d1bb6ccaa9e908968ae665996d",
+      "host-probe.mjs": "c10676e4144c9ebc273b1ee39dff1c377aea317fb1b2752639a59ec849897539",
+      "dyl27-host-mount.patch": "a30ddf37b47c99d3db0e575df339e8fe3411b97914551a1351f9d0d6e312c6aa",
+      "dyl42-host-writers.patch": "af14a89522f954345914f71762b436f9ff4d9db2d3f1b22557eafd9b3d6f3b83",
+      "dyl42-writer-campaign.mjs": "210ecf940952bb2331d5e616eee6efc4317e2ad8d6c787aa9b85c5290a51fec7",
+      "dyl43-host-lifecycle.patch": "232f3cef407229df54ad41e9026bde3fcc8076419dd1ac33f616c13fffd420c7",
+      "dyl43-lifecycle-campaign.mjs": "4adb41dc3ab20755dc41e22e47e85ec35b60eafaffa4ece68e6f7e906c2b39dd",
+      "dyl44-host-generations.patch": "e4dae9a1a5d6f98db8bea0cabf589f80245dde1b150fe9c2981c7fd12770f5ce",
+      "dyl44-generation-campaign.mjs": "9051d1407cb97f830c95589c5a9b179102124a345f44b8d4523dc3b5ee118ab2",
+      "dyl45-host-authority.patch": "bb13288e7828b8551bf879a8674a94f2814866e674f4c7f208126e3222414497",
+      "dyl45-authority-campaign.mjs": "951385bea5e85bf43a92a5e7314eaed263f72440d08e723e4eb88bcfa55b246b",
+      "owned-content-index.json": "3573dde3fda762bd77bda4464fbf250b309164475e45d61548275eeb65d5c2d6",
+      "dyl46-host-reconciliation.patch": "5a1fb552f84d2c5ec1471b726f1f7a712ffe8646426cde70f2d463c0636f8f87",
+      "dyl46-reconciliation-campaign.mjs": "61c9854bd5b4f0c696d66db651e1a68a530953ebef834deb6b7dfc5ecda528fe",
+      "applied-host-storage.mjs": "3db88d802ef99a1fcdadeac112863c3a0251fc0e25cdd3d7dd89b6d54dd21961"
+    },
+    "fixtureResets": null,
+    "classification": "DEVELOPMENT_OR_FAILED_ATTEMPT",
+    "checkpoints": 32,
+    "rawFile": "rereview-dev-authority.json.xz",
+    "rawSha256": "50c386ef47bf6d1418955df1185671fc22bde561d922def558bb854c0b546974",
+    "compressedSha256": "469a0e38480fd3a8c8108f9e22752fd65b54ee7b534eca27fc8f69029908c5ac",
+    "command": "SN_DYL46_TRACE=1 SN_DYL46=baseline SN_DYL44=baseline SN_DYL45=1 SN_PLAYWRIGHT_MODULE=/home/dq/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs node tests/probes/dyl28/host-probe.mjs /tmp/SillyTavern-m12-review /tmp/dyl46-rereview-dev-authority > /tmp/dyl46-rereview-dev-authority.log 2>&1",
+    "checks": [
+      {
+        "name": "native create/save allocates host identity and sourceRevision 1 for A and B",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "delayed native A response after B: B transcript, DOM, identity and target stay current; A load token is stale",
+        "classification": "NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "A-B-A with reordered native transcript responses: only latest A request and visit remain accepted",
+        "classification": "NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "held native activation acknowledgement across A-B-A is discarded without restoring its visit",
+        "classification": "NATIVE_HOST_UI with response barrier",
+        "result": "PASS"
+      },
+      {
+        "name": "old A visual CAS held across native A-B-A is refused against the old visit",
+        "classification": "NATIVE_HOST_UI + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "canonical edit during pending load: old revision 1 is not committed, a fresh revision 2 load is activated",
+        "classification": "NATIVE_HOST_UI + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "two authenticated clients on one host process: source revision 2 shared, visit tokens distinct, one visual CAS wins without canonical mutation",
+        "classification": "EXPERIMENTAL_HOST + NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "expired load ticket after a concurrent native edit: the revision 3 snapshot is not committed, the screen keeps revision 2, and the reopen activates revision 3",
+        "classification": "NATIVE_HOST_UI with request barrier + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "identity-bearing transcript followed by the pinned host non-JSON HTTP 403 refusal: the snapshot is not committed and target stays null",
+        "classification": "NATIVE_HOST_UI with real auth middleware refusal after response barrier",
+        "result": "PASS"
+      },
+      {
+        "name": "activation acknowledgement timeout leaves visuals unavailable while native text and ordinary reply/save continue",
+        "classification": "NATIVE_HOST_UI with response abort + deterministic loopback responder",
+        "result": "PASS"
+      },
+      {
+        "name": "native Temporary Chat transition revokes the persisted-chat visit",
+        "classification": "NATIVE_HOST_UI via host functions",
+        "result": "PASS"
+      },
+      {
+        "name": "missing chat returns an empty native snapshot with no visual identity",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "native rename during pending load preserves chat ID/revision but refuses old locator-bound activation",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "different authenticated store and cookie session cannot reuse another client\u2019s load identity",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "load request expires after the host TTL and cannot grant a visit",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "host restart recovers identity, source revision and visual record; old in-memory visit is rejected and a new visit is issued",
+        "classification": "EXPERIMENTAL_HOST + NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 identical participating save advances external/local generation and refuses old target",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 COUNTEREXAMPLE unknown in-place restore/copy still accepts old authority",
+        "classification": "SYNTHETIC",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 explicit same-name same-card same-byte re-enrollment mints fresh IDs; copied metadata ignored; held old CAS/load refuse",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 explicit re-enrollment succeeds after restart under fresh identity",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 enrollment overlapping enrollment: one owner; loser refuses before mutation",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 enrollment overlapping rename: one owner; loser refuses before mutation",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 enrollment overlapping import: one owner; loser refuses before mutation",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 enrollment overlapping delete: one owner; loser refuses before mutation",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 native rename wins against enrollment; revoked identity never returns",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 F1 injected external write failure precedes native mutation",
+        "classification": "SYNTHETIC",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 F1 real external-directory EACCES prevents native mutation",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 F2 durable unstarted receipt reconciles forward after restart, without native mutation",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 F3 external/local registry-finalize failure stays refused after restart",
+        "classification": "SYNTHETIC",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 F3 external/local reservation-finalize failure stays refused after restart",
+        "classification": "SYNTHETIC",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 F3 external/local finalize failure stays refused after restart",
+        "classification": "SYNTHETIC",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 F2 native mutation fails after external advance; unchanged canonical bytes confer no authority",
+        "classification": "SYNTHETIC",
+        "result": "PASS"
+      }
+    ]
+  },
+  "rereview-final-reconciliation": {
+    "runId": "e8f28ff6-f3b7-42dd-a3f4-7d5761f1e454",
+    "testedSillyNovelSha": "59acdbc0c66cb58ed616351947cd1c83ddc85ae7",
+    "sourceHostSha": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
+    "initialMainSha": "59acdbc0c66cb58ed616351947cd1c83ddc85ae7",
+    "node": "v26.8.1",
+    "browser": "151.0.7922.34",
+    "result": "PASS_WITH_BOUNDED_CHARACTER_CHAT_LIMITS",
+    "failure": null,
+    "cleanup": {
+      "ownedRootRemoved": true,
+      "hostStopped": true,
+      "sourceCheckoutPresent": true,
+      "sourceStatusUnchanged": true
+    },
+    "files": {
+      "host-storage.mjs": "77c5397c402e40bbc1580eb55e9f6df1559d1eaa7ab9ad5178e2ba86d4bd722a",
+      "host-visit.js": "dd18e8e1b71aa3dc60e2e9e1c3e22f43064edab5f8435f5643acf0c24b2f9287",
+      "host-envelope.patch": "e73905b37c59b20a6f9844050a4152e7c25a02d1bb6ccaa9e908968ae665996d",
+      "host-probe.mjs": "e4d61e24d0c103578d8637b4d70d60bee946f33e82ac02618cb03d4072148110",
+      "dyl27-host-mount.patch": "a30ddf37b47c99d3db0e575df339e8fe3411b97914551a1351f9d0d6e312c6aa",
+      "dyl42-host-writers.patch": "af14a89522f954345914f71762b436f9ff4d9db2d3f1b22557eafd9b3d6f3b83",
+      "dyl42-writer-campaign.mjs": "210ecf940952bb2331d5e616eee6efc4317e2ad8d6c787aa9b85c5290a51fec7",
+      "dyl43-host-lifecycle.patch": "232f3cef407229df54ad41e9026bde3fcc8076419dd1ac33f616c13fffd420c7",
+      "dyl43-lifecycle-campaign.mjs": "4adb41dc3ab20755dc41e22e47e85ec35b60eafaffa4ece68e6f7e906c2b39dd",
+      "dyl44-host-generations.patch": "e4dae9a1a5d6f98db8bea0cabf589f80245dde1b150fe9c2981c7fd12770f5ce",
+      "dyl44-generation-campaign.mjs": "9051d1407cb97f830c95589c5a9b179102124a345f44b8d4523dc3b5ee118ab2",
+      "dyl45-host-authority.patch": "bb13288e7828b8551bf879a8674a94f2814866e674f4c7f208126e3222414497",
+      "dyl45-authority-campaign.mjs": "4d4158636fb083949585b7024e76deee167e95f802e18378d7a3e4752dd571ea",
+      "owned-content-index.json": "3573dde3fda762bd77bda4464fbf250b309164475e45d61548275eeb65d5c2d6",
+      "dyl46-host-reconciliation.patch": "1e45477101018377f51a63f675252950b62aa4a5f9941cafcee2315f3f69e231",
+      "dyl46-reconciliation-campaign.mjs": "d5ec789a9b0533880ed63aa775c782aa8b1724b0f427f655623962a05183156c",
+      "applied-host-storage.mjs": "3db88d802ef99a1fcdadeac112863c3a0251fc0e25cdd3d7dd89b6d54dd21961"
+    },
+    "fixtureResets": null,
+    "classification": "FROZEN_PROOF",
+    "checkpoints": 61,
+    "rawFile": "rereview-final-reconciliation.json.xz",
+    "rawSha256": "feabc0683efd351e762cf1037491ac6d32600f2d3fc85695ef5e783a9f13e4b4",
+    "compressedSha256": "7468fe0d982a99fe00f59b59e3c37c1f3e2c075ebdf9d81a1d6bad56a7cdefee",
+    "command": "SN_DYL46_TRACE=1 SN_DYL46=1 SN_DYL44=baseline SN_DYL45=baseline SN_PLAYWRIGHT_MODULE=/home/dq/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs node tests/probes/dyl28/host-probe.mjs /tmp/SillyTavern-m12-review /tmp/dyl46-rereview-final-reconciliation > /tmp/dyl46-rereview-final-reconciliation.log 2>&1",
+    "checks": [
+      {
+        "name": "native create/save allocates host identity and sourceRevision 1 for A and B",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "delayed native A response after B: B transcript, DOM, identity and target stay current; A load token is stale",
+        "classification": "NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "A-B-A with reordered native transcript responses: only latest A request and visit remain accepted",
+        "classification": "NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "held native activation acknowledgement across A-B-A is discarded without restoring its visit",
+        "classification": "NATIVE_HOST_UI with response barrier",
+        "result": "PASS"
+      },
+      {
+        "name": "old A visual CAS held across native A-B-A is refused against the old visit",
+        "classification": "NATIVE_HOST_UI + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "canonical edit during pending load: old revision 1 is not committed, a fresh revision 2 load is activated",
+        "classification": "NATIVE_HOST_UI + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "two authenticated clients on one host process: source revision 2 shared, visit tokens distinct, one visual CAS wins without canonical mutation",
+        "classification": "EXPERIMENTAL_HOST + NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "expired load ticket after a concurrent native edit: the revision 3 snapshot is not committed, the screen keeps revision 2, and the reopen activates revision 3",
+        "classification": "NATIVE_HOST_UI with request barrier + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "identity-bearing transcript followed by the pinned host non-JSON HTTP 403 refusal: the snapshot is not committed and target stays null",
+        "classification": "NATIVE_HOST_UI with real auth middleware refusal after response barrier",
+        "result": "PASS"
+      },
+      {
+        "name": "activation acknowledgement timeout leaves visuals unavailable while native text and ordinary reply/save continue",
+        "classification": "NATIVE_HOST_UI with response abort + deterministic loopback responder",
+        "result": "PASS"
+      },
+      {
+        "name": "native Temporary Chat transition revokes the persisted-chat visit",
+        "classification": "NATIVE_HOST_UI via host functions",
+        "result": "PASS"
+      },
+      {
+        "name": "missing chat returns an empty native snapshot with no visual identity",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "native rename during pending load preserves chat ID/revision but refuses old locator-bound activation",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "different authenticated store and cookie session cannot reuse another client\u2019s load identity",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "load request expires after the host TTL and cannot grant a visit",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "host restart recovers identity, source revision and visual record; old in-memory visit is rejected and a new visit is issued",
+        "classification": "EXPERIMENTAL_HOST + NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 EACCES rename: verified pre-native guard failure reconciles forward",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 EACCES delete: verified pre-native guard failure reconciles forward",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 post-revocation rename inspected failure finalizes VERIFIED_REVOCATION, never clean abort",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 post-revocation rename restart retains revocation and permits healthy native/visual work",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 post-revocation delete inspected failure finalizes VERIFIED_REVOCATION, never clean abort",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 post-revocation delete restart retains revocation and permits healthy native/visual work",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 post-revocation import inspected failure finalizes VERIFIED_REVOCATION, never clean abort",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 post-revocation import restart retains revocation and permits healthy native/visual work",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 post-revocation reservation finalization failure remains durably refused",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 post-revocation external finalization failure remains durably refused",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 malformed-header HTTP 200 error attests clean abort before import commit",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 ordinary native save and restart work after malformed-header clean abort",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 completed revocation plus unrelated clean abort permits fresh enrollment without visual inheritance",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 F5/F6 read revocation owns reservation; competing save/read/enrollment never mutates; restored bytes stay revoked",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 eligible enrollment loses during revocation and succeeds with fresh scope after completion",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 completed scoped revocation persists through restart; unrelated native and visual operations resume",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 F5 native writer first: read refuses, no nested reservation/deadlock, later observation revokes",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 F1 real external-directory EACCES leaves durable validation refusal after restored bytes and restart",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 F1 external intent failure persists validation refusal despite restored bytes and restart",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 F2 reconciliation local-begin failure remains pending across restart",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 F3 reconciliation finalize failure remains pending across restart",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 F4 owned process stops at revocation barrier; durable pending intent survives restart",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 external-before-local durable receipt reconciles forward on authenticated load after restart",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 clean-abort finalize fault never releases pending evidence on restart",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 real local-parent EACCES: exact independently persisted unstarted receipt permits forward recovery and next native save",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 same-process authenticated visual read recovers unstarted intent without replacing its prior visit",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 forward recovery local persistence failure never adopts incomplete state",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 forward recovery finalize persistence failure never adopts incomplete state",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 receipt cannot be blindly cleared when local reservation already committed and dispatch fence failed",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 AUTHORITY_UNAVAILABLE missing: no local reconstruction or clean-abort bypass",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 AUTHORITY_UNAVAILABLE corrupt: no local reconstruction or clean-abort bypass",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 AUTHORITY_UNAVAILABLE wrong-account: no local reconstruction or clean-abort bypass",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 F7 partial native card write is INDETERMINATE; matching transcript cannot attest abort",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 F8 two authenticated accounts: submitted store/generation/target cannot select foreign authority",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 healthy read revocation, explicit fresh enrollment and old held CAS/load remain isolated",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 fresh enrolled authority persists across restart",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 COUNTEREXAMPLE unknown in-place restore still accepts old authority",
+        "classification": "SYNTHETIC",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 review regression: failed external intent plus unknown byte restore refuses old identity through two restarts",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 validation witness begin failure never grants authority or invents history",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 validation witness finalize failure never grants authority or invents history",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 validation witness missing is never reconstructed or adopted",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 validation witness corrupt is never reconstructed or adopted",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 validation witness binding is never reconstructed or adopted",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 root rollback refuses every recovery entry and enrollment through two restarts without adoption",
+        "classification": "SYNTHETIC restore + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-46 forged local serial/incarnation/store UUID without finalized registry history remains refused",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      }
+    ]
+  },
+  "rereview-final-writers": {
+    "runId": "a0c59779-6ca5-4da6-9930-b5f35d22a331",
+    "testedSillyNovelSha": "59acdbc0c66cb58ed616351947cd1c83ddc85ae7",
+    "sourceHostSha": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
+    "initialMainSha": "59acdbc0c66cb58ed616351947cd1c83ddc85ae7",
+    "node": "v26.8.1",
+    "browser": "151.0.7922.34",
+    "result": "PASS_WITH_BOUNDED_CHARACTER_CHAT_LIMITS",
+    "failure": null,
+    "cleanup": {
+      "ownedRootRemoved": true,
+      "hostStopped": true,
+      "sourceCheckoutPresent": true,
+      "sourceStatusUnchanged": true
+    },
+    "files": {
+      "host-storage.mjs": "77c5397c402e40bbc1580eb55e9f6df1559d1eaa7ab9ad5178e2ba86d4bd722a",
+      "host-visit.js": "dd18e8e1b71aa3dc60e2e9e1c3e22f43064edab5f8435f5643acf0c24b2f9287",
+      "host-envelope.patch": "e73905b37c59b20a6f9844050a4152e7c25a02d1bb6ccaa9e908968ae665996d",
+      "host-probe.mjs": "e4d61e24d0c103578d8637b4d70d60bee946f33e82ac02618cb03d4072148110",
+      "dyl27-host-mount.patch": "a30ddf37b47c99d3db0e575df339e8fe3411b97914551a1351f9d0d6e312c6aa",
+      "dyl42-host-writers.patch": "af14a89522f954345914f71762b436f9ff4d9db2d3f1b22557eafd9b3d6f3b83",
+      "dyl42-writer-campaign.mjs": "210ecf940952bb2331d5e616eee6efc4317e2ad8d6c787aa9b85c5290a51fec7",
+      "dyl43-host-lifecycle.patch": "232f3cef407229df54ad41e9026bde3fcc8076419dd1ac33f616c13fffd420c7",
+      "dyl43-lifecycle-campaign.mjs": "4adb41dc3ab20755dc41e22e47e85ec35b60eafaffa4ece68e6f7e906c2b39dd",
+      "dyl44-host-generations.patch": "e4dae9a1a5d6f98db8bea0cabf589f80245dde1b150fe9c2981c7fd12770f5ce",
+      "dyl44-generation-campaign.mjs": "9051d1407cb97f830c95589c5a9b179102124a345f44b8d4523dc3b5ee118ab2",
+      "dyl45-host-authority.patch": "bb13288e7828b8551bf879a8674a94f2814866e674f4c7f208126e3222414497",
+      "dyl45-authority-campaign.mjs": "4d4158636fb083949585b7024e76deee167e95f802e18378d7a3e4752dd571ea",
+      "owned-content-index.json": "3573dde3fda762bd77bda4464fbf250b309164475e45d61548275eeb65d5c2d6",
+      "dyl46-host-reconciliation.patch": "1e45477101018377f51a63f675252950b62aa4a5f9941cafcee2315f3f69e231",
+      "dyl46-reconciliation-campaign.mjs": "d5ec789a9b0533880ed63aa775c782aa8b1724b0f427f655623962a05183156c",
+      "applied-host-storage.mjs": "3db88d802ef99a1fcdadeac112863c3a0251fc0e25cdd3d7dd89b6d54dd21961"
+    },
+    "fixtureResets": null,
+    "classification": "FROZEN_PROOF",
+    "checkpoints": 33,
+    "rawFile": "rereview-final-writers.json.xz",
+    "rawSha256": "29c2333cfce87a31b76141acbfc07a35e9e74e1b4a8a57c56c7b5263014134b6",
+    "compressedSha256": "25cdf5b43ef8dbbdd28676c1c7e1476673b8bece5461d64869bd20ee90cc9d2c",
+    "command": "SN_DYL46_TRACE=1 SN_DYL46=baseline SN_DYL44=baseline SN_DYL45=baseline SN_DYL42=1 SN_PLAYWRIGHT_MODULE=/home/dq/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs node tests/probes/dyl28/host-probe.mjs /tmp/SillyTavern-m12-review /tmp/dyl46-rereview-final-writers > /tmp/dyl46-rereview-final-writers.log 2>&1",
+    "checks": [
+      {
+        "name": "native create/save allocates host identity and sourceRevision 1 for A and B",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "delayed native A response after B: B transcript, DOM, identity and target stay current; A load token is stale",
+        "classification": "NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "A-B-A with reordered native transcript responses: only latest A request and visit remain accepted",
+        "classification": "NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "held native activation acknowledgement across A-B-A is discarded without restoring its visit",
+        "classification": "NATIVE_HOST_UI with response barrier",
+        "result": "PASS"
+      },
+      {
+        "name": "old A visual CAS held across native A-B-A is refused against the old visit",
+        "classification": "NATIVE_HOST_UI + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "canonical edit during pending load: old revision 1 is not committed, a fresh revision 2 load is activated",
+        "classification": "NATIVE_HOST_UI + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "two authenticated clients on one host process: source revision 2 shared, visit tokens distinct, one visual CAS wins without canonical mutation",
+        "classification": "EXPERIMENTAL_HOST + NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "expired load ticket after a concurrent native edit: the revision 3 snapshot is not committed, the screen keeps revision 2, and the reopen activates revision 3",
+        "classification": "NATIVE_HOST_UI with request barrier + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "identity-bearing transcript followed by the pinned host non-JSON HTTP 403 refusal: the snapshot is not committed and target stays null",
+        "classification": "NATIVE_HOST_UI with real auth middleware refusal after response barrier",
+        "result": "PASS"
+      },
+      {
+        "name": "activation acknowledgement timeout leaves visuals unavailable while native text and ordinary reply/save continue",
+        "classification": "NATIVE_HOST_UI with response abort + deterministic loopback responder",
+        "result": "PASS"
+      },
+      {
+        "name": "native Temporary Chat transition revokes the persisted-chat visit",
+        "classification": "NATIVE_HOST_UI via host functions",
+        "result": "PASS"
+      },
+      {
+        "name": "missing chat returns an empty native snapshot with no visual identity",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "native rename during pending load preserves chat ID/revision but refuses old locator-bound activation",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "different authenticated store and cookie session cannot reuse another client\u2019s load identity",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "load request expires after the host TTL and cannot grant a visit",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "host restart recovers identity, source revision and visual record; old in-memory visit is rejected and a new visit is issued",
+        "classification": "EXPERIMENTAL_HOST + NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "native JSONL imports: identical bytes, duplicate card labels and forged IDs allocate fresh scoped identities without visual inheritance",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "native browser importCharacterChat and openCharacterChat resolve the new imported transcript envelope",
+        "classification": "NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "normal native import, malformed header refusal and forged owner fields remain authenticated-store scoped",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "canonical save advances only changed bytes; overlapping old source CAS and pending load ticket refuse after edit",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "native save-as identical copy and two older-message branches: unique IDs, collision suffixes, independent edits and parent navigation",
+        "classification": "NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "native swipe commits changed canonical bytes and refuses the previous source visit",
+        "classification": "NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "native continue commits changed canonical bytes and refuses the previous source visit",
+        "classification": "NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "native regenerate commits changed canonical bytes and refuses the previous source visit",
+        "classification": "NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "native selected-swipe save revision follows actual committed byte change",
+        "classification": "NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "four-member duplicate-label group: create/save/load/edit/membership/import/switch/new/delete-recreate preserve native behavior and refuse visual authority",
+        "classification": "NATIVE_HOST_UI + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "EACCES persisting collision invalidation refuses native overwrite before any source or registry change",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "native timestamp import collision with identical bytes invalidates scope before overwrite; old CAS cannot inherit or alter visual record",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "native collision restoring pre-drift identical bytes cannot resurrect old visual authority",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "native delete/recreate at the same locator tombstones old identity and allocates an independent revision-one record",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "native importer accepts malformed trailing record but visual registry stays pending and refuses authority",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "unknown/corrupt registry keeps canonical loads readable; real EACCES import leaves pending intent and no canonical file or visual authority",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "restart retains group canonical bytes, visual bytes and fail-closed pending registry without automatic recovery",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      }
+    ]
+  },
+  "rereview-final-lifecycle": {
+    "runId": "d84cc992-46b8-44a4-b7fd-fa5d1553edb7",
+    "testedSillyNovelSha": "59acdbc0c66cb58ed616351947cd1c83ddc85ae7",
+    "sourceHostSha": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
+    "initialMainSha": "59acdbc0c66cb58ed616351947cd1c83ddc85ae7",
+    "node": "v26.8.1",
+    "browser": "151.0.7922.34",
+    "result": "PASS_WITH_BOUNDED_CHARACTER_CHAT_LIMITS",
+    "failure": null,
+    "cleanup": {
+      "ownedRootRemoved": true,
+      "hostStopped": true,
+      "sourceCheckoutPresent": true,
+      "sourceStatusUnchanged": true
+    },
+    "files": {
+      "host-storage.mjs": "77c5397c402e40bbc1580eb55e9f6df1559d1eaa7ab9ad5178e2ba86d4bd722a",
+      "host-visit.js": "dd18e8e1b71aa3dc60e2e9e1c3e22f43064edab5f8435f5643acf0c24b2f9287",
+      "host-envelope.patch": "e73905b37c59b20a6f9844050a4152e7c25a02d1bb6ccaa9e908968ae665996d",
+      "host-probe.mjs": "e4d61e24d0c103578d8637b4d70d60bee946f33e82ac02618cb03d4072148110",
+      "dyl27-host-mount.patch": "a30ddf37b47c99d3db0e575df339e8fe3411b97914551a1351f9d0d6e312c6aa",
+      "dyl42-host-writers.patch": "af14a89522f954345914f71762b436f9ff4d9db2d3f1b22557eafd9b3d6f3b83",
+      "dyl42-writer-campaign.mjs": "210ecf940952bb2331d5e616eee6efc4317e2ad8d6c787aa9b85c5290a51fec7",
+      "dyl43-host-lifecycle.patch": "232f3cef407229df54ad41e9026bde3fcc8076419dd1ac33f616c13fffd420c7",
+      "dyl43-lifecycle-campaign.mjs": "4adb41dc3ab20755dc41e22e47e85ec35b60eafaffa4ece68e6f7e906c2b39dd",
+      "dyl44-host-generations.patch": "e4dae9a1a5d6f98db8bea0cabf589f80245dde1b150fe9c2981c7fd12770f5ce",
+      "dyl44-generation-campaign.mjs": "9051d1407cb97f830c95589c5a9b179102124a345f44b8d4523dc3b5ee118ab2",
+      "dyl45-host-authority.patch": "bb13288e7828b8551bf879a8674a94f2814866e674f4c7f208126e3222414497",
+      "dyl45-authority-campaign.mjs": "4d4158636fb083949585b7024e76deee167e95f802e18378d7a3e4752dd571ea",
+      "owned-content-index.json": "3573dde3fda762bd77bda4464fbf250b309164475e45d61548275eeb65d5c2d6",
+      "dyl46-host-reconciliation.patch": "1e45477101018377f51a63f675252950b62aa4a5f9941cafcee2315f3f69e231",
+      "dyl46-reconciliation-campaign.mjs": "d5ec789a9b0533880ed63aa775c782aa8b1724b0f427f655623962a05183156c",
+      "applied-host-storage.mjs": "3db88d802ef99a1fcdadeac112863c3a0251fc0e25cdd3d7dd89b6d54dd21961"
+    },
+    "fixtureResets": [
+      {
+        "classification": "SYNTHETIC_ISOLATION_ONLY",
+        "handle": "default-user",
+        "independentSha256": [
+          [
+            "host-authority/fc5d3c55392d23fa18d6f74dc64f24b86605fe4c9ad528c89a5066a3d9a37b09.json",
+            "0d7e28cd1c31a10cc4083ce673e9406fbd695bf153ca52c38946ed22d1cdcd76"
+          ],
+          [
+            "host-authority/validation/fc5d3c55392d23fa18d6f74dc64f24b86605fe4c9ad528c89a5066a3d9a37b09.json",
+            "9e8ced72edfebd75972c38f33972dae41f17d083785fe99612329c186a511146"
+          ]
+        ],
+        "hostRecovery": false
+      },
+      {
+        "classification": "SYNTHETIC_ISOLATION_ONLY",
+        "handle": "default-user",
+        "independentSha256": [
+          [
+            "host-authority/fc5d3c55392d23fa18d6f74dc64f24b86605fe4c9ad528c89a5066a3d9a37b09.json",
+            "eac9c8b4766ed2285ea225cc1e728c89b83c2fdb062832ee173a9f4ebf5d93e6"
+          ],
+          [
+            "host-authority/validation/fc5d3c55392d23fa18d6f74dc64f24b86605fe4c9ad528c89a5066a3d9a37b09.json",
+            "9e8ced72edfebd75972c38f33972dae41f17d083785fe99612329c186a511146"
+          ]
+        ],
+        "hostRecovery": false
+      },
+      {
+        "classification": "SYNTHETIC_ISOLATION_ONLY",
+        "handle": "default-user",
+        "independentSha256": [
+          [
+            "host-authority/fc5d3c55392d23fa18d6f74dc64f24b86605fe4c9ad528c89a5066a3d9a37b09.json",
+            "16188a5f41879b2adec20f76989e8343a3ae70d45348c2d147d219fca87c92e9"
+          ],
+          [
+            "host-authority/validation/fc5d3c55392d23fa18d6f74dc64f24b86605fe4c9ad528c89a5066a3d9a37b09.json",
+            "9e8ced72edfebd75972c38f33972dae41f17d083785fe99612329c186a511146"
+          ]
+        ],
+        "hostRecovery": false
+      }
+    ],
+    "classification": "FROZEN_PROOF",
+    "checkpoints": 41,
+    "rawFile": "rereview-final-lifecycle.json.xz",
+    "rawSha256": "4c25268cc8fb47d124712af30ca29ee669683cbd36bbf12a6e5a9eff15b46907",
+    "compressedSha256": "e09ef0a0de0cc414e1683e41dca876114f9cc4ccf4bf25ba4c3ca23cabe5be52",
+    "command": "SN_DYL46_TRACE=1 SN_DYL46=baseline SN_DYL44=baseline SN_DYL45=baseline SN_DYL43=1 SN_PLAYWRIGHT_MODULE=/home/dq/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs node tests/probes/dyl28/host-probe.mjs /tmp/SillyTavern-m12-review /tmp/dyl46-rereview-final-lifecycle > /tmp/dyl46-rereview-final-lifecycle.log 2>&1",
+    "checks": [
+      {
+        "name": "native create/save allocates host identity and sourceRevision 1 for A and B",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "delayed native A response after B: B transcript, DOM, identity and target stay current; A load token is stale",
+        "classification": "NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "A-B-A with reordered native transcript responses: only latest A request and visit remain accepted",
+        "classification": "NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "held native activation acknowledgement across A-B-A is discarded without restoring its visit",
+        "classification": "NATIVE_HOST_UI with response barrier",
+        "result": "PASS"
+      },
+      {
+        "name": "old A visual CAS held across native A-B-A is refused against the old visit",
+        "classification": "NATIVE_HOST_UI + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "canonical edit during pending load: old revision 1 is not committed, a fresh revision 2 load is activated",
+        "classification": "NATIVE_HOST_UI + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "two authenticated clients on one host process: source revision 2 shared, visit tokens distinct, one visual CAS wins without canonical mutation",
+        "classification": "EXPERIMENTAL_HOST + NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "expired load ticket after a concurrent native edit: the revision 3 snapshot is not committed, the screen keeps revision 2, and the reopen activates revision 3",
+        "classification": "NATIVE_HOST_UI with request barrier + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "identity-bearing transcript followed by the pinned host non-JSON HTTP 403 refusal: the snapshot is not committed and target stays null",
+        "classification": "NATIVE_HOST_UI with real auth middleware refusal after response barrier",
+        "result": "PASS"
+      },
+      {
+        "name": "activation acknowledgement timeout leaves visuals unavailable while native text and ordinary reply/save continue",
+        "classification": "NATIVE_HOST_UI with response abort + deterministic loopback responder",
+        "result": "PASS"
+      },
+      {
+        "name": "native Temporary Chat transition revokes the persisted-chat visit",
+        "classification": "NATIVE_HOST_UI via host functions",
+        "result": "PASS"
+      },
+      {
+        "name": "missing chat returns an empty native snapshot with no visual identity",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "native rename during pending load preserves chat ID/revision but refuses old locator-bound activation",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "different authenticated store and cookie session cannot reuse another client\u2019s load identity",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "load request expires after the host TTL and cannot grant a visit",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "host restart recovers identity, source revision and visual record; old in-memory visit is rejected and a new visit is issued",
+        "classification": "EXPERIMENTAL_HOST + NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 native browser rename with historical messages, moved directory, reused old name and independent stores",
+        "classification": "NATIVE_HOST_UI + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 native delete/recreate same avatar and identical transcript does not inherit authority",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 native card duplicate copies forged metadata byte-for-byte but grants no scope/chat/visual identity",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 F1 EACCES rename refuses before canonical ownership changes",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 F1 EACCES delete refuses before canonical ownership changes",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 F2 rename after durable revocation refuses old CAS/load despite unchanged canonical files",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 F2 delete after durable revocation refuses old CAS/load despite unchanged canonical files",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 approved conservative failure remains whole-store refused through restart",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 F5 interrupted native rename after new card write leaves both cards and old chats without authority",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 approved conservative failure remains whole-store refused through restart",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 F5 native delete unlinks card then chat-removal EACCES leaves remaining chats revoked",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 native rename into an orphan registered destination revokes both scopes even when native directory move is skipped",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 approved conservative failure remains whole-store refused through restart",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 Data Maid native report/delete token isolation, F1 EACCES, F2 unlink EACCES and identical-byte recreation refusal",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 unhooked chat unlink observed at host boundary remains revoked after identical-byte restoration",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 observed unknown write latches chat revocation; restored pre-drift bytes cannot resurrect",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 BLOCKING negative control: unobserved in-place write/restoration preserves old seal and authority",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 F2 card import refused after durable all-scope revocation without restoring authority",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 real native JSON card replacement with copied metadata, F1 refusal and conservative all-scope invalidation",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 F3 process restart retains permanent lifecycle tombstones without finalization or automatic recovery",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 F4 missing registry across restart keeps native transcript readable and visual authority unavailable",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 F4 corrupt registry across restart keeps native transcript readable and visual authority unavailable",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 F1 native save cannot swallow pending-intent EACCES and mutate canonical bytes",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 F3 native save finalization fault leaves durable whole-store pending refusal after restart",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-43 second authenticated store remains authorized through first-store revocations, corruption and pending restart",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      }
+    ]
+  },
+  "rereview-final-generations": {
+    "runId": "ee6c9dee-e11c-4477-ae9b-90c263b56a38",
+    "testedSillyNovelSha": "59acdbc0c66cb58ed616351947cd1c83ddc85ae7",
+    "sourceHostSha": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
+    "initialMainSha": "59acdbc0c66cb58ed616351947cd1c83ddc85ae7",
+    "node": "v26.8.1",
+    "browser": "151.0.7922.34",
+    "result": "PASS_WITH_BOUNDED_CHARACTER_CHAT_LIMITS",
+    "failure": null,
+    "cleanup": {
+      "ownedRootRemoved": true,
+      "hostStopped": true,
+      "sourceCheckoutPresent": true,
+      "sourceStatusUnchanged": true
+    },
+    "files": {
+      "host-storage.mjs": "77c5397c402e40bbc1580eb55e9f6df1559d1eaa7ab9ad5178e2ba86d4bd722a",
+      "host-visit.js": "dd18e8e1b71aa3dc60e2e9e1c3e22f43064edab5f8435f5643acf0c24b2f9287",
+      "host-envelope.patch": "e73905b37c59b20a6f9844050a4152e7c25a02d1bb6ccaa9e908968ae665996d",
+      "host-probe.mjs": "e4d61e24d0c103578d8637b4d70d60bee946f33e82ac02618cb03d4072148110",
+      "dyl27-host-mount.patch": "a30ddf37b47c99d3db0e575df339e8fe3411b97914551a1351f9d0d6e312c6aa",
+      "dyl42-host-writers.patch": "af14a89522f954345914f71762b436f9ff4d9db2d3f1b22557eafd9b3d6f3b83",
+      "dyl42-writer-campaign.mjs": "210ecf940952bb2331d5e616eee6efc4317e2ad8d6c787aa9b85c5290a51fec7",
+      "dyl43-host-lifecycle.patch": "232f3cef407229df54ad41e9026bde3fcc8076419dd1ac33f616c13fffd420c7",
+      "dyl43-lifecycle-campaign.mjs": "4adb41dc3ab20755dc41e22e47e85ec35b60eafaffa4ece68e6f7e906c2b39dd",
+      "dyl44-host-generations.patch": "e4dae9a1a5d6f98db8bea0cabf589f80245dde1b150fe9c2981c7fd12770f5ce",
+      "dyl44-generation-campaign.mjs": "9051d1407cb97f830c95589c5a9b179102124a345f44b8d4523dc3b5ee118ab2",
+      "dyl45-host-authority.patch": "bb13288e7828b8551bf879a8674a94f2814866e674f4c7f208126e3222414497",
+      "dyl45-authority-campaign.mjs": "4d4158636fb083949585b7024e76deee167e95f802e18378d7a3e4752dd571ea",
+      "owned-content-index.json": "3573dde3fda762bd77bda4464fbf250b309164475e45d61548275eeb65d5c2d6",
+      "dyl46-host-reconciliation.patch": "1e45477101018377f51a63f675252950b62aa4a5f9941cafcee2315f3f69e231",
+      "dyl46-reconciliation-campaign.mjs": "d5ec789a9b0533880ed63aa775c782aa8b1724b0f427f655623962a05183156c",
+      "applied-host-storage.mjs": "3db88d802ef99a1fcdadeac112863c3a0251fc0e25cdd3d7dd89b6d54dd21961"
+    },
+    "fixtureResets": [
+      {
+        "classification": "SYNTHETIC_ISOLATION_ONLY",
+        "handle": "default-user",
+        "independentSha256": [
+          [
+            "host-authority/59ff05acf2ae58e877895737c68a0a35dadeba2f7b80950ddbc378934629375b.json",
+            "53f4693df86b70062b73ce254bfd1292c822fb85422c168b8998a9fbde60f8d6"
+          ],
+          [
+            "host-authority/validation/59ff05acf2ae58e877895737c68a0a35dadeba2f7b80950ddbc378934629375b.json",
+            "45fce1482fedb33b2aabbf174330d767179882a7feac35dcf0fb3cd498e0b5de"
+          ]
+        ],
+        "hostRecovery": false
+      },
+      {
+        "classification": "SYNTHETIC_ISOLATION_ONLY",
+        "handle": "default-user",
+        "independentSha256": [
+          [
+            "host-authority/59ff05acf2ae58e877895737c68a0a35dadeba2f7b80950ddbc378934629375b.json",
+            "5a00398239dda0f09ca289874c27d4a084732fac51c1296d6984d3666fa8fcdc"
+          ],
+          [
+            "host-authority/validation/59ff05acf2ae58e877895737c68a0a35dadeba2f7b80950ddbc378934629375b.json",
+            "45fce1482fedb33b2aabbf174330d767179882a7feac35dcf0fb3cd498e0b5de"
+          ]
+        ],
+        "hostRecovery": false
+      },
+      {
+        "classification": "SYNTHETIC_ISOLATION_ONLY",
+        "handle": "default-user",
+        "independentSha256": [
+          [
+            "host-authority/59ff05acf2ae58e877895737c68a0a35dadeba2f7b80950ddbc378934629375b.json",
+            "c3897ac2fa7651c2b189c8dd7148c664535d59a9ca82c0ec4717ad87a3536448"
+          ],
+          [
+            "host-authority/validation/59ff05acf2ae58e877895737c68a0a35dadeba2f7b80950ddbc378934629375b.json",
+            "45fce1482fedb33b2aabbf174330d767179882a7feac35dcf0fb3cd498e0b5de"
+          ]
+        ],
+        "hostRecovery": false
+      }
+    ],
+    "classification": "FROZEN_PROOF",
+    "checkpoints": 37,
+    "rawFile": "rereview-final-generations.json.xz",
+    "rawSha256": "60f6753166e0a73973028b16da6305cb7a10793e420ad6f82c4da3aa940aec8c",
+    "compressedSha256": "d46bfc34e1adee5fbf67fbf4138582bfe13ee959d84e206359fbd83d06bb08f8",
+    "command": "SN_DYL46_TRACE=1 SN_DYL46=baseline SN_DYL44=1 SN_DYL45=baseline SN_PLAYWRIGHT_MODULE=/home/dq/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs node tests/probes/dyl28/host-probe.mjs /tmp/SillyTavern-m12-review /tmp/dyl46-rereview-final-generations > /tmp/dyl46-rereview-final-generations.log 2>&1",
+    "checks": [
+      {
+        "name": "native create/save allocates host identity and sourceRevision 1 for A and B",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "delayed native A response after B: B transcript, DOM, identity and target stay current; A load token is stale",
+        "classification": "NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "A-B-A with reordered native transcript responses: only latest A request and visit remain accepted",
+        "classification": "NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "held native activation acknowledgement across A-B-A is discarded without restoring its visit",
+        "classification": "NATIVE_HOST_UI with response barrier",
+        "result": "PASS"
+      },
+      {
+        "name": "old A visual CAS held across native A-B-A is refused against the old visit",
+        "classification": "NATIVE_HOST_UI + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "canonical edit during pending load: old revision 1 is not committed, a fresh revision 2 load is activated",
+        "classification": "NATIVE_HOST_UI + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "two authenticated clients on one host process: source revision 2 shared, visit tokens distinct, one visual CAS wins without canonical mutation",
+        "classification": "EXPERIMENTAL_HOST + NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "expired load ticket after a concurrent native edit: the revision 3 snapshot is not committed, the screen keeps revision 2, and the reopen activates revision 3",
+        "classification": "NATIVE_HOST_UI with request barrier + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "identity-bearing transcript followed by the pinned host non-JSON HTTP 403 refusal: the snapshot is not committed and target stays null",
+        "classification": "NATIVE_HOST_UI with real auth middleware refusal after response barrier",
+        "result": "PASS"
+      },
+      {
+        "name": "activation acknowledgement timeout leaves visuals unavailable while native text and ordinary reply/save continue",
+        "classification": "NATIVE_HOST_UI with response abort + deterministic loopback responder",
+        "result": "PASS"
+      },
+      {
+        "name": "native Temporary Chat transition revokes the persisted-chat visit",
+        "classification": "NATIVE_HOST_UI via host functions",
+        "result": "PASS"
+      },
+      {
+        "name": "missing chat returns an empty native snapshot with no visual identity",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "native rename during pending load preserves chat ID/revision but refuses old locator-bound activation",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "different authenticated store and cookie session cannot reuse another client\u2019s load identity",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "load request expires after the host TTL and cannot grant a visit",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "host restart recovers identity, source revision and visual record; old in-memory visit is rejected and a new visit is issued",
+        "classification": "EXPERIMENTAL_HOST + NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-44 byte-identical native save advances write generation, preserves incarnation/content revision, refuses old load and CAS",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-44 A\u2192B\u2192A generation transition issues a fresh visit and rejects former A",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-44 held authoritative CAS refuses identical bytes after participating write",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-44 native chat delete/recreate identical bytes allocates distinct incarnation and rejects held old CAS/load",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-44 two native renames claim one destination; loser changes no canonical bytes or reservation",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-44 native rename/import overlap rename wins reservation",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-44 native rename/import overlap import wins reservation",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-44 delete/cleanup blocks recreation until completion; identical recreated transcript remains refused after restart",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-44 native Data Maid cleanup overlaps native save at former path without resurrecting authority",
+        "classification": "SYNTHETIC orphan setup + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-44 F1 reservation persistence failure prevents all canonical mutation",
+        "classification": "SYNTHETIC fault + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-44 F1 real EACCES on reservation directory prevents canonical write",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-44 F2 committed reservation then native failure retains durable scope revocation",
+        "classification": "SYNTHETIC fault + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-44 approved partial native failure retains whole-store refusal through restart",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-44 F5 partial native multi-file rename exposes no committed visual identity",
+        "classification": "SYNTHETIC fault + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-44 OUTSIDE CONTRACT negative control: unknown in-place restoration and identical copy still accept old authority",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-44 wrong authenticated store refuses generation-bound target",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-44 F4 missing reservation state refuses after restart while native text loads",
+        "classification": "SYNTHETIC fault + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-44 F4 corrupt reservation state refuses after restart while native text loads",
+        "classification": "SYNTHETIC fault + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-44 external authority refuses root-only rollback through two restarts without adoption",
+        "classification": "SYNTHETIC restore + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-44 process stop while native rename awaits leaves unresolved reservation; restart cannot reopen writers",
+        "classification": "SYNTHETIC process stop + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-44 F3 committed identical canonical write plus failed finalization remains durably unresolved across restart",
+        "classification": "SYNTHETIC fault + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      }
+    ]
+  },
+  "rereview-final-authority": {
+    "runId": "0cb65a1c-65e6-424d-95d3-8622693e1cd1",
+    "testedSillyNovelSha": "59acdbc0c66cb58ed616351947cd1c83ddc85ae7",
+    "sourceHostSha": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
+    "initialMainSha": "59acdbc0c66cb58ed616351947cd1c83ddc85ae7",
+    "node": "v26.8.1",
+    "browser": "151.0.7922.34",
+    "result": "PASS_WITH_BOUNDED_CHARACTER_CHAT_LIMITS",
+    "failure": null,
+    "cleanup": {
+      "ownedRootRemoved": true,
+      "hostStopped": true,
+      "sourceCheckoutPresent": true,
+      "sourceStatusUnchanged": true
+    },
+    "files": {
+      "host-storage.mjs": "77c5397c402e40bbc1580eb55e9f6df1559d1eaa7ab9ad5178e2ba86d4bd722a",
+      "host-visit.js": "dd18e8e1b71aa3dc60e2e9e1c3e22f43064edab5f8435f5643acf0c24b2f9287",
+      "host-envelope.patch": "e73905b37c59b20a6f9844050a4152e7c25a02d1bb6ccaa9e908968ae665996d",
+      "host-probe.mjs": "e4d61e24d0c103578d8637b4d70d60bee946f33e82ac02618cb03d4072148110",
+      "dyl27-host-mount.patch": "a30ddf37b47c99d3db0e575df339e8fe3411b97914551a1351f9d0d6e312c6aa",
+      "dyl42-host-writers.patch": "af14a89522f954345914f71762b436f9ff4d9db2d3f1b22557eafd9b3d6f3b83",
+      "dyl42-writer-campaign.mjs": "210ecf940952bb2331d5e616eee6efc4317e2ad8d6c787aa9b85c5290a51fec7",
+      "dyl43-host-lifecycle.patch": "232f3cef407229df54ad41e9026bde3fcc8076419dd1ac33f616c13fffd420c7",
+      "dyl43-lifecycle-campaign.mjs": "4adb41dc3ab20755dc41e22e47e85ec35b60eafaffa4ece68e6f7e906c2b39dd",
+      "dyl44-host-generations.patch": "e4dae9a1a5d6f98db8bea0cabf589f80245dde1b150fe9c2981c7fd12770f5ce",
+      "dyl44-generation-campaign.mjs": "9051d1407cb97f830c95589c5a9b179102124a345f44b8d4523dc3b5ee118ab2",
+      "dyl45-host-authority.patch": "bb13288e7828b8551bf879a8674a94f2814866e674f4c7f208126e3222414497",
+      "dyl45-authority-campaign.mjs": "4d4158636fb083949585b7024e76deee167e95f802e18378d7a3e4752dd571ea",
+      "owned-content-index.json": "3573dde3fda762bd77bda4464fbf250b309164475e45d61548275eeb65d5c2d6",
+      "dyl46-host-reconciliation.patch": "1e45477101018377f51a63f675252950b62aa4a5f9941cafcee2315f3f69e231",
+      "dyl46-reconciliation-campaign.mjs": "d5ec789a9b0533880ed63aa775c782aa8b1724b0f427f655623962a05183156c",
+      "applied-host-storage.mjs": "3db88d802ef99a1fcdadeac112863c3a0251fc0e25cdd3d7dd89b6d54dd21961"
+    },
+    "fixtureResets": [
+      {
+        "classification": "SYNTHETIC_ISOLATION_ONLY",
+        "handle": "default-user",
+        "independentSha256": [
+          [
+            "host-authority/eeea8405a94b17514bf4c7647bd061149266331ecd6f935d232ebdaaf7f0d3dc.json",
+            "d0cdb3dfb8bc1428e48eab82848075873c9c2d15c4a410b81f197757ed1cdb53"
+          ],
+          [
+            "host-authority/validation/eeea8405a94b17514bf4c7647bd061149266331ecd6f935d232ebdaaf7f0d3dc.json",
+            "a041bf18765a5058b2f99743541e028a5746662e3b0060047a0bfddf3618a0e4"
+          ]
+        ],
+        "hostRecovery": false
+      },
+      {
+        "classification": "SYNTHETIC_ISOLATION_ONLY",
+        "handle": "default-user",
+        "independentSha256": [
+          [
+            "host-authority/eeea8405a94b17514bf4c7647bd061149266331ecd6f935d232ebdaaf7f0d3dc.json",
+            "d0cdb3dfb8bc1428e48eab82848075873c9c2d15c4a410b81f197757ed1cdb53"
+          ],
+          [
+            "host-authority/validation/eeea8405a94b17514bf4c7647bd061149266331ecd6f935d232ebdaaf7f0d3dc.json",
+            "a041bf18765a5058b2f99743541e028a5746662e3b0060047a0bfddf3618a0e4"
+          ]
+        ],
+        "hostRecovery": false
+      },
+      {
+        "classification": "SYNTHETIC_ISOLATION_ONLY",
+        "handle": "default-user",
+        "independentSha256": [
+          [
+            "host-authority/eeea8405a94b17514bf4c7647bd061149266331ecd6f935d232ebdaaf7f0d3dc.json",
+            "d0cdb3dfb8bc1428e48eab82848075873c9c2d15c4a410b81f197757ed1cdb53"
+          ],
+          [
+            "host-authority/validation/eeea8405a94b17514bf4c7647bd061149266331ecd6f935d232ebdaaf7f0d3dc.json",
+            "a041bf18765a5058b2f99743541e028a5746662e3b0060047a0bfddf3618a0e4"
+          ]
+        ],
+        "hostRecovery": false
+      },
+      {
+        "classification": "SYNTHETIC_ISOLATION_ONLY",
+        "handle": "default-user",
+        "independentSha256": [
+          [
+            "host-authority/eeea8405a94b17514bf4c7647bd061149266331ecd6f935d232ebdaaf7f0d3dc.json",
+            "d0cdb3dfb8bc1428e48eab82848075873c9c2d15c4a410b81f197757ed1cdb53"
+          ],
+          [
+            "host-authority/validation/eeea8405a94b17514bf4c7647bd061149266331ecd6f935d232ebdaaf7f0d3dc.json",
+            "a041bf18765a5058b2f99743541e028a5746662e3b0060047a0bfddf3618a0e4"
+          ]
+        ],
+        "hostRecovery": false
+      },
+      {
+        "classification": "SYNTHETIC_ISOLATION_ONLY",
+        "handle": "default-user",
+        "independentSha256": [
+          [
+            "host-authority/eeea8405a94b17514bf4c7647bd061149266331ecd6f935d232ebdaaf7f0d3dc.json",
+            "d0cdb3dfb8bc1428e48eab82848075873c9c2d15c4a410b81f197757ed1cdb53"
+          ],
+          [
+            "host-authority/validation/eeea8405a94b17514bf4c7647bd061149266331ecd6f935d232ebdaaf7f0d3dc.json",
+            "a041bf18765a5058b2f99743541e028a5746662e3b0060047a0bfddf3618a0e4"
+          ]
+        ],
+        "hostRecovery": false
+      }
+    ],
+    "classification": "FROZEN_PROOF",
+    "checkpoints": 46,
+    "rawFile": "rereview-final-authority.json.xz",
+    "rawSha256": "fd054a25a08b1db456f481c4be3276e04189c3decf9a53cd64e817e96242271d",
+    "compressedSha256": "d28856694203648e088fe43ded48edb480cff5a62006093c48e87a9052e62f7a",
+    "command": "SN_DYL46_TRACE=1 SN_DYL46=baseline SN_DYL44=baseline SN_DYL45=1 SN_PLAYWRIGHT_MODULE=/home/dq/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs node tests/probes/dyl28/host-probe.mjs /tmp/SillyTavern-m12-review /tmp/dyl46-rereview-final-authority > /tmp/dyl46-rereview-final-authority.log 2>&1",
+    "checks": [
+      {
+        "name": "native create/save allocates host identity and sourceRevision 1 for A and B",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "delayed native A response after B: B transcript, DOM, identity and target stay current; A load token is stale",
+        "classification": "NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "A-B-A with reordered native transcript responses: only latest A request and visit remain accepted",
+        "classification": "NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "held native activation acknowledgement across A-B-A is discarded without restoring its visit",
+        "classification": "NATIVE_HOST_UI with response barrier",
+        "result": "PASS"
+      },
+      {
+        "name": "old A visual CAS held across native A-B-A is refused against the old visit",
+        "classification": "NATIVE_HOST_UI + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "canonical edit during pending load: old revision 1 is not committed, a fresh revision 2 load is activated",
+        "classification": "NATIVE_HOST_UI + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "two authenticated clients on one host process: source revision 2 shared, visit tokens distinct, one visual CAS wins without canonical mutation",
+        "classification": "EXPERIMENTAL_HOST + NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "expired load ticket after a concurrent native edit: the revision 3 snapshot is not committed, the screen keeps revision 2, and the reopen activates revision 3",
+        "classification": "NATIVE_HOST_UI with request barrier + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "identity-bearing transcript followed by the pinned host non-JSON HTTP 403 refusal: the snapshot is not committed and target stays null",
+        "classification": "NATIVE_HOST_UI with real auth middleware refusal after response barrier",
+        "result": "PASS"
+      },
+      {
+        "name": "activation acknowledgement timeout leaves visuals unavailable while native text and ordinary reply/save continue",
+        "classification": "NATIVE_HOST_UI with response abort + deterministic loopback responder",
+        "result": "PASS"
+      },
+      {
+        "name": "native Temporary Chat transition revokes the persisted-chat visit",
+        "classification": "NATIVE_HOST_UI via host functions",
+        "result": "PASS"
+      },
+      {
+        "name": "missing chat returns an empty native snapshot with no visual identity",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "native rename during pending load preserves chat ID/revision but refuses old locator-bound activation",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "different authenticated store and cookie session cannot reuse another client\u2019s load identity",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "load request expires after the host TTL and cannot grant a visit",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "host restart recovers identity, source revision and visual record; old in-memory visit is rejected and a new visit is issued",
+        "classification": "EXPERIMENTAL_HOST + NATIVE_HOST_UI",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 identical participating save advances external/local generation and refuses old target",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 COUNTEREXAMPLE unknown in-place restore/copy still accepts old authority",
+        "classification": "SYNTHETIC",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 explicit same-name same-card same-byte re-enrollment mints fresh IDs; copied metadata ignored; held old CAS/load refuse",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 explicit re-enrollment succeeds after restart under fresh identity",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 enrollment overlapping enrollment: one owner; loser refuses before mutation",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 enrollment overlapping rename: one owner; loser refuses before mutation",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 enrollment overlapping import: one owner; loser refuses before mutation",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 enrollment overlapping delete: one owner; loser refuses before mutation",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 native rename wins against enrollment; revoked identity never returns",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 F1 injected external write failure precedes native mutation",
+        "classification": "SYNTHETIC",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 F1 real external-directory EACCES prevents native mutation",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 F2 durable unstarted receipt reconciles forward after restart, without native mutation",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 F3 external/local registry-finalize failure stays refused after restart",
+        "classification": "SYNTHETIC",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 F3 external/local reservation-finalize failure stays refused after restart",
+        "classification": "SYNTHETIC",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 F3 external/local finalize failure stays refused after restart",
+        "classification": "SYNTHETIC",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 F2 native mutation fails after external advance; unchanged canonical bytes confer no authority",
+        "classification": "SYNTHETIC",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 approved malformed-header clean abort preserves native error and permits later save after restart",
+        "classification": "EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 F4 registry missing: no reconstruction, native text readable, enrollment refuses",
+        "classification": "SYNTHETIC",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 F4 registry corrupt: no reconstruction, native text readable, enrollment refuses",
+        "classification": "SYNTHETIC",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 F4 registry stale: no reconstruction, native text readable, enrollment refuses",
+        "classification": "SYNTHETIC",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 F5 external missing: no reconstruction, native text readable, enrollment refuses",
+        "classification": "SYNTHETIC",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 F5 external corrupt: no reconstruction, native text readable, enrollment refuses",
+        "classification": "SYNTHETIC",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 F5 external stale: no reconstruction, native text readable, enrollment refuses",
+        "classification": "SYNTHETIC",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 foreign authenticated store and changed same-handle account creation evidence refuse",
+        "classification": "SYNTHETIC + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 F6 process stopped at enrollment barrier retains external/local intent after restart",
+        "classification": "SYNTHETIC",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 failed enrollment finalization never publishes new or old authority",
+        "classification": "SYNTHETIC",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 explicit enrollment refuses missing-card without granting authority",
+        "classification": "SYNTHETIC",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 explicit enrollment refuses ambiguous-inventory without granting authority",
+        "classification": "SYNTHETIC",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 explicit enrollment refuses client-owner without granting authority",
+        "classification": "SYNTHETIC",
+        "result": "PASS"
+      },
+      {
+        "name": "DYL-45 user-root-only metadata-preserving rollback refuses old visuals through two restarts without adoption",
+        "classification": "SYNTHETIC restore + EXPERIMENTAL_HOST",
+        "result": "PASS"
+      }
+    ]
+  }
+}

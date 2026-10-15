@@ -1,0 +1,32 @@
+✔ actual entry mounts, updates, disposes and preserves canonical state (881.117482ms)
+✔ long ordinary Markdown is formatted, selectable and copied completely (350.326514ms)
+✔ unsafe HTML, encoded protocols, media and malformed markup never execute or lose raw text (297.071215ms)
+✔ Previous/Next pin the cursor; new messages stay bounded until Latest (408.275235ms)
+✔ streaming follows text bottom independently; scrolling up and selecting text survive updates (308.075641ms)
+✔ stop and continuation stay readable; disable does not stop generation (291.746419ms)
+✔ deleted/replaced pinned source is explicit and never silently retargeted (456.807835ms)
+✔ backlog never claims an exact match against a stale native revision (473.175315ms)
+✔ backlog re-resolves reordered objects, returns pinned selection and reports locator fallback (455.892104ms)
+✔ draft, caret, native composer node and focus survive repeated view transitions (458.159818ms)
+✔ missing capability and mount failure leave native chat usable (294.785697ms)
+✔ format exception releases stage/listeners, restores native feed and keeps exact draft (299.148341ms)
+✔ A to B to A discards queued old-epoch reads and starts each visit at latest (300.634074ms)
+✔ IME and editable-field key events remain unconsumed (186.565403ms)
+✔ empty and unresolved-author sources are explicit; narrow reduced-height composer remains reachable (224.736998ms)
+✔ session stage: four manual actors, duplicate names, stable slots, refusal, swap, replace and locks (1214.910111ms)
+✔ session stage: forward projection, selected-source expressions, outfits and incompatible/missing fallback (1032.040317ms)
+✔ session stage: temporary raster decode, replacement/reset/disable cleanup and stale delayed work (640.224528ms)
+✔ session stage: chat return, A to B to A, reload, narrow/keyboard layout and transparent fixtures (886.940272ms)
+✔ session stage: delayed image cannot apply after same-source reset, manual override or unobserved source edit (436.861474ms)
+✔ session stage: denied subtle leaves a complete text reader (699.622104ms)
+✔ session stage: denied randomUUID leaves a complete text reader (689.3953ms)
+✔ session stage: delayed historical hashing neutralizes art before navigation and rejects obsolete work (583.140942ms)
+✔ session stage: history size refusal leaves neutral art and a usable text reader (411.188114ms)
+ℹ tests 24
+ℹ suites 0
+ℹ pass 24
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 12864.63958
