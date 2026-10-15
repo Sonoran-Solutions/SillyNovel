@@ -10,15 +10,16 @@ export async function run(h) {
     const localFile = path.join(root, 'sillynovel-dyl44-reservation.json');
     const registryFile = path.join(ns, 'identities.json');
     const authorityFile = path.join(h.authority, `${h.hash(path.resolve(root))}.json`);
+    const witnessFile = path.join(h.authority, 'validation', path.basename(authorityFile));
     const bytes = file => fs.readFileSync(file, 'utf8');
     const external = () => JSON.parse(bytes(authorityFile));
     const local = () => JSON.parse(bytes(localFile));
-    const capture = () => [authorityFile, localFile, registryFile].map(file => [file, bytes(file)]);
+    const capture = () => [authorityFile, localFile, registryFile, witnessFile].map(file => [file, bytes(file)]);
     // Restore only deliberate fixture faults BETWEEN independent cases, never as host recovery.
     const reset = saved => { for (const [file, value] of saved) fs.writeFileSync(file, value); };
     const cp = (name, details = {}, classification = 'EXPERIMENTAL_HOST') => h.checkpoint(`DYL-46 ${name}`, classification,
-        { ...details, authority: bytes(authorityFile), reservation: bytes(localFile), registry: bytes(registryFile),
-            authoritySha256: h.hash(bytes(authorityFile)), reservationSha256: h.hash(bytes(localFile)), registrySha256: h.hash(bytes(registryFile)) });
+        { ...details, authority: bytes(authorityFile), reservation: bytes(localFile), registry: bytes(registryFile), witness: bytes(witnessFile),
+            witnessSha256: h.hash(bytes(witnessFile)), authoritySha256: h.hash(bytes(authorityFile)), reservationSha256: h.hash(bytes(localFile)), registrySha256: h.hash(bytes(registryFile)) });
     async function load(x, accept = true, client = first) {
         const clientId = (await client.api('client')).clientId;
         const envelope = await client.request('/api/chats/get', { avatar_url: x.avatar, file_name: x.chatName,
@@ -88,6 +89,42 @@ export async function run(h) {
         cp(`EACCES ${operation}: verified pre-native guard failure reconciles forward`, { x, before, after: capture(), response,
             cardBase64: cardBytes.toString('base64'), cardSha256: h.hash(cardBytes) });
     }
+    for (const operation of ['rename', 'delete', 'import']) {
+        const x = await fixture(`CommittedRevocation-${operation}`); const before = capture();
+        const card = path.join(root, 'characters', x.avatar), originalCard = fs.readFileSync(card);
+        const undo = flag('dyl43-after-revoke'); let response;
+        try {
+            if (operation === 'import') {
+                const form = new FormData(); form.set('file_type', 'json'); form.set('preserved_name', x.avatar);
+                form.set('avatar', new Blob([JSON.stringify({ name: x.name, first_mes: 'Synthetic replacement.' })]), 'card.json');
+                response = await first.request('/api/characters/import', form, 503);
+            } else response = await first.request(`/api/characters/${operation}`, { avatar_url: x.avatar,
+                new_name: `Failed-${h.runId}`, delete_chats: true }, operation === 'rename' ? 500 : 503);
+        } finally { undo(); }
+        assert.equal(external().outcome, 'VERIFIED_REVOCATION'); assert.equal(external().pending, null);
+        assert.equal(external().generation, JSON.parse(before[0][1]).generation + 1);
+        assert.equal(local().serial, external().generation); assert.notEqual(bytes(registryFile), before[2][1]);
+        assert.deepEqual(fs.readFileSync(card), originalCard); assert.equal(bytes(x.file), x.canonical);
+        assert.equal((await oldCas(x, 400)).error, 'INVALID_TARGET');
+        assert.equal((await first.api('accept-load', x.ticket.request, 400)).error, 'INVALID_TARGET');
+        if (operation !== 'import') await first.api('read', { target: healthy.active.target });
+        cp(`post-revocation ${operation} inspected failure finalizes VERIFIED_REVOCATION, never clean abort`, { x, before, response });
+        await restart(); assert.equal((await load(x)).envelope.identity, null);
+        assert.equal((await oldCas(x, 400)).error, 'INVALID_TARGET'); assert.equal(bytes(x.visualFile), x.visual);
+        // Multipart import deliberately revokes all scopes. Fresh unrelated authority remains possible.
+        const next = await fixture(`AfterRevocation-${operation}`); assert.ok((await load(next)).target);
+        cp(`post-revocation ${operation} restart retains revocation and permits healthy native/visual work`, { x, next });
+    }
+    for (const point of ['reservation', 'external']) {
+        const x = await fixture(`RevocationFinalize-${point}`), before = capture();
+        const undoRevocation = flag('dyl43-after-revoke');
+        const undoFinalize = flag(point === 'reservation' ? 'dyl44-finalize-failure' : 'dyl45-finalize-failure');
+        await first.request('/api/characters/rename', { avatar_url: x.avatar, new_name: `Uncommitted-${h.runId}` }, 500);
+        undoRevocation(); undoFinalize(); assert.ok(external().pending); const pending = capture();
+        await restart(); const refusal = await refused(x); assert.deepEqual(capture(), pending);
+        cp(`post-revocation ${point} finalization failure remains durably refused`, { x, before, pending, refusal }, 'SYNTHETIC + EXPERIMENTAL_HOST');
+        reset(before);
+    }
     const clean = await fixture('Malformed'); const beforeImport = capture();
     const importResponse = await malformed(clean); assert.equal(importResponse.error, true);
     assert.equal(external().outcome, 'VERIFIED_CLEAN_ABORT'); assert.equal(external().pending, null);
@@ -144,10 +181,13 @@ export async function run(h) {
     fs.appendFileSync(deniedAuthority.file, '\n'); fs.chmodSync(h.authority, 0o500); let permissionFailure;
     try { permissionFailure = await first.api('read', { target: deniedAuthority.active.target }, 500); }
     finally { fs.chmodSync(h.authority, 0o700); }
-    assert.deepEqual(capture(), beforeDenied); assert.equal(bytes(deniedAuthority.visualFile), deniedAuthority.visual);
+    assert.deepEqual(capture().slice(0, 3), beforeDenied.slice(0, 3));
+    assert.ok(JSON.parse(bytes(witnessFile)).pending); assert.equal(bytes(deniedAuthority.visualFile), deniedAuthority.visual);
     fs.writeFileSync(deniedAuthority.file, deniedAuthority.canonical);
-    assert.equal((await first.api('read', { target: deniedAuthority.active.target }, 400)).error, 'INVALID_TARGET');
-    cp('F1 real external-directory EACCES preserves local bytes; same-process retry retains observed revocation', { deniedAuthority, beforeDenied, permissionFailure });
+    const deniedWitness = bytes(witnessFile); await restart(); const deniedRefusal = await refused(deniedAuthority);
+    assert.equal(bytes(witnessFile), deniedWitness);
+    cp('F1 real external-directory EACCES leaves durable validation refusal after restored bytes and restart', { deniedAuthority, beforeDenied, permissionFailure, deniedWitness, deniedRefusal });
+    reset(beforeDenied); // Deliberate fixture reset, never an exposed recovery operation.
 
     const faulted = await fixture('Faults'); const cleanState = capture();
     for (const point of ['begin', 'local-begin', 'finalize']) {
@@ -156,7 +196,7 @@ export async function run(h) {
         const response = await first.api('read', { target: faulted.active.target }, 503); undo();
         assert.equal(bytes(faulted.visualFile), faulted.visual);
         if (point === 'begin') {
-            assert.deepEqual(capture(), before); assert.equal(bytes(registryFile), cleanState[2][1]);
+            assert.deepEqual(capture().slice(0, 3), before.slice(0, 3)); assert.equal(bytes(registryFile), cleanState[2][1]);
             fs.writeFileSync(faulted.file, faulted.canonical); // Test reset after explicitly injected failed observation.
         } else {
             const pending = capture(); assert.ok(external().pending);
@@ -168,9 +208,9 @@ export async function run(h) {
             reset(cleanState); fs.writeFileSync(faulted.file, faulted.canonical);
         }
         if (point === 'begin') {
-            assert.equal((await first.api('read', { target: faulted.active.target }, 400)).error, 'INVALID_TARGET');
-            assert.ok(h.registry(owner).chats.find(c => c.chatId === faulted.entry.chatId).disabled);
-            cp('F1 external intent fails without local mutation; latched observation revokes on retry despite restored bytes', { before, response }, 'SYNTHETIC + EXPERIMENTAL_HOST');
+            const witness = bytes(witnessFile); await restart(); const refusal = await refused(faulted);
+            assert.equal(bytes(witnessFile), witness); assert.ok(JSON.parse(witness).pending);
+            cp('F1 external intent failure persists validation refusal despite restored bytes and restart', { before, response, witness, refusal }, 'SYNTHETIC + EXPERIMENTAL_HOST');
             reset(cleanState);
         }
     }
@@ -246,13 +286,38 @@ export async function run(h) {
     await first.api('read', { target: unknown.active.target });
     cp('COUNTEREXAMPLE unknown in-place restore still accepts old authority', { unknown, safetyVerdict: 'NOT_PROVEN' }, 'SYNTHETIC');
 
-    // Deliberate impossible-history control: no writable authority retained the observation.
-    const lost = await fixture('LostObservation'); fs.appendFileSync(lost.file, '\n');
+    const lost = await fixture('LostObservation'); const beforeLost = capture(); fs.appendFileSync(lost.file, '\n');
     const undoLost = flag('dyl45-begin-failure'); await first.api('read', { target: lost.active.target }, 503); undoLost();
-    fs.writeFileSync(lost.file, lost.canonical); await restart(); const lostLoad = await load(lost);
-    assert.ok(lostLoad.target); await first.api('read', { target: lostLoad.target });
-    cp('COUNTEREXAMPLE failed external intent plus unknown restore plus restart loses volatile observation',
-        { lost, lostLoad, safetyVerdict: 'NOT_PROVEN', limitation: 'No durable record of failed observation; independently durable refusal evidence is required.' }, 'SYNTHETIC + EXPERIMENTAL_HOST');
+    const durableWitness = bytes(witnessFile); assert.ok(JSON.parse(durableWitness).pending);
+    fs.writeFileSync(lost.file, lost.canonical); await restart(); const lostRefusal = await refused(lost);
+    assert.equal(bytes(witnessFile), durableWitness);
+    assert.equal((await first.api('reenroll', { avatar: lost.avatar }, 503)).error, 'VALIDATION_PENDING');
+    await restart(); await refused(lost); assert.equal(bytes(witnessFile), durableWitness);
+    cp('review regression: failed external intent plus unknown byte restore refuses old identity through two restarts',
+        { lost, durableWitness, lostRefusal }, 'SYNTHETIC + EXPERIMENTAL_HOST');
+    reset(beforeLost);
+
+    for (const point of ['begin', 'finalize']) {
+        const x = await fixture(`Witness-${point}`), before = capture(); const undo = flag(`dyl46-witness-${point}-failure`);
+        await first.api('read', { target: x.active.target }, 503); undo();
+        assert.equal(bytes(x.visualFile), x.visual); assert.equal(bytes(x.file), x.canonical);
+        if (point === 'begin') {
+            assert.deepEqual(capture(), before); await first.api('read', { target: x.active.target });
+        } else {
+            const pending = capture(); await restart(); await refused(x); assert.deepEqual(capture(), pending); reset(before);
+        }
+        cp(`validation witness ${point} failure never grants authority or invents history`, { x, before }, 'SYNTHETIC + EXPERIMENTAL_HOST');
+    }
+    for (const fault of ['missing', 'corrupt', 'binding']) {
+        const x = await fixture(`Witness-${fault}`), before = capture();
+        if (fault === 'missing') fs.unlinkSync(witnessFile);
+        if (fault === 'corrupt') fs.writeFileSync(witnessFile, '{broken');
+        if (fault === 'binding') fs.writeFileSync(witnessFile, JSON.stringify({ ...JSON.parse(bytes(witnessFile)), account: 'foreign' }));
+        const faultBytes = fs.existsSync(witnessFile) ? bytes(witnessFile) : null;
+        await restart(); const refusal = await refused(x); await first.api('reenroll', { avatar: x.avatar }, 503);
+        assert.equal(fs.existsSync(witnessFile) ? bytes(witnessFile) : null, faultBytes);
+        reset(before); cp(`validation witness ${fault} is never reconstructed or adopted`, { x, faultBytes, refusal }, 'SYNTHETIC + EXPERIMENTAL_HOST');
+    }
 
     const rollback = await fixture('Rollback'); const beforeRollback = capture();
     const backup = path.join(path.dirname(root), `dyl46-backup-${h.runId}`); assert.equal(fs.existsSync(backup), false);

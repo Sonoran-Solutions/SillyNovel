@@ -309,6 +309,10 @@ try {
         evidence.files['owned-content-index.json'] = hash(fs.readFileSync(seedFile));
         fs.mkdirSync(authority, { mode: 0o700 });
         fs.writeFileSync(path.join(authority, '.owned'), runId, { flag: 'wx', mode: 0o600 });
+        if (process.env.SN_DYL46) {
+            fs.mkdirSync(path.join(authority, 'validation'), { mode: 0o700 });
+            fs.writeFileSync(path.join(authority, 'validation/.owned'), runId, { flag: 'wx', mode: 0o600 });
+        }
     }
     if (process.env.SN_DYL46) {
         const patch = path.resolve(probeDir, '../dyl46/host-reconciliation.patch');
