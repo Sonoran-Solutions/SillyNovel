@@ -1,0 +1,205 @@
+--- a/public/script.js
++++ b/public/script.js
+@@ -1,4 +1,4 @@
+-import { beginVisit, finishVisit } from './scripts/dyl27-visit.js';
++import { beginVisit, beginLoad, acceptLoad, isCurrentLoad } from './scripts/dyl27-visit.js';
+ import {
+     showdown,
+     moment,
+@@ -7633,21 +7633,28 @@ export async function unshallowCharacter(characterId) {
+     await getOneCharacter(avatar);
+ }
+
+-export async function getChat() {
+-    const visit = await beginVisit(getRequestHeaders);
+-    const visitCharacter = characters[this_chid];
+-    const visitLocator = `chats/${visitCharacter?.avatar?.replace('.png', '')}/${visitCharacter?.chat}.jsonl`;
++export async function getChat(retrySourceMismatch = true) {
++    const requestedCharacterId = this_chid;
++    const requestedCharacter = characters[requestedCharacterId];
++    const requested = { name: requestedCharacter?.name, avatar: requestedCharacter?.avatar, fileName: requestedCharacter?.chat };
++    const load = await beginLoad(getRequestHeaders);
++    const isCurrent = () => isCurrentLoad(load.epoch)
++        && characters[this_chid]?.avatar === requested.avatar
++        && characters[this_chid]?.chat === requested.fileName;
+     try {
+-        await unshallowCharacter(this_chid);
++        if (!requestedCharacter || !isCurrent()) return;
++        await unshallowCharacter(requestedCharacterId);
++        if (!isCurrent()) return;
+
+         const response = await fetch('/api/chats/get', {
+             method: 'POST',
+             headers: getRequestHeaders(),
+             cache: 'no-cache',
+             body: JSON.stringify({
+-                ch_name: characters[this_chid].name,
+-                file_name: characters[this_chid].chat,
+-                avatar_url: characters[this_chid].avatar,
++                ch_name: requested.name,
++                file_name: requested.fileName,
++                avatar_url: requested.avatar,
++                ...(load.clientId ? { dyl28ClientId: load.clientId, dyl28Sequence: load.sequence } : {}),
+             }),
+         });
+
+@@ -7655,7 +7662,23 @@ export async function getChat() {
+             throw new Error('Chat could not be loaded');
+         }
+
+-        const data = await response.json();
++        const result = await response.json();
++        if (!isCurrent()) return;
++
++        let data = result;
++        if (result?.dyl28Envelope === true) {
++            const activation = await acceptLoad(load, result, getRequestHeaders);
++            if (!isCurrent()) return;
++            if (activation?.refusal) {
++                if (['SOURCE_REVISION_MISMATCH', 'SOURCE_SNAPSHOT_MISMATCH'].includes(activation.error) && retrySourceMismatch) {
++                    return getChat(false);
++                }
++                toastr.warning('This chat could not be activated. Reopen it to read the latest version.');
++                return;
++            }
++            data = result.messages;
++        }
++        if (!Array.isArray(data)) data = [];
+         if (Array.isArray(data) && data.length > 0) {
+             /** @type {ChatHeader} */
+             const chatHeader = data.shift();
+@@ -7670,25 +7693,31 @@ export async function getChat() {
+         if (!chat_metadata.integrity) {
+             chat_metadata.integrity = uuidv4();
+         }
+-        await getChatResult();
+-        await finishVisit(visit, visitLocator, getRequestHeaders);
+-        eventSource.emit(event_types.CHAT_LOADED, { detail: { id: this_chid, character: characters[this_chid] } });
++        await getChatResult(load.epoch, requestedCharacterId, isCurrent);
++        if (!isCurrent()) return;
++        eventSource.emit(event_types.CHAT_LOADED, { detail: { id: requestedCharacterId, character: requestedCharacter } });
+
+         // Focus on the textarea if not already focused on a visible text input
+         delay(debounce_timeout.short).then(() => {
++            if (!isCurrent()) return;
+             if ($(document.activeElement).is('input:visible, textarea:visible')) {
+                 return;
+             }
+             $('#send_textarea').trigger('click').trigger('focus');
+         });
+     } catch (error) {
+-        await getChatResult();
++        if (!isCurrent()) return;
++        await getChatResult(load.epoch, requestedCharacterId, isCurrent);
+         console.log(error);
+     }
+ }
+
+-async function getChatResult() {
+-    name2 = characters[this_chid].name;
++async function getChatResult(epoch, characterId, isCurrent) {
++    if (!isCurrent()) return;
++    const character = characters[characterId];
++    if (!character) return;
++    const chatName = character.chat;
++    name2 = character.name;
+     let freshChat = false;
+     if (chat.length === 0) {
+         const message = getFirstMessage();
+@@ -7698,17 +7727,25 @@ async function getChatResult() {
+         }
+         // Make sure the chat appears on the server
+         await saveChatConditional();
++        if (!isCurrent()) return;
+     }
+-    await loadItemizedPrompts(getCurrentChatId());
++    await loadItemizedPrompts(chatName);
++    if (epoch !== undefined && !isCurrent()) return;
+     await printMessages();
+-    select_selected_character(this_chid);
++    if (!isCurrent()) return;
++    select_selected_character(characterId);
+
+-    await eventSource.emit(event_types.CHAT_CHANGED, (getCurrentChatId()));
+-    if (freshChat) await eventSource.emit(event_types.CHAT_CREATED);
++    await eventSource.emit(event_types.CHAT_CHANGED, chatName);
++    if (!isCurrent()) return;
++    if (freshChat) {
++        await eventSource.emit(event_types.CHAT_CREATED);
++        if (!isCurrent()) return;
++    }
+
+     if (chat.length === 1) {
+         const chat_id = (chat.length - 1);
+         await eventSource.emit(event_types.MESSAGE_RECEIVED, chat_id, 'first_message');
++        if (!isCurrent()) return;
+         await eventSource.emit(event_types.CHARACTER_MESSAGE_RENDERED, chat_id, 'first_message');
+     }
+ }
+--- a/src/endpoints/chats.js
++++ b/src/endpoints/chats.js
+@@ -1,4 +1,4 @@
+-import { nativeMutation } from '../dyl27-storage.mjs';
++import { createLoadEnvelope, nativeMutation } from '../dyl27-storage.mjs';
+ import crypto from 'node:crypto';
+ import fs from 'node:fs';
+ import path from 'node:path';
+@@ -577,9 +577,17 @@ router.post('/save', validateAvatarUrlMiddleware, async function (request, respo
+  * @returns {Array}} If the chatFilePath cannot be read, this will return [].
+  */
+ export function getChatData(chatFilePath) {
+-    let chatData = [];
+-
+     const chatJSON = tryReadFileSync(chatFilePath) ?? '';
++    return parseChatData(chatJSON, chatFilePath);
++}
++
++export function getChatDataSnapshot(chatFilePath) {
++    const sourceText = tryReadFileSync(chatFilePath) ?? '';
++    return { messages: parseChatData(sourceText, chatFilePath), sourceText };
++}
++
++function parseChatData(chatJSON, chatFilePath) {
++    let chatData = [];
+     if (chatJSON.length > 0) {
+         const lines = chatJSON.split('\n');
+         // Iterate through the array of strings and parse each line as JSON
+@@ -592,6 +600,10 @@ export function getChatData(chatFilePath) {
+ }
+
+ router.post('/get', validateAvatarUrlMiddleware, function (request, response) {
++    const load = process.env.SN_DYL27_RUN && request.body?.dyl28ClientId;
++    const sendUnavailable = () => response.send(load
++        ? createLoadEnvelope(request, null, [], '', request.body.dyl28ClientId, request.body.dyl28Sequence)
++        : {});
+     try {
+         const dirName = String(request.body.avatar_url).replace('.png', '');
+         const directoryPath = path.join(request.user.directories.chats, dirName);
+@@ -603,19 +615,24 @@ router.post('/get', validateAvatarUrlMiddleware, function (request, response) {
+         //if no chat dir for the character is found, make one with the character name
+         if (!chatDirExists) {
+             fs.mkdirSync(directoryPath);
+-            return response.send({});
++            return sendUnavailable();
+         }
+
+         if (!request.body.file_name) {
+-            return response.send({});
++            return sendUnavailable();
+         }
+
+         const chatFileName = `${String(request.body.file_name)}.jsonl`;
+         const chatFilePath = path.join(directoryPath, sanitize(chatFileName));
+-
++        if (load) {
++            const snapshot = getChatDataSnapshot(chatFilePath);
++            return response.send(createLoadEnvelope(request, chatFilePath, snapshot.messages, snapshot.sourceText,
++                request.body.dyl28ClientId, request.body.dyl28Sequence));
++        }
+         return response.send(getChatData(chatFilePath));
+     } catch (error) {
+         console.error(error);
++        if (load && error.status) return response.status(error.status).send({ error: error.code });
+         return response.send({});
+     }
+ });

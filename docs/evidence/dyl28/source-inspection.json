@@ -1,0 +1,270 @@
+{
+  "pinnedHost": {
+    "version": "1.19.0",
+    "commit": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
+    "verifiedBy": "host-probe.mjs uses git rev-parse and rejects any other checkout"
+  },
+  "files": {
+    "public/script.js": {
+      "sha256": "955c603d0bad84bac5a716f0818d85c2543e44d4c43878e0d63ef1e55ca91855",
+      "lines": 12600
+    },
+    "public/scripts/bookmarks.js": {
+      "sha256": "5c3a68aa82e58c0d82777065b8466572fc1b202cad98a92ba4daa852c386ad1b",
+      "lines": 741
+    },
+    "public/scripts/chats.js": {
+      "sha256": "2b870d44c55f99c622b5afcd7b1fd563219b9444bc70e8653611327d6e7f7be6",
+      "lines": 2423
+    },
+    "src/endpoints/chats.js": {
+      "sha256": "40012ebc71a75357e62f7532e5b20def0d8b6c132bb6ab48f662993cc97b9063",
+      "lines": 1153
+    },
+    "src/endpoints/characters.js": {
+      "sha256": "3235555529e9ff17ecc2ebe9168b0af77fe6ef5947f3d1f7de3df6d5f2567d89",
+      "lines": 1688
+    },
+    "src/endpoints/groups.js": {
+      "sha256": "c5b956f8b4a2809b554229fed24588ed37163f1e73c129d4270ac6832438612b",
+      "lines": 235
+    }
+  },
+  "excerpts": [
+    {
+      "label": "native character-chat save route",
+      "line": 545,
+      "file": "src/endpoints/chats.js",
+      "startLine": 541,
+      "endLine": 555,
+      "text": "    tryWriteFileSync(filePath, jsonlData);\n    getBackupFunction(handle, cardName)(backupDirectory, cardName, jsonlData);\n}\n\nrouter.post('/save', validateAvatarUrlMiddleware, async function (request, response) {\n    try {\n        const handle = request.user.profile.handle;\n        const cardName = String(request.body.avatar_url).replace('.png', '');\n        const chatData = request.body.chat;\n        const chatFileName = `${String(request.body.file_name)}.jsonl`;\n        const chatFilePath = path.join(request.user.directories.chats, cardName, sanitize(chatFileName));\n        if (!isPathUnderParent(request.user.directories.chats, chatFilePath)) {\n            return response.sendStatus(400);\n        }\n"
+    },
+    {
+      "label": "native character-chat load route",
+      "line": 592,
+      "file": "src/endpoints/chats.js",
+      "startLine": 588,
+      "endLine": 602,
+      "text": "\n    return chatData;\n}\n\nrouter.post('/get', validateAvatarUrlMiddleware, function (request, response) {\n    try {\n        const dirName = String(request.body.avatar_url).replace('.png', '');\n        const directoryPath = path.join(request.user.directories.chats, dirName);\n        if (!isPathUnderParent(request.user.directories.chats, directoryPath)) {\n            return response.sendStatus(400);\n        }\n        const chatDirExists = fs.existsSync(directoryPath);\n\n        //if no chat dir for the character is found, make one with the character name\n        if (!chatDirExists) {"
+    },
+    {
+      "label": "native character-chat rename route",
+      "line": 621,
+      "file": "src/endpoints/chats.js",
+      "startLine": 617,
+      "endLine": 631,
+      "text": "        return response.send({});\n    }\n});\n\nrouter.post('/rename', validateAvatarUrlMiddleware, async function (request, response) {\n    try {\n        if (!request.body || !request.body.original_file || !request.body.renamed_file) {\n            return response.sendStatus(400);\n        }\n\n        const pathToFolder = request.body.is_group\n            ? request.user.directories.groupChats\n            : path.join(request.user.directories.chats, String(request.body.avatar_url).replace('.png', ''));\n        if (!request.body.is_group && !isPathUnderParent(request.user.directories.chats, pathToFolder)) {\n            return response.sendStatus(400);"
+    },
+    {
+      "label": "native character-chat delete route",
+      "line": 654,
+      "file": "src/endpoints/chats.js",
+      "startLine": 650,
+      "endLine": 664,
+      "text": "        return response.status(500).send({ error: true });\n    }\n});\n\nrouter.post('/delete', validateAvatarUrlMiddleware, function (request, response) {\n    try {\n        if (!path.extname(request.body.chatfile)) {\n            request.body.chatfile += '.jsonl';\n        }\n\n        const dirName = String(request.body.avatar_url).replace('.png', '');\n        const chatFileName = String(request.body.chatfile);\n        const chatFilePath = path.join(request.user.directories.chats, dirName, sanitize(chatFileName));\n        if (!isPathUnderParent(request.user.directories.chats, chatFilePath)) {\n            return response.sendStatus(400);"
+    },
+    {
+      "label": "native character-chat import route",
+      "line": 771,
+      "file": "src/endpoints/chats.js",
+      "startLine": 767,
+      "endLine": 781,
+      "text": "        return response.send({ error: true });\n    }\n});\n\nrouter.post('/import', validateAvatarUrlMiddleware, function (request, response) {\n    if (!request.body) return response.sendStatus(400);\n\n    const format = request.body.file_type;\n    const avatarUrl = (request.body.avatar_url).replace('.png', '');\n    const characterName = sanitize(request.body.character_name) || 'Character';\n    const userName = sanitize(request.body.user_name) || 'User';\n    const fileNames = [];\n\n    if (!request.file) {\n        return response.sendStatus(400);"
+    },
+    {
+      "label": "native group-chat load route",
+      "line": 872,
+      "file": "src/endpoints/chats.js",
+      "startLine": 868,
+      "endLine": 882,
+      "text": "        return response.send({ error: true });\n    }\n});\n\nrouter.post('/group/get', (request, response) => {\n    if (!request.body || !request.body.id) {\n        return response.sendStatus(400);\n    }\n\n    const id = request.body.id;\n    const chatFilePath = path.join(request.user.directories.groupChats, sanitize(`${id}.jsonl`));\n\n    return response.send(getChatData(chatFilePath));\n});\n"
+    },
+    {
+      "label": "native group-chat save route",
+      "line": 922,
+      "file": "src/endpoints/chats.js",
+      "startLine": 918,
+      "endLine": 932,
+      "text": "        return response.sendStatus(500);\n    }\n});\n\nrouter.post('/group/save', async function (request, response) {\n    try {\n        if (!request.body || !request.body.id) {\n            return response.sendStatus(400);\n        }\n\n        const id = request.body.id;\n        const handle = request.user.profile.handle;\n        const chatFilePath = path.join(request.user.directories.groupChats, sanitize(`${id}.jsonl`));\n        const chatData = request.body.chat;\n"
+    },
+    {
+      "label": "shared chat file writer",
+      "line": 532,
+      "file": "src/endpoints/chats.js",
+      "startLine": 528,
+      "endLine": 542,
+      "text": " * @param {string} handle The users handle, passed to getBackupFunction.\n * @param {string} cardName Passed to backupChat.\n * @param {string} backupDirectory Passed to backupChat.\n */\nexport async function trySaveChat(chatData, filePath, skipIntegrityCheck = false, handle, cardName, backupDirectory) {\n    const jsonlData = chatData?.map(m => JSON.stringify(m)).join('\\n');\n\n    const doIntegrityCheck = (checkIntegrity && !skipIntegrityCheck);\n    const chatIntegritySlug = doIntegrityCheck ? chatData?.[0]?.chat_metadata?.integrity : undefined;\n\n    if (chatIntegritySlug && !await checkChatIntegrity(filePath, chatIntegritySlug)) {\n        throw new IntegrityMismatchError(`Chat integrity check failed for \"${filePath}\". The expected integrity slug was \"${chatIntegritySlug}\".`);\n    }\n    tryWriteFileSync(filePath, jsonlData);\n    getBackupFunction(handle, cardName)(backupDirectory, cardName, jsonlData);"
+    },
+    {
+      "label": "native conversation clear",
+      "line": 1586,
+      "file": "public/script.js",
+      "startLine": 1582,
+      "endLine": 1596,
+      "text": " * Visually removes all chat message elements.\n * @param {object} [options] Options\n * @param {boolean} [options.clearData=false] Optionally clear the chat array's contents.\n */\nexport async function clearChat({ clearData = false } = {}) {\n    cancelDebouncedChatSave();\n    cancelDebouncedMetadataSave();\n    closeMessageEditor();\n    extension_prompts = {};\n    if (is_delete_mode) {\n        $('#dialogue_del_mes_cancel').trigger('click');\n    }\n    //This will also remove non '.mes' elements, e.g. '<div id=\"show_more_messages\">Show more messages</div>'.\n    chatElement.children().remove();\n    if ($('.zoomed_avatar[forChar]').length) {"
+    },
+    {
+      "label": "browser transcript request and global commit",
+      "line": 7634,
+      "file": "public/script.js",
+      "startLine": 7630,
+      "endLine": 7644,
+      "text": "\n    await getOneCharacter(avatar);\n}\n\nexport async function getChat() {\n    try {\n        await unshallowCharacter(this_chid);\n\n        const response = await fetch('/api/chats/get', {\n            method: 'POST',\n            headers: getRequestHeaders(),\n            cache: 'no-cache',\n            body: JSON.stringify({\n                ch_name: characters[this_chid].name,\n                file_name: characters[this_chid].chat,"
+    },
+    {
+      "label": "prompt/render/event continuation after load",
+      "line": 7684,
+      "file": "public/script.js",
+      "startLine": 7680,
+      "endLine": 7694,
+      "text": "        console.log(error);\n    }\n}\n\nasync function getChatResult() {\n    name2 = characters[this_chid].name;\n    let freshChat = false;\n    if (chat.length === 0) {\n        const message = getFirstMessage();\n        if (message.mes) {\n            chat.push(message);\n            freshChat = true;\n        }\n        // Make sure the chat appears on the server\n        await saveChatConditional();"
+    },
+    {
+      "label": "past-chat selection",
+      "line": 7744,
+      "file": "public/script.js",
+      "startLine": 7740,
+      "endLine": 7754,
+      "text": "\n    return message;\n}\n\nexport async function openCharacterChat(file_name) {\n    await waitUntilCondition(() => !isChatSaving, debounce_timeout.extended, 10);\n    await clearChat({ clearData: true });\n    characters[this_chid].chat = file_name;\n    chat_metadata = {};\n    await getChat();\n    $('#selected_chat_pole').val(file_name);\n    await createOrEditCharacter(new CustomEvent('newChat'));\n}\n\n////////// OPTIMZED MAIN API CHANGE FUNCTION ////////////"
+    },
+    {
+      "label": "new character chat selection",
+      "line": 10618,
+      "file": "public/script.js",
+      "startLine": 10614,
+      "endLine": 10628,
+      "text": "        }\n    }\n}\n\nexport async function doNewChat({ deleteCurrentChat = false } = {}) {\n    //Make a new chat for selected character\n    if ((!selected_group && this_chid == undefined) || menu_type == 'create') {\n        return;\n    }\n\n    //Fix it; New chat doesn't create while open create character menu\n    await waitUntilCondition(() => !isChatSaving, debounce_timeout.extended, 10);\n    await clearChat({ clearData: true });\n\n    chat_file_for_del = getCurrentChatDetails()?.sessionName;"
+    },
+    {
+      "label": "Temporary Chat transition",
+      "line": 10922,
+      "file": "public/script.js",
+      "startLine": 10918,
+      "endLine": 10932,
+      "text": " * @param {object} params - Parameters for the new assistant chat\n * @param {boolean} [params.temporary=false] I need a temporary secretary\n * @returns {Promise<void>} - A promise that resolves when the new assistant chat is created\n */\nexport async function newAssistantChat({ temporary = false } = {}) {\n    await clearChat();\n    if (!temporary) {\n        return openPermanentAssistantChat();\n    }\n    chat.splice(0, chat.length);\n    chat_metadata = {};\n    setCharacterName(neutralCharacterName);\n    sendSystemMessage(system_message_types.ASSISTANT_NOTE);\n}\n"
+    },
+    {
+      "label": "browser save entry",
+      "line": 9412,
+      "file": "public/script.js",
+      "startLine": 9408,
+      "endLine": 9422,
+      "text": "export async function saveMetadata() {\n    return await saveChatConditional();\n}\n\nexport async function saveChatConditional() {\n    try {\n        await waitUntilCondition(() => !isChatSaving, DEFAULT_SAVE_EDIT_TIMEOUT, 100);\n    } catch {\n        console.warn('Timeout waiting for chat to save');\n        return;\n    }\n\n    try {\n        cancelDebouncedChatSave();\n"
+    },
+    {
+      "label": "branch snapshot creation",
+      "line": 187,
+      "file": "public/scripts/bookmarks.js",
+      "startLine": 183,
+      "endLine": 197,
+      "text": "    return snapshot;\n}\n\n// Export is used by Timelines extension. Do not remove.\nexport async function createBranch(mesId, { swipeId = null } = {}) {\n    if (!chat.length) {\n        toastr.warning('The chat is empty.', 'Branch creation failed');\n        return;\n    }\n\n    if (mesId < 0 || mesId >= chat.length) {\n        toastr.warning('Invalid message ID.', 'Branch creation failed');\n        return;\n    }\n"
+    },
+    {
+      "label": "branch navigation",
+      "line": 452,
+      "file": "public/scripts/bookmarks.js",
+      "startLine": 448,
+      "endLine": 462,
+      "text": " * @param {number} mesId Message ID\n * @param {{swipeId?: number|null}} [options={}] Branch options\n * @returns {Promise<string?>} Branch file name\n */\nexport async function branchChat(mesId, { swipeId = null } = {}) {\n    if (this_chid === undefined && !selected_group) {\n        toastr.info('No character selected.', 'Create Branch');\n        return null;\n    }\n\n    const fileName = await createBranch(mesId, { swipeId });\n    if (!fileName) {\n        return null;\n    }\n"
+    },
+    {
+      "label": "character rename",
+      "line": 1053,
+      "file": "src/endpoints/characters.js",
+      "startLine": 1049,
+      "endLine": 1063,
+      "text": "        response.sendStatus(500);\n    }\n});\n\nrouter.post('/rename', validateAvatarUrlMiddleware, async function (request, response) {\n    if (!request.body.avatar_url || !request.body.new_name) {\n        return response.sendStatus(400);\n    }\n\n    const oldAvatarName = request.body.avatar_url;\n    const newName = sanitize(request.body.new_name);\n    const oldInternalName = path.parse(request.body.avatar_url).name;\n    const newInternalName = getPngName(newName, request.user.directories);\n    const newAvatarName = `${newInternalName}.png`;\n"
+    },
+    {
+      "label": "character delete",
+      "line": 1416,
+      "file": "src/endpoints/characters.js",
+      "startLine": 1412,
+      "endLine": 1426,
+      "text": "        response.status(500).send({ message: 'Unexpected error while saving character.', error: exception.toString() });\n    }\n});\n\nrouter.post('/delete', validateAvatarUrlMiddleware, async function (request, response) {\n    if (!request.body || !request.body.avatar_url) {\n        return response.sendStatus(400);\n    }\n\n    if (request.body.avatar_url !== sanitize(request.body.avatar_url)) {\n        console.error('Malicious filename prevented');\n        return response.sendStatus(403);\n    }\n\n    const avatarPath = path.join(request.user.directories.characters, request.body.avatar_url);"
+    },
+    {
+      "label": "character import",
+      "line": 1560,
+      "file": "src/endpoints/characters.js",
+      "startLine": 1556,
+      "endLine": 1570,
+      "text": "        ? path.parse(request.body.preserved_name).name\n        : undefined;\n}\n\nrouter.post('/import', async function (request, response) {\n    if (!request.body || !request.file) return response.sendStatus(400);\n\n    const uploadPath = path.join(request.file.destination, request.file.filename);\n    const format = request.body.file_type;\n    const preservedFileName = getPreservedName(request);\n\n    const formatImportFunctions = {\n        'yaml': importFromYaml,\n        'yml': importFromYaml,\n        'json': importFromJson,"
+    }
+  ],
+  "trySaveChatCallSites": [
+    {
+      "file": "src/endpoints/chats.js",
+      "line": 532,
+      "text": "export async function trySaveChat(chatData, filePath, skipIntegrityCheck = false, handle, cardName, backupDirectory) {"
+    },
+    {
+      "file": "src/endpoints/chats.js",
+      "line": 557,
+      "text": "await trySaveChat(chatData, chatFilePath, request.body.force, handle, cardName, request.user.directories.backups);"
+    },
+    {
+      "file": "src/endpoints/chats.js",
+      "line": 934,
+      "text": "await trySaveChat(chatData, chatFilePath, request.body.force, handle, String(id), request.user.directories.backups);"
+    }
+  ],
+  "directWriteAndRenameSites": [
+    {
+      "file": "src/endpoints/chats.js",
+      "line": 69,
+      "text": "tryWriteFileSync(backupFile, data);"
+    },
+    {
+      "file": "src/endpoints/chats.js",
+      "line": 541,
+      "text": "tryWriteFileSync(filePath, jsonlData);"
+    },
+    {
+      "file": "src/endpoints/chats.js",
+      "line": 644,
+      "text": "fs.copyFileSync(pathToOriginalFile, pathToRenamedFile);"
+    },
+    {
+      "file": "src/endpoints/chats.js",
+      "line": 645,
+      "text": "fs.unlinkSync(pathToOriginalFile);"
+    },
+    {
+      "file": "src/endpoints/chats.js",
+      "line": 762,
+      "text": "fs.copyFileSync(pathToUpload, pathToNewFile);"
+    },
+    {
+      "file": "src/endpoints/chats.js",
+      "line": 763,
+      "text": "fs.unlinkSync(pathToUpload);"
+    },
+    {
+      "file": "src/endpoints/chats.js",
+      "line": 794,
+      "text": "fs.unlinkSync(pathToUpload);"
+    },
+    {
+      "file": "src/endpoints/chats.js",
+      "line": 819,
+      "text": "writeFileAtomicSync(filePath, chat, 'utf8');"
+    },
+    {
+      "file": "src/endpoints/chats.js",
+      "line": 859,
+      "text": "writeFileAtomicSync(filePath, flattenedChat, 'utf8');"
+    },
+    {
+      "file": "src/endpoints/chats.js",
+      "line": 861,
+      "text": "fs.copyFileSync(pathToUpload, filePath);"
+    },
+    {
+      "file": "src/endpoints/chats.js",
+      "line": 863,
+      "text": "fs.unlinkSync(pathToUpload);"
+    }
+  ],
+  "scope": "Inspection of pristine pinned source. It does not modify or launch this checkout."
+}
