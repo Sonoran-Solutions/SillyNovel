@@ -34,8 +34,8 @@ export function mountVisualStage({ document, stage, actions }) {
     let projectEpoch=0,activation=actions.getSnapshot().sessionEpoch,capable=false,projectBusy=false,unavailable='Plugin unavailable · session visuals remain unsaved.';
     const client=createProjectClient(()=>actions.getRequestHeaders?.() ?? {});
     const listen=(el,type,cb)=>{el.addEventListener(type,cb);removers.push(()=>el.removeEventListener(type,cb));};
-    function run(fn) { const captured=model,epoch=actions.getSnapshot().sessionEpoch;Promise.resolve().then(fn).catch(error=> { if(!disposed && model===captured && actions.getSnapshot().sessionEpoch===epoch)feedback.textContent='Visual controls unavailable: '+error.message; }); }
-    const button=(text,fn)=> {const e=make('button','menu_button sillynovel-button',text);e.type='button';listen(e,'click',()=>run(fn));panel.append(e);controls.push(e);return e;};
+    function run(fn,mutation=false) { const captured=model,epoch=actions.getSnapshot().sessionEpoch;Promise.resolve().then(()=>{if(mutation&&(projectBusy||model.project&&model.status().importing))return;return fn();}).catch(error=> { if(!disposed && model===captured && actions.getSnapshot().sessionEpoch===epoch)feedback.textContent='Visual controls unavailable: '+error.message; }); }
+    const button=(text,fn)=> {const e=make('button','menu_button sillynovel-button',text);e.type='button';listen(e,'click',()=>run(fn,true));panel.append(e);controls.push(e);return e;};
     const field=(name,tag='select')=> { const label=make('label','sillynovel-control',name);const e=make(tag,'');e.setAttribute('aria-label',name);label.append(e);panel.append(label);controls.push(e);return e;};
     function options(select,items) {
         const signature=JSON.stringify(items);
@@ -52,7 +52,7 @@ export function mountVisualStage({ document, stage, actions }) {
     const projectButtons=[];
     const projectButton=(text,fn)=>{const b=button(text,fn);projectButtons.push(b);return b;};
     async function openProject(create=false) {
-        if(!capable||projectBusy)return;
+        if(!capable||projectBusy||model.project&&model.status().importing)return;
         if(model.project && model.status().dirty && !globalThis.confirm('Discard unsaved project changes and open another project?'))return;
         const token=++projectEpoch,epoch=actions.getSceneEvidence().snapshot.sessionEpoch;
         if(actions.getSnapshot().owner?.scope !== 'character')throw Error('Projects currently support single-character chats only.');
@@ -96,7 +96,7 @@ export function mountVisualStage({ document, stage, actions }) {
     for(const type of ['lock','release'])button(type==='lock'?'Lock choice':'Release lock',()=>model.dispatch({type,field:lockField.value,...(lockField.value==='background'?{}:{characterKey:actor.value})}));
     const fileKind=field('Temporary image use');options(fileKind,[['background','Background'],['outfit','Selected actor outfit']]);
     const file=field('Temporary raster file','input');file.type='file';file.accept='image/png,image/jpeg,image/webp';
-    listen(file,'change',()=>{const selected=file.files[0],kind=fileKind.value,key=actor.value;file.value='';if(selected)run(()=>model.importFile(selected,kind,key));});
+    listen(file,'change',()=>{const selected=file.files[0],kind=fileKind.value,key=actor.value;file.value='';if(selected)run(()=>model.importFile(selected,kind,key),true);});
     const reset=button('Reset transient visuals',()=>model.reset());
     listen(actor,'change',render);
     listen(details,'keydown',event=>{if(event.key==='Escape'){details.open=false;summary.focus();event.stopPropagation();}});
@@ -135,12 +135,13 @@ export function mountVisualStage({ document, stage, actions }) {
             image(img,url);label.textContent=a.label+' · '+manual?.description+(url?'':' · art unavailable');
         }
         const ready=Boolean(verified && scene?.context.selectedSourceKey);
-        for(const e of controls)e.disabled=e===reset ? false : !ready;
         const state=model.project?model.status():null;
+        const paused=projectBusy||Boolean(state?.importing);
+        for(const e of controls)e.disabled=paused||(e===reset ? false : !ready);
         unsaved.textContent=state?(state.dirty?'Unsaved project changes':'Saved project layout'):'Unsaved session visuals';
-        projectStatus.textContent=!capable?unavailable:state?state.name+' · revision '+state.revision+(state.busy?' · saving…':state.dirty?' · unsaved changes':' · saved'):'No project attached. Select one explicitly for this chat.';
-        for(const e of [projectName,projectList,...projectButtons])e.disabled=!capable||projectBusy||!ready||actions.getSnapshot().owner?.scope!=='character';
-        save.disabled=save.disabled||!state||state.busy;detach.disabled=!state;
+        projectStatus.textContent=projectBusy?'Opening project · visual edits paused…':!capable?unavailable:state?state.name+' · revision '+state.revision+(state.importing?' · importing PNG…':state.busy?' · saving…':state.dirty?' · unsaved changes':' · saved'):'No project attached. Select one explicitly for this chat.';
+        for(const e of [projectName,projectList,...projectButtons])e.disabled=!capable||paused||!ready||actions.getSnapshot().owner?.scope!=='character';
+        save.disabled=save.disabled||!state||state.busy;detach.disabled=detach.disabled||!state;
         if(state){reset.disabled=true;preset.disabled=true;expression.disabled=true;file.accept='image/png';help.textContent='This project stores global layout, presence, outfits and locks. Message expressions are not saved. Switching chats detaches the project; explicitly reopen after reload.';}
         else {file.accept='image/png,image/jpeg,image/webp';help.textContent=transientHelp;}
         for(const [control,sessionName,projectLabel] of [[name,'Session actor name','Project actor name'],[actor,'Session actor','Project actor'],[fileKind,'Temporary image use','Project image use'],[file,'Temporary raster file','Project PNG file']]){

@@ -26,3 +26,31 @@ test('late successful save cannot update detached model authority',async()=>{
  await model.register('','Actor');const pending=model.save();context.switch();release();await pending;
  assert.equal(model.status().revision,0);assert.equal(await model.dispatch({type:'clearBackground'}),false);model.dispose();
 });
+test('locked neutral background survives save, reload and explicit reopen',async()=>{
+ const {actions}=setup(),record=initial();let saved;
+ const client={save:async(id,body)=>{saved=structuredClone(body.scene);return{projectId:id,revision:body.expectedRevision+1};}};
+ const model=await createProjectScene(record,client,actions,()=>{},()=>true);
+ await model.dispatch({type:'lock',field:'background'});await model.save();
+ assert.equal(saved.backgroundAssetId,null);assert.equal(saved.backgroundLocked,true);
+ const expected=structuredClone(saved);model.dispose();
+ const reopened=await createProjectScene({...record,revision:1,scene:saved},client,actions,()=>{},()=>true);
+ assert.equal(reopened.get().scene.view.backgroundLocked,true);await reopened.save();assert.deepEqual(saved,expected);reopened.dispose();
+});
+test('pending PNG import rejects concurrent edits and uploads, then attaches its committed asset',async()=>{
+ const {actions}=setup();let release,uploads=0,saved;const assetId=randomUUID();
+ const client={upload:()=>{uploads++;return new Promise(r=>release=()=>r({assetId}));},asset:async()=>({blob:new Blob(['png']),hash:'hash'}),save:async(id,body)=>{saved=body.scene;return{projectId:id,revision:1};}};
+ const model=await createProjectScene(initial(),client,actions,()=>{},()=>true);
+ const file=new Blob(['png'],{type:'image/png'}),pending=model.importFile(file,'background');
+ assert.equal(model.status().importing,true);
+ await assert.rejects(model.dispatch({type:'clearBackground'}),/Wait for/);
+ await assert.rejects(model.register('','Another'),/Wait for/);
+ await assert.rejects(model.importFile(file,'background'),/Wait for/);
+ await model.save();assert.equal(saved,undefined);assert.equal(uploads,1);
+ release();await pending;assert.equal(model.status().importing,false);await model.save();assert.equal(saved.backgroundAssetId,assetId);model.dispose();
+});
+test('failed PNG upload unlocks editing and preserves the existing scene',async()=>{
+ const {actions}=setup();const model=await createProjectScene(initial(),{upload:async()=>{throw Error('UPLOAD_FAILED');}},actions,()=>{},()=>true);
+ await assert.rejects(model.importFile(new Blob(['png'],{type:'image/png'}),'background'),/UPLOAD_FAILED/);
+ assert.equal(model.status().importing,false);assert.equal(model.status().dirty,false);
+ assert.equal(await model.dispatch({type:'lock',field:'background'}),true);model.dispose();
+});

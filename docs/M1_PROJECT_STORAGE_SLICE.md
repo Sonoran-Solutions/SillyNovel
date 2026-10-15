@@ -1,6 +1,6 @@
 # First independent project slice — review candidate
 
-Owner assignment: 2026-10-15, independent projects plus an optional local plugin; planning and first bounded implementation only. Starting fetched main `ca77bbf5e4ee5219e34e873b1680e8d644754149`; PR #22 merged and DYL-48 Done verified. Documentation/Linear planning is separate open PR #23 (DYL-49). Implementation addresses DYL-50/51/52/53 with DYL-54 validation, on `codex/project-storage-slice`. No merge, live installation, production-release or Gate A approval is inferred.
+Owner assignment: 2026-10-15, independent projects plus an optional local plugin; planning and first bounded implementation only. Starting fetched main `ca77bbf5e4ee5219e34e873b1680e8d644754149`; PR #22 merged and DYL-48 Done verified. Documentation PR #23 was owner-approved and merged at `97441493dd42343883c5ef3f5ae44ad845e1368a`; DYL-49 is Done. Implementation addresses DYL-50/51/52/53 with DYL-54 validation, on `codex/project-storage-slice`. No merge, live installation, production-release or Gate A approval is inferred.
 
 ## Implementation
 
@@ -43,7 +43,7 @@ Initial store test had an incorrect relative fixture path (2 failures, corrected
 
 GO means ready for senior review of this bounded slice, never production or owner-experience acceptance. No DYL-22/23 status or blockers change; DYL-24 remains supported, M1.3/M2 unauthorized, Gate A NOT_RUN. DYL-55 export/import/backup and DYL-56 remembered hints remain separately authorized future work.
 
-Still unsupported: accounts-disabled persistence, other untested Node/host/platform combinations, groups, message cues/history/expressions, JPEG/WebP, duplication, cross-host sync, collaborative merging beyond CAS refusal, image generation and direction. Administrative restore, power loss, account lifecycle recovery, version migrations, global request-rate/resource defenses and full clean dependency installation on other platforms remain release work. The plugin is unsandboxed; a host administrator or another server plugin is outside its security boundary. No upstream contact was made. Smallest next step is senior review of the two open PRs and the documented runtime/account prerequisites, not starting export or M1.3.
+Still unsupported: accounts-disabled persistence, other untested Node/host/platform combinations, groups, message cues/history/expressions, JPEG/WebP, duplication, cross-host sync, collaborative merging beyond CAS refusal, image generation and direction. Administrative restore, power loss, account lifecycle recovery, version migrations, global request-rate/resource defenses and full clean dependency installation on other platforms remain release work. The plugin is unsandboxed; a host administrator or another server plugin is outside its security boundary. No upstream contact was made. Smallest next step is senior re-review of implementation PR #24 and the documented runtime/account prerequisites, not starting export or M1.3.
 
 ## Frozen evidence — 2026-10-15
 
@@ -54,3 +54,13 @@ Still unsupported: accounts-disabled persistence, other untested Node/host/platf
 Exact non-mutation scope: 33 files enumerated in `host.json`, under default-user characters, chats and worlds (including bundled public fixtures). File inventories and byte hashes matched across save/reload/explicit reopen; native send testing occurred afterward. No global filesystem, other-account, persona or connection-profile non-mutation claim is made.
 
 Time record: first explicit clock sample 19:29:52 UTC through 19:51:12 UTC = 21 minutes 20 seconds of observed work, plus initial inspection before that sample and final handoff afterward (not separately timed). Main blockers resolved: optional Node floor, default-user incarnation instability, fixture paths/404 parsing/drawer synchronization and fixed-origin provider/dependency-path setup. No owner approval wait or foundational persistence blocker remains for review; production limitations above remain.
+
+## Senior-review corrections — 2026-10-15
+
+Starting implementation head `fd6cab6289779225d03ba0001cae5fff14b4e8b4`. Merged the approved documentation baseline into this branch. PR #24 remains unmerged; DYL-50–54 remain In Review.
+
+Project replacement now disables all visual mutations through both control state and the event-handler gate until loading and asset restoration finish. Failed replacement restores editing of the original project. Native reading/reply controls stay available. Neutral backgrounds restore their explicit lock even without an asset. PNG import holds a separate busy flag through upload and attachment; concurrent edits, registration, saves, imports and project management are refused until it finishes, eliminating the ordinary edit-race orphan path. Failed uploads release the flag without changing the scene.
+
+Upload and layout save remain separate commits: closing/reloading/disabling the extension or switching native chats can still leave an uploaded asset unreferenced, as can discarding an unsaved arrangement. There is no cleanup/deletion API in this slice. Native chat switching must retain its authority to detach; no delayed import can attach into the new chat. This bounded fix does not claim recovery or reclaiming quota after those interruptions. Node 22.13 minimum remains NOT_TESTED; synchronous worst-case PNG decode time/memory remains unmeasured release work.
+
+Added regressions for delayed successful/failed replacement with attempted edits, full locked-neutral scene round-trip, concurrent upload/edit rejection and upload failure recovery. Updated verification results follow after execution; earlier frozen evidence above remains historical.

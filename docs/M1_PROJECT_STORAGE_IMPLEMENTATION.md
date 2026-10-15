@@ -8,7 +8,7 @@ The owner-approved [architecture pivot](M1_INDEPENDENT_PROJECT_STORAGE.md) autho
 
 | Issue | Scope | Depends on | Current status |
 |---|---|---|---|
-| [DYL-49](https://linear.app/devils17/issue/DYL-49) | Architecture/docs | — | In Review |
+| [DYL-49](https://linear.app/devils17/issue/DYL-49) | Architecture/docs | — | Done; PR #23 merged |
 | [DYL-50](https://linear.app/devils17/issue/DYL-50) | Optional authenticated plugin | DYL-49 | In Review |
 | [DYL-51](https://linear.app/devils17/issue/DYL-51) | Versioned project store/CAS | DYL-50 | In Review |
 | [DYL-52](https://linear.app/devils17/issue/DYL-52) | Immutable PNG assets | DYL-50 | In Review |

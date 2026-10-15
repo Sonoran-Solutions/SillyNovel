@@ -8,7 +8,7 @@ export async function createProjectScene(project,client,actions,changed,isCurren
     validateScene(project.scene);
     if(project.schemaVersion!==1 || !validId(project.projectId) || !label(project.name) || !Number.isSafeInteger(project.revision))throw Error('INVALID_PROJECT');
     const epoch=actions.getSnapshot().sessionEpoch;
-    let disposed=false,edit=0,savedEdit=0,busy=false,scene,notice='Project opened · global layout only.',catalogRevision=0;
+    let disposed=false,edit=0,savedEdit=0,busy=false,importing=false,scene,notice='Project opened · global layout only.',catalogRevision=0;
     let actors=project.scene.actors.map(a=>({key:a.actorId,label:a.name,description:'Project actor',defaultURL:null}));
     const assets=[],media=new Map();
     const bytes=new TextEncoder().encode('sillynovel-project-global-v1:'+project.projectId);
@@ -41,7 +41,7 @@ export async function createProjectScene(project,client,actions,changed,isCurren
         for(const a of project.scene.actors)if(a.spriteAssetId)await install(a.spriteAssetId,'outfit',a.actorId);
         if(!current())throw Error('STALE_PROJECT');refresh();
         if(project.scene.backgroundAssetId)apply({type:'setBackground',assetId:project.scene.backgroundAssetId});
-        if(!project.scene.backgroundLocked)apply({type:'release',field:'background'});
+        apply({type:project.scene.backgroundLocked?'lock':'release',field:'background'});
         for(const a of project.scene.actors){
             apply({type:'addCharacter',characterKey:a.actorId});
             apply({type:'setPresence',characterKey:a.actorId,present:a.present});
@@ -55,23 +55,27 @@ export async function createProjectScene(project,client,actions,changed,isCurren
     return {
         project:true,
         get:()=>({scene,actors,assets,media,notice,verifiedStamp:!disposed&&actions.getSnapshot().sessionEpoch===epoch?evidenceStamp(actions.getSnapshot()):null}),
-        status:()=>({name:project.name,revision:project.revision,dirty:edit!==savedEdit,busy}),
+        status:()=>({name:project.name,revision:project.revision,dirty:edit!==savedEdit,busy,importing}),
         async sync(){if(!current())return false;notify();return true;},
-        async dispatch(command){if(!current())return false;apply(command);edit++;notice='Applied · unsaved project changes.';notify();return true;},
-        async register(_preset,name){if(!current())return;if(!label(name)||actors.length>=20)throw Error('Use a name of 1–80 characters; maximum 20 actors.');const key=crypto.randomUUID();actors.push({key,label:name,description:'Project actor',defaultURL:null});refresh();apply({type:'addCharacter',characterKey:key});edit++;notify();return key;},
+        async dispatch(command){if(importing)throw Error('Wait for the PNG import to finish.');if(!current())return false;apply(command);edit++;notice='Applied · unsaved project changes.';notify();return true;},
+        async register(_preset,name){if(importing)throw Error('Wait for the PNG import to finish.');if(!current())return;if(!label(name)||actors.length>=20)throw Error('Use a name of 1–80 characters; maximum 20 actors.');const key=crypto.randomUUID();actors.push({key,label:name,description:'Project actor',defaultURL:null});refresh();apply({type:'addCharacter',characterKey:key});edit++;notify();return key;},
         async importFile(file,kind,key){
             if(!current())return;
             if(file.type!=='image/png'||file.size>5*1024*1024)throw Error('Project imports require static PNG up to 5 MiB.');
             if(kind!=='background'&&!actors.some(a=>a.key===key))throw Error('Select a project actor first.');
-            const captured=edit;
-            const result=await client.upload(project.projectId,file);
-            if(!current()||captured!==edit)return;
-            const ref=await install(result.assetId,kind,kind==='background'?undefined:key);
-            if(!current()||captured!==edit)return;
-            refresh();apply({type:kind==='background'?'setBackground':'setOutfit',assetId:ref,...(kind==='background'?{}:{characterKey:key})});edit++;notice='Imported · unsaved project arrangement.';notify();
+            if(importing)throw Error('Wait for the PNG import to finish.');
+            importing=true;notice='Importing PNG · visual edits paused.';notify();
+            try {
+                const result=await client.upload(project.projectId,file);
+                if(!current())return;
+                const ref=await install(result.assetId,kind,kind==='background'?undefined:key);
+                if(!current())return;
+                refresh();apply({type:kind==='background'?'setBackground':'setOutfit',assetId:ref,...(kind==='background'?{}:{characterKey:key})});edit++;notice='Imported · unsaved project arrangement.';
+            } catch(error){notice='Import failed: '+error.message;throw error;}
+            finally{importing=false;notify();}
         },
         async save(){
-            if(!current()||busy)return;
+            if(!current()||busy||importing)return;
             const captured=edit,id=project.projectId,expectedRevision=project.revision;
             const body={schemaVersion:1,expectedRevision,name:project.name,scene:structuredClone(globalState())};
             busy=true;notify();
