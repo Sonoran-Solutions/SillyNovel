@@ -87,7 +87,9 @@ export async function run(h) {
     const held = first.api('cas', { target: enrolled.active.target, expectedRevision: 1, record: { background: 'tavern' } }, 400);
     while (!(await first.api('barrier', { clientId: enrolled.active.target.clientId, action: 'status' })).entered) await new Promise(r => setTimeout(r, 10));
     await revoke(enrolled);
+    const enrollmentCard = fs.readFileSync(path.join(root, 'characters', enrolled.avatar));
     const fresh = await first.api('reenroll', { avatar: enrolled.avatar });
+    assert.deepEqual(fs.readFileSync(path.join(root, 'characters', enrolled.avatar)), enrollmentCard);
     assert.notEqual(fresh.scopeId, enrolled.entry.scopeId); assert.ok(!fresh.chatIds.includes(enrolled.entry.chatId));
     const accepted = await load(enrolled); assert.ok(accepted.target);
     const record = await first.api('read', { target: accepted.target });
@@ -97,7 +99,7 @@ export async function run(h) {
     await first.api('barrier', { clientId: enrolled.active.target.clientId, action: 'release' });
     assert.equal((await held).error, 'INVALID_TARGET');
     assert.equal((await first.api('accept-load', enrolled.ticket.request, 400)).error, 'INVALID_TARGET');
-    cp('explicit same-name same-card same-byte re-enrollment mints fresh IDs; copied metadata ignored; held old CAS/load refuse', { enrolled, fresh, accepted, record });
+    cp('explicit same-name same-card same-byte re-enrollment mints fresh IDs; copied metadata ignored; held old CAS/load refuse', { enrolled, fresh, accepted, record, cardBase64: enrollmentCard.toString('base64'), cardSha256: h.hash(enrollmentCard) });
 
     const again = await fixture('AfterRestart'); await revoke(again); await restart();
     const afterRestart = await first.api('reenroll', { avatar: again.avatar });
@@ -119,7 +121,7 @@ export async function run(h) {
         }
         assert.equal(loser.error, 'RESERVATION_BUSY'); assert.equal(bytes(authorityFile), before);
         gate.release(); const result = await winner; assert.ok((await load(x)).target);
-        cp(`enrollment overlapping ${competitor}: one owner; loser refuses before mutation`, { result, loser });
+        cp(`enrollment overlapping ${competitor}: one owner; loser refuses before mutation`, { response: result, loser });
     }
     // Opposite ordering: native rename owns the reservation before enrollment arrives.
     const reverse = await fixture('ReverseRace'); await revoke(reverse); const reverseGate = await arm('rename-read');
@@ -146,7 +148,7 @@ export async function run(h) {
         await restart(); assert.equal(bytes(authorityFile), pending);
         const refusal = await unavailable(x);
         assert.equal((await first.api('reenroll', { avatar: x.avatar }, 503)).error, 'EXTERNAL_LOCAL_MISMATCH');
-        cp(`${point === 'local-begin' ? 'F2' : 'F3'} external/local ${point} failure stays refused after restart`, { result, refusal, pending }, 'SYNTHETIC');
+        cp(`${point === 'local-begin' ? 'F2' : 'F3'} external/local ${point} failure stays refused after restart`, { response: result, refusal, pending }, 'SYNTHETIC');
         reset(clean);
     }
     // Actual native failure after external intent and lifecycle revocation.
@@ -154,6 +156,14 @@ export async function run(h) {
     const nativeFailure = await first.request('/api/characters/rename', { avatar_url: x.avatar, new_name: `Failed-${h.runId}` }, 500); fs.unlinkSync(flag);
     assert.equal(bytes(x.file), x.canonical); await restart(); const nativeRefusal = await unavailable(x);
     cp('F2 native mutation fails after external advance; unchanged canonical bytes confer no authority', { nativeFailure, nativeRefusal }, 'SYNTHETIC'); reset(clean);
+
+    const malformed = new FormData(); malformed.set('file_type', 'jsonl'); malformed.set('avatar_url', x.avatar);
+    malformed.set('avatar', new Blob(['{}']), 'malformed.jsonl');
+    const nativeLogicalFailure = await first.request('/api/chats/import', malformed);
+    assert.equal(nativeLogicalFailure.error, true); assert.ok(external().pending);
+    assert.equal(bytes(x.file), x.canonical); await restart(); const logicalRefusal = await unavailable(x);
+    cp('F2 native HTTP 200 error is not commit evidence; external intent remains refused after restart', { nativeLogicalFailure, logicalRefusal });
+    reset(clean);
 
     for (const [label, file] of [['F4 registry', registryFile], ['F5 external', authorityFile]]) {
         for (const fault of ['missing', 'corrupt', 'stale']) {
@@ -211,7 +221,7 @@ export async function run(h) {
         await unavailable(invalid);
         if (fault === 'missing-card') fs.writeFileSync(card, cardBytes);
         if (fault === 'ambiguous-inventory') fs.unlinkSync(extra);
-        cp(`explicit enrollment refuses ${fault} without granting authority`, { result }, 'SYNTHETIC');
+        cp(`explicit enrollment refuses ${fault} without granting authority`, { response: result }, 'SYNTHETIC');
         reset(saved);
     }
 

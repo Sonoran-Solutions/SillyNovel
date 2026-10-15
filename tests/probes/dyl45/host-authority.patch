@@ -127,20 +127,26 @@
          } catch (error) { return res.status(error.status ?? 503).json({ error: error.code ?? 'RESERVATION_UNAVAILABLE' }); }
          const owned = { root, operationId: state.pending.operationId };
          activeWriters.set(root, owned);
-@@ -133,7 +216,12 @@
+@@ -133,7 +216,18 @@
                  if (fs.existsSync(path.join(rootFor(root), 'dyl44-finalize-failure'))) fail('FINALIZATION_FAILED', 503);
                  // Failed native operations retain their scoped tombstones/pending registry.
                  // Clearing the route lock never restores any identity or visual record.
 +                const authority = external(root);
 +                if (authority.pending !== owned.operationId || authority.generation !== state.serial) fail('STALE_EXTERNAL_OWNER', 503);
-+                if (res.statusCode >= 400 || (fs.existsSync(rootFor(root)) && load(root).pending)) fail('INCOMPLETE_NATIVE_OPERATION', 503);
++                // Native import can return HTTP 200 with {error:true}; status alone is not commit evidence.
++                let nativeError = false;
++                if (String(res.getHeader('content-type')).includes('application/json')) {
++                    try { nativeError = Boolean(JSON.parse(String(args[0])).error); }
++                    catch { nativeError = true; }
++                }
++                if (nativeError || res.statusCode >= 400 || (fs.existsSync(rootFor(root)) && load(root).pending)) fail('INCOMPLETE_NATIVE_OPERATION', 503);
                  atomic(reservationFile(root), { ...state, pending: null });
 +                externalFault(root, 'finalize');
 +                atomic(externalFile(root), { ...authority, pending: null, registryDigest: registryDigest(root) });
              } catch { /* Disk intent remains: all visual authority and participating writers refuse after restart. */ }
              activeWriters.delete(root);
              return end.apply(this, args);
-@@ -147,7 +235,7 @@
+@@ -147,7 +241,7 @@
      const root = rootFor(userRoot);
      if (!fs.existsSync(root)) {
          fs.mkdirSync(root);
@@ -149,7 +155,7 @@
      }
      const catalog = load(userRoot);
      if (catalog.pending) return;
-@@ -230,6 +318,12 @@
+@@ -230,6 +324,12 @@
          || fs.readFileSync(path.join(dataRoot, '.dyl27-owned'), 'utf8') !== runId) {
          throw new Error('DYL27 requires an explicitly owned disposable data root');
      }
@@ -162,7 +168,7 @@
      installReservations(app);
      const clients = new Map();
      const loadRequests = new Map();
-@@ -249,7 +343,7 @@
+@@ -249,7 +349,7 @@
          try { catalog = JSON.parse(fs.readFileSync(path.join(root, 'identities.json'), 'utf8')); }
          catch { fail('IDENTITY_UNAVAILABLE', 409); }
          if (catalog.pending || !uuid(catalog.storeId) || !Array.isArray(catalog.chats) || !Array.isArray(catalog.scopes)) fail('IDENTITY_UNAVAILABLE', 409);
@@ -171,7 +177,7 @@
          catch { fail('IDENTITY_UNAVAILABLE', 409); }
          return { userRoot, root, catalog };
      }
-@@ -325,6 +419,7 @@
+@@ -325,6 +425,7 @@
              catch (error) { res.status(error.status ?? 500).json({ error: error.status ? error.code : 'IO_FAILED' }); }
          });
      }
