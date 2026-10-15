@@ -198,3 +198,9 @@ Corrected campaign: 56 expected checkpoints (16 inherited + 40 new), ONE unsafe 
 ## DYL-46 re-review corrections — 2026-10-15
 
 [Current report, commands, revisions, hashes, raw evidence and limits](M1_EXTERNAL_AUTHORITY_RECONCILIATION.md#pr-20-re-review-corrections--2026-10-15). Approved contracts and forward-only undispatched receipt recovery now complete all inherited campaign suffixes: reconciliation 61 expected (ONE unsafe control), writers 33/33, lifecycle 41/41, generations 37/37, authority 46/46. Node 64/64; corrected Chromium 24/24 on both current main and PR. GO for bounded feasibility under approved contracts; merge HOLD for owner review. Unknown writers remain outside the guarantee. Production unchanged; PR #20 OPEN/unmerged, DYL-46 In Review; downstream gates unchanged.
+
+## DYL-57 portable project bundles — 2026-10-15
+
+Owner assignment authorizes the bounded bundle slice under DYL-55, after merged PR #24 at `537c193ce6ac22234cfaab04def85af8ae0a25a2`. Live Linear inspection reports DYL-49–54 Done; no DYL-54 status was changed here. DYL-55's existing dependency remains. [Portable contract](M1_PROJECT_PORTABILITY.md): strict versioned JSON/PNG copy, fresh identities and explicit open; database recovery (DYL-58) and unused-asset cleanup (DYL-59) remain Backlog/unimplemented. Final exact-head evidence and review recommendation are in [the portability implementation report](M1_PROJECT_PORTABILITY_IMPLEMENTATION.md). DYL-22/23 remain blocked, DYL-56 Backlog, M1.3/M2 unauthorized and Gate A NOT_RUN.
+
+DYL-57 frozen candidate `770932811430dbd85bee79182be75ee3c22b7370`: 70/70 Node, 37/37 storage/bundle, 31/31 actual-entry Chromium, 12/12 disposable-host checkpoints PASS; 33 enumerated native file hashes unchanged. GO for bounded senior review, no production or human-gate acceptance. Exact commands, resource measurements, hashes and limits are in the portability report.

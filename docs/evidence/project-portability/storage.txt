@@ -1,0 +1,47 @@
+✔ bundle roundtrip remaps all IDs, preserves bytes/locks, isolates edits and survives restart (467.462784ms)
+✔ foreign export, forged IDs, busy worker, and caller ownership are refused or independently scoped (297.669799ms)
+▶ malformed containers all leave committed database inventory identical
+  ✔ truncated (48.409912ms)
+  ✔ oversized (68.061693ms)
+  ✔ excess entries (46.570886ms)
+  ✔ compression (40.525046ms)
+  ✔ duplicate entry (107.589509ms)
+  ✔ traversal (49.466643ms)
+  ✔ absolute (53.238208ms)
+  ✔ symlink (44.766914ms)
+  ✔ extra field (43.527919ms)
+  ✔ source project authority (45.845804ms)
+  ✔ version (50.144507ms)
+  ✔ missing (93.228071ms)
+  ✔ wrong hash (47.322206ms)
+  ✔ wrong length (44.294396ms)
+  ✔ foreign reference (49.815232ms)
+  ✔ invalid actor (46.547272ms)
+  ✔ extra scene key (48.609309ms)
+  ✔ script (111.942501ms)
+  ✔ corrupt png (54.298094ms)
+  ✔ dimensions (44.984795ms)
+  ✔ ZIP bytes (43.455937ms)
+  ✔ duplicate JSON key (40.873185ms)
+✔ malformed containers all leave committed database inventory identical (1396.65963ms)
+▶ write-phase failures inspect rollback; quotas refuse atomically
+  ✔ project creation (131.206612ms)
+  ✔ second asset insertion (118.556365ms)
+  ✔ final scene insertion (111.94696ms)
+  ✔ commit deferred foreign key (143.156563ms)
+  ✔ project quota (485.029743ms)
+  ✔ asset quota (196.290603ms)
+✔ write-phase failures inspect rollback; quotas refuse atomically (1369.010251ms)
+✔ export snapshots stay coherent while a peer saves; corrupt saved bytes refuse (233.420144ms)
+✔ experimental export ceilings refuse the complete saved arrangement (346.667295ms)
+✔ owned projects, immutable PNGs, CAS, failed transaction and restart (93.735385ms)
+✔ PNG decode, CRC, unsupported formats and byte/dimension limits (31.712727ms)
+✔ unknown schema refuses without rewriting database (5.33744ms)
+ℹ tests 37
+ℹ suites 0
+ℹ pass 37
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4288.551532
