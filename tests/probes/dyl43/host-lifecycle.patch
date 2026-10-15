@@ -1,0 +1,139 @@
+--- a/src/dyl27-storage.mjs
++++ b/src/dyl27-storage.mjs
+@@ -41,7 +41,26 @@
+         if (fs.existsSync(temporary)) fs.unlinkSync(temporary);
+     }
+ }
+-function persist(userRoot, catalog) { atomic(path.join(rootFor(userRoot), 'identities.json'), catalog); }
++function persist(userRoot, catalog) {
++    if (fs.existsSync(path.join(rootFor(userRoot), 'dyl43-finalize-failure')) && !catalog.pending) fail('INJECTED_FINALIZATION', 503);
++    atomic(path.join(rootFor(userRoot), 'identities.json'), catalog);
++}
++// DYL-43: permanent revocation has no post-native finalization/re-enable step.
++// ponytail: single-process experiment; restore/multi-process need an external store generation.
++export function revokeLifecycle(userRoot, avatars = null, file = null) {
++    const registry = path.join(rootFor(userRoot), 'identities.json');
++    if (!fs.existsSync(registry)) return; // No registry, no authority; never reconstruct it.
++    const catalog = load(userRoot); // Corrupt registry refuses destructive mutation.
++    if (!Array.isArray(catalog.scopes) || !Array.isArray(catalog.chats)) fail('IDENTITY_UNAVAILABLE', 503);
++    if (file) {
++        const relativePath = path.relative(userRoot, file);
++        for (const chat of catalog.chats) if (chat.relativePath === relativePath) chat.disabled = true;
++    } else {
++        for (const scope of catalog.scopes) if (avatars === null || avatars.includes(scope.avatar)) scope.disabled = true;
++    }
++    persist(userRoot, catalog); // Failure propagates BEFORE canonical mutation.
++    if (fs.existsSync(path.join(rootFor(userRoot), 'dyl43-after-revoke'))) fail('INJECTED_AFTER_REVOCATION', 503);
++}
+ export function scopeCreated(userRoot, avatar) {
+     const root = rootFor(userRoot);
+     if (!fs.existsSync(root)) {
+@@ -77,7 +96,7 @@
+         if (chat && JSON.stringify(seal(file)) !== JSON.stringify(chat.seal)) throw new Error('external drift');
+         if (!chat && (!['save', 'import'].includes(operation) || fs.existsSync(file))) throw new Error('adoption refused');
+         catalog.pending = { operation, relativePath, destination: destination && path.relative(userRoot, destination) };
+-        persist(userRoot, catalog);
++        try { persist(userRoot, catalog); } catch { fail('MUTATION_INVALIDATION_FAILED', 503); }
+         if (!chat) {
+             chat = { relativePath, scopeId: scope.scopeId, chatId: randomUUID() };
+             catalog.chats.push(chat);
+@@ -85,7 +104,7 @@
+     } catch (error) {
+         // An identical import overwrite cannot be detected by the byte seal. If
+         // durable revocation failed, leave the original canonical file untouched.
+-        if (error.code === 'IMPORT_INVALIDATION_FAILED') throw error;
++        if (['IMPORT_INVALIDATION_FAILED', 'MUTATION_INVALIDATION_FAILED'].includes(error.code)) throw error;
+         catalog = null;
+     }
+     const result = action(); // Native chat operation remains usable when visual identity is unresolved.
+@@ -128,14 +147,12 @@
+     }
+     const clients = new Map();
+     const loadRequests = new Map();
+-    // Unsupported scope mutation invalidates visual authority BEFORE native processing.
+-    for (const name of ['rename', 'delete', 'import', 'edit-avatar']) app.use(`/api/characters/${name}`, (req, res, next) => {
++    // Multipart routes run before field parsing here: revoke all existing scopes.
++    for (const name of ['import', 'edit-avatar']) app.use(`/api/characters/${name}`, (req, res, next) => {
+         try {
+-            const catalog = load(req.user.directories.root);
+-            for (const scope of catalog.scopes) scope.disabled = true;
+-            persist(req.user.directories.root, catalog);
+-        } catch { /* absent registry has no visual authority */ }
+-        next();
++            revokeLifecycle(req.user.directories.root);
++            next();
++        } catch { res.status(503).json({ error: 'LIFECYCLE_INVALIDATION_FAILED' }); }
+     });
+     // ponytail: one host process only; multiple processes require a shared transaction boundary.
+     function catalogFor(req) {
+@@ -170,14 +187,18 @@
+     function chatFor(context, chatId) {
+         const chat = context.catalog.chats.find(item => item.chatId === chatId);
+         const scope = chat && context.catalog.scopes.find(s => s.scopeId === chat.scopeId);
+-        if (!chat || chat.deleted || !scope || scope.disabled || !uuid(chat.chatId) || !uuid(chat.scopeId)) fail('INVALID_TARGET');
++        if (!chat || chat.deleted || chat.disabled || !scope || scope.disabled || !uuid(chat.chatId) || !uuid(chat.scopeId)) fail('INVALID_TARGET');
+         if (!Number.isSafeInteger(chat.sourceRevision) || chat.sourceRevision < 1) fail('INVALID_TARGET');
+         const file = path.resolve(context.userRoot, chat.relativePath);
+         if (!file.startsWith(`${context.userRoot}${path.sep}`)) fail('INVALID_TARGET');
+         try {
+             // Guard detects changes outside hooked native writes; UUIDs come from lifecycle allocation.
+             if (JSON.stringify(seal(file)) !== JSON.stringify(chat.seal)) fail('INVALID_TARGET');
+-        } catch { fail('INVALID_TARGET'); }
++        } catch {
++            // Observed drift is permanent; restoring old bytes cannot silently re-enable it.
++            revokeLifecycle(context.userRoot, null, file);
++            fail('INVALID_TARGET');
++        }
+         return chat;
+     }
+     function validate(req, target) {
+--- a/src/endpoints/characters.js
++++ b/src/endpoints/characters.js
+@@ -1,4 +1,4 @@
+-import { scopeCreated } from '../dyl27-storage.mjs';
++import { scopeCreated, revokeLifecycle } from '../dyl27-storage.mjs';
+ import path from 'node:path';
+ import fs from 'node:fs';
+ import { promises as fsPromises } from 'node:fs';
+@@ -1070,6 +1070,7 @@
+     const newChatsPath = path.join(request.user.directories.chats, newInternalName);
+ 
+     try {
++        if (process.env.SN_DYL27_RUN) revokeLifecycle(request.user.directories.root, [oldAvatarName, newAvatarName]);
+         // Read old file, replace name int it
+         const rawOldData = await readCharacterData(oldAvatarPath);
+         if (rawOldData === undefined) throw new Error('Failed to read character file');
+@@ -1082,6 +1083,7 @@
+         // Write data to new location
+         await writeCharacterData(oldAvatarPath, newData, newInternalName, request);
+ 
++        if (process.env.SN_DYL27_RUN && fs.existsSync(path.join(request.user.directories.root, 'sillynovel-dyl27/dyl43-partial-rename'))) throw new Error('Injected after new card write');
+         // Rename chats folder
+         if (fs.existsSync(oldChatsPath) && !fs.existsSync(newChatsPath)) {
+             // Supplying a filter avoids a Node.js Windows copyDir crash while preserving all entries.
+@@ -1431,6 +1433,10 @@
+         return response.sendStatus(400);
+     }
+ 
++    if (process.env.SN_DYL27_RUN) {
++        try { revokeLifecycle(request.user.directories.root, [request.body.avatar_url]); }
++        catch { return response.status(503).json({ error: 'LIFECYCLE_INVALIDATION_FAILED' }); }
++    }
+     fs.unlinkSync(avatarPath);
+     invalidateThumbnail(request.user.directories, 'avatar', request.body.avatar_url);
+     let dir_name = (request.body.avatar_url.replace('.png', ''));
+--- a/src/endpoints/data-maid.js
++++ b/src/endpoints/data-maid.js
+@@ -1,3 +1,4 @@
++import { revokeLifecycle } from '../dyl27-storage.mjs';
+ import crypto from 'node:crypto';
+ import fs from 'node:fs';
+ import path from 'node:path';
+@@ -805,6 +806,7 @@
+                 continue;
+             }
+ 
++            if (process.env.SN_DYL27_RUN) revokeLifecycle(req.user.directories.root, null, pathToFile);
+             await fs.promises.unlink(pathToFile);
+         }
+ 
