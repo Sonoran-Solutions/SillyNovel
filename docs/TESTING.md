@@ -341,3 +341,12 @@ Final evidence: 36/36 new-campaign expected outcomes, 38/38 inherited lifecycle,
 [Exact commands, counts, hashes, raw bytes and limitations](M1_EXTERNAL_STORE_AUTHORITY.md). `SN_DYL44=baseline SN_DYL45=1` runs the new campaign after all 16 inherited load/CAS checks. `SN_DYL45=baseline` applies the same overlay without the new campaign, permitting unchanged DYL-42/43 comparisons. The original DYL-44 counterexamples remain untouched. Independent external authority is outside the owned data root and excluded from the hardlink rollback snapshot.
 
 Do not label the complete inherited overlay suites PASS: their unchanged availability expectations fail under conservative external pending/digest refusal, with explicit raw evidence and counts in the report. Missing/corrupt-state tests restore only injected fixture faults, never imply a supported recovery API. Node and actual-entry Chromium regressions exercise unchanged production files. No account migration, external-authority rollback, cross-process or power-loss guarantee. Gate A remains NOT_RUN.
+
+
+## DYL-46 external reconciliation — 2026-10-14
+
+[Contract, exact commands, hashes, fault matrix and evidence](M1_EXTERNAL_AUTHORITY_RECONCILIATION.md). Frozen proof `1ae869f6b289a71a490fedf15799073e559c1ac2`, pinned SillyTavern 1.19.0 `7e8663cd9c184a550b37238218bdd32c6efc68e9`. Enable `SN_DYL46=1 SN_DYL44=baseline SN_DYL45=baseline` in the existing owned DYL-28 runner; `SN_DYL46=baseline` applies only the patch when exercising an unchanged predecessor campaign.
+
+New campaign: 43 expected checkpoints, including two unsafe accepted counterexamples. Full unchanged writer overlay 33/33; lifecycle FAIL after 21; generations FAIL after 27; authority FAIL after 32. Unreached suffixes are not green; no inherited campaign assertions changed. F1–F8, clean-abort faults, two accounts, enrollment races, held old CAS/load, root rollback across two restarts and forged local fields have direct replacement evidence. Failed external intent plus unknown byte restoration plus process restart remains an explicit unsafe control. Recommendation REVISE / compatibility HOLD.
+
+Node TAP 64/64; actual-entry Chromium 24/24; Node v26.8.1 / Chromium 151.0.7922.34. All owned cleanup checks pass; no new host/provider/device/owner compatibility claim. Raw JSON is losslessly XZ-compressed; readable indexes, baseline boundary bytes, summaries and checksums are included.

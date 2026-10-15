@@ -1,0 +1,15 @@
+{
+  "notes": [
+    "Initial plain git fetch failed because .git is read-only in the sandbox; authorized elevated fetch succeeded. Initial gh verification could not reach GitHub from restricted execution; elevated verification succeeded.",
+    "python is unavailable; preparation was rerun successfully with python3.",
+    "baseline-traced-writers initially did not capture the syntax-error fixture; corrected TRACE filter and reran frozen protocol in baseline-traced-writers-v2.",
+    "dev-1 and writers-1 used the first parser hook covering {} but not JSON.parse(header); the later syntax-error rejection remained pending. Original evidence retained.",
+    "dev-1 dynamically loaded an edited campaign during development; its mutable-source hashes are not frozen certification.",
+    "dev-2 completed 41 checkpoints before the failed-observation latch and extra controls were frozen; not final proof.",
+    "lifecycle-1 reached the later after-revocation failure; same contract blocker retained on final proof.",
+    "Restricted Node execution reported only six file-level smoke entries; elevated TAP proves all 64 individual tests.",
+    "No inherited campaign assertion was changed. Unreached suffixes are not certified.",
+    "Packaging link check initially ran before SHA256SUMS was created; generated the manifest and reran successfully. No runtime proof changed."
+  ],
+  "classification": "DEVELOPMENT_NOT_FINAL_PROOF"
+}

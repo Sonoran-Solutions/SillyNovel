@@ -125,3 +125,10 @@ The owner's pasted DYL-42 assignment authorizes one disposable pinned-host write
 ## Owner assignment — 2026-10-14, DYL-44
 
 The owner's pasted M1.2-J assignment authorizes only [DYL-44](https://linear.app/devils17/issue/DYL-44/sillynovel-m12-j-prove-host-owned-lifecycle-reservations-and-write): a disposable pinned-host lifecycle reservation/write-generation investigation and one OPEN/UNMERGED experimental PR. PR #17 is verified merged and DYL-43 Done; its REVISE outcome is retained. The store-wide reservation, conservative scope refusal, and generation binding in the [report](M1_NATIVE_LIFECYCLE_GENERATIONS.md) are bounded engineering choices, not approved production architecture. Unknown writers and whole-root restore remain outside the proven guarantee. No production persistence, permanent fork, upstream publication, recovery/re-enrollment policy, DYL-22/23 implementation, M1.3/M2 or Gate A verdict is authorized.
+
+
+## Owner assignment and experimental findings — 2026-10-14, DYL-46
+
+The pasted “SillyNovel M1.2-L: External Authority Reconciliation and Safe Failure Recovery” assignment authorizes this bounded investigation and one open/unmerged experimental PR after PR #19 merged / DYL-45 Done. [DYL-46 report](M1_EXTERNAL_AUTHORITY_RECONCILIATION.md) records forward-only clean-abort and coordinated read-revocation engineering choices, **not owner approval** of a release or replacement compatibility contract.
+
+Measured recommendation **REVISE; compatibility REQUEST CHANGES / HOLD**. The unchanged writer suite is fully passing; lifecycle and other predecessor campaigns retain documented failures and unreached suffixes. A failed observation with no durable external intent cannot survive unknown byte restoration plus restart. Owner decisions about durable failure evidence, scoped availability, writer exclusion and authority ownership remain open. No issue Done, merge, production persistence, DYL-22/23 unblock, M1.3/M2 authorization or Gate A verdict is inferred.

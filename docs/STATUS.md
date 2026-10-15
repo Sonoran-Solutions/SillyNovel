@@ -158,3 +158,10 @@ Owner-assigned bounded investigation on verified main `ea6659d70813812617ac0869b
 ## DYL-45 external authority and explicit enrollment — 2026-10-14
 
 **REVISE.** [Contract, rollback comparison, failure/race matrices and exact evidence](M1_EXTERNAL_STORE_AUTHORITY.md). A test-owned authority outside the restorable root detects user-root rollback after a participating native write and retains refusal through restart. Explicit enrollment of a revoked/recreated character allocates fresh scope/chat IDs and independent visual records; old CAS/load authority stays refused. Unknown in-place writers remain a counterexample. The corrected overlay does not pass the complete unchanged inherited campaigns: conservative whole-store failure refusal and read-time digest drift require a reviewed recovery contract. No production runtime changed. DYL-22/23 blocked, DYL-24 session-only, M1.3/M2 unauthorized, Gate A NOT_RUN. Deliver one open/unmerged experimental PR; follow-up requires separate authorization.
+
+
+## DYL-46 external reconciliation experiment — 2026-10-14
+
+[Report and evidence](M1_EXTERNAL_AUTHORITY_RECONCILIATION.md): **REVISE; compatibility REQUEST CHANGES / HOLD**. Verified clean aborts for pre-write registry EACCES and malformed JSONL headers finalize forward; read-triggered revocation now owns an external/local reservation. New campaign completes 43 expected checkpoints (16 inherited + 27 new), including two unsafe negative controls; unchanged writers pass 33/33, lifecycle remains red after 21, generations after 27, authority after 32. No assertion weakened; unreached suffixes remain unproved. Node 64/64 and actual-entry Chromium 24/24. Production files unchanged.
+
+Independent root rollback/forged local fields remain refused, but a failed external observation followed by unknown canonical restore and restart has no durable witness. Owner review and another bounded proof are required; no production persistence, merge approval or human gate verdict. DYL-22/23 blocked; DYL-24 session-only; M1.3/M2 unauthorized; Gate A NOT_RUN.
