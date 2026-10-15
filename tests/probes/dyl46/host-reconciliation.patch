@@ -1,0 +1,307 @@
+--- a/src/dyl27-storage.mjs
++++ b/src/dyl27-storage.mjs
+@@ -60,7 +60,8 @@
+     } else {
+         for (const scope of catalog.scopes) if (avatars === null || avatars.includes(scope.avatar)) { scope.disabled = true; scope.incarnation++; }
+     }
+-    persist(userRoot, catalog); // Failure propagates BEFORE canonical mutation.
++    try { persist(userRoot, catalog); }
++    catch (error) { verifiedCleanAbort(userRoot); throw error; } // Host guard has not entered native code.
+     if (fs.existsSync(path.join(rootFor(userRoot), 'dyl43-after-revoke'))) fail('INJECTED_AFTER_REVOCATION', 503);
+ }
+ // DYL-45 test-only external authority; never mounted in an installed host.
+@@ -187,52 +188,95 @@
+         || !Number.isSafeInteger(scope?.incarnation) || scope.incarnation < 1) fail('IDENTITY_UNAVAILABLE', 409);
+     return JSON.stringify([state.storeIncarnation, scope.incarnation, chat.incarnation, chat.writeGeneration]);
+ }
++// DYL-46: only inspected pre-write rejection sites may attest a clean abort.
++// No client recovery inputs, timeout release, digest repair or restart adoption.
++export function verifiedCleanAbort(root) {
++    assertWriter(root);
++    const owned = writers.getStore();
++    if (!owned.mutationStarted && registryDigest(root) === owned.beforeDigest) owned.cleanAbort = true;
++}
++export function canonicalBoundary(root) {
++    assertWriter(root);
++    const owned = writers.getStore();
++    owned.mutationStarted = true;
++    owned.cleanAbort = false;
++}
++function beginOperation(req, operation) {
++    const root = req.user.directories.root;
++    if (activeWriters.has(root)) fail('RESERVATION_BUSY', 409);
++    const authority = trusted(root, req), state = reservation(root);
++    if (state.serial === Number.MAX_SAFE_INTEGER) fail('GENERATION_LIMIT', 503);
++    state.serial++;
++    state.pending = { operationId: randomUUID(), operation, reservedLocators: ['*'] };
++    if (fs.existsSync(path.join(rootFor(root), 'dyl44-reserve-failure'))) fail('RESERVATION_PERSIST_FAILED', 503);
++    externalFault(root, 'begin');
++    atomic(externalFile(root), { ...authority, generation: state.serial, pending: state.pending.operationId });
++    externalFault(root, 'local-begin');
++    atomic(reservationFile(root), state);
++    const owned = { root, operationId: state.pending.operationId, state, beforeDigest: authority.registryDigest,
++        mutationStarted: false, cleanAbort: false };
++    activeWriters.set(root, owned);
++    return owned;
++}
++function finishOperation(owned, outcome) {
++    const { root, state } = owned;
++    assertWriter(root);
++    if (fs.existsSync(path.join(rootFor(root), 'dyl44-finalize-failure'))) fail('FINALIZATION_FAILED', 503);
++    const authority = external(root);
++    if (authority.pending !== owned.operationId || authority.generation !== state.serial
++        || authority.trustedIncarnation !== state.storeIncarnation) fail('STALE_EXTERNAL_OWNER', 503);
++    if (outcome === 'VERIFIED_CLEAN_ABORT' && (!owned.cleanAbort || owned.mutationStarted
++        || registryDigest(root) !== owned.beforeDigest)) fail('UNPROVEN_ABORT', 503);
++    if (fs.existsSync(rootFor(root)) && load(root).pending) fail('INCOMPLETE_NATIVE_OPERATION', 503);
++    atomic(reservationFile(root), { ...state, pending: null });
++    externalFault(root, 'finalize');
++    atomic(externalFile(root), { ...authority, pending: null, registryDigest: registryDigest(root), outcome });
++}
++// Retain a failed observation in this process even if an unknown writer restores bytes.
++const observedDrifts = new Map();
++async function observedRevocation(req, drift) {
++    const owned = beginOperation(req, 'observed-drift-revocation');
++    try {
++        await writers.run(owned, async () => {
++            await lifecycleBarrier(owned.root, 'reconcile');
++            assertWriter(owned.root);
++            // Re-read the authenticated registry; the observation cannot select another store/chat.
++            const catalog = load(owned.root);
++            if (registryDigest(owned.root) !== owned.beforeDigest || catalog.pending) fail('UNPROVEN_REVOCATION', 503);
++            const chat = catalog.chats.find(c => c.chatId === drift.chatId && c.relativePath === drift.relativePath);
++            if (!chat || chat.deleted || chat.disabled) fail('UNPROVEN_REVOCATION', 503);
++            // The observation latches even if canonical bytes were restored during the await.
++            chat.disabled = true;
++            persist(owned.root, catalog);
++            finishOperation(owned, 'VERIFIED_REVOCATION');
++            observedDrifts.delete(`${owned.root}:${drift.chatId}`);
++        });
++    } finally { activeWriters.delete(owned.root); }
++}
+ function installReservations(app) {
+     app.use((req, res, next) => {
+         const route = req.path.replace(/\/+$/, '').toLowerCase();
+         if (req.method !== 'POST' || !writerRoutes.has(route)) return next();
+-        const root = req.user.directories.root;
+-        let state;
+-        try {
+-            if (activeWriters.has(root)) fail('RESERVATION_BUSY', 409);
+-            const authority = trusted(root, req);
+-            state = reservation(root);
+-            if (state.pending) fail('UNRESOLVED_RESERVATION', 503);
+-            if (state.serial === Number.MAX_SAFE_INTEGER) fail('GENERATION_LIMIT', 503);
+-            state.serial++;
+-            state.pending = { operationId: randomUUID(), operation: route, reservedLocators: ['*'] };
+-            if (fs.existsSync(path.join(rootFor(root), 'dyl44-reserve-failure'))) fail('RESERVATION_PERSIST_FAILED', 503);
+-            externalFault(root, 'begin');
+-            atomic(externalFile(root), { ...authority, generation: state.serial, pending: state.pending.operationId });
+-            externalFault(root, 'local-begin');
+-            atomic(reservationFile(root), state); // External intent precedes local intent and native mutation.
+-        } catch (error) { return res.status(error.status ?? 503).json({ error: error.code ?? 'RESERVATION_UNAVAILABLE' }); }
+-        const owned = { root, operationId: state.pending.operationId };
+-        activeWriters.set(root, owned);
++        let owned;
++        try { owned = beginOperation(req, route); }
++        catch (error) { return res.status(error.status ?? 503).json({ error: error.code ?? 'RESERVATION_UNAVAILABLE' }); }
+         const end = res.end;
+         res.end = function (...args) {
+             try {
+-                assertWriter(root);
+-                if (fs.existsSync(path.join(rootFor(root), 'dyl44-finalize-failure'))) fail('FINALIZATION_FAILED', 503);
+-                // Failed native operations retain their scoped tombstones/pending registry.
+-                // Clearing the route lock never restores any identity or visual record.
+-                const authority = external(root);
+-                if (authority.pending !== owned.operationId || authority.generation !== state.serial) fail('STALE_EXTERNAL_OWNER', 503);
+-                // Native import can return HTTP 200 with {error:true}; status alone is not commit evidence.
+                 let nativeError = false;
+                 if (String(res.getHeader('content-type')).includes('application/json')) {
+                     try { nativeError = Boolean(JSON.parse(String(args[0])).error); }
+                     catch { nativeError = true; }
+                 }
+-                if (nativeError || res.statusCode >= 400 || (fs.existsSync(rootFor(root)) && load(root).pending)) fail('INCOMPLETE_NATIVE_OPERATION', 503);
+-                atomic(reservationFile(root), { ...state, pending: null });
+-                externalFault(root, 'finalize');
+-                atomic(externalFile(root), { ...authority, pending: null, registryDigest: registryDigest(root) });
+-            } catch { /* Disk intent remains: all visual authority and participating writers refuse after restart. */ }
+-            activeWriters.delete(root);
++                if (owned.cleanAbort) finishOperation(owned, 'VERIFIED_CLEAN_ABORT');
++                else {
++                    if (nativeError || res.statusCode >= 400) fail('INDETERMINATE', 503);
++                    finishOperation(owned, 'VERIFIED_COMMITTED');
++                }
++            } catch { /* Pending evidence survives restart; no automatic reconstruction. */ }
++            activeWriters.delete(owned.root);
+             return end.apply(this, args);
+         };
+-        // No close/abort release: an abandoned request cannot reopen an unfinished mutation.
+         writers.run(owned, next);
+     });
+ }
+@@ -267,13 +311,13 @@
+             // Refuse the entire affected scope before that writer can preserve an old seal.
+             scope.disabled = true;
+             try { persist(userRoot, catalog); }
+-            catch { fail('IMPORT_INVALIDATION_FAILED', 503); }
++            catch { verifiedCleanAbort(userRoot); fail('IMPORT_INVALIDATION_FAILED', 503); }
+             throw new Error('import collision');
+         }
+         if (chat && JSON.stringify(seal(file)) !== JSON.stringify(chat.seal)) throw new Error('external drift');
+         if (!chat && (!['save', 'import'].includes(operation) || fs.existsSync(file))) throw new Error('adoption refused');
+         catalog.pending = { operation, relativePath, destination: destination && path.relative(userRoot, destination) };
+-        try { persist(userRoot, catalog); } catch { fail('MUTATION_INVALIDATION_FAILED', 503); }
++        try { persist(userRoot, catalog); } catch { verifiedCleanAbort(userRoot); fail('MUTATION_INVALIDATION_FAILED', 503); }
+         if (!chat) {
+             chat = { relativePath, scopeId: scope.scopeId, chatId: randomUUID(), incarnation: randomUUID(), writeGeneration: 0 };
+             catalog.chats.push(chat);
+@@ -284,7 +328,8 @@
+         if (['IMPORT_INVALIDATION_FAILED', 'MUTATION_INVALIDATION_FAILED'].includes(error.code)) throw error;
+         catalog = null;
+     }
+-    const result = action(); // Native chat operation remains usable when visual identity is unresolved.
++    if (!file.includes(`${path.sep}group chats${path.sep}`)) canonicalBoundary(userRoot);
++    const result = action(); // A throw after entry is indeterminate, even when bytes match.
+     if (catalog) {
+         if (process.env.SN_DYL27_INTERRUPT === operation) return result;
+         try {
+@@ -383,11 +428,13 @@
+         if (!file.startsWith(`${context.userRoot}${path.sep}`)) fail('INVALID_TARGET');
+         try {
+             // Guard detects changes outside hooked native writes; UUIDs come from lifecycle allocation.
+-            if (JSON.stringify(seal(file)) !== JSON.stringify(chat.seal)) fail('INVALID_TARGET');
++            if (observedDrifts.has(`${context.userRoot}:${chat.chatId}`)
++                || JSON.stringify(seal(file)) !== JSON.stringify(chat.seal)) fail('INVALID_TARGET');
+         } catch {
+             // Observed drift is permanent; restoring old bytes cannot silently re-enable it.
+-            revokeLifecycle(context.userRoot, null, file);
+-            fail('INVALID_TARGET');
++            const drift = { chatId: chat.chatId, relativePath: chat.relativePath };
++            observedDrifts.set(`${context.userRoot}:${chat.chatId}`, drift);
++            throw Object.assign(new Error('INVALID_TARGET'), { code: 'INVALID_TARGET', status: 400, drift });
+         }
+         return chat;
+     }
+@@ -422,7 +469,13 @@
+         app.post(`/api/dyl27/${name}`, async (req, res) => {
+             res.set('Cache-Control', 'no-store');
+             try { res.json(await handler(req)); }
+-            catch (error) { res.status(error.status ?? 500).json({ error: error.status ? error.code : 'IO_FAILED' }); }
++            catch (error) {
++                if (error.drift) {
++                    try { await observedRevocation(req, error.drift); }
++                    catch (failure) { error = failure; }
++                }
++                res.status(error.status ?? 500).json({ error: error.status ? error.code : 'IO_FAILED' });
++            }
+         });
+     }
+     route('reenroll', reenroll);
+@@ -449,7 +502,7 @@
+         if (req.body.locator === null) return { inactive: true };
+         fail('LOAD_REQUIRED', 409);
+     });
+-    createLoadEnvelopeForRequest = (req, file, messages, sourceText, clientId, sequence) => {
++    createLoadEnvelopeForRequest = async (req, file, messages, sourceText, clientId, sequence) => {
+         if (!uuid(clientId) || !Number.isSafeInteger(sequence) || sequence < 1 || !Array.isArray(messages)
+             || typeof sourceText !== 'string') fail('INVALID_INPUT');
+         pruneLoadRequests();
+@@ -479,6 +532,10 @@
+             envelope.identity = identity;
+             envelope.sourceRevision = chat.sourceRevision;
+         } catch (error) {
++            if (error.drift) {
++                try { await observedRevocation(req, error.drift); }
++                catch (failure) { error = failure; }
++            }
+             envelope.unavailableReason = error.code ?? 'IDENTITY_UNAVAILABLE';
+         }
+         return envelope;
+--- a/src/endpoints/chats.js
++++ b/src/endpoints/chats.js
+@@ -1,4 +1,4 @@
+-import { createLoadEnvelope, nativeMutation } from '../dyl27-storage.mjs';
++import { createLoadEnvelope, nativeMutation, verifiedCleanAbort } from '../dyl27-storage.mjs';
+ import crypto from 'node:crypto';
+ import fs from 'node:fs';
+ import path from 'node:path';
+@@ -599,10 +599,10 @@
+     return chatData;
+ }
+ 
+-router.post('/get', validateAvatarUrlMiddleware, function (request, response) {
++router.post('/get', validateAvatarUrlMiddleware, async function (request, response) {
+     const load = process.env.SN_DYL27_RUN && request.body?.dyl28ClientId;
+-    const sendUnavailable = () => response.send(load
+-        ? createLoadEnvelope(request, null, [], '', request.body.dyl28ClientId, request.body.dyl28Sequence)
++    const sendUnavailable = async () => response.send(load
++        ? await createLoadEnvelope(request, null, [], '', request.body.dyl28ClientId, request.body.dyl28Sequence)
+         : {});
+     try {
+         const dirName = String(request.body.avatar_url).replace('.png', '');
+@@ -626,7 +626,7 @@
+         const chatFilePath = path.join(directoryPath, sanitize(chatFileName));
+         if (load) {
+             const snapshot = getChatDataSnapshot(chatFilePath);
+-            return response.send(createLoadEnvelope(request, chatFilePath, snapshot.messages, snapshot.sourceText,
++            return response.send(await createLoadEnvelope(request, chatFilePath, snapshot.messages, snapshot.sourceText,
+                 request.body.dyl28ClientId, request.body.dyl28Sequence));
+         }
+         return response.send(getChatData(chatFilePath));
+@@ -855,10 +855,16 @@
+             let lines = data.split('\n');
+             const header = lines[0];
+ 
+-            const jsonData = JSON.parse(header);
++            let jsonData;
++            try { jsonData = JSON.parse(header); }
++            catch (error) {
++                if (process.env.SN_DYL27_RUN) verifiedCleanAbort(request.user.directories.root);
++                throw error; // Native error response is preserved; no conversation writer was entered.
++            }
+ 
+             if (!(jsonData.user_name !== undefined || jsonData.name !== undefined || jsonData.chat_metadata !== undefined)) {
+                 console.error('Incorrect chat format .jsonl');
++                if (process.env.SN_DYL27_RUN) verifiedCleanAbort(request.user.directories.root);
+                 return response.send({ error: true });
+             }
+ 
+--- a/src/endpoints/characters.js
++++ b/src/endpoints/characters.js
+@@ -1,4 +1,4 @@
+-import { scopeCreated, revokeLifecycle, lifecycleBarrier } from '../dyl27-storage.mjs';
++import { scopeCreated, revokeLifecycle, lifecycleBarrier, canonicalBoundary } from '../dyl27-storage.mjs';
+ import path from 'node:path';
+ import fs from 'node:fs';
+ import { promises as fsPromises } from 'node:fs';
+@@ -1083,6 +1083,7 @@
+         _.set(oldData, 'name', newName);
+         const newData = JSON.stringify(oldData);
+ 
++        if (process.env.SN_DYL27_RUN) canonicalBoundary(request.user.directories.root);
+         // Write data to new location
+         await writeCharacterData(oldAvatarPath, newData, newInternalName, request);
+ 
+@@ -1440,6 +1441,7 @@
+         try { revokeLifecycle(request.user.directories.root, [request.body.avatar_url]); }
+         catch { return response.status(503).json({ error: 'LIFECYCLE_INVALIDATION_FAILED' }); }
+     }
++    if (process.env.SN_DYL27_RUN) canonicalBoundary(request.user.directories.root);
+     fs.unlinkSync(avatarPath);
+     invalidateThumbnail(request.user.directories, 'avatar', request.body.avatar_url);
+     let dir_name = (request.body.avatar_url.replace('.png', ''));
+--- a/src/endpoints/data-maid.js
++++ b/src/endpoints/data-maid.js
+@@ -1,4 +1,4 @@
+-import { revokeLifecycle, lifecycleBarrier } from '../dyl27-storage.mjs';
++import { revokeLifecycle, lifecycleBarrier, canonicalBoundary } from '../dyl27-storage.mjs';
+ import crypto from 'node:crypto';
+ import fs from 'node:fs';
+ import path from 'node:path';
+@@ -808,6 +808,7 @@
+ 
+             if (process.env.SN_DYL27_RUN) revokeLifecycle(req.user.directories.root, null, pathToFile);
+             if (process.env.SN_DYL27_RUN) await lifecycleBarrier(req.user.directories.root, 'maid-unlink');
++            if (process.env.SN_DYL27_RUN) canonicalBoundary(req.user.directories.root);
+             await fs.promises.unlink(pathToFile);
+         }
+ 

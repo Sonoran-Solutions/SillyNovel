@@ -120,6 +120,27 @@ function session() {
     const cookies = new Map();
     let csrf;
     const request = async (route, body, expected = 200) => {
+        const trace = process.env.SN_DYL46_TRACE && (
+            route === '/api/characters/rename' && body?.new_name?.startsWith('Denied-')
+            || route === '/api/chats/import' && body instanceof FormData && body.get('file_type') === 'jsonl'
+                && (body.get('character_name') === 'BadHeader' || (await body.get('avatar')?.text()) === '{}'));
+        function captureFailureBoundary() {
+            const entries = {};
+            function walk(dir) {
+                if (!fs.existsSync(dir)) return;
+                for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+                    const file = path.join(dir, e.name);
+                    if (e.isDirectory()) walk(file);
+                    else if (e.isFile() && (file.includes('/sillynovel-dyl27/') || file.includes('/chats/')
+                        || file.includes('/characters/') || file.endsWith('sillynovel-dyl44-reservation.json') || dir === authority)) {
+                        const value = fs.readFileSync(file);
+                        entries[path.relative(owned, file)] = { base64: value.toString('base64'), sha256: hash(value) };
+                    }
+                }
+            }
+            walk(data); walk(authority); return entries;
+        }
+        const before = trace && captureFailureBoundary();
         const response = await fetch(`${base}${route}`, {
             method: body === undefined ? 'GET' : 'POST', signal: AbortSignal.timeout(15000),
             headers: { cookie: [...cookies].map(([key, value]) => `${key}=${value}`).join('; '),
@@ -131,6 +152,8 @@ function session() {
             cookies.set(pair.slice(0, equals), pair.slice(equals + 1));
         }
         const raw = await response.text();
+        if (trace) (evidence.failureBoundaries ??= []).push({ route, status: response.status, raw,
+            before, after: captureFailureBoundary() });
         assert.equal(response.status, expected, `${route}: ${raw.slice(0, 300)}`);
         try { return JSON.parse(raw); } catch { return raw; }
     };
@@ -286,6 +309,12 @@ try {
         evidence.files['owned-content-index.json'] = hash(fs.readFileSync(seedFile));
         fs.mkdirSync(authority, { mode: 0o700 });
         fs.writeFileSync(path.join(authority, '.owned'), runId, { flag: 'wx', mode: 0o600 });
+    }
+    if (process.env.SN_DYL46) {
+        const patch = path.resolve(probeDir, '../dyl46/host-reconciliation.patch');
+        execFileSync('git', ['-C', host, 'apply', '--check', patch]);
+        execFileSync('git', ['-C', host, 'apply', patch]);
+        for (const file of ['host-reconciliation.patch', 'reconciliation-campaign.mjs']) evidence.files[`dyl46-${file}`] = hash(fs.readFileSync(path.resolve(probeDir, '../dyl46', file)));
     }
     evidence.files['applied-host-storage.mjs'] = hash(fs.readFileSync(path.join(host, 'src/dyl27-storage.mjs')));
     const settings = JSON.parse(fs.readFileSync(path.join(host, 'default/content/settings.json'), 'utf8'));
@@ -807,6 +836,11 @@ try {
         await run({ first: afterRestart, otherHandle, session, firstPage, registry, userRoot, visualFile, chatFile,
             checkpoint, evidence, runId, avatarA, avatarB, chatMessages, pageState, uiApi, startHost, stopHost,
             browser, baseUrl: () => base, hash, clickCard });
+    }
+    if (process.env.SN_DYL46 === '1') {
+        const { run } = await import('../dyl46/reconciliation-campaign.mjs');
+        await run({ first: afterRestart, otherHandle, session, firstPage, registry, userRoot, visualFile,
+            checkpoint, evidence, runId, chatMessages, startHost, stopHost, hash, authority });
     }
     if (process.env.SN_DYL45 === '1') {
         const { run } = await import('../dyl45/authority-campaign.mjs');
