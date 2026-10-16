@@ -1,6 +1,8 @@
-PASS 9 Markdown files/fences, 226 local links, 101 frozen input fingerprints, 24 host checkpoints, native inventories and 8 stage screenshots
+PASS 9 Markdown files/fences, 227 local links, 101 frozen input fingerprints, 24 host checkpoints, native inventories and 8 stage screenshots
 PASS syntax: src/stage-view.mjs, src/project-client.mjs, src/project-scene.mjs, tests/m1-reader-browser.test.mjs, tests/m1-project-scene.test.mjs, tests/probes/project-stage-ux/host.mjs, tests/probes/project-portability/host.mjs, tests/probes/project-migration/host.mjs
 PASS git diff --check
-GitHub PR #29 verified MERGED at ad70bb52e0f46155a5c7b1e5c3da957536612dc9; no main hosted workflow runs returned.
-PASS visual inspection: all 8 final stage screenshots; API drawer closed, Scene heading visible, three sprites stable, native composer and dialogue unobscured.
+GitHub PR #29 verified MERGED at ad70bb52e0f46155a5c7b1e5c3da957536612dc9.
 PASS final canonical results: Node 91/91; storage 126/126; Chromium 46/46; pinned host 24/24 checkpoints. All at 646ec9e7bd1439cb2137e97edba9c1526c808db9.
+PASS visual inspection: all 8 final stage screenshots; API drawer closed, Scene heading visible, three sprites stable, native composer and dialogue unobscured.
+PR #30 verified OPEN / DRAFT / UNMERGED; autoMergeRequest null; statusCheckRollup []; branch hosted workflow runs [].
+Linear DYL-23 In Review with original acceptance/dependencies retained; DYL-60 still blocked; no DYL-55 or human-gate change.

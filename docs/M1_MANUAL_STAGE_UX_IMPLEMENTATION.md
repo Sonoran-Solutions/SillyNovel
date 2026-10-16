@@ -1,5 +1,7 @@
 # DYL-23-A implementation and senior-review handoff
 
+**[Draft PR #30](https://github.com/Sonoran-Solutions/SillyNovel/pull/30): OPEN / DRAFT / UNMERGED; auto-merge disabled.** DYL-23 is In Review, not Done.
+
 **Scope:** [manual-stage UX contract and workflow](M1_MANUAL_STAGE_UX.md). One bounded DYL-23-A implementation; DYL-23 retains its full original acceptance/dependencies. Stop for senior review, no merge/auto-merge. Gate A NOT_RUN; Decision F unchanged; DYL-60 blocked. No native group support, attached source-expression overlays, persistent message history, remembered attachment, director, production/live install or later milestone work.
 
 Starting main: **`ad70bb52e0f46155a5c7b1e5c3da957536612dc9`**, verified with `git fetch origin main` and `gh pr view 29 --json state,mergedAt,mergeCommit,url`. PR #29 is MERGED at that SHA, timestamp `2026-10-16T16:07:26Z`. Initial supplied clean checkout `2f9daa38b9509e6462e3b9a84230a59a14d3c630` was its final head; implementation branch `codex/dyl23-a-stage-ux` starts from the main merge.
@@ -58,7 +60,7 @@ Named SHA-256 inventories, compared as full name→digest maps in structured evi
 - **65/65 unchanged** across the migration campaign, including both synthetic accounts' enumerated native files. Original v1 database and both preserved backup files retain their hashes after successful new-output migration.
 - The captured native main-API/connection-manager context hashes also match. This is a bounded context check, not a claim that every provider preference, persona metadata field, extension or filesystem path was inventoried. Actual-entry tests separately preserve native chat/character/metadata/connection fixtures, composer node, draft/caret and lifecycle.
 
-Additional executed checks: `node --check` for the three changed production modules, both changed test suites and all three changed host runners; `python3 /tmp/dyl23-validate.py` (9 changed Markdown documents/fences, 226 local file links, 101 frozen input fingerprints, all 24 host checkpoints/inventories and eight stage screenshots); `git diff --check`. [Validation log and evidence checksums](evidence/project-stage-ux/validation.txt). No hosted CI workflows/checks were available; no fabricated build or compatibility claim.
+Additional executed checks: `node --check` for the three changed production modules, both changed test suites and all three changed host runners; `python3 /tmp/dyl23-validate.py` (9 changed Markdown documents/fences, 227 local file links, 101 frozen input fingerprints, all 24 host checkpoints/inventories and eight stage screenshots); `git diff --check`. [Validation log and evidence checksums](evidence/project-stage-ux/validation.txt). No hosted CI workflows/checks were available; no fabricated build or compatibility claim.
 
 ## Screenshots and visual review
 
