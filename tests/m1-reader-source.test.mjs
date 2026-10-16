@@ -436,3 +436,9 @@ test('reader navigation skips unavailable records instead of becoming stuck at a
     assert.equal(model.getSnapshot().cursor.sourceKey, 'last');
     assert.equal(model.getSnapshot().selectionMode, 'pinned');
 });
+
+test('selection revision ignores canonical refresh and records an away-and-back navigation',()=>{
+ const model=createReaderSourceModel();const owner={chatId:'selection',characterId:1,scope:'character'};
+ const history=[{sourceKey:'a',text:'a',author:{kind:'user',label:'You'},index:0},{sourceKey:'b',text:'b',author:{kind:'character',label:'Mira'},index:1}];
+ model.activate(history,owner);const before=model.getSnapshot().selectionRevision;model.apply({history,owner});assert.equal(model.getSnapshot().selectionRevision,before);model.navigate(-1);model.navigate(1);assert.equal(model.getSnapshot().selectionRevision,before+2);model.jumpToLatest();assert.equal(model.getSnapshot().selectionRevision,before+3);
+});

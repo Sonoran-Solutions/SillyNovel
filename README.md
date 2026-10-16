@@ -4,7 +4,7 @@
 
 SillyNovel is a planned SillyTavern extension that presents ordinary roleplay chats with scene backgrounds, character sprites, a dialogue box, and restrained visual direction. Keep the characters, lorebooks, personas, model connections, and conversations you already use. Change how the story feels on screen—not who is writing it.
 
-> **Status: experimental manual stage with optional saved global projects.** DYL-24 supplies the session stage, DYL-53 saved global layouts, and merged PR #29 reusable PNG artwork. The owner-authorized [DYL-23-A usability integration](docs/M1_MANUAL_STAGE_UX.md) is prepared for senior review: grouped controls and clear project, save and recovery feedback. Reload/chat switching detach; explicitly reopen. Message-specific history and attached source-expression/group features remain unfinished. Decision F remains undecided; Gate A NOT_RUN. No production/live installation or release is authorized.
+> **Status: experimental manual stage with optional saved global projects.** PR #30 supplies Project/Scene/Artwork Library controls. The owner-authorized [DYL-23-B slice](docs/M1_PROJECT_EXPRESSIONS.md) adds temporary message expressions for explicitly selected manual actors/outfits while attached. Global layouts/library persist; expression choices disappear on reload or conversation switch. Group/device acceptance and persistent message history remain unfinished. Decision F undecided; Gate A NOT_RUN; no production/live installation or release authorization.
 
 See the [PNG library workflow, schema upgrade and portability limits](docs/M1_PNG_ASSET_LIBRARY.md) and [implementation handoff](docs/M1_PNG_ASSET_LIBRARY_IMPLEMENTATION.md). Saved alternatives survive explicit reopen; portable v1 copies include selected artwork only.
 

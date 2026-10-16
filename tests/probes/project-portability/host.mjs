@@ -40,7 +40,7 @@ async function session(handle='default-user'){
  };
  return {context,token,request,origin,api:async(path,method='GET',body,status=200,type)=> (await request('/api/plugins/sillynovel-storage'+path,method,body,status,type)).json()};
 }
-async function canonical(){const result={};for(const folder of ['characters','chats','groups','group chats','worlds',...(process.env.SN_STAGE_UX_RUN?['avatars']:[])]){
+async function canonical(){const result={};for(const folder of ['characters','chats','groups','group chats','worlds',...((process.env.SN_STAGE_UX_RUN||process.env.SN_EXPRESSIONS_RUN)?['avatars']:[])]){
  const base=join(data,'default-user',folder);
  async function walk(p){let entries;try{entries=await readdir(p,{withFileTypes:true});}catch{return;}for(const e of entries){const f=join(p,e.name);if(e.isDirectory())await walk(f);else result[f.slice(data.length+1)]=hash(await readFile(f));}}
  await walk(base);
@@ -94,7 +94,7 @@ try {
  pass('real host auth/CSRF, two-user project and asset isolation, two-client CAS, PNG hash and limits');
  for(const name of ['Project A','Project B'])await alice.request('/api/characters/create','POST',{ch_name:name,description:'Public synthetic fixture',first_mes:'Welcome to '+name},200,'application/json');
  const page=await alice.context.newPage();page.setDefaultTimeout(20000);page.on('pageerror',e=>console.log('PAGE ERROR '+e.message));
- await page.goto(origin);await page.locator('#sillynovel-settings').waitFor({state:'attached'});if(process.env.SN_CLEANUP_RUN||process.env.SN_LIBRARY_RUN){await select(page,'Project B');await delay(1500);}
+ await page.goto(origin);await page.locator('#sillynovel-settings').waitFor({state:'attached'});if(process.env.SN_CLEANUP_RUN||process.env.SN_LIBRARY_RUN||process.env.SN_EXPRESSIONS_RUN){await select(page,'Project B');await delay(1500);}
  await select(page,'Project A');await enable(page);
  await page.locator('.sillynovel-controls summary').click();
  const field=name=>page.locator('#sillynovel-stage').getByLabel(({'Session actor name':'Project actor name','Session actor':'Project actor','Temporary image use':'Project image use','Temporary raster file':'Project PNG file'})[name]||name,{exact:true});const button=name=>page.getByRole('button',{name,exact:true});
@@ -129,6 +129,7 @@ try {
  // Portable copy: browser download/upload, actual host validation and committed inventory.
  if(process.env.SN_LIBRARY_RUN){const {runLibrary}=await import('../project-library/host.mjs');await runLibrary({root,data,repo,page,alice,bob,peer,project,field,button,select,canonical,pass,evidence});}
  if(process.env.SN_STAGE_UX_RUN){const {runStageUX}=await import('../project-stage-ux/host.mjs');await runStageUX({root,data,repo,page,alice,peer,project,field,button,select,canonical,pass,evidence});}
+ if(process.env.SN_EXPRESSIONS_RUN){const {runExpressions}=await import('../project-expressions/host.mjs');await runExpressions({root,data,repo,page,alice,project,field,button,select,canonical,pass,evidence});}
  const portableBefore=await canonical();
  const sourceProject=await alice.api('/projects/'+project.projectId);
  await field('Saved project').selectOption(project.projectId);

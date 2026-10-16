@@ -34,6 +34,7 @@ export function createReaderSourceModel() {
     let generationStartMessageCount = 0;
     let sourceRevision = 0;
     let viewRevision = 0;
+    let selectionRevision = 0;
     let textScrollMode = 'followBottom';
 
 function revise(snapshot, previous) {
@@ -62,6 +63,7 @@ function revise(snapshot, previous) {
 
     function activate(history, nextOwner) {
         sessionEpoch++;
+        selectionRevision++;
         owner = nextOwner ? { ...nextOwner } : null;
         records = [];
         head = null;
@@ -219,6 +221,7 @@ function revise(snapshot, previous) {
         if (direction !== -1 && direction !== 1) return false;
         const next = adjacent(direction);
         if (!next) return false;
+        selectionRevision++;
         cursor = next;
         selectionMode = 'pinned';
         selectionState = 'valid';
@@ -227,6 +230,7 @@ function revise(snapshot, previous) {
     }
 
     function jumpToLatest() {
+        selectionRevision++;
         cursor = head;
         selectionMode = 'followLatest';
         selectionState = head ? 'valid' : 'empty';
@@ -255,6 +259,7 @@ function revise(snapshot, previous) {
             newMessageIndicator: newMessageCount ? (newMessageCount >= 99 ? '99+' : String(newMessageCount)) : null,
             sourceRevision,
             viewRevision,
+            selectionRevision,
             generation: generation ? { ...generation } : { id: null, type: null, sourceKey: null, sourceRevision: null, status: 'unknown', stopped: false },
             textScroll: { mode: textScrollMode, followsMessages: false },
         });

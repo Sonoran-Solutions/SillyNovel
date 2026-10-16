@@ -8,7 +8,7 @@ test('global reducer preserves actor IDs and excludes native anchors and express
  const {actions}=setup(),record=initial();let saved;
  const model=await createProjectScene(record,{save:async(id,body)=>{saved=body;return{projectId:id,revision:1};}},actions,()=>{},()=>true);
  const key=await model.register('mira-a','Same name');await model.dispatch({type:'setSlot',characterKey:key,slot:'left'});
- await assert.rejects(model.dispatch({type:'clearExpression',characterKey:key}),/session-only/);
+ await assert.rejects(model.dispatch({type:'clearExpression',characterKey:key}),/UNRESOLVED_SOURCE/);
  await model.save();assert.equal(saved.scene.actors[0].actorId,key);assert.equal(saved.scene.actors[0].slot,'left');
  assert.deepEqual(Object.keys(saved).sort(),['catalog','expectedRevision','name','scene','schemaVersion']);assert.ok(!JSON.stringify(saved).includes('native-a'));
  const restored=await createProjectScene({...record,revision:1,scene:saved.scene},{},actions,()=>{},()=>true);
