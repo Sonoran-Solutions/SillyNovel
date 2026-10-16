@@ -25,7 +25,7 @@ async function setup(t){
  const go=async index=>{refresh();reader.jumpToLatest();while(reader.getSnapshot().cursor.index>index)reader.navigate(-1);await model.sync();};
  const importExpression=async(key=actor,name='Happy')=>model.importExpression(file(),key,name);
  const apply=async(id,key=actor)=>model.dispatch({type:'setExpression',characterKey:key,assetId:id});
- return {model,record,actor,other,context,reader,go,importExpression,apply,get saved(){return saved;},get uploads(){return uploads;},get evidenceReads(){return evidenceReads;},decode:fn=>{decode=fn;},replace:()=>{current=false;}};
+ return {model,record,actor,other,context,reader,go,importExpression,apply,get saved(){return saved;},get uploads(){return uploads;},get evidenceReads(){return evidenceReads;},decode:fn=>{decode=fn;},replace:()=>{current=false;},restore:()=>{current=true;}};
 }
 test('attached expressions are per source and UUID; revisit/clear preserve global outfits and save records',async t=>{
  const x=await setup(t),{model,actor,other}=x;const base=structuredClone(view(model)),revision=model.get().scene.revision;
@@ -98,4 +98,8 @@ test('decision ceiling refuses atomically and an explicit historical clear relea
 test('a valid prior activation expression and its bytes never return after A B A',async t=>{
  const x=await setup(t);await x.go(0);const id=await x.importExpression();await x.apply(id);assert.ok(view(x.model).cast[0].expression);
  x.context.chatId='B';await x.model.sync();x.context.chatId='A';await x.model.sync();assert.equal(view(x.model).cast[0].expression,null);assert.equal(x.model.get().assets.filter(a=>a.kind==='expression').length,0);await assert.rejects(x.apply(id),/UNRESOLVED_SOURCE/);
+});
+
+test('a failed project replacement can resume the prior attachment expression authority',async t=>{
+ const x=await setup(t);const id=await x.importExpression();await x.apply(id);x.replace();assert.equal(await x.model.sync(),false);x.restore();await x.model.sync();assert.equal(view(x.model).cast[0].expression.id,id);await x.model.dispatch({type:'clearExpression',characterKey:x.actor});assert.equal(view(x.model).cast[0].expression,null);
 });
