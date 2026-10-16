@@ -1,0 +1,63 @@
+Owned evidence root /tmp/sn-portability-host-rWgfgT
+PASS real host auth/CSRF, two-user project and asset isolation, two-client CAS, PNG hash and limits
+PASS browser create/import background + two sprites/arrange/save/reload/explicit reopen; named canonical files unchanged
+PASS library controls: two backgrounds/two actor sprites, duplicate labels/UUIDs, inert label edit, saved unused protection, failed PNG and composer/native-file isolation
+PASS real Chromium reload/detach/explicit reopen/reselect every alternative without import; positions/locks and desktop/narrow reader/composer remain usable
+PASS two independent project libraries and authenticated stale client conflict preserve committed catalog/selection and local dirty edits
+PASS native switch abandons delayed PNG receipt; stale cleanup refuses; explicit unregister/save/selected cleanup removes only chosen alternative
+PASS schema-v2 full backup validates all retained assets; portable v1 exports selected bytes only; named native hashes unchanged across library campaign
+PASS stage UI: session/create/four manual actors/two same-name labels/seven library alternatives/three slots/offstage/refuse/swap/replace/presence/outfit/locks/save/dirty/save
+PASS reload stays detached; explicit reopen restores arrangement/library; desktop/narrow controls and dialogue/composer; Escape focus; discard cancel/confirm
+PASS real stale-save conflict and lost committed receipt retain edits/block retry; A→B→A detaches; named native files and connection context unchanged
+PASS native send accepts a real user reply after stage failures and conversation switching
+PASS portable browser download/import preserves dirty stage; explicit reopen restores new identities, bytes, layout/locks; exact native inventory unchanged
+PASS HTTP failed project/second-asset/final-scene writes inspected in committed database: zero partial projects/assets
+PASS real two-account export refusal and import ownership; two-client import retry creates distinct copies; concurrent export/save is coherent
+PASS actual native switch during delayed import receipt never attaches visuals or changes stage ownership
+PASS native A to B to A detaches and never auto-restores project
+PASS actual host failed update preserves project; missing/corrupt assets restore neutral fallback
+PASS delayed successful save receipt cannot redirect switched chat
+PASS actual host native send/stream/stop, navigation and backlog remain functional
+PASS plugin/server restart preserves original and imported layout/assets; imported project explicitly reopens in real browser
+PASS real v1 plugin startup refuses migration without changing database/native hashes; reader/composer/transient controls remain usable
+PASS explicit operator CLI verifies preserved v1 backup and migrates only a new output; original/backup/native files remain unchanged
+locator.selectOption: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for getByLabel('Saved project', { exact: true })[22m
+[2m    - locator resolved to <select class="" aria-label="Saved project" data-options="[["6d50d3ae-1686-4015-aba3-4a99eedc147d","Browser project · 6d50d3ae"],["ac6401b3-d0a7-4279-a49d-943654154dbd","Browser project · ac6401b3"],["b69bead8-a7df-4687-af86-e97076dffb7f","Browser project · b69bead8"],["bf971fc4-d383-4918-bca8-28deeb3dc521","Browser project · bf971fc4"],["cebcd235-d338-47cf-b29d-684600bd7e69","Browser project · cebcd235"],["0ecd97cb-705f-4d3e-a141-04bb54750703","Concurrent saved revision · 0ecd97cb"],["9c62cf24-a9ee-4…>…</select>[22m
+[2m  - attempting select option action[22m
+[2m    2 × waiting for element to be visible and enabled[22m
+[2m      - did not find some options[22m
+[2m    - retrying select option action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible and enabled[22m
+[2m      - did not find some options[22m
+[2m    - retrying select option action[22m
+[2m      - waiting 100ms[22m
+[2m    59 × waiting for element to be visible and enabled[22m
+[2m       - did not find some options[22m
+[2m     - retrying select option action[22m
+[2m       - waiting 500ms[22m
+
+    at runMigration (/home/dq/Projects/SillyNovel/tests/probes/project-migration/host.mjs:41:58)
+    at async file:///home/dq/Projects/SillyNovel/tests/probes/project-portability/host.mjs:234:102 {
+  log: [
+    "  - waiting for getByLabel('Saved project', { exact: true })",
+    '    - locator resolved to <select class="" aria-label="Saved project" data-options="[["6d50d3ae-1686-4015-aba3-4a99eedc147d","Browser project · 6d50d3ae"],["ac6401b3-d0a7-4279-a49d-943654154dbd","Browser project · ac6401b3"],["b69bead8-a7df-4687-af86-e97076dffb7f","Browser project · b69bead8"],["bf971fc4-d383-4918-bca8-28deeb3dc521","Browser project · bf971fc4"],["cebcd235-d338-47cf-b29d-684600bd7e69","Browser project · cebcd235"],["0ecd97cb-705f-4d3e-a141-04bb54750703","Concurrent saved revision · 0ecd97cb"],["9c62cf24-a9ee-4…>…</select>',
+    '  - attempting select option action',
+    '    2 × waiting for element to be visible and enabled',
+    '      - did not find some options',
+    '    - retrying select option action',
+    '    - waiting 20ms',
+    '    2 × waiting for element to be visible and enabled',
+    '      - did not find some options',
+    '    - retrying select option action',
+    '      - waiting 100ms',
+    '    59 × waiting for element to be visible and enabled',
+    '       - did not find some options',
+    '     - retrying select option action',
+    '       - waiting 500ms'
+  ],
+  name: 'TimeoutError'
+}
+Evidence /tmp/sn-portability-host-rWgfgT/evidence.json

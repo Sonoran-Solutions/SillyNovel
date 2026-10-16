@@ -13,6 +13,7 @@ export async function createProjectScene(project,client,actions,changed,isCurren
     const epoch=actions.getSnapshot().sessionEpoch;
     let disposed=false,edit=0,savedEdit=0,busy=false,importing=false,scene,notice='Project opened · global layout only.',catalogRevision=0;
     let actors=project.scene.actors.map(a=>({key:a.actorId,label:a.name,description:'Project actor',defaultURL:null}));
+    let saveState='clean';
     let cleanupBusy=false,cleanupPreview=null,cleanupNotice='Save or discard current changes before cleanup. Other tabs may hold unsaved drafts.';
     const assets=[],media=new Map();
     const bytes=new TextEncoder().encode('sillynovel-project-global-v1:'+project.projectId);
@@ -55,7 +56,7 @@ export async function createProjectScene(project,client,actions,changed,isCurren
     } catch(error){for(const item of media.values())if(item.url)URL.revokeObjectURL(item.url);throw error;}
     function globalState(){return validateScene({backgroundAssetId:scene.view.background?media.get(scene.view.background.id).assetId:null,backgroundLocked:scene.view.backgroundLocked,
         actors:scene.view.cast.map(a=>({actorId:a.key,name:a.label,spriteAssetId:a.outfit?media.get(a.outfit.id).assetId:null,slot:a.slot,present:a.present,locks:{...a.locks}}))});}
-    const cleanupReady=()=>current() && !busy && !importing && !cleanupBusy && edit===savedEdit;
+    const cleanupReady=()=>current() && !busy && !importing && !cleanupBusy && edit===savedEdit && !['conflict','uncertain'].includes(saveState);
     function invalidateCleanup(){cleanupPreview=null;}
     function evictCleanupAssets(ids) {
         // Confirmed or uncertain removal invalidates cached alternatives, never the saved scene.
@@ -119,7 +120,7 @@ export async function createProjectScene(project,client,actions,changed,isCurren
             finally {cleanupBusy=false;notify();}
         },
         get:()=>({scene,actors,assets,media,notice,verifiedStamp:!disposed&&actions.getSnapshot().sessionEpoch===epoch?evidenceStamp(actions.getSnapshot()):null}),
-        status:()=>({projectId:project.projectId,name:project.name,revision:project.revision,dirty:edit!==savedEdit,busy,importing,cleanupBusy,cleanupPreview,cleanupNotice}),
+        status:()=>({projectId:project.projectId,name:project.name,revision:project.revision,dirty:edit!==savedEdit,saveState,busy,importing,cleanupBusy,cleanupPreview,cleanupNotice}),
         async sync(){if(!current())return false;notify();return true;},
         async dispatch(command){if(importing||cleanupBusy)throw Error('Wait for the PNG import or cleanup to finish.');invalidateCleanup();if(!current())return false;apply(command);edit++;notice='Applied · unsaved project changes.';notify();return true;},
         async register(_preset,name){if(importing||cleanupBusy)throw Error('Wait for the PNG import or cleanup to finish.');invalidateCleanup();if(!current())return;if(!label(name)||actors.length>=20)throw Error('Use a name of 1–80 characters; maximum 20 actors.');const key=crypto.randomUUID();actors.push({key,label:name,description:'Project actor',defaultURL:null});refresh();apply({type:'addCharacter',characterKey:key});edit++;notify();return key;},
@@ -148,16 +149,19 @@ export async function createProjectScene(project,client,actions,changed,isCurren
             finally{importing=false;notify();}
         },
         async save(){
-            if(!current()||busy||importing||cleanupBusy)return;
+            if(!current()||busy||importing||cleanupBusy||['conflict','uncertain'].includes(saveState))return;
             invalidateCleanup();
             const captured=edit,id=project.projectId,expectedRevision=project.revision;
             const body={schemaVersion:2,expectedRevision,name:project.name,scene:structuredClone(globalState()),catalog:structuredClone(library)};
-            busy=true;notify();
+            busy=true;saveState='pending';notify();
             try {const receipt=await client.save(id,body);if(!current())return;
-                if(receipt.projectId!==id||receipt.revision!==expectedRevision+1)throw Error('INVALID_RECEIPT');
-                project={...project,revision:receipt.revision};savedEdit=captured;
+                if(!receipt||receipt.projectId!==id||receipt.revision!==expectedRevision+1)throw Error('INVALID_RECEIPT');
+                project={...project,revision:receipt.revision};savedEdit=captured;saveState='saved';
                 notice=edit===captured?'Project saved.':'Earlier project snapshot saved; newer changes remain unsaved.';
-            }catch(error){if(current())notice=error.message==='REVISION_CONFLICT'?'Conflict: another client saved first. Keep your changes or explicitly reopen to discard them.':error.message==='ASSET_MISSING'?'Save refused: artwork was removed, possibly by another tab. Your edits remain here. Reimport the artwork or deliberately change its reference before saving.':'Save failed: '+error.message;}
+            }catch(error){if(current()){
+                saveState=error.message==='REVISION_CONFLICT'?'conflict':['SAVE_UNCERTAIN','INVALID_RECEIPT'].includes(error.message)?'uncertain':'error';
+                notice=saveState==='conflict'?'Conflict: another client saved first. Your edits remain here. Explicitly discard and reopen to load the saved project.':saveState==='uncertain'?'Save outcome uncertain: the server may have saved it. Your edits remain here. Do not retry; explicitly discard and reopen to inspect the saved project.':error.message==='ASSET_MISSING'?'Save refused: artwork was removed, possibly by another tab. Your edits remain here. Reimport the artwork or deliberately change its reference before saving.':'Save failed: '+error.message+'. Your edits remain here.';
+            }}
             finally{busy=false;notify();}
         },
         reset(){throw Error('Detach the project before resetting session visuals.');},

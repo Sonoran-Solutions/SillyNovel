@@ -703,3 +703,67 @@ test('migration-required storage leaves original reader, composer and transient 
  await page.locator('#sillynovel-enabled').check();await page.locator('.sillynovel-controls summary').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('explicit v1 backup/migration'));
  assert.equal(await button(page,'Open project and use with this chat').isDisabled(),true);assert.equal(await button(page,'Register session actor').isEnabled(),true);assert.equal(await page.locator('#send_textarea').isEnabled(),true);assert.match(await message(page).innerText(),/Hello reader/);
 });
+
+async function projectUX(t,outcome='saved') {
+ const page=await fixture(t);page.setDefaultTimeout(5000);await page.locator('#sillynovel-enabled').uncheck();await page.evaluate(()=>{fixture.context.getRequestHeaders=()=>({});});
+ let record={schemaVersion:2,catalog:[],projectId:'12345678-1111-4111-8111-111111111111',name:'Readable project',revision:0,scene:{backgroundAssetId:null,backgroundLocked:false,actors:[]}},puts=0,release;
+ const gate=new Promise(r=>release=r);
+ await page.route('**/api/plugins/sillynovel-storage/**',async route=>{
+  const req=route.request(),path=new URL(req.url()).pathname;
+  if(req.method()==='PUT'){
+   puts++;await gate;
+   if(outcome==='conflict')return route.fulfill({status:409,json:{code:'REVISION_CONFLICT'}});
+   if(outcome==='uncertain')return route.abort();
+   if(outcome==='invalid')return route.fulfill({json:{projectId:record.projectId,revision:99}});
+   record={...record,...req.postDataJSON(),revision:record.revision+1};return route.fulfill({json:record});
+  }
+  return route.fulfill({json:path.endsWith('/capabilities')?{apiVersion:1,schemaVersion:2,catalogVersion:1,cleanupVersion:1}:path.endsWith('/projects')?[record]:record});
+ });
+ await page.locator('#sillynovel-enabled').check();await sceneControls(page);
+ await button(page,'Open project and use with this chat').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-project-status').title==='12345678-1111-4111-8111-111111111111');
+ return {page,release,puts:()=>puts};
+}
+for(const outcome of ['saved','conflict','uncertain','invalid'])test('project UX: identity, pending and durable save recovery status · '+outcome,async t=>{
+ const {page,release,puts}=await projectUX(t,outcome);
+ assert.deepEqual(await page.locator('.sillynovel-controls legend').allTextContents(),['Project','Scene','Artwork Library']);
+ assert.match(await page.locator('.sillynovel-project-status').innerText(),/Readable project.*12345678.*Attached/);
+ assert.match(await page.locator('.sillynovel-project-scope').innerText(),/Message-specific visual history is not saved/);
+ await page.getByLabel('Project actor name',{exact:true}).fill('Keep edits');await button(page,'Register project actor').click();
+ assert.equal(await page.locator('.sillynovel-unsaved').getAttribute('data-state'),'dirty');
+ await button(page,'Save project').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-unsaved').dataset.state==='pending');
+ await page.locator('#send_textarea').fill('Native draft during save');assert.equal(await button(page,'Save project').isDisabled(),true);
+ for(const name of ['Create project and use with this chat','Open project and use with this chat','Discard and reopen attached project'])assert.equal(await button(page,name).isDisabled(),true);
+ release();const expected=outcome==='saved'?'saved':outcome==='conflict'?'conflict':'uncertain';
+ await page.waitForFunction(expected=>document.querySelector('.sillynovel-unsaved').dataset.state===expected,expected);
+ if(outcome!=='saved'){
+  assert.equal(await button(page,'Save project').isDisabled(),true);assert.equal(await button(page,'Review unused artwork').isDisabled(),true);
+  await button(page,'Apply background').click();assert.equal(await page.locator('.sillynovel-unsaved').getAttribute('data-state'),expected);
+  page.once('dialog',d=>d.dismiss());await button(page,'Discard and reopen attached project').click();
+  assert.match(await page.locator('.sillynovel-cast').innerText(),/Keep edits/);assert.equal(puts(),1);
+  page.once('dialog',d=>d.accept());await button(page,'Discard and reopen attached project').click();
+  await page.waitForFunction(()=>document.querySelector('.sillynovel-unsaved').dataset.state==='saved');
+  assert.equal(await page.locator('.sillynovel-cast').getAttribute('data-count'),'0');
+ }
+ assert.equal(await page.locator('#send_textarea').inputValue(),'Native draft during save');
+ await button(page,'Detach project').click();assert.match(await page.locator('.sillynovel-project-status').innerText(),/No project.*detached by you/);
+ assert.equal(await page.locator('.sillynovel-unsaved').getAttribute('data-state'),'session');
+});
+test('project UX: discard cancel, actor feedback, local Escape focus and narrow composer',async t=>{
+ const {page}=await projectUX(t);const actor=page.getByLabel('Project actor',{exact:true});
+ for(const name of ['Mira','Mira','Rowan','Sage']){await page.getByLabel('Project actor name',{exact:true}).fill(name);await button(page,'Register project actor').click();}
+ assert.equal(await actor.locator('option').count(),4);assert.equal(new Set(await actor.locator('option').allTextContents()).size,4);
+ await page.getByLabel('Presence',{exact:true}).selectOption('false');await button(page,'Apply presence').click();
+ assert.match(await page.locator('.sillynovel-selected-art').innerText(),/Sage.*absent.*offstage.*locks: presence/);
+ page.once('dialog',d=>d.dismiss());await button(page,'Detach project').click();assert.equal(await actor.locator('option').count(),4);
+ await page.setViewportSize({width:390,height:550});await actor.focus();await page.keyboard.press('Escape');
+ assert.equal(await page.locator('.sillynovel-controls').getAttribute('open'),null);
+ assert.equal(await page.locator('.sillynovel-controls summary').evaluate(e=>e===document.activeElement),true);
+ assert.equal(await page.locator('.sillynovel-art').isVisible(),false);assert.ok((await page.locator('.sillynovel-dialogue').boundingBox()).height>60);
+ await page.locator('#send_textarea').fill('Keyboard draft');await page.keyboard.press('ArrowLeft');assert.equal(await page.locator('#send_textarea').inputValue(),'Keyboard draft');
+ assert.equal(await page.locator('#send_textarea').isVisible(),true);
+ await page.evaluate(()=>{fixture.context.chatId='native-B';fixture.emit('CHAT_CHANGED');});
+ await page.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('detached after a native conversation switch'));
+ await page.evaluate(()=>{fixture.context.chatId='synthetic-A';fixture.emit('CHAT_CHANGED');});
+ await page.waitForFunction(()=>document.querySelector('.sillynovel-unsaved').dataset.state==='session');
+ assert.match(await page.locator('.sillynovel-project-status').innerText(),/No project attached/);
+});
