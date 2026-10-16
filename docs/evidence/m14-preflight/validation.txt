@@ -1,0 +1,43 @@
+M1.4-A documentation readiness review, 2026-10-16 America/Phoenix.
+Starting checkout: 758443b011274c179aac4f401043386f844620d4 (clean).
+Fetched origin/main: f9497aebf59cbeae07a2b6391d0cff17e81bcc76.
+Branch: codex/m14-gate-a-preflight, based on fetched main.
+
+Commands/reads actually performed:
+- git status --short; git rev-parse HEAD; git fetch origin main; git rev-parse origin/main
+  Initial fetch was refused by read-only sandbox .git/FETCH_HEAD; authorized retry succeeded.
+- git branch --show-current; git remote -v; git log -6 --oneline
+- git switch -c codex/m14-gate-a-preflight origin/main
+- gh pr view 29/30/31/32 --repo Sonoran-Solutions/SillyNovel --json number,state,mergedAt,mergeCommit,headRefOid,url,reviews,body
+  Four separate invocations: all MERGED; submitted review arrays empty. No inferred review approval.
+- gh api repos/Sonoran-Solutions/SillyNovel/pulls/29 (and separately 30, 31, 32)
+  Retained selected factual fields in inspection.json; all closed/merged, auto_merge null.
+- Linear get_issue(id, includeRelations=true): DYL-22/23/55/56/60/61/62/63.
+  Original DYL-22/23/60/61 requirements and all eight current state/relation snapshots retained.
+- cat/sed/rg reads of required docs, runtime attachment/project/expression/source flow,
+  existing host/entry runners, fixtures, manifests, frozen evidence and dependency package.
+- git merge-base --is-ancestor 758443b011274c179aac4f401043386f844620d4 origin/main
+- git diff 11396926c0f0aed0028d5e8a3f320abd3bd486e4 origin/main --stat
+  Later differences are docs/evidence only; 60 frozen inputs match inspected main.
+- python3 docs/evidence/native-groups/review/validate.py
+  PASS: 56 original evidence files unchanged; 60 frozen inputs; 22 historical host checkpoints;
+  historical logs 153 Node / 81 Chromium / 126 storage; 41 identical named native files;
+  18 retained screenshots; 54 integration links at first invocation.
+- python3 docs/evidence/m14-preflight/validate.py
+  First invocation found the not-yet-created validation.txt link; added this check record.
+  Final result recorded below after completion.
+- git diff --check; git diff origin/main --name-only; git status --short
+
+NOT RUN: runtime suites, browser/host campaign, real-provider calls, physical-device discovery,
+ADB connection, owner session or Gate A. Historical log validation is not a fresh test run.
+No source/test/plugin/schema/asset/native-host changes, live installation, scheduling or gate decision.
+
+Final documentation checks: PASS. 119 relative links/anchors; fences/tables in three documents;
+21 required TESTING IDs mapped; four expected merge ancestors; eight issue states;
+11 fixture hashes; 60 historical input hashes; 33 retained correction-artifact hashes.
+Existing G validator also passes with 56 original evidence files unchanged.
+Git diff whitespace check PASS. These validate documentation/retained artifacts only.
+Environment reads: node --version = v26.8.1; node -p process.versions.sqlite = 3.53.4;
+installed external Playwright package = 1.62.1; bundled Chromium manifest = 151.0.7922.34,
+revision 1234. Existing disposable source checkout HEAD matches the documented host pin.
+GitHub branches/main recheck still f9497aebf59cbeae07a2b6391d0cff17e81bcc76.

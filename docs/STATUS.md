@@ -1,5 +1,9 @@
 # Project status
 
+## M1.4-A readiness preflight — 2026-10-16
+
+Fetched main `f9497aebf59cbeae07a2b6391d0cff17e81bcc76` is the verified PR #32 merge; PRs #29–32 are now merged. [Readiness matrix, proposed Decision F amendment, DYL-60 recipe and owner/device checklists](M1_4_GATE_A_READINESS.md). **REVISE before freeze; GO for senior/owner review only.** Decision F undecided; Gate A NOT_RUN; DYL-60 Backlog/unstarted. DYL-22/23/55 report Done; DYL-62/63 remain In Review despite merged implementations. Original acceptance and blockers remain intact; no tracker state changes. This documentation review checks retained evidence/input hashes, not fresh current-main runtime behavior. Older entries below retain their historical states and evidence limits.
+
 ## PR #32 P2 correction — 2026-10-16
 
 [Targeted correction and re-review evidence](M1_NATIVE_GROUPS_REVIEW.md): preserve a generation-start observation after new-owner activation so a newly attached project refuses expressions on its active head. Adapter/identity/persistence are unchanged. DYL-63 stays In Review and PR #32 draft/open/unmerged; Decision F undecided, Gate A NOT_RUN, DYL-60 unstarted.
