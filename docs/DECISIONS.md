@@ -199,6 +199,6 @@ The owner explicitly authorized the first residual DYL-22 slice. [Workflow and s
 
 This is a bounded implementation for review; historical blockers and original JPEG/static-WebP requirements remain. DYL-55 stays pending owner acceptance, DYL-23 separately gated, Decision F undecided and Gate A NOT_RUN. DYL-56/60 and M1.3/M2, production/release and upstream authorization are unchanged. Older entries below retain their original evidence/scope.
 
-## PR #29 senior-review correction — 2026-10-15
+## PR #29 senior-review correction — 2026-10-16
 
 The owner returned REVISE: automatic in-place startup migration conflicted with DYL-58 preservation/copy-on-new-output policy. No in-place exception was approved. The correction implements that policy: v1 startup refuses without mutation, and the explicit operator CLI transforms a verified preserved v1 backup into a new empty stopped-host slot, retaining both original and backup after success. [Correction and validation](M1_PNG_ASSET_LIBRARY_REVIEW_CORRECTION.md). The owner also explicitly approved publishing the factual DYL-22 PR/test/scope handoff including this finding; it was posted and DYL-22 set In Review with description/acceptance/blockers unchanged. DYL-55 status inconsistency is separately owner-reconciled; no reversal here. DYL-23, Decision F and Gate A remain gated/undecided/NOT_RUN respectively.

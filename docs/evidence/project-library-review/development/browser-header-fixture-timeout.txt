@@ -1,0 +1,63 @@
+TAP version 13
+LIB opening
+LIB open entry
+LIB clicking open
+LIB waiting open Opening project · visual edits paused…
+LIB opened
+LIB reload
+LIB open entry
+LIB clicking open
+# Subtest: project library actual entry edits labels, unregisters, saves and reloads/reopens compatible alternatives
+not ok 1 - project library actual entry edits labels, unregisters, saves and reloads/reopens compatible alternatives
+  ---
+  duration_ms: 5996.642706
+  type: 'test'
+  location: '/home/dq/Projects/SillyNovel/tests/m1-reader-browser.test.mjs:667:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    locator.click: Timeout 5000ms exceeded.
+    Call log:
+    [2m  - waiting for getByRole('button', { name: 'Open project and use with this chat', exact: true })[22m
+    [2m    - locator resolved to <button disabled type="button" class="menu_button sillynovel-button">Open project and use with this chat</button>[22m
+    [2m  - attempting click action[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is not enabled[22m
+    [2m    - retrying click action[22m
+    [2m    - waiting 20ms[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is not enabled[22m
+    [2m    - retrying click action[22m
+    [2m      - waiting 100ms[22m
+    [2m    10 × waiting for element to be visible, enabled and stable[22m
+    [2m       - element is not enabled[22m
+    [2m     - retrying click action[22m
+    [2m       - waiting 500ms[22m
+    
+  code: 'ERR_TEST_FAILURE'
+  name: 'TimeoutError'
+  stack: |-
+    open (/home/dq/Projects/SillyNovel/tests/m1-reader-browser.test.mjs:685:252)
+    async TestContext.<anonymous> (/home/dq/Projects/SillyNovel/tests/m1-reader-browser.test.mjs:696:48)
+  ...
+# Subtest: migration-required storage leaves original reader, composer and transient controls usable
+not ok 2 - migration-required storage leaves original reader, composer and transient controls usable
+  ---
+  duration_ms: 5302.941371
+  type: 'test'
+  location: '/home/dq/Projects/SillyNovel/tests/m1-reader-browser.test.mjs:701:1'
+  failureType: 'testCodeFailure'
+  error: 'page.waitForFunction: Timeout 5000ms exceeded.'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TimeoutError'
+  stack: |-
+    TestContext.<anonymous> (/home/dq/Projects/SillyNovel/tests/m1-reader-browser.test.mjs:703:122)
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 0
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 11609.223785

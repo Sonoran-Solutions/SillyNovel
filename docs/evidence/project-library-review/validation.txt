@@ -1,0 +1,6 @@
+PASS: 513 local links/anchors; fences in 46 Markdown documents; 3 JSON examples
+PASS: 100 final frozen input hashes; no runtime/test changes after final code SHA
+PASS: 16 original evidence checksums and 99 historical frozen input blobs preserved
+PASS: 85 Node / 126 storage / 41 Chromium; no failures/skips/cancellations; 20 exact-SHA host checkpoints
+PASS: 34 library / 64 migration named native hashes match; 10 projects and 25 assets preserved
+PASS: git diff --check
