@@ -1,0 +1,13 @@
+✔ eventless group ownership changes detected on ordinary native events start new epochs (2.664869ms)
+✔ new-owner generation refuses expressions after explicit project attach: normal (12.576883ms)
+✔ new-owner generation refuses expressions after explicit project attach: continue (4.125285ms)
+✔ new-owner generation refuses expressions after explicit project attach: swipe (3.674083ms)
+✔ owner-transition dry run resets the visit without inventing an active generation (0.215897ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 48.599473

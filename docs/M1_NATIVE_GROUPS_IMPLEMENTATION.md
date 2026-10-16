@@ -1,3 +1,5 @@
+> PR #32 senior review requested a targeted eventless generation-start correction. [Current correction, exact candidate and fresh evidence](M1_NATIVE_GROUPS_REVIEW.md). The original implementation record below remains historical.
+
 # DYL-23-C implementation and verification
 
 **GO for bounded senior review.** [DYL-63 / DYL-23-C](https://linear.app/devils17/issue/DYL-63/dyl-23-c-native-group-conversation-integration) delivers [manual independent-project use in native groups](M1_NATIVE_GROUPS.md). No merge/auto-merge, release, DYL-60 execution or owner gate is authorized. DYL-23 Done/history/original acceptance, DYL-55 and DYL-62 statuses are preserved. Decision F undecided; Gate A NOT_RUN.

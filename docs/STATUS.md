@@ -1,5 +1,9 @@
 # Project status
 
+## PR #32 P2 correction — 2026-10-16
+
+[Targeted correction and re-review evidence](M1_NATIVE_GROUPS_REVIEW.md): preserve a generation-start observation after new-owner activation so a newly attached project refuses expressions on its active head. Adapter/identity/persistence are unchanged. DYL-63 stays In Review and PR #32 draft/open/unmerged; Decision F undecided, Gate A NOT_RUN, DYL-60 unstarted.
+
 ## DYL-23-C native group integration — 2026-10-16
 
 Owner explicitly authorizes [native groups with manual independent-project attachment](M1_NATIVE_GROUPS.md), tracked by [DYL-63](https://linear.app/devils17/issue/DYL-63/dyl-23-c-native-group-conversation-integration), after PR #31 merged at `5a9b87f14d5a008e9801aa2260efe40d9e22f5b7`. Native group/chat/activation authority remains separate from account-owned project/manual actor UUIDs and memory-only source expressions. Four or more actors retain three visible slots; duplicate names never bind cards to actors. No schema, native metadata, automatic attachment or persistence expansion. DYL-23 Done/history/acceptance, DYL-55 and DYL-62 unchanged; Decision F undecided; Gate A NOT_RUN; DYL-60 unstarted. [Implementation/evidence](M1_NATIVE_GROUPS_IMPLEMENTATION.md). Older dated entries below are historical.

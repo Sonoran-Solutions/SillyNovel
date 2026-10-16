@@ -1,0 +1,87 @@
+✖ eventless group ownership changes detected on ordinary native events start new epochs (2.507275ms)
+✖ new-owner generation refuses expressions after explicit project attach: normal (11.647313ms)
+✖ new-owner generation refuses expressions after explicit project attach: continue (4.343001ms)
+✖ new-owner generation refuses expressions after explicit project attach: swipe (3.557087ms)
+✔ owner-transition dry run resets the visit without inventing an active generation (0.247477ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 1
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 44.405249
+
+✖ failing tests:
+
+test at tests/m0.test.mjs:547:1
+✖ eventless group ownership changes detected on ordinary native events start new epochs (2.507275ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'unknown'
+  - 'streaming'
+  
+      at TestContext.<anonymous> (file:///home/dq/Projects/SillyNovel/tests/m0.test.mjs:554:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'unknown',
+    expected: 'streaming',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/m1-project-expressions.test.mjs:134:59
+✖ new-owner generation refuses expressions after explicit project attach: normal (11.647313ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> (file:///home/dq/Projects/SillyNovel/tests/m1-project-expressions.test.mjs:141:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/m1-project-expressions.test.mjs:134:59
+✖ new-owner generation refuses expressions after explicit project attach: continue (4.343001ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> (file:///home/dq/Projects/SillyNovel/tests/m1-project-expressions.test.mjs:141:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/m1-project-expressions.test.mjs:134:59
+✖ new-owner generation refuses expressions after explicit project attach: swipe (3.557087ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> (file:///home/dq/Projects/SillyNovel/tests/m1-project-expressions.test.mjs:141:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
