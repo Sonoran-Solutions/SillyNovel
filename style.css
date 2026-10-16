@@ -95,9 +95,9 @@
 .sillynovel-cleanup-item { display: flex; align-items: center; gap: 0.5rem; overflow-wrap: anywhere; font-size: 0.85em; }
 .sillynovel-cleanup-item input { flex: 0 0 44px; width: 44px; height: 44px; }
 /* Project context remains visible while the manual controls are collapsed. */
-.sillynovel-project-status,.sillynovel-project-scope { flex-shrink: 0; margin: 0; font-size: 0.8em; overflow-wrap: anywhere; }
+.sillynovel-project-status,.sillynovel-project-scope,.sillynovel-native-context { flex-shrink: 0; margin: 0; font-size: 0.8em; overflow-wrap: anywhere; }
 .sillynovel-project-status { font-weight: 600; }
-.sillynovel-project-scope { max-height: 3em; overflow: auto; }
+.sillynovel-project-scope,.sillynovel-native-context { max-height: 3em; overflow: auto; }
 .sillynovel-unsaved[data-state="conflict"],.sillynovel-unsaved[data-state="uncertain"],.sillynovel-unsaved[data-state="error"] { color: #ffbcaa; }
 .sillynovel-controls__area { display: flex; flex-wrap: wrap; align-items: end; gap: 0.5rem; flex: 1 1 100%; min-width: 0; margin: 0; padding: 0.6rem; border: 1px solid var(--SmartThemeBorderColor, #888); border-radius: 0.4rem; }
 .sillynovel-controls__area legend { padding-inline: 0.35rem; font-weight: 600; }
@@ -111,7 +111,7 @@
 .sillynovel-dialogue { min-height: min(20vh, 160px); }
 .sillynovel-project-status { max-height: 2.6em; overflow: auto; }
 @media (max-width: 600px), (max-height: 620px) {
-    .sillynovel-project-status,.sillynovel-project-scope,.sillynovel-cast,.sillynovel-visual-status { max-height: 1.4em; overflow: auto; }
+    .sillynovel-project-status,.sillynovel-project-scope,.sillynovel-native-context,.sillynovel-cast,.sillynovel-visual-status { max-height: 1.4em; overflow: auto; }
     .sillynovel-dialogue { min-height: min(16vh, 100px); }
 }
 .sillynovel-controls__row { display: flex; flex-wrap: wrap; align-items: end; gap: 0.5rem; flex: 1 1 100%; min-width: 0; }

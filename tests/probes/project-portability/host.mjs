@@ -40,7 +40,7 @@ async function session(handle='default-user'){
  };
  return {context,token,request,origin,api:async(path,method='GET',body,status=200,type)=> (await request('/api/plugins/sillynovel-storage'+path,method,body,status,type)).json()};
 }
-async function canonical(){const result={};for(const folder of ['characters','chats','groups','group chats','worlds',...((process.env.SN_STAGE_UX_RUN||process.env.SN_EXPRESSIONS_RUN)?['avatars']:[])]){
+async function canonical(){const result={};for(const folder of ['characters','chats','groups','group chats','worlds',...((process.env.SN_STAGE_UX_RUN||process.env.SN_EXPRESSIONS_RUN||process.env.SN_GROUP_RUN)?['avatars']:[])]){
  const base=join(data,'default-user',folder);
  async function walk(p){let entries;try{entries=await readdir(p,{withFileTypes:true});}catch{return;}for(const e of entries){const f=join(p,e.name);if(e.isDirectory())await walk(f);else result[f.slice(data.length+1)]=hash(await readFile(f));}}
  await walk(base);
@@ -130,6 +130,7 @@ try {
  if(process.env.SN_LIBRARY_RUN){const {runLibrary}=await import('../project-library/host.mjs');await runLibrary({root,data,repo,page,alice,bob,peer,project,field,button,select,canonical,pass,evidence});}
  if(process.env.SN_STAGE_UX_RUN){const {runStageUX}=await import('../project-stage-ux/host.mjs');await runStageUX({root,data,repo,page,alice,peer,project,field,button,select,canonical,pass,evidence});}
  if(process.env.SN_EXPRESSIONS_RUN){const {runExpressions}=await import('../project-expressions/host.mjs');await runExpressions({root,data,repo,page,alice,project,field,button,select,canonical,pass,evidence});}
+ if(process.env.SN_GROUP_RUN){const {runGroups}=await import('../native-groups/host.mjs');await runGroups({root,data,repo,page,alice,peer,project,field,button,select,canonical,pass,evidence});}
  const portableBefore=await canonical();
  const sourceProject=await alice.api('/projects/'+project.projectId);
  await field('Saved project').selectOption(project.projectId);

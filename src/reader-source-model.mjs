@@ -17,7 +17,7 @@ function sameContent(left, right) {
 
 function ownerKey(owner) {
     if (!owner) return null;
-    return JSON.stringify([owner.chatId ?? null, owner.groupId ?? null, owner.characterId ?? null, owner.scope ?? 'unknown']);
+    return JSON.stringify([owner.chatId ?? null, owner.groupId ?? null, owner.characterId ?? null, owner.scope ?? 'unknown', owner.groupSessionKey ?? null, owner.groupVerified ?? null]);
 }
 
 export function createReaderSourceModel() {

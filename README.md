@@ -1,5 +1,7 @@
 # SillyNovel
 
+Native group support: explicitly attach an independent saved project, stage a larger manual cast in three slots, and apply temporary source-specific expressions. Native speaker labels never bind to manual actors. [Contract](docs/M1_NATIVE_GROUPS.md) · [Validation and limits](docs/M1_NATIVE_GROUPS_IMPLEMENTATION.md).
+
 **Your roleplay, presented as a visual novel.**
 
 SillyNovel is a planned SillyTavern extension that presents ordinary roleplay chats with scene backgrounds, character sprites, a dialogue box, and restrained visual direction. Keep the characters, lorebooks, personas, model connections, and conversations you already use. Change how the story feels on screen—not who is writing it.

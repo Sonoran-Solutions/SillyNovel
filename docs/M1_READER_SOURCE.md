@@ -1,3 +1,5 @@
+> [DYL-23-C](M1_NATIVE_GROUPS.md) now extends explicit account-owned project attachment and temporary expressions to verified native group conversations. Native author labels remain unresolved card identity; manual actors never bind automatically. Earlier individual-only exclusions below describe the prior slices.
+
 # M1 reader source model (DYL-17)
 
 **Status:** Implemented as an internal, in-memory contract for the DYL-17 candidate. DYL-18 now consumes this contract for the text reader described below. Visual state and persistence remain gated.

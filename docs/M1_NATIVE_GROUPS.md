@@ -1,0 +1,43 @@
+# DYL-23-C: native group conversations
+
+The owner authorized this slice conditional on PR #31 merging. Fetched main `5a9b87f14d5a008e9801aa2260efe40d9e22f5b7` is that merge, containing reviewed head `334023a87a4bdc02bb70aaba65651e664e2b773a`. The clean supplied checkout was that reviewed head. Work starts from fetched main on `codex/dyl23-c-native-groups`. After searching Linear for group follow-ups, [DYL-63](https://linear.app/devils17/issue/DYL-63/dyl-23-c-native-group-conversation-integration) tracks this assignment, related to DYL-23, DYL-62 and DYL-60. DYL-23's historical Done and acceptance remain intact; DYL-55 and DYL-62 are unchanged. Gate A NOT_RUN; Decision F undecided; DYL-60 unstarted. No merge, production release or later milestone authorization.
+
+## Use in a group
+
+Open a native group conversation and enable SillyNovel. Expand Manual scene controls, select a saved independent project, and choose **Open project and use with this chat**. Creating a project is also explicit. The authenticated storage plugin validates account access; the project remains account-owned, never group-owned. Nothing remembers a group→project association.
+
+Register/select manual project actors in Scene. Duplicate actor names keep separate UUIDs; short distinguishing IDs appear in the selector/cast/captions, with full IDs accessible through option titles. The existing maximum is 20 actors. Left, center and right are the only visible slots. A fourth present actor remains selectable offstage. Absence hides artwork but preserves its slot reservation; Offstage releases it. Occupied moves refuse unless the user explicitly selects swap or replace. Locks/release, outfit compatibility, backgrounds, missing-art fallback and deliberate manual overrides keep their existing reducer semantics.
+
+Native speakers never register, evict, move, select or spotlight actors. The group notice says **Native speaker: Mira. Project actor selection is manual; no native card binding.** Actual author labels remain exact readable native presentation data. Two cards named Mira are distinct host records, but neither is implicitly associated with either manual Mira actor. Member order, native avatar filenames and host character indices do not choose actors. No inferred speaker focus is rendered.
+
+Select a project actor explicitly, navigate to a stable verified message and use the existing temporary expression PNG/import/apply/clear controls. A native speaker with unresolved card identity does not prevent explicit manual expression use when source correspondence is established. Source ambiguity refuses expressions and keeps the global layout. See [expression contract](M1_PROJECT_EXPRESSIONS.md) for exact source, outfit, generation, limits and invalidation behavior.
+
+## Native conversation authority
+
+The pinned public `getContext()` exposes `groupId`, `groups`, `chatId`, `getCurrentChatId()` and native chat objects. The adapter requires exactly one current group record matching the nonempty group locator; a nonempty current chat locator agreeing with that record's `chat_id`; agreement with `context.chatId` when provided; and a successful current-chat read. Missing/duplicate records, invalid group markers, contradictory or unavailable locators refuse project attachment. Text remains readable.
+
+For groups only, the adapter supplies `groupVerified`, a display `groupLabel`, and a WeakMap-backed `groupSessionKey` for the current native group record object. This key detects observed record replacement/deletion without inventing a persistent group/card identity. The reader owner key includes verification and that transient instance key, so observed replacement or loss starts a new session epoch. This key is never stored or exported. Member reorder alone does not replace ownership or rebind actors.
+
+Pinned group generation temporarily sets `characterId` to each drafted member, then clears it. The group adapter deliberately reports `characterId: null` throughout: these temporary values cannot detach an attached project or identify a manual actor. Group ID/chat/instance, reader epoch and source authority remain separate from authenticated project UUID/actor UUIDs.
+
+All native observations now check current conversation ownership, including generation events without an explicit `CHAT_CHANGED`. On a changed owner the adapter reads the canonical history once before delivering the observation. The existing coalesced DOM fallback detects eventless owner changes; project opening/completion and asynchronous model work also refresh canonical evidence. There is no timer, member polling, native patch or new history hash. The existing frame sampling/prefix cache remains bounded. A completely unobserved switch away/back or same-object/same-locator external replacement cannot be proven by this public context: no durable incarnation or accepted-load token is claimed. Host load provenance beyond this public seam remains a limitation, not invented evidence.
+
+## Attachment and source lifecycle
+
+Each observed native activation detaches, including A→B→A, group↔individual, another chat in the same group, same-locator record replacement, verification loss and `CHAT_CHANGED` reactivation. Returning never reattaches automatically. Reload, detach, disable and project replacement also discard temporary decisions/artwork. Explicit reopening restores only saved global scene/catalog state.
+
+The existing attachment counter, reader session epoch and fresh canonical evidence gate project loads, artwork fetches/imports, saves and receipts. Completion after a switch cannot install a project, update its local receipt or apply a temporary decode in another activation. Server saves already committed may remain committed; stale receipts are ignored. Existing CAS/conflict/uncertain-receipt recovery is unchanged; no single-writer lease is added.
+
+Group expressions reuse the same `sourceOrderRevision`, shared evidence stamp and incremental `sn-source-v1` prefix implementation as individual expressions. Each choice pins attachment/session, unique transient native source, source revision/swipe/prefix, explicit actor UUID and exact outfit/asset revision. Equal text and equal author labels never transfer choices. Unchanged navigation/revisits and unchanged-prefix append preserve decisions. Editing, continuation, swipe, insertion/deletion/replacement/reorder invalidates the affected dependent suffix; source-order changes hide overlays synchronously before asynchronous prefix validation. Text scrolling/unchanged refresh does not hash history. `GENERATION_ENDED` still cannot prove success; stopped partial sources permit deliberate choices at their verified current revision, while unresolved completion refuses the affected head.
+
+## Storage boundaries
+
+No storage/plugin/schema/reducer/provider/source-fingerprint change. Schema-v2 account ownership, catalog, immutable PNG storage, CAS, explicit backup/migration and selected-art-only portable bundle v1 remain unchanged. Temporary expressions are projection-only memory state: no dirty/revision changes and no scene/catalog save-body, bundle, backup, browser-local or native record inclusion. Project save reads the existing global reducer, never the temporary projection. Group keys, member/card locators, source prefixes and attachment associations are not persisted.
+
+Visual actions do not write native group metadata, cards, chats, lore, personas or connection settings. Native UI edits/generation/new-chat operations intentionally mutate native files and are inventoried separately from the visual-only hash comparison. A browser image-error injection is failure evidence, not a native host operation.
+
+## Verification and next step
+
+[Implementation/evidence handoff](M1_NATIVE_GROUPS_IMPLEMENTATION.md) records exact tested/pushed heads, commands, native file maps, screenshots, failures and limitations. Source inspection of the pinned `st-context.js`, `script.js`, `group-chats.js` and group/card endpoints verifies public paths. Earlier DYL-42–48 durable-native-storage investigations remain historical; their host registry overlays are neither imported nor rerun as a prerequisite for this independent-project feature.
+
+Physical touch, IME, virtual keyboard, assistive devices, other hosts/browsers and real providers require separate evidence. Automated viewport/keyboard tests do not complete them or Gate A. Stop at one focused draft/open/unmerged PR for senior review. Remembered association, automatic speaker binding, persistent message history, DYL-60 execution and production hardening remain outside this assignment.

@@ -17,6 +17,14 @@ function safeId(value) {
     return null;
 }
 
+// Conversation authority is transient; it never binds a project actor to a card.
+export function supportsProjectConversation(owner) {
+    return safeId(owner?.chatId) !== null && (owner?.scope === 'character'
+        ? safeId(owner.characterId) !== null && owner.groupId == null
+        : owner?.scope === 'group' && owner.groupVerified === true
+            && safeId(owner.groupId) !== null && safeId(owner.groupSessionKey) !== null);
+}
+
 function safeLabel(value, fallback) {
     return typeof value === 'string' && value.trim() ? value : fallback;
 }
@@ -52,7 +60,11 @@ function sameSource(left, right) {
 
 export function createHostAdapter(getContext) {
     const sourceKeys = new WeakMap();
+    // ponytail: only observed record replacement is detectable here; durable or
+    // unseen same-locator lifecycle needs host-issued incarnation/load authority.
+    const groupKeys = new WeakMap();
     let nextSourceKey = 0;
+    let nextGroupKey = 0;
 
     function contextOrNull() {
         try {
@@ -86,13 +98,32 @@ export function createHostAdapter(getContext) {
     function readChatIdentity(context = contextOrNull()) {
         if (!context) return null;
         let chatId = null;
+        let chatReadFailed = false;
         try {
             chatId = safeId(typeof context.getCurrentChatId === 'function' ? context.getCurrentChatId() : context.chatId);
         } catch {
+            chatReadFailed = true;
             chatId = safeId(context.chatId);
         }
         const groupId = safeId(context.groupId);
         const characterId = safeId(context.characterId);
+        if (context.groupId != null && groupId === null) {
+            return { chatId, groupId: null, characterId: null, scope: 'unknown', durable: false };
+        }
+        if (groupId !== null) {
+            const matches = Array.isArray(context.groups)
+                ? context.groups.filter(group => group && safeId(group.id) !== null && String(group.id) === String(groupId)) : [];
+            const group = matches.length === 1 ? matches[0] : null;
+            const verified = !chatReadFailed && group !== null && safeId(chatId) !== null && safeId(group.chat_id) !== null
+                && String(group.chat_id) === String(chatId)
+                && (context.chatId == null || String(context.chatId) === String(chatId));
+            let key = group && groupKeys.get(group);
+            if (group && !key) { key = 'session-group-' + (++nextGroupKey); groupKeys.set(group, key); }
+            // Pinned native group generation temporarily sets characterId to each
+            // replying member. It is neither conversation ownership nor actor identity.
+            return { chatId, groupId: String(groupId), characterId: null, scope: 'group', durable: false,
+                groupVerified: verified, groupSessionKey: key ?? null, groupLabel: safeLabel(group?.name, 'Native group') };
+        }
         return {
             chatId,
             groupId: groupId === null ? null : String(groupId),
@@ -164,6 +195,12 @@ export function createHostAdapter(getContext) {
         let lastObservedOwner = currentOwner();
 
         function emit(type, details = {}) {
+            const owner = currentOwner();
+            if (JSON.stringify(owner) !== JSON.stringify(lastObservedOwner) && !details.history) {
+                const history = readHistory();
+                details = { ...details, history, source: history.at(-1) ?? null };
+            }
+            details = { ...details, owner };
             if (Object.prototype.hasOwnProperty.call(details, 'source')) {
                 lastObservedSource = details.source;
             }

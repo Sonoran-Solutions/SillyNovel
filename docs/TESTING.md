@@ -1,5 +1,10 @@
 # Verification and acceptance
 
+## DYL-23-C native group integration — 2026-10-16
+
+Owner explicitly authorizes [native groups with manual independent-project attachment](M1_NATIVE_GROUPS.md), tracked by [DYL-63](https://linear.app/devils17/issue/DYL-63/dyl-23-c-native-group-conversation-integration), after PR #31 merged at `5a9b87f14d5a008e9801aa2260efe40d9e22f5b7`. Native group/chat/activation authority remains separate from account-owned project/manual actor UUIDs and memory-only source expressions. Four or more actors retain three visible slots; duplicate names never bind cards to actors. No schema, native metadata, automatic attachment or persistence expansion. DYL-23 Done/history/acceptance, DYL-55 and DYL-62 unchanged; Decision F undecided; Gate A NOT_RUN; DYL-60 unstarted. [Implementation/evidence](M1_NATIVE_GROUPS_IMPLEMENTATION.md). Older dated entries below are historical.
+
+
 ## M1.2 completion and readiness review — 2026-10-15
 
 Documentation-only review of fetched main `ea65d84a521a39c9ccc977f4cb3643454963d4b8`. [Acceptance matrices, evidence keys and proposed owner checklist](M1_2_STORAGE_COMPLETION_AND_READINESS.md). The retained S/P/R/C/T campaigns are historical exact-candidate evidence; **no runtime, browser, host, provider, physical-device or owner tests were rerun**. Gate A NOT_RUN.

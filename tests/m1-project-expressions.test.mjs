@@ -8,12 +8,13 @@ import {createReaderSourceModel} from '../src/reader-source-model.mjs';
 const bytes=await readFile(new URL('./fixtures/m12-stage/mira-a-joy.png',import.meta.url));
 const file=()=>new Blob([bytes],{type:'image/png'});
 const view=model=>model.get().scene.view;
-async function setup(t){
+async function setup(t,group=false){
  const previous=globalThis.Image;let decode=async()=>{};
  const dimensions=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength);
  globalThis.Image=class {naturalWidth=dimensions.getUint32(16);naturalHeight=dimensions.getUint32(20);decode(){return decode();}};
  t.after(()=>{globalThis.Image=previous;});
  const context={chatId:'A',characterId:1,chat:[{name:'Mira',mes:'Equal text'},{name:'Mira',mes:'Equal text'},{name:'Mira',mes:'Later source'}]};
+ if(group){context.groupId='G';context.groups=[{id:'G',name:'Group',chat_id:'A',members:['Mira.png','Mira1.png','Rowan.png','Sage.png']}];}
  const host=createHostAdapter(()=>context),reader=createReaderSourceModel();reader.activate(host.readHistory(),host.readChatIdentity());
  const refresh=()=>reader.apply({history:host.readHistory(),owner:host.readChatIdentity()});
  const actions={getSnapshot:reader.getSnapshot,getSceneEvidence:(fresh=true)=>({snapshot:fresh?refresh():reader.getSnapshot(),history:reader.getHistory()})};
@@ -37,8 +38,8 @@ test('attached expressions are per source and UUID; revisit/clear preserve globa
  await model.dispatch({type:'clearExpression',characterKey:actor});assert.equal(view(model).cast[0].expression,null);assert.deepEqual(view(model).cast[0].outfit,base.cast[0].outfit);
  await x.go(1);assert.equal(view(model).cast[0].expression,null,'historical clear invalidates later decisions');
 });
-for(const change of ['edit','same-length','author','swipe','delete','insert','replace','reorder','older-prefix','continue','stream'])test('source suffix invalidation: '+change,async t=>{
- const x=await setup(t);await x.go(0);const id=await x.importExpression();await x.apply(id);await x.go(2);await x.apply(id);
+for(const group of [false,true])for(const change of ['edit','same-length','author','swipe','delete','insert','replace','reorder','older-prefix','continue','stream'])test((group?'group ':'')+'source suffix invalidation: '+change,async t=>{
+ const x=await setup(t,group);await x.go(0);const id=await x.importExpression();await x.apply(id);await x.go(2);await x.apply(id);
  const old=x.context.chat[0];
  if(change==='edit')old.mes+=' edit';
  if(change==='same-length')old.mes='Other text';
@@ -58,8 +59,8 @@ test('compatibility refuses wrong UUID/outfit; failed art falls back; global loc
  const x=await setup(t);await x.go(0);const id=await x.importExpression();await assert.rejects(x.apply(id,x.other),/INCOMPATIBLE_ASSET/);await x.apply(id);
  x.model.expressionFailed(id);assert.equal(view(x.model).cast[0].expression.status,'missing');assert.ok(view(x.model).cast[0].outfit);await x.model.dispatch({type:'clearOutfit',characterKey:x.actor});await assert.rejects(x.apply(id),/INCOMPATIBLE_ASSET/);assert.equal(x.model.get().assets.some(a=>a.id===id),false);
 });
-for(const boundary of ['selection','selection-return','edit','swipe','outfit','outfit-return','chat','replace','detach','disable','dispose'])test('delayed decode cannot cross '+boundary,async t=>{
- const x=await setup(t);await x.go(0);let release,entered;const start=new Promise(r=>entered=r);x.decode(()=>{entered();return new Promise(r=>release=r);});
+for(const group of [false,true])for(const boundary of ['selection','selection-return','edit','swipe','outfit','outfit-return','chat','replace','detach','disable','dispose'])test((group?'group ':'')+'delayed decode cannot cross '+boundary,async t=>{
+ const x=await setup(t,group);await x.go(0);let release,entered;const start=new Promise(r=>entered=r);x.decode(()=>{entered();return new Promise(r=>release=r);});
  const pending=x.importExpression();const rejected=assert.rejects(pending,/STALE_SOURCE/);await start;
  if(boundary.startsWith('selection')){await x.go(1);if(boundary==='selection-return')await x.go(0);}
  if(boundary==='edit')x.context.chat[0].mes+=' edit';
@@ -102,4 +103,29 @@ test('a valid prior activation expression and its bytes never return after A B A
 
 test('a failed project replacement can resume the prior attachment expression authority',async t=>{
  const x=await setup(t);const id=await x.importExpression();await x.apply(id);x.replace();assert.equal(await x.model.sync(),false);x.restore();await x.model.sync();assert.equal(view(x.model).cast[0].expression.id,id);await x.model.dispatch({type:'clearExpression',characterKey:x.actor});assert.equal(view(x.model).cast[0].expression,null);
+});
+
+
+test('group four-actor manual cast and duplicate names stay independent from native speakers/membership',async t=>{
+ const x=await setup(t,true),m=x.model;const base=structuredClone(view(m));
+ const third=await m.register('','Rowan'),fourth=await m.register('','Sage');
+ await m.dispatch({type:'setSlot',characterKey:third,slot:'center'});
+ assert.equal(view(m).cast.length,4);assert.equal(view(m).cast.find(a=>a.key===fourth).slot,null);
+ await assert.rejects(m.dispatch({type:'setSlot',characterKey:fourth,slot:'left'}),/SLOT_OCCUPIED/);
+ await m.dispatch({type:'setSlot',characterKey:fourth,slot:'left',mode:'replace'});
+ assert.equal(view(m).cast.find(a=>a.key===x.actor).slot,null);
+ await m.dispatch({type:'setSlot',characterKey:fourth,slot:'right',mode:'swap'});
+ await m.dispatch({type:'setPresence',characterKey:fourth,present:false});
+ assert.equal(view(m).cast.find(a=>a.key===fourth).slot,'right');
+ await m.dispatch({type:'setPresence',characterKey:fourth,present:true});
+ await m.dispatch({type:'setSlot',characterKey:fourth,slot:null});
+ assert.equal(view(m).cast.find(a=>a.key===fourth).present,true);
+ await m.save();const saved=structuredClone(x.saved),layout=structuredClone(view(m));
+ await x.go(0);const id=await x.importExpression();await x.apply(id);await x.go(1);await x.apply(id);await x.go(0);assert.equal(view(m).cast[0].expression.id,id);
+ x.context.groups[0].members.reverse();x.context.characterId=3;await m.sync();assert.equal(view(m).cast[0].expression.id,id);
+ assert.deepEqual(view(m).slots,layout.slots);assert.equal(m.status().dirty,false);
+ await m.save();assert.deepEqual(x.saved.scene,saved.scene);assert.deepEqual(x.saved.catalog,saved.catalog);
+ assert.equal(base.cast[0].label,base.cast[1].label);assert.notEqual(base.cast[0].key,base.cast[1].key);
+ x.context.groups[0].chat_id='B';x.context.chatId='B';await m.sync();x.context.groups[0].chat_id='A';x.context.chatId='A';await m.sync();
+ assert.equal(view(m).cast[0].expression,null);assert.equal(await m.dispatch({type:'clearBackground'}),false);
 });

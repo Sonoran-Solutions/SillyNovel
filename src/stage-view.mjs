@@ -1,6 +1,7 @@
 import { createProjectClient } from './project-client.mjs';
 import { createProjectScene } from './project-scene.mjs';
 import { createTransientScene, TEST_ACTORS, evidenceStamp } from './transient-scene.mjs';
+import { supportsProjectConversation } from './host-adapter.mjs';
 
 export function mountVisualStage({ document, stage, actions }) {
     const make = (tag, cls, text) => { const e=document.createElement(tag); e.className=cls; if(text)e.textContent=text; return e; };
@@ -54,7 +55,8 @@ export function mountVisualStage({ document, stage, actions }) {
     details.append(summary,panel);panel.append(help);
     const projectStatus=make('p','sillynovel-project-status','Checking optional project storage…');projectStatus.setAttribute('role','status');
     const scope=make('p','sillynovel-project-scope');
-    stage.querySelector('header').after(unsaved,projectStatus,scope,details,art,cast,feedback);
+    const nativeContext=make('p','sillynovel-native-context');
+    stage.querySelector('header').after(unsaved,projectStatus,scope,nativeContext,details,art,cast,feedback);
     area('Project','Choose a saved project explicitly. Attachment lasts only for this browser activation; it is never stored in the native conversation.');
     const projectName=field('Project name','input');projectName.maxLength=80;
     const projectList=field('Saved project');
@@ -67,9 +69,10 @@ export function mountVisualStage({ document, stage, actions }) {
         if(!create&&!id)throw Error('Select a saved project first.');
         if((state&&(state.dirty||state.busy||['conflict','uncertain'].includes(state.saveState))||!state&&model.get().scene?.commands.length) && !globalThis.confirm('Discard current visual edits and open the saved project? Pending operations may already have committed on the server.'))return;
         bundleStatus.textContent='';
-        const token=++projectEpoch,epoch=actions.getSceneEvidence().snapshot.sessionEpoch;
-        if(actions.getSnapshot().owner?.scope !== 'character')throw Error('Projects currently support single-character chats only.');
-        const current=()=>!disposed&&token===projectEpoch&&actions.getSnapshot().sessionEpoch===epoch;
+        const snapshot=actions.getSceneEvidence().snapshot;
+        if(!supportsProjectConversation(snapshot.owner))throw Error('Select a verified native character or group conversation before attaching a project.');
+        const token=++projectEpoch,epoch=snapshot.sessionEpoch;
+        const current=()=>!disposed&&token===projectEpoch&&actions.getSceneEvidence().snapshot.sessionEpoch===epoch;
         projectBusy=true;render();
         let candidate,installed=false;
         try {
@@ -208,7 +211,7 @@ export function mountVisualStage({ document, stage, actions }) {
         for(const [position,{figure,image:img,label}] of slots) {
             const a=view?.cast.find(a=>a.key===view.slots[position]);
             figure.hidden=!a;figure.dataset.actor=a?.key??'';
-            if(!a){image(img,null);continue;}
+            if(!a){img.dataset.expression='';image(img,null);continue;}
             const ref=a.expression?.status==='ready'?a.expression:a.outfit;
             img.dataset.expression=a.expression?.status==='ready'?a.expression.id:'';
             const manual=actors.find(item=>item.key===a.key);
@@ -225,7 +228,11 @@ export function mountVisualStage({ document, stage, actions }) {
         projectStatus.textContent=projectBusy?'Opening project · visual edits paused…':state?state.name+' · revision '+state.revision+' · '+state.projectId.slice(0,8)+' · Attached for this browser activation'+(state.importing?' · importing PNG…':''):'No project attached. '+attachmentNotice+(!capable?unavailable:' Select one explicitly for this chat.');
         projectStatus.title=state?state.projectId:'';
         scope.textContent=state?'Saved global layouts and library persist. Message-specific visual history is not saved. Reload or switching conversations detaches; explicitly reopen.':'Session-only visuals are not saved. No remembered project attachment. '+(!capable?'Storage unavailable; reading and replying remain available.':'');
-        for(const e of [projectName,projectList,...projectButtons])e.disabled=!capable||paused||!ready||actions.getSnapshot().owner?.scope!=='character';
+        const snapshot=actions.getSnapshot(),owner=snapshot.owner;
+        nativeContext.hidden=owner?.scope!=='group';
+        nativeContext.textContent=owner?.scope==='group'?'Native group: '+owner.groupLabel+'. '+(supportsProjectConversation(owner)?'':'Conversation identity unresolved; project attachment unavailable. ')+'Native speaker: '+(snapshot.cursor?.author.label??'unresolved')+'. Project actor selection is manual; no native card binding.':'';
+        nativeContext.title=owner?.scope==='group'?'Group '+owner.groupId+' / chat '+owner.chatId:'';
+        for(const e of [projectName,projectList,...projectButtons])e.disabled=!capable||paused||!ready||!supportsProjectConversation(owner);
         exportProject.disabled=exportProject.disabled||!bundleCapable||bundleBusy||!projectList.value;bundleFile.disabled=!bundleCapable||bundleBusy||paused;
         const preview=state?.cleanupPreview??null;
         if(preview!==displayedPreview){
