@@ -61,7 +61,7 @@ try {
  execFileSync('npm',['ci','--prefix',join(host,'plugins/sillynovel-storage'),'--ignore-scripts','--no-audit','--no-fund'],{stdio:'pipe'});
  await mkdir(join(host,'public/scripts/extensions/third-party'),{recursive:true});await symlink(repo,join(host,'public/scripts/extensions/third-party/SillyNovel'));
  await mkdir(join(data,'default-user'),{recursive:true});
- if(process.env.SN_RECOVERY_RUN||process.env.SN_CLEANUP_RUN||process.env.SN_LIBRARY_RUN)await chmod(data,0o700);
+ if(process.env.SN_RECOVERY_RUN||process.env.SN_CLEANUP_RUN||process.env.SN_LIBRARY_RUN||process.env.SN_GROUP_RUN)await chmod(data,0o700);
  const settings=JSON.parse(await readFile(join(host,'default/content/settings.json')));settings.firstRun=false;
  settings.main_api='openai';settings.oai_settings={...settings.oai_settings,chat_completion_source:'custom',custom_url:'http://127.0.0.1:8128/v1',custom_model:'sn-reader-local',stream_openai:true};
  await writeFile(join(data,'default-user/settings.json'),JSON.stringify(settings));
