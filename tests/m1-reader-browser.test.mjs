@@ -618,3 +618,48 @@ test('portable export downloads only a successful bundle, with explicit errors a
  await page.waitForFunction(()=>document.querySelector('.sillynovel-bundle-status').textContent.includes('up to 8 MiB'));
  assert.equal(await page.locator('#send_textarea').isEnabled(),true);
 });
+
+import {CLEANUP_WARNING} from '../plugins/sillynovel-storage/schema.mjs';
+for(const outcome of ['cancel','success','stale','lost response','wrong receipt','chat switch','project replacement','disable'])test('unused artwork controls and delayed results: '+outcome,async t=>{
+ const page=await fixture(t);await sceneControls(page);
+ const first={schemaVersion:1,projectId:'11111111-1111-4111-8111-111111111111',name:'Cleanup First',revision:0,scene:{backgroundAssetId:null,backgroundLocked:true,actors:[]}};
+ const second={...first,projectId:'22222222-2222-4222-8222-222222222222',name:'Cleanup Second'};
+ const assetId='33333333-3333-4333-8333-333333333333';
+ const preview={projectId:first.projectId,revision:0,inventoryRevision:'a'.repeat(64),candidates:[{assetId,sha256:'b'.repeat(64),width:1,height:1,byteCount:123}],reclaimableBytes:123,warning:CLEANUP_WARNING};
+ let deletes=0,entered,release;const seen=new Promise(r=>entered=r),gate=new Promise(r=>release=r);
+ await page.route('**/api/plugins/sillynovel-storage/**',async route=>{
+  const path=new URL(route.request().url()).pathname;
+  if(path.endsWith('/unused-assets/remove')){deletes++;const body=route.request().postDataJSON();assert.deepEqual(body,{expectedRevision:0,inventoryRevision:'a'.repeat(64),assetIds:[assetId]});entered();await gate;
+   if(outcome==='lost response')return route.abort('failed');
+   if(outcome==='stale')return route.fulfill({status:409,json:{code:'CLEANUP_STALE'}});
+   return route.fulfill({json:{projectId:outcome==='wrong receipt'?second.projectId:first.projectId,revision:0,deletedIds:[assetId],deletedCount:1,reclaimedBytes:123}});
+  }
+  return route.fulfill({json:path.endsWith('/capabilities')?{apiVersion:1,schemaVersion:1,cleanupVersion:1}:path.endsWith('/unused-assets')?preview:path.endsWith('/projects')?[first,second]:path.endsWith(second.projectId)?second:first});
+ });
+ // Re-enable to repeat the single capability probe after installing the fixture routes.
+ await page.locator('#sillynovel-enabled').uncheck();await page.evaluate(()=>{fixture.context.getRequestHeaders=()=>({});});await page.locator('#sillynovel-enabled').check();await sceneControls(page);
+ await page.waitForFunction(()=>!document.querySelector('[aria-label="Saved project"]').disabled);
+ await button(page,'Open project and use with this chat').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('Cleanup First · revision'));
+ await button(page,'Review unused artwork').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-cleanup-list input'));
+ assert.match(await page.locator('.sillynovel-cleanup-status').innerText(),/1 unused.*123 logical bytes/);
+ assert.match(await page.locator('.sillynovel-cleanup-warning').innerText(),/Other tabs/);
+ assert.equal(deletes,0);await page.locator('.sillynovel-cleanup-list input').check();assert.match(await page.locator('.sillynovel-cleanup-selected').innerText(),/1 selected.*123 logical bytes/);
+ page.on('dialog',dialog=>{assert.match(dialog.message(),/1 unused.*123 logical bytes/);return outcome==='cancel'?dialog.dismiss():dialog.accept();});
+ await button(page,'Remove selected unused artwork').click();
+ if(outcome==='cancel'){assert.equal(deletes,0);assert.equal(await page.locator('.sillynovel-cleanup-list input').count(),1);return;}
+ await seen;assert.equal(await page.locator('#send_textarea').isEnabled(),true);
+ if(outcome==='chat switch')await page.evaluate(()=>{fixture.context.chatId='cleanup-B';fixture.emit('CHAT_CHANGED','cleanup-B');});
+ if(outcome==='project replacement'){await page.getByLabel('Saved project',{exact:true}).selectOption(second.projectId);await button(page,'Open project and use with this chat').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('Cleanup Second · revision'));}
+ if(outcome==='disable')await page.locator('#sillynovel-enabled').uncheck();
+ release();
+ if(['success','stale','lost response','wrong receipt'].includes(outcome)){
+  await page.waitForFunction(()=>!document.querySelector('.sillynovel-cleanup-status').textContent.includes('Removing'));
+  const text=await page.locator('.sillynovel-cleanup-status').innerText();assert.match(text,outcome==='success'?/Cleanup completed.*123 logical bytes/:outcome==='stale'?/Preview expired/:/outcome uncertain/);
+  assert.equal(await page.locator('.sillynovel-cleanup-list input').count(),0);
+  await page.getByLabel('Project actor name',{exact:true}).fill('Keep edits');await button(page,'Register project actor').click();assert.equal(await button(page,'Review unused artwork').isDisabled(),true);assert.match(await page.locator('.sillynovel-cleanup-status').innerText(),/Save or discard/);
+ }else{
+  await page.waitForTimeout(100);
+  if(outcome==='disable')assert.equal(await page.locator('#sillynovel-stage').count(),0);
+  else assert.doesNotMatch(await page.locator('.sillynovel-cleanup-status').innerText(),/Cleanup completed/);
+ }
+});

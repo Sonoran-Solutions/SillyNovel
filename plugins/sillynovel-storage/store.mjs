@@ -1,8 +1,8 @@
 import { DatabaseSync } from 'node:sqlite';
 import { SCHEMA_SQL, validateDatabaseSchema } from './database-schema.mjs';
 import { randomUUID } from 'node:crypto';
-import { demand, exact, label, validId, validateScene, emptyScene } from './schema.mjs';
-import { decodePNG, digest } from './png.mjs';
+import { demand, exact, label, validId, validateScene, emptyScene, validateCleanupRequest, CLEANUP_WARNING } from './schema.mjs';
+import { decodePNG, digest, MAX_BYTES } from './png.mjs';
 import { bundleJob, references, ASSET_BYTES } from './bundle.mjs';
 
 export function openStore(filename) {
@@ -38,7 +38,45 @@ export function openStore(filename) {
         demand(digest(row.bytes) === row.sha256, 'CORRUPT_ASSET', 503);
         return row;
     }
+    function cleanupInventory(owner,id) {
+        const project=load(owner,id), refs=new Set(references(project.scene));
+        const rows=db.prepare('SELECT id AS assetId,sha256,width,height,length(bytes) AS byteCount FROM assets WHERE project=? ORDER BY id LIMIT 101').all(id);
+        demand(rows.length<=100,'CORRUPT_ASSET',503);
+        let total=0;
+        for(const row of rows) {
+            total+=row.byteCount;
+            demand(validId(row.assetId) && Number.isSafeInteger(row.byteCount) && row.byteCount>0 && row.byteCount<=MAX_BYTES && total<=100*1024*1024,'CORRUPT_ASSET',503);
+            // One bounded PNG at a time; corrupt candidates refuse the entire operation.
+            try {
+                const decoded=decodePNG(Buffer.from(asset(owner,id,row.assetId).bytes));
+                demand(decoded.sha256===row.sha256 && decoded.width===row.width && decoded.height===row.height,'CORRUPT_ASSET',503);
+            } catch { demand(false,'CORRUPT_ASSET',503); }
+        }
+        demand([...refs].every(ref=>rows.some(row=>row.assetId===ref)),'CORRUPT_ASSET',503);
+        const candidates=rows.filter(row=>!refs.has(row.assetId));
+        const inventoryRevision=digest(JSON.stringify([owner,id,project.revision,project.scene,rows,candidates.map(row=>row.assetId)]));
+        return {projectId:id,revision:project.revision,inventoryRevision,candidates,
+            reclaimableBytes:candidates.reduce((sum,row)=>sum+row.byteCount,0),warning:CLEANUP_WARNING};
+    }
     return {
+        previewCleanup(owner,id) { return transaction(()=>cleanupInventory(owner,id)); },
+        removeUnusedAssets(owner,id,body) {
+            validateCleanupRequest(body);
+            return transaction(()=>{
+                const project=load(owner,id);
+                demand(project.revision===body.expectedRevision,'REVISION_CONFLICT',409);
+                const preview=cleanupInventory(owner,id), refs=new Set(references(project.scene));
+                for(const assetId of body.assetIds) {
+                    demand(!refs.has(assetId),'ASSET_REFERENCED',409);
+                    demand(preview.candidates.some(a=>a.assetId===assetId),'ASSET_MISSING',409);
+                }
+                demand(preview.inventoryRevision===body.inventoryRevision,'CLEANUP_STALE',409);
+                const remove=db.prepare('DELETE FROM assets WHERE project=? AND id=?');
+                for(const assetId of body.assetIds)demand(remove.run(id,assetId).changes===1,'CLEANUP_STALE',409);
+                return {projectId:id,revision:project.revision,deletedIds:body.assetIds,
+                    deletedCount:body.assetIds.length,reclaimedBytes:preview.candidates.filter(a=>body.assetIds.includes(a.assetId)).reduce((sum,a)=>sum+a.byteCount,0)};
+            });
+        },
         close: () => db.close(), load,
         list(owner) { demand(typeof owner === 'string' && owner.length > 0, 'UNAUTHORIZED', 401); return db.prepare('SELECT id AS projectId,name,revision FROM projects WHERE owner=? ORDER BY name,id').all(owner); },
         create(owner, body) {
@@ -60,7 +98,10 @@ export function openStore(filename) {
                 const prior = load(owner,id);
                 demand(prior.revision === body.expectedRevision, 'REVISION_CONFLICT', 409);
                 const refs = [body.scene.backgroundAssetId, ...body.scene.actors.map(a => a.spriteAssetId)].filter(Boolean);
-                for (const ref of refs) asset(owner,id,ref);
+                for (const ref of refs) {
+                    demand(db.prepare('SELECT 1 FROM assets WHERE project=? AND id=?').get(id,ref),'ASSET_MISSING',409);
+                    asset(owner,id,ref);
+                }
                 const result = db.prepare('UPDATE projects SET name=?,scene=?,revision=revision+1 WHERE id=? AND owner=? AND revision=?')
                     .run(body.name,JSON.stringify(body.scene),id,owner,body.expectedRevision);
                 demand(result.changes === 1, 'REVISION_CONFLICT', 409);

@@ -54,3 +54,50 @@ test('failed PNG upload unlocks editing and preserves the existing scene',async(
  assert.equal(model.status().importing,false);assert.equal(model.status().dirty,false);
  assert.equal(await model.dispatch({type:'lock',field:'background'}),true);model.dispose();
 });
+
+import {CLEANUP_WARNING} from '../plugins/sillynovel-storage/schema.mjs';
+function unusedPreview(record,id=randomUUID()) {return {projectId:record.projectId,revision:record.revision,inventoryRevision:'a'.repeat(64),candidates:[{assetId:id,sha256:'b'.repeat(64),width:1,height:1,byteCount:3}],reclaimableBytes:3,warning:CLEANUP_WARNING};}
+test('cleanup refuses dirty/pending saves/imports, explicit cancel does not mutate',async()=>{
+ const {actions}=setup(),record=initial(),preview=unusedPreview(record);let previews=0,deletes=0,release;
+ const client={previewCleanup:async()=>{previews++;return preview;},removeUnusedAssets:async()=>{deletes++;},save:id=>new Promise(r=>release=()=>r({projectId:id,revision:1}))};
+ const model=await createProjectScene(record,client,actions,()=>{},()=>true);
+ await model.reviewUnused();assert.equal(previews,1);await model.removeUnused([preview.candidates[0].assetId],text=>{assert.match(text,/1 unused.*3 logical bytes/);assert.match(text,/Other tabs/);return false;});assert.equal(deletes,0);
+ await model.register('','Unsaved');await model.reviewUnused();assert.equal(previews,1);assert.equal(model.status().cleanupPreview,null);
+ const pending=model.save();await model.reviewUnused();assert.equal(previews,1);release();await pending;model.dispose();
+});
+for(const operation of ['preview','remove'])for(const stale of ['chat switch','replacement','disable'])test('late cleanup '+operation+' ignores '+stale,async()=>{
+ const context=setup(),record=initial(),preview=unusedPreview(record);let release,current=true;
+ const client={previewCleanup:()=>operation==='preview'?new Promise(r=>release=()=>r(preview)):Promise.resolve(preview),removeUnusedAssets:()=>new Promise(r=>release=()=>r({deletedIds:[preview.candidates[0].assetId],deletedCount:1,reclaimedBytes:3}))};
+ const model=await createProjectScene(record,client,context.actions,()=>{},()=>current);
+ let pending;
+ if(operation==='preview')pending=model.reviewUnused();else{await model.reviewUnused();pending=model.removeUnused([preview.candidates[0].assetId],()=>true);}
+ if(stale==='chat switch')context.switch();else if(stale==='replacement')current=false;else model.dispose();
+ const before=model.status();release();await pending;assert.equal(model.status().cleanupPreview,before.cleanupPreview);assert.equal(model.status().cleanupNotice,before.cleanupNotice);assert.equal(model.status().dirty,false);model.dispose();
+});
+test('confirmed cleanup evicts unused Blob/catalog entries and keeps saved scene/dirty state',async()=>{
+ const {actions}=setup(),record=initial(),assetId=randomUUID();let scene,revision=0;
+ const preview=unusedPreview(record,assetId);
+ const client={upload:async()=>({assetId}),asset:async()=>({blob:new Blob(['png']),hash:'b'.repeat(64)}),save:async(id,body)=>{scene=body.scene;return{projectId:id,revision:++revision};},previewCleanup:async()=>({...preview,revision}),removeUnusedAssets:async()=>({deletedIds:[assetId],deletedCount:1,reclaimedBytes:3})};
+ const model=await createProjectScene(record,client,actions,()=>{},()=>true);
+ await model.importFile(new Blob(['png'],{type:'image/png'}),'background');await model.dispatch({type:'clearBackground'});await model.save();
+ assert.equal(model.get().assets.length,1);await model.reviewUnused();const pending=model.removeUnused([assetId],()=>true);
+ await assert.rejects(model.register('','Blocked'),/Wait for/);await pending;
+ assert.equal(model.get().assets.length,0);assert.equal(model.get().media.size,0);assert.equal(model.status().dirty,false);assert.equal(model.status().revision,1);assert.equal(scene.backgroundAssetId,null);assert.match(model.status().cleanupNotice,/Cleanup completed/);model.dispose();
+});
+test('pending PNG upload blocks cleanup, and ASSET_MISSING save keeps edits for recovery',async()=>{
+ const {actions}=setup(),record=initial();let release,previews=0;
+ const client={upload:()=>new Promise(r=>release=()=>r({assetId:randomUUID()})),asset:async()=>({blob:new Blob(['png']),hash:'hash'}),previewCleanup:async()=>{previews++;},save:async()=>{throw Error('ASSET_MISSING');}};
+ const model=await createProjectScene(record,client,actions,()=>{},()=>true),pending=model.importFile(new Blob(['png'],{type:'image/png'}),'background');
+ await model.reviewUnused();assert.equal(previews,0);release();await pending;await model.save();assert.equal(model.status().dirty,true);assert.equal(model.status().revision,0);assert.match(model.get().notice,/Your edits remain here/);assert.equal(model.get().assets.length,1);model.dispose();
+});
+
+import {createProjectClient} from '../src/project-client.mjs';
+test('cleanup client treats transport loss, malformed/proxy failures and wrong committed receipts as uncertain',async t=>{
+ const original=globalThis.fetch;t.after(()=>{globalThis.fetch=original;});const record=initial(),v=unusedPreview(record),id=v.candidates[0].assetId;
+ const client=createProjectClient(()=>({'X-CSRF-Token':'fixture'}));
+ for(const response of [()=>{throw Error('lost');},()=>new Response('gateway failure',{status:502}),()=>new Response('{}'),()=>Response.json({projectId:record.projectId,revision:0,deletedIds:[id,id],deletedCount:1,reclaimedBytes:3})]){
+  globalThis.fetch=async()=>response();await assert.rejects(client.removeUnusedAssets(record.projectId,v,[id]),/CLEANUP_UNCERTAIN/);
+ }
+ globalThis.fetch=async()=>Response.json({code:'CLEANUP_STALE'},{status:409});await assert.rejects(client.removeUnusedAssets(record.projectId,v,[id]),/CLEANUP_STALE/);
+ globalThis.fetch=async()=>Response.json({projectId:record.projectId,revision:0,deletedIds:[id],deletedCount:1,reclaimedBytes:3});assert.equal((await client.removeUnusedAssets(record.projectId,v,[id])).reclaimedBytes,3);
+});

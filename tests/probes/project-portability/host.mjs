@@ -21,10 +21,10 @@ const pass=name=>{evidence.checks.push(name);console.log('PASS '+name);};
 const hash=x=>createHash('sha256').update(x).digest('hex');
 let child,browser,origin,logs='',provider,portableProject;
 async function stop(){if(child&&child.exitCode===null){const done=new Promise(r=>child.once('close',r));child.kill('SIGTERM');await done;}child=null;}
-async function start(enabled=true,storageRoot=data){
+async function start(enabled=true,storageRoot=data,disableCsrf=false){
  const cfg=(await readFile(join(host,'default/config.yaml'),'utf8')).replace('enableServerPlugins: false','enableServerPlugins: '+enabled).replace('enableServerPluginsAutoUpdate: true','enableServerPluginsAutoUpdate: false').replace('enableUserAccounts: false','enableUserAccounts: true');
  await writeFile(config,cfg);const server=createServer();await new Promise(r=>server.listen(0,'127.0.0.1',r));const port=server.address().port;await new Promise(r=>server.close(r));origin='http://127.0.0.1:'+port;logs='';
- child=spawn(process.execPath,['server.js','--configPath',config,'--dataRoot',storageRoot,'--port',String(port),'--listen','false','--browserLaunchEnabled','false'],{cwd:host,stdio:['ignore','pipe','pipe']});
+ child=spawn(process.execPath,['server.js','--configPath',config,'--dataRoot',storageRoot,'--port',String(port),'--listen','false','--browserLaunchEnabled','false','--disableCsrf',String(disableCsrf)],{cwd:host,stdio:['ignore','pipe','pipe']});
  child.stdout.on('data',x=>logs+=x);child.stderr.on('data',x=>logs+=x);
  const deadline=Date.now()+60000;
  while(Date.now()<deadline&&child.exitCode===null){if(logs.includes('127.0.0.1:'+port))return;await delay(100);}
@@ -61,7 +61,7 @@ try {
  execFileSync('npm',['ci','--prefix',join(host,'plugins/sillynovel-storage'),'--ignore-scripts','--no-audit','--no-fund'],{stdio:'pipe'});
  await mkdir(join(host,'public/scripts/extensions/third-party'),{recursive:true});await symlink(repo,join(host,'public/scripts/extensions/third-party/SillyNovel'));
  await mkdir(join(data,'default-user'),{recursive:true});
- if(process.env.SN_RECOVERY_RUN)await chmod(data,0o700);
+ if(process.env.SN_RECOVERY_RUN||process.env.SN_CLEANUP_RUN)await chmod(data,0o700);
  const settings=JSON.parse(await readFile(join(host,'default/content/settings.json')));settings.firstRun=false;
  settings.main_api='openai';settings.oai_settings={...settings.oai_settings,chat_completion_source:'custom',custom_url:'http://127.0.0.1:8128/v1',custom_model:'sn-reader-local',stream_openai:true};
  await writeFile(join(data,'default-user/settings.json'),JSON.stringify(settings));
@@ -94,7 +94,8 @@ try {
  pass('real host auth/CSRF, two-user project and asset isolation, two-client CAS, PNG hash and limits');
  for(const name of ['Project A','Project B'])await alice.request('/api/characters/create','POST',{ch_name:name,description:'Public synthetic fixture',first_mes:'Welcome to '+name},200,'application/json');
  const page=await alice.context.newPage();page.setDefaultTimeout(20000);page.on('pageerror',e=>console.log('PAGE ERROR '+e.message));
- await page.goto(origin);await page.locator('#sillynovel-settings').waitFor({state:'attached'});await select(page,'Project A');await enable(page);
+ await page.goto(origin);await page.locator('#sillynovel-settings').waitFor({state:'attached'});if(process.env.SN_CLEANUP_RUN){await select(page,'Project B');await delay(1500);}
+ await select(page,'Project A');await enable(page);
  await page.locator('.sillynovel-controls summary').click();
  const field=name=>page.locator('#sillynovel-stage').getByLabel(({'Session actor name':'Project actor name','Session actor':'Project actor','Temporary image use':'Project image use','Temporary raster file':'Project PNG file'})[name]||name,{exact:true});const button=name=>page.getByRole('button',{name,exact:true});
  await page.waitForFunction(()=>document.querySelector('.sillynovel-project-status')?.textContent.includes('No project'));
@@ -115,6 +116,7 @@ try {
  await button('Save project').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('revision 1'));
  const project=(await alice.api('/projects')).find(x=>x.name==='Browser project');const saved=await alice.api('/projects/'+project.projectId);
  assert.equal(saved.scene.actors.length,2);assert.deepEqual(saved.scene.actors.map(x=>x.slot),['left','right']);
+ if(process.env.SN_CLEANUP_RUN){for(const file of ['forest.png','mira-a.png']){await field('Temporary image use').selectOption('background');await field('Temporary raster file').setInputFiles(join(repo,'tests/fixtures/m12-stage',file));await page.waitForFunction(()=>document.querySelector('.sillynovel-visual-status').textContent.startsWith('Imported'));}}
  await page.reload();await page.locator('#sillynovel-stage').waitFor();await select(page,'Project A');await page.locator('.sillynovel-controls summary').click();
  assert.equal(await page.locator('.sillynovel-sprite:visible').count(),0);
  await field('Saved project').selectOption(project.projectId);await button('Open project and use with this chat').click();
@@ -123,6 +125,7 @@ try {
  assert.deepEqual((await alice.api('/projects/'+project.projectId)).scene,saved.scene);
  await page.locator('.sillynovel-controls summary').click();await page.screenshot({path:join(root,'restored.png')});await page.locator('.sillynovel-controls summary').click();assert.deepEqual(await canonical(),before);evidence.files=before;
  pass('browser create/import background + two sprites/arrange/save/reload/explicit reopen; named canonical files unchanged');
+ if(process.env.SN_CLEANUP_RUN){const {runCleanup}=await import('../project-cleanup/host.mjs');await runCleanup({root,data,repo,page,alice,bob,peer,project,saved,field,button,select,pass,evidence});}
  // Portable copy: browser download/upload, actual host validation and committed inventory.
  const portableBefore=await canonical();
  const sourceProject=await alice.api('/projects/'+project.projectId);
@@ -230,8 +233,9 @@ try {
  const fallback=await disabled.context.newPage();await fallback.goto(origin);await fallback.locator('#sillynovel-stage').waitFor();await fallback.locator('.sillynovel-controls summary').click();
  await fallback.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('Plugin unavailable'));
  assert.equal(await fallback.locator('#send_textarea').isVisible(),true);assert.equal(await fallback.getByRole('button',{name:'Register session actor',exact:true}).isEnabled(),true);
- assert.equal(await fallback.getByRole('button',{name:'Export project',exact:true}).isDisabled(),true);assert.equal(await fallback.getByLabel('Import project bundle',{exact:true}).isDisabled(),true);
+ assert.equal(await fallback.getByRole('button',{name:'Review unused artwork',exact:true}).isDisabled(),true);assert.equal(await fallback.getByRole('button',{name:'Export project',exact:true}).isDisabled(),true);assert.equal(await fallback.getByLabel('Import project bundle',{exact:true}).isDisabled(),true);
  pass('plugin disabled at startup refuses bundle controls and retains session stage/native composer');
+ if(process.env.SN_CLEANUP_RUN){await stop();await start(true,data,true);const unprotected=await session();const refusal=await unprotected.api('/projects/'+project.projectId+'/unused-assets','GET',undefined,503);assert.equal(refusal.code,'CSRF_REQUIRED');const removal=await unprotected.api('/projects/'+project.projectId+'/unused-assets/remove','POST',{expectedRevision:1,inventoryRevision:'a'.repeat(64),assetIds:[]},503);assert.equal(removal.code,'CSRF_REQUIRED');pass('CSRF-disabled pinned host refuses cleanup inspection and persistence');}
  evidence.result='PASS';
 } catch(error){evidence.result='FAIL';evidence.error=error.stack;console.error(error);process.exitCode=1;}
 finally{await browser?.close();await stop();provider?.kill('SIGTERM');await writeFile(join(root,'host.log'),logs);await writeFile(join(root,'evidence.json'),JSON.stringify(evidence,null,2));console.log('Evidence '+join(root,'evidence.json'));}

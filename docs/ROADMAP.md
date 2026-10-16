@@ -126,3 +126,7 @@ The owner separately authorizes DYL-57 portable global-project bundles under DYL
 ## Bounded database recovery — 2026-10-15
 
 DYL-58 is separately owner-authorized after merged PR #25 and completed DYL-57: operator-only online backup, strict offline inspection, restore into an empty SillyNovel database slot with existing verified account incarnations, and schema-v1 migration preconditions/policy. [Contract](M1_PROJECT_DATABASE_RECOVERY.md); [implementation/evidence](M1_PROJECT_DATABASE_RECOVERY_IMPLEMENTATION.md). Historical DYL-58 Backlog entries above describe the earlier assignment. This work does not authorize production replacement, account reassignment, DYL-59 cleanup, DYL-56 hints, DYL-22/23, M1.3/M2 or a Gate A verdict. DYL-55 remains unfinished.
+
+## Explicit unused artwork cleanup — DYL-59, 2026-10-15
+
+The owner separately authorized [cleanup](M1_PROJECT_ASSET_CLEANUP.md) after merged PRs #25/#26 and completed DYL-57/58. This supersedes the earlier DYL-59 Backlog/unauthorized implementation note only for this bounded task. [Evidence and recommendation](M1_PROJECT_ASSET_CLEANUP_IMPLEMENTATION.md). Saved references remain protected; other clients' unsaved drafts remain an explicit limitation. DYL-55 requires separate completion review; DYL-56 Backlog, DYL-22/23 blocked, M1.3/M2 unauthorized and Gate A NOT_RUN. No release/live installation, merge or automatic next-slice work.

@@ -22,3 +22,25 @@ export function validateScene(scene) {
     }
     return scene;
 }
+
+export const CLEANUP_WARNING='Only saved project references are checked. Other tabs or clients may have unsaved drafts that will lose access to removed artwork. Removal cannot be undone here; keep verified database backups.';
+const hash256=value=>typeof value==='string' && /^[0-9a-f]{64}$/.test(value);
+export function validateCleanupRequest(body) {
+    demand(exact(body,['expectedRevision','inventoryRevision','assetIds']) && Number.isSafeInteger(body.expectedRevision) && body.expectedRevision>=0
+        && hash256(body.inventoryRevision) && Array.isArray(body.assetIds) && body.assetIds.length>0 && body.assetIds.length<=100
+        && body.assetIds.every(validId) && new Set(body.assetIds).size===body.assetIds.length);
+    return body;
+}
+export function validateCleanupPreview(value,id) {
+    demand(exact(value,['projectId','revision','inventoryRevision','candidates','reclaimableBytes','warning']) && value.projectId===id && validId(id)
+        && Number.isSafeInteger(value.revision) && value.revision>=0 && hash256(value.inventoryRevision) && value.warning===CLEANUP_WARNING
+        && Array.isArray(value.candidates) && value.candidates.length<=100,'INVALID_CLEANUP_PREVIEW');
+    let total=0;const ids=new Set();
+    for(const a of value.candidates) {
+        demand(exact(a,['assetId','sha256','width','height','byteCount']) && validId(a.assetId) && !ids.has(a.assetId) && hash256(a.sha256)
+            && Number.isSafeInteger(a.width) && a.width>0 && a.width<=4096 && Number.isSafeInteger(a.height) && a.height>0 && a.height<=4096
+            && a.width*a.height<=16000000 && Number.isSafeInteger(a.byteCount) && a.byteCount>0 && a.byteCount<=5*1024*1024,'INVALID_CLEANUP_PREVIEW');
+        ids.add(a.assetId);total+=a.byteCount;
+    }
+    demand(total===value.reclaimableBytes && total<=100*1024*1024,'INVALID_CLEANUP_PREVIEW');return value;
+}

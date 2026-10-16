@@ -47,7 +47,7 @@ export async function init(router) {
         const bytes = await body(req,'application/vnd.sillynovel+json',32768);
         try { return JSON.parse(bytes.toString('utf8')); } catch { demand(false,'INVALID_JSON'); }
     };
-    router.get('/capabilities',route((req,res)=>res.json({apiVersion:1,schemaVersion:1,formats:['image/png'],maxBytes:MAX_BYTES,bundleVersion:1,bundleMaxBytes:BUNDLE_BYTES})));
+    router.get('/capabilities',route((req,res)=>res.json({apiVersion:1,schemaVersion:1,formats:['image/png'],maxBytes:MAX_BYTES,bundleVersion:1,bundleMaxBytes:BUNDLE_BYTES,cleanupVersion:1})));
     router.get('/projects',route((req,res)=>res.json(store.list(req.sillynovelOwner))));
     router.post('/projects',route(async(req,res)=>res.status(201).json(store.create(req.sillynovelOwner,await json(req)))));
     let bundleBusy=false;
@@ -67,6 +67,8 @@ export async function init(router) {
         store.load(req.sillynovelOwner,req.params.id);
         res.status(201).json(store.importAsset(req.sillynovelOwner,req.params.id,await body(req,'image/png',MAX_BYTES)));
     }));
+    router.get('/projects/:id/unused-assets',route((req,res)=>res.json(store.previewCleanup(req.sillynovelOwner,req.params.id))));
+    router.post('/projects/:id/unused-assets/remove',route(async(req,res)=>res.json(store.removeUnusedAssets(req.sillynovelOwner,req.params.id,await json(req)))));
     router.get('/projects/:id/assets/:asset',route((req,res)=> {
         const asset=store.asset(req.sillynovelOwner,req.params.id,req.params.asset);
         res.set('X-Content-Type-Options','nosniff').set('X-Content-SHA256',asset.sha256).type('png').send(Buffer.from(asset.bytes));
