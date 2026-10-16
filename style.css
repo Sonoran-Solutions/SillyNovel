@@ -111,7 +111,7 @@
 .sillynovel-dialogue { min-height: min(20vh, 160px); }
 .sillynovel-project-status { max-height: 2.6em; overflow: auto; }
 @media (max-width: 600px), (max-height: 620px) {
-    .sillynovel-project-status,.sillynovel-project-scope,.sillynovel-native-context,.sillynovel-cast,.sillynovel-visual-status { max-height: 1.4em; overflow: auto; }
+    .sillynovel-project-status,.sillynovel-project-scope,.sillynovel-cast,.sillynovel-visual-status { max-height: 1.4em; overflow: auto; }
     .sillynovel-dialogue { min-height: min(16vh, 100px); }
 }
 .sillynovel-controls__row { display: flex; flex-wrap: wrap; align-items: end; gap: 0.5rem; flex: 1 1 100%; min-width: 0; }

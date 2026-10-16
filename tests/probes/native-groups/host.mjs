@@ -29,7 +29,7 @@ export async function runGroups({root,data,repo,page,alice,peer,project,field,bu
  assert.deepEqual(sources.map(m=>m.name),['Mira','Mira','Rowan','Sage']);assert.equal(sources[0].mes,sources[1].mes);
  assert.match(await page.locator('.sillynovel-native-context').innerText(),/Project actor selection is manual; no native card binding/);
  const contextDrawer=page.locator('#rightNavDrawerIcon');await contextDrawer.click();
- for(const [device,viewport]of [['desktop',{width:1440,height:1100}],['narrow',{width:390,height:800}]]){await page.setViewportSize(viewport);const file='group-native-members-'+device+'.png';await page.screenshot({path:join(root,file)});screenshots.push(file);}
+ for(const [device,viewport]of [['desktop',{width:1440,height:1100}],['narrow',{width:390,height:800}]]){await page.setViewportSize(viewport);await page.locator('#rm_group_members .group_member').nth(3).scrollIntoViewIfNeeded();const file='group-native-members-'+device+'.png';await page.screenshot({path:join(root,file)});screenshots.push(file);}
  await contextDrawer.click();await page.setViewportSize({width:1440,height:1100});
  pass('groups: four actual native card API records, two Mira labels/distinct avatars, real group list activation and exact native greetings');
  const record=await alice.api('/projects','POST',{name:'Group manual cast'},201);

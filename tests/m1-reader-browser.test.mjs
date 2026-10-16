@@ -882,6 +882,7 @@ test('group member reorder/drafted speaker leaves manual UUIDs, selection, three
  await page.evaluate(()=>{fixture.context.groups[0].members.reverse();fixture.context.characterId=3;fixture.emit('GENERATION_STARTED','normal',{},true);fixture.renderNative();});
  await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));
  assert.equal(await x.image.getAttribute('src'),url);assert.equal(await page.locator('.sillynovel-cast').innerText(),before);assert.equal(await actor.inputValue(),keys[0]);
+ await page.setViewportSize({width:390,height:800});assert.equal(await page.locator('.sillynovel-native-context').evaluate(e=>e.scrollHeight<=e.clientHeight),true);
  assert.match(before,/Sage.*offstage/);assert.equal(await page.locator('.sillynovel-sprite:not([hidden])').count(),3);assert.match(await page.locator('.sillynovel-native-context').innerText(),/Native speaker: Mira/);
 });
 
