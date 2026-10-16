@@ -8,7 +8,7 @@ export const TEST_ACTORS = [
     { preset: 'sage', label: 'Sage', description: 'Sage · gold hat' },
 ];
 const fixtureURL = name => new URL('../tests/fixtures/m12-stage/' + name + '.png', import.meta.url).href;
-export const evidenceStamp = s => JSON.stringify([s.sessionEpoch, s.sourceRevision, s.cursor?.sourceKey, s.cursor?.revision]);
+export const evidenceStamp = s => JSON.stringify([s.sessionEpoch, s.sourceRevision, s.sourceOrderRevision, s.cursor?.sourceKey, s.cursor?.revision]);
 
 /** Only the reader's unique host-object keys and explicit manual actors attest identity.
  * Hashes are change detectors, never proof of durable ownership or card binding. */

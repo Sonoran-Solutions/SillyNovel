@@ -1,3 +1,5 @@
+> PR #31 senior review returned REQUEST CHANGES at head `8e6e97020472a9a6c49e2376730f8563dcdd91c1`: unchanged-object reorders could skip automatic overlay reconciliation. The [bounded correction and current evidence](M1_PROJECT_EXPRESSIONS_REVIEW.md) supersede the recommendation/input hashes below for the revised candidate. The original implementation evidence remains historical and unchanged.
+
 # DYL-23-B implementation and senior-review handoff
 
 **GO for senior review of DYL-23-B only.** **[Draft PR #31](https://github.com/Sonoran-Solutions/SillyNovel/pull/31): OPEN / DRAFT / UNMERGED; auto-merge disabled.** Final pushed head is recorded in the PR/Linear handoff to avoid a self-referential commit field. [DYL-62](https://linear.app/devils17/issue/DYL-62) tracks the authorized follow-up. DYL-23 retains Done and its original acceptance/history/relationships; native groups/device requirements remain unfinished. Decision F undecided; Gate A NOT_RUN. No DYL-60 execution, persistent history, live installation, release, merge or auto-merge.

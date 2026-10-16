@@ -137,7 +137,7 @@ export function mountVisualStage({ document, stage, actions }) {
     const outfit=field('Outfit');
     button('Apply outfit',()=>model.dispatch(outfit.value?{type:'setOutfit',characterKey:actor.value,assetId:outfit.value}:{type:'clearOutfit',characterKey:actor.value}));
     row();
-    const expression=field('Expression · selected source only');
+    const expression=field('Expression to apply · selected source only');
     const applyExpression=button('Apply expression',()=>model.dispatch(expression.value?{type:'setExpression',characterKey:actor.value,assetId:expression.value}:{type:'clearExpression',characterKey:actor.value}));
     const clearExpression=button('Clear expression',()=>model.dispatch({type:'clearExpression',characterKey:actor.value}));
     const expressionContext=make('p','sillynovel-expression-context');expressionContext.setAttribute('role','status');target.append(expressionContext);

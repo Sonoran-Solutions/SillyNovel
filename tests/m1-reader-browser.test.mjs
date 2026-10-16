@@ -353,7 +353,7 @@ test('session stage: forward projection, selected-source expressions, outfits an
     const a=await addActor(page,'mira-a'), b=await addActor(page,'mira-b');
     await positionActor(page,a,'left');
     await field(page,'Background').selectOption('tavern');await applyScene(page,'Apply background');
-    await field(page,'Expression · selected source only').selectOption(a+':joy-default');await applyScene(page,'Apply expression');
+    await field(page,'Expression to apply · selected source only').selectOption(a+':joy-default');await applyScene(page,'Apply expression');
     await page.waitForFunction(()=>document.querySelector('.sillynovel-sprite--left img').src.endsWith('mira-a-joy.png'));
     await button(page,'Previous').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-art__background').hidden);
     assert.equal(await sprite(page,'left').isVisible(),false);
@@ -363,7 +363,7 @@ test('session stage: forward projection, selected-source expressions, outfits an
     await page.waitForFunction(()=>document.querySelector('.sillynovel-sprite--left img').src.endsWith('mira-a.png'));
     assert.match(await page.locator('.sillynovel-art__background').getAttribute('src'),/tavern.png$/);
     await field(page,'Outfit').selectOption(a+':blue-coat');await applyScene(page,'Apply outfit');
-    await field(page,'Expression · selected source only').selectOption(a+':coat-joy');await applyScene(page,'Apply expression');
+    await field(page,'Expression to apply · selected source only').selectOption(a+':coat-joy');await applyScene(page,'Apply expression');
     await page.waitForFunction(()=>document.querySelector('.sillynovel-sprite--left img').src.endsWith('mira-a-coat-joy.png'));
     await field(page,'Outfit').selectOption(b+':neutral-sprite');await button(page,'Apply outfit').click();
     await page.waitForFunction(()=>document.querySelector('.sillynovel-visual-status').textContent.includes('INCOMPATIBLE_ASSET'));
@@ -371,7 +371,7 @@ test('session stage: forward projection, selected-source expressions, outfits an
     await field(page,'Outfit').selectOption(a+':missing');await applyScene(page,'Apply outfit');
     assert.equal(await sprite(page,'left').locator('img').isVisible(),false);assert.match(await sprite(page,'left').innerText(),/art unavailable/);
     await field(page,'Outfit').selectOption('');await applyScene(page,'Apply outfit');
-    await field(page,'Expression · selected source only').selectOption(a+':stern-default');await applyScene(page,'Apply expression');
+    await field(page,'Expression to apply · selected source only').selectOption(a+':stern-default');await applyScene(page,'Apply expression');
     await page.evaluate(()=>{fixture.context.chat[2].swipe_id=1;fixture.emit('MESSAGE_SWIPED',2);});
     await page.waitForFunction(()=>document.querySelector('.sillynovel-sprite--left img').src.endsWith('mira-a.png'));
     await page.evaluate(()=>fixture.setText('historical edit',0));
@@ -782,7 +782,7 @@ async function attachedExpressions(t){
  });
  await page.locator('#sillynovel-enabled').check();await sceneControls(page);await button(page,'Open project and use with this chat').click();await page.waitForFunction(()=>document.querySelectorAll('.sillynovel-sprite:not([hidden])').length===2);
  await page.getByLabel('Project actor',{exact:true}).selectOption(actors[0]);
- const expression=page.getByLabel('Expression · selected source only',{exact:true}),image=page.locator('.sillynovel-sprite--left img');
+ const expression=page.getByLabel('Expression to apply · selected source only',{exact:true}),image=page.locator('.sillynovel-sprite--left img');
  const upload=async(label='Happy',file='mira-a-joy.png')=>{await page.getByLabel('Temporary expression label',{exact:true}).fill(label);const picker=page.getByLabel('Temporary expression PNG',{exact:true});await picker.focus();assert.equal(await picker.evaluate(e=>e===document.activeElement),true);const chooser=page.waitForEvent('filechooser');await picker.click();await(await chooser).setFiles(resolve(root,'tests/fixtures/m12-stage',file));await page.waitForFunction(()=>document.querySelector('.sillynovel-expression-context').textContent.includes('Temporary expression ready'));return expression.inputValue();};
  const apply=async id=>{if(id)await expression.selectOption(id);await button(page,'Apply expression').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-sprite--left img').dataset.expression!=='');return image.getAttribute('src');};
  return {page,actors,original,saves,expression,image,upload,apply};
@@ -823,4 +823,28 @@ for(const boundary of ['selection','edit','swipe','outfit','actor','chat','repla
 test('attached missing expression image falls back to base outfit; clear, no dirty changes',async t=>{
  const x=await attachedExpressions(t);const base=await x.image.getAttribute('src'),id=await x.upload();await x.apply(id);
  await x.image.evaluate(e=>e.dispatchEvent(new Event('error')));await x.page.waitForFunction(()=>document.querySelector('.sillynovel-sprite--left img').dataset.expression==='');assert.equal(await x.image.getAttribute('src'),base);assert.equal(await x.page.locator('.sillynovel-unsaved').getAttribute('data-state'),'saved');assert.match(await x.page.locator('.sillynovel-expression-context').innerText(),/unavailable/);
+});
+
+for(const movement of ['prefix-only','selected-index'])test('attached expressions automatically reconcile unchanged-object reorder: '+movement,async t=>{
+ const x=await attachedExpressions(t),{page}=x;
+ await page.evaluate(()=>{fixture.context.chat.push({name:'Mira',mes:'Pinned unchanged source.\n\n'+('A paragraph for scrolling.\n\n'.repeat(60))},{name:'You',is_user:true,mes:'Later unchanged source'},{name:'Mira',mes:'Unchanged head'});fixture.renderNative();fixture.emit('MESSAGE_RECEIVED',4);});
+ await button(page,'Previous').click();await button(page,'Previous').click();const base=await x.image.getAttribute('src'),happy=await x.upload();const happyURL=await x.apply(happy);
+ await page.evaluate(()=>{
+  window.pinnedObject=fixture.context.chat[2];window.prefixEncodes=0;window.expressionHashes=0;
+  const encode=TextEncoder.prototype.encode;TextEncoder.prototype.encode=function(...args){prefixEncodes++;return encode.apply(this,args);};
+  const digest=crypto.subtle.digest.bind(crypto.subtle);crypto.subtle.digest=async(...args)=>{expressionHashes++;if(window.holdExpressionHash)await new Promise(resolve=>window.releaseExpressionHash=resolve);return digest(...args);};
+  const dialogue=document.querySelector('.sillynovel-dialogue');dialogue.scrollTop=100;dialogue.dispatchEvent(new Event('scroll'));fixture.emit('MESSAGE_EDITED',0);
+ });
+ await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+ assert.deepEqual(await page.evaluate(()=>[prefixEncodes,expressionHashes]),[0,0],'scroll and unchanged canonical reconciliation do not validate history again');assert.equal(await x.image.getAttribute('src'),happyURL);
+ const immediate=await page.evaluate(movement=>{
+  window.holdExpressionHash=true;const chat=fixture.context.chat;
+  if(movement==='prefix-only')[chat[0],chat[1]]=[chat[1],chat[0]];else [chat[1],chat[2]]=[chat[2],chat[1]];
+  fixture.emit('MESSAGE_EDITED',0); // Canonical host refresh only; no overlay method or navigation.
+  return {expression:document.querySelector('.sillynovel-sprite--left img').dataset.expression,sourcePreserved:chat.includes(pinnedObject),message:document.querySelector('.sillynovel-dialogue__message').textContent};
+ },movement);
+ assert.equal(immediate.sourcePreserved,true);assert.match(immediate.message,/Pinned unchanged source/);assert.equal(immediate.expression,'','remove overlay synchronously before checking changed correspondence');
+ await page.waitForFunction(()=>typeof window.releaseExpressionHash==='function');assert.equal(await button(page,'Apply expression').isDisabled(),true);assert.equal(await x.image.getAttribute('src'),base);assert.equal(await page.locator('#send_textarea').isEnabled(),true);
+ await page.evaluate(()=>{window.holdExpressionHash=false;releaseExpressionHash();});
+ await page.waitForFunction(()=>document.querySelector('.sillynovel-expression-context').textContent.includes('invalidated'));assert.equal(await x.image.getAttribute('src'),base);assert.equal(await x.expression.locator('option').count(),1);assert.match(await message(page).innerText(),/^Pinned unchanged source/);assert.equal(await page.locator('.sillynovel-unsaved').getAttribute('data-state'),'saved');
 });

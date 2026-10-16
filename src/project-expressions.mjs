@@ -1,4 +1,5 @@
 import { fingerprintHistory } from './source-prefix.mjs';
+import { evidenceStamp } from './transient-scene.mjs';
 
 // A projection-only journal: never passed to project serialization or the global reducer.
 export function createProjectExpressions(actions, globalScene, current, changed) {
@@ -6,7 +7,7 @@ export function createProjectExpressions(actions, globalScene, current, changed)
     let cache=null,sources=[],stamp=null,work=0,selectionRevision=0,historyRevision=0,disposed=false,busy=false;
     let notice='Temporary message expressions are not saved.',decisions=[];
     const assets=[],media=new Map(),pending=new Map();
-    const signature=s=>JSON.stringify([s.sessionEpoch,s.owner,s.sourceRevision,s.selectionRevision,s.cursor?.sourceKey,s.cursor?.revision,s.generation]);
+    const signature=s=>JSON.stringify([evidenceStamp(s),s.owner,s.selectionRevision,s.generation]);
     const same=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
     const live=()=>!disposed&&current()&&actions.getSnapshot().sessionEpoch===epoch;
     const notify=text=>{if(text)notice=text;if(!disposed)changed();};

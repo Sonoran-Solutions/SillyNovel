@@ -1,5 +1,10 @@
 # Project status
 
+## PR #31 senior-review correction — 2026-10-16
+
+The owner supplied REQUEST CHANGES for missed automatic reconciliation after unchanged-object reorder. [Bounded correction/evidence](M1_PROJECT_EXPRESSIONS_REVIEW.md): dedicated source-order revision shared by stage and expression authority; immediate temporary fallback during prefix checking; actual-entry regressions preserving the selected source; explicit “Expression to apply” labeling. DYL-62 stays In Review; PR #31 stays draft/open/unmerged. DYL-23 Done, DYL-60, Decision F and Gate A NOT_RUN remain unchanged.
+
+
 ## DYL-23-B attached temporary expressions — 2026-10-16
 
 Owner explicitly authorizes [memory-only attached message expressions](M1_PROJECT_EXPRESSIONS.md), tracked by [DYL-62](https://linear.app/devils17/issue/DYL-62). Starting main `d3f5761c03fec7fc5d97b0698da718af7af9c187` is the verified PR #30 merge. The project-global layout/catalog remains persistent; explicit actor/outfit-compatible PNG expression choices use a separate bounded activation-only source journal and the existing renderer. No expression-only dirty/revision changes or persistence. [Validation and handoff](M1_PROJECT_EXPRESSIONS_IMPLEMENTATION.md).

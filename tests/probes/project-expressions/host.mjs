@@ -11,14 +11,14 @@ export async function runExpressions({root,data,repo,page,alice,project,field,bu
  // Portable v1 deliberately omits catalog entries; normalize selected registrations with a global save before the expression baseline.
  await button('Save project').click();await page.waitForFunction(n=>document.querySelector('.sillynovel-project-status').textContent.includes('revision '+n),project.revision+1);
  const original=await state(),actor=original.scene.actors[0].actorId;
- const expression=field('Expression · selected source only'),img=page.locator('.sillynovel-sprite--left img');
+ const expression=field('Expression to apply · selected source only'),img=page.locator('.sillynovel-sprite--left img');
  async function connect(){const icon=page.locator('#API-status-top'),drawer=page.locator('#rm_api_block');if((await icon.getAttribute('class')).includes('closedIcon'))await icon.click();await drawer.waitFor({state:'visible'});await page.locator('#api_button_openai').click();await page.locator('#send_but').waitFor({state:'visible'});if((await drawer.getAttribute('class')).includes('openDrawer'))await icon.click();await drawer.waitFor({state:'hidden'});}
  await connect();
  // Create real native messages before taking the visual-only integrity inventory.
  await page.locator('#send_textarea').fill('Synthetic expression campaign native reply');await page.locator('#send_but').click();
  await page.waitForFunction(()=>document.querySelector('.sillynovel-reader__status').textContent.includes('streaming'));await page.locator('#mes_stop').click();await page.waitForFunction(()=>!document.querySelector('.sillynovel-reader__status').textContent.includes('streaming'));await page.waitForTimeout(1500);
  const nativeCount=await page.evaluate(()=>SillyTavern.getContext().chat.length);assert.ok(nativeCount>=3);
- const at=async index=>{if(await button('Jump to Latest').isEnabled())await button('Jump to Latest').click();for(let i=nativeCount-1;i>index;i--)await button('Previous').click();await page.waitForFunction(()=>!document.querySelector('[aria-label="Expression · selected source only"]').disabled);};
+ const at=async index=>{if(await button('Jump to Latest').isEnabled())await button('Jump to Latest').click();for(let i=nativeCount-1;i>index;i--)await button('Previous').click();await page.waitForFunction(()=>!document.querySelector('[aria-label="Expression to apply · selected source only"]').disabled);};
  await mkdir(join(data,'default-user/worlds'),{recursive:true});await mkdir(join(data,'default-user/avatars'),{recursive:true});
  await writeFile(join(data,'default-user/worlds/expression-fixture.json'),JSON.stringify({entries:{},name:'Synthetic expression lore'}));await writeFile(join(data,'default-user/avatars/expression-persona.png'),await readFile(join(repo,'tests/fixtures/m12-stage/mira-a.png')));
  const before=await canonical();const connection=await page.evaluate(()=>JSON.stringify({main:SillyTavern.getContext().mainApi,connection:SillyTavern.getContext().extensionSettings?.connectionManager??null}));
