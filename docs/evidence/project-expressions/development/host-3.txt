@@ -1,0 +1,38 @@
+Owned evidence root /tmp/sn-portability-host-5fDMR0
+PASS real host auth/CSRF, two-user project and asset isolation, two-client CAS, PNG hash and limits
+PASS browser create/import background + two sprites/arrange/save/reload/explicit reopen; named canonical files unchanged
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+
++ [
++   {
++     actorId: null,
++     assetId: '0ccbb058-2295-45bc-ac70-f56a0b04cba6',
++     kind: 'background',
++     label: 'Background'
++   },
++   {
++     actorId: '2a46634f-2c80-49ed-9f96-51c04245b66d',
++     assetId: '380f9e45-7a5c-49b5-9a9a-d4c46b08302e',
++     kind: 'sprite',
++     label: 'One sprite'
++   },
++   {
++     actorId: 'c39abac2-4946-47a2-88ea-6a05a416f3f3',
++     assetId: 'e5e27fbc-d1bb-42a5-85bf-acaadb67a51f',
++     kind: 'sprite',
++     label: 'Two sprite'
++   }
++ ]
+- []
+
+    at runExpressions (file:///home/dq/Projects/SillyNovel/tests/probes/project-expressions/host.mjs:34:80)
+    at async file:///home/dq/Projects/SillyNovel/tests/probes/project-portability/host.mjs:132:108 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: [Array],
+  expected: [],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+Evidence /tmp/sn-portability-host-5fDMR0/evidence.json

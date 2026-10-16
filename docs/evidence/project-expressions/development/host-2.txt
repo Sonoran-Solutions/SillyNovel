@@ -1,0 +1,28 @@
+Owned evidence root /tmp/sn-portability-host-DUrUQN
+PASS real host auth/CSRF, two-user project and asset isolation, two-client CAS, PNG hash and limits
+PASS browser create/import background + two sprites/arrange/save/reload/explicit reopen; named canonical files unchanged
+PASS expressions: two native sources/two compatible PNG choices/revisit/base fallback/composer draft-focus/global save exclusion/native-file equality
+PASS expressions: real native edit invalidates selected expression; global outfit/layout/locks retained; desktop and narrow fallback screenshots
+PAGE ERROR Generation was aborted.
+PASS expressions: native swipe invalidates stopped-reply expression; real Continue/stream/Stop retain base layout and usable reader
+PASS expressions: instrumented missing PNG falls back; reload/reopen, explicit detach and A B A clear temporary assets/decisions
+PASS portable browser download/import preserves dirty stage; explicit reopen restores new identities, bytes, layout/locks; exact native inventory unchanged
+PASS HTTP failed project/second-asset/final-scene writes inspected in committed database: zero partial projects/assets
+PASS real two-account export refusal and import ownership; two-client import retry creates distinct copies; concurrent export/save is coherent
+PASS actual native switch during delayed import receipt never attaches visuals or changes stage ownership
+PASS native A to B to A detaches and never auto-restores project
+AssertionError [ERR_ASSERTION]: /api/plugins/sillynovel-storage/projects/f3257f75-2bed-45ac-8148-84a6b5b4978c {"code":"REVISION_CONFLICT"}
+
+409 !== 503
+
+    at request (file:///home/dq/Projects/SillyNovel/tests/probes/project-portability/host.mjs:39:10)
+    at async Object.api (file:///home/dq/Projects/SillyNovel/tests/probes/project-portability/host.mjs:41:92)
+    at async file:///home/dq/Projects/SillyNovel/tests/probes/project-portability/host.mjs:198:2 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 409,
+  expected: 503,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+Evidence /tmp/sn-portability-host-DUrUQN/evidence.json

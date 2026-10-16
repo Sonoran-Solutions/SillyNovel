@@ -1,0 +1,403 @@
+✖ attached expressions are per source and UUID; revisit/clear preserve global outfits and save records (29.366062ms)
+✖ source suffix invalidation: edit (6.047752ms)
+✖ source suffix invalidation: same-length (5.514905ms)
+✖ source suffix invalidation: author (5.025044ms)
+✖ source suffix invalidation: swipe (8.647285ms)
+✖ source suffix invalidation: delete (4.018184ms)
+✖ source suffix invalidation: insert (2.863868ms)
+✖ source suffix invalidation: replace (3.007827ms)
+✖ source suffix invalidation: reorder (4.899077ms)
+✖ source suffix invalidation: older-prefix (4.163134ms)
+✖ source suffix invalidation: continue (6.871673ms)
+✖ source suffix invalidation: stream (3.573534ms)
+✖ compatibility refuses wrong UUID/outfit; failed art falls back; global locks stay intact (3.548008ms)
+✖ delayed decode cannot cross selection (4.637778ms)
+✖ delayed decode cannot cross selection-return (3.701544ms)
+✖ delayed decode cannot cross edit (2.940736ms)
+✖ delayed decode cannot cross swipe (3.75492ms)
+✖ delayed decode cannot cross outfit (4.266099ms)
+✖ delayed decode cannot cross outfit-return (2.660332ms)
+✖ delayed decode cannot cross chat (3.010713ms)
+✖ delayed decode cannot cross replace (4.564165ms)
+✖ delayed decode cannot cross detach (3.891024ms)
+✖ delayed decode cannot cross disable (3.094102ms)
+✖ delayed decode cannot cross dispose (3.207896ms)
+✖ ambiguous history clears decisions and cannot resurrect; A B A resets attachment authority (7.042771ms)
+✖ generation end without completion proof refuses head; pinned older source remains usable (3.674425ms)
+✖ PNG content/type/animation/dimension limits refuse without upload or dirtying (6.185069ms)
+✔ global reducer preserves actor IDs and excludes native anchors and expressions (12.450703ms)
+✔ save captures snapshot and keeps edits made during request dirty (1.57429ms)
+✔ late successful save cannot update detached model authority (1.6576ms)
+✔ locked neutral background survives save, reload and explicit reopen (0.844788ms)
+✔ pending PNG import rejects concurrent edits and uploads, then attaches its committed asset (1.711678ms)
+✔ failed PNG upload unlocks editing and preserves the existing scene (0.645ms)
+✔ cleanup refuses dirty/pending saves/imports, explicit cancel does not mutate (1.54667ms)
+✔ late cleanup preview ignores chat switch (0.662661ms)
+✔ late cleanup preview ignores replacement (0.554977ms)
+✔ late cleanup preview ignores disable (0.530123ms)
+✔ late cleanup remove ignores chat switch (0.866869ms)
+✔ late cleanup remove ignores replacement (0.407673ms)
+✔ late cleanup remove ignores disable (0.339581ms)
+✔ confirmed cleanup evicts unused Blob/catalog entries and keeps saved scene/dirty state (1.719902ms)
+✔ pending PNG upload blocks cleanup, and ASSET_MISSING save keeps edits for recovery (1.04006ms)
+✔ cleanup client treats transport loss, malformed/proxy failures and wrong committed receipts as uncertain (33.240778ms)
+✔ project library reopens all alternatives, preserves UUIDs/labels and restricts actor compatibility (8.331678ms)
+✔ late PNG library upload cannot attach after switch (0.874071ms)
+✔ late PNG library upload cannot attach after replacement (0.521578ms)
+✔ late PNG library upload cannot attach after dispose (2.020503ms)
+✔ missing catalog art remains a selectable neutral alternative; invalid imports and failed catalog save preserve state (1.6526ms)
+✔ save recovery state retains edits: REVISION_CONFLICT (1.84129ms)
+✔ save recovery state retains edits: SAVE_UNCERTAIN (1.168541ms)
+✔ save recovery state retains edits: INVALID_RECEIPT (1.051841ms)
+✔ save recovery state retains edits: ASSET_MISSING (3.017895ms)
+✔ save client distinguishes lost receipts from definite server refusal (2.045517ms)
+✔ null, foreign and wrong-revision save receipts all require explicit reopen (1.633627ms)
+ℹ tests 54
+ℹ suites 0
+ℹ pass 27
+ℹ fail 27
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 280.790756
+
+✖ failing tests:
+
+test at tests/m1-project-expressions.test.mjs:29:1
+✖ attached expressions are per source and UUID; revisit/clear preserve global outfits and save records (29.366062ms)
+  Error: UNRESOLVED_SOURCE: select a stable verified message first.
+      at Object.importFile (file:///home/dq/Projects/SillyNovel/src/project-expressions.mjs:59:32)
+      at async TestContext.<anonymous> (file:///home/dq/Projects/SillyNovel/tests/m1-project-expressions.test.mjs:31:28)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+
+test at tests/m1-project-expressions.test.mjs:39:134
+✖ source suffix invalidation: edit (6.047752ms)
+  Error: UNRESOLVED_SOURCE: select a stable verified message first.
+      at Object.importFile (file:///home/dq/Projects/SillyNovel/src/project-expressions.mjs:59:32)
+      at async TestContext.<anonymous> (file:///home/dq/Projects/SillyNovel/tests/m1-project-expressions.test.mjs:40:48)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tests/m1-project-expressions.test.mjs:39:134
+✖ source suffix invalidation: same-length (5.514905ms)
+  Error: UNRESOLVED_SOURCE: select a stable verified message first.
+      at Object.importFile (file:///home/dq/Projects/SillyNovel/src/project-expressions.mjs:59:32)
+      at async TestContext.<anonymous> (file:///home/dq/Projects/SillyNovel/tests/m1-project-expressions.test.mjs:40:48)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tests/m1-project-expressions.test.mjs:39:134
+✖ source suffix invalidation: author (5.025044ms)
+  Error: UNRESOLVED_SOURCE: select a stable verified message first.
+      at Object.importFile (file:///home/dq/Projects/SillyNovel/src/project-expressions.mjs:59:32)
+      at async TestContext.<anonymous> (file:///home/dq/Projects/SillyNovel/tests/m1-project-expressions.test.mjs:40:48)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tests/m1-project-expressions.test.mjs:39:134
+✖ source suffix invalidation: swipe (8.647285ms)
+  Error: UNRESOLVED_SOURCE: select a stable verified message first.
+      at Object.importFile (file:///home/dq/Projects/SillyNovel/src/project-expressions.mjs:59:32)
+      at async TestContext.<anonymous> (file:///home/dq/Projects/SillyNovel/tests/m1-project-expressions.test.mjs:40:48)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tests/m1-project-expressions.test.mjs:39:134
+✖ source suffix invalidation: delete (4.018184ms)
+  Error: UNRESOLVED_SOURCE: select a stable verified message first.
+      at Object.importFile (file:///home/dq/Projects/SillyNovel/src/project-expressions.mjs:59:32)
+      at async TestContext.<anonymous> (file:///home/dq/Projects/SillyNovel/tests/m1-project-expressions.test.mjs:40:48)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tests/m1-project-expressions.test.mjs:39:134
+✖ source suffix invalidation: insert (2.863868ms)
+  Error: UNRESOLVED_SOURCE: select a stable verified message first.
+      at Object.importFile (file:///home/dq/Projects/SillyNovel/src/project-expressions.mjs:59:32)
+      at async TestContext.<anonymous> (file:///home/dq/Projects/SillyNovel/tests/m1-project-expressions.test.mjs:40:48)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tests/m1-project-expressions.test.mjs:39:134
+✖ source suffix invalidation: replace (3.007827ms)
+  Error: UNRESOLVED_SOURCE: select a stable verified message first.
+      at Object.importFile (file:///home/dq/Projects/SillyNovel/src/project-expressions.mjs:59:32)
+      at async TestContext.<anonymous> (file:///home/dq/Projects/SillyNovel/tests/m1-project-expressions.test.mjs:40:48)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tests/m1-project-expressions.test.mjs:39:134
+✖ source suffix invalidation: reorder (4.899077ms)
+  Error: UNRESOLVED_SOURCE: select a stable verified message first.
+      at Object.importFile (file:///home/dq/Projects/SillyNovel/src/project-expressions.mjs:59:32)
+      at async TestContext.<anonymous> (file:///home/dq/Projects/SillyNovel/tests/m1-project-expressions.test.mjs:40:48)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tests/m1-project-expressions.test.mjs:39:134
+✖ source suffix invalidation: older-prefix (4.163134ms)
+  Error: UNRESOLVED_SOURCE: select a stable verified message first.
+      at Object.importFile (file:///home/dq/Projects/SillyNovel/src/project-expressions.mjs:59:32)
+      at async TestContext.<anonymous> (file:///home/dq/Projects/SillyNovel/tests/m1-project-expressions.test.mjs:40:48)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tests/m1-project-expressions.test.mjs:39:134
+✖ source suffix invalidation: continue (6.871673ms)
+  Error: UNRESOLVED_SOURCE: select a stable verified message first.
+      at Object.importFile (file:///home/dq/Projects/SillyNovel/src/project-expressions.mjs:59:32)
+      at async TestContext.<anonymous> (file:///home/dq/Projects/SillyNovel/tests/m1-project-expressions.test.mjs:40:48)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tests/m1-project-expressions.test.mjs:39:134
+✖ source suffix invalidation: stream (3.573534ms)
+  Error: UNRESOLVED_SOURCE: select a stable verified message first.
+      at Object.importFile (file:///home/dq/Projects/SillyNovel/src/project-expressions.mjs:59:32)
+      at async TestContext.<anonymous> (file:///home/dq/Projects/SillyNovel/tests/m1-project-expressions.test.mjs:40:48)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tests/m1-project-expressions.test.mjs:56:1
+✖ compatibility refuses wrong UUID/outfit; failed art falls back; global locks stay intact (3.548008ms)
+  Error: UNRESOLVED_SOURCE: select a stable verified message first.
+      at Object.importFile (file:///home/dq/Projects/SillyNovel/src/project-expressions.mjs:59:32)
+      at async TestContext.<anonymous> (file:///home/dq/Projects/SillyNovel/tests/m1-project-expressions.test.mjs:57:48)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tests/m1-project-expressions.test.mjs:60:142
+✖ delayed decode cannot cross selection (4.637778ms)
+  [AssertionError [ERR_ASSERTION]: The input did not match the regular expression /STALE_SOURCE/. Input:
+  
+  'Error: UNRESOLVED_SOURCE: select a stable verified message first.'
+  ] {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: UNRESOLVED_SOURCE: select a stable verified message first.
+        at Object.importFile (file:///home/dq/Projects/SillyNovel/src/project-expressions.mjs:59:32)
+        at async waitForActual (node:assert:615:5)
+        at async strict.rejects (node:assert:738:25),
+    expected: /STALE_SOURCE/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests/m1-project-expressions.test.mjs:60:142
+✖ delayed decode cannot cross selection-return (3.701544ms)
+  [AssertionError [ERR_ASSERTION]: The input did not match the regular expression /STALE_SOURCE/. Input:
+  
+  'Error: UNRESOLVED_SOURCE: select a stable verified message first.'
+  ] {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: UNRESOLVED_SOURCE: select a stable verified message first.
+        at Object.importFile (file:///home/dq/Projects/SillyNovel/src/project-expressions.mjs:59:32)
+        at async waitForActual (node:assert:615:5)
+        at async strict.rejects (node:assert:738:25),
+    expected: /STALE_SOURCE/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests/m1-project-expressions.test.mjs:60:142
+✖ delayed decode cannot cross edit (2.940736ms)
+  [AssertionError [ERR_ASSERTION]: The input did not match the regular expression /STALE_SOURCE/. Input:
+  
+  'Error: UNRESOLVED_SOURCE: select a stable verified message first.'
+  ] {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: UNRESOLVED_SOURCE: select a stable verified message first.
+        at Object.importFile (file:///home/dq/Projects/SillyNovel/src/project-expressions.mjs:59:32)
+        at async waitForActual (node:assert:615:5)
+        at async strict.rejects (node:assert:738:25),
+    expected: /STALE_SOURCE/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests/m1-project-expressions.test.mjs:60:142
+✖ delayed decode cannot cross swipe (3.75492ms)
+  [AssertionError [ERR_ASSERTION]: The input did not match the regular expression /STALE_SOURCE/. Input:
+  
+  'Error: UNRESOLVED_SOURCE: select a stable verified message first.'
+  ] {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: UNRESOLVED_SOURCE: select a stable verified message first.
+        at Object.importFile (file:///home/dq/Projects/SillyNovel/src/project-expressions.mjs:59:32)
+        at async waitForActual (node:assert:615:5)
+        at async strict.rejects (node:assert:738:25),
+    expected: /STALE_SOURCE/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests/m1-project-expressions.test.mjs:60:142
+✖ delayed decode cannot cross outfit (4.266099ms)
+  [AssertionError [ERR_ASSERTION]: The input did not match the regular expression /STALE_SOURCE/. Input:
+  
+  'Error: UNRESOLVED_SOURCE: select a stable verified message first.'
+  ] {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: UNRESOLVED_SOURCE: select a stable verified message first.
+        at Object.importFile (file:///home/dq/Projects/SillyNovel/src/project-expressions.mjs:59:32)
+        at async waitForActual (node:assert:615:5)
+        at async strict.rejects (node:assert:738:25),
+    expected: /STALE_SOURCE/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests/m1-project-expressions.test.mjs:60:142
+✖ delayed decode cannot cross outfit-return (2.660332ms)
+  [AssertionError [ERR_ASSERTION]: The input did not match the regular expression /STALE_SOURCE/. Input:
+  
+  'Error: UNRESOLVED_SOURCE: select a stable verified message first.'
+  ] {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: UNRESOLVED_SOURCE: select a stable verified message first.
+        at Object.importFile (file:///home/dq/Projects/SillyNovel/src/project-expressions.mjs:59:32)
+        at async waitForActual (node:assert:615:5)
+        at async strict.rejects (node:assert:738:25),
+    expected: /STALE_SOURCE/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests/m1-project-expressions.test.mjs:60:142
+✖ delayed decode cannot cross chat (3.010713ms)
+  [AssertionError [ERR_ASSERTION]: The input did not match the regular expression /STALE_SOURCE/. Input:
+  
+  'Error: UNRESOLVED_SOURCE: select a stable verified message first.'
+  ] {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: UNRESOLVED_SOURCE: select a stable verified message first.
+        at Object.importFile (file:///home/dq/Projects/SillyNovel/src/project-expressions.mjs:59:32)
+        at async waitForActual (node:assert:615:5)
+        at async strict.rejects (node:assert:738:25),
+    expected: /STALE_SOURCE/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests/m1-project-expressions.test.mjs:60:142
+✖ delayed decode cannot cross replace (4.564165ms)
+  [AssertionError [ERR_ASSERTION]: The input did not match the regular expression /STALE_SOURCE/. Input:
+  
+  'Error: UNRESOLVED_SOURCE: select a stable verified message first.'
+  ] {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: UNRESOLVED_SOURCE: select a stable verified message first.
+        at Object.importFile (file:///home/dq/Projects/SillyNovel/src/project-expressions.mjs:59:32)
+        at async waitForActual (node:assert:615:5)
+        at async strict.rejects (node:assert:738:25),
+    expected: /STALE_SOURCE/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests/m1-project-expressions.test.mjs:60:142
+✖ delayed decode cannot cross detach (3.891024ms)
+  [AssertionError [ERR_ASSERTION]: The input did not match the regular expression /STALE_SOURCE/. Input:
+  
+  'Error: UNRESOLVED_SOURCE: select a stable verified message first.'
+  ] {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: UNRESOLVED_SOURCE: select a stable verified message first.
+        at Object.importFile (file:///home/dq/Projects/SillyNovel/src/project-expressions.mjs:59:32)
+        at async waitForActual (node:assert:615:5)
+        at async strict.rejects (node:assert:738:25),
+    expected: /STALE_SOURCE/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests/m1-project-expressions.test.mjs:60:142
+✖ delayed decode cannot cross disable (3.094102ms)
+  [AssertionError [ERR_ASSERTION]: The input did not match the regular expression /STALE_SOURCE/. Input:
+  
+  'Error: UNRESOLVED_SOURCE: select a stable verified message first.'
+  ] {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: UNRESOLVED_SOURCE: select a stable verified message first.
+        at Object.importFile (file:///home/dq/Projects/SillyNovel/src/project-expressions.mjs:59:32)
+        at async waitForActual (node:assert:615:5)
+        at async strict.rejects (node:assert:738:25),
+    expected: /STALE_SOURCE/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests/m1-project-expressions.test.mjs:60:142
+✖ delayed decode cannot cross dispose (3.207896ms)
+  [AssertionError [ERR_ASSERTION]: The input did not match the regular expression /STALE_SOURCE/. Input:
+  
+  'Error: UNRESOLVED_SOURCE: select a stable verified message first.'
+  ] {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: UNRESOLVED_SOURCE: select a stable verified message first.
+        at Object.importFile (file:///home/dq/Projects/SillyNovel/src/project-expressions.mjs:59:32)
+        at async waitForActual (node:assert:615:5)
+        at async strict.rejects (node:assert:738:25),
+    expected: /STALE_SOURCE/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests/m1-project-expressions.test.mjs:72:1
+✖ ambiguous history clears decisions and cannot resurrect; A B A resets attachment authority (7.042771ms)
+  Error: UNRESOLVED_SOURCE: select a stable verified message first.
+      at Object.importFile (file:///home/dq/Projects/SillyNovel/src/project-expressions.mjs:59:32)
+      at async TestContext.<anonymous> (file:///home/dq/Projects/SillyNovel/tests/m1-project-expressions.test.mjs:73:48)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tests/m1-project-expressions.test.mjs:77:1
+✖ generation end without completion proof refuses head; pinned older source remains usable (3.674425ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file:///home/dq/Projects/SillyNovel/tests/m1-project-expressions.test.mjs:79:138)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/m1-project-expressions.test.mjs:81:1
+✖ PNG content/type/animation/dimension limits refuse without upload or dirtying (6.185069ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /Animated/. Input:
+  
+  'Error: UNRESOLVED_SOURCE: select a stable verified message first.'
+  
+      at async TestContext.<anonymous> (file:///home/dq/Projects/SillyNovel/tests/m1-project-expressions.test.mjs:83:70)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: UNRESOLVED_SOURCE: select a stable verified message first.
+        at Object.importFile (file:///home/dq/Projects/SillyNovel/src/project-expressions.mjs:59:32)
+        at async waitForActual (node:assert:615:5)
+        at async strict.rejects (node:assert:738:25)
+        at async TestContext.<anonymous> (file:///home/dq/Projects/SillyNovel/tests/m1-project-expressions.test.mjs:83:70)
+        at async Test.run (node:internal/test_runner/test:1409:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:974:7),
+    expected: /Animated/,
+    operator: 'rejects',
+    diff: 'simple'
+  }

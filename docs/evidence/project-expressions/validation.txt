@@ -1,0 +1,7 @@
+87 frozen input hashes match; storage inputs unchanged
+node-tests.txt 123 PASS
+storage-tests.txt 126 PASS
+browser-tests.txt 57 PASS
+16 host groups; 36 native hashes unchanged; global scene/catalog save equality; no expression payload
+8 screenshots match desktop/narrow dimensions
+Contract/handoff links and Markdown fences verified
