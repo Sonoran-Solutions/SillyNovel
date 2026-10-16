@@ -1,5 +1,7 @@
 # Optional SillyNovel project storage — experimental
 
+**PR #29 review correction:** startup refuses existing v1 storage with `MIGRATION_REQUIRED` and leaves it unchanged. Use the [documented operator backup/inspect/migrate workflow](../../docs/M1_PNG_ASSET_LIBRARY.md#explicit-v1--v2-transition) to transform a verified preserved v1 backup into a new, absent stopped-host database slot. Both the original store and backup remain available after success; no automatic in-place migration or overwrite.
+
 **DYL-22 review candidate:** [Reusable PNG library and v1→v2 upgrade](../../docs/M1_PNG_ASSET_LIBRARY.md). Update plugin, extension and recovery tools together; create and inspect a full backup before upgrading. Project/database schema v2 adds labels/categories/actor registrations, protects saved alternatives from cleanup and reuses identical project-local bytes. Scene and portable bundle v1 stay unchanged; portable copies omit library labels and unselected alternatives. Earlier schema-v1-only/no-migration statements below are historical. No live installation/release is approved.
 
 This package is separate from the UI extension. It stores only SillyNovel global visual projects and immutable static PNG bytes. It does not hook native chat writers. Production distribution and live installation are not approved by this prototype.

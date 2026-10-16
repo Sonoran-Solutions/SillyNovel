@@ -3,7 +3,7 @@ import { constants, openSync, closeSync, readSync, fstatSync, lstatSync, readdir
 import { resolve, dirname, basename, join, parse, isAbsolute } from 'node:path';
 import { createHash } from 'node:crypto';
 import { demand, exact, validId, label, validateScene, validateCatalog } from './schema.mjs';
-import { validateDatabaseSchema } from './database-schema.mjs';
+import { validateDatabaseSchema, upgradeV1 } from './database-schema.mjs';
 import { decodePNG, MAX_BYTES, digest } from './png.mjs';
 
 export const DATABASE_NAME = '.sillynovel-projects.sqlite';
@@ -210,24 +210,40 @@ export async function createBackup(source, destination, hooks = {}) {
         return {code:'VALID_BACKUP',...result,owners:undefined,accountBinding:'ACCOUNT_BINDING_UNVERIFIED'};
     } finally { db?.close(); stage.cleanup(); }
 }
-export function restoreBackup(directory, destination, hooks = {}) {
+export const restoreBackup = (directory,destination,hooks={}) => copyBackup(directory,destination,hooks,false);
+export const migrateBackup = (directory,destination,hooks={}) => copyBackup(directory,destination,hooks,true);
+function copyBackup(directory, destination, hooks, migrate) {
     demand(basename(destination) === DATABASE_NAME, 'INVALID_DESTINATION');
     safePath(destination,true); const parent=privateParent(destination);
     for(const suffix of ['', '-wal','-shm','-journal']) demand(!exists(destination+suffix),'DESTINATION_EXISTS');
-    inspectBackup(directory,parent); const stage=stageAt(parent);
+    const original=inspectBackup(directory,parent);
+    if(migrate)demand(original.schemaVersion===1,'UNSUPPORTED_SCHEMA');
+    const stage=stageAt(parent);
     try {
         hooks.at?.('staging');
         writeFileSync(join(stage.path,SNAPSHOT),'',{flag:'wx',mode:0o600}); stage.own(SNAPSHOT);
         copyFileSync(join(directory,SNAPSHOT),join(stage.path,SNAPSHOT)); chmodSync(join(stage.path,SNAPSHOT),0o600);
         hooks.at?.('validation');
-        const result=validateDatabase(join(stage.path,SNAPSHOT));
+        let result=validateDatabase(join(stage.path,SNAPSHOT));
         // Independently compare staged bytes against the validated package, then
         // recheck account evidence and destination immediately before publication.
         const expected=inspectBackup(directory,parent);
-        demand(result.sha256===expected.sha256 && result.byteLength===expected.byteLength,'CHECKSUM_MISMATCH');
+        demand(result.sha256===original.sha256 && result.byteLength===original.byteLength && expected.sha256===original.sha256,'CHECKSUM_MISMATCH');
+        if(migrate) {
+            hooks.at?.('migration');stage.check(SNAPSHOT);
+            const db=new sqlite.DatabaseSync(join(stage.path,SNAPSHOT),{allowExtension:false});
+            try {
+                db.exec('PRAGMA foreign_keys=ON; PRAGMA synchronous=FULL; BEGIN IMMEDIATE;');
+                try {upgradeV1(db);db.exec('COMMIT');} catch(error){db.exec('ROLLBACK');throw error;}
+            } finally {db.close();}
+            hooks.at?.('migrated');stage.check(SNAPSHOT);
+            result=validateDatabase(join(stage.path,SNAPSHOT));
+            demand(result.schemaVersion===2 && result.projects===original.projects && result.assets===original.assets,'INVALID_PROJECT_STATE');
+            demand(inspectBackup(directory,parent).sha256===original.sha256,'CHECKSUM_MISMATCH');
+        }
         sync(join(stage.path,SNAPSHOT)); hooks.at?.('publish');
         for(const suffix of ['', '-wal','-shm','-journal']) demand(!exists(destination+suffix),'DESTINATION_EXISTS');
         linkSync(join(stage.path,SNAPSHOT),destination); sync(parent);
-        return {...expected,code:'RESTORED'};
+        return {...expected,...result,owners:undefined,code:migrate?'MIGRATED':'RESTORED'};
     } finally {stage.cleanup();}
 }

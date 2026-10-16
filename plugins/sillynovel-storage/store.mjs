@@ -1,11 +1,20 @@
 import { DatabaseSync } from 'node:sqlite';
-import { SCHEMA_SQL, validateDatabaseSchema, upgradeV1 } from './database-schema.mjs';
+import { existsSync } from 'node:fs';
+import { SCHEMA_SQL, validateDatabaseSchema } from './database-schema.mjs';
 import { randomUUID } from 'node:crypto';
 import { demand, exact, label, validId, validateScene, validateCatalog, emptyScene, validateCleanupRequest, CLEANUP_WARNING } from './schema.mjs';
 import { decodePNG, digest, MAX_BYTES } from './png.mjs';
 import { bundleJob, references, ASSET_BYTES } from './bundle.mjs';
 
 export function openStore(filename) {
+    // Inspect existing stores read-only before acquiring any writable connection.
+    if(existsSync(filename)) {
+        const probe=new DatabaseSync(filename,{readOnly:true,allowExtension:false});
+        try {const version=probe.prepare('PRAGMA user_version').get().user_version;
+            demand([0,1,2].includes(version),'UNSUPPORTED_SCHEMA',503);
+            if(version===1){validateDatabaseSchema(probe,[1]);demand(false,'MIGRATION_REQUIRED',503);}
+        } finally {probe.close();}
+    }
     const db = new DatabaseSync(filename, { allowExtension: false });
     const transaction = fn => {
         db.exec('BEGIN IMMEDIATE');
@@ -20,7 +29,7 @@ export function openStore(filename) {
             demand(db.prepare("SELECT count(*) AS n FROM sqlite_master WHERE type='table'").get().n === 0, 'UNSUPPORTED_SCHEMA', 503);
             db.exec(SCHEMA_SQL.join(';') + '; PRAGMA user_version=2;');
         });
-        if(version===1)transaction(()=>{if(db.prepare('PRAGMA user_version').get().user_version===1)upgradeV1(db);else validateDatabaseSchema(db);});
+        if(version===1){validateDatabaseSchema(db,[1]);demand(false,'MIGRATION_REQUIRED',503);}
         validateDatabaseSchema(db);
         demand(db.prepare('PRAGMA quick_check').get().quick_check === 'ok', 'CORRUPT_STORE', 503);
     } catch (error) { db.close(); throw error; }

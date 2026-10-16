@@ -1,5 +1,7 @@
 # Architecture
 
+**PR #29 re-review:** [Migration-policy correction](M1_PNG_ASSET_LIBRARY_REVIEW_CORRECTION.md) replaces automatic v1 startup upgrade with explicit verified-backup migration to a new output. The original store and backup remain unchanged. DYL-22 is In Review with original unfinished acceptance/blockers retained; no DYL-55 reconciliation, DYL-23 authorization or Gate A change.
+
 ## DYL-22 PNG-library review candidate — 2026-10-15
 
 The owner explicitly authorized the first residual DYL-22 slice. [Workflow and storage contract](M1_PNG_ASSET_LIBRARY.md): project-owned labels/categories, durable alternatives and explicit reselection, shared immutable PNG bytes, catalog-aware cleanup, transactional schema-v1→v2 upgrade and compatible full-store recovery. Portable v1 copies still include selected artwork only, without library labels/alternatives. [Implementation/evidence](M1_PNG_ASSET_LIBRARY_IMPLEMENTATION.md). PR #28 is merged at starting main `262aad7b64624845e68f783bf779a6fd5e4689d4`.

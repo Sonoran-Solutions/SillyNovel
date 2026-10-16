@@ -1,15 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {mkdtempSync,readFileSync,writeFileSync,mkdirSync,rmSync} from 'node:fs';
+import {mkdtempSync,readFileSync,writeFileSync,mkdirSync,rmSync,existsSync,readdirSync,chmodSync} from 'node:fs';
 import {tmpdir} from 'node:os';
-import {join} from 'node:path';
+import {join,dirname} from 'node:path';
 import {randomUUID} from 'node:crypto';
 import {DatabaseSync} from 'node:sqlite';
 import {openStore} from '../store.mjs';
 import {V1_SCHEMA_SQL} from '../database-schema.mjs';
 import {validateCatalog,selectedCatalog,emptyScene} from '../schema.mjs';
 import {decodePNG,digest} from '../png.mjs';
-import {createBackup,inspectBackup,restoreBackup,DATABASE_NAME} from '../recovery.mjs';
+import {createBackup,inspectBackup,restoreBackup,migrateBackup,DATABASE_NAME} from '../recovery.mjs';
 const owner='["alice",1]',foreign='["bob",2]';
 const png=n=>readFileSync(new URL('../../../tests/fixtures/m12-stage/'+n+'.png',import.meta.url));
 const refuses=(fn,code)=>assert.throws(fn,e=>e.code===code);
@@ -87,21 +87,43 @@ function legacy(path){
  db.prepare('INSERT INTO projects VALUES (?,?,?,?,?)').run(id,owner,'Legacy',7,JSON.stringify(scene));
  db.prepare('INSERT INTO assets VALUES (?,?,?,?,?,?)').run(assetId,id,metadata.sha256,metadata.width,metadata.height,png('forest'));db.close();return {id,scene,assetId};
 }
-test('actual v1 schema upgrades atomically; old backup remains inspectable/restorable; IDs/revisions/scenes/bytes survive',async t=>{
- const root=mkdtempSync(join(tmpdir(),'sn-library-v1-'));t.after(()=>rmSync(root,{recursive:true,force:true}));const path=join(root,'old'),p=legacy(path);
- const backup=join(root,'v1');await createBackup(path,backup);assert.equal(inspectBackup(backup).schemaVersion,1);
- const store=openStore(path);const loaded=store.load(owner,p.id);assert.equal(loaded.schemaVersion,2);assert.equal(loaded.revision,7);assert.deepEqual(loaded.scene,p.scene);assert.equal(loaded.catalog.length,2);assert.deepEqual(Buffer.from(store.asset(owner,p.id,p.assetId).bytes),png('forest'));store.close();
- const target=join(root,'target');mkdirSync(target,{mode:0o700});mkdirSync(join(target,'_storage'));writeFileSync(join(target,'_storage',digest('user:alice')),JSON.stringify({key:'user:alice',value:{handle:'alice',created:1}}));
- restoreBackup(backup,join(target,DATABASE_NAME));const restored=openStore(join(target,DATABASE_NAME));assert.deepEqual(restored.load(owner,p.id),loaded);restored.close();assert.equal(inspectBackup(backup).schemaVersion,1);
+function migrationTarget(root,name='target') {
+ const target=join(root,name);mkdirSync(target,{mode:0o700});mkdirSync(join(target,'_storage'));
+ writeFileSync(join(target,'_storage',digest('user:alice')),JSON.stringify({key:'user:alice',value:{handle:'alice',created:1}}));return join(target,DATABASE_NAME);
+}
+const packageBytes=directory=>['snapshot.sqlite','manifest.json'].map(name=>readFileSync(join(directory,name)));
+test('v1 startup refuses without mutation; explicit verified-backup migration preserves source and reversible v1 copy',async t=>{
+ const root=mkdtempSync(join(tmpdir(),'sn-library-v1-'));t.after(()=>rmSync(root,{recursive:true,force:true}));const path=join(root,'old'),p=legacy(path),original=readFileSync(path);chmodSync(path,0o400);
+ refuses(()=>openStore(path),'MIGRATION_REQUIRED');assert.deepEqual(readFileSync(path),original);
+ const backup=join(root,'v1');await createBackup(path,backup);const frozen=packageBytes(backup);assert.equal(inspectBackup(backup).schemaVersion,1);
+ const output=migrationTarget(root);assert.equal(migrateBackup(backup,output).code,'MIGRATED');
+ const store=openStore(output),loaded=store.load(owner,p.id);assert.equal(loaded.schemaVersion,2);assert.equal(loaded.revision,7);assert.deepEqual(loaded.scene,p.scene);assert.equal(loaded.catalog.length,2);assert.deepEqual(Buffer.from(store.asset(owner,p.id,p.assetId).bytes),png('forest'));store.close();
+ assert.deepEqual(readFileSync(path),original);assert.deepEqual(packageBytes(backup),frozen);
+ const rollback=migrationTarget(root,'rollback');restoreBackup(backup,rollback);assert.equal(inspectBackup(backup).schemaVersion,1);assert.deepEqual(readFileSync(rollback),frozen[0]);refuses(()=>openStore(rollback),'MIGRATION_REQUIRED');
+ const before=readFileSync(output);refuses(()=>migrateBackup(backup,output),'DESTINATION_EXISTS');assert.deepEqual(readFileSync(output),before);
+ const commandTarget=migrationTarget(root,'cli');const {execFileSync}=await import('node:child_process');
+ const receipt=JSON.parse(execFileSync(process.execPath,[new URL('../tools/recovery.mjs',import.meta.url).pathname,'migrate',backup,commandTarget],{encoding:'utf8'}));assert.equal(receipt.code,'MIGRATED');assert.equal(receipt.schemaVersion,2);assert.deepEqual(packageBytes(backup),frozen);
 });
-for(const phase of ['catalog write','version marker'])test('v1 upgrade rolls back schema, metadata, bytes and marker after '+phase,t=>{
- const root=mkdtempSync(join(tmpdir(),'sn-library-fault-'));t.after(()=>rmSync(root,{recursive:true,force:true}));const path=join(root,'old');legacy(path);const before=readFileSync(path);
+for(const phase of ['catalog write','version marker'])test('copy migration failure preserves v1 source and backup after '+phase,async t=>{
+ const root=mkdtempSync(join(tmpdir(),'sn-library-fault-'));t.after(()=>rmSync(root,{recursive:true,force:true}));const path=join(root,'old');legacy(path);const before=readFileSync(path),backup=join(root,'backup');await createBackup(path,backup);const frozen=packageBytes(backup),output=migrationTarget(root);
  const prepare=DatabaseSync.prototype.prepare,exec=DatabaseSync.prototype.exec;
  DatabaseSync.prototype.prepare=function(sql){if(phase==='catalog write'&&sql==='UPDATE projects SET catalog=? WHERE id=?')throw Error('injected migration failure');return prepare.call(this,sql);};
  DatabaseSync.prototype.exec=function(sql){const result=exec.call(this,sql);if(phase==='version marker'&&sql==='PRAGMA user_version=2')throw Error('injected marker failure');return result;};
- try{assert.throws(()=>openStore(path),/injected/);}finally{DatabaseSync.prototype.prepare=prepare;DatabaseSync.prototype.exec=exec;}
- assert.deepEqual(readFileSync(path),before);const db=new DatabaseSync(path);assert.equal(db.prepare('PRAGMA user_version').get().user_version,1);assert.equal(db.prepare('PRAGMA table_info(projects)').all().some(a=>a.name==='catalog'),false);db.close();
- const reopened=openStore(path);reopened.close();
+ try{assert.throws(()=>migrateBackup(backup,output),/injected/);}finally{DatabaseSync.prototype.prepare=prepare;DatabaseSync.prototype.exec=exec;}
+ assert.deepEqual(readFileSync(path),before);assert.deepEqual(packageBytes(backup),frozen);assert.equal(existsSync(output),false);
+ assert.equal(migrateBackup(backup,output).code,'MIGRATED');
+});
+for(const phase of ['staging','validation','migration','migrated','publish'])test('migration '+phase+' failure publishes no output and preserves v1 backup',async t=>{
+ const root=mkdtempSync(join(tmpdir(),'sn-library-publish-'));t.after(()=>rmSync(root,{recursive:true,force:true}));const path=join(root,'old');legacy(path);const original=readFileSync(path),backup=join(root,'backup');await createBackup(path,backup);const frozen=packageBytes(backup),output=migrationTarget(root);
+ assert.throws(()=>migrateBackup(backup,output,{at(p){if(p===phase)throw Error('injected '+phase);}}),/injected/);
+ assert.equal(existsSync(output),false);assert.deepEqual(readFileSync(path),original);assert.deepEqual(packageBytes(backup),frozen);assert.equal(readdirSync(dirname(output)).some(p=>p.startsWith('.sn-recovery-')),false);
+});
+test('migration refuses invalid backup, schema2 source and wrong-account destinations',async t=>{
+ const f=fixture(t),p=library(f);f.store.save(owner,p.projectId,body(p));const backup=join(f.root,'v2');await createBackup(f.path,backup);const output=migrationTarget(f.root);
+ refuses(()=>migrateBackup(backup,output),'UNSUPPORTED_SCHEMA');assert.equal(existsSync(output),false);
+ const old=join(f.root,'v1');legacy(old);const v1=join(f.root,'v1-backup');await createBackup(old,v1);
+ const record=join(f.root,'target','_storage',digest('user:alice'));writeFileSync(record,JSON.stringify({key:'user:alice',value:{handle:'alice',created:2}}));refuses(()=>migrateBackup(v1,output),'ACCOUNT_BINDING_UNVERIFIED');assert.equal(existsSync(output),false);
+ writeFileSync(record,JSON.stringify({key:'user:alice',value:{handle:'alice',created:1}}));writeFileSync(join(v1,'manifest.json'),'{}');refuses(()=>migrateBackup(v1,output),'INVALID_MANIFEST');assert.equal(existsSync(output),false);
 });
 
 test('backup inspection rejects corrupt catalogs and mismatched schema declarations without touching source',async t=>{
@@ -118,7 +140,14 @@ test('backup inspection rejects corrupt catalogs and mismatched schema declarati
   writeFileSync(join(directory,'manifest.json'),JSON.stringify(manifest));refuses(()=>inspectBackup(directory),code);assert.deepEqual(readFileSync(f.path),original);
  });
 });
-test('invalid existing v1 scene refuses upgrade without changing original data',t=>{
+test('v1 startup leaves malformed scene untouched for offline inspection',t=>{
  const root=mkdtempSync(join(tmpdir(),'sn-library-invalid-v1-'));t.after(()=>rmSync(root,{recursive:true,force:true}));const path=join(root,'old');legacy(path);const db=new DatabaseSync(path);db.exec("UPDATE projects SET scene='{}'");db.close();
- const original=readFileSync(path);refuses(()=>openStore(path),'INVALID_STATE');assert.deepEqual(readFileSync(path),original);
+ const original=readFileSync(path);refuses(()=>openStore(path),'MIGRATION_REQUIRED');assert.deepEqual(readFileSync(path),original);
+});
+
+test('post-migration output validation and publication race preserve source, backup and existing destination',async t=>{
+ const root=mkdtempSync(join(tmpdir(),'sn-library-validate-'));t.after(()=>rmSync(root,{recursive:true,force:true}));const path=join(root,'old');legacy(path);const original=readFileSync(path),backup=join(root,'backup');await createBackup(path,backup);const frozen=packageBytes(backup),output=migrationTarget(root);
+ refuses(()=>migrateBackup(backup,output,{at(phase){if(phase==='migrated'){const stage=readdirSync(dirname(output)).find(n=>n.startsWith('.sn-recovery-'));const db=new DatabaseSync(join(dirname(output),stage,'snapshot.sqlite'));db.exec("UPDATE projects SET catalog='{}'");db.close();}}}),'INVALID_PROJECT_STATE');assert.equal(existsSync(output),false);
+ refuses(()=>migrateBackup(backup,output,{at(phase){if(phase==='publish')writeFileSync(output,'Other operator output');}}),'DESTINATION_EXISTS');assert.equal(readFileSync(output,'utf8'),'Other operator output');
+ assert.deepEqual(readFileSync(path),original);assert.deepEqual(packageBytes(backup),frozen);
 });

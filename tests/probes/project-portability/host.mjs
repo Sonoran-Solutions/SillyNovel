@@ -230,6 +230,7 @@ try {
   const {runRecovery}=await import('../project-recovery/host.mjs');
   await runRecovery({root,data,repo,stop,start,session,select,pass,evidence});
  }
+ if(process.env.SN_MIGRATION_RUN){const {runMigration}=await import('../project-migration/host.mjs');await runMigration({root,data,repo,stop,start,session,select,pass,evidence});}
  await stop();await start(false);const disabled=await session();await disabled.request('/api/plugins/sillynovel-storage/capabilities','GET',undefined,404);
  const fallback=await disabled.context.newPage();await fallback.goto(origin);await fallback.locator('#sillynovel-stage').waitFor();await fallback.locator('.sillynovel-controls summary').click();
  await fallback.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('Plugin unavailable'));

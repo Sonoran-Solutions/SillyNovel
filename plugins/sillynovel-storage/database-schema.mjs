@@ -18,8 +18,8 @@ export function validateDatabaseSchema(db, versions=[SCHEMA_VERSION]) {
     return version;
 }
 
-// Called inside the existing BEGIN IMMEDIATE transaction. Any failure rolls back
-// both the added column and version marker; bytes, UUIDs and revisions stay put.
+// Only the explicit recovery migration calls this, on its private staged copy.
+// The preserved v1 backup and original store are never modified.
 export function upgradeV1(db) {
     validateDatabaseSchema(db,[1]);
     db.exec("ALTER TABLE projects ADD COLUMN catalog TEXT NOT NULL DEFAULT '[]'");

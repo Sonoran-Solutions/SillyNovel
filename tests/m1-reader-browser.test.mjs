@@ -663,3 +663,43 @@ for(const outcome of ['cancel','success','stale','lost response','wrong receipt'
   else assert.doesNotMatch(await page.locator('.sillynovel-cleanup-status').innerText(),/Cleanup completed/);
  }
 });
+
+test('project library actual entry edits labels, unregisters, saves and reloads/reopens compatible alternatives',async t=>{
+ const page=await fixture(t);page.setDefaultTimeout(5000);await page.locator('#sillynovel-enabled').uncheck();await page.evaluate(()=>{fixture.context.getRequestHeaders=()=>({});});
+ const id='11111111-1111-4111-8111-111111111111',actor='22222222-2222-4222-8222-222222222222';
+ const ids=['33333333-3333-4333-8333-333333333333','44444444-4444-4444-8444-444444444444','55555555-5555-4555-8555-555555555555','66666666-6666-4666-8666-666666666666'];
+ let record={schemaVersion:2,projectId:id,name:'Reusable library',revision:0,
+  scene:{backgroundAssetId:ids[1],backgroundLocked:true,actors:[{actorId:actor,name:'Manual actor',spriteAssetId:ids[3],slot:'left',present:true,locks:{presence:true,slot:true,outfit:true}}]},
+  catalog:ids.map((assetId,i)=>({assetId,label:'Same label',kind:i<2?'background':'sprite',actorId:i<2?null:actor}))};
+ const png=await readFile(resolve(root,'tests/fixtures/m12-stage/mira-a.png')),{createHash}=await import('node:crypto'),sha=createHash('sha256').update(png).digest('hex');
+ const saves=[];
+ await page.route('**/api/plugins/sillynovel-storage/**',async route=>{
+  const request=route.request(),path=new URL(request.url()).pathname;
+  if(path.includes('/assets/'))return route.fulfill({contentType:'image/png',headers:{'X-Content-SHA256':sha},body:png});
+  if(request.method()==='PUT'){
+   const body=request.postDataJSON();assert.equal(body.expectedRevision,record.revision);saves.push(structuredClone(body));record={...record,...body,revision:record.revision+1};delete record.expectedRevision;return route.fulfill({json:record});
+  }
+  return route.fulfill({json:path.endsWith('/capabilities')?{apiVersion:1,schemaVersion:2,catalogVersion:1}:path.endsWith('/projects')?[record]:record});
+ });
+ const field=name=>page.getByLabel(name,{exact:true});
+ const open=async()=>{await page.evaluate(()=>{fixture.context.getRequestHeaders=()=>({});});await page.locator('#sillynovel-enabled').check();await page.locator('.sillynovel-controls summary').click();await button(page,'Open project and use with this chat').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('Reusable library · revision'));};
+ await open();await page.locator('#send_textarea').fill('Keep native draft');
+ await field('Library artwork').selectOption(actor+':'+ids[2]);await field('Artwork label').fill('<b>Alternative</b>');await button(page,'Save artwork label').click();
+ assert.equal(await page.locator('.sillynovel-controls b').count(),0);assert.match(await page.locator('.sillynovel-unsaved').innerText(),/Unsaved/);
+ await button(page,'Save project').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('revision 1'));
+ assert.equal(saves[0].catalog.find(a=>a.assetId===ids[2]).label,'<b>Alternative</b>');
+ page.on('dialog',dialog=>dialog.accept());await field('Library artwork').selectOption(ids[0]);await button(page,'Remove artwork from library').click();
+ assert.match(await page.locator('.sillynovel-unsaved').innerText(),/Unsaved/);assert.equal(await field('Library artwork').locator('option').count(),3);
+ await button(page,'Save project').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('revision 2'));
+ assert.equal(saves[1].catalog.some(a=>a.assetId===ids[0]),false);assert.equal(saves[1].scene.backgroundAssetId,ids[1]);assert.equal(await page.locator('#send_textarea').inputValue(),'Keep native draft');
+ await button(page,'Detach project').click();assert.match(await page.locator('.sillynovel-project-status').innerText(),/No project/);
+ await page.reload();await open();assert.equal(await field('Library artwork').locator('option').count(),3);assert.equal(await field('Background').locator('option').count(),2);assert.equal(await field('Outfit').locator('option').count(),3);
+ assert.ok((await field('Outfit').textContent()).includes('<b>Alternative</b>'));assert.equal(await page.locator('.sillynovel-controls b').count(),0);
+ await field('Outfit').selectOption(actor+':'+ids[2]);await button(page,'Apply outfit').click();await button(page,'Save project').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('revision 3'));
+ assert.equal(saves[2].scene.actors[0].spriteAssetId,ids[2]);assert.deepEqual(saves[2].scene.actors[0].locks,{presence:true,slot:true,outfit:true});assert.equal(saves[2].scene.actors[0].slot,'left');
+});
+test('migration-required storage leaves original reader, composer and transient controls usable',async t=>{
+ const page=await fixture(t);page.setDefaultTimeout(5000);await page.locator('#sillynovel-enabled').uncheck();await page.evaluate(()=>{fixture.context.getRequestHeaders=()=>({});});await page.route('**/api/plugins/sillynovel-storage/**',route=>route.fulfill({status:503,json:{code:'MIGRATION_REQUIRED'}}));
+ await page.locator('#sillynovel-enabled').check();await page.locator('.sillynovel-controls summary').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('explicit v1 backup/migration'));
+ assert.equal(await button(page,'Open project and use with this chat').isDisabled(),true);assert.equal(await button(page,'Register session actor').isEnabled(),true);assert.equal(await page.locator('#send_textarea').isEnabled(),true);assert.match(await message(page).innerText(),/Hello reader/);
+});

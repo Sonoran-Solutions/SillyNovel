@@ -1,5 +1,7 @@
 # DYL-22 implementation and evidence
 
+**Historical first handoff:** senior review returned REVISE for the automatic in-place migration. Its code/evidence below and `docs/evidence/project-library/` are preserved unchanged as that original campaign. [Current P2 correction and exact-head re-review evidence](M1_PNG_ASSET_LIBRARY_REVIEW_CORRECTION.md) supersedes its migration proposal and resolves the earlier Linear publication hold.
+
 **GO for senior review of this first PNG-library slice only.** [Draft PR #29](https://github.com/Sonoran-Solutions/SillyNovel/pull/29) is OPEN/UNMERGED, auto-merge disabled. Starting main `262aad7b64624845e68f783bf779a6fd5e4689d4` includes merged PR #28. Frozen tested code: `80c03000b9f9b3a2a5c67e4daa6752d1964ee515`. Later commits contain documentation/evidence only; [99 file fingerprints](evidence/project-library/proof-hashes.json) cover all tracked runtime/plugin/test/fixture inputs. Final pushed head is recorded in the PR/Linear handoff rather than a self-referential commit field.
 
 [User workflow and complete storage/migration contract](M1_PNG_ASSET_LIBRARY.md). Create/open a project, register a manual actor, import labeled PNG backgrounds/sprites, Save project, reload/detach and explicitly reopen, then select alternatives without reimport. UUID-bearing options distinguish duplicate labels; selected artwork is identified separately. Label edits and library removal are deliberate; selected bytes need a separate unused-art deletion confirmation after unregister/save.
