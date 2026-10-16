@@ -1,0 +1,6 @@
+87 frozen input hashes verified; inherited storage inputs unchanged
+node-tests.txt 124 PASS 
+browser-tests.txt 59 PASS 
+storage-tests.txt 126 PASS (inherited; not rerun)
+Before-fix regressions fail as expected; 16 host groups; 36 native hashes unchanged; global-only save; 8 screenshots
+Correction handoff links and Markdown fences verified
