@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {mkdtemp,readFile,writeFile,mkdir,symlink,readdir} from 'node:fs/promises';
+import {mkdtemp,readFile,writeFile,mkdir,symlink,readdir,chmod} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {resolve,join} from 'node:path';
 import {spawn,execFileSync} from 'node:child_process';
@@ -21,10 +21,10 @@ const pass=name=>{evidence.checks.push(name);console.log('PASS '+name);};
 const hash=x=>createHash('sha256').update(x).digest('hex');
 let child,browser,origin,logs='',provider,portableProject;
 async function stop(){if(child&&child.exitCode===null){const done=new Promise(r=>child.once('close',r));child.kill('SIGTERM');await done;}child=null;}
-async function start(enabled=true){
+async function start(enabled=true,storageRoot=data){
  const cfg=(await readFile(join(host,'default/config.yaml'),'utf8')).replace('enableServerPlugins: false','enableServerPlugins: '+enabled).replace('enableServerPluginsAutoUpdate: true','enableServerPluginsAutoUpdate: false').replace('enableUserAccounts: false','enableUserAccounts: true');
  await writeFile(config,cfg);const server=createServer();await new Promise(r=>server.listen(0,'127.0.0.1',r));const port=server.address().port;await new Promise(r=>server.close(r));origin='http://127.0.0.1:'+port;logs='';
- child=spawn(process.execPath,['server.js','--configPath',config,'--dataRoot',data,'--port',String(port),'--listen','false','--browserLaunchEnabled','false'],{cwd:host,stdio:['ignore','pipe','pipe']});
+ child=spawn(process.execPath,['server.js','--configPath',config,'--dataRoot',storageRoot,'--port',String(port),'--listen','false','--browserLaunchEnabled','false'],{cwd:host,stdio:['ignore','pipe','pipe']});
  child.stdout.on('data',x=>logs+=x);child.stderr.on('data',x=>logs+=x);
  const deadline=Date.now()+60000;
  while(Date.now()<deadline&&child.exitCode===null){if(logs.includes('127.0.0.1:'+port))return;await delay(100);}
@@ -38,7 +38,7 @@ async function session(handle='default-user'){
   const res=await context.request.fetch(origin+path,{method,headers:{'X-CSRF-Token':token,...(body===undefined?{}:{'Content-Type':type})},data:body===undefined?undefined:Buffer.isBuffer(body)?body:JSON.stringify(body)});
   assert.equal(res.status(),status,path+' '+await res.text());return res;
  };
- return {context,token,request,api:async(path,method='GET',body,status=200,type)=> (await request('/api/plugins/sillynovel-storage'+path,method,body,status,type)).json()};
+ return {context,token,request,origin,api:async(path,method='GET',body,status=200,type)=> (await request('/api/plugins/sillynovel-storage'+path,method,body,status,type)).json()};
 }
 async function canonical(){const result={};for(const folder of ['characters','chats','groups','group chats','worlds']){
  const base=join(data,'default-user',folder);
@@ -61,6 +61,7 @@ try {
  execFileSync('npm',['ci','--prefix',join(host,'plugins/sillynovel-storage'),'--ignore-scripts','--no-audit','--no-fund'],{stdio:'pipe'});
  await mkdir(join(host,'public/scripts/extensions/third-party'),{recursive:true});await symlink(repo,join(host,'public/scripts/extensions/third-party/SillyNovel'));
  await mkdir(join(data,'default-user'),{recursive:true});
+ if(process.env.SN_RECOVERY_RUN)await chmod(data,0o700);
  const settings=JSON.parse(await readFile(join(host,'default/content/settings.json')));settings.firstRun=false;
  settings.main_api='openai';settings.oai_settings={...settings.oai_settings,chat_completion_source:'custom',custom_url:'http://127.0.0.1:8128/v1',custom_model:'sn-reader-local',stream_openai:true};
  await writeFile(join(data,'default-user/settings.json'),JSON.stringify(settings));
@@ -221,6 +222,10 @@ try {
  await importedPage.waitForFunction(()=>[...document.querySelectorAll('.sillynovel-art img')].filter(e=>!e.hidden).every(e=>e.complete&&e.naturalWidth));
  pass('plugin/server restart preserves original and imported layout/assets; imported project explicitly reopens in real browser');
  const again=await reopened.request('/api/plugins/sillynovel-storage/projects/'+p.projectId+'/assets/'+asset.assetId);assert.equal(hash(await again.body()),asset.sha256);
+ if(process.env.SN_RECOVERY_RUN) {
+  const {runRecovery}=await import('../project-recovery/host.mjs');
+  await runRecovery({root,data,repo,stop,start,session,select,pass,evidence});
+ }
  await stop();await start(false);const disabled=await session();await disabled.request('/api/plugins/sillynovel-storage/capabilities','GET',undefined,404);
  const fallback=await disabled.context.newPage();await fallback.goto(origin);await fallback.locator('#sillynovel-stage').waitFor();await fallback.locator('.sillynovel-controls summary').click();
  await fallback.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('Plugin unavailable'));
