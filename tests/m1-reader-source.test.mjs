@@ -436,3 +436,20 @@ test('reader navigation skips unavailable records instead of becoming stuck at a
     assert.equal(model.getSnapshot().cursor.sourceKey, 'last');
     assert.equal(model.getSnapshot().selectionMode, 'pinned');
 });
+
+test('selection revision ignores canonical refresh and records an away-and-back navigation',()=>{
+ const model=createReaderSourceModel();const owner={chatId:'selection',characterId:1,scope:'character'};
+ const history=[{sourceKey:'a',text:'a',author:{kind:'user',label:'You'},index:0},{sourceKey:'b',text:'b',author:{kind:'character',label:'Mira'},index:1}];
+ model.activate(history,owner);const before=model.getSnapshot().selectionRevision;model.apply({history,owner});assert.equal(model.getSnapshot().selectionRevision,before);model.navigate(-1);model.navigate(1);assert.equal(model.getSnapshot().selectionRevision,before+2);model.jumpToLatest();assert.equal(model.getSnapshot().selectionRevision,before+3);
+});
+
+test('ordered-source revision notices full/sample order and availability changes without scroll or refresh churn',()=>{
+ const history=['a','b','c','d'].map((key,index)=>message(key,'Unchanged '+key,index)),model=modelWith(...history);model.navigate(-1);
+ const before=model.getSnapshot();model.reconcile(history);model.setTextScrollMode('userControlled');assert.equal(model.getSnapshot().sourceOrderRevision,before.sourceOrderRevision);
+ model.reconcile([history[1],history[0],history[2],history[3]]);const reordered=model.getSnapshot();
+ assert.equal(reordered.sourceOrderRevision,before.sourceOrderRevision+1);assert.equal(reordered.sourceRevision,before.sourceRevision);assert.equal(reordered.selectionRevision,before.selectionRevision);assert.equal(reordered.cursor.sourceKey,'c');assert.equal(reordered.cursor.revision,before.cursor.revision);assert.equal(reordered.cursor.index,before.cursor.index);
+ model.apply({sources:[message('b','Unchanged b',0),message('a','Edited a',1)],messageCount:4});assert.equal(model.getSnapshot().sourceOrderRevision,reordered.sourceOrderRevision);
+ model.apply({sources:[message('a','Edited a',0),message('b','Unchanged b',1)],messageCount:4});assert.equal(model.getSnapshot().sourceOrderRevision,reordered.sourceOrderRevision+1);
+ model.apply({sources:[message('d','Unchanged d',3),message('e','Appended',4)],messageCount:5});const appended=model.getSnapshot().sourceOrderRevision;assert.equal(appended,reordered.sourceOrderRevision+2);
+ model.reconcile([null,history[1],history[2],history[3]]);assert.equal(model.getSnapshot().sourceOrderRevision,appended+1);
+});

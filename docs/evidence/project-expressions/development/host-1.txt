@@ -1,0 +1,44 @@
+Owned evidence root /tmp/sn-portability-host-yq4a6t
+PASS real host auth/CSRF, two-user project and asset isolation, two-client CAS, PNG hash and limits
+PASS browser create/import background + two sprites/arrange/save/reload/explicit reopen; named canonical files unchanged
+locator.click: Timeout 20000ms exceeded.
+Call log:
+[2m  - waiting for getByRole('button', { name: 'Jump to Latest', exact: true })[22m
+[2m    - locator resolved to <button disabled tabindex="0" type="button" role="button" class="menu_button sillynovel-button interactable">Jump to Latest</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    38 × waiting for element to be visible, enabled and stable[22m
+[2m       - element is not enabled[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+
+    at at (/home/dq/Projects/SillyNovel/tests/probes/project-expressions/host.mjs:15:56)
+    at runExpressions (/home/dq/Projects/SillyNovel/tests/probes/project-expressions/host.mjs:19:57)
+    at async file:///home/dq/Projects/SillyNovel/tests/probes/project-portability/host.mjs:132:108 {
+  log: [
+    "  - waiting for getByRole('button', { name: 'Jump to Latest', exact: true })",
+    '    - locator resolved to <button disabled tabindex="0" type="button" role="button" class="menu_button sillynovel-button interactable">Jump to Latest</button>',
+    '  - attempting click action',
+    '    2 × waiting for element to be visible, enabled and stable',
+    '      - element is not enabled',
+    '    - retrying click action',
+    '    - waiting 20ms',
+    '    2 × waiting for element to be visible, enabled and stable',
+    '      - element is not enabled',
+    '    - retrying click action',
+    '      - waiting 100ms',
+    '    38 × waiting for element to be visible, enabled and stable',
+    '       - element is not enabled',
+    '     - retrying click action',
+    '       - waiting 500ms'
+  ],
+  name: 'TimeoutError'
+}
+Evidence /tmp/sn-portability-host-yq4a6t/evidence.json

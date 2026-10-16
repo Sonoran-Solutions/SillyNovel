@@ -1,3 +1,5 @@
+> DYL-23-A below is historical. The separately authorized [DYL-23-B expression slice](M1_PROJECT_EXPRESSIONS.md) now adds temporary attached expressions in Scene; global project save/recovery semantics remain unchanged. Native group/device work remains unfinished.
+
 # DYL-23-A manual stage and project UX
 
 Owner assignment, 2026-10-16 (America/Phoenix), authorizes **DYL-23-A only**: integrate the existing manual stage and reusable PNG catalog, test the actual UI on disposable data, and submit one draft/open/unmerged PR for senior review. Starting fetched main is `ad70bb52e0f46155a5c7b1e5c3da957536612dc9`; GitHub confirms it merged PR #29. Initial supplied checkout was clean at `2f9daa38b9509e6462e3b9a84230a59a14d3c630`, PR #29's final head; the focused branch starts from the merge.

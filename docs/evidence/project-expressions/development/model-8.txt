@@ -1,0 +1,39 @@
+✔ attached expressions are per source and UUID; revisit/clear preserve global outfits and save records (29.2962ms)
+✔ source suffix invalidation: edit (7.049287ms)
+✔ source suffix invalidation: same-length (4.580433ms)
+✔ source suffix invalidation: author (4.511575ms)
+✔ source suffix invalidation: swipe (4.16583ms)
+✔ source suffix invalidation: delete (4.283599ms)
+✔ source suffix invalidation: insert (6.550547ms)
+✔ source suffix invalidation: replace (8.57909ms)
+✔ source suffix invalidation: reorder (6.872346ms)
+✔ source suffix invalidation: older-prefix (4.575262ms)
+✔ source suffix invalidation: continue (4.661042ms)
+✔ source suffix invalidation: stream (8.701867ms)
+✔ compatibility refuses wrong UUID/outfit; failed art falls back; global locks stay intact (8.023052ms)
+✔ delayed decode cannot cross selection (6.931196ms)
+✔ delayed decode cannot cross selection-return (5.386274ms)
+✔ delayed decode cannot cross edit (4.468183ms)
+✔ delayed decode cannot cross swipe (3.622956ms)
+✔ delayed decode cannot cross outfit (3.427872ms)
+✔ delayed decode cannot cross outfit-return (6.399925ms)
+✔ delayed decode cannot cross chat (4.936376ms)
+✔ delayed decode cannot cross replace (8.047347ms)
+✔ delayed decode cannot cross detach (5.381245ms)
+✔ delayed decode cannot cross disable (5.494867ms)
+✔ delayed decode cannot cross dispose (3.301096ms)
+✔ ambiguous history clears decisions and cannot resurrect; A B A resets attachment authority (5.272613ms)
+✔ generation end without completion proof refuses head; pinned older source remains usable (3.241295ms)
+✔ PNG content/type/animation/dimension limits refuse without upload or dirtying (6.947726ms)
+✔ temporary artwork count ceiling and URL release on invalidation/disposal (29.382455ms)
+✔ decision ceiling refuses atomically and an explicit historical clear releases journal capacity (1335.115913ms)
+✔ a valid prior activation expression and its bytes never return after A B A (4.210271ms)
+✔ a failed project replacement can resume the prior attachment expression authority (3.649064ms)
+ℹ tests 31
+ℹ suites 0
+ℹ pass 31
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1589.105039

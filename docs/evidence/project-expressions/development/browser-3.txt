@@ -1,0 +1,19 @@
+✔ attached message expressions: actual UI, navigation/revisit, save exclusion, invalidation and reload (1724.769808ms)
+✔ attached PNG delayed actual-entry decode rejects selection (612.271741ms)
+✔ attached PNG delayed actual-entry decode rejects edit (610.655802ms)
+✔ attached PNG delayed actual-entry decode rejects swipe (579.946465ms)
+✔ attached PNG delayed actual-entry decode rejects outfit (574.677734ms)
+✔ attached PNG delayed actual-entry decode rejects actor (590.182292ms)
+✔ attached PNG delayed actual-entry decode rejects chat (527.95705ms)
+✔ attached PNG delayed actual-entry decode rejects replace (572.498005ms)
+✔ attached PNG delayed actual-entry decode rejects detach (550.15208ms)
+✔ attached PNG delayed actual-entry decode rejects disable (604.117098ms)
+✔ attached missing expression image falls back to base outfit; clear, no dirty changes (645.02214ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8030.458211

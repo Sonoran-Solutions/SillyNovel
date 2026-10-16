@@ -33,7 +33,9 @@ export function createReaderSourceModel() {
     let generation = null;
     let generationStartMessageCount = 0;
     let sourceRevision = 0;
+    let sourceOrderRevision = 0;
     let viewRevision = 0;
+    let selectionRevision = 0;
     let textScrollMode = 'followBottom';
 
 function revise(snapshot, previous) {
@@ -45,6 +47,7 @@ function revise(snapshot, previous) {
     }
 
     function setHistory(history = []) {
+        const prior = records;
         const previousByKey = new Map(records.filter(Boolean).map((record) => [record.sourceKey, record]));
         const counts = new Map();
         for (const source of history) {
@@ -57,11 +60,13 @@ function revise(snapshot, previous) {
             const old = previousByKey.get(source.sourceKey);
             return revise({ ...source, index, identity: source.identity ? { ...source.identity } : null, author: { ...source.author } }, old);
         });
+        if (records.length !== prior.length || records.some((source,index) => source?.sourceKey !== prior[index]?.sourceKey)) sourceOrderRevision++;
         head = records.at(-1) ?? null;
     }
 
     function activate(history, nextOwner) {
         sessionEpoch++;
+        selectionRevision++;
         owner = nextOwner ? { ...nextOwner } : null;
         records = [];
         head = null;
@@ -130,6 +135,7 @@ function revise(snapshot, previous) {
     function reconcileSample(sources, messageCount) {
         if (!Number.isSafeInteger(messageCount) || messageCount < 0 || messageCount < records.length || messageCount > records.length + 1) return getSnapshot();
         const previousCount = records.length;
+        let orderChanged = messageCount !== previousCount;
         const byIndex = new Map((sources ?? []).filter(Boolean).map((source) => [source.index, source]));
         if (messageCount === previousCount + 1) {
             const appended = byIndex.get(messageCount - 1);
@@ -154,6 +160,7 @@ function revise(snapshot, previous) {
         for (const source of sources ?? []) {
             if (!source || source.index < 0 || source.index >= records.length) continue;
             const previous = records[source.index];
+            if (previous?.sourceKey !== source.sourceKey) orderChanged = true;
             const next = revise({ ...source, index: source.index, identity: source.identity ? { ...source.identity } : null, author: { ...source.author } }, previous);
             records[source.index] = next;
             if (selectionMode === 'pinned' && previous?.sourceKey !== source.sourceKey && cursor?.sourceKey === previous?.sourceKey) {
@@ -171,6 +178,7 @@ function revise(snapshot, previous) {
             const generatedSource = records.find((record) => record?.sourceKey === generation.sourceKey);
             if (generatedSource) generation = { ...generation, sourceRevision: generatedSource.revision };
         }
+        if (orderChanged) sourceOrderRevision++;
         viewRevision++;
         return getSnapshot();
     }
@@ -219,6 +227,7 @@ function revise(snapshot, previous) {
         if (direction !== -1 && direction !== 1) return false;
         const next = adjacent(direction);
         if (!next) return false;
+        selectionRevision++;
         cursor = next;
         selectionMode = 'pinned';
         selectionState = 'valid';
@@ -227,6 +236,7 @@ function revise(snapshot, previous) {
     }
 
     function jumpToLatest() {
+        selectionRevision++;
         cursor = head;
         selectionMode = 'followLatest';
         selectionState = head ? 'valid' : 'empty';
@@ -254,7 +264,9 @@ function revise(snapshot, previous) {
             newMessageCount,
             newMessageIndicator: newMessageCount ? (newMessageCount >= 99 ? '99+' : String(newMessageCount)) : null,
             sourceRevision,
+            sourceOrderRevision,
             viewRevision,
+            selectionRevision,
             generation: generation ? { ...generation } : { id: null, type: null, sourceKey: null, sourceRevision: null, status: 'unknown', stopped: false },
             textScroll: { mode: textScrollMode, followsMessages: false },
         });

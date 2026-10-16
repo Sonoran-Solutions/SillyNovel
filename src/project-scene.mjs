@@ -1,4 +1,5 @@
 import { createScene, reduceScene, reconcileScene } from './scene-reducer.mjs';
+import { createProjectExpressions } from './project-expressions.mjs';
 import { evidenceStamp } from './transient-scene.mjs';
 import { validateScene, validId, label, validateCleanupPreview, validateCatalog, selectedCatalog } from '../plugins/sillynovel-storage/schema.mjs';
 
@@ -24,7 +25,6 @@ export async function createProjectScene(project,client,actions,changed,isCurren
     const context=()=>({ownerKey:'project:'+project.projectId,sessionEpoch:epoch,historyRevision:0,selectionRevision:0,selectedSourceKey:source.key,sources:[source],characters:actors.map(({key,label})=>({key,label})),catalog:{revision:catalogRevision,assets}});
     const refresh=()=>{const result=scene?reconcileScene(scene,context()):createScene(context());if(!result.result.accepted)throw Error(result.result.code);scene=result.scene;};
     function apply(command) {
-        if(['setExpression','clearExpression'].includes(command.type))throw Error('Message expressions are session-only; detach the project to use them.');
         const c=scene.context;
         const outcome=reduceScene(scene,command,{ownerKey:c.ownerKey,sessionEpoch:epoch,historyRevision:0,selectionRevision:0,catalogRevision,expectedRevision:scene.revision,source,origin:'manual'});
         if(!outcome.result.accepted)throw Error(outcome.result.code);
@@ -75,8 +75,13 @@ export async function createProjectScene(project,client,actions,changed,isCurren
             CLEANUP_UNCERTAIN:'Cleanup outcome uncertain after a lost or invalid response. Removal may have committed. Review again; do not assume rollback.'};
         return messages[error.message]??('Cleanup refused: '+error.message+'. Review again before retrying.');
     }
+    const expressions=createProjectExpressions(actions,()=>scene,()=>!disposed&&isCurrent()&&actions.getSnapshot().sessionEpoch===epoch,notify);
+    await expressions.sync();
     return {
         project:true,
+        expressionStatus:()=>expressions.get(),
+        importExpression:(file,key,name,selectionCurrent)=>expressions.importFile(file,key,name,selectionCurrent),
+        expressionFailed:id=>expressions.failed(id),
         async renameAsset(ref,name) {
             if(!current())return;
             if(importing||cleanupBusy)throw Error('Wait for the PNG import or cleanup to finish.');
@@ -119,10 +124,10 @@ export async function createProjectScene(project,client,actions,changed,isCurren
             } catch(error){if(current()){if(error.message==='CLEANUP_UNCERTAIN')evictCleanupAssets(assetIds);cleanupNotice=cleanupError(error);}}
             finally {cleanupBusy=false;notify();}
         },
-        get:()=>({scene,actors,assets,media,notice,verifiedStamp:!disposed&&actions.getSnapshot().sessionEpoch===epoch?evidenceStamp(actions.getSnapshot()):null}),
+        get:()=>{const overlay=expressions.get();return {scene:{...scene,view:overlay.view},actors,assets:[...assets,...overlay.assets],media:new Map([...media,...overlay.media]),notice:notice+' '+overlay.notice,verifiedStamp:!disposed&&actions.getSnapshot().sessionEpoch===epoch?evidenceStamp(actions.getSnapshot()):null};},
         status:()=>({projectId:project.projectId,name:project.name,revision:project.revision,dirty:edit!==savedEdit,saveState,busy,importing,cleanupBusy,cleanupPreview,cleanupNotice}),
-        async sync(){if(!current())return false;notify();return true;},
-        async dispatch(command){if(importing||cleanupBusy)throw Error('Wait for the PNG import or cleanup to finish.');invalidateCleanup();if(!current())return false;apply(command);edit++;notice='Applied · unsaved project changes.';notify();return true;},
+        async sync(refresh=true){if(!current()){if(actions.getSnapshot().sessionEpoch!==epoch)expressions.dispose();return false;}await expressions.sync(refresh);notify();return true;},
+        async dispatch(command){if(['setExpression','clearExpression'].includes(command.type))return expressions.dispatch(command);if(importing||cleanupBusy)throw Error('Wait for the PNG import or cleanup to finish.');invalidateCleanup();if(!current())return false;apply(command);await expressions.sync();edit++;notice='Applied · unsaved project changes.';notify();return true;},
         async register(_preset,name){if(importing||cleanupBusy)throw Error('Wait for the PNG import or cleanup to finish.');invalidateCleanup();if(!current())return;if(!label(name)||actors.length>=20)throw Error('Use a name of 1–80 characters; maximum 20 actors.');const key=crypto.randomUUID();actors.push({key,label:name,description:'Project actor',defaultURL:null});refresh();apply({type:'addCharacter',characterKey:key});edit++;notify();return key;},
         async importFile(file,kind,key,displayLabel){
             if(!current())return;
@@ -165,6 +170,6 @@ export async function createProjectScene(project,client,actions,changed,isCurren
             finally{busy=false;notify();}
         },
         reset(){throw Error('Detach the project before resetting session visuals.');},
-        dispose(){disposed=true;for(const item of media.values())if(item.url)URL.revokeObjectURL(item.url);},
+        dispose(){disposed=true;expressions.dispose();for(const item of media.values())if(item.url)URL.revokeObjectURL(item.url);},
     };
 }

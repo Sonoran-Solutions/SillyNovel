@@ -77,7 +77,7 @@ export function mountVisualStage({ document, stage, actions }) {
             if(!current())return;
             candidate=await createProjectScene(record,client,actions,render,current);
             if(!current()){candidate.dispose();return;}
-            model.dispose();model=candidate;installed=true;attachmentNotice='';render();
+            model.dispose();model=candidate;installed=true;attachmentNotice='';await model.sync();render();
             const list=await client.list();if(current()){options(projectList,list.map(p=>[p.projectId,p.name+' · '+p.projectId.slice(0,8)]));projectList.value=record.projectId;}
         } finally {if(token===projectEpoch){if(!installed)projectEpoch--;projectBusy=false;}if(!disposed)render();}
     }
@@ -137,8 +137,14 @@ export function mountVisualStage({ document, stage, actions }) {
     const outfit=field('Outfit');
     button('Apply outfit',()=>model.dispatch(outfit.value?{type:'setOutfit',characterKey:actor.value,assetId:outfit.value}:{type:'clearOutfit',characterKey:actor.value}));
     row();
-    const expression=field('Expression · selected source only');
+    const expression=field('Expression to apply · selected source only');
     const applyExpression=button('Apply expression',()=>model.dispatch(expression.value?{type:'setExpression',characterKey:actor.value,assetId:expression.value}:{type:'clearExpression',characterKey:actor.value}));
+    const clearExpression=button('Clear expression',()=>model.dispatch({type:'clearExpression',characterKey:actor.value}));
+    const expressionContext=make('p','sillynovel-expression-context');expressionContext.setAttribute('role','status');target.append(expressionContext);
+    row();
+    const expressionLabel=field('Temporary expression label','input');expressionLabel.maxLength=80;
+    const expressionFile=field('Temporary expression PNG','input');expressionFile.type='file';expressionFile.accept='image/png';
+    listen(expressionFile,'change',()=>{const selected=expressionFile.files[0],captured=model,key=actor.value;expressionFile.value='';if(selected)run(async()=>{const id=await captured.importExpression(selected,key,expressionLabel.value,()=>model===captured&&actor.value===key);if(id&&model===captured){expression.value=id;render();}},true);});
     row();
     const lockField=field('Lock field');options(lockField,['background','presence','slot','outfit'].map(x=>[x,x]));
     for(const type of ['lock','release'])button(type==='lock'?'Lock choice':'Release lock',()=>model.dispatch({type,field:lockField.value,...(lockField.value==='background'?{}:{characterKey:actor.value})}));
@@ -171,7 +177,7 @@ export function mountVisualStage({ document, stage, actions }) {
         if(url) {el.src=url;} else el.removeAttribute('src');
     }
     listen(background,'error',()=>{background.hidden=true;feedback.textContent='Background unavailable · neutral stage. Text reading remains available.';});
-    for(const {image:img,label} of slots.values())listen(img,'error',()=>{img.hidden=true;label.textContent+=' · art unavailable';});
+    for(const {image:img,label} of slots.values())listen(img,'error',()=>{if(model.project&&img.dataset.expression){const id=img.dataset.expression;img.dataset.expression='';model.expressionFailed(id);}else{img.hidden=true;label.textContent+=' · art unavailable';}});
     function render() {
         if(disposed)return;
         const {scene,actors,assets,media,notice,verifiedStamp}=model.get();
@@ -182,7 +188,7 @@ export function mountVisualStage({ document, stage, actions }) {
         const active=actor.value;
         options(outfit,[['','Clear · default'],...assets.filter(a=>a.kind==='outfit' && (!model.project || a.characterKey===active)).map(a=>[a.id,(a.characterKey===active?'':'Other actor · ')+(media.get(a.id)?.label??a.id)+(model.project?' · '+media.get(a.id)?.assetId?.slice(0,8):'')])]);
         const member=view?.cast.find(a=>a.key===active);
-        options(libraryAsset,assets.map(a=>[a.id,(a.kind==='background'?'Background':'Actor sprite')+' · '+(media.get(a.id)?.label??a.id)+' · '+media.get(a.id)?.assetId?.slice(0,8)+(a.characterKey?' · '+(actors.find(actor=>actor.key===a.characterKey)?.label??'Unknown actor')+' ['+a.characterKey.slice(0,8)+']':'')+(a.available?'':' · art unavailable')]));
+        options(libraryAsset,assets.filter(a=>a.kind!=='expression').map(a=>[a.id,(a.kind==='background'?'Background':'Actor sprite')+' · '+(media.get(a.id)?.label??a.id)+' · '+media.get(a.id)?.assetId?.slice(0,8)+(a.characterKey?' · '+(actors.find(actor=>actor.key===a.characterKey)?.label??'Unknown actor')+' ['+a.characterKey.slice(0,8)+']':'')+(a.available?'':' · art unavailable')]));
         if(libraryLabel.dataset.ref!==libraryAsset.value){libraryLabel.dataset.ref=libraryAsset.value;libraryLabel.value=media.get(libraryAsset.value)?.label??'';}
         const artName=ref=>ref?(media.get(ref.id)?.label??ref.id)+(ref.status==='ready'?'':' · '+ref.status+' artwork'):'neutral / no artwork';
         selectedArt.textContent='Selected background: '+artName(view?.background)+(model.project&&view?.background?' · '+media.get(view.background.id)?.assetId:'')+' / Active actor: '+(member?member.label+' ['+shortId(member.key)+'] · '+(member.present?'present':'absent')+' · '+(member.slot??'offstage')+' · outfit: '+artName(member.outfit)+(model.project&&member.outfit?' · '+media.get(member.outfit.id)?.assetId:'')+' · locks: '+(Object.entries(member.locks).filter(([,v])=>v).map(([k])=>k).join(', ')||'none'):'none');
@@ -191,7 +197,7 @@ export function mountVisualStage({ document, stage, actions }) {
             presence.value=String(member?.present??true);slot.value=member?.slot??'';outfit.value=member?.outfit?.id??'';
             displayedView=view;displayedActor=active;
         }
-        options(expression,[['','Clear · neutral'],...assets.filter(a=>a.kind==='expression').map(a=>[a.id,(a.characterKey===active && a.outfitId===(member?.outfit?.id??null)?'':'Incompatible · ')+(media.get(a.id)?.label??a.id)])]);
+        options(expression,[['','Clear · neutral'],...assets.filter(a=>a.kind==='expression'&&(!model.project||a.characterKey===active&&a.outfitId===(member?.outfit?.id??null))).map(a=>[a.id,(a.characterKey===active && a.outfitId===(member?.outfit?.id??null)?'':'Incompatible · ')+(media.get(a.id)?.label??a.id)])]);
         const labels=view?.cast.map(a=>a.label+' ['+shortId(a.key)+'] '+(!a.present?'absent':a.slot??'offstage')+' · locks: '+Object.entries(a.locks).filter(([,v])=>v).map(([k])=>k).join(', '))??[];
         cast.textContent=labels.length?'Cast: '+labels.join(' / '):'No manual cast. Register actors in Scene.';
         cast.dataset.count=String(view?.cast.length??0);
@@ -203,7 +209,8 @@ export function mountVisualStage({ document, stage, actions }) {
             const a=view?.cast.find(a=>a.key===view.slots[position]);
             figure.hidden=!a;figure.dataset.actor=a?.key??'';
             if(!a){image(img,null);continue;}
-            const ref=a.expression??a.outfit;
+            const ref=a.expression?.status==='ready'?a.expression:a.outfit;
+            img.dataset.expression=a.expression?.status==='ready'?a.expression.id:'';
             const manual=actors.find(item=>item.key===a.key);
             const url=ref?(ref.status==='ready'?media.get(ref.id)?.url:null):manual?.defaultURL;
             image(img,url);label.textContent=a.label+' ['+shortId(a.key)+']'+(url?'':' · art unavailable');
@@ -237,7 +244,12 @@ export function mountVisualStage({ document, stage, actions }) {
         for(const e of projectButtons)if(e!==detach&&e!==exportProject)e.disabled=e.disabled||Boolean(state?.busy);
         open.disabled=open.disabled||!projectList.value;
         save.disabled=save.disabled||!state||state.busy||recovery;detach.disabled=detach.disabled||!state;reopen.disabled=reopen.disabled||!state;
-        if(state){reset.disabled=true;preset.disabled=true;expression.disabled=true;file.accept='image/png';help.textContent='Project actors are manual identities with no native card binding. Global choices apply across all messages. Portable v1 bundles include selected artwork only, without library labels or unselected alternatives.';}
+        const overlay=state?model.expressionStatus():null;
+        expressionContext.textContent=state?'Selected message: '+(actions.getSnapshot().cursor?String(actions.getSnapshot().cursor.index+1)+' · '+actions.getSnapshot().cursor.author.label:'unresolved')+' / Actor: '+(member?member.label+' ['+shortId(member.key)+']':'select actor')+' / Current expression: '+artName(member?.expression)+' · Temporary, not saved. '+overlay.notice:'';
+        for(const e of [expression,applyExpression,clearExpression])e.disabled=e.disabled||Boolean(state&&!overlay.ready);
+        for(const e of [expressionFile,expressionLabel]){e.parentElement.hidden=!state;e.disabled=e.disabled||!state||!overlay?.ready||overlay?.busy;}
+        expressionContext.hidden=!state;
+        if(state){reset.disabled=true;preset.disabled=true;file.accept='image/png';help.textContent='Project actors are manual identities with no native card binding. Global outfits and layout persist across messages. Expressions are temporary, source-specific, and can be invalidated by edits; no speaker mapping is inferred. Portable v1 bundles include selected artwork only, without library labels or unselected alternatives.';}
         else {file.accept='image/png,image/jpeg,image/webp';help.textContent=transientHelp;}
         for(const [control,sessionName,projectLabel] of [[name,'Session actor name','Project actor name'],[actor,'Session actor','Project actor'],[fileKind,'Temporary image use','Project image use'],[file,'Temporary raster file','Project PNG file']]){
             const text=state?projectLabel:sessionName;control.setAttribute('aria-label',text);control.parentElement.firstChild.textContent=text;
@@ -245,14 +257,14 @@ export function mountVisualStage({ document, stage, actions }) {
         for(const control of [importLabel,libraryAsset,libraryLabel])control.parentElement.hidden=!state;
         for(const control of [renameAsset,unregisterAsset]){control.hidden=!state;control.disabled=control.disabled||!libraryAsset.value;}
         registerActor.textContent=state?'Register project actor':'Register session actor';
-        preset.parentElement.hidden=Boolean(state);expression.parentElement.hidden=Boolean(state);applyExpression.hidden=Boolean(state);
+        preset.parentElement.hidden=Boolean(state);
     }
     function update(snapshot) {
         if(snapshot.sessionEpoch!==activation){
             activation=snapshot.sessionEpoch;projectEpoch++;projectBusy=false;bundleStatus.textContent='';
             if(model.project){attachmentNotice='Project detached after a native conversation switch. Explicitly reopen to use a saved global layout.';model.dispose();model=createTransientScene(actions,render);}
         }
-        const stamp=evidenceStamp(snapshot);
+        const stamp=JSON.stringify([evidenceStamp(snapshot),snapshot.selectionRevision,snapshot.generation]);
         if(stamp===lastStamp)return;
         lastStamp=stamp;
         // Neutralize synchronously before the reader paints changed dialogue. A later

@@ -1,5 +1,12 @@
 # Architecture
 
+## DYL-23-B attached temporary expressions — 2026-10-16
+
+Owner explicitly authorizes [memory-only attached message expressions](M1_PROJECT_EXPRESSIONS.md), tracked by [DYL-62](https://linear.app/devils17/issue/DYL-62). Starting main `d3f5761c03fec7fc5d97b0698da718af7af9c187` is the verified PR #30 merge. The project-global layout/catalog remains persistent; explicit actor/outfit-compatible PNG expression choices use a separate bounded activation-only source journal and the existing renderer. No expression-only dirty/revision changes or persistence. [Validation and handoff](M1_PROJECT_EXPRESSIONS_IMPLEMENTATION.md).
+
+Linear DYL-23 reports Done; preserve its original acceptance/history/relationships and the remaining group/device gaps. This assignment authorizes only DYL-23-B, not native groups, persistent history, DYL-60 execution or later milestones. Decision F remains undecided; Gate A NOT_RUN; no live install, release or merge. Older entries below are historical.
+
+
 ## DYL-23-A manual-stage UX — 2026-10-16
 
 Owner explicitly authorized the bounded [manual stage/project integration](M1_MANUAL_STAGE_UX.md): Project, Scene and Artwork Library controls, visible attachment/global-scope/save/recovery feedback, and responsive/accessibility verification. Starting main `ad70bb52e0f46155a5c7b1e5c3da957536612dc9` merges PR #29; Linear DYL-22 is Done with broader original format/revision requirements still unfinished. DYL-24 session stage and DYL-53 global projects remain credited. DYL-23 keeps original acceptance/dependencies and stays unfinished; attached source overlays/native groups remain excluded. DYL-60 stays blocked. Decision F undecided; Gate A NOT_RUN; no DYL-55 change, M1.3/M2, live install, release or merge. [Implementation/evidence](M1_MANUAL_STAGE_UX_IMPLEMENTATION.md). Older dated entries below are historical.

@@ -14,7 +14,7 @@ const files = new Map([
     ['/', resolve(root, 'tests/fixtures/reader-browser.html')],
     ['/vendor/showdown.js', resolve(hostRoot, 'node_modules/showdown/dist/showdown.js')],
     ['/vendor/purify.js', resolve(hostRoot, 'node_modules/dompurify/dist/purify.js')],
-    ...['index.js', 'style.css', 'src/shell.mjs', 'src/reader-view.mjs', 'src/reader-source-model.mjs', 'src/host-adapter.mjs', 'src/stage-view.mjs', 'src/transient-scene.mjs', 'src/source-prefix.mjs', 'src/scene-reducer.mjs', 'src/project-client.mjs', 'src/project-scene.mjs', 'plugins/sillynovel-storage/schema.mjs'].map(path => ['/' + path, resolve(root, path)]),
+    ...['index.js', 'style.css', 'src/shell.mjs', 'src/reader-view.mjs', 'src/reader-source-model.mjs', 'src/host-adapter.mjs', 'src/stage-view.mjs', 'src/transient-scene.mjs', 'src/source-prefix.mjs', 'src/scene-reducer.mjs', 'src/project-client.mjs', 'src/project-scene.mjs', 'src/project-expressions.mjs', 'plugins/sillynovel-storage/schema.mjs'].map(path => ['/' + path, resolve(root, path)]),
 ]);
 for (const asset of JSON.parse(await readFile(resolve(root,'tests/fixtures/m12-stage/manifest.json')))) files.set('/tests/fixtures/m12-stage/'+asset.file,resolve(root,'tests/fixtures/m12-stage',asset.file));
 before(async () => {
@@ -353,7 +353,7 @@ test('session stage: forward projection, selected-source expressions, outfits an
     const a=await addActor(page,'mira-a'), b=await addActor(page,'mira-b');
     await positionActor(page,a,'left');
     await field(page,'Background').selectOption('tavern');await applyScene(page,'Apply background');
-    await field(page,'Expression · selected source only').selectOption(a+':joy-default');await applyScene(page,'Apply expression');
+    await field(page,'Expression to apply · selected source only').selectOption(a+':joy-default');await applyScene(page,'Apply expression');
     await page.waitForFunction(()=>document.querySelector('.sillynovel-sprite--left img').src.endsWith('mira-a-joy.png'));
     await button(page,'Previous').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-art__background').hidden);
     assert.equal(await sprite(page,'left').isVisible(),false);
@@ -363,7 +363,7 @@ test('session stage: forward projection, selected-source expressions, outfits an
     await page.waitForFunction(()=>document.querySelector('.sillynovel-sprite--left img').src.endsWith('mira-a.png'));
     assert.match(await page.locator('.sillynovel-art__background').getAttribute('src'),/tavern.png$/);
     await field(page,'Outfit').selectOption(a+':blue-coat');await applyScene(page,'Apply outfit');
-    await field(page,'Expression · selected source only').selectOption(a+':coat-joy');await applyScene(page,'Apply expression');
+    await field(page,'Expression to apply · selected source only').selectOption(a+':coat-joy');await applyScene(page,'Apply expression');
     await page.waitForFunction(()=>document.querySelector('.sillynovel-sprite--left img').src.endsWith('mira-a-coat-joy.png'));
     await field(page,'Outfit').selectOption(b+':neutral-sprite');await button(page,'Apply outfit').click();
     await page.waitForFunction(()=>document.querySelector('.sillynovel-visual-status').textContent.includes('INCOMPATIBLE_ASSET'));
@@ -371,7 +371,7 @@ test('session stage: forward projection, selected-source expressions, outfits an
     await field(page,'Outfit').selectOption(a+':missing');await applyScene(page,'Apply outfit');
     assert.equal(await sprite(page,'left').locator('img').isVisible(),false);assert.match(await sprite(page,'left').innerText(),/art unavailable/);
     await field(page,'Outfit').selectOption('');await applyScene(page,'Apply outfit');
-    await field(page,'Expression · selected source only').selectOption(a+':stern-default');await applyScene(page,'Apply expression');
+    await field(page,'Expression to apply · selected source only').selectOption(a+':stern-default');await applyScene(page,'Apply expression');
     await page.evaluate(()=>{fixture.context.chat[2].swipe_id=1;fixture.emit('MESSAGE_SWIPED',2);});
     await page.waitForFunction(()=>document.querySelector('.sillynovel-sprite--left img').src.endsWith('mira-a.png'));
     await page.evaluate(()=>fixture.setText('historical edit',0));
@@ -766,4 +766,85 @@ test('project UX: discard cancel, actor feedback, local Escape focus and narrow 
  await page.evaluate(()=>{fixture.context.chatId='synthetic-A';fixture.emit('CHAT_CHANGED');});
  await page.waitForFunction(()=>document.querySelector('.sillynovel-unsaved').dataset.state==='session');
  assert.match(await page.locator('.sillynovel-project-status').innerText(),/No project attached/);
+});
+
+async function attachedExpressions(t){
+ const page=await fixture(t);page.setDefaultTimeout(6000);await page.locator('#sillynovel-enabled').uncheck();await page.evaluate(()=>{fixture.context.getRequestHeaders=()=>({});});
+ const aid='22222222-2222-4222-8222-222222222222',bid='33333333-3333-4333-8333-333333333333',bgid='44444444-4444-4444-8444-444444444444';
+ const actors=['11111111-1111-4111-8111-111111111111','55555555-5555-4555-8555-555555555555'];
+ let record={schemaVersion:2,projectId:'12345678-1111-4111-8111-111111111111',name:'Expression project',revision:4,catalog:[{assetId:aid,kind:'sprite',actorId:actors[0],label:'Base'},{assetId:bid,kind:'sprite',actorId:actors[1],label:'Other Mira'},{assetId:bgid,kind:'background',actorId:null,label:'Forest'}],scene:{backgroundAssetId:bgid,backgroundLocked:true,actors:actors.map((actorId,i)=>({actorId,name:'Mira',present:true,slot:i?'right':'left',spriteAssetId:i?bid:aid,locks:{presence:true,slot:true,outfit:true}}))}};
+ const original=structuredClone(record),saves=[];
+ await page.route('**/api/plugins/sillynovel-storage/**',async route=>{
+  const req=route.request(),path=new URL(req.url()).pathname;
+  if(path.includes('/assets/'))return route.fulfill({contentType:'image/png',body:await readFile(resolve(root,'tests/fixtures/m12-stage',path.endsWith(bgid)?'forest.png':path.endsWith(aid)?'mira-a.png':'rowan.png'))});
+  if(req.method()==='PUT'){saves.push(req.postDataJSON());record={...record,...req.postDataJSON(),revision:record.revision+1};return route.fulfill({json:record});}
+  return route.fulfill({json:path.endsWith('/capabilities')?{apiVersion:1,schemaVersion:2,catalogVersion:1}:path.endsWith('/projects')?[record]:record});
+ });
+ await page.locator('#sillynovel-enabled').check();await sceneControls(page);await button(page,'Open project and use with this chat').click();await page.waitForFunction(()=>document.querySelectorAll('.sillynovel-sprite:not([hidden])').length===2);
+ await page.getByLabel('Project actor',{exact:true}).selectOption(actors[0]);
+ const expression=page.getByLabel('Expression to apply · selected source only',{exact:true}),image=page.locator('.sillynovel-sprite--left img');
+ const upload=async(label='Happy',file='mira-a-joy.png')=>{await page.getByLabel('Temporary expression label',{exact:true}).fill(label);const picker=page.getByLabel('Temporary expression PNG',{exact:true});await picker.focus();assert.equal(await picker.evaluate(e=>e===document.activeElement),true);const chooser=page.waitForEvent('filechooser');await picker.click();await(await chooser).setFiles(resolve(root,'tests/fixtures/m12-stage',file));await page.waitForFunction(()=>document.querySelector('.sillynovel-expression-context').textContent.includes('Temporary expression ready'));return expression.inputValue();};
+ const apply=async id=>{if(id)await expression.selectOption(id);await button(page,'Apply expression').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-sprite--left img').dataset.expression!=='');return image.getAttribute('src');};
+ return {page,actors,original,saves,expression,image,upload,apply};
+}
+test('attached message expressions: actual UI, navigation/revisit, save exclusion, invalidation and reload',async t=>{
+ const x=await attachedExpressions(t),{page}=x,base=await x.image.getAttribute('src');
+ await button(page,'Previous').click();const happy=await x.upload();const happyURL=await x.apply(happy);
+ await button(page,'Next').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-sprite--left img').dataset.expression==='');assert.equal(await x.image.getAttribute('src'),base);
+ const stern=await x.upload('Stern','mira-a-stern.png'),sternURL=await x.apply(stern);assert.notEqual(sternURL,happyURL);
+ await button(page,'Previous').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-sprite--left img').dataset.expression!=='');assert.equal(await x.image.getAttribute('src'),happyURL);
+ await page.evaluate(()=>{fixture.context.chat.push({name:'You',is_user:true,mes:'Appended while pinned'});fixture.renderNative();fixture.emit('MESSAGE_RECEIVED',2);});
+ assert.equal(await x.image.getAttribute('src'),happyURL);assert.equal(await message(page).innerText(),'First message.');
+ await page.locator('#send_textarea').fill('Draft preserved 日本語');await page.locator('#send_textarea').focus();await button(page,'Next').click();assert.equal(await page.locator('#send_textarea').inputValue(),'Draft preserved 日本語');assert.equal(await page.locator('#send_textarea').evaluate(e=>e===document.activeElement),true);
+ assert.equal(await x.image.getAttribute('src'),sternURL);assert.equal(await page.locator('.sillynovel-unsaved').getAttribute('data-state'),'saved');
+ await button(page,'Save project').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('revision 5'));assert.equal(x.saves.length,1);assert.deepEqual(x.saves[0].scene,x.original.scene);assert.deepEqual(x.saves[0].catalog,x.original.catalog);assert.doesNotMatch(JSON.stringify(x.saves[0]),/expression|session-source|prefixSha256/);
+ await text(page,'Changed selected source',1);await page.waitForFunction(()=>document.querySelector('.sillynovel-sprite--left img').dataset.expression==='');assert.equal(await x.image.getAttribute('src'),base);assert.match(await page.locator('.sillynovel-expression-context').innerText(),/invalidated/);
+ await button(page,'Previous').click();assert.equal(await x.image.getAttribute('src'),happyURL);await button(page,'Clear expression').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-sprite--left img').dataset.expression==='');assert.equal(await x.image.getAttribute('src'),base);
+ await page.reload();await page.evaluate(()=>{fixture.context.getRequestHeaders=()=>({});});await page.locator('#sillynovel-enabled').check();await sceneControls(page);await button(page,'Open project and use with this chat').click();await page.waitForFunction(()=>document.querySelectorAll('.sillynovel-sprite:not([hidden])').length===2);assert.equal(await x.expression.locator('option').count(),1);
+});
+for(const boundary of ['selection','edit','swipe','outfit','actor','chat','replace','detach','disable'])test('attached PNG delayed actual-entry decode rejects '+boundary,async t=>{
+ const x=await attachedExpressions(t),{page}=x;
+ await page.evaluate(()=>{const original=Image.prototype.decode;Image.prototype.decode=function(){window.expressionDecodeStarted=true;return new Promise(resolve=>window.finishExpressionDecode=()=>original.call(this).then(resolve));};});
+ await page.getByLabel('Temporary expression PNG',{exact:true}).setInputFiles(resolve(root,'tests/fixtures/m12-stage/mira-a-joy.png'));await page.waitForFunction(()=>window.expressionDecodeStarted);
+ if(boundary==='selection')await button(page,'Previous').click();
+ if(boundary==='edit')await text(page,'Edited while decoding');
+ if(boundary==='swipe')await page.evaluate(()=>{fixture.context.chat[1].swipe_id=1;fixture.emit('MESSAGE_SWIPED',1);});
+ if(boundary==='outfit'){await page.getByLabel('Outfit',{exact:true}).selectOption('');await button(page,'Apply outfit').click();}
+ if(boundary==='actor')await page.getByLabel('Project actor',{exact:true}).selectOption(x.actors[1]);
+ if(boundary==='chat')await page.evaluate(()=>{fixture.context.chatId='B';fixture.emit('CHAT_CHANGED');});
+ if(boundary==='replace')await button(page,'Open project and use with this chat').click();
+ if(boundary==='detach')await button(page,'Detach project').click();
+ if(boundary==='disable')await page.locator('#sillynovel-enabled').uncheck();
+ await page.evaluate(()=>window.finishExpressionDecode());
+ if(['selection','edit','swipe','outfit','actor'].includes(boundary)){await page.waitForFunction(()=>document.querySelector('.sillynovel-visual-status').textContent.includes('STALE_SOURCE'));assert.equal(await x.expression.locator('option').count(),1);}
+ else if(boundary!=='disable')assert.equal(await page.locator('.sillynovel-sprite img[data-expression]:not([data-expression=""])').count(),0);
+ assert.equal(await page.locator('#send_textarea').isEnabled(),true);
+});
+test('attached missing expression image falls back to base outfit; clear, no dirty changes',async t=>{
+ const x=await attachedExpressions(t);const base=await x.image.getAttribute('src'),id=await x.upload();await x.apply(id);
+ await x.image.evaluate(e=>e.dispatchEvent(new Event('error')));await x.page.waitForFunction(()=>document.querySelector('.sillynovel-sprite--left img').dataset.expression==='');assert.equal(await x.image.getAttribute('src'),base);assert.equal(await x.page.locator('.sillynovel-unsaved').getAttribute('data-state'),'saved');assert.match(await x.page.locator('.sillynovel-expression-context').innerText(),/unavailable/);
+});
+
+for(const movement of ['prefix-only','selected-index'])test('attached expressions automatically reconcile unchanged-object reorder: '+movement,async t=>{
+ const x=await attachedExpressions(t),{page}=x;
+ await page.evaluate(()=>{fixture.context.chat.push({name:'Mira',mes:'Pinned unchanged source.\n\n'+('A paragraph for scrolling.\n\n'.repeat(60))},{name:'You',is_user:true,mes:'Later unchanged source'},{name:'Mira',mes:'Unchanged head'});fixture.renderNative();fixture.emit('MESSAGE_RECEIVED',4);});
+ await button(page,'Previous').click();await button(page,'Previous').click();const base=await x.image.getAttribute('src'),happy=await x.upload();const happyURL=await x.apply(happy);
+ await page.evaluate(()=>{
+  window.pinnedObject=fixture.context.chat[2];window.prefixEncodes=0;window.expressionHashes=0;
+  const encode=TextEncoder.prototype.encode;TextEncoder.prototype.encode=function(...args){prefixEncodes++;return encode.apply(this,args);};
+  const digest=crypto.subtle.digest.bind(crypto.subtle);crypto.subtle.digest=async(...args)=>{expressionHashes++;if(window.holdExpressionHash)await new Promise(resolve=>window.releaseExpressionHash=resolve);return digest(...args);};
+  const dialogue=document.querySelector('.sillynovel-dialogue');dialogue.scrollTop=100;dialogue.dispatchEvent(new Event('scroll'));fixture.emit('MESSAGE_EDITED',0);
+ });
+ await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+ assert.deepEqual(await page.evaluate(()=>[prefixEncodes,expressionHashes]),[0,0],'scroll and unchanged canonical reconciliation do not validate history again');assert.equal(await x.image.getAttribute('src'),happyURL);
+ const immediate=await page.evaluate(movement=>{
+  window.holdExpressionHash=true;const chat=fixture.context.chat;
+  if(movement==='prefix-only')[chat[0],chat[1]]=[chat[1],chat[0]];else [chat[1],chat[2]]=[chat[2],chat[1]];
+  fixture.emit('MESSAGE_EDITED',0); // Canonical host refresh only; no overlay method or navigation.
+  return {expression:document.querySelector('.sillynovel-sprite--left img').dataset.expression,sourcePreserved:chat.includes(pinnedObject),message:document.querySelector('.sillynovel-dialogue__message').textContent};
+ },movement);
+ assert.equal(immediate.sourcePreserved,true);assert.match(immediate.message,/Pinned unchanged source/);assert.equal(immediate.expression,'','remove overlay synchronously before checking changed correspondence');
+ await page.waitForFunction(()=>typeof window.releaseExpressionHash==='function');assert.equal(await button(page,'Apply expression').isDisabled(),true);assert.equal(await x.image.getAttribute('src'),base);assert.equal(await page.locator('#send_textarea').isEnabled(),true);
+ await page.evaluate(()=>{window.holdExpressionHash=false;releaseExpressionHash();});
+ await page.waitForFunction(()=>document.querySelector('.sillynovel-expression-context').textContent.includes('invalidated'));assert.equal(await x.image.getAttribute('src'),base);assert.equal(await x.expression.locator('option').count(),1);assert.match(await message(page).innerText(),/^Pinned unchanged source/);assert.equal(await page.locator('.sillynovel-unsaved').getAttribute('data-state'),'saved');
 });

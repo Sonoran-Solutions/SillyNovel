@@ -1,0 +1,36 @@
+✔ attached expressions are per source and UUID; revisit/clear preserve global outfits and save records (31.719046ms)
+✔ source suffix invalidation: edit (10.795425ms)
+✔ source suffix invalidation: same-length (15.398055ms)
+✔ source suffix invalidation: author (6.923626ms)
+✔ source suffix invalidation: swipe (4.287345ms)
+✔ source suffix invalidation: delete (4.236273ms)
+✔ source suffix invalidation: insert (5.013267ms)
+✔ source suffix invalidation: replace (6.548183ms)
+✔ source suffix invalidation: reorder (9.473201ms)
+✔ source suffix invalidation: older-prefix (4.756306ms)
+✔ source suffix invalidation: continue (5.027974ms)
+✔ source suffix invalidation: stream (4.002252ms)
+✔ compatibility refuses wrong UUID/outfit; failed art falls back; global locks stay intact (4.20707ms)
+✔ delayed decode cannot cross selection (4.343776ms)
+✔ delayed decode cannot cross selection-return (3.458086ms)
+✔ delayed decode cannot cross edit (10.221805ms)
+✔ delayed decode cannot cross swipe (4.846969ms)
+✔ delayed decode cannot cross outfit (3.354049ms)
+✔ delayed decode cannot cross outfit-return (4.819509ms)
+✔ delayed decode cannot cross chat (2.838754ms)
+✔ delayed decode cannot cross replace (3.057788ms)
+✔ delayed decode cannot cross detach (4.988533ms)
+✔ delayed decode cannot cross disable (2.677836ms)
+✔ delayed decode cannot cross dispose (4.053144ms)
+✔ ambiguous history clears decisions and cannot resurrect; A B A resets attachment authority (12.513988ms)
+✔ generation end without completion proof refuses head; pinned older source remains usable (4.057131ms)
+✔ PNG content/type/animation/dimension limits refuse without upload or dirtying (7.405721ms)
+✔ temporary artwork count ceiling and URL release on invalidation/disposal (34.282367ms)
+ℹ tests 28
+ℹ suites 0
+ℹ pass 28
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 259.411215

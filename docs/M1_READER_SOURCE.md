@@ -81,3 +81,11 @@ These checks establish a candidate position, **not its rendered revision**. The 
 Consequently this adapter always returns the unresolved result, even after scrolling to a matching rendered candidate. The reader displays “Exact source could not be located”; native editing, deletion, swipe selection and regeneration remain accessible. Paginated/unrendered, ambiguous or missing candidates do not scroll. This conservative P2 correction is a bounded engineering choice, not an owner ruling. Exact success requires a separately verified read-only host source/revision seam; the pinned public context also has no verified read-only history loader. Do not add host tags, invoke the mutating formatter, or execute `/chat-jump` to manufacture correspondence.
 
 Implementation/security/browser evidence and remaining gaps: [DYL-18 testing record](TESTING.md#dyl-18-text-reader--2026-10-12). DYL-19 PARTIAL/BLOCKED persistence and asset contracts are unchanged.
+
+## DYL-23-B selection evidence
+
+Snapshots additionally expose `selectionRevision`. Activation, successful Previous/Next and explicit Jump to Latest advance it; unchanged canonical refreshes and text scrolling do not. Attached temporary expression work captures it to reject selection away/back while decoding. `viewRevision` retains its existing scheduling/display meaning. No new native source identity or completion proof is introduced. See [attached expression contract](M1_PROJECT_EXPRESSIONS.md).
+
+## PR #31 review correction: ordered-source evidence
+
+`sourceOrderRevision` advances when canonical source-key order, count or availability changes, including unchanged-object reorders. Full reconciliation compares the previous and next ordered records; incremental samples advance it on append or changed source keys. Content-only edits retain the separate `sourceRevision`. Unchanged refreshes, navigation and text scrolling do not advance the order revision. The shared `evidenceStamp` includes it, so stage updates, transient validation and attached expression work observe the same order-change signal without using `viewRevision` as visual authority. An order change immediately removes the expression projection until prefix reconciliation completes. No history hashing is added to the scroll path. [Review correction and exact evidence](M1_PROJECT_EXPRESSIONS_REVIEW.md).

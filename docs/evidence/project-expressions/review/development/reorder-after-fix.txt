@@ -1,0 +1,10 @@
+✔ attached expressions automatically reconcile unchanged-object reorder: prefix-only (671.150395ms)
+✔ attached expressions automatically reconcile unchanged-object reorder: selected-index (556.94914ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1447.974137

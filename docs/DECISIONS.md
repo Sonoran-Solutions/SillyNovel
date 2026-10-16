@@ -1,5 +1,12 @@
 # Decision register
 
+## DYL-23-B attached temporary expressions — 2026-10-16
+
+Owner explicitly authorizes [memory-only attached message expressions](M1_PROJECT_EXPRESSIONS.md), tracked by [DYL-62](https://linear.app/devils17/issue/DYL-62). Starting main `d3f5761c03fec7fc5d97b0698da718af7af9c187` is the verified PR #30 merge. The project-global layout/catalog remains persistent; explicit actor/outfit-compatible PNG expression choices use a separate bounded activation-only source journal and the existing renderer. No expression-only dirty/revision changes or persistence. [Validation and handoff](M1_PROJECT_EXPRESSIONS_IMPLEMENTATION.md).
+
+Linear DYL-23 reports Done; preserve its original acceptance/history/relationships and the remaining group/device gaps. This assignment authorizes only DYL-23-B, not native groups, persistent history, DYL-60 execution or later milestones. Decision F remains undecided; Gate A NOT_RUN; no live install, release or merge. Older entries below are historical.
+
+
 ## Completion review proposals — 2026-10-15 (NOT owner decisions)
 
 Owner assignment authorizes documentation, acceptance review, Linear planning and one open/unmerged documentation PR only. [Decision package A–G](M1_2_STORAGE_COMPLETION_AND_READINESS.md#11-owner-decision-package), reviewed main `ea65d84a521a39c9ccc977f4cb3643454963d4b8`: recommend **DYL-55 GO for bounded experimental completion; overall M1.2 REVISE**. PRs #23–27 are verified merged and DYL-49–54/57–59 Done; parent DYL-55 remains unfinished, pending explicit owner acceptance/closure approval.
