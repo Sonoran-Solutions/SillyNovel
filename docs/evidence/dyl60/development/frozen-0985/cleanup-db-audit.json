@@ -1,0 +1,101 @@
+[
+  {
+    "id": "affabd83-bbdb-462d-bcd3-8849a8d1f5b7",
+    "name": "API project",
+    "scene": {
+      "backgroundAssetId": null,
+      "backgroundLocked": false,
+      "actors": []
+    },
+    "catalog": [],
+    "assets": [
+      {
+        "id": "58186b7a-572f-4a96-9f22-5b9034211787",
+        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
+        "bytes": 11591
+      }
+    ]
+  },
+  {
+    "id": "56d9defa-1935-4d22-a80c-744b895634a5",
+    "name": "Bob project",
+    "scene": {
+      "backgroundAssetId": null,
+      "backgroundLocked": false,
+      "actors": []
+    },
+    "catalog": [],
+    "assets": []
+  },
+  {
+    "id": "de6386fb-abf4-4c43-9fef-3b752fb14a69",
+    "name": "Browser project",
+    "scene": {
+      "backgroundAssetId": "84321fae-d513-403b-aca0-51da3258a9f1",
+      "backgroundLocked": true,
+      "actors": [
+        {
+          "actorId": "de4ef909-6af0-449d-9d0f-a79d2a1322b7",
+          "name": "One",
+          "spriteAssetId": "7dabdcbd-0406-4c18-9701-c8676777ec3c",
+          "slot": "left",
+          "present": true,
+          "locks": {
+            "presence": true,
+            "slot": true,
+            "outfit": true
+          }
+        },
+        {
+          "actorId": "b790de56-3754-499f-b8de-2f5c7dd507f1",
+          "name": "Two",
+          "spriteAssetId": "799231e3-17ad-446f-ba56-09930df22c7e",
+          "slot": "right",
+          "present": true,
+          "locks": {
+            "presence": true,
+            "slot": true,
+            "outfit": true
+          }
+        }
+      ]
+    },
+    "catalog": [
+      {
+        "assetId": "84321fae-d513-403b-aca0-51da3258a9f1",
+        "label": "forest",
+        "kind": "background",
+        "actorId": null
+      },
+      {
+        "assetId": "7dabdcbd-0406-4c18-9701-c8676777ec3c",
+        "label": "mira-a",
+        "kind": "sprite",
+        "actorId": "de4ef909-6af0-449d-9d0f-a79d2a1322b7"
+      },
+      {
+        "assetId": "799231e3-17ad-446f-ba56-09930df22c7e",
+        "label": "rowan",
+        "kind": "sprite",
+        "actorId": "b790de56-3754-499f-b8de-2f5c7dd507f1"
+      }
+    ],
+    "assets": [
+      {
+        "id": "84321fae-d513-403b-aca0-51da3258a9f1",
+        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
+        "bytes": 11591
+      },
+      {
+        "id": "7dabdcbd-0406-4c18-9701-c8676777ec3c",
+        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
+        "bytes": 4454
+      },
+      {
+        "id": "799231e3-17ad-446f-ba56-09930df22c7e",
+        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
+        "bytes": 4253
+      }
+    ]
+  }
+]

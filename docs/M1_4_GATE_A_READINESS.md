@@ -42,7 +42,7 @@ Read basis: [M1 plan](M1_PLAN.md), [prior completion review](M1_2_STORAGE_COMPLE
 
 ## 2. Decision F — one-page owner comparison
 
-This is **Decision F from the prior completion-review decision package**, not DYL-16's earlier “F — Rich content” default. No choice below is recorded as approved.
+This is **Decision F from the prior completion-review decision package**, not DYL-16's earlier “F — Rich content” default. The comparison was unapproved in PR #33. The owner has now selected **F1 APPROVED for the first disposable Gate A playtest**, on 2026-10-16 America/Phoenix; [exact approved register](DECISIONS.md#owner-approvals-and-dyl-60-authorization--2026-10-16). F2 is unselected and its implications remain below.
 
 | | F1 — recommended bounded amendment | F2 — retain original Gate A |
 | --- | --- | --- |
@@ -53,7 +53,7 @@ This is **Decision F from the prior completion-review decision package**, not DY
 | Next consequence | Record exact amendment plus decisions in section 3; authorize DYL-60 technical preparation, then a separately authorized owner session | Keep freeze BLOCKED; authorize the missing capabilities below in small reviewed slices before DYL-60 |
 | Does it accept Gate A now? | No: Gate A NOT_RUN, human verdict still required | No: original requirements remain unmet |
 
-### Exact proposed F1 amendment — approval text
+### Exact F1 amendment — APPROVED for the first disposable Gate A playtest
 
 > For the first disposable SillyNovel Gate A owner playtest only, I amend the persistence and multi-tab writer acceptance as follows. A saved, account-owned independent project must restore its global layout and labeled static-PNG artwork catalog after explicit reopening. Reload and every observed native conversation activation, including A → B → A, start detached; no native chat/project association is remembered. Source-specific manual expression decisions and their artwork are temporary, source/revision/session checked, and disappear on reload, detach, project replacement, disable or conversation switching. Reopening restores the saved global layout, not message-specific scene history or branch history.
 >
@@ -76,7 +76,7 @@ Global project rows contain neither message decisions nor durable source/branch 
 
 ## 3. Other owner decisions before freeze
 
-Each row needs an attributed owner/date/record link; blanks are not approval. Recommended language is ready to approve separately.
+All five choices are now approved by the owner on 2026-10-16 America/Phoenix, with separate DYL-60 execution authorization: [attributed decision record](DECISIONS.md#owner-approvals-and-dyl-60-authorization--2026-10-16). The original recommendation/consequence table below is retained for provenance; the unresolved cases no longer describe current decision status. Device access itself remains an empirical prerequisite.
 
 | Decision | Proposed wording / recommendation | Consequence if declined or unresolved |
 | --- | --- | --- |
@@ -86,7 +86,7 @@ Each row needs an attributed owner/date/record link; blanks are not approval. Re
 | Device access | Name the physical Android device/browser/OS/keyboard and authorized tester/access path. Preserve section 7 as mandatory evidence; do not substitute viewport emulation. Recommendation: collect device technical evidence during separately authorized candidate preparation, before final freeze/readiness signoff. | Physical requirements remain NOT_TESTED and block full readiness. A desktop-only feedback trial would need a separately explicit reduced scope and would leave full Gate A unaccepted. No device waiver is proposed by F1. |
 | Candidate preparation | After decisions are recorded, separately authorize DYL-60 on the selected full SHA, including disposable technical/device evidence and integrity coverage; keep the owner session separately gated. | DYL-60 remains Backlog/unstarted. Scope decisions alone do not start it. |
 
-Owner record template: `Decision / approved exact wording or revisions / owner / date / evidence link / candidate consequences`. Decision F remains **undecided** in this PR; all rows above remain **proposed**.
+Owner record template: `Decision / approved exact wording or revisions / owner / date / evidence link / candidate consequences`. At the original PR #33 preflight, Decision F was **undecided** and these rows were **proposed**. The later approved record above supersedes that pending state, without supplying a human Gate A verdict.
 
 ## 4. Readiness matrix
 
@@ -126,7 +126,9 @@ Original requirements intentionally outside proposed F1: persistent message visu
 
 Later concerns, **not disposable-playtest blockers on the pinned environment**: Node 22.13 compatibility/floor verification, other host/browser/OS/filesystem support, public plugin packaging/update/uninstall, license/demo distribution, production security/resource budgets, account recreation/repair, real disk-full/power-loss/fsync campaigns and recovery drills. [DYL-61](https://linear.app/devils17/issue/DYL-61) retains these; known unsupported account/CSRF-disabled persistence must still refuse safely. Real providers remain NOT_TESTED and are not needed for the deterministic manual evaluation.
 
-## 5. DYL-60 candidate plan — proposed, do not execute yet
+## 5. DYL-60 candidate plan — execution authorized 2026-10-16
+
+The owner has now separately authorized this recipe after recording all decisions. [Frozen candidate and fresh campaign](M1_4_DYL60_CANDIDATE.md). The next paragraph and setup estimates preserve the original preflight instructions; authorization is complete.
 
 Use [existing DYL-60](https://linear.app/devils17/issue/DYL-60); no separate preflight issue is needed. Record scope decisions first, then obtain separate candidate-preparation authorization. Do not freeze this documentation branch by implication. Choose one clean full merged SHA at that later point (current inspected main is `f9497aebf59cbeae07a2b6391d0cff17e81bcc76`). Re-fetch/reconcile intervening changes rather than copying a historical SHA into a “current” claim.
 
@@ -246,9 +248,11 @@ For each answer, record a concrete moment and screenshot/scenario reference: mor
 
 Later owner record: `PASS / REVISE / STOP / exact words / owner / date / candidate full SHA / tested surfaces / blockers / next bounded step`. Until supplied, **Gate A NOT_RUN**. Do not infer PASS from completing checkboxes or from an automated campaign. A PASS does not authorize M2, beta or production.
 
-## 7. Physical-device technical checklist — separate NOT_TESTED surface
+## 7. Physical-device technical checklist — access authorized, evidence BLOCKED
 
-No device was inspected, connected, unlocked or modified in this review. No repository instructions for an established wireless-ADB endpoint were found in Markdown guidance; do not invent an IP, pairing code, serial, browser or Android version. If the owner's **Galaxy Tab S8** and established wireless-ADB setup are available later, obtain authorized unlocked device access and the existing connection details from its operator. Use the already paired connection only; record model/serial redacted for public evidence, Android/build, native browser version, keyboard/IME, density/text scaling, orientation and candidate/host SHA. Device discovery/connection and testing require that later authorization; none was attempted here.
+Current DYL-60 disposition: authorized `adb devices -l` and `adb mdns services` both return empty inventories. No established endpoint is accessible. Physical testing is BLOCKED pending the operator’s already paired, connected/unlocked Galaxy Tab S8 or its established reachable endpoint. No pairing, unlock, setting change or private-data access was attempted. [Exact discovery record](evidence/dyl60/device.txt). The following paragraphs retain the original preflight recipe and do not revoke this later authorization.
+
+No device was inspected, connected, unlocked or modified in the original preflight review. No repository instructions for an established wireless-ADB endpoint were found in Markdown guidance; do not invent an IP, pairing code, serial, browser or Android version. If the owner's **Galaxy Tab S8** and established wireless-ADB setup are available later, obtain authorized unlocked device access and the existing connection details from its operator. Use the already paired connection only; record model/serial redacted for public evidence, Android/build, native browser version, keyboard/IME, density/text scaling, orientation and candidate/host SHA. Device discovery/connection and testing require that later authorization; none was attempted here.
 
 Use a dedicated disposable host accessible from the authorized device without making a live host public. The runner binds host/provider to loopback; for an authorized already-connected ADB device, an operator can use an explicitly approved `adb -s DEVICE_SERIAL reverse tcp:DEVICE_PORT tcp:HOST_PORT`, then open `http://127.0.0.1:DEVICE_PORT` in the device's native Android browser. Use actual recorded ports and verify secure-context/crypto availability; the provider remains host-loopback only. This is a proposed transport recipe, **not a tested connection**. Remove only that reverse mapping afterward and close the synthetic tab. Do not enable debugging, pair, unlock, change device settings, forward network exposure or reuse private browser sessions without explicit authorization. If transport/browser crypto cannot support the visuals, record BLOCKED rather than claim viewport equivalence.
 
@@ -263,7 +267,7 @@ Touch, Android browser behavior, virtual keyboard/IME, physical focus/caret, ori
 
 ## 8. Issue reconciliation and handoff boundary
 
-Live Linear reads on 2026-10-16, with relations, confirm:
+The table preserves the original PR #33 Linear snapshot on 2026-10-16. Current DYL-60 authorization/status/evidence is in the [candidate record](M1_4_DYL60_CANDIDATE.md); its historical blockers remain. The other issue dispositions were not changed by DYL-60. Original reads, with relations, confirmed:
 
 | Issue | Current status / actual relationships | Recommended owner disposition |
 | --- | --- | --- |
@@ -278,7 +282,7 @@ Live Linear reads on 2026-10-16, with relations, confirm:
 
 No state, original acceptance or blocker relation is changed by this PR. No duplicate issue is created. Existing narrative “draft/unmerged”, “groups unfinished” and “pending parent” statements in older reports describe their original checkpoints; this dated snapshot distinguishes current implementation/status without erasing those records.
 
-**Next bounded step:** senior/owner review of this draft documentation PR; record F1 or F2 and section 3 choices. If F1 and bounded scope are approved, separately authorize DYL-60 to complete one exact-candidate technical/device/integrity package. If F2, separately authorize the missing implementation/proofs first. Stop here: no frozen candidate, owner session/schedule, Gate A verdict, blocker removal, M1.3/M2, live installation, release, public beta, production approval or merge.
+**Historical PR #33 next-step recommendation:** senior/owner review of that draft documentation PR; record F1 or F2 and section 3 choices. If F1 and bounded scope are approved, separately authorize DYL-60 to complete one exact-candidate technical/device/integrity package. If F2, separately authorize the missing implementation/proofs first. Stop here: no frozen candidate, owner session/schedule, Gate A verdict, blocker removal, M1.3/M2, live installation, release, public beta, production approval or merge.
 
 ## 9. Checks performed by this preflight
 

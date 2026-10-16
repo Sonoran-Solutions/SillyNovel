@@ -1,0 +1,17 @@
+Owned evidence root /tmp/sn-portability-host-mWy13c
+PASS real host auth/CSRF, two-user project and asset isolation, two-client CAS, PNG hash and limits
+PASS browser create/import background + two sprites/arrange/save/reload/explicit reopen; named canonical files unchanged
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+0 !== 2
+
+    at runCleanup (file:///home/dq/Projects/SillyNovel/tests/probes/project-cleanup/host.mjs:21:51)
+    at async file:///home/dq/Projects/SillyNovel/tests/probes/project-portability/host.mjs:129:96 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 0,
+  expected: 2,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+Evidence /tmp/sn-portability-host-mWy13c/evidence.json

@@ -1,0 +1,4 @@
+Command: git diff --name-only c835afe6e274be3fab5a2862f517fd8e4bca32ad HEAD -- index.js style.css manifest.json src plugins
+Exit: 0
+Output: 
+PASS: no production runtime/plugin changes from starting main to frozen candidate.

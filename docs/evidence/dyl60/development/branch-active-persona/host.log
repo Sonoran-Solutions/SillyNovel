@@ -1,0 +1,40 @@
+Node version: v26.8.1. Running in undefined environment. Server directory: /tmp/sn-portability-host-nhXBgw/host
+Using config path: /tmp/sn-portability-host-nhXBgw/config.yaml
+Using data root: /tmp/sn-portability-host-nhXBgw/data
+Preferring IPv4 for DNS resolution
+
+SillyTavern 1.19.0
+Running 'HEAD' (7e8663cd9) - 9/14/2026, 10:55:46 AM MST
+
+
+Compiling frontend libraries...
+webpack 5.105.4 compiled [1m[32msuccessfully[39m[22m in 1071 ms
+
+]2;SillyTavern WebServer\SillyTavern is listening on IPv4: 127.0.0.1:33097
+
+==================================================
+
+Go to: http://127.0.0.1:33097/ to open SillyTavern
+
+==================================================
+
+Login successful: default-user from 127.0.0.1 at 10/16/2026, 4:11:34 PM
+Extensions available for default-user [
+  { type: 'system', name: 'assets' },
+  { type: 'system', name: 'attachments' },
+  { type: 'system', name: 'caption' },
+  { type: 'system', name: 'connection-manager' },
+  { type: 'system', name: 'expressions' },
+  { type: 'system', name: 'gallery' },
+  { type: 'system', name: 'memory' },
+  { type: 'system', name: 'quick-reply' },
+  { type: 'system', name: 'regex' },
+  { type: 'system', name: 'stable-diffusion' },
+  { type: 'system', name: 'token-counter' },
+  { type: 'system', name: 'translate' },
+  { type: 'system', name: 'tts' },
+  { type: 'system', name: 'vectors' },
+  { type: 'global', name: 'third-party/SillyNovel' }
+]
+Instantiated the tokenizer for gpt-3.5-turbo
+]2;/home/dq/.hermes/node/bin/node\

@@ -39,7 +39,19 @@ assert any('User Avatars/lantern-persona.png' in p for p in visual['before']['fi
 assert detail['copy']['parentPath'] != detail['copy']['copyPath']
 assert detail['copy']['before']['files'][detail['copy']['parentPath']] == detail['copy']['before']['files'][detail['copy']['copyPath']]
 assert detail['branch']['allowedCardChange']['field'] == 'chat'
+assert detail['activeBranch']['hadAppliedExpression'] and detail['activeBranch']['lateCommittedSaveIgnored']
+assert detail['activeBranch']['name'] != detail['branch']['name']
 assert detail['generation']['requests'] and not re.search('sillynovel|prefixSha256|session-source|temporary-expression|projectId|actorId',json.dumps(detail['generation']['requests']),re.I)
+generation = detail['generation']
+assert generation['activeSyntheticPersona'] and generation['before']['settings']['user_avatar'] == 'lantern-persona.png'
+assert [{k:m[k] for k in ('role','content')} for m in generation['requests'][0]['messages'] if m['role'] != 'system'] == generation['expectedMessages']
+assert all(v not in json.dumps(generation['requests']) for v in generation['excludedVisualIds'])
+cleanup = load('cleanup/evidence.json')['cleanup']
+assert cleanup['nativeBefore'] == cleanup['nativeAfter']
+assert cleanup['revisions']['beforeCleanup'] == cleanup['revisions']['afterCleanup']
+assert cleanup['revisions']['afterSave'] == cleanup['revisions']['beforeCleanup'] + 1
+assert cleanup['quota']['before']['logical'] - cleanup['quota']['after']['logical'] == cleanup['quota']['receipt']['reclaimedBytes']
+assert cleanup['quota']['afterUpload']['logical'] > cleanup['quota']['after']['logical']
 assert detail['fixture']['individualTurns'] == 20 and len(detail['fixture']['groupMessages']) == 6
 for run in runs[3:]:
     for file in (out / run['name']).glob('*.png'):
