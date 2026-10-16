@@ -1,5 +1,9 @@
 # Decision register
 
+## M1.4-A owner decision proposals — 2026-10-16 (NOT approved)
+
+[Decision F comparison and exact proposed F1 amendment](M1_4_GATE_A_READINESS.md#2-decision-f--one-page-owner-comparison) recommend bounded global-project reopen/temporary expressions/CAS acceptance instead of original persistent history/branch restore/single-writer requirements. F2 retains those requirements and needs separately authorized implementation. PNG-only deferral, attachment/group scope and physical-device access remain explicit owner choices. Reader/source/group/native-integrity/device and human-verdict requirements are preserved. **Decision F undecided; Gate A NOT_RUN; DYL-60 Backlog/unstarted.** This is documentation readiness analysis on merged main `f9497aebf59cbeae07a2b6391d0cff17e81bcc76`, not an amendment, freeze, gate verdict, release, M1.3/M2 or execution authorization. DYL-16's historical F rich-content default is a different decision and is unchanged.
+
 ## DYL-23-C native group integration — 2026-10-16
 
 Owner explicitly authorizes [native groups with manual independent-project attachment](M1_NATIVE_GROUPS.md), tracked by [DYL-63](https://linear.app/devils17/issue/DYL-63/dyl-23-c-native-group-conversation-integration), after PR #31 merged at `5a9b87f14d5a008e9801aa2260efe40d9e22f5b7`. Native group/chat/activation authority remains separate from account-owned project/manual actor UUIDs and memory-only source expressions. Four or more actors retain three visible slots; duplicate names never bind cards to actors. No schema, native metadata, automatic attachment or persistence expansion. DYL-23 Done/history/acceptance, DYL-55 and DYL-62 unchanged; Decision F undecided; Gate A NOT_RUN; DYL-60 unstarted. [Implementation/evidence](M1_NATIVE_GROUPS_IMPLEMENTATION.md). Older dated entries below are historical.
