@@ -56,7 +56,7 @@ All rows describe tracker facts, not a new ruling that a completed investigation
 | DYL-52 | Done | DYL-50 | DYL-53 |
 | DYL-53 | Done | DYL-51, DYL-52 | DYL-54 |
 | DYL-54 | Done | DYL-53 | DYL-55, DYL-56 |
-| DYL-55 | Backlog; unfinished pending owner | DYL-54 | None |
+| DYL-55 | In Progress; unfinished pending owner acceptance | DYL-54 | None |
 | DYL-56 | Backlog; unauthorized | DYL-54 | None |
 | DYL-57 | Done; child of DYL-55 | None | DYL-58, DYL-59 |
 | DYL-58 | Done; child of DYL-55 | DYL-57 | DYL-59 |
@@ -124,7 +124,7 @@ Primary code: `cleanupInventory`, `previewCleanup`, `removeUnusedAssets` and `sa
 | Verified backup compatibility | PASS | Pre/post backups validate; pre retains unused art; portable export still exactly saved refs; C plus R regression tests | C did not restore a pre-cleanup backup; R separately proves whole-store restore including unused assets |
 | Cross-tab unsaved-draft preservation | UNSUPPORTED | Explicit warning and failed missing-reference save retain local edits for deliberate repair | It is not global draft safety; no silent replacement or promise of art after deletion |
 
-**DYL-55 disposition: GO.** No mandatory gap was identified in the specifically implemented and approved experimental bundle, v1 recovery-policy/empty-slot, and cleanup contracts. The NOT_TESTED/UNSUPPORTED rows remain release limits. If the owner requires universal store-to-bundle export, actual cross-version migration, account reassignment, power-loss certification or live replacement as parent acceptance, the disposition becomes **REVISE** against that expanded scope. Current tracker state remains **Backlog/unfinished**; only the owner can accept the bounded completion and authorize closure. There is no foundational incompatibility requiring STOP.
+**DYL-55 disposition: GO.** No mandatory gap was identified in the specifically implemented and approved experimental bundle, v1 recovery-policy/empty-slot, and cleanup contracts. The NOT_TESTED/UNSUPPORTED rows remain release limits. If the owner requires universal store-to-bundle export, actual cross-version migration, account reassignment, power-loss certification or live replacement as parent acceptance, the disposition becomes **REVISE** against that expanded scope. DYL-55 remains **unfinished, pending owner acceptance**; only the owner can accept the bounded completion and authorize closure. There is no foundational incompatibility requiring STOP.
 
 ## 4. DYL-22: original raster-registry requirements versus current code
 

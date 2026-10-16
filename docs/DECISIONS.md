@@ -2,7 +2,7 @@
 
 ## Completion review proposals — 2026-10-15 (NOT owner decisions)
 
-Owner assignment authorizes documentation, acceptance review, Linear planning and one open/unmerged documentation PR only. [Decision package A–G](M1_2_STORAGE_COMPLETION_AND_READINESS.md#11-owner-decision-package), reviewed main `ea65d84a521a39c9ccc977f4cb3643454963d4b8`: recommend **DYL-55 GO for bounded experimental completion; overall M1.2 REVISE**. PRs #23–27 are verified merged and DYL-49–54/57–59 Done; parent DYL-55 remains Backlog/unfinished until explicit owner acceptance/closure approval.
+Owner assignment authorizes documentation, acceptance review, Linear planning and one open/unmerged documentation PR only. [Decision package A–G](M1_2_STORAGE_COMPLETION_AND_READINESS.md#11-owner-decision-package), reviewed main `ea65d84a521a39c9ccc977f4cb3643454963d4b8`: recommend **DYL-55 GO for bounded experimental completion; overall M1.2 REVISE**. PRs #23–27 are verified merged and DYL-49–54/57–59 Done; parent DYL-55 remains unfinished, pending explicit owner acceptance/closure approval.
 
 Propose revising DYL-22/23 while preserving historical requirements and blocker relations, temporarily deferring persistent JPEG/WebP in favor of a reusable labeled PNG library, retaining explicit attachment, and explicitly amending Gate A's persistence/writer expectations to global-project reopen/temporary source overlays/CAS. Original group/touch/reader-safety and human-verdict requirements remain. None is approved here. Preferred next implementation is DYL-22's first revised PNG-library slice, only after owner scope authorization.
 

@@ -2,7 +2,7 @@
 
 ## Active project-storage direction — 2026-10-15
 
-Fetched main `ea65d84a521a39c9ccc977f4cb3643454963d4b8` contains merged PRs #23–27. DYL-49–54 and DYL-57–59 are Done. [Completion/readiness review](M1_2_STORAGE_COMPLETION_AND_READINESS.md): **DYL-55 GO for bounded experimental acceptance, pending owner; overall M1.2 REVISE**. DYL-55 stays Backlog/unfinished, DYL-22/23 retain Backlog/blockers, DYL-56 stays Backlog. New planning-only DYL-60 prepares a frozen owner candidate after DYL-23; DYL-61 tracks release hardening separately. Gate A NOT_RUN.
+Fetched main `ea65d84a521a39c9ccc977f4cb3643454963d4b8` contains merged PRs #23–27. DYL-49–54 and DYL-57–59 are Done. [Completion/readiness review](M1_2_STORAGE_COMPLETION_AND_READINESS.md): **DYL-55 GO for bounded experimental acceptance, pending owner; overall M1.2 REVISE**. DYL-55 stays unfinished, pending owner acceptance; DYL-22/23 retain Backlog/blockers, DYL-56 stays Backlog. New planning-only DYL-60 prepares a frozen owner candidate after DYL-23; DYL-61 tracks release hardening separately. Gate A NOT_RUN.
 
 [Independent project storage](M1_INDEPENDENT_PROJECT_STORAGE.md) supersedes the upstream-API implementation path and earlier chat-metadata persistence proposals for this bounded slice. The owner authorizes planning and the first independent-project implementation with an optional local plugin, explicit attachment and project-global state only. Production release is not approved. Source-specific history remains transient/gated; existing renderer, source, lock and native-composer safeguards remain applicable. No project data enters native metadata or browser persistence. [Implementation and tracking](M1_PROJECT_STORAGE_IMPLEMENTATION.md).
 
