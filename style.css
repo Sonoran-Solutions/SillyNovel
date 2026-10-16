@@ -116,3 +116,5 @@
 }
 .sillynovel-controls__row { display: flex; flex-wrap: wrap; align-items: end; gap: 0.5rem; flex: 1 1 100%; min-width: 0; }
 .sillynovel-controls summary { position: sticky; top: 0; z-index: 1; background: var(--SmartThemeBlurTintColor, #202020); }
+/* The host hides file inputs globally; these native pickers must remain focusable. */
+.sillynovel-control input[type="file"] { display: block; }
