@@ -910,7 +910,7 @@ test('eventless group generation start survives activation and refuses expressio
  });
  await page.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('No project attached'));
  await button(page,'Open project and use with this chat').click();await page.waitForFunction(()=>document.querySelectorAll('.sillynovel-sprite:not([hidden])').length===2);
- assert.match(await page.locator('.sillynovel-reader__status').innerText(),/streaming/);assert.equal(await message(page).innerText(),'Active head B');
+ assert.match(await page.locator('.sillynovel-reader__status').innerText(),/A new reply is being generated/);assert.equal(await message(page).innerText(),'Active head B');
  assert.equal(await x.expression.isDisabled(),true);assert.equal(await button(page,'Apply expression').isDisabled(),true);assert.equal(await page.getByLabel('Temporary expression PNG',{exact:true}).isDisabled(),true);
  await page.evaluate(()=>fixture.emit('GENERATION_ENDED',fixture.context.chat.length));
  assert.equal(await x.expression.isDisabled(),true,'unresolved end does not grant head authority');

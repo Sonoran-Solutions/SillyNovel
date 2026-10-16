@@ -25,7 +25,7 @@ Snapshots contain `owner`, `sessionEpoch`, `head`, `cursor`, `selectionMode`, `s
 
 The `sourceKey` is backed by a `WeakMap` keyed by the host message object. It is transient, is not serialized, and is not a durable message ID. Repeated text is never used as identity. If a locator is duplicated, selection is rejected. Replacing a pinned source invalidates that selection; replacing the latest source while following the head selects the new canonical head. A deleted selected source is reported as `deleted`; other locator loss is `invalidated`. Reordering that preserves the unique source object re-resolves its current index.
 
-Owner changes start a new session epoch, clear prior records, and select the new session's latest source. Epoch and owner are available for consumers to reject delayed work. This source model itself does not persist state or authorize writes.
+Owner changes start a new session epoch, clear prior records, and select the new session's latest source. If `generationStarted` is the first observation exposing the new owner, activation is followed by normal start processing in that same observation: normal generation stays unbound, Continue/Swipe can bind the new verified assistant head, and dry runs remain ignored. Other owner-transition observations retain activation-only behavior. Epoch and owner are available for consumers to reject delayed work. This source model itself does not persist state or authorize writes.
 
 ## Streaming and revision rules
 
