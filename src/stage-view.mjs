@@ -31,7 +31,7 @@ export function mountVisualStage({ document, stage, actions }) {
     const controls=[], removers=[];
     let disposed=false,lastStamp=null;
     let model=createTransientScene(actions,render);
-    let projectEpoch=0,activation=actions.getSnapshot().sessionEpoch,capable=false,bundleCapable=false,bundleBusy=false,projectBusy=false,unavailable='Plugin unavailable · session visuals remain unsaved.';
+    let projectEpoch=0,activation=actions.getSnapshot().sessionEpoch,capable=false,cleanupCapable=false,bundleCapable=false,bundleBusy=false,projectBusy=false,unavailable='Plugin unavailable · session visuals remain unsaved.';
     const client=createProjectClient(()=>actions.getRequestHeaders?.() ?? {});
     const listen=(el,type,cb)=>{el.addEventListener(type,cb);removers.push(()=>el.removeEventListener(type,cb));};
     function run(fn,mutation=false) { const captured=model,epoch=actions.getSnapshot().sessionEpoch;Promise.resolve().then(()=>{if(mutation&&(projectBusy||model.project&&model.status().importing))return;return fn();}).catch(error=> { if(!disposed && model===captured && actions.getSnapshot().sessionEpoch===epoch)feedback.textContent='Visual controls unavailable: '+error.message; }); }
@@ -101,7 +101,16 @@ export function mountVisualStage({ document, stage, actions }) {
     const exportProject=projectButton('Export project',()=>portable());
     const bundleFile=field('Import project bundle','input');bundleFile.type='file';bundleFile.accept='.sillynovel';
     listen(bundleFile,'change',()=>{const selected=bundleFile.files[0];bundleFile.value='';if(selected)run(()=>portable(selected));});
-    run(async()=>{try{const cap=await client.capabilities();if(disposed)return;if(cap.apiVersion!==1||cap.schemaVersion!==1)throw Error('Incompatible storage');const list=await client.list();if(disposed)return;capable=true;bundleCapable=cap.bundleVersion===1;if(!bundleCapable)bundleStatus.textContent='Project bundles require an updated compatible storage plugin.';options(projectList,list.map(p=>[p.projectId,p.name+' · '+p.projectId.slice(0,8)]));}catch(error){if(disposed)return;capable=false;if(error.message==='AUTHENTICATED_ACCOUNT_REQUIRED')unavailable='Project storage requires a signed-in SillyTavern account. Session visuals remain available.';else if(error.message==='CSRF_REQUIRED')unavailable='Project storage requires host CSRF protection. Session visuals remain available.';}render();});
+    panel.append(make('h4','','Unused Project Assets'));
+    const reviewUnused=button('Review unused artwork',()=>model.project&&model.reviewUnused());
+    const cleanupList=make('div','sillynovel-cleanup-list');panel.append(cleanupList);
+    const cleanupSelected=make('p','sillynovel-cleanup-selected');panel.append(cleanupSelected);
+    const removeUnused=button('Remove selected unused artwork',()=>model.project&&model.removeUnused([...cleanupSelection],message=>globalThis.confirm(message)));
+    const cleanupStatus=make('p','sillynovel-cleanup-status');cleanupStatus.setAttribute('role','status');panel.append(cleanupStatus);
+    const cleanupWarning=make('p','sillynovel-cleanup-warning');panel.append(cleanupWarning);
+    let displayedPreview=null;const cleanupSelection=new Set();
+    listen(cleanupList,'change',event=>{const input=event.target;if(input.type!=='checkbox')return;if(input.checked)cleanupSelection.add(input.value);else cleanupSelection.delete(input.value);render();});
+    run(async()=>{try{const cap=await client.capabilities();if(disposed)return;if(cap.apiVersion!==1||cap.schemaVersion!==1)throw Error('Incompatible storage');const list=await client.list();if(disposed)return;capable=true;cleanupCapable=cap.cleanupVersion===1;bundleCapable=cap.bundleVersion===1;if(!bundleCapable)bundleStatus.textContent='Project bundles require an updated compatible storage plugin.';options(projectList,list.map(p=>[p.projectId,p.name+' · '+p.projectId.slice(0,8)]));}catch(error){if(disposed)return;capable=false;if(error.message==='AUTHENTICATED_ACCOUNT_REQUIRED')unavailable='Project storage requires a signed-in SillyTavern account. Session visuals remain available.';else if(error.message==='CSRF_REQUIRED')unavailable='Project storage requires host CSRF protection. Session visuals remain available.';}render();});
     const bg=field('Background');
     button('Apply background',()=>model.dispatch(bg.value ? {type:'setBackground',assetId:bg.value}:{type:'clearBackground'}));
     const preset=field('Test actor art');options(preset,[['','No art · manual actor'],...TEST_ACTORS.map(a=>[a.preset,a.description])]);preset.value='mira-a';
@@ -168,6 +177,20 @@ export function mountVisualStage({ document, stage, actions }) {
         projectStatus.textContent=projectBusy?'Opening project · visual edits paused…':!capable?unavailable:state?state.name+' · revision '+state.revision+(state.importing?' · importing PNG…':state.busy?' · saving…':state.dirty?' · unsaved changes':' · saved'):'No project attached. Select one explicitly for this chat.';
         for(const e of [projectName,projectList,...projectButtons])e.disabled=!capable||paused||!ready||actions.getSnapshot().owner?.scope!=='character';
         exportProject.disabled=exportProject.disabled||!bundleCapable||bundleBusy||!projectList.value;bundleFile.disabled=!bundleCapable||bundleBusy||paused;
+        const preview=state?.cleanupPreview??null;
+        if(preview!==displayedPreview){
+            displayedPreview=preview;cleanupSelection.clear();
+            cleanupList.replaceChildren(...(preview?.candidates??[]).map(a=>{
+                const label=make('label','sillynovel-cleanup-item',a.assetId+' · '+a.width+' × '+a.height+' · '+a.byteCount+' bytes · SHA-256 '+a.sha256.slice(0,12));
+                const input=make('input','');input.type='checkbox';input.value=a.assetId;label.prepend(input);return label;
+            }));
+        }
+        const cleanupBlocked=!cleanupCapable||!state||paused||state.dirty||state.busy||state.cleanupBusy||bundleBusy||!ready;
+        reviewUnused.disabled=cleanupBlocked;removeUnused.disabled=cleanupBlocked||!preview||cleanupSelection.size===0;
+        for(const input of cleanupList.querySelectorAll('input'))input.disabled=cleanupBlocked;
+        cleanupSelected.textContent=cleanupSelection.size+' selected · '+(preview?.candidates??[]).filter(a=>cleanupSelection.has(a.assetId)).reduce((sum,a)=>sum+a.byteCount,0)+' logical bytes';
+        cleanupStatus.textContent=!cleanupCapable?'Cleanup requires an updated compatible storage plugin.':!state?'Explicitly open a saved project to review unused artwork.':state.dirty||state.importing||state.busy?'Save or discard unsaved changes and wait for imports and saves before cleanup.':state.cleanupNotice;
+        cleanupWarning.textContent=preview?.warning??'Other tabs may have unsaved drafts using artwork absent from the saved project. Removal cannot be undone here; keep verified backups.';
         save.disabled=save.disabled||!state||state.busy;detach.disabled=detach.disabled||!state;
         if(state){reset.disabled=true;preset.disabled=true;expression.disabled=true;file.accept='image/png';help.textContent='This project stores global layout, presence, outfits and locks. Message expressions are not saved. Switching chats detaches the project; explicitly reopen after reload.';}
         else {file.accept='image/png,image/jpeg,image/webp';help.textContent=transientHelp;}

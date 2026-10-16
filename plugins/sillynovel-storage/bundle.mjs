@@ -65,7 +65,7 @@ export async function bundleJob(mode,value) {
         });
     } finally {busy=false;}
 }
-if(!isMainThread) {
+if(!isMainThread && ['encode','decode'].includes(workerData?.mode)) {
     try {parentPort.postMessage({value:processBundle(workerData.mode,workerData.value)});}
     catch(error){parentPort.postMessage({error:error.code||'INVALID_BUNDLE',status:error.status||400});}
 }

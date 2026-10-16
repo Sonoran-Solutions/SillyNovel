@@ -1,0 +1,72 @@
+TAP version 13
+# Subtest: separate SQLite connection waits for cleanup transaction: save deleted reference
+not ok 1 - separate SQLite connection waits for cleanup transaction: save deleted reference
+  ---
+  duration_ms: 137.421481
+  type: 'test'
+  location: '/tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:119:102'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + undefined
+    - 'ASSET_MISSING'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'ASSET_MISSING'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:144:49)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: separate SQLite connection waits for cleanup transaction: asset upload
+ok 2 - separate SQLite connection waits for cleanup transaction: asset upload
+  ---
+  duration_ms: 30232.47444
+  type: 'test'
+  ...
+# Subtest: separate SQLite connection waits for cleanup transaction: portable export
+not ok 3 - separate SQLite connection waits for cleanup transaction: portable export
+  ---
+  duration_ms: 8175.159882
+  type: 'test'
+  location: '/tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:119:102'
+  failureType: 'testCodeFailure'
+  error: 'The first argument must be of type string or an instance of Buffer, ArrayBuffer, or Array or an Array-like Object. Received undefined'
+  code: 'ERR_INVALID_ARG_TYPE'
+  name: 'TypeError'
+  stack: |-
+    Buffer.from (node:buffer:374:9)
+    TestContext.<anonymous> (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:145:81)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: separate SQLite connection waits for cleanup transaction: database backup
+not ok 4 - separate SQLite connection waits for cleanup transaction: database backup
+  ---
+  duration_ms: 8190.467851
+  type: 'test'
+  location: '/tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:119:102'
+  failureType: 'testCodeFailure'
+  error: 'UNSAFE_PATH'
+  code: 'UNSAFE_PATH'
+  stack: |-
+    demand (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/schema.mjs:3:34)
+    safePath (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/recovery.mjs:27:9)
+    inspectBackup (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/recovery.mjs:129:5)
+    TestContext.<anonymous> (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:146:60)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 1
+# fail 3
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 46786.166643

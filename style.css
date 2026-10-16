@@ -91,3 +91,6 @@
 /* Editing yields art space to the dialogue before the control panel grows. */
 .sillynovel-controls[open] ~ .sillynovel-art { height: 90px; flex-basis: 10%; }
 @media (max-width: 600px) { .sillynovel-controls[open] ~ .sillynovel-art { display: none; } }
+.sillynovel-controls__panel h4,.sillynovel-cleanup-list { flex-basis: 100%; margin: 0; min-width: 0; }
+.sillynovel-cleanup-item { display: flex; align-items: center; gap: 0.5rem; overflow-wrap: anywhere; font-size: 0.85em; }
+.sillynovel-cleanup-item input { flex: 0 0 44px; width: 44px; height: 44px; }

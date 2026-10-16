@@ -1,0 +1,280 @@
+✖ classification uses committed references, including shared background/sprites and duplicate bytes (20.130699ms)
+✖ selected single/multiple deletion commits exact rows, preserves scene revision, export, backup and restart (15.432195ms)
+✖ ownership, strict bounded schema, forged/foreign/referenced/unknown IDs refuse without mutation (14.83868ms)
+✖ preview ordering: save adds reference (14.288925ms)
+✖ preview ordering: upload (12.80732ms)
+✖ preview ordering: another cleanup (13.120097ms)
+✖ preview ordering: unrelated bundle import (13.127111ms)
+✖ cleanup then stale draft save refuses missing artwork, subsequent import/export/backup serialize coherently (11.627783ms)
+✖ atomic SQLite rollback before first delete (11.794711ms)
+✖ atomic SQLite rollback after first delete (9.864819ms)
+✖ corruption refuses entire preview/removal: bytes (10.524647ms)
+✖ corruption refuses entire preview/removal: digest (10.615124ms)
+✖ corruption refuses entire preview/removal: dimensions (11.891419ms)
+✖ corruption refuses entire preview/removal: missing reference (12.66584ms)
+✖ logical quota recovery, freelist and file size are distinct (13.3598ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 0
+ℹ fail 15
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 235.915596
+
+✖ failing tests:
+
+test at plugins/sillynovel-storage/test/cleanup.test.mjs:28:1
+✖ classification uses committed references, including shared background/sprites and duplicate bytes (20.130699ms)
+  Error: INVALID_PNG
+      at demand (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/schema.mjs:3:34)
+      at decodePNG (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/png.mjs:28:15)
+      at Object.importAsset (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/store.mjs:144:30)
+      at upload (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:18:39)
+      at fixture (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:19:13)
+      at TestContext.<anonymous> (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:29:16)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    code: 'INVALID_PNG',
+    status: 400
+  }
+
+test at plugins/sillynovel-storage/test/cleanup.test.mjs:40:1
+✖ selected single/multiple deletion commits exact rows, preserves scene revision, export, backup and restart (15.432195ms)
+  Error: INVALID_PNG
+      at demand (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/schema.mjs:3:34)
+      at decodePNG (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/png.mjs:28:15)
+      at Object.importAsset (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/store.mjs:144:30)
+      at upload (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:18:39)
+      at fixture (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:19:13)
+      at TestContext.<anonymous> (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:41:16)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19) {
+    code: 'INVALID_PNG',
+    status: 400
+  }
+
+test at plugins/sillynovel-storage/test/cleanup.test.mjs:50:1
+✖ ownership, strict bounded schema, forged/foreign/referenced/unknown IDs refuse without mutation (14.83868ms)
+  Error: INVALID_PNG
+      at demand (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/schema.mjs:3:34)
+      at decodePNG (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/png.mjs:28:15)
+      at Object.importAsset (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/store.mjs:144:30)
+      at upload (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:18:39)
+      at fixture (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:19:13)
+      at TestContext.<anonymous> (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:51:16)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19) {
+    code: 'INVALID_PNG',
+    status: 400
+  }
+
+test at plugins/sillynovel-storage/test/cleanup.test.mjs:60:98
+✖ preview ordering: save adds reference (14.288925ms)
+  Error: INVALID_PNG
+      at demand (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/schema.mjs:3:34)
+      at decodePNG (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/png.mjs:28:15)
+      at Object.importAsset (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/store.mjs:144:30)
+      at upload (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:18:39)
+      at fixture (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:19:13)
+      at TestContext.<anonymous> (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:61:16)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19) {
+    code: 'INVALID_PNG',
+    status: 400
+  }
+
+test at plugins/sillynovel-storage/test/cleanup.test.mjs:60:98
+✖ preview ordering: upload (12.80732ms)
+  Error: INVALID_PNG
+      at demand (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/schema.mjs:3:34)
+      at decodePNG (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/png.mjs:28:15)
+      at Object.importAsset (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/store.mjs:144:30)
+      at upload (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:18:39)
+      at fixture (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:19:13)
+      at TestContext.<anonymous> (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:61:16)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19) {
+    code: 'INVALID_PNG',
+    status: 400
+  }
+
+test at plugins/sillynovel-storage/test/cleanup.test.mjs:60:98
+✖ preview ordering: another cleanup (13.120097ms)
+  Error: INVALID_PNG
+      at demand (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/schema.mjs:3:34)
+      at decodePNG (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/png.mjs:28:15)
+      at Object.importAsset (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/store.mjs:144:30)
+      at upload (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:18:39)
+      at fixture (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:19:13)
+      at TestContext.<anonymous> (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:61:16)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19) {
+    code: 'INVALID_PNG',
+    status: 400
+  }
+
+test at plugins/sillynovel-storage/test/cleanup.test.mjs:60:98
+✖ preview ordering: unrelated bundle import (13.127111ms)
+  Error: INVALID_PNG
+      at demand (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/schema.mjs:3:34)
+      at decodePNG (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/png.mjs:28:15)
+      at Object.importAsset (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/store.mjs:144:30)
+      at upload (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:18:39)
+      at fixture (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:19:13)
+      at TestContext.<anonymous> (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:61:16)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19) {
+    code: 'INVALID_PNG',
+    status: 400
+  }
+
+test at plugins/sillynovel-storage/test/cleanup.test.mjs:73:1
+✖ cleanup then stale draft save refuses missing artwork, subsequent import/export/backup serialize coherently (11.627783ms)
+  Error: INVALID_PNG
+      at demand (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/schema.mjs:3:34)
+      at decodePNG (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/png.mjs:28:15)
+      at Object.importAsset (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/store.mjs:144:30)
+      at upload (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:18:39)
+      at fixture (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:19:13)
+      at TestContext.<anonymous> (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:74:16)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19) {
+    code: 'INVALID_PNG',
+    status: 400
+  }
+
+test at plugins/sillynovel-storage/test/cleanup.test.mjs:82:67
+✖ atomic SQLite rollback before first delete (11.794711ms)
+  Error: INVALID_PNG
+      at demand (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/schema.mjs:3:34)
+      at decodePNG (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/png.mjs:28:15)
+      at Object.importAsset (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/store.mjs:144:30)
+      at upload (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:18:39)
+      at fixture (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:19:13)
+      at TestContext.<anonymous> (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:83:16)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19) {
+    code: 'INVALID_PNG',
+    status: 400
+  }
+
+test at plugins/sillynovel-storage/test/cleanup.test.mjs:82:67
+✖ atomic SQLite rollback after first delete (9.864819ms)
+  Error: INVALID_PNG
+      at demand (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/schema.mjs:3:34)
+      at decodePNG (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/png.mjs:28:15)
+      at Object.importAsset (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/store.mjs:144:30)
+      at upload (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:18:39)
+      at fixture (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:19:13)
+      at TestContext.<anonymous> (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:83:16)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19) {
+    code: 'INVALID_PNG',
+    status: 400
+  }
+
+test at plugins/sillynovel-storage/test/cleanup.test.mjs:90:74
+✖ corruption refuses entire preview/removal: bytes (10.524647ms)
+  Error: INVALID_PNG
+      at demand (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/schema.mjs:3:34)
+      at decodePNG (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/png.mjs:28:15)
+      at Object.importAsset (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/store.mjs:144:30)
+      at upload (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:18:39)
+      at fixture (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:19:13)
+      at TestContext.<anonymous> (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:91:16)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19) {
+    code: 'INVALID_PNG',
+    status: 400
+  }
+
+test at plugins/sillynovel-storage/test/cleanup.test.mjs:90:74
+✖ corruption refuses entire preview/removal: digest (10.615124ms)
+  Error: INVALID_PNG
+      at demand (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/schema.mjs:3:34)
+      at decodePNG (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/png.mjs:28:15)
+      at Object.importAsset (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/store.mjs:144:30)
+      at upload (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:18:39)
+      at fixture (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:19:13)
+      at TestContext.<anonymous> (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:91:16)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19) {
+    code: 'INVALID_PNG',
+    status: 400
+  }
+
+test at plugins/sillynovel-storage/test/cleanup.test.mjs:90:74
+✖ corruption refuses entire preview/removal: dimensions (11.891419ms)
+  Error: INVALID_PNG
+      at demand (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/schema.mjs:3:34)
+      at decodePNG (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/png.mjs:28:15)
+      at Object.importAsset (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/store.mjs:144:30)
+      at upload (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:18:39)
+      at fixture (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:19:13)
+      at TestContext.<anonymous> (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:91:16)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19) {
+    code: 'INVALID_PNG',
+    status: 400
+  }
+
+test at plugins/sillynovel-storage/test/cleanup.test.mjs:90:74
+✖ corruption refuses entire preview/removal: missing reference (12.66584ms)
+  Error: INVALID_PNG
+      at demand (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/schema.mjs:3:34)
+      at decodePNG (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/png.mjs:28:15)
+      at Object.importAsset (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/store.mjs:144:30)
+      at upload (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:18:39)
+      at fixture (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:19:13)
+      at TestContext.<anonymous> (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:91:16)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19) {
+    code: 'INVALID_PNG',
+    status: 400
+  }
+
+test at plugins/sillynovel-storage/test/cleanup.test.mjs:98:1
+✖ logical quota recovery, freelist and file size are distinct (13.3598ms)
+  Error: INVALID_PNG
+      at demand (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/schema.mjs:3:34)
+      at decodePNG (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/png.mjs:28:15)
+      at Object.importAsset (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/store.mjs:144:30)
+      at upload (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:18:39)
+      at fixture (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:19:13)
+      at TestContext.<anonymous> (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:99:16)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19) {
+    code: 'INVALID_PNG',
+    status: 400
+  }

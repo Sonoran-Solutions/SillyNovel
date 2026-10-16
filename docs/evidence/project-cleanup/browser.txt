@@ -1,0 +1,47 @@
+✔ actual entry mounts, updates, disposes and preserves canonical state (719.286628ms)
+✔ long ordinary Markdown is formatted, selectable and copied completely (254.725235ms)
+✔ unsafe HTML, encoded protocols, media and malformed markup never execute or lose raw text (261.920161ms)
+✔ Previous/Next pin the cursor; new messages stay bounded until Latest (342.124159ms)
+✔ streaming follows text bottom independently; scrolling up and selecting text survive updates (244.799094ms)
+✔ stop and continuation stay readable; disable does not stop generation (256.049929ms)
+✔ deleted/replaced pinned source is explicit and never silently retargeted (347.583288ms)
+✔ backlog never claims an exact match against a stale native revision (348.606522ms)
+✔ backlog re-resolves reordered objects, returns pinned selection and reports locator fallback (353.643735ms)
+✔ draft, caret, native composer node and focus survive repeated view transitions (387.570933ms)
+✔ missing capability and mount failure leave native chat usable (263.10717ms)
+✔ format exception releases stage/listeners, restores native feed and keeps exact draft (214.038811ms)
+✔ A to B to A discards queued old-epoch reads and starts each visit at latest (235.7324ms)
+✔ IME and editable-field key events remain unconsumed (146.780126ms)
+✔ empty and unresolved-author sources are explicit; narrow reduced-height composer remains reachable (186.506609ms)
+✔ session stage: four manual actors, duplicate names, stable slots, refusal, swap, replace and locks (961.100578ms)
+✔ session stage: forward projection, selected-source expressions, outfits and incompatible/missing fallback (870.465464ms)
+✔ session stage: temporary raster decode, replacement/reset/disable cleanup and stale delayed work (480.174763ms)
+✔ session stage: chat return, A to B to A, reload, narrow/keyboard layout and transparent fixtures (927.662202ms)
+✔ session stage: delayed image cannot apply after same-source reset, manual override or unobserved source edit (419.32342ms)
+✔ session stage: denied subtle leaves a complete text reader (597.122353ms)
+✔ session stage: denied randomUUID leaves a complete text reader (589.251681ms)
+✔ session stage: delayed historical hashing neutralizes art before navigation and rejects obsolete work (467.618823ms)
+✔ session stage: history size refusal leaves neutral art and a usable text reader (329.612455ms)
+✔ project replacement pauses all visual mutations and success replaces the original scene (499.443443ms)
+✔ project replacement pauses all visual mutations and failure preserves the original scene (499.54434ms)
+✔ portable bundle import preserves current visuals: success (530.674958ms)
+✔ portable bundle import preserves current visuals: failure (515.04775ms)
+✔ portable bundle import preserves current visuals: chat switch (502.900527ms)
+✔ portable bundle import preserves current visuals: project replacement (603.581984ms)
+✔ portable export downloads only a successful bundle, with explicit errors and size refusal (1557.727764ms)
+✔ unused artwork controls and delayed results: cancel (539.940636ms)
+✔ unused artwork controls and delayed results: success (635.308299ms)
+✔ unused artwork controls and delayed results: stale (615.57548ms)
+✔ unused artwork controls and delayed results: lost response (581.709451ms)
+✔ unused artwork controls and delayed results: wrong receipt (635.198882ms)
+✔ unused artwork controls and delayed results: chat switch (658.794063ms)
+✔ unused artwork controls and delayed results: project replacement (734.007454ms)
+✔ unused artwork controls and delayed results: disable (687.804033ms)
+ℹ tests 39
+ℹ suites 0
+ℹ pass 39
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 20294.65794

@@ -1,0 +1,19 @@
+{
+  "testedImplementation": "c77f512834d9c52b17a9d0a74f0ed5a89004c50a",
+  "runtimeImplementation": "ebe4d08cb2b771f9ba4d51a7880c749844441156",
+  "files": {
+    "plugins/sillynovel-storage/bundle.mjs": "389a0c3fb8f9ff96a09dd26adcc4674abfe98af5bb9bbeb61cf4f21ffdac72c1",
+    "plugins/sillynovel-storage/index.mjs": "59737cfc5b2313678c23c70216ad164c92ead950d49fb3e30ce9551a0ed83dbb",
+    "plugins/sillynovel-storage/schema.mjs": "c5a7276862f9c74d43f0e44099b040f7fcf546ffafd7feedadeaaa4c224df3ed",
+    "plugins/sillynovel-storage/store.mjs": "f1c508c839021b2575d1fd51017a6457817e276ba36e463b35a65d752a931fac",
+    "plugins/sillynovel-storage/test/cleanup.test.mjs": "971ac71ec79d92a05f3daa32e495433dde9d9499f9fc87ea2a0cf23a6ef7bd74",
+    "src/project-client.mjs": "006f570061df951c6c57716099b72e4caed837750c67f5847025895513614f13",
+    "src/project-scene.mjs": "d1a8e894fb65f7a712f52cad9a99c8fed98171ec2d87db2e1c3c644e300fe852",
+    "src/stage-view.mjs": "b953b3cc3781903117426fa6c3eba24da4173f59649c5a8f97296c6cb267c61b",
+    "style.css": "5faf145a90bc5cb7044578d4df9748277c38f668aa5dc1be972f3fbdb3a00b12",
+    "tests/m1-project-scene.test.mjs": "79860421262070332fc63f0b5c96a0786b1229f59583067bf50751d4db3d31ca",
+    "tests/m1-reader-browser.test.mjs": "2fe3063f74d0254502e1472354da4a211b5597211c986ca6babffd77f5d7fbf1",
+    "tests/probes/project-cleanup/host.mjs": "b1c53ffff13137e616f31168f4880974589a4d4c7a8d1e4b947fd898e70d6ee3",
+    "tests/probes/project-portability/host.mjs": "41f539ba91509338210339b9db113abf5705dc123ad247a55589d70fbb7255f0"
+  }
+}
