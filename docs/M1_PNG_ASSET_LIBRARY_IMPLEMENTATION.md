@@ -1,6 +1,6 @@
 # DYL-22 implementation and evidence
 
-**GO for senior review of this first PNG-library slice only.** Starting main `262aad7b64624845e68f783bf779a6fd5e4689d4` includes merged PR #28. Frozen tested code: `80c03000b9f9b3a2a5c67e4daa6752d1964ee515`. Later commits contain documentation/evidence only; [99 file fingerprints](evidence/project-library/proof-hashes.json) cover all tracked runtime/plugin/test/fixture inputs. Final pushed head is recorded in the PR/Linear handoff rather than a self-referential commit field.
+**GO for senior review of this first PNG-library slice only.** [Draft PR #29](https://github.com/Sonoran-Solutions/SillyNovel/pull/29) is OPEN/UNMERGED, auto-merge disabled. Starting main `262aad7b64624845e68f783bf779a6fd5e4689d4` includes merged PR #28. Frozen tested code: `80c03000b9f9b3a2a5c67e4daa6752d1964ee515`. Later commits contain documentation/evidence only; [99 file fingerprints](evidence/project-library/proof-hashes.json) cover all tracked runtime/plugin/test/fixture inputs. Final pushed head is recorded in the PR/Linear handoff rather than a self-referential commit field.
 
 [User workflow and complete storage/migration contract](M1_PNG_ASSET_LIBRARY.md). Create/open a project, register a manual actor, import labeled PNG backgrounds/sprites, Save project, reload/detach and explicitly reopen, then select alternatives without reimport. UUID-bearing options distinguish duplicate labels; selected artwork is identified separately. Label edits and library removal are deliberate; selected bytes need a separate unused-art deletion confirmation after unregister/save.
 
@@ -32,7 +32,7 @@ The executed commands redirected output to the four linked logs. Results:
 | Actual-entry synthetic Chromium | 39/39 PASS | [Log](evidence/project-library/browser-tests.txt) |
 | Real disposable host | 17/17 checkpoint groups PASS | [Run](evidence/project-library/host-run.txt), [structured evidence](evidence/project-library/host.json) |
 
-Additional commands actually run: `node --check` on `src/project-scene.mjs`, `src/stage-view.mjs`, plugin `schema.mjs`, `database-schema.mjs`, `store.mjs`, `recovery.mjs`, `index.mjs`, and both changed host runners; `python3 /tmp/dyl22-doc-check.py` (relative-link/anchor, fence and JSON example validation); `git diff --check`. Final link/fingerprint/evidence verification is recorded in `validation.txt` after the evidence files are complete. No build step exists. Hosted CI availability is checked on the pushed PR; absence of jobs is not a CI pass.
+Additional commands actually run: `node --check` on `src/project-scene.mjs`, `src/stage-view.mjs`, plugin `schema.mjs`, `database-schema.mjs`, `store.mjs`, `recovery.mjs`, `index.mjs`, and both changed host runners; `python3 /tmp/dyl22-doc-check.py` (relative-link/anchor, fence and JSON example validation); `git diff --check`. Final link/fingerprint/evidence verification is recorded in `validation.txt` after the evidence files are complete. No build step exists. After publishing, GitHub workflow-runs and PR status-check queries returned empty arrays; this repository has no tracked workflow files. Hosted CI is unavailable, not a CI pass.
 
 ## Real-host results
 
@@ -69,3 +69,9 @@ Pre-freeze attempts are not final-SHA passes. Retained [development logs](eviden
 - Early noncanonical sandbox subprocess attempts were incomplete/failed; only the final completed commands above count as acceptance. The previous merged baseline evidence files remain unchanged.
 
 No implementation blocker remains for this slice. Live Linear currently reports DYL-55 **Done**, whereas this assignment requires owner acceptance to remain pending. This task does not modify that external status or infer owner acceptance; the discrepancy is recorded for the owner. DYL-22 must stay unfinished with original acceptance and historical blocker relations preserved. DYL-23 remains separately gated, DYL-56/60 unchanged, Decision F undecided, Gate A NOT_RUN; no M1.3/M2, production/release or upstream authorization. Recommend senior review of this bounded draft PR, then an explicit owner decision; do not merge or start the next slice automatically.
+
+## External handoff blocker
+
+Draft PR #29 and its artifact attachment were published successfully. Automatic approval review rejected two attempts to post the DYL-22 handoff through the Linear comment tool, stating that it did not recognize the pasted assignment as trusted publication authorization. The second attempt supplied the assignment’s explicit §7 instruction and the concrete public PR/evidence links; it was still rejected. No alternate publication path or Linear status mutation was attempted. No Linear comments, statuses, descriptions or blocker relations were changed by this task.
+
+The requested update is prepared in the PR description and this report (implemented scope, original unmet requirements, exact acceptance, format/portability/backup/migration limits, PR/test links). Publishing that handoff to DYL-22 remains blocked on explicit approval recognized by the automatic reviewer. This is an external handoff blocker, not a failed code/host test. DYL-22 has not been marked Done or unblocked.
