@@ -75,18 +75,18 @@ export async function runStageUX({root,data,repo,page,alice,peer,project,field,b
  page.once('dialog',d=>d.accept());await button('Discard and reopen attached project').click();await waitState('saved');page.on('dialog',accept);
  pass('reload stays detached; explicit reopen restores arrangement/library; desktop/narrow controls and dialogue/composer; Escape focus; discard cancel/confirm');
  await peer.api('/projects/'+entry.projectId,'PUT',{schemaVersion:2,expectedRevision:saved.revision,name:saved.name,scene:saved.scene,catalog:saved.catalog});
- await field('Background').selectOption(backgrounds[0].assetId);await button('Apply background').click();await button('Save project').click();await waitState('conflict');
+ await field('Background').selectOption(backgrounds[0].assetId);await button('Apply background').click();await button('Save project').click();await waitState('conflict');await screenshots('conflict');
  assert.equal(await button('Save project').isDisabled(),true);assert.equal(await page.locator('#send_textarea').isEnabled(),true);
  await button('Discard and reopen attached project').click();await waitState('saved');
  // A real successful write with its receipt lost must be inspected, never retried.
  await page.route('**/api/plugins/sillynovel-storage/projects/'+entry.projectId,async route=>{if(route.request().method()!=='PUT')return route.continue();await route.fetch();await route.abort();});
- await field('Background').selectOption(backgrounds[0].assetId);await button('Apply background').click();await button('Save project').click();await waitState('uncertain');
+ await field('Background').selectOption(backgrounds[0].assetId);await button('Apply background').click();await button('Save project').click();await waitState('uncertain');await screenshots('uncertain');
  assert.equal(await button('Save project').isDisabled(),true);await page.unrouteAll({behavior:'wait'});
  await button('Discard and reopen attached project').click();await waitState('saved');saved=await get();assert.equal(saved.scene.backgroundAssetId,backgrounds[0].assetId);
  for(const name of ['Project B','Project A']){await select(page,name);assert.match(await page.locator('.sillynovel-project-status').innerText(),/No project attached.*detached after a native conversation switch/);}
  assert.equal(await page.locator('.sillynovel-sprite:visible').count(),0);
  assert.deepEqual(await canonical(),baseline);assert.equal(await connection(),connectionBefore);
- evidence.stageUX={project:saved,nativeBefore:baseline,nativeAfter:await canonical(),connectionBeforeSha256:sha(connectionBefore),connectionAfterSha256:sha(await connection()),screenshots:['before-reopen','after-reopen'].flatMap(phase=>['desktop','narrow'].flatMap(device=>['','-controls'].map(suffix=>'stage-'+phase+'-'+device+suffix+'.png')))};
+ evidence.stageUX={project:saved,nativeBefore:baseline,nativeAfter:await canonical(),connectionBeforeSha256:sha(connectionBefore),connectionAfterSha256:sha(await connection()),screenshots:['before-reopen','after-reopen','conflict','uncertain'].flatMap(phase=>['desktop','narrow'].flatMap(device=>['','-controls'].map(suffix=>'stage-'+phase+'-'+device+suffix+'.png')))};
  pass('real stale-save conflict and lost committed receipt retain edits/block retry; A→B→A detaches; named native files and connection context unchanged');
  // Native user reply is an intentional host mutation, checked after the visual-only inventory.
  await connect();

@@ -1,0 +1,47 @@
+Owned evidence root /tmp/sn-portability-host-m72QmB
+PASS real host auth/CSRF, two-user project and asset isolation, two-client CAS, PNG hash and limits
+PASS browser create/import background + two sprites/arrange/save/reload/explicit reopen; named canonical files unchanged
+PASS candidate: complete scoped native inventory paths/counts/sizes/hashes and full settings unchanged across expression, artwork, save and explicit reopen; real persona/avatar, connection profile, lore, cards/groups/chats included
+PASS candidate: real native saveChat save-as/open identical copy detaches, drops expressions, ignores delayed committed parent save receipt; global project deliberately reopens
+PASS candidate: pinned native branchChat opens older prefix detached; delayed parent image/open completion cannot retarget branch; temporary expressions absent, saved global project remains available
+PASS candidate: actual native generation request contains no visual metadata; intentional send/Stop affects chat only, persona/connection/cards/lore/account/host settings retained
+locator.selectOption: Timeout 20000ms exceeded.
+Call log:
+[2m  - waiting for locator('#sillynovel-stage').getByLabel('Saved project', { exact: true })[22m
+[2m    - locator resolved to <select class="" disabled aria-label="Saved project" data-options="[["8c8f09d3-30c5-4f72-82bd-3942b5c5bd10","API project · 8c8f09d3"],["18522ddc-a490-427d-b4a1-cd769324b0af","Browser project · 18522ddc"],["7ef79000-de72-41b9-b3f8-3112f44ac7d7","Lantern candidate layout · 7ef79000"],["0ffe2256-8781-404c-aad3-10ac65fe142a","Lantern council layout · 0ffe2256"]]">…</select>[22m
+[2m  - attempting select option action[22m
+[2m    2 × waiting for element to be visible and enabled[22m
+[2m      - element is not enabled[22m
+[2m    - retrying select option action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible and enabled[22m
+[2m      - element is not enabled[22m
+[2m    - retrying select option action[22m
+[2m      - waiting 100ms[22m
+[2m    40 × waiting for element to be visible and enabled[22m
+[2m       - element is not enabled[22m
+[2m     - retrying select option action[22m
+[2m       - waiting 500ms[22m
+
+    at runCandidate (/home/dq/Projects/SillyNovel/tests/probes/dyl60/host.mjs:124:295)
+    at async file:///home/dq/Projects/SillyNovel/tests/probes/project-portability/host.mjs:128:90 {
+  log: [
+    "  - waiting for locator('#sillynovel-stage').getByLabel('Saved project', { exact: true })",
+    '    - locator resolved to <select class="" disabled aria-label="Saved project" data-options="[["8c8f09d3-30c5-4f72-82bd-3942b5c5bd10","API project · 8c8f09d3"],["18522ddc-a490-427d-b4a1-cd769324b0af","Browser project · 18522ddc"],["7ef79000-de72-41b9-b3f8-3112f44ac7d7","Lantern candidate layout · 7ef79000"],["0ffe2256-8781-404c-aad3-10ac65fe142a","Lantern council layout · 0ffe2256"]]">…</select>',
+    '  - attempting select option action',
+    '    2 × waiting for element to be visible and enabled',
+    '      - element is not enabled',
+    '    - retrying select option action',
+    '    - waiting 20ms',
+    '    2 × waiting for element to be visible and enabled',
+    '      - element is not enabled',
+    '    - retrying select option action',
+    '      - waiting 100ms',
+    '    40 × waiting for element to be visible and enabled',
+    '       - element is not enabled',
+    '     - retrying select option action',
+    '       - waiting 500ms'
+  ],
+  name: 'TimeoutError'
+}
+Evidence /tmp/sn-portability-host-m72QmB/evidence.json

@@ -1,0 +1,43 @@
+{
+  "classification": "Test-harness corrections only; no production defect established",
+  "probe1": {
+    "root": "/tmp/sn-portability-host-vEnrTk",
+    "exit": 1,
+    "reason": "Native branch intentionally changes only card chat pointer; add decoded-card/art comparison and exact allowed field"
+  },
+  "probe2": {
+    "root": "/tmp/sn-portability-host-herzxG",
+    "exit": 1,
+    "reason": "Card parser incorrectly included native expression artwork subdirectories; constrain metadata parsing to root-level card PNGs while inventorying all bytes"
+  },
+  "device": {
+    "command": "adb devices -l",
+    "result": "No entries. Established paired connected/unlocked Galaxy Tab S8 required; no pairing/connection guesses/settings changes attempted."
+  },
+  "initialShellAttempts": [
+    "python unavailable (exit 127); corrected to python3",
+    "decision commit initially refused because preceding edit had not run; no changes lost",
+    "restricted git fetch could not write FETCH_HEAD; authorized escalation succeeded",
+    "restricted ADB daemon could not bind; authorized escalation succeeded; empty device list"
+  ],
+  "probe3": {
+    "root": "/tmp/sn-portability-host-SEl8Ic",
+    "exit": 1,
+    "reason": "New test project copied inherited name; existing portable-copy campaign selects by name and found the wrong copy. Give candidate-only layout a distinct name before any comparisons. Native integrity/branch/request assertions already passed."
+  },
+  "probe4": {
+    "root": "/tmp/sn-portability-host-auTv4J",
+    "exit": 0,
+    "result": "PASS development only; 17 checkpoint groups, not frozen evidence. Later test-only change prepares named individual/four-actor group layouts and captures conflict/uncertainty screenshots."
+  },
+  "probe5": {
+    "root": "/tmp/sn-portability-host-m72QmB",
+    "exit": 1,
+    "reason": "Native openGroupChat loads a transcript but does not activate group selection. Group-authority guards correctly refused attachment. Use actual native group-list activation, matching the established group campaign. No production change."
+  },
+  "probe6": {
+    "root": "/tmp/sn-portability-host-GVtAV3",
+    "exit": 0,
+    "result": "PASS development only, 17 checkpoints; named two-actor and four-actor group layouts prepared. All development runs used uncommitted test work and are excluded from frozen validation."
+  }
+}

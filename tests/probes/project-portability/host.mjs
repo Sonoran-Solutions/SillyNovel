@@ -125,6 +125,7 @@ try {
  assert.deepEqual((await alice.api('/projects/'+project.projectId)).scene,saved.scene);
  await page.locator('.sillynovel-controls summary').click();await page.screenshot({path:join(root,'restored.png')});await page.locator('.sillynovel-controls summary').click();assert.deepEqual(await canonical(),before);evidence.files=before;
  pass('browser create/import background + two sprites/arrange/save/reload/explicit reopen; named canonical files unchanged');
+ if(process.env.SN_CANDIDATE_RUN){const {runCandidate}=await import('../dyl60/host.mjs');await runCandidate({root,data,config,repo,page,alice,project,field,button,select,pass,evidence});}
  if(process.env.SN_CLEANUP_RUN){const {runCleanup}=await import('../project-cleanup/host.mjs');await runCleanup({root,data,repo,page,alice,bob,peer,project,saved,field,button,select,pass,evidence});}
  // Portable copy: browser download/upload, actual host validation and committed inventory.
  if(process.env.SN_LIBRARY_RUN){const {runLibrary}=await import('../project-library/host.mjs');await runLibrary({root,data,repo,page,alice,bob,peer,project,field,button,select,canonical,pass,evidence});}

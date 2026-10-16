@@ -1,0 +1,35 @@
+# Reproducing the DYL-60 technical candidate
+
+This is a disposable technical campaign. The human Gate A session remains NOT_RUN and requires separate authorization. No real provider or live installation is involved. [Approved scope](DECISIONS.md#owner-approvals-and-dyl-60-authorization--2026-10-16).
+
+Use the full frozen SHA and versions in [the package](M1_4_DYL60_CANDIDATE.md) / `evidence/dyl60/final/pins.json`. Install Node 26.8.1 and the exact Playwright package/Chromium already identified there; do not replace the browser with a system build. Prepare a pristine SillyTavern 1.19.0 checkout at `7e8663cd9c184a550b37238218bdd32c6efc68e9`, with its package-lock dependencies installed. The original run reused the clean `/tmp/SillyTavern-dyl22` source and external installed browser tooling; it did not upgrade either. No extension build step.
+
+From a clean checkout of the frozen candidate:
+
+```sh
+npm ci --prefix plugins/sillynovel-storage --ignore-scripts --no-audit --no-fund
+export SILLYTAVERN_ROOT=/path/to/pristine/pinned/SillyTavern
+export SN_PLAYWRIGHT_MODULE=/path/to/pinned/playwright/index.mjs
+python3 tests/probes/dyl60/run.py /tmp/unique-new-dyl60-evidence
+python3 tests/probes/dyl60/validate.py /tmp/unique-new-dyl60-evidence
+```
+
+The Python runner refuses mismatched host/Node/browser pins, clears inherited campaign flags, hashes every tracked executable/test/fixture/plugin input, and runs three automated suites and six native-host campaigns serially. `runs.json` retains the expanded exact command, environment, UTC times, elapsed seconds, exit/counts and owned evidence root for each; raw logs are unfiltered. It stops on the first failure. Use a new evidence directory for retries and retain failures. Port 8128 must be free for the deterministic loopback endpoint. Host binds to an ephemeral 127.0.0.1 port, CSRF/accounts enabled, auto-update disabled. No credentials or external service are required. Keep the source checkout unchanged throughout symlinked runs.
+
+Each native run creates its own `sn-portability-host-*` root with private data and plugin SQLite modes, copies pinned host dependencies, installs the plugin's locked dependency, and symlinks the candidate UI. The five existing campaigns retain their stateful setup combinations. The sixth adds full scoped file/settings inventories, real persona/avatar/profile/lore fixtures, actual native copy/branch isolation and native request capture. No experimental host patch or durable identity registry is installed. Input/runtime pins, host hashes and output manifests are separate from final evidence-only commits.
+
+## Prepared story (no human session executed)
+
+[The Last Lantern script](../tests/fixtures/dyl60-owner-conversation.json) contains 20 distinct user/reply turns, Mira and Rowan, two backgrounds, outfit/presence/expression cues, a long formatted field note, a reason to revisit earlier directions, correction opportunities and reload/reopen cues. Six group messages use four actual cards (Mira, Mira, Rowan, Sage), including identical first lines. Cues are separate fields; canonical native prose contains no visual tags. All prose and procedural artwork are original public-safe synthetic fixtures. `oversized.png` is rejection-only. No LLM authors the story; the regression provider keeps its original short/[LONG] responses.
+
+`SN_CANDIDATE_RUN=1` seeds the complete story as a native individual chat **The Last Lantern** under Project A, plus **Lantern council**, a six-message actual native group. `native-integrity-branches/evidence.json` → `candidatePreparation.fixture` identifies exact generated card/group/project IDs and script hash. The runner reads and copies the full long reply technically; that is not a 20-turn human immersion trial. This is a staged conversation: a later authorized owner may navigate the prepared transcript or deliberately replay its scripted turns. Its pacing and enjoyment remain unaccepted.
+
+For later review, use only the recorded sixth owned root. The runner shuts down all owned processes; its last generic fallback test leaves `enableServerPlugins: false` in that root's config. Before a separately authorized session, copy that synthetic config to a new file and change only `enableServerPlugins: false` to `true`; keep CSRF/accounts/loopback and auto-update policies. Start the retained host using Node 26.8.1 with explicit `--configPath`, `--dataRoot`, `--port`, `--listen false --browserLaunchEnabled false`, matching the original host command structure. Do not use a private host/data directory. The native conversation is already seeded; no provider is required for reading it. Native generation tests require starting the retained loopback `provider.mjs` with its origin rewritten to the chosen local host origin, as the committed runner does.
+
+In native UI explicitly select Project A and open **The Last Lantern** via past chats; explicitly open the fixture's project UUID. This independent project is a portable copy with deliberately named Mira/Rowan manual actors. No automatic speaker/card binding is assumed. For the group, explicitly open Lantern council and the prepared Lantern council layout UUID in `candidatePreparation.fixture.groupProject`: four manual actors, two named Mira, three visible slots and Sage offstage. Distinguish both Mira UUIDs, retain three slots and Sage offstage; use deliberate swap/replace. Save global arrangements, then expect reload/switch to detach and temporary expressions to disappear. Do not mistake the staged fixtures for owner usability acceptance.
+
+## Inspection and cleanup
+
+The package retains desktop/narrow screenshots and selected raw host files; full troubleshooting roots, SQLite stores, backups/migration inputs and native fixtures remain at the individually listed local paths until senior review. Never delete them before review. A reviewer can run fresh roots rather than reuse a mutated root; random UUIDs/timestamp filenames may differ but input hashes and assertions must agree.
+
+The host runner closes browser/host/provider in `finally`. On outer timeout, inspect exact owned PIDs, command lines and loopback listeners before stopping only task-owned processes. After reviewer release and verified retained copies, remove only individually recorded roots whose ownership/path/symlink checks pass; no wildcard recursive deletion. No live host or rollback is involved. A future physical run uses only the established paired Galaxy Tab S8 and an explicit local ADB reverse mapping, removes only that mapping afterward, and preserves the separately recorded device checklist. Current device access is BLOCKED.
