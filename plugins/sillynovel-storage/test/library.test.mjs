@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {mkdtempSync,readFileSync,writeFileSync,mkdirSync,rmSync,existsSync,readdirSync,chmodSync} from 'node:fs';
+import {mkdtempSync,readFileSync,writeFileSync,mkdirSync,rmSync,existsSync,readdirSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join,dirname} from 'node:path';
 import {randomUUID} from 'node:crypto';
@@ -93,7 +93,7 @@ function migrationTarget(root,name='target') {
 }
 const packageBytes=directory=>['snapshot.sqlite','manifest.json'].map(name=>readFileSync(join(directory,name)));
 test('v1 startup refuses without mutation; explicit verified-backup migration preserves source and reversible v1 copy',async t=>{
- const root=mkdtempSync(join(tmpdir(),'sn-library-v1-'));t.after(()=>rmSync(root,{recursive:true,force:true}));const path=join(root,'old'),p=legacy(path),original=readFileSync(path);chmodSync(path,0o400);
+ const root=mkdtempSync(join(tmpdir(),'sn-library-v1-'));t.after(()=>rmSync(root,{recursive:true,force:true}));const path=join(root,'old'),p=legacy(path),original=readFileSync(path);
  refuses(()=>openStore(path),'MIGRATION_REQUIRED');assert.deepEqual(readFileSync(path),original);
  const backup=join(root,'v1');await createBackup(path,backup);const frozen=packageBytes(backup);assert.equal(inspectBackup(backup).schemaVersion,1);
  const output=migrationTarget(root);assert.equal(migrateBackup(backup,output).code,'MIGRATED');
