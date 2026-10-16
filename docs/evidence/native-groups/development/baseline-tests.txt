@@ -1,0 +1,163 @@
+✖ reads the active message and host author without inventing a durable identity (4.167209ms)
+✔ chat switch to an empty chat is retained across source-less generation start (0.911204ms)
+✔ populated A to B to empty B to refreshed A always reads the active chat (0.497728ms)
+✔ observes normal and streaming lifecycle events without forwarding token text (1.069774ms)
+✔ activation and repeated disposal own exactly one stage and one listener set (1.025522ms)
+✔ invalid indices on indexed events never fall back to the last message (0.362813ms)
+✔ group author labels follow the host message, while duplicate-name card identity stays unresolved (0.164882ms)
+✔ host chat DOM changes clear stale sources when no lifecycle event fires and dispose cleanly (0.612268ms)
+✔ debug observer hashes host avatar fields without confusing duplicate labels (2.558091ms)
+✔ missing required capability prevents mount and leaves host state untouched (0.487871ms)
+✔ partial event registration failure removes listeners already attached (0.198332ms)
+✔ observer distinguishes sanitized integer, string, missing, and invalid identities by chat scope (2.214373ms)
+✔ debug observer remains removable when the instrumented host lacks one event type (0.952469ms)
+✔ attached expressions are per source and UUID; revisit/clear preserve global outfits and save records (13.363782ms)
+✔ source suffix invalidation: edit (5.285762ms)
+✔ source suffix invalidation: same-length (3.519396ms)
+✔ source suffix invalidation: author (5.039583ms)
+✔ source suffix invalidation: swipe (3.783469ms)
+✔ source suffix invalidation: delete (4.384226ms)
+✔ source suffix invalidation: insert (3.5266ms)
+✔ source suffix invalidation: replace (2.949476ms)
+✔ source suffix invalidation: reorder (2.553162ms)
+✔ source suffix invalidation: older-prefix (2.220254ms)
+✔ source suffix invalidation: continue (2.511857ms)
+✔ source suffix invalidation: stream (2.374476ms)
+✔ compatibility refuses wrong UUID/outfit; failed art falls back; global locks stay intact (2.934057ms)
+✔ delayed decode cannot cross selection (1.931127ms)
+✔ delayed decode cannot cross selection-return (1.765163ms)
+✔ delayed decode cannot cross edit (2.132654ms)
+✔ delayed decode cannot cross swipe (1.667004ms)
+✔ delayed decode cannot cross outfit (2.199646ms)
+✔ delayed decode cannot cross outfit-return (1.968044ms)
+✔ delayed decode cannot cross chat (1.707207ms)
+✔ delayed decode cannot cross replace (2.020329ms)
+✔ delayed decode cannot cross detach (1.69238ms)
+✔ delayed decode cannot cross disable (1.997377ms)
+✔ delayed decode cannot cross dispose (2.030919ms)
+✔ ambiguous history clears decisions and cannot resurrect; A B A resets attachment authority (2.216026ms)
+✔ generation end without completion proof refuses head; pinned older source remains usable (2.297295ms)
+✔ PNG content/type/animation/dimension limits refuse without upload or dirtying (3.122332ms)
+✔ temporary artwork count ceiling and URL release on invalidation/disposal (13.150603ms)
+✔ decision ceiling refuses atomically and an explicit historical clear releases journal capacity (715.975921ms)
+✔ a valid prior activation expression and its bytes never return after A B A (3.387235ms)
+✔ a failed project replacement can resume the prior attachment expression authority (3.984405ms)
+✔ global reducer preserves actor IDs and excludes native anchors and expressions (1.529373ms)
+✔ save captures snapshot and keeps edits made during request dirty (0.475949ms)
+✔ late successful save cannot update detached model authority (0.337225ms)
+✔ locked neutral background survives save, reload and explicit reopen (0.516493ms)
+✔ pending PNG import rejects concurrent edits and uploads, then attaches its committed asset (0.788169ms)
+✔ failed PNG upload unlocks editing and preserves the existing scene (0.315707ms)
+✔ cleanup refuses dirty/pending saves/imports, explicit cancel does not mutate (0.760319ms)
+✔ late cleanup preview ignores chat switch (0.304286ms)
+✔ late cleanup preview ignores replacement (0.614432ms)
+✔ late cleanup preview ignores disable (0.418384ms)
+✔ late cleanup remove ignores chat switch (0.265745ms)
+✔ late cleanup remove ignores replacement (0.252221ms)
+✔ late cleanup remove ignores disable (0.185649ms)
+✔ confirmed cleanup evicts unused Blob/catalog entries and keeps saved scene/dirty state (0.866593ms)
+✔ pending PNG upload blocks cleanup, and ASSET_MISSING save keeps edits for recovery (0.497839ms)
+✔ cleanup client treats transport loss, malformed/proxy failures and wrong committed receipts as uncertain (12.273522ms)
+✔ project library reopens all alternatives, preserves UUIDs/labels and restricts actor compatibility (4.618524ms)
+✔ late PNG library upload cannot attach after switch (0.336464ms)
+✔ late PNG library upload cannot attach after replacement (0.215183ms)
+✔ late PNG library upload cannot attach after dispose (0.182082ms)
+✔ missing catalog art remains a selectable neutral alternative; invalid imports and failed catalog save preserve state (0.57488ms)
+✔ save recovery state retains edits: REVISION_CONFLICT (0.457916ms)
+✔ save recovery state retains edits: SAVE_UNCERTAIN (0.455672ms)
+✔ save recovery state retains edits: INVALID_RECEIPT (0.258693ms)
+✔ save recovery state retains edits: ASSET_MISSING (0.250177ms)
+✔ save client distinguishes lost receipts from definite server refusal (0.675003ms)
+✔ null, foreign and wrong-revision save receipts all require explicit reopen (0.609103ms)
+✔ head and reader cursor are independent; Next at latest stays pinned until Jump to Latest (0.431568ms)
+✔ edits, continuations, same-length changes and author labels revise an immutable selected source (0.118286ms)
+✔ insertions and deletions before a pinned source re-resolve only by transient source key (0.082039ms)
+✔ repeated identical text keeps distinct locators; replacing selected host object invalidates it (0.20804ms)
+✔ swipes and group author changes update the same selected message revision (0.079335ms)
+✔ generation status ignores dry runs, preserves stop, and never infers success from end (0.077913ms)
+✔ normal generation stays unbound until a new assistant source appears (0.125769ms)
+✔ chat reactivation increments the epoch for A to B to A and starts each visit at latest (0.073103ms)
+✔ empty history has an explicit no-source state (0.043389ms)
+✔ DOM-only first-message arrival and latest-object replacement reconcile through adapter and model (0.666937ms)
+✔ a refresh after ambiguous history safely skips unavailable source records (0.13157ms)
+✔ text scrolling has a separate snapshot contract from message-following mode (0.063206ms)
+✔ adapter snapshots keep full labels and token signals coalesce into fresh canonical reads (0.417993ms)
+✔ one-message middle insertion falls back to full history and preserves the pinned source (0.415889ms)
+✔ reader navigation skips unavailable records instead of becoming stuck at a gap (0.135247ms)
+✔ selection revision ignores canonical refresh and records an away-and-back navigation (0.143542ms)
+✔ ordered-source revision notices full/sample order and availability changes without scroll or refresh churn (0.18049ms)
+✔ neutral schema, immutable inputs/output snapshots, deterministic output and revision rules (1.429731ms)
+✔ background select, replace, clear, lock/release and forward projection at messages 3, 4, 7 (0.984908ms)
+✔ four logical members, duplicate labels, stable slots, move, explicit swap and replace (1.40195ms)
+✔ presence and offstage are separate; presence release and slot lock release obey precedence (0.865781ms)
+✔ occupied-slot automatic replacement/swap checks every affected lock atomically (0.784924ms)
+✔ outfit select, replace, default/clear, lock/release, compatibility and forward scope (2.056485ms)
+✔ expressions select/replace/clear only on exact selected source and swipe; outfit resets to neutral (1.042433ms)
+✔ unknown/malformed commands, unverified identities and missing authority cannot bypass locks (0.963249ms)
+✔ malformed/unsupported context and scenes safely refuse without modifying supplied objects (2.178998ms)
+✔ stale session, selection, source, history, scene and catalog authority rejected (0.699928ms)
+✔ edit/continuation invalidates the affected suffix without transferring decisions (0.737907ms)
+✔ deletion invalidates the affected suffix without transferring decisions (0.555163ms)
+✔ replacement invalidates the affected suffix without transferring decisions (0.545877ms)
+✔ insertion invalidates the affected suffix without transferring decisions (0.551737ms)
+✔ reorder invalidates the affected suffix without transferring decisions (1.473431ms)
+✔ historical deliberate correction invalidates later decisions; rejected correction stays atomic (0.49857ms)
+✔ A → B → A resets session-only state; epochs and revisions remain monotonic (0.382789ms)
+✔ fresh append retains prefix decisions; context revision failures and identity loss fail safely (0.479896ms)
+✔ catalog refresh preserves requested immutable references with missing/incompatible fallbacks (0.513879ms)
+✔ deterministic replay of identical validated command histories; identical text has distinct sources (1.134301ms)
+✔ revision ceiling refuses instead of wrapping (0.286994ms)
+✔ malformed journal/catalog entries and sparse arrays refuse instead of throwing (1.071677ms)
+✔ forward releases retain earlier locks, while expressions and layouts use their distinct scopes (1.176879ms)
+✔ non-data and cyclic malformed views are explainable refusals (0.265886ms)
+✔ prefixes retain exact sn-source-v1 semantics through edits, insertion, deletion, reorder and owner changes (1.781874ms)
+✔ unchanged history reuses hashes, tail edit hashes once, historical edit hashes its suffix (0.440905ms)
+✔ stale work cannot return a cache; size and elapsed-time ceilings refuse without truncation (10.430817ms)
+✔ a pre-existing owner record survives a collision refusal and cleanup (0.558069ms)
+✔ cleanup deletes only records whose create call completed successfully (0.550124ms)
+✔ a pre-existing asset survives a collision refusal and cleanup (0.283187ms)
+✔ fixed field order gives a deterministic SHA-256 prefix (0.117424ms)
+✔ repeated identical messages remain position-sensitive through ordered history (0.050863ms)
+✔ same-length text replacement changes the prefix digest without normalization (0.096366ms)
+✔ branch copies share a verified prefix digest but retain different chat owners (0.103499ms)
+✔ author, swipe, insertion, deletion, and continuation changes revise the prefix (0.121051ms)
+✔ ambiguous authors have an explicit unresolved representation and missing scope is refused (0.128715ms)
+ℹ tests 124
+ℹ suites 0
+ℹ pass 123
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 941.045109
+
+✖ failing tests:
+
+test at tests/m0.test.mjs:100:1
+✖ reads the active message and host author without inventing a durable identity (4.167209ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+      characterId: null,
+      chatId: 'synthetic-chat.jsonl',
+      durable: false,
+      groupId: 'synthetic-group',
+  +   groupLabel: 'Native group',
+  +   groupSessionKey: null,
+  +   groupVerified: false,
+      scope: 'group'
+    }
+  
+      at TestContext.<anonymous> (file:///home/dq/Projects/SillyNovel/tests/m0.test.mjs:109:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [Object],
+    expected: [Object],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

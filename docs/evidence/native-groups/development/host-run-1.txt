@@ -1,0 +1,18 @@
+Owned evidence root /tmp/sn-portability-host-NJYfoP
+PASS real host auth/CSRF, two-user project and asset isolation, two-client CAS, PNG hash and limits
+PASS browser create/import background + two sprites/arrange/save/reload/explicit reopen; named canonical files unchanged
+PASS groups: four actual native card API records, two Mira labels/distinct avatars, real group list activation and exact native greetings
+PASS groups: explicit account project opening, four manual UUIDs/two Mira labels, stable three slots/offstage, refuse/swap/replace/presence/outfit/locks/save
+PAGE ERROR joyURL is not defined
+page.waitForFunction: ReferenceError: joyURL is not defined
+    at eval (eval at predicate (eval at evaluate (:311:30)), <anonymous>:1:66)
+    at predicate (eval at evaluate (:311:30), <anonymous>:7:27)
+    at next (eval at evaluate (:311:30), <anonymous>:29:33)
+    at eval (eval at evaluate (:311:30), <anonymous>:42:13)
+    at UtilityScript.evaluate (<anonymous>:313:16)
+    at UtilityScript.<anonymous> (<anonymous>:1:44)
+    at runGroups (/home/dq/Projects/SillyNovel/tests/probes/native-groups/host.mjs:63:359)
+    at async file:///home/dq/Projects/SillyNovel/tests/probes/project-portability/host.mjs:133:91 {
+  log: []
+}
+Evidence /tmp/sn-portability-host-NJYfoP/evidence.json

@@ -1,0 +1,46 @@
+Owned evidence root /tmp/sn-portability-host-TOdU7F
+PASS real host auth/CSRF, two-user project and asset isolation, two-client CAS, PNG hash and limits
+PASS browser create/import background + two sprites/arrange/save/reload/explicit reopen; named canonical files unchanged
+PASS groups: four actual native card API records, two Mira labels/distinct avatars, real group list activation and exact native greetings
+PASS groups: explicit account project opening, four manual UUIDs/two Mira labels, stable three slots/offstage, refuse/swap/replace/presence/outfit/locks/save
+locator.selectOption: Timeout 20000ms exceeded.
+Call log:
+[2m  - waiting for locator('#sillynovel-stage').getByLabel('Expression to apply · selected source only', { exact: true })[22m
+[2m    - locator resolved to <select class="" data-options="[["","Clear · neutral"]]" aria-label="Expression to apply · selected source only">…</select>[22m
+[2m  - attempting select option action[22m
+[2m    2 × waiting for element to be visible and enabled[22m
+[2m      - did not find some options[22m
+[2m    - retrying select option action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible and enabled[22m
+[2m      - did not find some options[22m
+[2m    - retrying select option action[22m
+[2m      - waiting 100ms[22m
+[2m    40 × waiting for element to be visible and enabled[22m
+[2m       - did not find some options[22m
+[2m     - retrying select option action[22m
+[2m       - waiting 500ms[22m
+
+    at apply (/home/dq/Projects/SillyNovel/tests/probes/native-groups/host.mjs:62:42)
+    at runGroups (/home/dq/Projects/SillyNovel/tests/probes/native-groups/host.mjs:64:156)
+    at async file:///home/dq/Projects/SillyNovel/tests/probes/project-portability/host.mjs:133:91 {
+  log: [
+    "  - waiting for locator('#sillynovel-stage').getByLabel('Expression to apply · selected source only', { exact: true })",
+    '    - locator resolved to <select class="" data-options="[["","Clear · neutral"]]" aria-label="Expression to apply · selected source only">…</select>',
+    '  - attempting select option action',
+    '    2 × waiting for element to be visible and enabled',
+    '      - did not find some options',
+    '    - retrying select option action',
+    '    - waiting 20ms',
+    '    2 × waiting for element to be visible and enabled',
+    '      - did not find some options',
+    '    - retrying select option action',
+    '      - waiting 100ms',
+    '    40 × waiting for element to be visible and enabled',
+    '       - did not find some options',
+    '     - retrying select option action',
+    '       - waiting 500ms'
+  ],
+  name: 'TimeoutError'
+}
+Evidence /tmp/sn-portability-host-TOdU7F/evidence.json

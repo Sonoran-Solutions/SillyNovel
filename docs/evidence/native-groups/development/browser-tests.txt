@@ -1,0 +1,370 @@
+
+Interrupted while running:
+
+⚠ actual entry mounts, updates, disposes and preserves canonical state (tests/m1-reader-browser.test.mjs:50:1)
+✖ actual entry mounts, updates, disposes and preserves canonical state (299632.540439ms)
+✖ long ordinary Markdown is formatted, selectable and copied completely
+✖ unsafe HTML, encoded protocols, media and malformed markup never execute or lose raw text
+✖ Previous/Next pin the cursor; new messages stay bounded until Latest
+✖ streaming follows text bottom independently; scrolling up and selecting text survive updates
+✖ stop and continuation stay readable; disable does not stop generation
+✖ deleted/replaced pinned source is explicit and never silently retargeted
+✖ backlog never claims an exact match against a stale native revision
+✖ backlog re-resolves reordered objects, returns pinned selection and reports locator fallback
+✖ draft, caret, native composer node and focus survive repeated view transitions
+✖ missing capability and mount failure leave native chat usable
+✖ format exception releases stage/listeners, restores native feed and keeps exact draft
+✖ A to B to A discards queued old-epoch reads and starts each visit at latest
+✖ IME and editable-field key events remain unconsumed
+✖ empty and unresolved-author sources are explicit; narrow reduced-height composer remains reachable
+✖ session stage: four manual actors, duplicate names, stable slots, refusal, swap, replace and locks
+✖ session stage: forward projection, selected-source expressions, outfits and incompatible/missing fallback
+✖ session stage: temporary raster decode, replacement/reset/disable cleanup and stale delayed work
+✖ session stage: chat return, A to B to A, reload, narrow/keyboard layout and transparent fixtures
+✖ session stage: delayed image cannot apply after same-source reset, manual override or unobserved source edit
+✖ session stage: denied subtle leaves a complete text reader
+✖ session stage: denied randomUUID leaves a complete text reader
+✖ session stage: delayed historical hashing neutralizes art before navigation and rejects obsolete work
+✖ session stage: history size refusal leaves neutral art and a usable text reader
+✖ project replacement pauses all visual mutations and success replaces the original scene
+✖ project replacement pauses all visual mutations and failure preserves the original scene
+✖ portable bundle import preserves current visuals: success
+✖ portable bundle import preserves current visuals: failure
+✖ portable bundle import preserves current visuals: chat switch
+✖ portable bundle import preserves current visuals: project replacement
+✖ portable export downloads only a successful bundle, with explicit errors and size refusal
+✖ unused artwork controls and delayed results: cancel
+✖ unused artwork controls and delayed results: success
+✖ unused artwork controls and delayed results: stale
+✖ unused artwork controls and delayed results: lost response
+✖ unused artwork controls and delayed results: wrong receipt
+✖ unused artwork controls and delayed results: chat switch
+✖ unused artwork controls and delayed results: project replacement
+✖ unused artwork controls and delayed results: disable
+✖ project library actual entry edits labels, unregisters, saves and reloads/reopens compatible alternatives
+✖ migration-required storage leaves original reader, composer and transient controls usable
+✖ project UX: identity, pending and durable save recovery status · saved
+✖ project UX: identity, pending and durable save recovery status · conflict
+✖ project UX: identity, pending and durable save recovery status · uncertain
+✖ project UX: identity, pending and durable save recovery status · invalid
+✖ project UX: discard cancel, actor feedback, local Escape focus and narrow composer
+✖ attached message expressions: actual UI, navigation/revisit, save exclusion, invalidation and reload
+✖ group attached message expressions: actual UI, navigation/revisit, save exclusion, invalidation and reload
+✖ attached PNG delayed actual-entry decode rejects selection
+✖ attached PNG delayed actual-entry decode rejects edit
+✖ attached PNG delayed actual-entry decode rejects swipe
+✖ attached PNG delayed actual-entry decode rejects outfit
+✖ attached PNG delayed actual-entry decode rejects actor
+✖ attached PNG delayed actual-entry decode rejects chat
+✖ attached PNG delayed actual-entry decode rejects replace
+✖ attached PNG delayed actual-entry decode rejects detach
+✖ attached PNG delayed actual-entry decode rejects disable
+✖ group attached PNG delayed actual-entry decode rejects selection
+✖ group attached PNG delayed actual-entry decode rejects edit
+✖ group attached PNG delayed actual-entry decode rejects swipe
+✖ group attached PNG delayed actual-entry decode rejects outfit
+✖ group attached PNG delayed actual-entry decode rejects actor
+✖ group attached PNG delayed actual-entry decode rejects chat
+✖ group attached PNG delayed actual-entry decode rejects replace
+✖ group attached PNG delayed actual-entry decode rejects detach
+✖ group attached PNG delayed actual-entry decode rejects disable
+✖ attached missing expression image falls back to base outfit; clear, no dirty changes
+✖ attached expressions automatically reconcile unchanged-object reorder: prefix-only
+✖ attached expressions automatically reconcile unchanged-object reorder: selected-index
+✖ group attached expressions automatically reconcile unchanged-object reorder: prefix-only
+✖ group attached expressions automatically reconcile unchanged-object reorder: selected-index
+ℹ Error: Test hook "before" at tests/m1-reader-browser.test.mjs:20:1 generated asynchronous activity after the test ended. This activity created the error "Error: listen EPERM: operation not permitted 127.0.0.1" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ tests 71
+ℹ suites 0
+ℹ pass 0
+ℹ fail 0
+ℹ cancelled 71
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 299960.958167
+
+✖ failing tests:
+
+test at tests/m1-reader-browser.test.mjs:50:1
+✖ actual entry mounts, updates, disposes and preserves canonical state (299632.540439ms)
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:66:1
+✖ long ordinary Markdown is formatted, selectable and copied completely
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:79:1
+✖ unsafe HTML, encoded protocols, media and malformed markup never execute or lose raw text
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:93:1
+✖ Previous/Next pin the cursor; new messages stay bounded until Latest
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:109:1
+✖ streaming follows text bottom independently; scrolling up and selecting text survive updates
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:134:1
+✖ stop and continuation stay readable; disable does not stop generation
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:148:1
+✖ deleted/replaced pinned source is explicit and never silently retargeted
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:161:1
+✖ backlog never claims an exact match against a stale native revision
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:195:1
+✖ backlog re-resolves reordered objects, returns pinned selection and reports locator fallback
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:223:1
+✖ draft, caret, native composer node and focus survive repeated view transitions
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:232:1
+✖ missing capability and mount failure leave native chat usable
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:242:1
+✖ format exception releases stage/listeners, restores native feed and keeps exact draft
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:256:1
+✖ A to B to A discards queued old-epoch reads and starts each visit at latest
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:277:1
+✖ IME and editable-field key events remain unconsumed
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:288:1
+✖ empty and unresolved-author sources are explicit; narrow reduced-height composer remains reachable
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:327:1
+✖ session stage: four manual actors, duplicate names, stable slots, refusal, swap, replace and locks
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:351:1
+✖ session stage: forward projection, selected-source expressions, outfits and incompatible/missing fallback
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:382:1
+✖ session stage: temporary raster decode, replacement/reset/disable cleanup and stale delayed work
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:406:1
+✖ session stage: chat return, A to B to A, reload, narrow/keyboard layout and transparent fixtures
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:429:1
+✖ session stage: delayed image cannot apply after same-source reset, manual override or unobserved source edit
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:451:51
+✖ session stage: denied subtle leaves a complete text reader
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:451:51
+✖ session stage: denied randomUUID leaves a complete text reader
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:479:1
+✖ session stage: delayed historical hashing neutralizes art before navigation and rejects obsolete work
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:517:1
+✖ session stage: history size refusal leaves neutral art and a usable text reader
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:532:34
+✖ project replacement pauses all visual mutations and success replaces the original scene
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:532:34
+✖ project replacement pauses all visual mutations and failure preserves the original scene
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:573:80
+✖ portable bundle import preserves current visuals: success
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:573:80
+✖ portable bundle import preserves current visuals: failure
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:573:80
+✖ portable bundle import preserves current visuals: chat switch
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:573:80
+✖ portable bundle import preserves current visuals: project replacement
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:605:1
+✖ portable export downloads only a successful bundle, with explicit errors and size refusal
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:623:129
+✖ unused artwork controls and delayed results: cancel
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:623:129
+✖ unused artwork controls and delayed results: success
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:623:129
+✖ unused artwork controls and delayed results: stale
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:623:129
+✖ unused artwork controls and delayed results: lost response
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:623:129
+✖ unused artwork controls and delayed results: wrong receipt
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:623:129
+✖ unused artwork controls and delayed results: chat switch
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:623:129
+✖ unused artwork controls and delayed results: project replacement
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:623:129
+✖ unused artwork controls and delayed results: disable
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:667:1
+✖ project library actual entry edits labels, unregisters, saves and reloads/reopens compatible alternatives
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:701:1
+✖ migration-required storage leaves original reader, composer and transient controls usable
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:726:65
+✖ project UX: identity, pending and durable save recovery status · saved
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:726:65
+✖ project UX: identity, pending and durable save recovery status · conflict
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:726:65
+✖ project UX: identity, pending and durable save recovery status · uncertain
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:726:65
+✖ project UX: identity, pending and durable save recovery status · invalid
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:751:1
+✖ project UX: discard cancel, actor feedback, local Escape focus and narrow composer
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:791:33
+✖ attached message expressions: actual UI, navigation/revisit, save exclusion, invalidation and reload
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:791:33
+✖ group attached message expressions: actual UI, navigation/revisit, save exclusion, invalidation and reload
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:806:137
+✖ attached PNG delayed actual-entry decode rejects selection
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:806:137
+✖ attached PNG delayed actual-entry decode rejects edit
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:806:137
+✖ attached PNG delayed actual-entry decode rejects swipe
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:806:137
+✖ attached PNG delayed actual-entry decode rejects outfit
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:806:137
+✖ attached PNG delayed actual-entry decode rejects actor
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:806:137
+✖ attached PNG delayed actual-entry decode rejects chat
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:806:137
+✖ attached PNG delayed actual-entry decode rejects replace
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:806:137
+✖ attached PNG delayed actual-entry decode rejects detach
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:806:137
+✖ attached PNG delayed actual-entry decode rejects disable
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:806:137
+✖ group attached PNG delayed actual-entry decode rejects selection
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:806:137
+✖ group attached PNG delayed actual-entry decode rejects edit
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:806:137
+✖ group attached PNG delayed actual-entry decode rejects swipe
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:806:137
+✖ group attached PNG delayed actual-entry decode rejects outfit
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:806:137
+✖ group attached PNG delayed actual-entry decode rejects actor
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:806:137
+✖ group attached PNG delayed actual-entry decode rejects chat
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:806:137
+✖ group attached PNG delayed actual-entry decode rejects replace
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:806:137
+✖ group attached PNG delayed actual-entry decode rejects detach
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:806:137
+✖ group attached PNG delayed actual-entry decode rejects disable
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:824:1
+✖ attached missing expression image falls back to base outfit; clear, no dirty changes
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:829:88
+✖ attached expressions automatically reconcile unchanged-object reorder: prefix-only
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:829:88
+✖ attached expressions automatically reconcile unchanged-object reorder: selected-index
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:829:88
+✖ group attached expressions automatically reconcile unchanged-object reorder: prefix-only
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at tests/m1-reader-browser.test.mjs:829:88
+✖ group attached expressions automatically reconcile unchanged-object reorder: selected-index
+  'Promise resolution is still pending but the event loop has already resolved'
