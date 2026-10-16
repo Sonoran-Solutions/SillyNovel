@@ -1,5 +1,9 @@
 # Project status
 
+## DYL-60 technical candidate preparation — 2026-10-16
+
+The owner [approved all five rulings and separately authorized DYL-60](DECISIONS.md#owner-approvals-and-dyl-60-authorization--2026-10-16): F1 for the first disposable Gate A playtest, PNG-only assets, explicit project reopening, manual four-card groups and available established Galaxy Tab S8 technical testing. PR #33 merged at `c835afe6e274be3fab5a2862f517fd8e4bca32ad`, the starting main for this work. [Current preparation/evidence](M1_4_DYL60_CANDIDATE.md) distinguishes technical results and remaining gaps. Original history/writer requirements below are amended only by F1 for this playtest; broader DYL-22/23 criteria and historical blocker relations remain. DYL-62/63 remain In Review despite merged code. Gate A NOT_RUN; owner session and verdict, M1.3/M2, DYL-56 and DYL-61 release work remain separately gated. Older dated entries retain historical states.
+
 ## M1.4-A readiness preflight — 2026-10-16
 
 Fetched main `f9497aebf59cbeae07a2b6391d0cff17e81bcc76` is the verified PR #32 merge; PRs #29–32 are now merged. [Readiness matrix, proposed Decision F amendment, DYL-60 recipe and owner/device checklists](M1_4_GATE_A_READINESS.md). **REVISE before freeze; GO for senior/owner review only.** Decision F undecided; Gate A NOT_RUN; DYL-60 Backlog/unstarted. DYL-22/23/55 report Done; DYL-62/63 remain In Review despite merged implementations. Original acceptance and blockers remain intact; no tracker state changes. This documentation review checks retained evidence/input hashes, not fresh current-main runtime behavior. Older entries below retain their historical states and evidence limits.

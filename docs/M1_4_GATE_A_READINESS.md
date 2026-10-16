@@ -1,5 +1,13 @@
 # M1.4-A: Gate A readiness and owner decision package
 
+## Owner disposition — 2026-10-16, America/Phoenix
+
+**F1 APPROVED for the first disposable Gate A playtest.** [Full exact approved amendment and all five rulings](DECISIONS.md#owner-approvals-and-dyl-60-authorization--2026-10-16). PNG-only deferral, explicit reopening and manual native groups are approved. Established Galaxy Tab S8 technical access and DYL-60 preparation are separately authorized by the same explicit assignment. The historical proposal, unselected F2 alternative and original acceptance below remain intact as the PR #33 review record; its “undecided”, “unstarted” and authorization-required statements describe that earlier checkpoint.
+
+DYL-60 now proceeds to one exact-candidate technical campaign and draft PR. Scope decisions are complete; integrated validation, native integrity/branch evidence and actual-device coverage still require fresh results. [Current candidate/evidence record](M1_4_DYL60_CANDIDATE.md). Human Gate A remains NOT_RUN and separately gated. No M1.3/M2, production, live installation or merge authorization.
+
+## Historical PR #33 preflight
+
 Review: **2026-10-16, America/Phoenix**. Documentation/evidence only; stop for senior and owner review. **Decision F: undecided. Gate A: NOT_RUN. DYL-60: Backlog, execution not started.**
 
 **Recommendation: REVISE before freeze; conditional GO for candidate preparation after the owner records the scope choices below and separately authorizes DYL-60.** The merged manual experience is a credible basis for a disposable usability candidate. It does not meet the original persistence/writer gate. No new runtime defect was established in this review; no runtime correction is included or currently recommended without a failing reproduction.
