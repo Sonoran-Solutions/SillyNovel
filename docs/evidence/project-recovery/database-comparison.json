@@ -1,0 +1,21 @@
+{
+  "testedCommit": "08d1f3560efb3832b9730543ae18dde5829a0d2b",
+  "sourceFixtureSHA256AfterCampaign": "07581a77b4db5a9df8945555758c36fb415b47dff49e2ae3dfba3cbefb813bef",
+  "backup": {
+    "snapshot.sqlite": "22d3c30cc3f6800ea0d6d7b5431169104a6911eb9aaf86dccc2f0e1a18681e40",
+    "manifest.json": "6715b8d9688abd88b5e224a39a3e7ae1450ccd1644cbed52a444f1058fb08589"
+  },
+  "restoredDatabaseSHA256": "22d3c30cc3f6800ea0d6d7b5431169104a6911eb9aaf86dccc2f0e1a18681e40",
+  "projects": 8,
+  "assets": 19,
+  "rowComparison": "EXACT",
+  "ownerKeysPreserved": [
+    "[\"default-user\",1792109995198]",
+    "[\"sn-other\",1792110008676]"
+  ],
+  "nativeFiles": 64,
+  "nativeComparison": "EXACT",
+  "snapshotBytes": 176128,
+  "sqlite": "3.53.4",
+  "journal": "delete"
+}

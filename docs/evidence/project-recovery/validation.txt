@@ -1,0 +1,8 @@
+PASS node --check: 8 modules
+PASS package/lock agreement; no new dependency
+PASS 385 relative Markdown file links and fenced code blocks (anchors/external URLs not validated)
+PASS frozen implementation/probe hashes 08d1f3560efb3832b9730543ae18dde5829a0d2b
+PASS post-freeze tracked diff contains evidence/documentation only
+PASS git diff --check
+PASS 8 projects / 19 PNG assets exact row/hash comparison; 64 named native files unchanged
+PASS retained manifest digest matches measured backup

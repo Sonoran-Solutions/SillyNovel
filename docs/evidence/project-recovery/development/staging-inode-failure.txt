@@ -1,0 +1,81 @@
+✔ backup/inspect/restore preserve every row, account, revision, lock, actor and PNG through restart (591.870676ms)
+✔ empty schema-v1 database roundtrip (124.946787ms)
+▶ invalid packages refuse without changing backup, account evidence or an existing destination
+  ✔ missing manifest (29652.398727ms)
+  ✔ invalid JSON (259.672234ms)
+  ✔ future format (326.013031ms)
+  ✔ wrong count (413.331061ms)
+  ✔ checksum (274.459987ms)
+  ✔ truncated SQLite (260.468295ms)
+  ✔ corrupt btree (288.542796ms)
+  ✔ future schema (270.157278ms)
+  ✔ missing projects (319.796159ms)
+  ✔ missing assets (328.625093ms)
+  ✔ missing index (333.558267ms)
+  ✔ extra trigger (343.197074ms)
+  ✔ bad foreign key (311.48105ms)
+  ✔ bad scene (273.29545ms)
+  ✔ bad revision (305.066412ms)
+  ✔ bad owner (259.666509ms)
+  ✔ wrong digest (306.966664ms)
+  ✔ wrong dimensions (333.74675ms)
+  ✔ invalid PNG (262.930135ms)
+  ✔ missing referenced PNG (285.759331ms)
+  ✔ foreign project PNG (155.347996ms)
+  ✔ unexpected file (272.879329ms)
+  ✔ symlink database (297.334834ms)
+  ✔ hardlink alias (315.880507ms)
+✔ invalid packages refuse without changing backup, account evidence or an existing destination (36467.863776ms)
+✔ account incarnation, symlink components, public paths, sidecars and nonempty destinations refuse (369.86435ms)
+▶ faults inspect source and destination filesystem rather than assuming rollback
+  ✔ backup snapshot (92.449998ms)
+  ✔ backup snapshot-written (184.266151ms)
+  ✔ backup manifest (269.89251ms)
+  ✔ backup publish (294.755569ms)
+  ✔ restore staging (320.68056ms)
+  ✔ restore validation (346.55273ms)
+  ✔ restore publish (399.079255ms)
+  ✔ exclusive destination creation race (276.591179ms)
+  ✔ backup snapshot write fails with SQLite target replaced by directory (77.55027ms)
+✔ faults inspect source and destination filesystem rather than assuming rollback (2265.723751ms)
+✔ coherent committed revisions with overlapping asset imports/save and rolled-back transaction: delete (2709.354818ms)
+✔ coherent committed revisions with overlapping asset imports/save and rolled-back transaction: wal (2866.364485ms)
+✔ killed backup retains an incomplete private stage, no completed package and unchanged committed source (322.877334ms)
+{"code":"DESTINATION_EXISTS"}
+✔ actual operator CLI creates, inspects, restores and refuses replacement (1101.329597ms)
+✔ process killed inside a rollback transaction: backup refuses hot journal, normal SQLite reopen recovers the original commit (266.661793ms)
+▶ staging tampering and real publication failures preserve unknown files and refuse activation
+  ✔ manifest write failure (226.212223ms)
+  ✖ restore symlink (381.609466ms)
+  ✔ restore integrity (345.298069ms)
+  ✔ restore publication (512.236814ms)
+✖ staging tampering and real publication failures preserve unknown files and refuse activation (1467.969938ms)
+ℹ tests 48
+ℹ suites 0
+ℹ pass 46
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 48595.826326
+
+✖ failing tests:
+
+test at plugins/sillynovel-storage/test/recovery.test.mjs:151:66
+✖ restore symlink (381.609466ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(stage)
+  
+      at TestContext.<anonymous> (file:///home/dq/.codex/worktrees/dyl-58-database-recovery/SillyNovel/plugins/sillynovel-storage/test/recovery.test.mjs:155:103)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async TestContext.<anonymous> (file:///home/dq/.codex/worktrees/dyl-58-database-recovery/SillyNovel/plugins/sillynovel-storage/test/recovery.test.mjs:151:58)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

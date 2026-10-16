@@ -1,0 +1,20 @@
+{
+  "hostCommit": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
+  "node": "v26.8.1",
+  "nodePersistVersion": "4.0.4",
+  "sha256": {
+    "src/users.js": "3100591d000a28f6d3a548242c9de69060c2fd4777c170b13f38a99bc67f3476",
+    "src/endpoints/users-admin.js": "682cf8df991b7a9339b2061901a4178193a193202e827d6a0677a3187de6b579",
+    "node_modules/node-persist/package.json": "99e280d65e9f80b41531fd4b0303e06bf0f8ddd7267e39a9a012a425d3f5650c",
+    "node_modules/node-persist/src/local-storage.js": "3021336e6c040481ad46ef278e6f2c81ef29702eb52f11fea01dec10f7bc0260"
+  },
+  "observedAccountFormat": {
+    "directory": "<dataRoot>/_storage",
+    "key": "user:<handle>",
+    "filename": "sha256(key)",
+    "serializedRecord": "{key,value,...}",
+    "incarnation": "[value.handle,value.created]",
+    "ttl": false
+  },
+  "accountCreation": "admin create slugifies handle and uses Date.now(); no owner mapping in recovery"
+}

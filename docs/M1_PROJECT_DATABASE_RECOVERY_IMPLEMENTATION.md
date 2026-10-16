@@ -1,6 +1,6 @@
 # DYL-58 implementation and exact-candidate evidence
 
-Bounded operator-only recovery under DYL-55. [Recovery contract and commands](M1_PROJECT_DATABASE_RECOVERY.md). The implementation is prepared for a frozen validation campaign; final results and candidate SHA will be recorded below before review handoff. No production/live overwrite, release or human-gate verdict is inferred.
+Bounded operator-only recovery under DYL-55. [Recovery contract and commands](M1_PROJECT_DATABASE_RECOVERY.md). **GO for bounded senior review**: the frozen campaign below passed. No production/live overwrite, release or human-gate verdict is inferred.
 
 Starting original checkout: clean `1ff171f747c6f03cbd3cf7aa8564e0d06d8ec4fd` on the preserved DYL-57 branch. Fetched main: `4337a05ac8321e714a9677d6a408aa3ee37bbcbf`. GitHub PR #25 was verified MERGED at that exact commit with head `1ff171f747c6f03cbd3cf7aa8564e0d06d8ec4fd`. Dedicated managed worktree and branch `codex/dyl-58-database-recovery`. Linear inspection confirmed DYL-57 Done; DYL-58/59 Backlog; DYL-55 Backlog/unfinished; DYL-22/23 Backlog with existing blocker relations. DYL-58 alone moved to In Progress when implementation began. No other issue/dependency changed.
 
@@ -8,11 +8,12 @@ The shared schema check preserves v1 and refuses incomplete/future schemas at pl
 
 ## Commands actually executed
 
-Development checks were run before freezing; they do not substitute for the acceptance campaign. Final command outputs will be retained under `docs/evidence/project-recovery/`.
+Development checks were run before freezing; they do not substitute for the acceptance campaign. Final command outputs are retained under `docs/evidence/project-recovery/`.
 
 ```sh
 git fetch origin main
 gh pr view 25 --repo Sonoran-Solutions/SillyNovel --json state,mergeCommit,headRefOid,url
+npm test --prefix plugins/sillynovel-storage
 node --test --test-isolation=none plugins/sillynovel-storage/test/*.test.mjs
 node --test --test-isolation=none plugins/sillynovel-storage/test/recovery.test.mjs
 node --test --test-isolation=none tests/m0.test.mjs tests/m1-reader-source.test.mjs tests/m1-source-prefix.test.mjs tests/m1-scene-reducer.test.mjs tests/m1-project-scene.test.mjs tests/probes/dyl19/*.test.mjs
@@ -40,10 +41,46 @@ The real host campaign reuses the existing storage/portability checkpoints and a
 - First recovery run: 35/40 passed. Fixture deletion of a parent table inherited Node 26's default foreign keys, a directory fixture used nonrecursive removal, and the small database completed in one backup batch, so no concurrency was established. Corrected fixtures explicitly disable FKs only for corruption injection, remove only their own directory, and enlarge the database to force progress before completion. The next run was 40/40. No failed overlap was counted as concurrency evidence.
 - First host run passed the inherited checks, then correctly refused UNSAFE_PARENT because the host-created synthetic data root was group-writable. Fixture setup now explicitly sets 0700 before startup; source permissions are never changed by the backup command. The next development host run passed all 17 checkpoints, including the recovery workflow.
 - Additional staging-symlink fault: 46/48 passed. Immediate inode reuse could make a replacement appear owned during cleanup. The correction holds open file and directory descriptors throughout staging/publication, preventing inode reuse until ownership checks and cleanup finish. All 48 then passed. This failure is retained as evidence for the ownership defense, not hidden as a fixture issue.
-- Development host runs reported baseline HEAD while changes were uncommitted. Their evidence is diagnostic only. Frozen acceptance below will record the committed implementation SHA; later changes must be evidence/documentation only or trigger affected reruns.
+- Development host runs reported baseline HEAD while changes were uncommitted. Their evidence is diagnostic only. Frozen acceptance below records the committed implementation SHA; later changes must be evidence/documentation only or trigger affected reruns.
 
 ## Remaining scope and review
 
 Only schema v1 compatibility and future/incomplete-schema refusal are implemented. There is no actual version transition or production recovery certification. The destination must be stopped, trusted, privately controlled, and independently provisioned with identical account incarnations. Full-database replacement, account repair, cloud backup, synchronization, asset cleanup, unknown host formats, other runtimes/platforms and power-loss survival are unsupported or NOT_TESTED. Digests do not establish authenticity.
 
 DYL-55 remains unfinished; DYL-59/56 Backlog; DYL-22/23 blocked; DYL-24 session-only fallback supported; upstream engagement on hold; M1.3/M2 unauthorized and Gate A NOT_RUN. The next bounded action after a successful frozen campaign is senior review of this one open/unmerged PR, not merge or starting cleanup.
+
+## Frozen acceptance — 2026-10-15
+
+Tested implementation: `08d1f3560efb3832b9730543ae18dde5829a0d2b`. Runtime/tests were committed and clean before the campaign. Subsequent handoff changes contain evidence/documentation only; the final pushed SHA is recorded in GitHub/Linear rather than circularly embedded in its own commit. [Run summary](evidence/project-recovery/runs.json), [runtime/probe hashes](evidence/project-recovery/proof-hashes.json), [pinned account-source inspection](evidence/project-recovery/source-inspection.json).
+
+| Campaign | Result | Evidence |
+|---|---|---|
+| Storage + portable bundles + recovery | **85/85**, zero failures/cancellations/skips/todos; includes 48 recovery checks | [Output](evidence/project-recovery/storage.txt) |
+| Existing Node regressions | **70/70**, zero failures/cancellations/skips/todos | [Output](evidence/project-recovery/node.txt) |
+| Actual-entry Chromium regressions | **31/31**, zero failures/cancellations/skips/todos | [Output](evidence/project-recovery/browser.txt) |
+| npm test | **85/85**; duplicate run, not added to assertion totals | [Output](evidence/project-recovery/npm.txt) |
+| Pinned disposable host | **17/17** named checkpoints, including five recovery checkpoint groups | [Output](evidence/project-recovery/host-run.txt), [raw host JSON](evidence/project-recovery/host.json), [recovery JSON](evidence/project-recovery/recovery.json) |
+
+Node v26.8.1, SQLite 3.53.4, Chromium 151.0.7922.34/Linux; SillyTavern 1.19.0 at `7e8663cd9c184a550b37238218bdd32c6efc68e9`. Owned final host root `/tmp/sn-portability-host-5v8Uml`. Snapshot **176128 bytes / 8 projects / 19 assets**, DELETE journal mode. Exact owner keys, IDs/revisions, global scenes, actors/locks, asset-project association, PNG bytes/hash/dimensions match source rows through normal storage-module and host restart. [Database and identity comparison](evidence/project-recovery/database-comparison.json) records retained source fixture, snapshot, manifest and restored database hashes. [Manifest](evidence/project-recovery/manifest.json): snapshot SHA-256 `22d3c30cc3f6800ea0d6d7b5431169104a6911eb9aaf86dccc2f0e1a18681e40`; manifest SHA-256 `6715b8d9688abd88b5e224a39a3e7ae1450ccd1644cbed52a444f1058fb08589`. Fixture PNG hashes are in recovery JSON. The source fixture hash is measured after the campaign; exact committed-row comparison, not a before/after file hash during writes, proves snapshot coherence.
+
+The complete names/counts/SHA-256 inventory of **64 native files** for two synthetic owners is identical before and after the backup/restore/browser/restart workflow. Each copied host account-record digest is also unchanged by restore. No global filesystem non-mutation claim. [Explicitly reopened restored layout](evidence/project-recovery/restored.png) shows the original background/two sprites, actor identities and locks with the native reader/composer and preserved draft. Projects remained detached until explicit selection.
+
+The inherited host JSON's broad `notTested` label “Power loss and administrative restore” predates the opt-in recovery addition: its explicit `recovery` block proves this bounded empty-slot restore. Power loss and existing-store replacement remain NOT_TESTED; [run summary](evidence/project-recovery/runs.json) makes that scope explicit. No production recovery guarantee follows.
+
+### Resource results
+
+[Raw measurements](evidence/project-recovery/resources.jsonl), on the same frozen implementation; synthetic inputs/outputs are retained under `/tmp/sn-recovery-resources-JEMMnL`. File hashes, manifest hashes, SQLite version and configured limits are recorded per case.
+
+| Fixture | Snapshot | Backup / inspect / restore | Process high-water RSS |
+|---|---|---|---|
+| 4 projects / 12 assets | 86016 bytes | 21.90 / 4.44 / 9.67 ms | 69808128 bytes |
+| 100 projects / 1000 assets / five owners | 131735552 bytes | 1689.32 / 734.58 / 1939.03 ms | 160972800 bytes |
+| One 4000×4000 PNG / 16M pixels | 90112 bytes | 446.12 / 266.23 / 809.17 ms | **417751040 bytes (~398 MiB)** |
+
+The resource process retains fixture-generation allocations and previous cases. These high-water values are observations, not universal bounds or server-memory budgets. Full PNG decoding is the dominant single-asset allocation risk even with a small encoded database. The host campaign process high-water was 288120832 bytes, including Playwright/harness allocations; it is not a separately measured CLI-only ceiling. Its 15161.53 ms recovery block includes host starts, browser interaction and restart, not just backup duration. The separate CLI keeps decode work out of the active server. All tests used local storage with sufficient space; no actual disk-full, OS-memory-limit, watchdog-deadline or power-loss endurance claim.
+
+### Validation and handoff
+
+Eight changed/related module syntax checks, package/lock dependency agreement, relative Markdown file links/fences, proof hashes, evidence checksums and `git diff --check` are validated in [validation output](evidence/project-recovery/validation.txt). Evidence checksum verification used `sha256sum -c SHA256SUMS` from `docs/evidence/project-recovery`; all 18 entries passed. No hosted CI/build/release is claimed. Raw failures are retained: [initial recovery](evidence/project-recovery/development/recovery-initial.txt), [inode cleanup counterexample](evidence/project-recovery/development/staging-inode-failure.txt), [host permission refusal](evidence/project-recovery/development/host-permission-refusal.txt).
+
+**GO for senior review of DYL-58; PR must remain OPEN/UNMERGED with auto-merge disabled.** DYL-58 is In Review after these acceptance checks. No remaining bounded empty-slot acceptance failure was observed. Remaining limits are the explicitly unsupported/NOT_TESTED surfaces above, account-provisioning prerequisites and senior review itself. DYL-55 remains unfinished; DYL-59/56 Backlog, DYL-22/23 blocked, Gate A NOT_RUN. Smallest next task: review the recovery/account/filesystem contract and evidence on this PR. Do not start cleanup or merge without separate owner authorization.
