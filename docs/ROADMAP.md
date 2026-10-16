@@ -1,12 +1,20 @@
 # Staged implementation roadmap
 
+## Current M1.2 completion checkpoint — 2026-10-15
+
+[Reviewed main `ea65d84a521a39c9ccc977f4cb3643454963d4b8`](M1_2_STORAGE_COMPLETION_AND_READINESS.md): PRs #23–27 merged; DYL-49–54/57–59 Done. **DYL-55 GO for bounded technical acceptance pending owner; overall M1.2 REVISE.** Parent stays unfinished; DYL-22/23 retain blockers and DYL-56 Backlog. Gate A NOT_RUN, M1.3/M2 unauthorized, upstream on hold, no release/live installation.
+
+Proposed functional order: owner approves revised scope → **DYL-22 reusable PNG-library labels/kinds/list/reselection** → **DYL-23 remaining manual-stage/source-overlay/group/attachment/layout usability** → [DYL-60 frozen disposable candidate preparation](https://linear.app/devils17/issue/DYL-60) → separately approved owner playtest. Keep PNG-only temporarily by explicit owner deferral; do not count JPEG/WebP as complete. DYL-60 is Backlog under M1.4 and blocked by DYL-23. [DYL-61](https://linear.app/devils17/issue/DYL-61) tracks public-beta/production hardening without blocking the next feature. No implementation starts from this planning sequence.
+
+Persistent **global project layouts** already exist; persistent **per-message scenes/native correspondence** do not. Original Gate A matching-history/branch restore and single-writer/read-only-tab requirements need an explicit owner amendment or separately authorized implementation. Preserve original group/touch/reader safety checks. The older slice map and gate text below remain historical requirements, not silently satisfied or waived.
+
 ## Active project-storage direction — 2026-10-15
 
 [Independent project storage](M1_INDEPENDENT_PROJECT_STORAGE.md) supersedes the upstream-API implementation path and earlier chat-metadata persistence proposals for this bounded slice. The owner authorizes planning and the first independent-project implementation with an optional local plugin, explicit attachment and project-global state only. Production release is not approved. Source-specific history remains transient/gated; existing renderer, source, lock and native-composer safeguards remain applicable. No project data enters native metadata or browser persistence. [Implementation and tracking](M1_PROJECT_STORAGE_IMPLEMENTATION.md).
 
 DYL-48 is Done and PR #22 merged at `ca77bbf5e4ee5219e34e873b1680e8d644754149`. Upstream engagement is **ON HOLD / NOT_SUBMITTED**. DYL-22/23 retain Backlog and their blocker relations; DYL-24 remains supported; M1.3/M2 unauthorized and Gate A NOT_RUN. Earlier entries below retain their historical authorization/evidence scope and do not override this decision.
 
-**Status:** proposed sequence with an owner-approved M0 verdict and limited M1 authorization. M0 is **PASS for the explicitly documented scope and evidence limits**; L10 is **UNSUPPORTED / WAIVED** for the tested persistent-chat workflow. See [M0 compatibility](M0_COMPATIBILITY.md) and [lifecycle report](M0_LIFECYCLE_VALIDATION.md). M1 defaults A–G are approved with clarifications recorded in [DYL-16](DECISIONS.md#owner-decision--2026-10-12-dyl-16) and [M1 reader plan](M1_PLAN.md#owner-approved-defaults--2026-10-12-dyl-16). DYL-17 and DYL-19 are merged; the owner separately assigned **DYL-18**, whose text-reader candidate is implemented for review. DYL-19 persistence/assets remain PARTIAL/BLOCKED and later implementation remains unauthorized. M2–M4 are **NOT_STARTED**, and Gates A/B/C are **NOT_RUN**. This document's targets do not authorize work beyond those named tickets.
+**Historical roadmap status before independent-project completion:** proposed sequence with an owner-approved M0 verdict and limited M1 authorization. M0 is **PASS for the explicitly documented scope and evidence limits**; L10 is **UNSUPPORTED / WAIVED** for the tested persistent-chat workflow. See [M0 compatibility](M0_COMPATIBILITY.md) and [lifecycle report](M0_LIFECYCLE_VALIDATION.md). M1 defaults A–G are approved with clarifications recorded in [DYL-16](DECISIONS.md#owner-decision--2026-10-12-dyl-16) and [M1 reader plan](M1_PLAN.md#owner-approved-defaults--2026-10-12-dyl-16). DYL-17 and DYL-19 are merged; the owner separately assigned **DYL-18**, whose text-reader candidate is implemented for review. DYL-19 persistence/assets remain PARTIAL/BLOCKED and later implementation remains unauthorized. M2–M4 are **NOT_STARTED**, and Gates A/B/C are **NOT_RUN**. This document's targets do not authorize work beyond those named tickets.
 
 ## Delivery rule
 
@@ -119,7 +127,9 @@ Before an installable release: choose the repository license, include properly l
 
 Release claims must correspond to tested features on an exact candidate. A provider, host version, or device not exercised is **NOT_TESTED**, not “probably supported.”
 
-## Bounded project portability — 2026-10-15
+## Historical bounded project portability assignment — 2026-10-15
+
+The following records the DYL-57 assignment. DYL-57/58/59 are now Done and PRs #25–27 merged; current parent disposition and remaining feature sequence are in the completion checkpoint above.
 
 The owner separately authorizes DYL-57 portable global-project bundles under DYL-55 after merged PR #24. [Contract](M1_PROJECT_PORTABILITY.md) and [implementation/evidence](M1_PROJECT_PORTABILITY_IMPLEMENTATION.md). This independent-project copy lane does not start message-scoped M1.3 or M2. DYL-58 database backup/recovery/migrations follows portability review; DYL-59 unused-asset cleanup follows those policies. Both remain Backlog and require separate implementation authorization. DYL-55 remains unfinished, DYL-56 Backlog, DYL-22/23 blocked and Gate A NOT_RUN.
 

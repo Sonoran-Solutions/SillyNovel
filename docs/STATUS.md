@@ -2,7 +2,7 @@
 
 ## Active project-storage direction — 2026-10-15
 
-First slice is implemented in open/unmerged [PR #24](https://github.com/Sonoran-Solutions/SillyNovel/pull/24); architecture is open/unmerged [PR #23](https://github.com/Sonoran-Solutions/SillyNovel/pull/23). DYL-49–54 In Review; DYL-55/56 future Backlog. [Current handoff and tested scope](M1_PROJECT_STORAGE_IMPLEMENTATION.md#first-slice-handoff--2026-10-15). GO for senior review only.
+Fetched main `ea65d84a521a39c9ccc977f4cb3643454963d4b8` contains merged PRs #23–27. DYL-49–54 and DYL-57–59 are Done. [Completion/readiness review](M1_2_STORAGE_COMPLETION_AND_READINESS.md): **DYL-55 GO for bounded experimental acceptance, pending owner; overall M1.2 REVISE**. DYL-55 stays unfinished, pending owner acceptance; DYL-22/23 retain Backlog/blockers, DYL-56 stays Backlog. New planning-only DYL-60 prepares a frozen owner candidate after DYL-23; DYL-61 tracks release hardening separately. Gate A NOT_RUN.
 
 [Independent project storage](M1_INDEPENDENT_PROJECT_STORAGE.md) supersedes the upstream-API implementation path and earlier chat-metadata persistence proposals for this bounded slice. The owner authorizes planning and the first independent-project implementation with an optional local plugin, explicit attachment and project-global state only. Production release is not approved. Source-specific history remains transient/gated; existing renderer, source, lock and native-composer safeguards remain applicable. No project data enters native metadata or browser persistence. [Implementation and tracking](M1_PROJECT_STORAGE_IMPLEMENTATION.md).
 
@@ -12,20 +12,21 @@ DYL-48 is Done and PR #22 merged at `ca77bbf5e4ee5219e34e873b1680e8d644754149`. 
 
 ## Current state
 
-The DYL-18 review branch now implements a complete text reader on the merged DYL-17 source model, with native composer/backlog access. It does not implement visual state, scene direction, art or persistence.
+Main implements the complete text reader, DYL-24 session stage and optional independent-project persistence. Saved project-global layout is separate from source-specific scene history; reload/chat switching detach. Persistent projects currently accept PNG and single-character conversations only. Remaining reusable asset-library and manual-stage gaps are mapped in the [readiness review](M1_2_STORAGE_COMPLETION_AND_READINESS.md).
 
 | Area | State |
 | --- | --- |
 | M0 shell code | IMPLEMENTED |
-| Current automated reader regressions | PASS — 37 Node + 14 actual-entry behavioral Chromium tests; prior M0/source/storage regressions retained |
+| Latest retained automated evidence | DYL-59 frozen candidate: 80 Node, 104 storage/bundle/recovery/cleanup, 39 actual-entry Chromium, 21 pinned-host checkpoint groups; overlapping coverage, not rerun by this docs review |
 | SillyTavern 1.19.0 source inspection | COMPLETE — commit `7e8663cd9c184a550b37238218bdd32c6efc68e9` |
 | Isolated real-host lifecycle checks | PASS within documented scope — normal, streaming, stop, continuation, swipe, edit/delete, chat switching, toggles, group/duplicate labels, and disable-during-stream verified with synthetic data and deterministic local endpoint |
 | Live model/provider behavior | NOT_TESTED — endpoint was deterministic and local |
 | L10 persistent empty-chat workflow | UNSUPPORTED / WAIVED; supported host UI restores the welcome message on reopen |
 | Missing-capability behavior | INSTRUMENTED_HOST_PASS; capability omission was injected, not a natural host failure |
 | M0 overall | OWNER APPROVED PASS for the explicitly documented scope and evidence limits; L10 is UNSUPPORTED / WAIVED |
-| M1 runtime | DYL-17/19 merged; separately owner-assigned DYL-18 text-reader review candidate IMPLEMENTED / HOST_TESTED. Later art/persistence work remains gated |
-| M1.2 storage | DYL-46 bounded feasibility is Done/merged at PR #20; production storage remains unsupported. DYL-47 architecture checkpoint is Done/merged at PR #21; DYL-48 upstream drafts are In Review / NOT_SUBMITTED; no production work authorized |
+| M1 runtime | DYL-18/20/24 Done; complete reader, pure reducer and supported session-only stage; full DYL-22/23 remain blocked |
+| M1.2 storage | Independent-project DYL-49–54/57–59 Done, PRs #23–27 merged; bounded DYL-55 GO recommended, parent unfinished; production release unauthorized |
+| M1.2 remaining | Reusable labeled/kinded asset catalog, attached transient source controls/group support and integrated usability evidence; proposed revised DYL-22 → DYL-23 → DYL-60 |
 | Gate A — reader feel | NOT_RUN |
 | M2 — automatic direction | NOT_STARTED |
 | Gate B — direction quality | NOT_RUN |
@@ -35,13 +36,17 @@ The DYL-18 review branch now implements a complete text reader on the merged DYL
 | Provider tests | Deterministic localhost OpenAI-compatible endpoint tested; real model/provider behavior NOT_TESTED |
 | License choice | OPEN |
 
-## Upstream proposal draft — 2026-10-15, DYL-48
+## Historical upstream proposal handoff — 2026-10-15, DYL-48
+
+The following records the pre-merge handoff. DYL-48 is now Done/PR #22 merged; independent projects supersede that implementation direction, while upstream remains ON HOLD / NOT_SUBMITTED.
 
 [Public request](UPSTREAM_HOST_CAPABILITY_REQUEST.md) and [technical support / owner recommendation](UPSTREAM_HOST_CAPABILITY_TECHNICAL.md) are complete for review. Starting fetched main `f3ff9a4b61fa31df3e57cf3367f0dcf4860f3fe6`; prerequisite PR #21 merged and DYL-47 Done verified. Current official release/staging source and related proposals were inspected read-only. Recommend coordinating first in existing upstream #5265 after explicit owner approval, leading with identity/lifecycle/conditional per-chat state and deferring assets. No supported complete foundation was found in the bounded research; adjacent proposals are acknowledged.
 
 **NOT_SUBMITTED.** Draft preparation is authorized; architecture selection, upstream engagement and implementation are not. DYL-22/23 remain Blocked; DYL-24 accepted session-only; production persistence, M1.3 and M2 unauthorized; Gate A NOT_RUN. [Documentation validation](TESTING.md#dyl-48-upstream-proposal-validation--2026-10-15) adds no runtime/host/provider/device evidence. DYL-48 stops In Review and its PR remains open/unmerged with auto-merge disabled.
 
-## Current storage architecture checkpoint — 2026-10-15, DYL-47
+## Historical storage architecture checkpoint — 2026-10-15, DYL-47
+
+The following recommendation predates the owner's independent-project decision and merged PRs #23–27; it is not the current implementation prerequisite.
 
 [DYL-47](M1_STORAGE_ARCHITECTURE_CHECKPOINT.md) recommends a small upstream SillyTavern identity/lifecycle/targeted-CAS/asset capability, with the visibly session-only DYL-24 experience as fallback. This is **PROPOSED**, not an owner selection or production authorization. The recommendation is GO for owner architecture review only; durable persistence remains NO-GO until a supported host API and recovery/backup contract exist.
 
