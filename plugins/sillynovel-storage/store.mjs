@@ -1,4 +1,5 @@
 import { DatabaseSync } from 'node:sqlite';
+import { SCHEMA_SQL, validateDatabaseSchema } from './database-schema.mjs';
 import { randomUUID } from 'node:crypto';
 import { demand, exact, label, validId, validateScene, emptyScene } from './schema.mjs';
 import { decodePNG, digest } from './png.mjs';
@@ -17,13 +18,9 @@ export function openStore(filename) {
         demand(version === 0 || version === 1, 'UNSUPPORTED_SCHEMA', 503);
         if (version === 0) transaction(() => {
             demand(db.prepare("SELECT count(*) AS n FROM sqlite_master WHERE type='table'").get().n === 0, 'UNSUPPORTED_SCHEMA', 503);
-            db.exec(`CREATE TABLE projects (id TEXT PRIMARY KEY, owner TEXT NOT NULL, name TEXT NOT NULL,
-                revision INTEGER NOT NULL CHECK(revision >= 0), scene TEXT NOT NULL);
-                CREATE INDEX projects_owner ON projects(owner);
-                CREATE TABLE assets (id TEXT PRIMARY KEY, project TEXT NOT NULL REFERENCES projects(id),
-                sha256 TEXT NOT NULL, width INTEGER NOT NULL, height INTEGER NOT NULL, bytes BLOB NOT NULL);
-                CREATE INDEX assets_project ON assets(project); PRAGMA user_version=1;`);
+            db.exec(SCHEMA_SQL.join(';') + '; PRAGMA user_version=1;');
         });
+        validateDatabaseSchema(db);
         demand(db.prepare('PRAGMA quick_check').get().quick_check === 'ok', 'CORRUPT_STORE', 503);
     } catch (error) { db.close(); throw error; }
     function load(owner, id) {

@@ -1,0 +1,16 @@
+{
+  "testedCommit": "08d1f3560efb3832b9730543ae18dde5829a0d2b",
+  "sha256": {
+    "plugins/sillynovel-storage/store.mjs": "7a5ea11cb13079d6464892dfeac0bdf031f99660d0931f4cdc878dfb3d769e81",
+    "plugins/sillynovel-storage/database-schema.mjs": "7b7f66af5ebfde2aa73de8e3138fd5bf70a757d7a0b9fae405fb57d498d2f792",
+    "plugins/sillynovel-storage/recovery.mjs": "46b191ea95b4229a11b4f31e8de70489a9755775730a9d785b565b7bdaefcad4",
+    "plugins/sillynovel-storage/tools/recovery.mjs": "0645666f2b781f783a8bde12ed3380849948ee92918f78441bca050533285565",
+    "plugins/sillynovel-storage/schema.mjs": "b162f2845219e83f23f37d9bd24dfffabc1178645aa2041e8fd0c79d111d7131",
+    "plugins/sillynovel-storage/png.mjs": "03ab687e80fbaf90162f179a95899fcec8af465c5567821d48468e910f2017fb",
+    "plugins/sillynovel-storage/bundle.mjs": "899e9da52b26fa43bd210aba558e50b66a874b784ae7a7f7652ea116697f1d00",
+    "plugins/sillynovel-storage/test/recovery.test.mjs": "d6a9a067f093bb32f363a842c93b55206fee4666e410172e13c8213c66a1fb40",
+    "tests/probes/project-portability/host.mjs": "b8447705bbcccf8504d7c83f45db0ae75d187ff0179f8dc93481f9e4856fc9b4",
+    "tests/probes/project-recovery/host.mjs": "8dd252affbfd53f640efd8b846235d8df2b6d4838cd5867df8421de84924ce03",
+    "tests/probes/project-recovery/resources.mjs": "59af19ab352d844e59023a44a154cffd9b6d6976042d438f801dd048d0a3632c"
+  }
+}

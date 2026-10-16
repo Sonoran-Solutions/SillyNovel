@@ -122,3 +122,7 @@ Release claims must correspond to tested features on an exact candidate. A provi
 ## Bounded project portability — 2026-10-15
 
 The owner separately authorizes DYL-57 portable global-project bundles under DYL-55 after merged PR #24. [Contract](M1_PROJECT_PORTABILITY.md) and [implementation/evidence](M1_PROJECT_PORTABILITY_IMPLEMENTATION.md). This independent-project copy lane does not start message-scoped M1.3 or M2. DYL-58 database backup/recovery/migrations follows portability review; DYL-59 unused-asset cleanup follows those policies. Both remain Backlog and require separate implementation authorization. DYL-55 remains unfinished, DYL-56 Backlog, DYL-22/23 blocked and Gate A NOT_RUN.
+
+## Bounded database recovery — 2026-10-15
+
+DYL-58 is separately owner-authorized after merged PR #25 and completed DYL-57: operator-only online backup, strict offline inspection, restore into an empty SillyNovel database slot with existing verified account incarnations, and schema-v1 migration preconditions/policy. [Contract](M1_PROJECT_DATABASE_RECOVERY.md); [implementation/evidence](M1_PROJECT_DATABASE_RECOVERY_IMPLEMENTATION.md). Historical DYL-58 Backlog entries above describe the earlier assignment. This work does not authorize production replacement, account reassignment, DYL-59 cleanup, DYL-56 hints, DYL-22/23, M1.3/M2 or a Gate A verdict. DYL-55 remains unfinished.

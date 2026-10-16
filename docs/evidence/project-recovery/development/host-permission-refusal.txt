@@ -1,0 +1,22 @@
+Owned evidence root /tmp/sn-portability-host-hkTTxF
+PASS real host auth/CSRF, two-user project and asset isolation, two-client CAS, PNG hash and limits
+PASS browser create/import background + two sprites/arrange/save/reload/explicit reopen; named canonical files unchanged
+PASS portable browser download/import preserves dirty stage; explicit reopen restores new identities, bytes, layout/locks; exact native inventory unchanged
+PASS HTTP failed project/second-asset/final-scene writes inspected in committed database: zero partial projects/assets
+PASS real two-account export refusal and import ownership; two-client import retry creates distinct copies; concurrent export/save is coherent
+PASS actual native switch during delayed import receipt never attaches visuals or changes stage ownership
+PASS native A to B to A detaches and never auto-restores project
+PASS actual host failed update preserves project; missing/corrupt assets restore neutral fallback
+PASS delayed successful save receipt cannot redirect switched chat
+PASS actual host native send/stream/stop, navigation and backlog remain functional
+PASS plugin/server restart preserves original and imported layout/assets; imported project explicitly reopens in real browser
+Error: UNSAFE_PARENT
+    at demand (file:///home/dq/.codex/worktrees/dyl-58-database-recovery/SillyNovel/plugins/sillynovel-storage/schema.mjs:3:34)
+    at privateParent (file:///home/dq/.codex/worktrees/dyl-58-database-recovery/SillyNovel/plugins/sillynovel-storage/recovery.mjs:34:5)
+    at createBackup (file:///home/dq/.codex/worktrees/dyl-58-database-recovery/SillyNovel/plugins/sillynovel-storage/recovery.mjs:156:23)
+    at runRecovery (file:///home/dq/.codex/worktrees/dyl-58-database-recovery/SillyNovel/tests/probes/project-recovery/host.mjs:16:21)
+    at async file:///home/dq/.codex/worktrees/dyl-58-database-recovery/SillyNovel/tests/probes/project-portability/host.mjs:226:3 {
+  code: 'UNSAFE_PARENT',
+  status: 400
+}
+Evidence /tmp/sn-portability-host-hkTTxF/evidence.json

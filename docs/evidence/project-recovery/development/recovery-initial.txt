@@ -1,0 +1,115 @@
+✔ backup/inspect/restore preserve every row, account, revision, lock, actor and PNG through restart (406.574966ms)
+✔ empty schema-v1 database roundtrip (29841.782193ms)
+▶ invalid packages refuse without changing backup, account evidence or an existing destination
+  ✔ missing manifest (239.11319ms)
+  ✔ invalid JSON (246.611966ms)
+  ✔ future format (240.758891ms)
+  ✔ wrong count (273.649296ms)
+  ✔ checksum (228.380031ms)
+  ✔ truncated SQLite (229.244446ms)
+  ✔ future schema (236.058617ms)
+  ✖ missing projects (250.97243ms)
+  ✔ missing assets (252.305545ms)
+  ✔ missing index (336.526253ms)
+  ✔ extra trigger (247.592608ms)
+  ✔ bad foreign key (243.343628ms)
+  ✔ bad scene (242.792084ms)
+  ✔ bad revision (229.282951ms)
+  ✔ bad owner (211.427866ms)
+  ✔ wrong digest (233.394894ms)
+  ✔ wrong dimensions (234.368164ms)
+  ✔ invalid PNG (232.274394ms)
+  ✔ missing referenced PNG (231.345431ms)
+  ✔ foreign project PNG (236.509808ms)
+  ✔ unexpected file (236.226823ms)
+  ✔ symlink database (218.312391ms)
+  ✔ hardlink alias (235.689702ms)
+✖ invalid packages refuse without changing backup, account evidence or an existing destination (5573.455772ms)
+✖ account incarnation, symlink components, public paths, sidecars and nonempty destinations refuse (263.754448ms)
+▶ faults inspect source and destination filesystem rather than assuming rollback
+  ✔ backup snapshot (55.827011ms)
+  ✔ backup snapshot-written (148.519059ms)
+  ✔ backup manifest (215.690742ms)
+  ✔ backup publish (243.867316ms)
+  ✔ restore staging (269.48889ms)
+  ✔ restore validation (244.751598ms)
+  ✔ restore publish (388.220507ms)
+  ✔ exclusive destination creation race (288.21209ms)
+  ✔ backup snapshot write fails with SQLite target replaced by directory (53.779422ms)
+✔ faults inspect source and destination filesystem rather than assuming rollback (1911.348551ms)
+✖ coherent committed revisions with overlapping asset imports/save and rolled-back transaction: delete (235.15416ms)
+✖ coherent committed revisions with overlapping asset imports/save and rolled-back transaction: wal (239.455297ms)
+✔ killed backup retains an incomplete private stage, no completed package and unchanged committed source (112.134795ms)
+ℹ tests 40
+ℹ suites 0
+ℹ pass 35
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 38606.744571
+
+✖ failing tests:
+
+test at plugins/sillynovel-storage/test/recovery.test.mjs:73:47
+✖ missing projects (250.97243ms)
+  Error: FOREIGN KEY constraint failed
+      at mutate (file:///home/dq/.codex/worktrees/dyl-58-database-recovery/SillyNovel/plugins/sillynovel-storage/test/recovery.test.mjs:28:90)
+      at file:///home/dq/.codex/worktrees/dyl-58-database-recovery/SillyNovel/plugins/sillynovel-storage/test/recovery.test.mjs:56:25
+      at TestContext.<anonymous> (file:///home/dq/.codex/worktrees/dyl-58-database-recovery/SillyNovel/plugins/sillynovel-storage/test/recovery.test.mjs:73:127)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async TestContext.<anonymous> (file:///home/dq/.codex/worktrees/dyl-58-database-recovery/SillyNovel/plugins/sillynovel-storage/test/recovery.test.mjs:73:39)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    code: 'ERR_SQLITE_ERROR',
+    errcode: 787,
+    errstr: 'constraint failed'
+  }
+
+test at plugins/sillynovel-storage/test/recovery.test.mjs:81:1
+✖ account incarnation, symlink components, public paths, sidecars and nonempty destinations refuse (263.754448ms)
+  SystemError [ERR_FS_EISDIR]: Path is a directory: rm returned EISDIR (is a directory) /tmp/sn-recovery-test-xM7Kgy/target/.sillynovel-projects.sqlite
+      at rmSync (node:fs:1566:16)
+      at TestContext.<anonymous> (file:///home/dq/.codex/worktrees/dyl-58-database-recovery/SillyNovel/plugins/sillynovel-storage/test/recovery.test.mjs:87:85)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    code: 'ERR_FS_EISDIR',
+    info: { code: 'EISDIR', message: 'is a directory', path: '/tmp/sn-recovery-test-xM7Kgy/target/.sillynovel-projects.sqlite', syscall: 'rm', errno: 21 },
+    errno: [Getter/Setter: 21],
+    syscall: [Getter/Setter: 'rm'],
+    path: [Getter/Setter: '/tmp/sn-recovery-test-xM7Kgy/target/.sillynovel-projects.sqlite']
+  }
+
+test at plugins/sillynovel-storage/test/recovery.test.mjs:100:39
+✖ coherent committed revisions with overlapping asset imports/save and rolled-back transaction: delete (235.15416ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(progress>0)
+  
+      at TestContext.<anonymous> (file:///home/dq/.codex/worktrees/dyl-58-database-recovery/SillyNovel/plugins/sillynovel-storage/test/recovery.test.mjs:109:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at plugins/sillynovel-storage/test/recovery.test.mjs:100:39
+✖ coherent committed revisions with overlapping asset imports/save and rolled-back transaction: wal (239.455297ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(progress>0)
+  
+      at TestContext.<anonymous> (file:///home/dq/.codex/worktrees/dyl-58-database-recovery/SillyNovel/plugins/sillynovel-storage/test/recovery.test.mjs:109:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

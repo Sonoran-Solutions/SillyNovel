@@ -1,0 +1,36 @@
+{
+  "testedCommit": "08d1f3560efb3832b9730543ae18dde5829a0d2b",
+  "startingMain": "4337a05ac8321e714a9677d6a408aa3ee37bbcbf",
+  "node": "v26.8.1",
+  "host": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
+  "browser": "151.0.7922.34",
+  "results": {
+    "storageBundleRecovery": {
+      "pass": 85,
+      "fail": 0
+    },
+    "node": {
+      "pass": 70,
+      "fail": 0
+    },
+    "chromium": {
+      "pass": 31,
+      "fail": 0
+    },
+    "hostCheckpoints": {
+      "pass": 17,
+      "fail": 0
+    }
+  },
+  "scopeClarification": "Inherited host.json notTested label Power loss and administrative restore predates this opt-in recovery campaign. Its recovery block explicitly proves empty-slot restore; power loss and existing-store replacement remain NOT_TESTED.",
+  "notTested": [
+    "Production/live installation",
+    "Existing-store replacement",
+    "Power loss/fsync hardware failure",
+    "Actual ENOSPC",
+    "Other host/Node/browser/platform/filesystem versions",
+    "Real providers/physical devices",
+    "Owner Gate A",
+    "Real schema-version transition"
+  ]
+}
