@@ -136,3 +136,28 @@ test('missing catalog art remains a selectable neutral alternative; invalid impo
  await model.renameAsset(id,'Retained label');await model.save();assert.equal(model.status().dirty,true);assert.equal(model.status().revision,0);assert.equal(model.get().media.get(id).label,'Retained label');
  await assert.rejects(model.unregisterAsset(id,()=>true),/different artwork/);await model.dispatch({type:'clearBackground'});await model.unregisterAsset(id,()=>false);assert.equal(model.get().assets.length,1);await model.unregisterAsset(id,()=>true);assert.equal(model.get().assets.length,0);model.dispose();
 });
+
+for(const code of ['REVISION_CONFLICT','SAVE_UNCERTAIN','INVALID_RECEIPT','ASSET_MISSING'])test('save recovery state retains edits: '+code,async()=>{
+ const {actions}=setup();let calls=0;
+ const model=await createProjectScene(initial(),{save:async()=>{calls++;throw Error(code);}},actions,()=>{},()=>true);
+ await model.register('','Keep this actor');await model.save();
+ const state=code==='REVISION_CONFLICT'?'conflict':code==='ASSET_MISSING'?'error':'uncertain';
+ assert.equal(model.status().saveState,state);assert.equal(model.status().dirty,true);assert.equal(model.status().revision,0);
+ await model.dispatch({type:'clearBackground'});assert.equal(model.status().saveState,state);
+ if(state!=='error'){await model.save();await model.reviewUnused();assert.equal(calls,1);assert.equal(model.status().cleanupPreview,null);}
+ assert.equal(model.get().scene.view.cast[0].label,'Keep this actor');model.dispose();
+});
+test('save client distinguishes lost receipts from definite server refusal',async t=>{
+ const original=globalThis.fetch;t.after(()=>{globalThis.fetch=original;});const client=createProjectClient(()=>({}));
+ for(const response of [()=>{throw Error('offline');},()=>new Response('gateway',{status:502}),()=>new Response('invalid JSON')]){
+  globalThis.fetch=async()=>response();await assert.rejects(client.save(randomUUID(),{}),/SAVE_UNCERTAIN/);
+ }
+ globalThis.fetch=async()=>Response.json({code:'REVISION_CONFLICT'},{status:409});await assert.rejects(client.save(randomUUID(),{}),/REVISION_CONFLICT/);
+});
+test('null, foreign and wrong-revision save receipts all require explicit reopen',async()=>{
+ const {actions}=setup();
+ for(const receipt of [null,{projectId:randomUUID(),revision:1},{revision:99}]){
+  const model=await createProjectScene(initial(),{save:async()=>receipt},actions,()=>{},()=>true);
+  await model.register('','Keep edits');await model.save();assert.equal(model.status().saveState,'uncertain');assert.equal(model.status().dirty,true);model.dispose();
+ }
+});

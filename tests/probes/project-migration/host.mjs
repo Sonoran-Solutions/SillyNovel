@@ -8,7 +8,7 @@ import {V1_SCHEMA_SQL} from '../../../plugins/sillynovel-storage/database-schema
 import {inspectBackup,DATABASE_NAME} from '../../../plugins/sillynovel-storage/recovery.mjs';
 import {selectedCatalog} from '../../../plugins/sillynovel-storage/schema.mjs';
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
-export async function runMigration({root,data,repo,stop,start,session,select,pass,evidence}) {
+export async function runMigration({root,data,repo,stop,start,session,select,pass,evidence,projectId}) {
  await stop();
  const legacy=join(root,'v1-data'),target=join(root,'migrated-data'),backup=join(root,'preserved-v1-backup');
  async function provision(from,to){await mkdir(to,{mode:0o700});for(const name of await readdir(from))if(!name.startsWith(DATABASE_NAME))await cp(join(from,name),join(to,name),{recursive:true,errorOnExist:true,force:false});}
@@ -37,7 +37,7 @@ export async function runMigration({root,data,repo,stop,start,session,select,pas
  await start(true,target);const alice=await session(),bob=await session('sn-other');
  for(const p of projects){const owner=JSON.parse(p.owner)[0]==='default-user'?alice:bob,other=owner===alice?bob:alice;const got=await owner.api('/projects/'+p.id);assert.equal(got.revision,p.revision);assert.deepEqual(got.scene,JSON.parse(p.scene));assert.deepEqual(got.catalog,selectedCatalog(JSON.parse(p.scene)));await other.api('/projects/'+p.id,'GET',undefined,404);}
  for(const a of assets){const p=projects.find(p=>p.id===a.project),owner=JSON.parse(p.owner)[0]==='default-user'?alice:bob;const response=await owner.request('/api/plugins/sillynovel-storage/projects/'+a.project+'/assets/'+a.id);assert.equal(hash(await response.body()),a.sha256);}
- const reopened=await alice.context.newPage();await reopened.goto(alice.origin);await reopened.locator('#sillynovel-stage').waitFor();await select(reopened,'Project A');await reopened.locator('.sillynovel-controls summary').click();const project=projects.find(p=>p.name==='Browser project');
+ const reopened=await alice.context.newPage();await reopened.goto(alice.origin);await reopened.locator('#sillynovel-stage').waitFor();await select(reopened,'Project A');await reopened.locator('.sillynovel-controls summary').click();const project=projects.find(p=>p.id===projectId);assert.ok(project,'Original project UUID retained by migration');
  await reopened.getByLabel('Saved project',{exact:true}).selectOption(project.id);await reopened.getByRole('button',{name:'Open project and use with this chat',exact:true}).click();await reopened.waitForFunction(()=>document.querySelectorAll('.sillynovel-sprite:not([hidden])').length===2);
  await reopened.waitForFunction(()=>[...document.querySelectorAll('.sillynovel-art img')].filter(e=>!e.hidden).every(e=>e.complete&&e.naturalWidth));await reopened.locator('.sillynovel-controls summary').click();await reopened.screenshot({path:join(root,'migration-reopened.png')});
  assert.deepEqual(await nativeFiles(target),native);assert.equal(hash(await readFile(database)),before);

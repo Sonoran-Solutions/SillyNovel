@@ -40,7 +40,7 @@ async function session(handle='default-user'){
  };
  return {context,token,request,origin,api:async(path,method='GET',body,status=200,type)=> (await request('/api/plugins/sillynovel-storage'+path,method,body,status,type)).json()};
 }
-async function canonical(){const result={};for(const folder of ['characters','chats','groups','group chats','worlds']){
+async function canonical(){const result={};for(const folder of ['characters','chats','groups','group chats','worlds',...(process.env.SN_STAGE_UX_RUN?['avatars']:[])]){
  const base=join(data,'default-user',folder);
  async function walk(p){let entries;try{entries=await readdir(p,{withFileTypes:true});}catch{return;}for(const e of entries){const f=join(p,e.name);if(e.isDirectory())await walk(f);else result[f.slice(data.length+1)]=hash(await readFile(f));}}
  await walk(base);
@@ -128,6 +128,7 @@ try {
  if(process.env.SN_CLEANUP_RUN){const {runCleanup}=await import('../project-cleanup/host.mjs');await runCleanup({root,data,repo,page,alice,bob,peer,project,saved,field,button,select,pass,evidence});}
  // Portable copy: browser download/upload, actual host validation and committed inventory.
  if(process.env.SN_LIBRARY_RUN){const {runLibrary}=await import('../project-library/host.mjs');await runLibrary({root,data,repo,page,alice,bob,peer,project,field,button,select,canonical,pass,evidence});}
+ if(process.env.SN_STAGE_UX_RUN){const {runStageUX}=await import('../project-stage-ux/host.mjs');await runStageUX({root,data,repo,page,alice,peer,project,field,button,select,canonical,pass,evidence});}
  const portableBefore=await canonical();
  const sourceProject=await alice.api('/projects/'+project.projectId);
  await field('Saved project').selectOption(project.projectId);
@@ -230,7 +231,7 @@ try {
   const {runRecovery}=await import('../project-recovery/host.mjs');
   await runRecovery({root,data,repo,stop,start,session,select,pass,evidence});
  }
- if(process.env.SN_MIGRATION_RUN){const {runMigration}=await import('../project-migration/host.mjs');await runMigration({root,data,repo,stop,start,session,select,pass,evidence});}
+ if(process.env.SN_MIGRATION_RUN){const {runMigration}=await import('../project-migration/host.mjs');await runMigration({root,data,repo,stop,start,session,select,pass,evidence,projectId:project.projectId});}
  await stop();await start(false);const disabled=await session();await disabled.request('/api/plugins/sillynovel-storage/capabilities','GET',undefined,404);
  const fallback=await disabled.context.newPage();await fallback.goto(origin);await fallback.locator('#sillynovel-stage').waitFor();await fallback.locator('.sillynovel-controls summary').click();
  await fallback.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('Plugin unavailable'));

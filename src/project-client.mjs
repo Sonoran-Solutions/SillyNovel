@@ -1,10 +1,13 @@
 import { validateCleanupPreview, validateCleanupRequest } from '../plugins/sillynovel-storage/schema.mjs';
 const ROOT='/api/plugins/sillynovel-storage';
 export function createProjectClient(getHeaders) {
-    async function request(path='',method='GET',value) {
-        const response=await fetch(ROOT+path,{method,credentials:'same-origin',headers:{...getHeaders(),...(value!==undefined?{'Content-Type':value instanceof Blob?'image/png':'application/vnd.sillynovel+json'}:{})},body:value===undefined?undefined:value instanceof Blob?value:JSON.stringify(value)});
-        if(!response.ok){let code='STORAGE_UNAVAILABLE';try{code=(await response.json()).code||code;}catch{}throw Error(code);}
-        return response.json();
+    async function request(path='',method='GET',value,uncertain=false) {
+        let response;
+        try {
+            response=await fetch(ROOT+path,{method,credentials:'same-origin',headers:{...getHeaders(),...(value!==undefined?{'Content-Type':value instanceof Blob?'image/png':'application/vnd.sillynovel+json'}:{})},body:value===undefined?undefined:value instanceof Blob?value:JSON.stringify(value)});
+        } catch(error){throw uncertain?Error('SAVE_UNCERTAIN'):error;}
+        if(!response.ok){let code=uncertain?'SAVE_UNCERTAIN':'STORAGE_UNAVAILABLE';try{const value=(await response.json()).code;if(typeof value==='string')code=value;}catch{}throw Error(code);}
+        try {return await response.json();}catch(error){throw uncertain?Error('SAVE_UNCERTAIN'):error;}
     }
     async function bundle(path,method='GET',file) {
         const limit=8*1024*1024+32768;
@@ -37,7 +40,7 @@ export function createProjectClient(getHeaders) {
         } catch {throw Error('CLEANUP_UNCERTAIN');}
     }
     return {previewCleanup,removeUnusedAssets,exportBundle:id=>bundle('/projects/'+encodeURIComponent(id)+'/export'),importBundle:file=>bundle('/projects/import','POST',file),capabilities:()=>request('/capabilities'),list:()=>request('/projects'),create:name=>request('/projects','POST',{name}),
-        load:id=>request('/projects/'+encodeURIComponent(id)),save:(id,body)=>request('/projects/'+encodeURIComponent(id),'PUT',body),
+        load:id=>request('/projects/'+encodeURIComponent(id)),save:(id,body)=>request('/projects/'+encodeURIComponent(id),'PUT',body,true),
         upload:(id,file)=>request('/projects/'+encodeURIComponent(id)+'/assets','POST',file),
         async asset(project,id){
             const response=await fetch(ROOT+'/projects/'+encodeURIComponent(project)+'/assets/'+encodeURIComponent(id),{credentials:'same-origin'});
