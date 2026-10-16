@@ -86,6 +86,16 @@ export async function runCleanup({root,data,repo,page,alice,bob,peer,project,sav
   await createBackup(path,join(root,'cleanup-after'));assert.equal(inspectBackup(join(root,'cleanup-after'),data).code,'VALID_BACKUP');
   report.after=rows();report.nativeAfter=await nativeFiles(data);assert.deepEqual(report.nativeAfter,beforeNative);assert.deepEqual((await alice.api(api)).scene,saved.scene);
   pass('post-cleanup portable export and verified database backup remain valid; named two-account native file inventory unchanged');
+  const revisionBefore=saved.revision;
+  await button('Save project').click();await page.waitForFunction(revision=>document.querySelector('.sillynovel-project-status').textContent.includes('revision '+revision),revisionBefore+1);
+  const reloaded=await alice.api(api);assert.equal(reloaded.revision,revisionBefore+1);assert.deepEqual(reloaded.scene,saved.scene);Object.assign(saved,reloaded);
+  await page.reload();await page.locator('#sillynovel-stage').waitFor();await select(page,'Project A');await page.locator('.sillynovel-controls summary').click();
+  assert.equal(await page.locator('.sillynovel-sprite:visible').count(),0);await field('Saved project').selectOption(project.projectId);await button('Open project and use with this chat').click();
+  await page.waitForFunction(()=>document.querySelectorAll('.sillynovel-sprite:not([hidden])').length===2);
+  await page.waitForFunction(()=>[...document.querySelectorAll('.sillynovel-art img')].filter(e=>!e.hidden).every(e=>e.complete&&e.naturalWidth));
+  assert.deepEqual((await alice.api(api)).scene,saved.scene);report.revisions={beforeCleanup:revisionBefore,afterCleanup:report.firstDeletion.revision,afterSave:reloaded.revision};report.after=rows();
+  report.nativeAfter=await nativeFiles(data);assert.deepEqual(report.nativeAfter,beforeNative);
+  pass('original project saves after cleanup, reload stays detached, explicit reopen restores original artwork/actors/positions/locks and only save increments revision');
   await page.screenshot({path:join(root,'cleanup.png')});evidence.cleanup=report;await writeFile(join(root,'cleanup.json'),JSON.stringify(report,null,2));
  } finally {db.close();}
 }
