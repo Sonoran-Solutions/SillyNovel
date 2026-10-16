@@ -1,12 +1,15 @@
 import { createScene, reduceScene, reconcileScene } from './scene-reducer.mjs';
 import { evidenceStamp } from './transient-scene.mjs';
-import { validateScene, validId, label, validateCleanupPreview } from '../plugins/sillynovel-storage/schema.mjs';
+import { validateScene, validId, label, validateCleanupPreview, validateCatalog, selectedCatalog } from '../plugins/sillynovel-storage/schema.mjs';
 
 /** Global project commands use a project anchor, never a native message anchor.
  * This journal is memory-only; persistence serializes only the global projection. */
 export async function createProjectScene(project,client,actions,changed,isCurrent) {
     validateScene(project.scene);
-    if(project.schemaVersion!==1 || !validId(project.projectId) || !label(project.name) || !Number.isSafeInteger(project.revision))throw Error('INVALID_PROJECT');
+    if(project.schemaVersion!==2 || !validId(project.projectId) || !label(project.name) || !Number.isSafeInteger(project.revision))throw Error('INVALID_PROJECT');
+    const library=structuredClone(validateCatalog(project.catalog,project.scene));
+    // v1 bundles and pre-library saves carry selected art without labels.
+    for(const entry of selectedCatalog(project.scene))if(!library.some(a=>a.assetId===entry.assetId && a.kind===entry.kind && a.actorId===entry.actorId))library.push(entry);
     const epoch=actions.getSnapshot().sessionEpoch;
     let disposed=false,edit=0,savedEdit=0,busy=false,importing=false,scene,notice='Project opened · global layout only.',catalogRevision=0;
     let actors=project.scene.actors.map(a=>({key:a.actorId,label:a.name,description:'Project actor',defaultURL:null}));
@@ -26,20 +29,19 @@ export async function createProjectScene(project,client,actions,changed,isCurren
         if(!outcome.result.accepted)throw Error(outcome.result.code);
         scene=outcome.scene;
     }
-    async function install(id,kind,key) {
+    async function install(id,kind,key,displayLabel='Imported PNG') {
         // Reducer IDs are actor-specific even when immutable bytes are shared.
         const ref=kind==='background'?id:key+':'+id;
-        if(assets.some(a=>a.id===ref))return ref;
+        if(assets.some(a=>a.id===ref)){media.get(ref).label=displayLabel;return ref;}
         let url=null,revision='missing';
         try {const value=await client.asset(project.projectId,id);if(!current())throw Error('STALE_PROJECT');url=URL.createObjectURL(value.blob);revision=value.hash;}
         catch {notice='Some project art is unavailable · neutral fallback.';}
         if(!current()){if(url)URL.revokeObjectURL(url);throw Error('STALE_PROJECT');}
         assets.push({id:ref,kind,revision,available:Boolean(url),...(key?{characterKey:key}:{})});
-        media.set(ref,{url,label:'Imported PNG',assetId:id});catalogRevision++;return ref;
+        media.set(ref,{url,label:displayLabel,assetId:id});catalogRevision++;return ref;
     }
     try {
-        if(project.scene.backgroundAssetId)await install(project.scene.backgroundAssetId,'background');
-        for(const a of project.scene.actors)if(a.spriteAssetId)await install(a.spriteAssetId,'outfit',a.actorId);
+        for(const a of library)await install(a.assetId,a.kind==='background'?'background':'outfit',a.actorId??undefined,a.label);
         if(!current())throw Error('STALE_PROJECT');refresh();
         if(project.scene.backgroundAssetId)apply({type:'setBackground',assetId:project.scene.backgroundAssetId});
         apply({type:project.scene.backgroundLocked?'lock':'release',field:'background'});
@@ -74,6 +76,26 @@ export async function createProjectScene(project,client,actions,changed,isCurren
     }
     return {
         project:true,
+        async renameAsset(ref,name) {
+            if(!current())return;
+            if(importing||cleanupBusy)throw Error('Wait for the PNG import or cleanup to finish.');
+            if(!label(name))throw Error('Use a label of 1–80 characters.');
+            const asset=assets.find(a=>a.id===ref),item=media.get(ref);
+            if(!asset||!item)throw Error('Select library artwork first.');
+            const entry=library.find(a=>a.assetId===item.assetId && a.actorId===(asset.characterKey??null) && a.kind===(asset.kind==='background'?'background':'sprite'));
+            entry.label=name;item.label=name;edit++;invalidateCleanup();notify();
+        },
+        async unregisterAsset(ref,confirm) {
+            if(!current())return;
+            if(importing||cleanupBusy)throw Error('Wait for the PNG import or cleanup to finish.');
+            const asset=assets.find(a=>a.id===ref),item=media.get(ref);
+            if(!asset||!item)throw Error('Select library artwork first.');
+            if(scene.view.background?.id===ref || scene.view.cast.some(a=>a.outfit?.id===ref))throw Error('Select different artwork or clear its scene choice first.');
+            if(!confirm('Remove '+item.label+' from this project library? Save this change, then review unused artwork to explicitly delete its bytes.'))return;
+            const index=library.findIndex(a=>a.assetId===item.assetId && a.actorId===(asset.characterKey??null) && a.kind===(asset.kind==='background'?'background':'sprite'));
+            library.splice(index,1);assets.splice(assets.indexOf(asset),1);media.delete(ref);if(item.url)URL.revokeObjectURL(item.url);
+            catalogRevision++;refresh();edit++;invalidateCleanup();notice='Removed from library · save before reviewing unused artwork.';notify();
+        },
         async reviewUnused() {
             if(!cleanupReady()){cleanupNotice='Save or discard unsaved changes and wait for imports, saves and cleanup to finish.';notify();return;}
             cleanupBusy=true;invalidateCleanup();cleanupNotice='Reviewing saved project artwork…';notify();
@@ -101,8 +123,11 @@ export async function createProjectScene(project,client,actions,changed,isCurren
         async sync(){if(!current())return false;notify();return true;},
         async dispatch(command){if(importing||cleanupBusy)throw Error('Wait for the PNG import or cleanup to finish.');invalidateCleanup();if(!current())return false;apply(command);edit++;notice='Applied · unsaved project changes.';notify();return true;},
         async register(_preset,name){if(importing||cleanupBusy)throw Error('Wait for the PNG import or cleanup to finish.');invalidateCleanup();if(!current())return;if(!label(name)||actors.length>=20)throw Error('Use a name of 1–80 characters; maximum 20 actors.');const key=crypto.randomUUID();actors.push({key,label:name,description:'Project actor',defaultURL:null});refresh();apply({type:'addCharacter',characterKey:key});edit++;notify();return key;},
-        async importFile(file,kind,key){
+        async importFile(file,kind,key,displayLabel){
             if(!current())return;
+            displayLabel=displayLabel?.trim() || file.name?.replace(/\.png$/i,'').slice(0,80) || 'Imported PNG';
+            if(!label(displayLabel))throw Error('Use a label of 1–80 characters.');
+            if(!['background','outfit'].includes(kind))throw Error('Select background or actor sprite.');
             if(file.type!=='image/png'||file.size>5*1024*1024)throw Error('Project imports require static PNG up to 5 MiB.');
             if(kind!=='background'&&!actors.some(a=>a.key===key))throw Error('Select a project actor first.');
             if(importing||cleanupBusy)throw Error('Wait for the PNG import or cleanup to finish.');
@@ -111,8 +136,13 @@ export async function createProjectScene(project,client,actions,changed,isCurren
             try {
                 const result=await client.upload(project.projectId,file);
                 if(!current())return;
-                const ref=await install(result.assetId,kind,kind==='background'?undefined:key);
+                if(!validId(result.assetId))throw Error('INVALID_RECEIPT');
+                const entry={assetId:result.assetId,label:displayLabel,kind:kind==='background'?'background':'sprite',actorId:kind==='background'?null:key};
+                const prior=library.findIndex(a=>a.assetId===entry.assetId && a.kind===entry.kind && a.actorId===entry.actorId);
+                if(prior<0 && library.length>=100)throw Error('Maximum 100 library entries.');
+                const ref=await install(result.assetId,kind,kind==='background'?undefined:key,displayLabel);
                 if(!current())return;
+                if(prior<0)library.push(entry);else library[prior]=entry;
                 refresh();apply({type:kind==='background'?'setBackground':'setOutfit',assetId:ref,...(kind==='background'?{}:{characterKey:key})});edit++;notice='Imported · unsaved project arrangement.';
             } catch(error){notice='Import failed: '+error.message;throw error;}
             finally{importing=false;notify();}
@@ -121,7 +151,7 @@ export async function createProjectScene(project,client,actions,changed,isCurren
             if(!current()||busy||importing||cleanupBusy)return;
             invalidateCleanup();
             const captured=edit,id=project.projectId,expectedRevision=project.revision;
-            const body={schemaVersion:1,expectedRevision,name:project.name,scene:structuredClone(globalState())};
+            const body={schemaVersion:2,expectedRevision,name:project.name,scene:structuredClone(globalState()),catalog:structuredClone(library)};
             busy=true;notify();
             try {const receipt=await client.save(id,body);if(!current())return;
                 if(receipt.projectId!==id||receipt.revision!==expectedRevision+1)throw Error('INVALID_RECEIPT');

@@ -1,5 +1,11 @@
 # Staged implementation roadmap
 
+## DYL-22 PNG-library review candidate — 2026-10-15
+
+The owner explicitly authorized the first residual DYL-22 slice. [Workflow and storage contract](M1_PNG_ASSET_LIBRARY.md): project-owned labels/categories, durable alternatives and explicit reselection, shared immutable PNG bytes, catalog-aware cleanup, transactional schema-v1→v2 upgrade and compatible full-store recovery. Portable v1 copies still include selected artwork only, without library labels/alternatives. [Implementation/evidence](M1_PNG_ASSET_LIBRARY_IMPLEMENTATION.md). PR #28 is merged at starting main `262aad7b64624845e68f783bf779a6fd5e4689d4`.
+
+This is a bounded implementation for review; historical blockers and original JPEG/static-WebP requirements remain. DYL-55 stays pending owner acceptance, DYL-23 separately gated, Decision F undecided and Gate A NOT_RUN. DYL-56/60 and M1.3/M2, production/release and upstream authorization are unchanged. Older entries below retain their original evidence/scope.
+
 ## Current M1.2 completion checkpoint — 2026-10-15
 
 [Reviewed main `ea65d84a521a39c9ccc977f4cb3643454963d4b8`](M1_2_STORAGE_COMPLETION_AND_READINESS.md): PRs #23–27 merged; DYL-49–54/57–59 Done. **DYL-55 GO for bounded technical acceptance pending owner; overall M1.2 REVISE.** Parent stays unfinished; DYL-22/23 retain blockers and DYL-56 Backlog. Gate A NOT_RUN, M1.3/M2 unauthorized, upstream on hold, no release/live installation.

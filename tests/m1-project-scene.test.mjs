@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {randomUUID} from 'node:crypto';
 import {createProjectScene} from '../src/project-scene.mjs';
-const initial=()=>({schemaVersion:1,projectId:randomUUID(),name:'Project',revision:0,scene:{backgroundAssetId:null,backgroundLocked:false,actors:[]}});
+const initial=()=>({schemaVersion:2,catalog:[],projectId:randomUUID(),name:'Project',revision:0,scene:{backgroundAssetId:null,backgroundLocked:false,actors:[]}});
 function setup(){let snapshot={sessionEpoch:1,sourceRevision:0,cursor:{sourceKey:'native-a',revision:0},owner:{scope:'character'}};return{actions:{getSnapshot:()=>snapshot,getSceneEvidence:()=>({snapshot})},switch:()=>{snapshot={...snapshot,sessionEpoch:2};}};}
 test('global reducer preserves actor IDs and excludes native anchors and expressions',async()=>{
  const {actions}=setup(),record=initial();let saved;
@@ -10,7 +10,7 @@ test('global reducer preserves actor IDs and excludes native anchors and express
  const key=await model.register('mira-a','Same name');await model.dispatch({type:'setSlot',characterKey:key,slot:'left'});
  await assert.rejects(model.dispatch({type:'clearExpression',characterKey:key}),/session-only/);
  await model.save();assert.equal(saved.scene.actors[0].actorId,key);assert.equal(saved.scene.actors[0].slot,'left');
- assert.deepEqual(Object.keys(saved).sort(),['expectedRevision','name','scene','schemaVersion']);assert.ok(!JSON.stringify(saved).includes('native-a'));
+ assert.deepEqual(Object.keys(saved).sort(),['catalog','expectedRevision','name','scene','schemaVersion']);assert.ok(!JSON.stringify(saved).includes('native-a'));
  const restored=await createProjectScene({...record,revision:1,scene:saved.scene},{},actions,()=>{},()=>true);
  assert.equal(restored.get().scene.view.cast[0].key,key);assert.equal(restored.get().scene.view.slots.left,key);model.dispose();restored.dispose();
 });
@@ -79,8 +79,8 @@ test('confirmed cleanup evicts unused Blob/catalog entries and keeps saved scene
  const preview=unusedPreview(record,assetId);
  const client={upload:async()=>({assetId}),asset:async()=>({blob:new Blob(['png']),hash:'b'.repeat(64)}),save:async(id,body)=>{scene=body.scene;return{projectId:id,revision:++revision};},previewCleanup:async()=>({...preview,revision}),removeUnusedAssets:async()=>({deletedIds:[assetId],deletedCount:1,reclaimedBytes:3})};
  const model=await createProjectScene(record,client,actions,()=>{},()=>true);
- await model.importFile(new Blob(['png'],{type:'image/png'}),'background');await model.dispatch({type:'clearBackground'});await model.save();
- assert.equal(model.get().assets.length,1);await model.reviewUnused();const pending=model.removeUnused([assetId],()=>true);
+ await model.importFile(new Blob(['png'],{type:'image/png'}),'background');await model.dispatch({type:'clearBackground'});await model.unregisterAsset(assetId,()=>true);await model.save();
+ assert.equal(model.get().assets.length,0);await model.reviewUnused();const pending=model.removeUnused([assetId],()=>true);
  await assert.rejects(model.register('','Blocked'),/Wait for/);await pending;
  assert.equal(model.get().assets.length,0);assert.equal(model.get().media.size,0);assert.equal(model.status().dirty,false);assert.equal(model.status().revision,1);assert.equal(scene.backgroundAssetId,null);assert.match(model.status().cleanupNotice,/Cleanup completed/);model.dispose();
 });
@@ -100,4 +100,39 @@ test('cleanup client treats transport loss, malformed/proxy failures and wrong c
  }
  globalThis.fetch=async()=>Response.json({code:'CLEANUP_STALE'},{status:409});await assert.rejects(client.removeUnusedAssets(record.projectId,v,[id]),/CLEANUP_STALE/);
  globalThis.fetch=async()=>Response.json({projectId:record.projectId,revision:0,deletedIds:[id],deletedCount:1,reclaimedBytes:3});assert.equal((await client.removeUnusedAssets(record.projectId,v,[id])).reclaimedBytes,3);
+});
+
+test('project library reopens all alternatives, preserves UUIDs/labels and restricts actor compatibility',async()=>{
+ const {actions}=setup();let record=initial();const files=new Map();let uploads=0;
+ const client={upload:async(id,file)=>{uploads++;const assetId=randomUUID();files.set(assetId,file);return{assetId};},asset:async(id,asset)=>({blob:files.get(asset),hash:'b'.repeat(64)}),save:async(id,body)=>{record={...record,...structuredClone(body),revision:body.expectedRevision+1};return record;}};
+ let model=await createProjectScene(record,client,actions,()=>{},()=>true);
+ const key=await model.register('','Actor'),other=await model.register('','Same name');
+ const file=new Blob(['png'],{type:'image/png'});
+ for(const kind of ['background','background','outfit','outfit'])await model.importFile(file,kind,key,'Duplicate label');
+ await model.dispatch({type:'setSlot',characterKey:key,slot:'left'});await model.dispatch({type:'lock',field:'outfit',characterKey:key});await model.save();
+ const saved=structuredClone(record);model.dispose();model=await createProjectScene(record,client,actions,()=>{},()=>true);
+ assert.equal(model.get().assets.length,4);assert.equal(model.status().dirty,false);
+ for(const asset of model.get().assets){
+  assert.equal(model.get().media.get(asset.id).label,'Duplicate label');
+  await model.dispatch({type:asset.kind==='background'?'setBackground':'setOutfit',assetId:asset.id,...(asset.kind==='background'?{}:{characterKey:key})});
+ }
+ assert.equal(uploads,4);assert.equal(model.get().scene.view.slots.left,key);assert.equal(model.get().scene.view.cast.find(a=>a.key===key).locks.outfit,true);
+ const sprite=model.get().assets.find(a=>a.kind==='outfit');await assert.rejects(model.dispatch({type:'setOutfit',assetId:sprite.id,characterKey:other}));
+ await model.renameAsset(sprite.id,'Recognizable sprite');await model.save();assert.equal(record.catalog.find(a=>a.assetId===model.get().media.get(sprite.id).assetId).label,'Recognizable sprite');
+ assert.deepEqual(record.catalog.map(a=>a.assetId),saved.catalog.map(a=>a.assetId));model.dispose();
+});
+for(const change of ['switch','replacement','dispose'])test('late PNG library upload cannot attach after '+change,async()=>{
+ const context=setup();let release,current=true,reads=0;
+ const model=await createProjectScene(initial(),{upload:()=>new Promise(r=>release=()=>r({assetId:randomUUID()})),asset:async()=>{reads++;return{blob:new Blob(['png']),hash:'hash'};}},context.actions,()=>{},()=>current);
+ const pending=model.importFile(new Blob(['png'],{type:'image/png'}),'background',undefined,'Late');
+ if(change==='switch')context.switch();else if(change==='replacement')current=false;else model.dispose();release();await pending;
+ assert.equal(reads,0);assert.equal(model.get().assets.length,0);assert.equal(model.status().dirty,false);model.dispose();
+});
+test('missing catalog art remains a selectable neutral alternative; invalid imports and failed catalog save preserve state',async()=>{
+ const {actions}=setup(),record=initial(),id=randomUUID();record.catalog=[{assetId:id,label:'Unavailable',kind:'background',actorId:null}];
+ const model=await createProjectScene(record,{asset:async()=>{throw Error('CORRUPT_ASSET');},save:async()=>{throw Error('REVISION_CONFLICT');}},actions,()=>{},()=>true);
+ assert.equal(model.get().assets[0].available,false);await model.dispatch({type:'setBackground',assetId:id});assert.notEqual(model.get().scene.view.background.status,'ready');
+ await assert.rejects(model.importFile(new Blob(['x'],{type:'image/png'}),'expression'),/background or actor/);
+ await model.renameAsset(id,'Retained label');await model.save();assert.equal(model.status().dirty,true);assert.equal(model.status().revision,0);assert.equal(model.get().media.get(id).label,'Retained label');
+ await assert.rejects(model.unregisterAsset(id,()=>true),/different artwork/);await model.dispatch({type:'clearBackground'});await model.unregisterAsset(id,()=>false);assert.equal(model.get().assets.length,1);await model.unregisterAsset(id,()=>true);assert.equal(model.get().assets.length,0);model.dispose();
 });

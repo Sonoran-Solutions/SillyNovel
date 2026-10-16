@@ -1,5 +1,7 @@
 # DYL-58 operator database recovery contract
 
+**DYL-22 review candidate:** [PNG library contract](M1_PNG_ASSET_LIBRARY.md) extends project/database envelopes to v2 with an additive transactional catalog migration; scene and portable bundle v1 remain unchanged. Saved library alternatives are protected from cleanup. Updated recovery tools support exact schema 1/2 and whole-library backups; portable v1 copies omit library labels/unselected alternatives. Historical v1-only/no-migration statements below describe the prior slice.
+
 This experimental local workflow recovers the installed SillyNovel store with its original IDs, revisions, owner keys and every immutable PNG, including unreferenced assets. It is authorized for disposable verification and senior review. It does not authorize live installation, production replacement, automatic recovery, account reassignment, DYL-59 cleanup, associations, M1.3/M2 or Gate A acceptance. [Implementation/evidence](M1_PROJECT_DATABASE_RECOVERY_IMPLEMENTATION.md).
 
 The separate [portable `.sillynovel` format](M1_PROJECT_PORTABILITY.md) remains the supported copy path between account identities, allocating new project/actor/asset IDs. A database recovery never imports those semantics.

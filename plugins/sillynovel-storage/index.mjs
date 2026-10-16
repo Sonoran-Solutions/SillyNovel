@@ -47,7 +47,7 @@ export async function init(router) {
         const bytes = await body(req,'application/vnd.sillynovel+json',32768);
         try { return JSON.parse(bytes.toString('utf8')); } catch { demand(false,'INVALID_JSON'); }
     };
-    router.get('/capabilities',route((req,res)=>res.json({apiVersion:1,schemaVersion:1,formats:['image/png'],maxBytes:MAX_BYTES,bundleVersion:1,bundleMaxBytes:BUNDLE_BYTES,cleanupVersion:1})));
+    router.get('/capabilities',route((req,res)=>res.json({apiVersion:1,schemaVersion:2,catalogVersion:1,formats:['image/png'],maxBytes:MAX_BYTES,bundleVersion:1,bundleMaxBytes:BUNDLE_BYTES,cleanupVersion:1})));
     router.get('/projects',route((req,res)=>res.json(store.list(req.sillynovelOwner))));
     router.post('/projects',route(async(req,res)=>res.status(201).json(store.create(req.sillynovelOwner,await json(req)))));
     let bundleBusy=false;

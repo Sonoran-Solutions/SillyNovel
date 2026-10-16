@@ -533,7 +533,7 @@ for (const fail of [false,true]) test(`project replacement pauses all visual mut
     const page=await fixture(t);
     await page.locator('#sillynovel-enabled').uncheck();
     await page.evaluate(()=>{fixture.context.getRequestHeaders=()=>({});});
-    const first={schemaVersion:1,projectId:'11111111-1111-4111-8111-111111111111',name:'First',revision:0,scene:{backgroundAssetId:null,backgroundLocked:true,actors:[]}};
+    const first={schemaVersion:2,catalog:[],projectId:'11111111-1111-4111-8111-111111111111',name:'First',revision:0,scene:{backgroundAssetId:null,backgroundLocked:true,actors:[]}};
     const second={...first,projectId:'22222222-2222-4222-8222-222222222222',name:'Second'};
     let release,started;
     const requested=new Promise(r=>started=r),gate=new Promise(r=>release=r);
@@ -543,7 +543,7 @@ for (const fail of [false,true]) test(`project replacement pauses all visual mut
             started();await gate;
             await route.fulfill({status:fail?500:200,json:fail?{code:'LOAD_FAILED'}:second});return;
         }
-        await route.fulfill({json:path.endsWith('/capabilities')?{apiVersion:1,schemaVersion:1}:path.endsWith('/projects')?[first,second]:first});
+        await route.fulfill({json:path.endsWith('/capabilities')?{apiVersion:1,schemaVersion:2,catalogVersion:1}:path.endsWith('/projects')?[first,second]:first});
     });
     await page.locator('#sillynovel-enabled').check();
     await page.locator('.sillynovel-controls summary').click();
@@ -572,13 +572,13 @@ for (const fail of [false,true]) test(`project replacement pauses all visual mut
 
 for(const outcome of ['success','failure','chat switch','project replacement'])test('portable bundle import preserves current visuals: '+outcome,async t=>{
  const page=await fixture(t);page.setDefaultTimeout(5000);await page.locator('#sillynovel-enabled').uncheck();await page.evaluate(()=>{fixture.context.getRequestHeaders=()=>({});});
- const first={schemaVersion:1,projectId:'11111111-1111-4111-8111-111111111111',name:'First',revision:0,scene:{backgroundAssetId:null,backgroundLocked:true,actors:[]}};
+ const first={schemaVersion:2,catalog:[],projectId:'11111111-1111-4111-8111-111111111111',name:'First',revision:0,scene:{backgroundAssetId:null,backgroundLocked:true,actors:[]}};
  const imported={...first,projectId:'22222222-2222-4222-8222-222222222222',name:'Imported'};
  let release,started;const gate=new Promise(r=>release=r),seen=new Promise(r=>started=r);let done=false;
  await page.route('**/api/plugins/sillynovel-storage/**',async route=>{
   const path=new URL(route.request().url()).pathname;
   if(path.endsWith('/import')){started();await gate;done=true;return route.fulfill({status:outcome==='failure'?400:201,json:outcome==='failure'?{code:'INVALID_BUNDLE'}:imported});}
-  await route.fulfill({json:path.endsWith('/capabilities')?{apiVersion:1,schemaVersion:1,bundleVersion:1}:path.endsWith('/projects')?(done?[first,imported]:[first]):first});
+  await route.fulfill({json:path.endsWith('/capabilities')?{apiVersion:1,schemaVersion:2,catalogVersion:1,bundleVersion:1}:path.endsWith('/projects')?(done?[first,imported]:[first]):first});
  });
  await page.locator('#sillynovel-enabled').check();await page.locator('.sillynovel-controls summary').click();
  await button(page,'Open project and use with this chat').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('First · revision'));
@@ -608,7 +608,7 @@ test('portable export downloads only a successful bundle, with explicit errors a
  await page.route('**/api/plugins/sillynovel-storage/**',async route=>{
   const path=new URL(route.request().url()).pathname;
   if(path.endsWith('/export'))return route.fulfill(fail?{status:503,json:{code:'CORRUPT_ASSET'}}:{contentType:'application/vnd.sillynovel.bundle',body:'{"format":"test-only"}'});
-  await route.fulfill({json:path.endsWith('/capabilities')?{apiVersion:1,schemaVersion:1,bundleVersion:1}:[{projectId:id,name:'Saved'}]});
+  await route.fulfill({json:path.endsWith('/capabilities')?{apiVersion:1,schemaVersion:2,catalogVersion:1,bundleVersion:1}:[{projectId:id,name:'Saved'}]});
  });
  await page.locator('#sillynovel-enabled').check();await page.locator('.sillynovel-controls summary').click();
  const download=page.waitForEvent('download');await button(page,'Export project').click();assert.equal((await download).suggestedFilename(),'project.sillynovel');
@@ -622,7 +622,7 @@ test('portable export downloads only a successful bundle, with explicit errors a
 import {CLEANUP_WARNING} from '../plugins/sillynovel-storage/schema.mjs';
 for(const outcome of ['cancel','success','stale','lost response','wrong receipt','chat switch','project replacement','disable'])test('unused artwork controls and delayed results: '+outcome,async t=>{
  const page=await fixture(t);await sceneControls(page);
- const first={schemaVersion:1,projectId:'11111111-1111-4111-8111-111111111111',name:'Cleanup First',revision:0,scene:{backgroundAssetId:null,backgroundLocked:true,actors:[]}};
+ const first={schemaVersion:2,catalog:[],projectId:'11111111-1111-4111-8111-111111111111',name:'Cleanup First',revision:0,scene:{backgroundAssetId:null,backgroundLocked:true,actors:[]}};
  const second={...first,projectId:'22222222-2222-4222-8222-222222222222',name:'Cleanup Second'};
  const assetId='33333333-3333-4333-8333-333333333333';
  const preview={projectId:first.projectId,revision:0,inventoryRevision:'a'.repeat(64),candidates:[{assetId,sha256:'b'.repeat(64),width:1,height:1,byteCount:123}],reclaimableBytes:123,warning:CLEANUP_WARNING};
@@ -634,7 +634,7 @@ for(const outcome of ['cancel','success','stale','lost response','wrong receipt'
    if(outcome==='stale')return route.fulfill({status:409,json:{code:'CLEANUP_STALE'}});
    return route.fulfill({json:{projectId:outcome==='wrong receipt'?second.projectId:first.projectId,revision:0,deletedIds:[assetId],deletedCount:1,reclaimedBytes:123}});
   }
-  return route.fulfill({json:path.endsWith('/capabilities')?{apiVersion:1,schemaVersion:1,cleanupVersion:1}:path.endsWith('/unused-assets')?preview:path.endsWith('/projects')?[first,second]:path.endsWith(second.projectId)?second:first});
+  return route.fulfill({json:path.endsWith('/capabilities')?{apiVersion:1,schemaVersion:2,catalogVersion:1,cleanupVersion:1}:path.endsWith('/unused-assets')?preview:path.endsWith('/projects')?[first,second]:path.endsWith(second.projectId)?second:first});
  });
  // Re-enable to repeat the single capability probe after installing the fixture routes.
  await page.locator('#sillynovel-enabled').uncheck();await page.evaluate(()=>{fixture.context.getRequestHeaders=()=>({});});await page.locator('#sillynovel-enabled').check();await sceneControls(page);

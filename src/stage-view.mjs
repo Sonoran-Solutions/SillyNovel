@@ -93,7 +93,7 @@ export function mountVisualStage({ document, stage, actions }) {
             } else {
                 const blob=await client.exportBundle(id);if(!current()||projectList.value!==id)return;
                 const url=URL.createObjectURL(blob),link=make('a','');link.href=url;link.download='project.sillynovel';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
-                bundleStatus.textContent='Exported saved project layout. Unsaved changes are excluded.';
+                bundleStatus.textContent='Exported saved layout and selected artwork only. Library labels and unselected alternatives do not travel in v1 bundles. Unsaved changes are excluded.';
             }
         } catch(error){if(current())bundleStatus.textContent=(file?'Import':'Export')+' failed: '+error.message;}
         finally{bundleBusy=false;if(!disposed)render();}
@@ -110,7 +110,7 @@ export function mountVisualStage({ document, stage, actions }) {
     const cleanupWarning=make('p','sillynovel-cleanup-warning');panel.append(cleanupWarning);
     let displayedPreview=null;const cleanupSelection=new Set();
     listen(cleanupList,'change',event=>{const input=event.target;if(input.type!=='checkbox')return;if(input.checked)cleanupSelection.add(input.value);else cleanupSelection.delete(input.value);render();});
-    run(async()=>{try{const cap=await client.capabilities();if(disposed)return;if(cap.apiVersion!==1||cap.schemaVersion!==1)throw Error('Incompatible storage');const list=await client.list();if(disposed)return;capable=true;cleanupCapable=cap.cleanupVersion===1;bundleCapable=cap.bundleVersion===1;if(!bundleCapable)bundleStatus.textContent='Project bundles require an updated compatible storage plugin.';options(projectList,list.map(p=>[p.projectId,p.name+' · '+p.projectId.slice(0,8)]));}catch(error){if(disposed)return;capable=false;if(error.message==='AUTHENTICATED_ACCOUNT_REQUIRED')unavailable='Project storage requires a signed-in SillyTavern account. Session visuals remain available.';else if(error.message==='CSRF_REQUIRED')unavailable='Project storage requires host CSRF protection. Session visuals remain available.';}render();});
+    run(async()=>{try{const cap=await client.capabilities();if(disposed)return;if(cap.apiVersion!==1||cap.schemaVersion!==2 || cap.catalogVersion!==1)throw Error('Incompatible storage');const list=await client.list();if(disposed)return;capable=true;cleanupCapable=cap.cleanupVersion===1;bundleCapable=cap.bundleVersion===1;if(!bundleCapable)bundleStatus.textContent='Project bundles require an updated compatible storage plugin.';options(projectList,list.map(p=>[p.projectId,p.name+' · '+p.projectId.slice(0,8)]));}catch(error){if(disposed)return;capable=false;if(error.message==='AUTHENTICATED_ACCOUNT_REQUIRED')unavailable='Project storage requires a signed-in SillyTavern account. Session visuals remain available.';else if(error.message==='CSRF_REQUIRED')unavailable='Project storage requires host CSRF protection. Session visuals remain available.';}render();});
     const bg=field('Background');
     button('Apply background',()=>model.dispatch(bg.value ? {type:'setBackground',assetId:bg.value}:{type:'clearBackground'}));
     const preset=field('Test actor art');options(preset,[['','No art · manual actor'],...TEST_ACTORS.map(a=>[a.preset,a.description])]);preset.value='mira-a';
@@ -130,8 +130,15 @@ export function mountVisualStage({ document, stage, actions }) {
     const lockField=field('Lock field');options(lockField,['background','presence','slot','outfit'].map(x=>[x,x]));
     for(const type of ['lock','release'])button(type==='lock'?'Lock choice':'Release lock',()=>model.dispatch({type,field:lockField.value,...(lockField.value==='background'?{}:{characterKey:actor.value})}));
     const fileKind=field('Temporary image use');options(fileKind,[['background','Background'],['outfit','Selected actor outfit']]);
+    const importLabel=field('PNG display label','input');importLabel.maxLength=80;
+    const libraryAsset=field('Library artwork');
+    const libraryLabel=field('Artwork label','input');libraryLabel.maxLength=80;
+    const renameAsset=button('Save artwork label',()=>model.project&&model.renameAsset(libraryAsset.value,libraryLabel.value.trim()));
+    const unregisterAsset=button('Remove artwork from library',()=>model.project&&model.unregisterAsset(libraryAsset.value,message=>globalThis.confirm(message)));
+    listen(libraryAsset,'change',()=>{libraryLabel.value=model.get().media.get(libraryAsset.value)?.label??'';});
+    const selectedArt=make('p','sillynovel-selected-art');panel.append(selectedArt);
     const file=field('Temporary raster file','input');file.type='file';file.accept='image/png,image/jpeg,image/webp';
-    listen(file,'change',()=>{const selected=file.files[0],kind=fileKind.value,key=actor.value;file.value='';if(selected)run(()=>model.importFile(selected,kind,key),true);});
+    listen(file,'change',()=>{const selected=file.files[0],kind=fileKind.value,key=actor.value;file.value='';if(selected)run(()=>model.importFile(selected,kind,key,importLabel.value),true);});
     const reset=button('Reset transient visuals',()=>model.reset());
     listen(actor,'change',render);
     listen(details,'keydown',event=>{if(event.key==='Escape'){details.open=false;summary.focus();event.stopPropagation();}});
@@ -147,11 +154,14 @@ export function mountVisualStage({ document, stage, actions }) {
         const {scene,actors,assets,media,notice,verifiedStamp}=model.get();
         const verified=verifiedStamp===evidenceStamp(actions.getSnapshot());
         const view=verified?scene?.view:null;
-        options(bg,[['','Clear · neutral'],...assets.filter(a=>a.kind==='background').map(a=>[a.id,media.get(a.id)?.label??a.id])]);
+        options(bg,[['','Clear · neutral'],...assets.filter(a=>a.kind==='background').map(a=>[a.id,(media.get(a.id)?.label??a.id)+(model.project?' · '+media.get(a.id)?.assetId:'')])]);
         options(actor,actors.map(a=>[a.key,a.label+' · '+a.description+' · '+a.key.split('-').at(-1)]));
         const active=actor.value;
-        options(outfit,[['','Clear · default'],...assets.filter(a=>a.kind==='outfit').map(a=>[a.id,(a.characterKey===active?'':'Other actor · ')+(media.get(a.id)?.label??a.id)])]);
+        options(outfit,[['','Clear · default'],...assets.filter(a=>a.kind==='outfit' && (!model.project || a.characterKey===active)).map(a=>[a.id,(a.characterKey===active?'':'Other actor · ')+(media.get(a.id)?.label??a.id)+(model.project?' · '+media.get(a.id)?.assetId:'')])]);
         const member=view?.cast.find(a=>a.key===active);
+        options(libraryAsset,assets.map(a=>[a.id,(a.kind==='background'?'Background':'Actor sprite')+' · '+(media.get(a.id)?.label??a.id)+' · '+media.get(a.id)?.assetId]));
+        if(libraryLabel.dataset.ref!==libraryAsset.value){libraryLabel.dataset.ref=libraryAsset.value;libraryLabel.value=media.get(libraryAsset.value)?.label??'';}
+        selectedArt.textContent=model.project?'Selected background: '+(view?.background?media.get(view.background.id)?.label+' · '+media.get(view.background.id)?.assetId:'neutral')+' / Selected actor sprite: '+(member?.outfit?media.get(member.outfit.id)?.label+' · '+media.get(member.outfit.id)?.assetId:'default'):'';
         options(expression,[['','Clear · neutral'],...assets.filter(a=>a.kind==='expression').map(a=>[a.id,(a.characterKey===active && a.outfitId===(member?.outfit?.id??null)?'':'Incompatible · ')+(media.get(a.id)?.label??a.id)])]);
         const labels=view?.cast.map(a=>a.label+' ['+a.key.split('-').at(-1)+'] '+(!a.present?'absent':a.slot??'offstage')+' · locks: '+Object.entries(a.locks).filter(([,v])=>v).map(([k])=>k).join(', '))??[];
         cast.textContent=labels.length?'Cast: '+labels.join(' / '):'No session cast. Register actors manually.';
@@ -172,7 +182,7 @@ export function mountVisualStage({ document, stage, actions }) {
         const ready=Boolean(verified && scene?.context.selectedSourceKey);
         const state=model.project?model.status():null;
         const paused=projectBusy||Boolean(state?.importing);
-        for(const e of controls)e.disabled=paused||(e===reset ? false : !ready);
+        for(const e of controls)e.disabled=paused||Boolean(state?.cleanupBusy)||(e===reset ? false : !ready);
         unsaved.textContent=state?(state.dirty?'Unsaved project changes':'Saved project layout'):'Unsaved session visuals';
         projectStatus.textContent=projectBusy?'Opening project · visual edits paused…':!capable?unavailable:state?state.name+' · revision '+state.revision+(state.importing?' · importing PNG…':state.busy?' · saving…':state.dirty?' · unsaved changes':' · saved'):'No project attached. Select one explicitly for this chat.';
         for(const e of [projectName,projectList,...projectButtons])e.disabled=!capable||paused||!ready||actions.getSnapshot().owner?.scope!=='character';
@@ -192,11 +202,13 @@ export function mountVisualStage({ document, stage, actions }) {
         cleanupStatus.textContent=!cleanupCapable?'Cleanup requires an updated compatible storage plugin.':!state?'Explicitly open a saved project to review unused artwork.':state.dirty||state.importing||state.busy?'Save or discard unsaved changes and wait for imports and saves before cleanup.':state.cleanupNotice;
         cleanupWarning.textContent=preview?.warning??'Other tabs may have unsaved drafts using artwork absent from the saved project. Removal cannot be undone here; keep verified backups.';
         save.disabled=save.disabled||!state||state.busy;detach.disabled=detach.disabled||!state;
-        if(state){reset.disabled=true;preset.disabled=true;expression.disabled=true;file.accept='image/png';help.textContent='This project stores global layout, presence, outfits and locks. Message expressions are not saved. Switching chats detaches the project; explicitly reopen after reload.';}
+        if(state){reset.disabled=true;preset.disabled=true;expression.disabled=true;file.accept='image/png';help.textContent='This project stores global layout, presence, outfits and locks. Message expressions are not saved. Library imports and label edits require Save project. Unselected saved alternatives are retained. Remove an alternative from the library and save before explicitly deleting its unused bytes. Portable v1 bundles include selected art only, without library labels or alternatives. Switching chats detaches the project; explicitly reopen after reload.';}
         else {file.accept='image/png,image/jpeg,image/webp';help.textContent=transientHelp;}
         for(const [control,sessionName,projectLabel] of [[name,'Session actor name','Project actor name'],[actor,'Session actor','Project actor'],[fileKind,'Temporary image use','Project image use'],[file,'Temporary raster file','Project PNG file']]){
             const text=state?projectLabel:sessionName;control.setAttribute('aria-label',text);control.parentElement.firstChild.textContent=text;
         }
+        for(const control of [importLabel,libraryAsset,libraryLabel])control.parentElement.hidden=!state;
+        for(const control of [renameAsset,unregisterAsset]){control.hidden=!state;control.disabled=control.disabled||!libraryAsset.value;}
         registerActor.textContent=state?'Register project actor':'Register session actor';
         preset.parentElement.hidden=Boolean(state);expression.parentElement.hidden=Boolean(state);applyExpression.hidden=Boolean(state);
     }
