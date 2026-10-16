@@ -1,0 +1,41 @@
+✔ classification uses committed references, including shared background/sprites and duplicate bytes (74.635985ms)
+✔ selected single/multiple deletion commits exact rows, preserves scene revision, export, backup and restart (38238.234178ms)
+✔ ownership, strict bounded schema, forged/foreign/referenced/unknown IDs refuse without mutation (6906.465176ms)
+✔ preview ordering: save adds reference (1248.433422ms)
+✔ preview ordering: upload (8178.36232ms)
+✔ preview ordering: another cleanup (81.040267ms)
+✔ preview ordering: unrelated bundle import (329.163424ms)
+✖ cleanup then stale draft save refuses missing artwork, subsequent import/export/backup serialize coherently (7864.815069ms)
+✔ atomic SQLite rollback before first delete (7031.858775ms)
+✔ atomic SQLite rollback after first delete (1014.415114ms)
+✔ corruption refuses entire preview/removal: bytes (8187.469155ms)
+✔ corruption refuses entire preview/removal: digest (8207.008201ms)
+✔ corruption refuses entire preview/removal: dimensions (8174.889315ms)
+✔ corruption refuses entire preview/removal: missing reference (8178.845434ms)
+QUOTA_EVIDENCE {"before":{"logical":104043833,"fileBytes":104185856,"freePages":0,"pageSize":4096},"after":{"logical":100042160,"fileBytes":104185856,"freePages":978,"pageSize":4096},"receipt":{"projectId":"a68d8d90-895a-4069-9187-f0672b99ef45","revision":0,"deletedIds":["095e0816-5d6f-487e-8df5-a5f052f245eb"],"deletedCount":1,"reclaimedBytes":4001673},"afterUpload":{"logical":104043833,"fileBytes":104185856,"freePages":0,"pageSize":4096}}
+✔ logical quota recovery, freelist and file size are distinct (14051.85277ms)
+ℹ Error: Test "cleanup then stale draft save refuses missing artwork, subsequent import/export/backup serialize coherently" at plugins/sillynovel-storage/test/cleanup.test.mjs:74:1 generated asynchronous activity after the test ended. This activity created the error "Error: database is not open" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ tests 15
+ℹ suites 0
+ℹ pass 14
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 117813.794188
+
+✖ failing tests:
+
+test at plugins/sillynovel-storage/test/cleanup.test.mjs:74:1
+✖ cleanup then stale draft save refuses missing artwork, subsequent import/export/backup serialize coherently (7864.815069ms)
+  Error: BUNDLE_BUSY
+      at demand (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/schema.mjs:3:34)
+      at bundleJob (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/bundle.mjs:51:5)
+      at Object.exportBundle (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/store.mjs:123:38)
+      at TestContext.<anonymous> (file:///tmp/sillynovel-dyl59/plugins/sillynovel-storage/test/cleanup.test.mjs:77:26)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    code: 'BUNDLE_BUSY',
+    status: 429
+  }

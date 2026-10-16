@@ -1,0 +1,62 @@
+{
+  "startingMain": "b37a60615795d8871171504de88da8d10afddf9e",
+  "runtimeImplementation": "ebe4d08cb2b771f9ba4d51a7880c749844441156",
+  "testedImplementation": "c77f512834d9c52b17a9d0a74f0ed5a89004c50a",
+  "result": "PASS",
+  "platform": "Linux",
+  "hostVersion": "1.19.0",
+  "hostSHA": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
+  "node": "v26.8.1",
+  "chromium": "151.0.7922.34",
+  "sqlite": "3.53.4",
+  "disposableRoot": "/tmp/sn-portability-host-7YC9TC",
+  "suites": {
+    "storage": 104,
+    "node": 80,
+    "actualEntryChromium": 39,
+    "realHostCheckpointGroups": 21
+  },
+  "quota": {
+    "before": {
+      "logical": 104091432,
+      "fileBytes": 104239104,
+      "freePages": 0
+    },
+    "after": {
+      "logical": 100089759,
+      "fileBytes": 104239104,
+      "freePages": 978
+    },
+    "receipt": {
+      "projectId": "251e37fa-f884-472d-bea9-390b535c3445",
+      "revision": 0,
+      "deletedIds": [
+        "0beb27a9-f657-4dfa-a3cd-4e575ff02001"
+      ],
+      "deletedCount": 1,
+      "reclaimedBytes": 4001673
+    },
+    "afterUpload": {
+      "logical": 104091432,
+      "fileBytes": 104239104,
+      "freePages": 0
+    }
+  },
+  "revisions": {
+    "beforeCleanup": 1,
+    "afterCleanup": 1,
+    "afterSave": 2
+  },
+  "nativeFileCount": 64,
+  "notTested": [
+    "Owner Gate A",
+    "Production/live installation or release",
+    "Physical devices",
+    "Other host/Node/SQLite/browser/OS/filesystem versions",
+    "Power loss or actual ENOSPC durability",
+    "Hostile local administrators",
+    "Cross-tab unsaved-draft enumeration",
+    "Immediate OS disk-space reclamation"
+  ],
+  "next": "Senior review only; no merge or automatic next issue"
+}

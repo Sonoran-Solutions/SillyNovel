@@ -1,0 +1,23 @@
+Owned evidence root /tmp/sn-portability-host-7YC9TC
+PASS real host auth/CSRF, two-user project and asset isolation, two-client CAS, PNG hash and limits
+PASS browser create/import background + two sprites/arrange/save/reload/explicit reopen; named canonical files unchanged
+PASS cleanup authenticated preview, strict schema/body/method/CSRF and two-account/foreign-ID isolation
+PASS browser review/select/cancel/confirm removes exact unused row; saved background/two sprites, IDs, locks, positions and revision preserved
+PASS second-client upload stales preview; injected SQLite failure after first delete rolls back whole selection without leaking error details
+PASS lost deletion response reports uncertainty despite committed removal; another unsaved draft receives ASSET_MISSING without changing scene
+PASS real browser late preview cannot cross native A/B/A; dirty edits and pending PNG upload disable cleanup; explicit reopen preserves original saved layout
+PASS real HTTP ASSET_QUOTA refusal → explicit selected cleanup → exact logical recovery → successful upload; unchanged file bytes and increased freelist measured separately
+PASS post-cleanup portable export and verified database backup remain valid; named two-account native file inventory unchanged
+PASS original project saves after cleanup, reload stays detached, explicit reopen restores original artwork/actors/positions/locks and only save increments revision
+PASS portable browser download/import preserves dirty stage; explicit reopen restores new identities, bytes, layout/locks; exact native inventory unchanged
+PASS HTTP failed project/second-asset/final-scene writes inspected in committed database: zero partial projects/assets
+PASS real two-account export refusal and import ownership; two-client import retry creates distinct copies; concurrent export/save is coherent
+PASS actual native switch during delayed import receipt never attaches visuals or changes stage ownership
+PASS native A to B to A detaches and never auto-restores project
+PASS actual host failed update preserves project; missing/corrupt assets restore neutral fallback
+PASS delayed successful save receipt cannot redirect switched chat
+PASS actual host native send/stream/stop, navigation and backlog remain functional
+PASS plugin/server restart preserves original and imported layout/assets; imported project explicitly reopens in real browser
+PASS plugin disabled at startup refuses bundle controls and retains session stage/native composer
+PASS CSRF-disabled pinned host refuses cleanup inspection and persistence
+Evidence /tmp/sn-portability-host-7YC9TC/evidence.json
