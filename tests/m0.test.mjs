@@ -551,6 +551,8 @@ test('eventless group ownership changes detected on ordinary native events start
     controller.enable();const first=latest.sessionEpoch;
     context.groups[0]={...context.groups[0]};context.eventSource.emit(eventTypes.GENERATION_STARTED,'normal');
     assert.equal(latest.sessionEpoch,first+1);assert.equal(latest.cursor.author.label,'Mira');
+    assert.equal(latest.generation.status,'streaming');assert.equal(latest.generation.type,'normal');
+    assert.notEqual(latest.generation.id,null);assert.equal(latest.generation.sourceKey,null);
     context.groups=[];context.eventSource.emit(eventTypes.MESSAGE_EDITED,1);
     assert.equal(latest.sessionEpoch,first+2);assert.equal(supportsProjectConversation(latest.owner),false);controller.disable();
 });

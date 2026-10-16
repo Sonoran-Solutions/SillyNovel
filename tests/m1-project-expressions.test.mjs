@@ -26,7 +26,7 @@ async function setup(t,group=false){
  const go=async index=>{refresh();reader.jumpToLatest();while(reader.getSnapshot().cursor.index>index)reader.navigate(-1);await model.sync();};
  const importExpression=async(key=actor,name='Happy')=>model.importExpression(file(),key,name);
  const apply=async(id,key=actor)=>model.dispatch({type:'setExpression',characterKey:key,assetId:id});
- return {model,record,actor,other,context,reader,go,importExpression,apply,get saved(){return saved;},get uploads(){return uploads;},get evidenceReads(){return evidenceReads;},decode:fn=>{decode=fn;},replace:()=>{current=false;},restore:()=>{current=true;}};
+ return {model,record,actor,other,context,reader,host,actions,client,go,importExpression,apply,get saved(){return saved;},get uploads(){return uploads;},get evidenceReads(){return evidenceReads;},decode:fn=>{decode=fn;},replace:()=>{current=false;},restore:()=>{current=true;}};
 }
 test('attached expressions are per source and UUID; revisit/clear preserve global outfits and save records',async t=>{
  const x=await setup(t),{model,actor,other}=x;const base=structuredClone(view(model)),revision=model.get().scene.revision;
@@ -128,4 +128,24 @@ test('group four-actor manual cast and duplicate names stay independent from nat
  assert.equal(base.cast[0].label,base.cast[1].label);assert.notEqual(base.cast[0].key,base.cast[1].key);
  x.context.groups[0].chat_id='B';x.context.chatId='B';await m.sync();x.context.groups[0].chat_id='A';x.context.chatId='A';await m.sync();
  assert.equal(view(m).cast[0].expression,null);assert.equal(await m.dispatch({type:'clearBackground'}),false);
+});
+
+
+for(const generationType of ['normal','continue','swipe'])test('new-owner generation refuses expressions after explicit project attach: '+generationType,async t=>{
+ const x=await setup(t,true),before=x.reader.getSnapshot();
+ x.context.groupId='H';x.context.chatId='B';x.context.groups=[{id:'H',chat_id:'B'}];
+ x.context.chat=[{name:'Mira',mes:'Stable older B'},{name:'Mira',mes:'Active head B'}];
+ x.reader.apply({type:'generationStarted',generationType,owner:x.host.readChatIdentity(),history:x.host.readHistory()});
+ // Explicitly attach a new project in the new activation, as the UI permits.
+ const attached=await createProjectScene(x.record,x.client,x.actions,()=>{},()=>true);t.after(()=>attached.dispose());
+ assert.equal(attached.expressionStatus().ready,false);
+ await assert.rejects(attached.importExpression(file(),x.actor,'Refused while generating'),/UNRESOLVED_SOURCE/);
+ await assert.rejects(attached.dispatch({type:'clearExpression',characterKey:x.actor}),/UNRESOLVED_SOURCE/);
+ const active=x.reader.getSnapshot();assert.equal(active.sessionEpoch,before.sessionEpoch+1);
+ assert.equal(active.owner.groupId,'H');assert.equal(active.owner.chatId,'B');assert.equal(active.cursor.text,'Active head B');
+ assert.equal(active.generation.status,'streaming');assert.equal(active.generation.type,generationType);
+ assert.equal(active.generation.sourceKey,generationType==='normal'?null:active.head.sourceKey);
+ x.reader.apply({type:'generationEnded'});await attached.sync();assert.equal(attached.expressionStatus().ready,false,'end is not completion proof');
+ x.reader.navigate(-1);await attached.sync();assert.equal(attached.expressionStatus().ready,true,'stable older source remains usable');
+ assert.equal(attached.status().dirty,false);assert.equal(attached.status().revision,7);assert.equal(x.uploads,0);
 });

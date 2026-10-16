@@ -899,3 +899,21 @@ for(const operation of ['load','save'])test('group delayed '+operation+' complet
  await page.evaluate(()=>fixture.renderNative());await page.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('No project attached'));
  assert.equal(await page.locator('.sillynovel-sprite:not([hidden])').count(),0);assert.equal(await page.locator('#send_textarea').isEnabled(),true);
 });
+
+
+test('eventless group generation start survives activation and refuses expressions on explicitly reopened head',async t=>{
+ const x=await attachedExpressions(t,true),{page}=x;
+ await page.evaluate(()=>{
+  const c=fixture.context;c.groupId='B';c.chatId='B';c.groups.push({id:'B',name:'Generating group',chat_id:'B'});
+  c.chat=[{name:'Mira',mes:'Stable older B'},{name:'Mira',mes:'Active head B'}];
+  fixture.emit('GENERATION_STARTED','normal',{},false); // First ownership signal; no CHAT_CHANGED or DOM wake-up.
+ });
+ await page.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('No project attached'));
+ await button(page,'Open project and use with this chat').click();await page.waitForFunction(()=>document.querySelectorAll('.sillynovel-sprite:not([hidden])').length===2);
+ assert.match(await page.locator('.sillynovel-reader__status').innerText(),/streaming/);assert.equal(await message(page).innerText(),'Active head B');
+ assert.equal(await x.expression.isDisabled(),true);assert.equal(await button(page,'Apply expression').isDisabled(),true);assert.equal(await page.getByLabel('Temporary expression PNG',{exact:true}).isDisabled(),true);
+ await page.evaluate(()=>fixture.emit('GENERATION_ENDED',fixture.context.chat.length));
+ assert.equal(await x.expression.isDisabled(),true,'unresolved end does not grant head authority');
+ await button(page,'Previous').click();await page.waitForFunction(()=>!document.querySelector('[aria-label="Expression to apply · selected source only"]').disabled);assert.equal(await message(page).innerText(),'Stable older B');
+ assert.equal(await page.locator('#send_textarea').isEnabled(),true);assert.equal(await page.locator('.sillynovel-unsaved').getAttribute('data-state'),'saved');
+});
