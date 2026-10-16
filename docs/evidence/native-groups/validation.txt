@@ -1,0 +1,1 @@
+PASS: 60 frozen inputs; 22 actual-host checkpoints; 149 Node / 80 Chromium / 126 storage; 41 identical named native files; 18 screenshots; 38 integration links

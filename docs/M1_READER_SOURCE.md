@@ -1,3 +1,5 @@
+> [DYL-23-C](M1_NATIVE_GROUPS.md) now extends explicit account-owned project attachment and temporary expressions to verified native group conversations. Native author labels remain unresolved card identity; manual actors never bind automatically. Earlier individual-only exclusions below describe the prior slices.
+
 # M1 reader source model (DYL-17)
 
 **Status:** Implemented as an internal, in-memory contract for the DYL-17 candidate. DYL-18 now consumes this contract for the text reader described below. Visual state and persistence remain gated.
@@ -23,7 +25,7 @@ Snapshots contain `owner`, `sessionEpoch`, `head`, `cursor`, `selectionMode`, `s
 
 The `sourceKey` is backed by a `WeakMap` keyed by the host message object. It is transient, is not serialized, and is not a durable message ID. Repeated text is never used as identity. If a locator is duplicated, selection is rejected. Replacing a pinned source invalidates that selection; replacing the latest source while following the head selects the new canonical head. A deleted selected source is reported as `deleted`; other locator loss is `invalidated`. Reordering that preserves the unique source object re-resolves its current index.
 
-Owner changes start a new session epoch, clear prior records, and select the new session's latest source. Epoch and owner are available for consumers to reject delayed work. This source model itself does not persist state or authorize writes.
+Owner changes start a new session epoch, clear prior records, and select the new session's latest source. If `generationStarted` is the first observation exposing the new owner, activation is followed by normal start processing in that same observation: normal generation stays unbound, Continue/Swipe can bind the new verified assistant head, and dry runs remain ignored. Other owner-transition observations retain activation-only behavior. Epoch and owner are available for consumers to reject delayed work. This source model itself does not persist state or authorize writes.
 
 ## Streaming and revision rules
 

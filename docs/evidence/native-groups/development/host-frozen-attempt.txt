@@ -1,0 +1,15 @@
+Owned evidence root /tmp/sn-portability-host-3bQb0J
+PASS real host auth/CSRF, two-user project and asset isolation, two-client CAS, PNG hash and limits
+PASS browser create/import background + two sprites/arrange/save/reload/explicit reopen; named canonical files unchanged
+PASS groups: four actual native card API records, two Mira labels/distinct avatars, real group list activation and exact native greetings
+PASS groups: explicit account project opening, four manual UUIDs/two Mira labels, stable three slots/offstage, refuse/swap/replace/presence/outfit/locks/save
+Error: UNSAFE_PARENT
+    at demand (file:///home/dq/Projects/SillyNovel/plugins/sillynovel-storage/schema.mjs:3:34)
+    at privateParent (file:///home/dq/Projects/SillyNovel/plugins/sillynovel-storage/recovery.mjs:34:5)
+    at createBackup (file:///home/dq/Projects/SillyNovel/plugins/sillynovel-storage/recovery.mjs:173:23)
+    at runGroups (file:///home/dq/Projects/SillyNovel/tests/probes/native-groups/host.mjs:75:147)
+    at async file:///home/dq/Projects/SillyNovel/tests/probes/project-portability/host.mjs:133:91 {
+  code: 'UNSAFE_PARENT',
+  status: 400
+}
+Evidence /tmp/sn-portability-host-3bQb0J/evidence.json

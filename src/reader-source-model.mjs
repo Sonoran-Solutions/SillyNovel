@@ -17,7 +17,7 @@ function sameContent(left, right) {
 
 function ownerKey(owner) {
     if (!owner) return null;
-    return JSON.stringify([owner.chatId ?? null, owner.groupId ?? null, owner.characterId ?? null, owner.scope ?? 'unknown']);
+    return JSON.stringify([owner.chatId ?? null, owner.groupId ?? null, owner.characterId ?? null, owner.scope ?? 'unknown', owner.groupSessionKey ?? null, owner.groupVerified ?? null]);
 }
 
 export function createReaderSourceModel() {
@@ -185,7 +185,11 @@ function revise(snapshot, previous) {
 
     function apply(observation = {}) {
         if (observation.type === 'chatChanged') return activate(observation.history ?? [], observation.owner ?? null);
-        if (observation.owner && ownerKey(observation.owner) !== ownerKey(owner)) return activate(observation.history ?? [], observation.owner);
+        if (observation.owner && ownerKey(observation.owner) !== ownerKey(owner)) {
+            const activated = activate(observation.history ?? [], observation.owner);
+            // The first signal for this visit may also start its generation.
+            if (observation.type !== 'generationStarted') return activated;
+        }
 
         if (observation.type === 'generationStarted') {
             if (observation.dryRun) return getSnapshot();

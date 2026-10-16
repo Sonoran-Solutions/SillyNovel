@@ -1,3 +1,5 @@
+> [DYL-23-C](M1_NATIVE_GROUPS.md) now extends explicit account-owned project attachment and temporary expressions to verified native group conversations. Native author labels remain unresolved card identity; manual actors never bind automatically. Earlier individual-only exclusions below describe the prior slices.
+
 > DYL-23-A below is historical. The separately authorized [DYL-23-B expression slice](M1_PROJECT_EXPRESSIONS.md) now adds temporary attached expressions in Scene; global project save/recovery semantics remain unchanged. Native group/device work remains unfinished.
 
 # DYL-23-A manual stage and project UX

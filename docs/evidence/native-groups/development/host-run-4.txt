@@ -1,0 +1,25 @@
+Owned evidence root /tmp/sn-portability-host-fWpI9d
+PASS real host auth/CSRF, two-user project and asset isolation, two-client CAS, PNG hash and limits
+PASS browser create/import background + two sprites/arrange/save/reload/explicit reopen; named canonical files unchanged
+PASS groups: four actual native card API records, two Mira labels/distinct avatars, real group list activation and exact native greetings
+PASS groups: explicit account project opening, four manual UUIDs/two Mira labels, stable three slots/offstage, refuse/swap/replace/presence/outfit/locks/save
+PASS groups: equal-text same-name native sources keep separate temporary decisions; revisit/clear/manual actor, draft/focus, clean global save body and named native-file equality
+PASS groups: native edit invalidates dependent expression, earlier prefix survives; instrumented image failure and corrupt PNG preserve base layout/reading
+PASS groups: authenticated peer CAS conflict and lost committed receipt retain safe explicit-reopen recovery
+PAGE ERROR AbortSignal was fired. Group generation stopped
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 'blob:http://127.0.0.1:37455/9e0cf331-7186-45f5-8e10-c618e930e39d'
+- 'blob:http://127.0.0.1:37455/777a5d1d-be40-4578-93ad-9a045b7ac051'
+
+    at runGroups (file:///home/dq/Projects/SillyNovel/tests/probes/native-groups/host.mjs:90:649)
+    at async file:///home/dq/Projects/SillyNovel/tests/probes/project-portability/host.mjs:133:91 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'blob:http://127.0.0.1:37455/9e0cf331-7186-45f5-8e10-c618e930e39d',
+  expected: 'blob:http://127.0.0.1:37455/777a5d1d-be40-4578-93ad-9a045b7ac051',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+Evidence /tmp/sn-portability-host-fWpI9d/evidence.json

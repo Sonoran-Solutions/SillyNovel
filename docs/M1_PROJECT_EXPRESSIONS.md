@@ -1,3 +1,5 @@
+> [DYL-23-C](M1_NATIVE_GROUPS.md) now extends explicit account-owned project attachment and temporary expressions to verified native group conversations. Native author labels remain unresolved card identity; manual actors never bind automatically. Earlier individual-only exclusions below describe the prior slices.
+
 # DYL-23-B: attached temporary message expressions
 
 Owner assignment of 2026-10-16 authorizes this bounded slice only. Starting main `d3f5761c03fec7fc5d97b0698da718af7af9c187` is GitHub's verified merge of PR #30. The supplied clean checkout was its head `e132b23b9766467ab88260eb3d507380dae4eba0`. After searching all SillyNovel issues (including archived issues and expression/title searches), [DYL-62](https://linear.app/devils17/issue/DYL-62) tracks DYL-23-B, related to DYL-23 and DYL-60. DYL-23 currently reports Done; its original acceptance, history and relationships are preserved. That status does not complete group/device requirements. Decision F remains undecided; Gate A NOT_RUN. DYL-60 is not started. No persistent message history, group implementation, live installation, production release or merge authorization.

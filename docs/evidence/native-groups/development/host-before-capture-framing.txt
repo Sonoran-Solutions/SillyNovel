@@ -1,0 +1,25 @@
+Owned evidence root /tmp/sn-portability-host-18a9P5
+PASS real host auth/CSRF, two-user project and asset isolation, two-client CAS, PNG hash and limits
+PASS browser create/import background + two sprites/arrange/save/reload/explicit reopen; named canonical files unchanged
+PASS groups: four actual native card API records, two Mira labels/distinct avatars, real group list activation and exact native greetings
+PASS groups: explicit account project opening, four manual UUIDs/two Mira labels, stable three slots/offstage, refuse/swap/replace/presence/outfit/locks/save
+PASS groups: equal-text same-name native sources keep separate temporary decisions; revisit/clear/manual actor, draft/focus, clean global save body and named native-file equality
+PASS groups: native edit invalidates dependent expression, earlier prefix survives; instrumented image failure and corrupt PNG preserve base layout/reading
+PASS groups: authenticated peer CAS conflict and lost committed receipt retain safe explicit-reopen recovery
+PAGE ERROR AbortSignal was fired. Group generation stopped
+PASS groups: actual native user send/group reply, stopped-source expression, native swipe/Continue/Stop invalidation, Copy/Backlog/composer and attachment survive drafted-member IDs
+PASS groups: actual native member Move up changes host order without rebinding manual actors or changing slots
+PASS groups: real committed save receipt delayed across group A to B cannot revive attachment or cross session authority
+PASS groups: group A B A, group↔individual, same-group new/old chat, reload/detach/explicit reopen never restore temporary decisions; saved global scene survives
+PASS groups: actual native Delete group control and same-name native recreation detach; fresh group ID requires explicit reopen without prior temporary state
+PASS portable browser download/import preserves dirty stage; explicit reopen restores new identities, bytes, layout/locks; exact native inventory unchanged
+PASS HTTP failed project/second-asset/final-scene writes inspected in committed database: zero partial projects/assets
+PASS real two-account export refusal and import ownership; two-client import retry creates distinct copies; concurrent export/save is coherent
+PASS actual native switch during delayed import receipt never attaches visuals or changes stage ownership
+PASS native A to B to A detaches and never auto-restores project
+PASS actual host failed update preserves project; missing/corrupt assets restore neutral fallback
+PASS delayed successful save receipt cannot redirect switched chat
+PASS actual host native send/stream/stop, navigation and backlog remain functional
+PASS plugin/server restart preserves original and imported layout/assets; imported project explicitly reopens in real browser
+PASS plugin disabled at startup refuses bundle controls and retains session stage/native composer
+Evidence /tmp/sn-portability-host-18a9P5/evidence.json

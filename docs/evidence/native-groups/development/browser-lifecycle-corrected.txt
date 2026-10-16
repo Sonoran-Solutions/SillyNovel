@@ -1,0 +1,15 @@
+✔ group attachment invalidates on eventless native owner change: group (597.394666ms)
+✔ group attachment invalidates on eventless native owner change: chat (485.022316ms)
+✔ group attachment invalidates on eventless native owner change: individual (498.314746ms)
+✔ group attachment invalidates on eventless native owner change: replacement (496.672999ms)
+✔ group attachment invalidates on eventless native owner change: deleted (484.98159ms)
+✔ group attachment invalidates on eventless native owner change: contradictory (481.961577ms)
+✔ group member reorder/drafted speaker leaves manual UUIDs, selection, three-slot cast and expression unchanged (606.505641ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3868.421295

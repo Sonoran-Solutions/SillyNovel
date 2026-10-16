@@ -1,0 +1,13 @@
+{
+  "hostCommit": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
+  "files": {
+    "public/scripts/st-context.js": "5a91ce36a343041c81351953baba10a54a7576f15571c01ef1af8c19bcc0e30d",
+    "public/script.js": "955c603d0bad84bac5a716f0818d85c2543e44d4c43878e0d63ef1e55ca91855",
+    "public/scripts/group-chats.js": "862eb24dfe1f596a2bd6d039a69397667829e0fc34471d22d2028d7781a5c73c",
+    "src/endpoints/groups.js": "c5b956f8b4a2809b554229fed24588ed37163f1e73c129d4270ac6832438612b",
+    "src/endpoints/characters.js": "3235555529e9ff17ecc2ebe9168b0af77fe6ef5947f3d1f7de3df6d5f2567d89",
+    "src/endpoints/chats.js": "40012ebc71a75357e62f7532e5b20def0d8b6c132bb6ab48f662993cc97b9063",
+    "package.json": "5b6e0634a63872c33603bf803217613a388f2e5dbd5990f7b30d254bfbf027c2"
+  },
+  "runtime": "v26.8.1"
+}

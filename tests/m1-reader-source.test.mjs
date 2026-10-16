@@ -453,3 +453,12 @@ test('ordered-source revision notices full/sample order and availability changes
  model.apply({sources:[message('d','Unchanged d',3),message('e','Appended',4)],messageCount:5});const appended=model.getSnapshot().sourceOrderRevision;assert.equal(appended,reordered.sourceOrderRevision+2);
  model.reconcile([null,history[1],history[2],history[3]]);assert.equal(model.getSnapshot().sourceOrderRevision,appended+1);
 });
+
+
+test('owner-transition dry run resets the visit without inventing an active generation',()=>{
+ const model=modelWith(message('old','Old source',0));model.apply({type:'generationStarted',generationType:'normal'});
+ const before=model.getSnapshot();
+ const after=model.apply({type:'generationStarted',generationType:'continue',dryRun:true,owner:{chatId:'B'},history:[message('new','New source',0,{chatId:'B'})]});
+ assert.equal(after.sessionEpoch,before.sessionEpoch+1);assert.equal(after.owner.chatId,'B');assert.equal(after.cursor.sourceKey,'new');
+ assert.equal(after.generation.id,null);assert.equal(after.generation.status,'unknown');
+});

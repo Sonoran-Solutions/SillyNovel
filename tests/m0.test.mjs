@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import test from 'node:test';
 import { runInNewContext } from 'node:vm';
-import { createHostAdapter } from '../src/host-adapter.mjs';
+import { createHostAdapter, supportsProjectConversation } from '../src/host-adapter.mjs';
 import { createShellController, createSourceTracker } from '../src/shell.mjs';
 
 const eventTypes = Object.fromEntries([
@@ -112,6 +112,9 @@ test('reads the active message and host author without inventing a durable ident
         characterId: null,
         scope: 'group',
         durable: false,
+        groupVerified: false,
+        groupSessionKey: null,
+        groupLabel: 'Native group',
     });
     assert.equal(adapter.readMessageAt(99), null);
     assert.equal(adapter.inspectCapabilities().ok, true);
@@ -522,4 +525,34 @@ test('debug observer remains removable when the instrumented host lacks one even
     assert.equal(observer.observer.uninstall(), true);
     assert.equal(observer.observer.uninstall(), false);
     assert.equal(Object.values(context.eventSource.events).flat().length, 0);
+});
+
+
+test('group ownership verifies a unique current record/chat, ignores drafted member IDs, and distinguishes replacement',()=>{
+    const context=createFixtureContext();
+    context.groups=[{id:context.groupId,name:'Four actors',chat_id:context.chatId,members:['Mira.png','Mira1.png','Rowan.png','Sage.png']}];
+    const host=createHostAdapter(()=>context),first=host.readChatIdentity();
+    assert.equal(supportsProjectConversation(first),true);
+    for(const characterId of [0,1,3,undefined]){context.characterId=characterId;assert.deepEqual(host.readChatIdentity(),first);}
+    context.groups[0].members.reverse();assert.deepEqual(host.readChatIdentity(),first);
+    context.groups[0]={...context.groups[0]};assert.notEqual(host.readChatIdentity().groupSessionKey,first.groupSessionKey);
+    for(const groups of [[],[null],[{id:context.groupId,chat_id:'wrong'}],[{...context.groups[0]},{...context.groups[0]}]]){context.groups=groups;assert.equal(supportsProjectConversation(host.readChatIdentity()),false);}
+    context.groups=[{id:context.groupId,chat_id:context.chatId}];context.getCurrentChatId=()=>{throw Error('unavailable');};
+    assert.equal(supportsProjectConversation(host.readChatIdentity()),false);
+    delete context.getCurrentChatId;context.chatId='';assert.equal(supportsProjectConversation(host.readChatIdentity()),false);
+    context.groupId={bad:true};context.characterId=0;assert.equal(supportsProjectConversation(host.readChatIdentity()),false);
+    context.groupId=null;context.characterId=0;context.chatId='individual';assert.equal(supportsProjectConversation(host.readChatIdentity()),true);
+});
+
+test('eventless group ownership changes detected on ordinary native events start new epochs',()=>{
+    const context=createFixtureContext();context.groups=[{id:context.groupId,chat_id:context.chatId}];
+    const host=createHostAdapter(()=>context);let latest;
+    const controller=createShellController(host,{mountStage:(_source,reader)=>{latest=reader;return {update:o=>latest=o.reader,dispose(){}};}});
+    controller.enable();const first=latest.sessionEpoch;
+    context.groups[0]={...context.groups[0]};context.eventSource.emit(eventTypes.GENERATION_STARTED,'normal');
+    assert.equal(latest.sessionEpoch,first+1);assert.equal(latest.cursor.author.label,'Mira');
+    assert.equal(latest.generation.status,'streaming');assert.equal(latest.generation.type,'normal');
+    assert.notEqual(latest.generation.id,null);assert.equal(latest.generation.sourceKey,null);
+    context.groups=[];context.eventSource.emit(eventTypes.MESSAGE_EDITED,1);
+    assert.equal(latest.sessionEpoch,first+2);assert.equal(supportsProjectConversation(latest.owner),false);controller.disable();
 });

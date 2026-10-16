@@ -1,5 +1,6 @@
 import { fingerprintHistory } from './source-prefix.mjs';
 import { evidenceStamp } from './transient-scene.mjs';
+import { supportsProjectConversation } from './host-adapter.mjs';
 
 // A projection-only journal: never passed to project serialization or the global reducer.
 export function createProjectExpressions(actions, globalScene, current, changed) {
@@ -17,7 +18,7 @@ export function createProjectExpressions(actions, globalScene, current, changed)
     function compatible(asset){const actor=globalScene().view.cast.find(a=>a.key===asset.characterKey);return actor&&same(actor.outfit,asset.outfit);}
     function authority(snapshot){
         const key=snapshot.cursor?.sourceKey,g=snapshot.generation;
-        if(!live()||snapshot.owner?.scope!=='character'||snapshot.owner.chatId==null||snapshot.selectionState!=='valid'||!key||!sources.some(s=>s.key===key))return false;
+        if(!live()||!supportsProjectConversation(snapshot.owner)||snapshot.selectionState!=='valid'||!key||!sources.some(s=>s.key===key))return false;
         // End without completion provenance is unresolved, never a successful finish.
         return !(g?.id!=null&&['streaming','unknown'].includes(g.status)&&(g.sourceKey===key||!g.sourceKey&&snapshot.head?.sourceKey===key));
     }

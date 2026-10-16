@@ -1,0 +1,119 @@
+✖ group attachment invalidates on eventless native owner change: group (551.301137ms)
+✖ group attachment invalidates on eventless native owner change: chat (443.380775ms)
+✖ group attachment invalidates on eventless native owner change: individual (417.687198ms)
+✖ group attachment invalidates on eventless native owner change: replacement (448.642618ms)
+✖ group attachment invalidates on eventless native owner change: deleted (417.195509ms)
+✖ group attachment invalidates on eventless native owner change: contradictory (433.01296ms)
+✔ group member reorder/drafted speaker leaves manual UUIDs, selection, three-slot cast and expression unchanged (631.996731ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 1
+ℹ fail 6
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3561.478626
+
+✖ failing tests:
+
+test at tests/m1-reader-browser.test.mjs:853:91
+✖ group attachment invalidates on eventless native owner change: group (551.301137ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (file:///home/dq/Projects/SillyNovel/tests/m1-reader-browser.test.mjs:866:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/m1-reader-browser.test.mjs:853:91
+✖ group attachment invalidates on eventless native owner change: chat (443.380775ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (file:///home/dq/Projects/SillyNovel/tests/m1-reader-browser.test.mjs:866:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/m1-reader-browser.test.mjs:853:91
+✖ group attachment invalidates on eventless native owner change: individual (417.687198ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (file:///home/dq/Projects/SillyNovel/tests/m1-reader-browser.test.mjs:866:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/m1-reader-browser.test.mjs:853:91
+✖ group attachment invalidates on eventless native owner change: replacement (448.642618ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (file:///home/dq/Projects/SillyNovel/tests/m1-reader-browser.test.mjs:866:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/m1-reader-browser.test.mjs:853:91
+✖ group attachment invalidates on eventless native owner change: deleted (417.195509ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (file:///home/dq/Projects/SillyNovel/tests/m1-reader-browser.test.mjs:866:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/m1-reader-browser.test.mjs:853:91
+✖ group attachment invalidates on eventless native owner change: contradictory (433.01296ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (file:///home/dq/Projects/SillyNovel/tests/m1-reader-browser.test.mjs:866:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

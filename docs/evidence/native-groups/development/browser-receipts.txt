@@ -1,0 +1,10 @@
+✔ group delayed load completion refreshes unannounced ownership before accepting authority (473.440915ms)
+✔ group delayed save completion refreshes unannounced ownership before accepting authority (376.663557ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1109.525425

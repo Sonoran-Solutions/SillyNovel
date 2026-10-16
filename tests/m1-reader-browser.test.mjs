@@ -768,8 +768,9 @@ test('project UX: discard cancel, actor feedback, local Escape focus and narrow 
  assert.match(await page.locator('.sillynovel-project-status').innerText(),/No project attached/);
 });
 
-async function attachedExpressions(t){
+async function attachedExpressions(t,group=false){
  const page=await fixture(t);page.setDefaultTimeout(6000);await page.locator('#sillynovel-enabled').uncheck();await page.evaluate(()=>{fixture.context.getRequestHeaders=()=>({});});
+ if(group)await page.evaluate(()=>{fixture.context.groupId='G';fixture.context.groups=[{id:'G',name:'Four member group',chat_id:fixture.context.chatId,members:['Mira.png','Mira1.png','Rowan.png','Sage.png']}];fixture.context.chat[0]={name:'Mira',mes:'First message.'};});
  const aid='22222222-2222-4222-8222-222222222222',bid='33333333-3333-4333-8333-333333333333',bgid='44444444-4444-4444-8444-444444444444';
  const actors=['11111111-1111-4111-8111-111111111111','55555555-5555-4555-8555-555555555555'];
  let record={schemaVersion:2,projectId:'12345678-1111-4111-8111-111111111111',name:'Expression project',revision:4,catalog:[{assetId:aid,kind:'sprite',actorId:actors[0],label:'Base'},{assetId:bid,kind:'sprite',actorId:actors[1],label:'Other Mira'},{assetId:bgid,kind:'background',actorId:null,label:'Forest'}],scene:{backgroundAssetId:bgid,backgroundLocked:true,actors:actors.map((actorId,i)=>({actorId,name:'Mira',present:true,slot:i?'right':'left',spriteAssetId:i?bid:aid,locks:{presence:true,slot:true,outfit:true}}))}};
@@ -787,8 +788,8 @@ async function attachedExpressions(t){
  const apply=async id=>{if(id)await expression.selectOption(id);await button(page,'Apply expression').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-sprite--left img').dataset.expression!=='');return image.getAttribute('src');};
  return {page,actors,original,saves,expression,image,upload,apply};
 }
-test('attached message expressions: actual UI, navigation/revisit, save exclusion, invalidation and reload',async t=>{
- const x=await attachedExpressions(t),{page}=x,base=await x.image.getAttribute('src');
+for(const group of [false,true])test((group?'group ':'')+'attached message expressions: actual UI, navigation/revisit, save exclusion, invalidation and reload',async t=>{
+ const x=await attachedExpressions(t,group),{page}=x,base=await x.image.getAttribute('src');
  await button(page,'Previous').click();const happy=await x.upload();const happyURL=await x.apply(happy);
  await button(page,'Next').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-sprite--left img').dataset.expression==='');assert.equal(await x.image.getAttribute('src'),base);
  const stern=await x.upload('Stern','mira-a-stern.png'),sternURL=await x.apply(stern);assert.notEqual(sternURL,happyURL);
@@ -802,8 +803,8 @@ test('attached message expressions: actual UI, navigation/revisit, save exclusio
  await button(page,'Previous').click();assert.equal(await x.image.getAttribute('src'),happyURL);await button(page,'Clear expression').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-sprite--left img').dataset.expression==='');assert.equal(await x.image.getAttribute('src'),base);
  await page.reload();await page.evaluate(()=>{fixture.context.getRequestHeaders=()=>({});});await page.locator('#sillynovel-enabled').check();await sceneControls(page);await button(page,'Open project and use with this chat').click();await page.waitForFunction(()=>document.querySelectorAll('.sillynovel-sprite:not([hidden])').length===2);assert.equal(await x.expression.locator('option').count(),1);
 });
-for(const boundary of ['selection','edit','swipe','outfit','actor','chat','replace','detach','disable'])test('attached PNG delayed actual-entry decode rejects '+boundary,async t=>{
- const x=await attachedExpressions(t),{page}=x;
+for(const group of [false,true])for(const boundary of ['selection','edit','swipe','outfit','actor','chat','replace','detach','disable'])test((group?'group ':'')+'attached PNG delayed actual-entry decode rejects '+boundary,async t=>{
+ const x=await attachedExpressions(t,group),{page}=x;
  await page.evaluate(()=>{const original=Image.prototype.decode;Image.prototype.decode=function(){window.expressionDecodeStarted=true;return new Promise(resolve=>window.finishExpressionDecode=()=>original.call(this).then(resolve));};});
  await page.getByLabel('Temporary expression PNG',{exact:true}).setInputFiles(resolve(root,'tests/fixtures/m12-stage/mira-a-joy.png'));await page.waitForFunction(()=>window.expressionDecodeStarted);
  if(boundary==='selection')await button(page,'Previous').click();
@@ -825,8 +826,8 @@ test('attached missing expression image falls back to base outfit; clear, no dir
  await x.image.evaluate(e=>e.dispatchEvent(new Event('error')));await x.page.waitForFunction(()=>document.querySelector('.sillynovel-sprite--left img').dataset.expression==='');assert.equal(await x.image.getAttribute('src'),base);assert.equal(await x.page.locator('.sillynovel-unsaved').getAttribute('data-state'),'saved');assert.match(await x.page.locator('.sillynovel-expression-context').innerText(),/unavailable/);
 });
 
-for(const movement of ['prefix-only','selected-index'])test('attached expressions automatically reconcile unchanged-object reorder: '+movement,async t=>{
- const x=await attachedExpressions(t),{page}=x;
+for(const group of [false,true])for(const movement of ['prefix-only','selected-index'])test((group?'group ':'')+'attached expressions automatically reconcile unchanged-object reorder: '+movement,async t=>{
+ const x=await attachedExpressions(t,group),{page}=x;
  await page.evaluate(()=>{fixture.context.chat.push({name:'Mira',mes:'Pinned unchanged source.\n\n'+('A paragraph for scrolling.\n\n'.repeat(60))},{name:'You',is_user:true,mes:'Later unchanged source'},{name:'Mira',mes:'Unchanged head'});fixture.renderNative();fixture.emit('MESSAGE_RECEIVED',4);});
  await button(page,'Previous').click();await button(page,'Previous').click();const base=await x.image.getAttribute('src'),happy=await x.upload();const happyURL=await x.apply(happy);
  await page.evaluate(()=>{
@@ -847,4 +848,72 @@ for(const movement of ['prefix-only','selected-index'])test('attached expression
  await page.waitForFunction(()=>typeof window.releaseExpressionHash==='function');assert.equal(await button(page,'Apply expression').isDisabled(),true);assert.equal(await x.image.getAttribute('src'),base);assert.equal(await page.locator('#send_textarea').isEnabled(),true);
  await page.evaluate(()=>{window.holdExpressionHash=false;releaseExpressionHash();});
  await page.waitForFunction(()=>document.querySelector('.sillynovel-expression-context').textContent.includes('invalidated'));assert.equal(await x.image.getAttribute('src'),base);assert.equal(await x.expression.locator('option').count(),1);assert.match(await message(page).innerText(),/^Pinned unchanged source/);assert.equal(await page.locator('.sillynovel-unsaved').getAttribute('data-state'),'saved');
+});
+
+for(const change of ['group','chat','individual','replacement','deleted','contradictory'])test('group attachment invalidates on eventless native owner change: '+change,async t=>{
+ const x=await attachedExpressions(t,true),{page}=x;await x.apply(await x.upload());
+ await page.evaluate(change=>{
+  const c=fixture.context;
+  if(change==='group'){c.groupId='B';c.groups.push({id:'B',name:'Group B',chat_id:c.chatId});}
+  if(change==='chat'){c.chatId='other';c.groups[0].chat_id=c.chatId;}
+  if(change==='individual')c.groupId=null;
+  if(change==='replacement')c.groups[0]={...c.groups[0]};
+  if(change==='deleted')c.groups=[];
+  if(change==='contradictory')c.groups[0].chat_id='not-current';
+  fixture.renderNative(); // DOM fallback only; no synthetic CHAT_CHANGED.
+ },change);
+ await page.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('No project attached'));
+ assert.equal(await page.locator('.sillynovel-sprite img[data-expression]:not([data-expression=""])').count(),0);
+ if(['deleted','contradictory'].includes(change))assert.equal(await button(page,'Open project and use with this chat').isDisabled(),true);
+ await page.evaluate(()=>{const c=fixture.context;c.groupId='G';c.chatId='synthetic-A';c.groups=[{id:'G',name:'Returned group',chat_id:c.chatId}];fixture.emit('CHAT_CHANGED');});
+ await page.waitForFunction(()=>!document.querySelector('[aria-label="Saved project"]').disabled);
+ assert.match(await page.locator('.sillynovel-project-status').innerText(),/No project attached/);
+ await button(page,'Open project and use with this chat').click();await page.waitForFunction(()=>document.querySelectorAll('.sillynovel-sprite:not([hidden])').length===2);assert.equal(await x.expression.locator('option').count(),1);
+});
+
+test('group member reorder/drafted speaker leaves manual UUIDs, selection, three-slot cast and expression unchanged',async t=>{
+ const x=await attachedExpressions(t,true),{page}=x;
+ for(const name of ['Rowan','Sage']){await page.getByLabel('Project actor name',{exact:true}).fill(name);await button(page,'Register project actor').click();}
+ await page.waitForFunction(()=>document.querySelector('.sillynovel-cast').dataset.count==='4');
+ const actor=page.getByLabel('Project actor',{exact:true}),keys=await actor.locator('option').evaluateAll(os=>os.map(o=>o.value));
+ await actor.selectOption(keys[2]);await field(page,'Position').selectOption('center');await button(page,'Apply position').click();
+ await actor.selectOption(keys[0]);await x.apply(await x.upload());const url=await x.image.getAttribute('src');
+ const before=await page.locator('.sillynovel-cast').innerText();
+ await page.evaluate(()=>{fixture.context.groups[0].members.reverse();fixture.context.characterId=3;fixture.emit('GENERATION_STARTED','normal',{},true);fixture.renderNative();});
+ await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));
+ assert.equal(await x.image.getAttribute('src'),url);assert.equal(await page.locator('.sillynovel-cast').innerText(),before);assert.equal(await actor.inputValue(),keys[0]);
+ await page.setViewportSize({width:390,height:800});assert.equal(await page.locator('.sillynovel-native-context').evaluate(e=>e.scrollHeight<=e.clientHeight),true);
+ assert.match(before,/Sage.*offstage/);assert.equal(await page.locator('.sillynovel-sprite:not([hidden])').count(),3);assert.match(await page.locator('.sillynovel-native-context').innerText(),/Native speaker: Mira/);
+});
+
+for(const operation of ['load','save'])test('group delayed '+operation+' completion refreshes unannounced ownership before accepting authority',async t=>{
+ const x=await attachedExpressions(t,true),{page}=x;
+ let release,entered;const gate=new Promise(r=>release=r),seen=new Promise(r=>entered=r);
+ await page.route('**/api/plugins/sillynovel-storage/projects/'+x.original.projectId,async route=>{
+  if(route.request().method()!==(operation==='load'?'GET':'PUT'))return route.fallback();
+  entered();await gate;await route.fulfill({json:{...x.original,revision:operation==='save'?5:4}});
+ });
+ await button(page,operation==='save'?'Save project':'Open project and use with this chat').click();await seen;
+ await page.evaluate(()=>{const c=fixture.context;c.groupId='B';c.groups.push({id:'B',name:'Group B',chat_id:c.chatId});});
+ release();await page.waitForFunction(()=>!document.querySelector('.sillynovel-project-status').textContent.includes('Opening project'));
+ await page.evaluate(()=>fixture.renderNative());await page.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('No project attached'));
+ assert.equal(await page.locator('.sillynovel-sprite:not([hidden])').count(),0);assert.equal(await page.locator('#send_textarea').isEnabled(),true);
+});
+
+
+test('eventless group generation start survives activation and refuses expressions on explicitly reopened head',async t=>{
+ const x=await attachedExpressions(t,true),{page}=x;
+ await page.evaluate(()=>{
+  const c=fixture.context;c.groupId='B';c.chatId='B';c.groups.push({id:'B',name:'Generating group',chat_id:'B'});
+  c.chat=[{name:'Mira',mes:'Stable older B'},{name:'Mira',mes:'Active head B'}];
+  fixture.emit('GENERATION_STARTED','normal',{},false); // First ownership signal; no CHAT_CHANGED or DOM wake-up.
+ });
+ await page.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('No project attached'));
+ await button(page,'Open project and use with this chat').click();await page.waitForFunction(()=>document.querySelectorAll('.sillynovel-sprite:not([hidden])').length===2);
+ assert.match(await page.locator('.sillynovel-reader__status').innerText(),/A new reply is being generated/);assert.equal(await message(page).innerText(),'Active head B');
+ assert.equal(await x.expression.isDisabled(),true);assert.equal(await button(page,'Apply expression').isDisabled(),true);assert.equal(await page.getByLabel('Temporary expression PNG',{exact:true}).isDisabled(),true);
+ await page.evaluate(()=>fixture.emit('GENERATION_ENDED',fixture.context.chat.length));
+ assert.equal(await x.expression.isDisabled(),true,'unresolved end does not grant head authority');
+ await button(page,'Previous').click();await page.waitForFunction(()=>!document.querySelector('[aria-label="Expression to apply · selected source only"]').disabled);assert.equal(await message(page).innerText(),'Stable older B');
+ assert.equal(await page.locator('#send_textarea').isEnabled(),true);assert.equal(await page.locator('.sillynovel-unsaved').getAttribute('data-state'),'saved');
 });
