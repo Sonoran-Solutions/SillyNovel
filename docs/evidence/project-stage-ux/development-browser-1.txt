@@ -1,0 +1,107 @@
+✔ actual entry mounts, updates, disposes and preserves canonical state (558.311418ms)
+✖ long ordinary Markdown is formatted, selectable and copied completely (187.340648ms)
+✖ unsafe HTML, encoded protocols, media and malformed markup never execute or lose raw text (30167.092704ms)
+✔ Previous/Next pin the cursor; new messages stay bounded until Latest (419.976654ms)
+✔ streaming follows text bottom independently; scrolling up and selecting text survive updates (192.857701ms)
+✔ stop and continuation stay readable; disable does not stop generation (206.841865ms)
+✔ deleted/replaced pinned source is explicit and never silently retargeted (316.290334ms)
+✔ backlog never claims an exact match against a stale native revision (296.666832ms)
+✔ backlog re-resolves reordered objects, returns pinned selection and reports locator fallback (300.276709ms)
+✔ draft, caret, native composer node and focus survive repeated view transitions (332.247099ms)
+✔ missing capability and mount failure leave native chat usable (169.811684ms)
+✔ format exception releases stage/listeners, restores native feed and keeps exact draft (150.394471ms)
+✔ A to B to A discards queued old-epoch reads and starts each visit at latest (185.487371ms)
+✔ IME and editable-field key events remain unconsumed (128.930384ms)
+✔ empty and unresolved-author sources are explicit; narrow reduced-height composer remains reachable (150.768731ms)
+✖ session stage: four manual actors, duplicate names, stable slots, refusal, swap, replace and locks (316.835195ms)
+✔ session stage: forward projection, selected-source expressions, outfits and incompatible/missing fallback (663.362624ms)
+✔ session stage: temporary raster decode, replacement/reset/disable cleanup and stale delayed work (477.601071ms)
+✖ session stage: chat return, A to B to A, reload, narrow/keyboard layout and transparent fixtures (613.295846ms)
+✔ session stage: delayed image cannot apply after same-source reset, manual override or unobserved source edit (284.016218ms)
+✔ session stage: denied subtle leaves a complete text reader (525.395237ms)
+✔ session stage: denied randomUUID leaves a complete text reader (518.924186ms)
+✔ session stage: delayed historical hashing neutralizes art before navigation and rejects obsolete work (433.178374ms)
+✔ session stage: history size refusal leaves neutral art and a usable text reader (314.568807ms)
+✔ project replacement pauses all visual mutations and success replaces the original scene (383.035859ms)
+✔ project replacement pauses all visual mutations and failure preserves the original scene (440.423918ms)
+✔ portable bundle import preserves current visuals: success (450.393017ms)
+✔ portable bundle import preserves current visuals: failure (447.331363ms)
+✔ portable bundle import preserves current visuals: chat switch (444.166573ms)
+✔ portable bundle import preserves current visuals: project replacement (503.650992ms)
+✔ portable export downloads only a successful bundle, with explicit errors and size refusal (959.054949ms)
+✔ unused artwork controls and delayed results: cancel (466.713061ms)
+✔ unused artwork controls and delayed results: success (521.430745ms)
+✔ unused artwork controls and delayed results: stale (517.10134ms)
+✔ unused artwork controls and delayed results: lost response (532.090049ms)
+✔ unused artwork controls and delayed results: wrong receipt (519.39552ms)
+✔ unused artwork controls and delayed results: chat switch (572.082012ms)
+✔ unused artwork controls and delayed results: project replacement (655.180859ms)
+✔ unused artwork controls and delayed results: disable (584.738606ms)
+✔ project library actual entry edits labels, unregisters, saves and reloads/reopens compatible alternatives (826.045651ms)
+✔ migration-required storage leaves original reader, composer and transient controls usable (283.602136ms)
+ℹ tests 41
+ℹ suites 0
+ℹ pass 37
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 47392.788997
+
+✖ failing tests:
+
+test at tests/m1-reader-browser.test.mjs:66:1
+✖ long ordinary Markdown is formatted, selectable and copied completely (187.340648ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(await message(page).locator('p').count() > 400)
+  
+      at TestContext.<anonymous> (file:///home/dq/Projects/SillyNovel/tests/m1-reader-browser.test.mjs:70:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/m1-reader-browser.test.mjs:79:1
+✖ unsafe HTML, encoded protocols, media and malformed markup never execute or lose raw text (30167.092704ms)
+  locator.textContent: Timeout 30000ms exceeded.
+  Call log:
+  [2m  - waiting for locator('.sillynovel-dialogue__message')[22m
+  
+      at TestContext.<anonymous> (/home/dq/Projects/SillyNovel/tests/m1-reader-browser.test.mjs:84:42) {
+    log: [ "  - waiting for locator('.sillynovel-dialogue__message')" ],
+    name: 'TimeoutError'
+  }
+
+test at tests/m1-reader-browser.test.mjs:327:1
+✖ session stage: four manual actors, duplicate names, stable slots, refusal, swap, replace and locks (316.835195ms)
+  AssertionError [ERR_ASSERTION]: Open controls yield art space to dialogue
+      at TestContext.<anonymous> (file:///home/dq/Projects/SillyNovel/tests/m1-reader-browser.test.mjs:332:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/m1-reader-browser.test.mjs:406:1
+✖ session stage: chat return, A to B to A, reload, narrow/keyboard layout and transparent fixtures (613.295846ms)
+  AssertionError [ERR_ASSERTION]: {"x":15.546875,"y":271.828125,"width":358.90625,"height":18}
+      at TestContext.<anonymous> (file:///home/dq/Projects/SillyNovel/tests/m1-reader-browser.test.mjs:422:87)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
