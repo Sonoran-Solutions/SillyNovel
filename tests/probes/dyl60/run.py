@@ -3,6 +3,20 @@ from pathlib import Path
 import datetime, hashlib, json, os, re, shlex, shutil, subprocess, sys, time
 
 repo = Path(__file__).resolve().parents[3]
+node_files = [repo / 'tests' / (name + '.test.mjs') for name in ['m0', 'm1-reader-source', 'm1-source-prefix', 'm1-scene-reducer', 'm1-project-scene', 'm1-project-expressions']]
+storage_files = []
+for directory, expected, files in [
+    ('tests/probes/dyl19', {'owned-chat-probe.test.mjs', 'source-anchor.test.mjs'}, node_files),
+    ('plugins/sillynovel-storage/test', {'bundle.test.mjs', 'cleanup.test.mjs', 'library.test.mjs', 'recovery.test.mjs', 'store.test.mjs'}, storage_files),
+]:
+    discovered = sorted((repo / directory).glob('*.test.mjs'))
+    assert {p.name for p in discovered} == expected, f'Unexpected or empty suite: {directory}: {[p.name for p in discovered]}'
+    files.extend(discovered)
+browser_files = [repo / 'tests/m1-reader-browser.test.mjs']
+assert all(p.is_file() for p in node_files + storage_files + browser_files), 'Missing expected test file'
+suites = {name: [str(p.relative_to(repo)) for p in files] for name, files in [('node', node_files), ('storage', storage_files), ('browser', browser_files)]}
+if sys.argv[1:] == ['--list-tests']:
+    print(json.dumps(suites, indent=2));sys.exit(0)
 host = Path(os.environ['SILLYTAVERN_ROOT']).resolve()
 out = Path(sys.argv[1]).resolve()
 out.mkdir(parents=True, exist_ok=False)
@@ -13,6 +27,7 @@ def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 def save(name, value):
     (out / name).write_text(json.dumps(value, indent=2) + '\n')
+save('discovery.json', suites)
 
 candidate = output(['git', 'rev-parse', 'HEAD'])
 assert subprocess.run(['git','diff','--quiet','HEAD','--','index.js','style.css','manifest.json','src','tests','plugins'],cwd=repo).returncode == 0, 'Commit executable changes before freezing'
@@ -31,7 +46,7 @@ pins = {'candidate': candidate, 'host': output(['git', '-C', str(host), 'rev-par
 assert pins['sqlite'] == '3.53.4'
 pins['toolingHashes'] = {str(p): sha(p) for p in [Path(env['SN_PLAYWRIGHT_MODULE']), Path(env['SN_PLAYWRIGHT_MODULE']).parent / 'package.json', Path(env['SN_PLAYWRIGHT_MODULE']).parent.parent / 'playwright-core/browsers.json']}
 save('pins.json', pins)
-steps = [('node', ['node', '--test', '--test-isolation=none', *['tests/' + p + '.test.mjs' for p in ['m0', 'm1-reader-source', 'm1-source-prefix', 'm1-scene-reducer', 'm1-project-scene', 'm1-project-expressions']], *map(str, sorted((Path('tests/probes/dyl19')).glob('*.test.mjs')))], {}, 300), ('storage', ['node', '--test', '--test-isolation=none', *map(str, sorted(Path('plugins/sillynovel-storage/test').glob('*.test.mjs')))], {}, 600), ('browser', ['node', '--test', '--test-isolation=none', 'tests/m1-reader-browser.test.mjs'], {}, 300)]
+steps = [(name, ['node', '--test', '--test-isolation=none', *map(str, files)], {}, limit) for name, files, limit in [('node', node_files, 300), ('storage', storage_files, 600), ('browser', browser_files, 300)]]
 for name, flags in [('stage-library-migration', ['STAGE_UX','LIBRARY','MIGRATION']), ('expressions',['EXPRESSIONS']), ('groups',['GROUP']), ('recovery',['RECOVERY']), ('cleanup',['CLEANUP']), ('native-integrity-branches',['CANDIDATE'])]:
     steps.append((name, ['node','tests/probes/project-portability/host.mjs',str(host)], {f'SN_{f}_RUN':'1' for f in flags}, 600))
 runs = []

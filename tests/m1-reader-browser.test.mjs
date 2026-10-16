@@ -47,6 +47,40 @@ const button = (page, name) => page.getByRole('button', { name, exact: true });
 const message = page => page.locator('.sillynovel-dialogue__message');
 async function text(page, value, index) { await page.evaluate(({value,index}) => fixture.setText(value,index), {value,index}); }
 
+test('visual viewport keeps the original composer reachable through keyboard resize, pan and native chat; disable releases it', async t => {
+    const page = await fixture(t, '', () => {
+        window.testViewport = Object.assign(new EventTarget(), { height: 900, offsetTop: 0, scale: 1 });
+        Object.defineProperty(window, 'visualViewport', { value: testViewport });
+    });
+    await page.evaluate(() => {
+        window.originalComposer = document.getElementById('send_textarea');
+        originalComposer.value = 'Keyboard draft'; originalComposer.focus(); originalComposer.setSelectionRange(2, 7);
+    });
+    for (const [height, offsetTop] of [[350, 0], [210, 35], [900, 0]]) {
+        await page.evaluate(({height, offsetTop}) => {
+            Object.assign(testViewport, { height, offsetTop });
+            testViewport.dispatchEvent(new Event('resize')); testViewport.dispatchEvent(new Event('scroll'));
+        }, {height, offsetTop});
+        const controls = page.locator('.sillynovel-controls');
+        await controls.locator('summary').click();
+        assert.equal(await controls.evaluate(e => e.open), true);
+        await controls.locator('summary').click();
+        for (const name of ['Back to Chat', 'Return to Reader']) {
+            const form = await page.locator('#send_form').boundingBox();
+            assert.ok(form.y + form.height <= height + offsetTop + 1, JSON.stringify(form));
+            await button(page, name).click();
+        }
+    }
+    assert.deepEqual(await page.evaluate(() => ({same: originalComposer === document.getElementById('send_textarea'), value: originalComposer.value, selection: [originalComposer.selectionStart, originalComposer.selectionEnd]})), {same: true, value: 'Keyboard draft', selection: [2, 7]});
+    await page.evaluate(() => { testViewport.scale = 2; testViewport.dispatchEvent(new Event('resize')); });
+    assert.equal(await page.locator('#sheld').evaluate(e => e.classList.contains('sillynovel-viewport')), false);
+    await page.locator('#sillynovel-enabled').uncheck();
+    await page.evaluate(() => { testViewport.scale = 1; testViewport.dispatchEvent(new Event('resize')); });
+    assert.equal(await page.locator('#sheld').evaluate(e => e.classList.contains('sillynovel-viewport') || e.style.getPropertyValue('--sillynovel-available-height') !== ''), false);
+    const noViewport = await fixture(t, '', () => Object.defineProperty(window, 'visualViewport', { value: undefined }));
+    assert.equal(await noViewport.locator('#sheld').evaluate(e => e.classList.contains('sillynovel-viewport')), false);
+});
+
 test('actual entry mounts, updates, disposes and preserves canonical state', async t => {
     const page = await fixture(t);
     assert.equal(await page.locator('#sillynovel-stage').count(), 1);
