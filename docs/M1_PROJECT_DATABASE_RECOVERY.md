@@ -1,5 +1,7 @@
 # DYL-58 operator database recovery contract
 
+**DYL-22 review candidate:** [PNG library contract](M1_PNG_ASSET_LIBRARY.md) extends project/database envelopes to v2 with explicit operator-only migration of a verified v1 backup to a new output; plugin startup refuses v1 without mutation; scene and portable bundle v1 remain unchanged. Saved library alternatives are protected from cleanup. Updated recovery tools support exact schema 1/2 and whole-library backups; portable v1 copies omit library labels/unselected alternatives. Historical v1-only/no-migration statements below describe the prior slice.
+
 This experimental local workflow recovers the installed SillyNovel store with its original IDs, revisions, owner keys and every immutable PNG, including unreferenced assets. It is authorized for disposable verification and senior review. It does not authorize live installation, production replacement, automatic recovery, account reassignment, DYL-59 cleanup, associations, M1.3/M2 or Gate A acceptance. [Implementation/evidence](M1_PROJECT_DATABASE_RECOVERY_IMPLEMENTATION.md).
 
 The separate [portable `.sillynovel` format](M1_PROJECT_PORTABILITY.md) remains the supported copy path between account identities, allocating new project/actor/asset IDs. A database recovery never imports those semantics.
@@ -103,6 +105,8 @@ No whole-database Buffer or JSON serialization is needed; file hashing and BLOB 
 Plan free space for a full source, any source WAL/journal growth, the full snapshot and a full separate restored copy; staging and final hardlinks do not duplicate their BLOB bytes. Allow at least twice the snapshot size beyond the retained source/sidecars for backup plus restored copy, and additional headroom for failed attempts and concurrent growth. The utility does not reserve free space; ENOSPC refuses and must be handled like other I/O failures. Keep multiple dated backups outside served directories, restrict OS access, verify them periodically and retain independent host/account backups. Encryption, off-host retention and storage authentication remain operator responsibilities; no cloud transport is added.
 
 ## Migration policy
+
+**Current DYL-22 correction:** the concrete v1→v2 transition implements this preservation policy via `tools/recovery.mjs migrate V1_BACKUP_DIR NEW_TARGET_DATA_ROOT/.sillynovel-projects.sqlite`. It requires a fully verified preserved backup and matching destination accounts, transforms only a private staged copy, validates the full v2 output and exclusively publishes into an absent stopped-host slot. The original store and v1 backup remain unchanged after success. Startup returns `MIGRATION_REQUIRED` instead of transforming v1. [Workflow, successful-upgrade rollback and limitations](M1_PNG_ASSET_LIBRARY.md#explicit-v1--v2-transition). The following v1-only statements describe the earlier DYL-58 scope, not the current transition.
 
 Schema v1 remains the only implemented version. Shared schema validation is the migration-precondition safeguard: version plus the exact tables, columns, constraints and indexes must match. Startup and operator validation refuse incomplete/corrupt or future schemas. Tests cover future-version and damaged-schema refusal without rewriting source bytes. There is **no v1→v2 transition** and no cross-version migration success claim.
 

@@ -2,8 +2,8 @@ import * as sqlite from 'node:sqlite';
 import { constants, openSync, closeSync, readSync, fstatSync, lstatSync, readdirSync, mkdtempSync, mkdirSync, chmodSync, writeFileSync, linkSync, unlinkSync, rmdirSync, fsyncSync, copyFileSync } from 'node:fs';
 import { resolve, dirname, basename, join, parse, isAbsolute } from 'node:path';
 import { createHash } from 'node:crypto';
-import { demand, exact, validId, label, validateScene } from './schema.mjs';
-import { validateDatabaseSchema } from './database-schema.mjs';
+import { demand, exact, validId, label, validateScene, validateCatalog } from './schema.mjs';
+import { validateDatabaseSchema, upgradeV1 } from './database-schema.mjs';
 import { decodePNG, MAX_BYTES, digest } from './png.mjs';
 
 export const DATABASE_NAME = '.sillynovel-projects.sqlite';
@@ -86,13 +86,14 @@ export function validateDatabase(path) {
     try {
         db = new sqlite.DatabaseSync(path, { readOnly: true, allowExtension: false });
         db.exec('PRAGMA query_only=ON; PRAGMA trusted_schema=OFF; PRAGMA busy_timeout=3000; PRAGMA cache_size=-2048;');
-        validateDatabaseSchema(db);
+        const schemaVersion=validateDatabaseSchema(db,[1,2]);
         demand(db.prepare('PRAGMA integrity_check').all().every(r => r.integrity_check === 'ok'), 'CORRUPT_DATABASE');
         const projects = db.prepare('SELECT count(*) AS n FROM projects').get().n, assets = db.prepare('SELECT count(*) AS n FROM assets').get().n;
         demand(projects <= LIMITS.projects && assets <= LIMITS.assets, 'RECOVERY_LIMIT');
         demand(!db.prepare('PRAGMA foreign_key_check').get(), 'INVALID_PROJECT_STATE');
         demand(!db.prepare('SELECT 1 FROM projects WHERE length(CAST(scene AS BLOB))>32768 OR length(CAST(owner AS BLOB))>1024 OR length(CAST(name AS BLOB))>320 OR length(CAST(id AS BLOB))>36 LIMIT 1').get(), 'INVALID_PROJECT_STATE');
         demand(!db.prepare('SELECT 1 FROM assets WHERE length(bytes)>? OR length(CAST(id AS BLOB))>36 OR length(CAST(project AS BLOB))>36 OR length(CAST(sha256 AS BLOB))>64 LIMIT 1').get(MAX_BYTES), 'INVALID_ASSET');
+        if(schemaVersion===2)demand(!db.prepare('SELECT 1 FROM projects WHERE length(CAST(catalog AS BLOB))>32768 LIMIT 1').get(),'INVALID_PROJECT_STATE');
         const owners = new Set();
         for (const p of db.prepare('SELECT * FROM projects').iterate()) {
             budget();
@@ -100,7 +101,8 @@ export function validateDatabase(path) {
                 demand(validId(p.id) && label(p.name) && Number.isSafeInteger(p.revision) && p.revision >= 0, 'INVALID_PROJECT_STATE');
                 ownerPair(p.owner); owners.add(p.owner);
                 const scene = validateScene(JSON.parse(p.scene));
-                for (const id of [scene.backgroundAssetId, ...scene.actors.map(a => a.spriteAssetId)].filter(Boolean))
+                const catalog=schemaVersion===2?validateCatalog(JSON.parse(p.catalog),scene):[];
+                for (const id of [scene.backgroundAssetId, ...scene.actors.map(a => a.spriteAssetId),...catalog.map(a=>a.assetId)].filter(Boolean))
                     demand(db.prepare('SELECT 1 FROM assets WHERE id=? AND project=?').get(id,p.id), 'INVALID_PROJECT_STATE');
             } catch { fail('INVALID_PROJECT_STATE'); }
         }
@@ -117,7 +119,7 @@ export function validateDatabase(path) {
         budget();
         const final=file(path,LIMITS.databaseBytes);
         demand(final.sha256 === info.sha256 && final.byteLength === info.byteLength,'CHECKSUM_MISMATCH');
-        return { ...info, schemaVersion: 1, integrity: 'ok', projects, assets, owners: [...owners], sqlite: db.prepare('SELECT sqlite_version() AS v').get().v, journalMode: 'delete' };
+        return { ...info, schemaVersion, integrity: 'ok', projects, assets, owners: [...owners], sqlite: db.prepare('SELECT sqlite_version() AS v').get().v, journalMode: 'delete' };
     } catch (e) { if(e.code && !e.code.startsWith('ERR_')) throw e; fail('CORRUPT_DATABASE'); }
     finally { db?.close(); }
 }
@@ -136,9 +138,9 @@ export function inspectBackup(directory, dataRoot) {
     demand(exact(m.snapshot,['byteLength','sha256']) && Number.isSafeInteger(m.snapshot.byteLength) && m.snapshot.byteLength>0 && m.snapshot.byteLength<=LIMITS.databaseBytes && typeof m.snapshot.sha256==='string' && /^[0-9a-f]{64}$/.test(m.snapshot.sha256) && Number.isSafeInteger(m.projects) && m.projects>=0 && m.projects<=LIMITS.projects && Number.isSafeInteger(m.assets) && m.assets>=0 && m.assets<=LIMITS.assets, 'INVALID_MANIFEST');
     const path = join(directory,SNAPSHOT), bytes = file(path,LIMITS.databaseBytes);
     demand(bytes.byteLength === m.snapshot.byteLength && bytes.sha256 === m.snapshot.sha256, 'CHECKSUM_MISMATCH');
-    demand(m.schemaVersion === 1, 'UNSUPPORTED_SCHEMA');
+    demand([1,2].includes(m.schemaVersion), 'UNSUPPORTED_SCHEMA');
     const result = validateDatabase(path);
-    demand(result.projects === m.projects && result.assets === m.assets, 'INVALID_MANIFEST');
+    demand(result.schemaVersion===m.schemaVersion && result.projects === m.projects && result.assets === m.assets, 'INVALID_MANIFEST');
     const accountBinding = accounts(result.owners,dataRoot);
     const {owners,...publicResult}=result;
     return { code: 'VALID_BACKUP', ...publicResult, accountBinding };
@@ -177,7 +179,7 @@ export async function createBackup(source, destination, hooks = {}) {
         writeFileSync(join(stage.path,SNAPSHOT),'',{flag:'wx',mode:0o600}); stage.own(SNAPSHOT);
         hooks.at?.('snapshot');
         db = new sqlite.DatabaseSync(source,{readOnly:true,allowExtension:false});
-        db.exec('PRAGMA busy_timeout=3000;'); validateDatabaseSchema(db);
+        db.exec('PRAGMA busy_timeout=3000;'); validateDatabaseSchema(db,[1,2]);
         demand(db.prepare('PRAGMA page_count').get().page_count * db.prepare('PRAGMA page_size').get().page_size <= LIMITS.databaseBytes,'RECOVERY_LIMIT');
         // SQLite owns journal/WAL coordination. No raw file copy of an active store.
         await sqlite.backup(db,join(stage.path,SNAPSHOT),{rate:64,progress:hooks.progress});
@@ -208,24 +210,40 @@ export async function createBackup(source, destination, hooks = {}) {
         return {code:'VALID_BACKUP',...result,owners:undefined,accountBinding:'ACCOUNT_BINDING_UNVERIFIED'};
     } finally { db?.close(); stage.cleanup(); }
 }
-export function restoreBackup(directory, destination, hooks = {}) {
+export const restoreBackup = (directory,destination,hooks={}) => copyBackup(directory,destination,hooks,false);
+export const migrateBackup = (directory,destination,hooks={}) => copyBackup(directory,destination,hooks,true);
+function copyBackup(directory, destination, hooks, migrate) {
     demand(basename(destination) === DATABASE_NAME, 'INVALID_DESTINATION');
     safePath(destination,true); const parent=privateParent(destination);
     for(const suffix of ['', '-wal','-shm','-journal']) demand(!exists(destination+suffix),'DESTINATION_EXISTS');
-    inspectBackup(directory,parent); const stage=stageAt(parent);
+    const original=inspectBackup(directory,parent);
+    if(migrate)demand(original.schemaVersion===1,'UNSUPPORTED_SCHEMA');
+    const stage=stageAt(parent);
     try {
         hooks.at?.('staging');
         writeFileSync(join(stage.path,SNAPSHOT),'',{flag:'wx',mode:0o600}); stage.own(SNAPSHOT);
         copyFileSync(join(directory,SNAPSHOT),join(stage.path,SNAPSHOT)); chmodSync(join(stage.path,SNAPSHOT),0o600);
         hooks.at?.('validation');
-        const result=validateDatabase(join(stage.path,SNAPSHOT));
+        let result=validateDatabase(join(stage.path,SNAPSHOT));
         // Independently compare staged bytes against the validated package, then
         // recheck account evidence and destination immediately before publication.
         const expected=inspectBackup(directory,parent);
-        demand(result.sha256===expected.sha256 && result.byteLength===expected.byteLength,'CHECKSUM_MISMATCH');
+        demand(result.sha256===original.sha256 && result.byteLength===original.byteLength && expected.sha256===original.sha256,'CHECKSUM_MISMATCH');
+        if(migrate) {
+            hooks.at?.('migration');stage.check(SNAPSHOT);
+            const db=new sqlite.DatabaseSync(join(stage.path,SNAPSHOT),{allowExtension:false});
+            try {
+                db.exec('PRAGMA foreign_keys=ON; PRAGMA synchronous=FULL; BEGIN IMMEDIATE;');
+                try {upgradeV1(db);db.exec('COMMIT');} catch(error){db.exec('ROLLBACK');throw error;}
+            } finally {db.close();}
+            hooks.at?.('migrated');stage.check(SNAPSHOT);
+            result=validateDatabase(join(stage.path,SNAPSHOT));
+            demand(result.schemaVersion===2 && result.projects===original.projects && result.assets===original.assets,'INVALID_PROJECT_STATE');
+            demand(inspectBackup(directory,parent).sha256===original.sha256,'CHECKSUM_MISMATCH');
+        }
         sync(join(stage.path,SNAPSHOT)); hooks.at?.('publish');
         for(const suffix of ['', '-wal','-shm','-journal']) demand(!exists(destination+suffix),'DESTINATION_EXISTS');
         linkSync(join(stage.path,SNAPSHOT),destination); sync(parent);
-        return {...expected,code:'RESTORED'};
+        return {...expected,...result,owners:undefined,code:migrate?'MIGRATED':'RESTORED'};
     } finally {stage.cleanup();}
 }

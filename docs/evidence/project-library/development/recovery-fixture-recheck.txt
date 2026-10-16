@@ -1,0 +1,22 @@
+TAP version 13
+# Subtest: coherent committed revisions with overlapping asset imports/save and rolled-back transaction: delete
+ok 1 - coherent committed revisions with overlapping asset imports/save and rolled-back transaction: delete
+  ---
+  duration_ms: 5959.994989
+  type: 'test'
+  ...
+# Subtest: coherent committed revisions with overlapping asset imports/save and rolled-back transaction: wal
+ok 2 - coherent committed revisions with overlapping asset imports/save and rolled-back transaction: wal
+  ---
+  duration_ms: 5892.455855
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 11895.192919

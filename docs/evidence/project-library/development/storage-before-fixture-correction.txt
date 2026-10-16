@@ -1,0 +1,157 @@
+✔ bundle roundtrip remaps all IDs, preserves bytes/locks, isolates edits and survives restart (486.354774ms)
+✔ foreign export, forged IDs, busy worker, and caller ownership are refused or independently scoped (307.4724ms)
+▶ malformed containers all leave committed database inventory identical
+  ✔ truncated (53.588976ms)
+  ✔ oversized (74.43109ms)
+  ✔ excess entries (52.901629ms)
+  ✔ compression (45.150967ms)
+  ✔ duplicate entry (109.071598ms)
+  ✔ traversal (48.336943ms)
+  ✔ absolute (48.155717ms)
+  ✔ symlink (48.101135ms)
+  ✔ extra field (44.518552ms)
+  ✔ source project authority (47.055233ms)
+  ✔ version (47.302011ms)
+  ✔ missing (82.424946ms)
+  ✔ wrong hash (43.860971ms)
+  ✔ wrong length (41.122826ms)
+  ✔ foreign reference (39.687751ms)
+  ✔ invalid actor (54.019285ms)
+  ✔ extra scene key (51.802619ms)
+  ✔ script (112.727167ms)
+  ✔ corrupt png (53.404033ms)
+  ✔ dimensions (45.633783ms)
+  ✔ ZIP bytes (45.348534ms)
+  ✔ duplicate JSON key (43.652223ms)
+✔ malformed containers all leave committed database inventory identical (1437.173565ms)
+▶ write-phase failures inspect rollback; quotas refuse atomically
+  ✔ project creation (120.731763ms)
+  ✔ second asset insertion (110.285565ms)
+  ✔ final scene insertion (94.562467ms)
+  ✔ commit deferred foreign key (100.288029ms)
+  ✔ project quota (328.242821ms)
+  ✔ asset quota (186.766285ms)
+✔ write-phase failures inspect rollback; quotas refuse atomically (1162.94507ms)
+✔ export snapshots stay coherent while a peer saves; corrupt saved bytes refuse (244.431854ms)
+✔ experimental export ceilings refuse the complete saved arrangement (724.024908ms)
+✔ classification uses committed references, including shared background/sprites and distinct alternatives (125.056228ms)
+✔ selected single/multiple deletion commits exact rows, preserves scene revision, export, backup and restart (10679.695984ms)
+✔ ownership, strict bounded schema, forged/foreign/referenced/unknown IDs refuse without mutation (90.728203ms)
+✔ preview ordering: save adds reference (15021.966389ms)
+✔ preview ordering: upload (8224.341473ms)
+✔ preview ordering: another cleanup (92.187793ms)
+✔ preview ordering: unrelated bundle import (187.731841ms)
+✔ cleanup then stale draft save refuses missing artwork, subsequent import/export/backup serialize coherently (14882.41713ms)
+✔ atomic SQLite rollback before first delete (1175.259639ms)
+✔ atomic SQLite rollback after first delete (8184.921015ms)
+✔ corruption refuses entire preview/removal: bytes (8156.91465ms)
+✔ corruption refuses entire preview/removal: digest (50.635741ms)
+✔ corruption refuses entire preview/removal: dimensions (168.66093ms)
+✔ corruption refuses entire preview/removal: missing reference (7948.738256ms)
+QUOTA_EVIDENCE {"before":{"logical":104043848,"fileBytes":104185856,"freePages":0,"pageSize":4096},"after":{"logical":100042175,"fileBytes":104185856,"freePages":978,"pageSize":4096},"receipt":{"projectId":"b7633c11-e194-43c9-84ba-7fb583538196","revision":0,"deletedIds":["0ba60e6e-f55c-46db-92ff-a45d6190cc21"],"deletedCount":1,"reclaimedBytes":4001673},"afterUpload":{"logical":104043848,"fileBytes":104185856,"freePages":0,"pageSize":4096}}
+✔ logical quota recovery, freelist and file size are distinct (26250.067793ms)
+✔ separate SQLite connection waits for cleanup transaction: save deleted reference (242.939912ms)
+✔ separate SQLite connection waits for cleanup transaction: asset upload (7990.803024ms)
+✔ separate SQLite connection waits for cleanup transaction: portable export (8335.080187ms)
+✔ separate SQLite connection waits for cleanup transaction: database backup (8081.023888ms)
+✔ two backgrounds/two actor sprites survive saves/restart/reselection, labels and immutable bytes stay distinct (438.79659ms)
+✔ catalog validation rejects foreign actors, categories, labels, duplicate identities and incompatible selected art (96.792477ms)
+✔ catalog protects alternatives; unregister/save is separate from stale-checked byte deletion; failed writes preserve metadata (491.763562ms)
+✔ identical project PNG uploads reuse UUID/bytes/quota, including shared actor use; separate projects own separate bytes (152.270256ms)
+✔ full database backup/recovery preserves library; portable v1 copy carries only selected bytes and no catalog labels/alternatives (893.944705ms)
+✔ actual v1 schema upgrades atomically; old backup remains inspectable/restorable; IDs/revisions/scenes/bytes survive (286.398755ms)
+✔ v1 upgrade rolls back schema, metadata, bytes and marker after catalog write (47.761666ms)
+✔ v1 upgrade rolls back schema, metadata, bytes and marker after version marker (47.68863ms)
+✔ backup/inspect/restore preserve every row, account, revision, lock, actor and PNG through restart (499.433768ms)
+✔ empty current-schema database roundtrip (40.167521ms)
+▶ invalid packages refuse without changing backup, account evidence or an existing destination
+  ✔ missing manifest (3992.052557ms)
+  ✔ invalid JSON (208.240923ms)
+  ✔ future format (216.088571ms)
+  ✔ wrong count (319.260985ms)
+  ✔ checksum (178.180368ms)
+  ✔ truncated SQLite (284.560418ms)
+  ✔ corrupt btree (220.496697ms)
+  ✔ future schema (224.203367ms)
+  ✔ missing projects (213.168686ms)
+  ✔ missing assets (216.200202ms)
+  ✔ missing index (203.998883ms)
+  ✔ extra trigger (223.15488ms)
+  ✔ bad foreign key (219.499195ms)
+  ✔ bad scene (220.619528ms)
+  ✔ bad revision (220.112136ms)
+  ✔ bad owner (213.832013ms)
+  ✔ wrong digest (367.112944ms)
+  ✔ wrong dimensions (266.475258ms)
+  ✔ invalid PNG (215.552835ms)
+  ✔ missing referenced PNG (188.918346ms)
+  ✔ foreign project PNG (352.363571ms)
+  ✔ unexpected file (297.280975ms)
+  ✔ symlink database (302.089074ms)
+  ✔ hardlink alias (197.451659ms)
+✔ invalid packages refuse without changing backup, account evidence or an existing destination (9575.13381ms)
+✔ account incarnation, symlink components, public paths, sidecars and nonempty destinations refuse (217.493093ms)
+▶ faults inspect source and destination filesystem rather than assuming rollback
+  ✔ backup snapshot (68.58055ms)
+  ✔ backup snapshot-written (80.050371ms)
+  ✔ backup manifest (148.218826ms)
+  ✔ backup publish (205.230712ms)
+  ✔ restore staging (150.270259ms)
+  ✔ restore validation (154.916155ms)
+  ✔ restore publish (268.4517ms)
+  ✔ exclusive destination creation race (135.065838ms)
+  ✔ backup snapshot write fails with SQLite target replaced by directory (56.766791ms)
+✔ faults inspect source and destination filesystem rather than assuming rollback (1270.919111ms)
+✖ coherent committed revisions with overlapping asset imports/save and rolled-back transaction: delete (2039.180366ms)
+✖ coherent committed revisions with overlapping asset imports/save and rolled-back transaction: wal (2081.344021ms)
+✔ killed backup retains an incomplete private stage, no completed package and unchanged committed source (115.083899ms)
+{"code":"DESTINATION_EXISTS"}
+✔ actual operator CLI creates, inspects, restores and refuses replacement (749.713002ms)
+✔ process killed inside a rollback transaction: backup refuses hot journal, normal SQLite reopen recovers the original commit (135.516913ms)
+▶ staging tampering and real publication failures preserve unknown files and refuse activation
+  ✔ manifest write failure (107.027074ms)
+  ✔ restore symlink (181.114545ms)
+  ✔ restore integrity (178.467906ms)
+  ✔ restore publication (231.11947ms)
+✔ staging tampering and real publication failures preserve unknown files and refuse activation (699.605634ms)
+✔ owned projects, immutable PNGs, CAS, failed transaction and restart (57.683008ms)
+✔ PNG decode, CRC, unsupported formats and byte/dimension limits (15.387945ms)
+✔ unknown schema refuses without rewriting database (4.543255ms)
+ℹ tests 112
+ℹ suites 0
+ℹ pass 110
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 150266.394423
+
+✖ failing tests:
+
+test at plugins/sillynovel-storage/test/recovery.test.mjs:102:39
+✖ coherent committed revisions with overlapping asset imports/save and rolled-back transaction: delete (2039.180366ms)
+  Error: INVALID_ASSET
+      at demand (file:///home/dq/Projects/SillyNovel/plugins/sillynovel-storage/schema.mjs:3:34)
+      at fail (file:///home/dq/Projects/SillyNovel/plugins/sillynovel-storage/recovery.mjs:12:22)
+      at validateDatabase (file:///home/dq/Projects/SillyNovel/plugins/sillynovel-storage/recovery.mjs:118:68)
+      at createBackup (file:///home/dq/Projects/SillyNovel/plugins/sillynovel-storage/recovery.mjs:191:24)
+      at async TestContext.<anonymous> (file:///home/dq/Projects/SillyNovel/plugins/sillynovel-storage/test/recovery.test.mjs:110:2)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    code: 'INVALID_ASSET',
+    status: 400
+  }
+
+test at plugins/sillynovel-storage/test/recovery.test.mjs:102:39
+✖ coherent committed revisions with overlapping asset imports/save and rolled-back transaction: wal (2081.344021ms)
+  Error: INVALID_ASSET
+      at demand (file:///home/dq/Projects/SillyNovel/plugins/sillynovel-storage/schema.mjs:3:34)
+      at fail (file:///home/dq/Projects/SillyNovel/plugins/sillynovel-storage/recovery.mjs:12:22)
+      at validateDatabase (file:///home/dq/Projects/SillyNovel/plugins/sillynovel-storage/recovery.mjs:118:68)
+      at createBackup (file:///home/dq/Projects/SillyNovel/plugins/sillynovel-storage/recovery.mjs:191:24)
+      at async TestContext.<anonymous> (file:///home/dq/Projects/SillyNovel/plugins/sillynovel-storage/test/recovery.test.mjs:110:2)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    code: 'INVALID_ASSET',
+    status: 400
+  }

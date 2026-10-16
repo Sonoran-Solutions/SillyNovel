@@ -7,6 +7,7 @@ import { randomUUID } from 'node:crypto';
 import { DatabaseSync } from 'node:sqlite';
 import { openStore } from '../store.mjs';
 import { BUNDLE_BYTES } from '../bundle.mjs';
+import {PNG} from 'pngjs';
 import { digest } from '../png.mjs';
 const png=n=>readFileSync(new URL('../../../tests/fixtures/m12-stage/'+n+'.png',import.meta.url));
 function fixture(t) {
@@ -113,7 +114,7 @@ test('experimental export ceilings refuse the complete saved arrangement',async 
  // Reusing large PNG bytes for distinct sprites counts every decoded entry.
  const actors=Array.from({length:4},(_,i)=>({actorId:randomUUID(),name:'Actor '+i,spriteAssetId:null,slot:null,present:true,locks:{presence:false,slot:false,outfit:false}}));
  // Distinct IDs matter: create four separately stored copies of the large background.
- for(const a of actors)a.spriteAssetId=f.store.importAsset('alice',f.p.projectId,png('forest')).assetId;
+ for(const [i,a] of actors.entries()){const im=PNG.sync.read(png('forest'));im.data[0]=i;a.spriteAssetId=f.store.importAsset('alice',f.p.projectId,PNG.sync.write(im)).assetId;}
  f.store.save('alice',f.p.projectId,{schemaVersion:1,expectedRevision:1,name:f.p.name,scene:{...f.p.scene,actors}});
  const before=f.inventory();await assert.rejects(f.store.exportBundle('alice',f.p.projectId),{code:'BUNDLE_PIXELS'});assert.deepEqual(f.inventory(),before);
 });

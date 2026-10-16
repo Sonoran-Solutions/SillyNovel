@@ -4,7 +4,7 @@ import { demand } from './schema.mjs';
 import { MAX_BYTES } from './png.mjs';
 import { BUNDLE_TYPE, BUNDLE_BYTES } from './bundle.mjs';
 export const info = { id: 'sillynovel-storage', name: 'SillyNovel project storage', description: 'Optional local project persistence; experimental.' };
-let store;
+let store,unavailable='STORAGE_UNAVAILABLE';
 export function exit() { store?.close(); store = null; }
 export async function init(router) {
     // Dynamic import leaves the host operational when its Node lacks SQLite.
@@ -19,7 +19,7 @@ export async function init(router) {
         demand(!existing || existing.isFile() && !existing.isSymbolicLink(), 'INVALID_STORE', 503);
         store = openStore(filename);
         chmodSync(filename, 0o600);
-    } catch { exit(); }
+    } catch(error) { exit(); unavailable=error.code==='MIGRATION_REQUIRED'?'MIGRATION_REQUIRED':'STORAGE_UNAVAILABLE'; }
     router.use((req,res,next) => {
         res.set('Cache-Control','no-store');
         const profile = req.user?.profile;
@@ -28,7 +28,7 @@ export async function init(router) {
         // Refuse persistence even for GET if host CSRF is disabled. Host auth runs before the mounted router.
         if (typeof req.session?.csrfToken !== 'string' || req.session.csrfToken.length < 32) return res.status(503).json({code:'CSRF_REQUIRED'});
         if (req.method !== 'GET' && req.headers['x-csrf-token'] !== req.session.csrfToken) return res.status(403).json({code:'CSRF_REQUIRED'});
-        if (!store) return res.status(503).json({code:'STORAGE_UNAVAILABLE'});
+        if (!store) return res.status(503).json({code:unavailable});
         req.sillynovelOwner = JSON.stringify([profile.handle,profile.created]);
         next();
     });
@@ -47,7 +47,7 @@ export async function init(router) {
         const bytes = await body(req,'application/vnd.sillynovel+json',32768);
         try { return JSON.parse(bytes.toString('utf8')); } catch { demand(false,'INVALID_JSON'); }
     };
-    router.get('/capabilities',route((req,res)=>res.json({apiVersion:1,schemaVersion:1,formats:['image/png'],maxBytes:MAX_BYTES,bundleVersion:1,bundleMaxBytes:BUNDLE_BYTES,cleanupVersion:1})));
+    router.get('/capabilities',route((req,res)=>res.json({apiVersion:1,schemaVersion:2,catalogVersion:1,formats:['image/png'],maxBytes:MAX_BYTES,bundleVersion:1,bundleMaxBytes:BUNDLE_BYTES,cleanupVersion:1})));
     router.get('/projects',route((req,res)=>res.json(store.list(req.sillynovelOwner))));
     router.post('/projects',route(async(req,res)=>res.status(201).json(store.create(req.sillynovelOwner,await json(req)))));
     let bundleBusy=false;

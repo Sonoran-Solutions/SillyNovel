@@ -1,0 +1,32 @@
+Owned evidence root /tmp/sn-portability-host-j2pIzb
+PASS real host auth/CSRF, two-user project and asset isolation, two-client CAS, PNG hash and limits
+PASS browser create/import background + two sprites/arrange/save/reload/explicit reopen; named canonical files unchanged
+PASS library controls: two backgrounds/two actor sprites, duplicate labels/UUIDs, inert label edit, saved unused protection, failed PNG and composer/native-file isolation
+PASS real Chromium reload/detach/explicit reopen/reselect every alternative without import; positions/locks and desktop/narrow reader/composer remain usable
+PASS two independent project libraries and authenticated stale client conflict preserve committed catalog/selection and local dirty edits
+PASS native switch abandons delayed PNG receipt; stale cleanup refuses; explicit unregister/save/selected cleanup removes only chosen alternative
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+... Skipped lines
+
+  {
+    'default-user/characters/Project A.png': 'a6b3b82748515c17dc8aea474c59ee34ff3c7a8888421c8ec0f249c5a7c2a974',
+    'default-user/characters/Project B.png': '4c8c5b693953b265fbb419a4b59b3df67052de5b45ad2731bd30aee1cbdd7cdd',
+    'default-user/characters/Seraphina/admiration.png': 'e451994487b3a5b7c72d6e6025c8cbe6bbcfbf01a490042b8b581522e6ba4f96',
+    'default-user/characters/Seraphina/amusement.png': '1cedaee06fb1c740c5c8c52de8973f733789d51fe9b23fcb633635e755ae6e6f',
+...
+    'default-user/chats/Project A/Project A - 2026-10-15@21h21m39s632ms.jsonl': 'dcded7102cddbc0f5e1c5af42e713e576082049aae451496838c43f0704c9b99',
++   'default-user/chats/Project B/Project B - 2026-10-15@21h21m39s682ms.jsonl': 'fea101f0fbf8f7f21b07c51fff2d4fc61b22ee868c27a733b64d62ca7ff305a6',
+    'default-user/worlds/Eldoria.json': 'bfc2548443c890746a54d54e35e41265b02d1b59fd06d72552b305bf9b1e063c'
+  }
+
+    at runLibrary (file:///home/dq/Projects/SillyNovel/tests/probes/project-library/host.mjs:93:9)
+    at async file:///home/dq/Projects/SillyNovel/tests/probes/project-portability/host.mjs:130:96 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: [Object],
+  expected: [Object],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+Evidence /tmp/sn-portability-host-j2pIzb/evidence.json

@@ -6,6 +6,7 @@ import { join } from 'node:path';
 import { randomUUID, createHash } from 'node:crypto';
 import { spawn } from 'node:child_process';
 import { DatabaseSync } from 'node:sqlite';
+import {PNG} from 'pngjs';
 import { openStore } from '../store.mjs';
 import { createBackup, inspectBackup, restoreBackup, DATABASE_NAME } from '../recovery.mjs';
 const owner = JSON.stringify(['alice',123]), other=JSON.stringify(['bob',456]);
@@ -42,7 +43,7 @@ test('backup/inspect/restore preserve every row, account, revision, lock, actor 
  assert.ok(!readFileSync(join(f.backup,'manifest.json'),'utf8').includes('alice'));
  }finally{f.cleanup();}
 });
-test('empty schema-v1 database roundtrip',async()=>{const f=fixture(false);try{await createBackup(f.source,f.backup);assert.equal(inspectBackup(f.backup).projects,0);restoreBackup(f.backup,f.dest);assert.deepEqual(inventory(f.dest),inventory(f.source));}finally{f.cleanup();}});
+test('empty current-schema database roundtrip',async()=>{const f=fixture(false);try{await createBackup(f.source,f.backup);assert.equal(inspectBackup(f.backup).projects,0);restoreBackup(f.backup,f.dest);assert.deepEqual(inventory(f.dest),inventory(f.source));}finally{f.cleanup();}});
 
 test('invalid packages refuse without changing backup, account evidence or an existing destination',async t=>{
  const cases=[
@@ -53,7 +54,7 @@ test('invalid packages refuse without changing backup, account evidence or an ex
  ['checksum',p=>writeFileSync(join(p,'snapshot.sqlite'),Buffer.from('altered')),'CHECKSUM_MISMATCH'],
  ['truncated SQLite',p=>{writeFileSync(join(p,'snapshot.sqlite'),readFileSync(join(p,'snapshot.sqlite')).subarray(0,100));resign(p);},'CORRUPT_DATABASE'],
  ['corrupt btree',p=>{const b=readFileSync(join(p,'snapshot.sqlite'));b[100]=0;writeFileSync(join(p,'snapshot.sqlite'),b);resign(p);},'CORRUPT_DATABASE'],
- ['future schema',p=>mutate(p,'PRAGMA user_version=2'),'UNSUPPORTED_SCHEMA'],
+ ['future schema',p=>mutate(p,'PRAGMA user_version=99'),'UNSUPPORTED_SCHEMA'],
  ['missing projects',p=>mutate(p,'DROP TABLE projects'),'UNSUPPORTED_SCHEMA'],
  ['missing assets',p=>mutate(p,'DROP TABLE assets'),'UNSUPPORTED_SCHEMA'],
  ['missing index',p=>mutate(p,'DROP INDEX assets_project'),'UNSUPPORTED_SCHEMA'],
@@ -100,10 +101,10 @@ test('faults inspect source and destination filesystem rather than assuming roll
 
 for(const journal of ['delete','wal'])test('coherent committed revisions with overlapping asset imports/save and rolled-back transaction: '+journal,async()=>{
  const f=fixture();try{
- const grow=openStore(f.source);for(let i=0;i<30;i++)grow.importAsset(owner,f.saved.projectId,png);grow.close();
+ const grow=openStore(f.source),image=PNG.sync.read(png);for(let i=0;i<30;i++){image.data[0]=i+1;grow.importAsset(owner,f.saved.projectId,PNG.sync.write(image));}grow.close();
  const writer=new DatabaseSync(f.source);assert.equal(writer.prepare('PRAGMA journal_mode='+journal).get().journal_mode,journal);
  // Enlarge page count so backup progress necessarily precedes completion.
- writer.prepare('UPDATE assets SET bytes=? WHERE id=(SELECT id FROM assets LIMIT 1)').run(png);writer.prepare('UPDATE projects SET name=? WHERE owner=?').run('Committed pending WAL',other);
+ writer.prepare('UPDATE assets SET bytes=? WHERE sha256=?').run(png,hash(png));writer.prepare('UPDATE projects SET name=? WHERE owner=?').run('Committed pending WAL',other);
  if(journal==='wal')assert.ok(statSync(f.source+'-wal').size>0);
  let changed=false,progress=0;const original=inventory(f.source);
  await createBackup(f.source,f.backup,{progress({remainingPages}){progress++;if(changed||remainingPages===0)return;changed=true;

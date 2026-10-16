@@ -23,7 +23,7 @@ export function validateScene(scene) {
     return scene;
 }
 
-export const CLEANUP_WARNING='Only saved project references are checked. Other tabs or clients may have unsaved drafts that will lose access to removed artwork. Removal cannot be undone here; keep verified database backups.';
+export const CLEANUP_WARNING='Saved library alternatives are retained. Only saved scene and library references are checked. Other tabs or clients may have unsaved drafts that will lose access to removed artwork. Removal cannot be undone here; keep verified database backups.';
 const hash256=value=>typeof value==='string' && /^[0-9a-f]{64}$/.test(value);
 export function validateCleanupRequest(body) {
     demand(exact(body,['expectedRevision','inventoryRevision','assetIds']) && Number.isSafeInteger(body.expectedRevision) && body.expectedRevision>=0
@@ -43,4 +43,24 @@ export function validateCleanupPreview(value,id) {
         ids.add(a.assetId);total+=a.byteCount;
     }
     demand(total===value.reclaimableBytes && total<=100*1024*1024,'INVALID_CLEANUP_PREVIEW');return value;
+}
+
+// A PNG may serve several manual actors/categories without duplicating its bytes.
+export const catalogKey = a => [a.kind,a.actorId,a.assetId].join(':');
+export function validateCatalog(catalog,scene) {
+    demand(Array.isArray(catalog) && catalog.length<=100 && new TextEncoder().encode(JSON.stringify(catalog)).length<=32768);
+    const keys=new Set();
+    for(const a of catalog) {
+        demand(exact(a,['assetId','label','kind','actorId']) && validId(a.assetId) && label(a.label));
+        demand(a.kind==='background' && a.actorId===null || a.kind==='sprite' && scene.actors.some(actor=>actor.actorId===a.actorId));
+        const key=catalogKey(a);demand(!keys.has(key));keys.add(key);
+    }
+    for(const selected of selectedCatalog(scene)) {
+        if(catalog.some(a=>a.assetId===selected.assetId))demand(catalog.some(a=>catalogKey(a)===catalogKey(selected)),'INCOMPATIBLE_ASSET');
+    }
+    return catalog;
+}
+export function selectedCatalog(scene) {
+    return [ ...(scene.backgroundAssetId?[{assetId:scene.backgroundAssetId,label:'Background',kind:'background',actorId:null}]:[]),
+        ...scene.actors.filter(a=>a.spriteAssetId).map(a=>({assetId:a.spriteAssetId,label:(a.name+' sprite').slice(0,80),kind:'sprite',actorId:a.actorId})) ];
 }

@@ -1,5 +1,7 @@
 # Explicit unused project artwork cleanup (DYL-59)
 
+**DYL-22 review candidate:** [PNG library contract](M1_PNG_ASSET_LIBRARY.md) extends project/database envelopes to v2 with an additive transactional catalog migration; scene and portable bundle v1 remain unchanged. Saved library alternatives are protected from cleanup. Updated recovery tools support exact schema 1/2 and whole-library backups; portable v1 copies omit library labels/unselected alternatives. Historical v1-only/no-migration statements below describe the prior slice.
+
 Owner assignment: implement and validate explicit project-scoped cleanup after DYL-57 portability and DYL-58 recovery. This is an experimental extension-owned storage operation for senior review. Schema v1, authentication and native host boundaries remain unchanged. [Implementation evidence](M1_PROJECT_ASSET_CLEANUP_IMPLEMENTATION.md).
 
 ## Ownership and candidate definition

@@ -533,7 +533,7 @@ for (const fail of [false,true]) test(`project replacement pauses all visual mut
     const page=await fixture(t);
     await page.locator('#sillynovel-enabled').uncheck();
     await page.evaluate(()=>{fixture.context.getRequestHeaders=()=>({});});
-    const first={schemaVersion:1,projectId:'11111111-1111-4111-8111-111111111111',name:'First',revision:0,scene:{backgroundAssetId:null,backgroundLocked:true,actors:[]}};
+    const first={schemaVersion:2,catalog:[],projectId:'11111111-1111-4111-8111-111111111111',name:'First',revision:0,scene:{backgroundAssetId:null,backgroundLocked:true,actors:[]}};
     const second={...first,projectId:'22222222-2222-4222-8222-222222222222',name:'Second'};
     let release,started;
     const requested=new Promise(r=>started=r),gate=new Promise(r=>release=r);
@@ -543,7 +543,7 @@ for (const fail of [false,true]) test(`project replacement pauses all visual mut
             started();await gate;
             await route.fulfill({status:fail?500:200,json:fail?{code:'LOAD_FAILED'}:second});return;
         }
-        await route.fulfill({json:path.endsWith('/capabilities')?{apiVersion:1,schemaVersion:1}:path.endsWith('/projects')?[first,second]:first});
+        await route.fulfill({json:path.endsWith('/capabilities')?{apiVersion:1,schemaVersion:2,catalogVersion:1}:path.endsWith('/projects')?[first,second]:first});
     });
     await page.locator('#sillynovel-enabled').check();
     await page.locator('.sillynovel-controls summary').click();
@@ -572,13 +572,13 @@ for (const fail of [false,true]) test(`project replacement pauses all visual mut
 
 for(const outcome of ['success','failure','chat switch','project replacement'])test('portable bundle import preserves current visuals: '+outcome,async t=>{
  const page=await fixture(t);page.setDefaultTimeout(5000);await page.locator('#sillynovel-enabled').uncheck();await page.evaluate(()=>{fixture.context.getRequestHeaders=()=>({});});
- const first={schemaVersion:1,projectId:'11111111-1111-4111-8111-111111111111',name:'First',revision:0,scene:{backgroundAssetId:null,backgroundLocked:true,actors:[]}};
+ const first={schemaVersion:2,catalog:[],projectId:'11111111-1111-4111-8111-111111111111',name:'First',revision:0,scene:{backgroundAssetId:null,backgroundLocked:true,actors:[]}};
  const imported={...first,projectId:'22222222-2222-4222-8222-222222222222',name:'Imported'};
  let release,started;const gate=new Promise(r=>release=r),seen=new Promise(r=>started=r);let done=false;
  await page.route('**/api/plugins/sillynovel-storage/**',async route=>{
   const path=new URL(route.request().url()).pathname;
   if(path.endsWith('/import')){started();await gate;done=true;return route.fulfill({status:outcome==='failure'?400:201,json:outcome==='failure'?{code:'INVALID_BUNDLE'}:imported});}
-  await route.fulfill({json:path.endsWith('/capabilities')?{apiVersion:1,schemaVersion:1,bundleVersion:1}:path.endsWith('/projects')?(done?[first,imported]:[first]):first});
+  await route.fulfill({json:path.endsWith('/capabilities')?{apiVersion:1,schemaVersion:2,catalogVersion:1,bundleVersion:1}:path.endsWith('/projects')?(done?[first,imported]:[first]):first});
  });
  await page.locator('#sillynovel-enabled').check();await page.locator('.sillynovel-controls summary').click();
  await button(page,'Open project and use with this chat').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('First · revision'));
@@ -608,7 +608,7 @@ test('portable export downloads only a successful bundle, with explicit errors a
  await page.route('**/api/plugins/sillynovel-storage/**',async route=>{
   const path=new URL(route.request().url()).pathname;
   if(path.endsWith('/export'))return route.fulfill(fail?{status:503,json:{code:'CORRUPT_ASSET'}}:{contentType:'application/vnd.sillynovel.bundle',body:'{"format":"test-only"}'});
-  await route.fulfill({json:path.endsWith('/capabilities')?{apiVersion:1,schemaVersion:1,bundleVersion:1}:[{projectId:id,name:'Saved'}]});
+  await route.fulfill({json:path.endsWith('/capabilities')?{apiVersion:1,schemaVersion:2,catalogVersion:1,bundleVersion:1}:[{projectId:id,name:'Saved'}]});
  });
  await page.locator('#sillynovel-enabled').check();await page.locator('.sillynovel-controls summary').click();
  const download=page.waitForEvent('download');await button(page,'Export project').click();assert.equal((await download).suggestedFilename(),'project.sillynovel');
@@ -622,7 +622,7 @@ test('portable export downloads only a successful bundle, with explicit errors a
 import {CLEANUP_WARNING} from '../plugins/sillynovel-storage/schema.mjs';
 for(const outcome of ['cancel','success','stale','lost response','wrong receipt','chat switch','project replacement','disable'])test('unused artwork controls and delayed results: '+outcome,async t=>{
  const page=await fixture(t);await sceneControls(page);
- const first={schemaVersion:1,projectId:'11111111-1111-4111-8111-111111111111',name:'Cleanup First',revision:0,scene:{backgroundAssetId:null,backgroundLocked:true,actors:[]}};
+ const first={schemaVersion:2,catalog:[],projectId:'11111111-1111-4111-8111-111111111111',name:'Cleanup First',revision:0,scene:{backgroundAssetId:null,backgroundLocked:true,actors:[]}};
  const second={...first,projectId:'22222222-2222-4222-8222-222222222222',name:'Cleanup Second'};
  const assetId='33333333-3333-4333-8333-333333333333';
  const preview={projectId:first.projectId,revision:0,inventoryRevision:'a'.repeat(64),candidates:[{assetId,sha256:'b'.repeat(64),width:1,height:1,byteCount:123}],reclaimableBytes:123,warning:CLEANUP_WARNING};
@@ -634,7 +634,7 @@ for(const outcome of ['cancel','success','stale','lost response','wrong receipt'
    if(outcome==='stale')return route.fulfill({status:409,json:{code:'CLEANUP_STALE'}});
    return route.fulfill({json:{projectId:outcome==='wrong receipt'?second.projectId:first.projectId,revision:0,deletedIds:[assetId],deletedCount:1,reclaimedBytes:123}});
   }
-  return route.fulfill({json:path.endsWith('/capabilities')?{apiVersion:1,schemaVersion:1,cleanupVersion:1}:path.endsWith('/unused-assets')?preview:path.endsWith('/projects')?[first,second]:path.endsWith(second.projectId)?second:first});
+  return route.fulfill({json:path.endsWith('/capabilities')?{apiVersion:1,schemaVersion:2,catalogVersion:1,cleanupVersion:1}:path.endsWith('/unused-assets')?preview:path.endsWith('/projects')?[first,second]:path.endsWith(second.projectId)?second:first});
  });
  // Re-enable to repeat the single capability probe after installing the fixture routes.
  await page.locator('#sillynovel-enabled').uncheck();await page.evaluate(()=>{fixture.context.getRequestHeaders=()=>({});});await page.locator('#sillynovel-enabled').check();await sceneControls(page);
@@ -662,4 +662,44 @@ for(const outcome of ['cancel','success','stale','lost response','wrong receipt'
   if(outcome==='disable')assert.equal(await page.locator('#sillynovel-stage').count(),0);
   else assert.doesNotMatch(await page.locator('.sillynovel-cleanup-status').innerText(),/Cleanup completed/);
  }
+});
+
+test('project library actual entry edits labels, unregisters, saves and reloads/reopens compatible alternatives',async t=>{
+ const page=await fixture(t);page.setDefaultTimeout(5000);await page.locator('#sillynovel-enabled').uncheck();await page.evaluate(()=>{fixture.context.getRequestHeaders=()=>({});});
+ const id='11111111-1111-4111-8111-111111111111',actor='22222222-2222-4222-8222-222222222222';
+ const ids=['33333333-3333-4333-8333-333333333333','44444444-4444-4444-8444-444444444444','55555555-5555-4555-8555-555555555555','66666666-6666-4666-8666-666666666666'];
+ let record={schemaVersion:2,projectId:id,name:'Reusable library',revision:0,
+  scene:{backgroundAssetId:ids[1],backgroundLocked:true,actors:[{actorId:actor,name:'Manual actor',spriteAssetId:ids[3],slot:'left',present:true,locks:{presence:true,slot:true,outfit:true}}]},
+  catalog:ids.map((assetId,i)=>({assetId,label:'Same label',kind:i<2?'background':'sprite',actorId:i<2?null:actor}))};
+ const png=await readFile(resolve(root,'tests/fixtures/m12-stage/mira-a.png')),{createHash}=await import('node:crypto'),sha=createHash('sha256').update(png).digest('hex');
+ const saves=[];
+ await page.route('**/api/plugins/sillynovel-storage/**',async route=>{
+  const request=route.request(),path=new URL(request.url()).pathname;
+  if(path.includes('/assets/'))return route.fulfill({contentType:'image/png',headers:{'X-Content-SHA256':sha},body:png});
+  if(request.method()==='PUT'){
+   const body=request.postDataJSON();assert.equal(body.expectedRevision,record.revision);saves.push(structuredClone(body));record={...record,...body,revision:record.revision+1};delete record.expectedRevision;return route.fulfill({json:record});
+  }
+  return route.fulfill({json:path.endsWith('/capabilities')?{apiVersion:1,schemaVersion:2,catalogVersion:1}:path.endsWith('/projects')?[record]:record});
+ });
+ const field=name=>page.getByLabel(name,{exact:true});
+ const open=async()=>{await page.evaluate(()=>{fixture.context.getRequestHeaders=()=>({});});await page.locator('#sillynovel-enabled').check();await page.locator('.sillynovel-controls summary').click();await button(page,'Open project and use with this chat').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('Reusable library · revision'));};
+ await open();await page.locator('#send_textarea').fill('Keep native draft');
+ await field('Library artwork').selectOption(actor+':'+ids[2]);await field('Artwork label').fill('<b>Alternative</b>');await button(page,'Save artwork label').click();
+ assert.equal(await page.locator('.sillynovel-controls b').count(),0);assert.match(await page.locator('.sillynovel-unsaved').innerText(),/Unsaved/);
+ await button(page,'Save project').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('revision 1'));
+ assert.equal(saves[0].catalog.find(a=>a.assetId===ids[2]).label,'<b>Alternative</b>');
+ page.on('dialog',dialog=>dialog.accept());await field('Library artwork').selectOption(ids[0]);await button(page,'Remove artwork from library').click();
+ assert.match(await page.locator('.sillynovel-unsaved').innerText(),/Unsaved/);assert.equal(await field('Library artwork').locator('option').count(),3);
+ await button(page,'Save project').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('revision 2'));
+ assert.equal(saves[1].catalog.some(a=>a.assetId===ids[0]),false);assert.equal(saves[1].scene.backgroundAssetId,ids[1]);assert.equal(await page.locator('#send_textarea').inputValue(),'Keep native draft');
+ await button(page,'Detach project').click();assert.match(await page.locator('.sillynovel-project-status').innerText(),/No project/);
+ await page.reload();await open();assert.equal(await field('Library artwork').locator('option').count(),3);assert.equal(await field('Background').locator('option').count(),2);assert.equal(await field('Outfit').locator('option').count(),3);
+ assert.ok((await field('Outfit').textContent()).includes('<b>Alternative</b>'));assert.equal(await page.locator('.sillynovel-controls b').count(),0);
+ await field('Outfit').selectOption(actor+':'+ids[2]);await button(page,'Apply outfit').click();await button(page,'Save project').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('revision 3'));
+ assert.equal(saves[2].scene.actors[0].spriteAssetId,ids[2]);assert.deepEqual(saves[2].scene.actors[0].locks,{presence:true,slot:true,outfit:true});assert.equal(saves[2].scene.actors[0].slot,'left');
+});
+test('migration-required storage leaves original reader, composer and transient controls usable',async t=>{
+ const page=await fixture(t);page.setDefaultTimeout(5000);await page.locator('#sillynovel-enabled').uncheck();await page.evaluate(()=>{fixture.context.getRequestHeaders=()=>({});});await page.route('**/api/plugins/sillynovel-storage/**',route=>route.fulfill({status:503,json:{code:'MIGRATION_REQUIRED'}}));
+ await page.locator('#sillynovel-enabled').check();await page.locator('.sillynovel-controls summary').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('explicit v1 backup/migration'));
+ assert.equal(await button(page,'Open project and use with this chat').isDisabled(),true);assert.equal(await button(page,'Register session actor').isEnabled(),true);assert.equal(await page.locator('#send_textarea').isEnabled(),true);assert.match(await message(page).innerText(),/Hello reader/);
 });

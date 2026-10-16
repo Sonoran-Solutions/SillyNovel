@@ -10,13 +10,14 @@ import {createBackup,inspectBackup,validateDatabase,DATABASE_NAME} from '../reco
 import {bundleJob} from '../bundle.mjs';
 const alice='["alice",1]',bob='["bob",2]';
 import {PNG} from 'pngjs';
-const png=PNG.sync.write(new PNG({width:1,height:1}));
+const pixel=new PNG({width:1,height:1});pixel.data.set([1,123,45,255]);const png=PNG.sync.write(pixel);
 const refuses=(fn,code)=>assert.throws(fn,e=>e.code===code);
 async function fixture(t){
  const root=mkdtempSync(join(tmpdir(),'sn-cleanup-')),path=join(root,DATABASE_NAME);let store=openStore(path);const db=new DatabaseSync(path);
  t.after(()=>{store.close();db.close();rmSync(root,{recursive:true,force:true});});
  const p=store.create(alice,{name:'Original'}),q=store.create(alice,{name:'Other project'}),foreign=store.create(bob,{name:'Foreign'});
- const upload=(id=p.projectId)=>store.importAsset(id===foreign.projectId?bob:alice,id,png);
+ let serial=0;
+ const upload=(id=p.projectId)=>{const image=new PNG({width:1,height:1});image.data.set([++serial,123,45,255]);return store.importAsset(id===foreign.projectId?bob:alice,id,PNG.sync.write(image));};
  const used=upload(),unused=[upload(),upload(),upload()],other=upload(q.projectId),secret=upload(foreign.projectId);
  const scene={backgroundAssetId:used.assetId,backgroundLocked:true,actors:[0,1].map((_,i)=>({actorId:randomUUID(),name:'Actor',spriteAssetId:used.assetId,slot:i?'right':'left',present:!i,locks:{presence:true,slot:true,outfit:true}}))};
  const saved=store.save(alice,p.projectId,{schemaVersion:1,expectedRevision:0,name:p.name,scene});
@@ -26,10 +27,10 @@ async function fixture(t){
  const rows=()=>({projects:db.prepare('SELECT * FROM projects ORDER BY id').all(),assets:db.prepare('SELECT * FROM assets ORDER BY id').all()});
  return {root,path,get store(){return store;},db,p,q,foreign,used,unused,other,secret,saved,upload,preview,body,rows,restart(){store.close();store=openStore(path);}};
 }
-test('classification uses committed references, including shared background/sprites and duplicate bytes',async t=>{
+test('classification uses committed references, including shared background/sprites and distinct alternatives',async t=>{
  const f=await fixture(t),v=f.preview();assert.equal(v.revision,1);assert.equal(v.reclaimableBytes,3*png.length);
  assert.deepEqual(new Set(v.candidates.map(a=>a.assetId)),new Set(f.unused.map(a=>a.assetId)));
- assert.ok(v.candidates.every(a=>a.sha256===f.used.sha256&&a.width===1&&a.height===1&&a.byteCount===png.length));
+ assert.ok(v.candidates.every(a=>a.sha256.length===64&&a.width===1&&a.height===1&&a.byteCount===png.length));
  assert.match(v.warning,/Other tabs/);assert.equal(f.store.previewCleanup(alice,f.q.projectId).candidates.length,1);
  const empty=f.store.create(alice,{name:'Empty'});assert.deepEqual(f.store.previewCleanup(alice,empty.projectId).candidates,[]);
  const all=f.store.create(alice,{name:'All referenced'}),a=f.upload(all.projectId);
@@ -102,17 +103,18 @@ test('logical quota recovery, freelist and file size are distinct',async t=>{
  const f=await fixture(t),limit=100*1024*1024;
  // Incompressible valid PNGs fill logical BLOB quota through the real uploader.
  const {randomFillSync}=await import('node:crypto');
- const image=new PNG({width:1000,height:1000});randomFillSync(image.data);const big=PNG.sync.write(image,{deflateLevel:0});
+ const image=new PNG({width:1000,height:1000});randomFillSync(image.data);
  const quotaProject=f.store.create(alice,{name:'Quota'});let count=0;
- while(true){try{f.store.importAsset(alice,quotaProject.projectId,big);count++;}catch(e){assert.equal(e.code,'ASSET_QUOTA');break;}}
+ while(true){try{image.data[0]=count;const unique=PNG.sync.write(image,{deflateLevel:0});f.store.importAsset(alice,quotaProject.projectId,unique);count++;}catch(e){assert.equal(e.code,'ASSET_QUOTA');break;}}
  assert.ok(count>20);await createBackup(f.path,join(f.root,'quota-before'));
  const used=()=>f.db.prepare('SELECT sum(length(bytes)) AS n FROM assets JOIN projects ON assets.project=projects.id WHERE owner=?').get(alice).n;
  const measure=()=>({logical:used(),fileBytes:statSync(f.path).size,freePages:f.db.prepare('PRAGMA freelist_count').get().freelist_count,pageSize:f.db.prepare('PRAGMA page_size').get().page_size});
  const before=measure(),v=f.store.previewCleanup(alice,quotaProject.projectId),ids=[v.candidates[0].assetId];assert.ok(before.logical<=limit);
- refuses(()=>f.store.importAsset(alice,quotaProject.projectId,big),'ASSET_QUOTA');
+ image.data[0]=count;const next=PNG.sync.write(image,{deflateLevel:0});
+ refuses(()=>f.store.importAsset(alice,quotaProject.projectId,next),'ASSET_QUOTA');
  const result=f.store.removeUnusedAssets(alice,quotaProject.projectId,{expectedRevision:v.revision,inventoryRevision:v.inventoryRevision,assetIds:ids});const after=measure();
  assert.equal(before.logical-after.logical,result.reclaimedBytes);assert.ok(after.freePages>before.freePages);assert.equal(after.fileBytes,before.fileBytes);
- f.store.importAsset(alice,quotaProject.projectId,big);assert.equal(used(),before.logical);assert.equal(f.store.asset(alice,f.p.projectId,f.used.assetId).sha256,f.used.sha256);
+ f.store.importAsset(alice,quotaProject.projectId,next);assert.equal(used(),before.logical);assert.equal(f.store.asset(alice,f.p.projectId,f.used.assetId).sha256,f.used.sha256);
  console.log('QUOTA_EVIDENCE '+JSON.stringify({before,after,receipt:result,afterUpload:measure()}));
 });
 

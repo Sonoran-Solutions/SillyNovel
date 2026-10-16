@@ -1,0 +1,74 @@
+✔ actual entry mounts, updates, disposes and preserves canonical state (778.087294ms)
+✔ long ordinary Markdown is formatted, selectable and copied completely (383.629119ms)
+✔ unsafe HTML, encoded protocols, media and malformed markup never execute or lose raw text (385.366257ms)
+✔ Previous/Next pin the cursor; new messages stay bounded until Latest (493.651191ms)
+✔ streaming follows text bottom independently; scrolling up and selecting text survive updates (362.47359ms)
+✔ stop and continuation stay readable; disable does not stop generation (309.909877ms)
+✔ deleted/replaced pinned source is explicit and never silently retargeted (402.976067ms)
+✔ backlog never claims an exact match against a stale native revision (497.341154ms)
+✔ backlog re-resolves reordered objects, returns pinned selection and reports locator fallback (430.385137ms)
+✔ draft, caret, native composer node and focus survive repeated view transitions (404.500367ms)
+✔ missing capability and mount failure leave native chat usable (249.059829ms)
+✔ format exception releases stage/listeners, restores native feed and keeps exact draft (216.261275ms)
+✔ A to B to A discards queued old-epoch reads and starts each visit at latest (295.392786ms)
+✔ IME and editable-field key events remain unconsumed (197.112601ms)
+✔ empty and unresolved-author sources are explicit; narrow reduced-height composer remains reachable (183.140808ms)
+✔ session stage: four manual actors, duplicate names, stable slots, refusal, swap, replace and locks (1238.538776ms)
+✔ session stage: forward projection, selected-source expressions, outfits and incompatible/missing fallback (1000.218406ms)
+✔ session stage: temporary raster decode, replacement/reset/disable cleanup and stale delayed work (533.872767ms)
+✔ session stage: chat return, A to B to A, reload, narrow/keyboard layout and transparent fixtures (786.522769ms)
+✔ session stage: delayed image cannot apply after same-source reset, manual override or unobserved source edit (476.05442ms)
+✔ session stage: denied subtle leaves a complete text reader (686.549279ms)
+✔ session stage: denied randomUUID leaves a complete text reader (619.108964ms)
+✔ session stage: delayed historical hashing neutralizes art before navigation and rejects obsolete work (531.152058ms)
+✔ session stage: history size refusal leaves neutral art and a usable text reader (362.903055ms)
+✔ project replacement pauses all visual mutations and success replaces the original scene (548.897513ms)
+✔ project replacement pauses all visual mutations and failure preserves the original scene (534.111432ms)
+✔ portable bundle import preserves current visuals: success (528.457266ms)
+✔ portable bundle import preserves current visuals: failure (562.017411ms)
+✔ portable bundle import preserves current visuals: chat switch (578.143903ms)
+✔ portable bundle import preserves current visuals: project replacement (597.470768ms)
+✔ portable export downloads only a successful bundle, with explicit errors and size refusal (1412.38842ms)
+✔ unused artwork controls and delayed results: cancel (568.75819ms)
+✔ unused artwork controls and delayed results: success (704.222647ms)
+✔ unused artwork controls and delayed results: stale (690.056388ms)
+✔ unused artwork controls and delayed results: lost response (630.508555ms)
+✔ unused artwork controls and delayed results: wrong receipt (703.037502ms)
+✔ unused artwork controls and delayed results: chat switch (700.592904ms)
+✖ unused artwork controls and delayed results: project replacement (30526.765281ms)
+✔ unused artwork controls and delayed results: disable (621.113165ms)
+ℹ tests 39
+ℹ suites 0
+ℹ pass 38
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 52068.575606
+
+✖ failing tests:
+
+test at tests/m1-reader-browser.test.mjs:623:129
+✖ unused artwork controls and delayed results: project replacement (30526.765281ms)
+  locator.selectOption: Timeout 30000ms exceeded.
+  Call log:
+  [2m  - waiting for getByLabel('Saved project', { exact: true })[22m
+  [2m    - locator resolved to <select class="" disabled aria-label="Saved project" data-options="[["11111111-1111-4111-8111-111111111111","Cleanup First · 11111111"],["22222222-2222-4222-8222-222222222222","Cleanup Second · 22222222"]]">…</select>[22m
+  [2m  - attempting select option action[22m
+  [2m    2 × waiting for element to be visible and enabled[22m
+  [2m      - element is not enabled[22m
+  [2m    - retrying select option action[22m
+  [2m    - waiting 20ms[22m
+  [2m    2 × waiting for element to be visible and enabled[22m
+  [2m      - element is not enabled[22m
+  [2m    - retrying select option action[22m
+  [2m      - waiting 100ms[22m
+  [2m    60 × waiting for element to be visible and enabled[22m
+  [2m       - element is not enabled[22m
+  [2m     - retrying select option action[22m
+  [2m       - waiting 500ms[22m
+  
+      at TestContext.<anonymous> (/home/dq/Projects/SillyNovel/tests/m1-reader-browser.test.mjs:652:90) {
+    log: [ "  - waiting for getByLabel('Saved project', { exact: true })", '    - locator resolved to <select class="" disabled aria-label="Saved project" data-options="[["11111111-1111-4111-8111-111111111111","Cleanup First · 11111111"],["22222222-2222-4222-8222-222222222222","Cleanup Second · 22222222"]]">…</select>', '  - attempting select option action', '    2 × waiting for element to be visible and enabled', '      - element is not enabled', '    - retrying select option action', '    - waiting 20ms', '    2 × waiting for element to be visible and enabled', '      - element is not enabled', '    - retrying select option action', '      - waiting 100ms', '    60 × waiting for element to be visible and enabled', '       - element is not enabled', '     - retrying select option action', '       - waiting 500ms' ],
+    name: 'TimeoutError'
+  }

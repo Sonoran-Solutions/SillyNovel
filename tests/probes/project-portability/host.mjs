@@ -61,7 +61,7 @@ try {
  execFileSync('npm',['ci','--prefix',join(host,'plugins/sillynovel-storage'),'--ignore-scripts','--no-audit','--no-fund'],{stdio:'pipe'});
  await mkdir(join(host,'public/scripts/extensions/third-party'),{recursive:true});await symlink(repo,join(host,'public/scripts/extensions/third-party/SillyNovel'));
  await mkdir(join(data,'default-user'),{recursive:true});
- if(process.env.SN_RECOVERY_RUN||process.env.SN_CLEANUP_RUN)await chmod(data,0o700);
+ if(process.env.SN_RECOVERY_RUN||process.env.SN_CLEANUP_RUN||process.env.SN_LIBRARY_RUN)await chmod(data,0o700);
  const settings=JSON.parse(await readFile(join(host,'default/content/settings.json')));settings.firstRun=false;
  settings.main_api='openai';settings.oai_settings={...settings.oai_settings,chat_completion_source:'custom',custom_url:'http://127.0.0.1:8128/v1',custom_model:'sn-reader-local',stream_openai:true};
  await writeFile(join(data,'default-user/settings.json'),JSON.stringify(settings));
@@ -94,7 +94,7 @@ try {
  pass('real host auth/CSRF, two-user project and asset isolation, two-client CAS, PNG hash and limits');
  for(const name of ['Project A','Project B'])await alice.request('/api/characters/create','POST',{ch_name:name,description:'Public synthetic fixture',first_mes:'Welcome to '+name},200,'application/json');
  const page=await alice.context.newPage();page.setDefaultTimeout(20000);page.on('pageerror',e=>console.log('PAGE ERROR '+e.message));
- await page.goto(origin);await page.locator('#sillynovel-settings').waitFor({state:'attached'});if(process.env.SN_CLEANUP_RUN){await select(page,'Project B');await delay(1500);}
+ await page.goto(origin);await page.locator('#sillynovel-settings').waitFor({state:'attached'});if(process.env.SN_CLEANUP_RUN||process.env.SN_LIBRARY_RUN){await select(page,'Project B');await delay(1500);}
  await select(page,'Project A');await enable(page);
  await page.locator('.sillynovel-controls summary').click();
  const field=name=>page.locator('#sillynovel-stage').getByLabel(({'Session actor name':'Project actor name','Session actor':'Project actor','Temporary image use':'Project image use','Temporary raster file':'Project PNG file'})[name]||name,{exact:true});const button=name=>page.getByRole('button',{name,exact:true});
@@ -127,6 +127,7 @@ try {
  pass('browser create/import background + two sprites/arrange/save/reload/explicit reopen; named canonical files unchanged');
  if(process.env.SN_CLEANUP_RUN){const {runCleanup}=await import('../project-cleanup/host.mjs');await runCleanup({root,data,repo,page,alice,bob,peer,project,saved,field,button,select,pass,evidence});}
  // Portable copy: browser download/upload, actual host validation and committed inventory.
+ if(process.env.SN_LIBRARY_RUN){const {runLibrary}=await import('../project-library/host.mjs');await runLibrary({root,data,repo,page,alice,bob,peer,project,field,button,select,canonical,pass,evidence});}
  const portableBefore=await canonical();
  const sourceProject=await alice.api('/projects/'+project.projectId);
  await field('Saved project').selectOption(project.projectId);
@@ -192,7 +193,7 @@ try {
  // Actual host persistence failure and neutral missing-art restore.
  const fault=new DatabaseSync(join(data,'.sillynovel-projects.sqlite'));
  fault.exec("CREATE TRIGGER fail_update BEFORE UPDATE ON projects BEGIN SELECT RAISE(ABORT,'fixture failure'); END;");
- await alice.api('/projects/'+project.projectId,'PUT',{schemaVersion:1,expectedRevision:saved.revision,name:'lost',scene:saved.scene},503);
+ await alice.api('/projects/'+project.projectId,'PUT',{schemaVersion:2,expectedRevision:saved.revision,name:'lost',scene:saved.scene,catalog:saved.catalog},503);
  assert.deepEqual(await alice.api('/projects/'+project.projectId),saved);fault.exec('DROP TRIGGER fail_update');
  const missingURL='**/api/plugins/sillynovel-storage/projects/'+project.projectId+'/assets/'+saved.scene.backgroundAssetId;
  await page.route(missingURL,route=>route.fulfill({status:404,body:'missing test asset'}));
@@ -229,6 +230,7 @@ try {
   const {runRecovery}=await import('../project-recovery/host.mjs');
   await runRecovery({root,data,repo,stop,start,session,select,pass,evidence});
  }
+ if(process.env.SN_MIGRATION_RUN){const {runMigration}=await import('../project-migration/host.mjs');await runMigration({root,data,repo,stop,start,session,select,pass,evidence});}
  await stop();await start(false);const disabled=await session();await disabled.request('/api/plugins/sillynovel-storage/capabilities','GET',undefined,404);
  const fallback=await disabled.context.newPage();await fallback.goto(origin);await fallback.locator('#sillynovel-stage').waitFor();await fallback.locator('.sillynovel-controls summary').click();
  await fallback.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('Plugin unavailable'));

@@ -1,5 +1,13 @@
 # Project status
 
+**PR #29 re-review:** [Migration-policy correction](M1_PNG_ASSET_LIBRARY_REVIEW_CORRECTION.md) replaces automatic v1 startup upgrade with explicit verified-backup migration to a new output. The original store and backup remain unchanged. DYL-22 is In Review with original unfinished acceptance/blockers retained; no DYL-55 reconciliation, DYL-23 authorization or Gate A change.
+
+## DYL-22 PNG-library review candidate — 2026-10-15
+
+The owner explicitly authorized the first residual DYL-22 slice. [Workflow and storage contract](M1_PNG_ASSET_LIBRARY.md): project-owned labels/categories, durable alternatives and explicit reselection, shared immutable PNG bytes, catalog-aware cleanup, transactional schema-v1→v2 upgrade and compatible full-store recovery. Portable v1 copies still include selected artwork only, without library labels/alternatives. [Implementation/evidence](M1_PNG_ASSET_LIBRARY_IMPLEMENTATION.md). PR #28 is merged at starting main `262aad7b64624845e68f783bf779a6fd5e4689d4`.
+
+This is a bounded implementation for review; historical blockers and original JPEG/static-WebP requirements remain. DYL-55 stays pending owner acceptance, DYL-23 separately gated, Decision F undecided and Gate A NOT_RUN. DYL-56/60 and M1.3/M2, production/release and upstream authorization are unchanged. Older entries below retain their original evidence/scope.
+
 ## Active project-storage direction — 2026-10-15
 
 Fetched main `ea65d84a521a39c9ccc977f4cb3643454963d4b8` contains merged PRs #23–27. DYL-49–54 and DYL-57–59 are Done. [Completion/readiness review](M1_2_STORAGE_COMPLETION_AND_READINESS.md): **DYL-55 GO for bounded experimental acceptance, pending owner; overall M1.2 REVISE**. DYL-55 stays unfinished, pending owner acceptance; DYL-22/23 retain Backlog/blockers, DYL-56 stays Backlog. New planning-only DYL-60 prepares a frozen owner candidate after DYL-23; DYL-61 tracks release hardening separately. Gate A NOT_RUN.

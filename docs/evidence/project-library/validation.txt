@@ -1,0 +1,5 @@
+PASS: 492 local links/anchors; fences in 45 Markdown documents; 3 JSON examples
+PASS: 99 frozen runtime/test/fixture SHA-256 inputs; no code changes since frozen candidate
+PASS: 85 Node / 119 storage / 39 Chromium tests, no failures/skips/cancellations; 17 real-host checkpoints
+PASS: exact frozen host candidate; 34 named native SHA-256 inventories equal; portable inventory equal
+PASS: git diff --check

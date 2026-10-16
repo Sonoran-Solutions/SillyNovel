@@ -1,5 +1,7 @@
 # Independent SillyNovel project storage
 
+**DYL-22 review candidate:** [PNG library contract](M1_PNG_ASSET_LIBRARY.md) extends project/database envelopes to v2 with an additive transactional catalog migration; scene and portable bundle v1 remain unchanged. Saved library alternatives are protected from cleanup. Updated recovery tools support exact schema 1/2 and whole-library backups; portable v1 copies omit library labels/unselected alternatives. Historical v1-only/no-migration statements below describe the prior slice.
+
 ## Executive decision — 2026-10-15
 
 The owner explicitly authorized independent projects, an optional local storage plugin, architecture documentation, Linear planning and the first bounded implementation slice. SillyTavern core remains unchanged. The existing session-only reader/stage remains supported when the plugin is absent. This authorization is **not production-release acceptance**.
