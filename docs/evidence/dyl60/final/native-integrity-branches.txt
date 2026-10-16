@@ -1,0 +1,20 @@
+Owned evidence root /tmp/sn-portability-host-ont3YD
+PASS real host auth/CSRF, two-user project and asset isolation, two-client CAS, PNG hash and limits
+PASS browser create/import background + two sprites/arrange/save/reload/explicit reopen; named canonical files unchanged
+PASS candidate: complete scoped native inventory paths/counts/sizes/hashes and full settings unchanged across expression, artwork, save and explicit reopen; real persona/avatar, connection profile, lore, cards/groups/chats included
+PASS candidate: real native saveChat save-as/open identical copy detaches, drops expressions, ignores delayed committed parent save receipt; global project deliberately reopens
+PASS candidate: native branch while expression is actively applied and parent save receipt is held detaches immediately; late receipt cannot attach or resurrect choices; deliberate reopen has only global layout
+PASS candidate: pinned native branchChat opens older prefix detached; delayed parent image/open completion cannot retarget branch; temporary expressions absent, saved global project remains available
+PASS candidate: actual native generation request contains no visual metadata; intentional send/Stop affects chat only, persona/connection/cards/lore/account/host settings retained
+PASS candidate: staged 20-turn individual story and six-message four-card duplicate-name group load through native host; manual cue script remains separate from canonical prose
+PASS portable browser download/import preserves dirty stage; explicit reopen restores new identities, bytes, layout/locks; exact native inventory unchanged
+PASS HTTP failed project/second-asset/final-scene writes inspected in committed database: zero partial projects/assets
+PASS real two-account export refusal and import ownership; two-client import retry creates distinct copies; concurrent export/save is coherent
+PASS actual native switch during delayed import receipt never attaches visuals or changes stage ownership
+PASS native A to B to A detaches and never auto-restores project
+PASS actual host failed update preserves project; missing/corrupt assets restore neutral fallback
+PASS delayed successful save receipt cannot redirect switched chat
+PASS actual host native send/stream/stop, navigation and backlog remain functional
+PASS plugin/server restart preserves original and imported layout/assets; imported project explicitly reopens in real browser
+PASS plugin disabled at startup refuses bundle controls and retains session stage/native composer
+Evidence /tmp/sn-portability-host-ont3YD/evidence.json

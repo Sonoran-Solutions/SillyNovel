@@ -4,7 +4,7 @@
 
 **F1 APPROVED for the first disposable Gate A playtest.** [Full exact approved amendment and all five rulings](DECISIONS.md#owner-approvals-and-dyl-60-authorization--2026-10-16). PNG-only deferral, explicit reopening and manual native groups are approved. Established Galaxy Tab S8 technical access and DYL-60 preparation are separately authorized by the same explicit assignment. The historical proposal, unselected F2 alternative and original acceptance below remain intact as the PR #33 review record; its “undecided”, “unstarted” and authorization-required statements describe that earlier checkpoint.
 
-DYL-60 now proceeds to one exact-candidate technical campaign and draft PR. Scope decisions are complete; integrated validation, native integrity/branch evidence and actual-device coverage still require fresh results. [Current candidate/evidence record](M1_4_DYL60_CANDIDATE.md). Human Gate A remains NOT_RUN and separately gated. No M1.3/M2, production, live installation or merge authorization.
+DYL-60 now proceeds to one exact-candidate technical campaign and draft PR. Scope decisions and the fresh integrated desktop/native integrity/branch campaign are complete at `6f8252699dae3a92f639f94531bba221d5e1cc02`; actual-device coverage remains BLOCKED by access and assistive coverage NOT_TESTED. Technical readiness is REVISE pending those mandatory surfaces. [Current candidate/evidence record](M1_4_DYL60_CANDIDATE.md). Human Gate A remains NOT_RUN and separately gated. No M1.3/M2, production, live installation or merge authorization.
 
 ## Historical PR #33 preflight
 

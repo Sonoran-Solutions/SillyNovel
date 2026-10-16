@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/sn-dyl60-doc-check.py", line 19, in <module>
+    assert dest.exists(),(name,target)
+           ^^^^^^^^^^^^^
+AssertionError: ('docs/M1_4_DYL60_CANDIDATE.md', 'evidence/dyl60/SHA256SUMS.json')

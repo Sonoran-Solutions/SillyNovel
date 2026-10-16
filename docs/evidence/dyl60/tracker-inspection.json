@@ -1,0 +1,422 @@
+{
+  "capture": "Before DYL-60 In Review transition; read-only inspection",
+  "issues": [
+    {
+      "id": "DYL-22",
+      "title": "SillyNovel M1.2-C: Import and register a small approved raster asset library",
+      "status": "Done",
+      "url": "https://linear.app/devils17/issue/DYL-22/sillynovel-m12-c-import-and-register-a-small-approved-raster-asset",
+      "description": "## Objective\n\nCreate a small, explicitly user-approved background/sprite raster library **only after** <issue id=\"b8a967f8-9a16-4846-94ab-da12c61402ba\" href=\"https://linear.app/devils17/issue/DYL-21/sillynovel-m12-a2-investigate-safe-targeted-saves-and-owned-asset\">DYL-21</issue> produces sufficient ownership/storage evidence and the owner separately approves the selected architecture and implementation scope. This is a downstream gated ticket, **not authorized to start by issue creation**.\n\n## Prerequisites and blockers\n\n* <issue id=\"68a64d40-8ef5-4762-9d09-286440e02951\" href=\"https://linear.app/devils17/issue/DYL-19/sillynovel-m12-a-prove-chatcard-identity-and-assetmetadata-storage\">DYL-19</issue> proved SillyTavern's background filenames are mutable and did **not** prove extension-owned immutable revisions, identity, export, quotas or safe metadata saving.\n* **Blocked by** <issue id=\"b8a967f8-9a16-4846-94ab-da12c61402ba\" href=\"https://linear.app/devils17/issue/DYL-21/sillynovel-m12-a2-investigate-safe-targeted-saves-and-owned-asset\">DYL-21</issue>: verify a supported owner-scoped import/read/remove contract and receive the corresponding owner storage/portability decision. A completed report with `BLOCKED` findings does *not* automatically satisfy this prerequisite.\n* Read merged `docs/M1_IDENTITY_STORAGE.md`, <issue id=\"b8a967f8-9a16-4846-94ab-da12c61402ba\" href=\"https://linear.app/devils17/issue/DYL-21/sillynovel-m12-a2-investigate-safe-targeted-saves-and-owned-asset\">DYL-21</issue>'s eventual reviewed report, `docs/M1_PLAN.md`, `docs/ASSETS_AND_PROVIDERS.md`, `docs/DECISIONS.md`, `AGENTS.md`, and main. No dependency on the pure reducer's implementation internals beyond agreed registry reference shapes.\n\n## Scope\n\n* Explicit manual import of PNG, **static** WebP and JPEG raster art; allow transparency for sprites. No generated/downloaded art, animations, remote paths or ZIP/pack importer.\n* Validate actual decoded format, dimensions, bytes, image safety and extension-owned storage scope. Proposed ceilings (e.g., 10 MiB/file, 4096px edge, bounded total library) require measured checks and an explicit owner decision; do not assume values are approved limits.\n* Extension namespaced logical `assetId`, **immutable** revision/content SHA-256, typed background vs character/sprite records, media type/dimensions, approved user labels, outfit/expression compatibility and optional attribution.\n* Replacing a logical asset creates a new immutable revision without overwriting previous bytes. Readback must verify bytes/hash. Reject collisions, unsafe paths, corrupt/mismatched data and ambiguous character binding; never silently associate two same-named cards.\n* Safe import/read/list/export/removal, explicit reference display, missing-art neutral fallback and cleanup restricted to proven extension-owned resources. Preserve referenced revisions or explicit tombstones instead of deleting another scene's assets.\n* Keep image bytes out of extensionSettings and chat metadata; no unapproved browser-local persistence. Storage failure must preserve native chat and previously approved assets.\n\n## Acceptance\n\n* Automated tests: wrong mime/decoded content, corrupt and oversized images, animated WebP, format coercion, filename traversal, collisions, duplicate labels/cards, quota/error handling, immutable revision replacement, missing/corrupt assets, reference-safe removal, partial batch errors and export/round-trip.\n* **Actual pinned-host** isolated read/write/reload/remove evidence for the specifically approved storage seam, verified user/account scope and no cross-owner writes; no risky host production writes or shared-file cleanup.\n* Any unresolved mandatory seam is explicitly BLOCKED, not substituted by hidden browser storage or made to look like a PASS.\n* Exact base/tested/pushed SHAs, fixture hashes, tests/results, honest gaps and registry contracts documented. One focused **OPEN/UNMERGED** PR; set Linear In Review only when reviewable.\n\n## Scope exclusions\n\nNo scene UI, manual reducer, AI art/director, provider integration, automatic card assignment, durable scene-history persistence, migrations or M2. Gate A NOT_RUN. <issue id=\"986b0ad5-1141-4d3f-9df8-ba8d6c898392\" href=\"https://linear.app/devils17/issue/DYL-20/sillynovel-m12-b-implement-the-pure-manual-scene-reducer-and-lock\">DYL-20</issue> and <issue id=\"b8a967f8-9a16-4846-94ab-da12c61402ba\" href=\"https://linear.app/devils17/issue/DYL-21/sillynovel-m12-a2-investigate-safe-targeted-saves-and-owned-asset\">DYL-21</issue> may proceed independently; this issue remains Backlog/blocked until separately released.\n\n## Completion/readiness proposal — 2026-10-15 (not owner approval)\n\nVerified main ea65d84a521a39c9ccc977f4cb3643454963d4b8; PRs #23–27 merged, <issue id=\"708fec47-6d85-4d32-940b-0d6de2d9606c\" href=\"https://linear.app/devils17/issue/DYL-49/sillynovel-adopt-independent-projects-and-optional-local-persistence\">DYL-49</issue>–54/57–59 Done. This supplies account/project-scoped immutable PNG storage, CAS/global saves, saved-reference portability, full-store recovery and explicit unused deletion. It does not complete this ticket's reusable raster library. Original requirements above remain historical acceptance, including JPEG/static WebP, logical immutable revision replacement, labels/kinds, compatibility metadata, full catalog management and native-card assumptions.\n\nRecommendation: REVISE this existing ticket to project-owned manual actor IDs; do not create a second asset-registry ticket or infer native identity from names/cards. First proposed vertical slice: labeled/kinded PNG alternatives that can be listed and explicitly reselected after reload/reopen, preserving immutable bytes, scene references, missing-art fallback and quota/error behavior. Follow with compatibility/expression-library completeness. Any real metadata/schema/portable-format transition must preserve old usable state and include backup/rollback/roundtrip tests under its reviewed scope; v1 recovery policy is not an implemented migration. No asset editor, packs, providers or persistent message history.\n\nAcceptance: two alternatives/background and per actor survive reopen and explicit reselection, duplicate labels remain distinct, foreign/incompatible/ref-missing choices refuse, replacement preserves old bytes/refs, selected cleanup remains safe, rollback/CAS/version/quota failures preserve data. Require actual-entry and two-account pinned-host evidence, explicit native-file inventory, portable/backup compatibility; retain untested device/runtime limits.\n\nOwner must approve revised prerequisite/card scope and any temporary PNG-only deferral. JPEG/WebP remain unmet until implemented or explicitly deferred, not erased. Keep Backlog and original <issue id=\"b8a967f8-9a16-4846-94ab-da12c61402ba\" href=\"https://linear.app/devils17/issue/DYL-21/sillynovel-m12-a2-investigate-safe-targeted-saves-and-owned-asset\">DYL-21</issue> blocker; no closure, unblock, implementation or release authorized by this planning update. Proposed order: this first slice → remaining <issue id=\"7e3bbfd3-e744-45e2-916d-36684b74b159\" href=\"https://linear.app/devils17/issue/DYL-23/sillynovel-m12-d-render-stable-manual-scenes-and-source-scoped\">DYL-23</issue> → <issue id=\"705ea7ac-3580-47a4-87a8-863cd76f1ea7\" href=\"https://linear.app/devils17/issue/DYL-60/sillynovel-m14-prepare-the-frozen-manual-stage-owner-playtest\">DYL-60</issue>; release hardening <issue id=\"f2256cd4-2e37-4165-8c3c-7c041799e886\" href=\"https://linear.app/devils17/issue/DYL-61/sillynovel-track-public-beta-and-production-storage-hardening\">DYL-61</issue> separate.\n\n[Full gap matrix/decision package](<https://github.com/Sonoran-Solutions/SillyNovel/blob/codex/m12-storage-readiness/docs/M1_2_STORAGE_COMPLETION_AND_READINESS.md>).",
+      "relations": {
+        "blocks": [
+          {
+            "id": "DYL-23",
+            "title": "SillyNovel M1.2-D: Render stable manual scenes and source-scoped controls"
+          }
+        ],
+        "blockedBy": [
+          {
+            "id": "DYL-21",
+            "title": "SillyNovel M1.2-A2: Investigate safe targeted saves and owned asset storage"
+          }
+        ],
+        "relatedTo": [
+          {
+            "id": "DYL-58",
+            "title": "SillyNovel: Define and verify database backup, restore and migrations"
+          },
+          {
+            "id": "DYL-50",
+            "title": "SillyNovel: Build optional authenticated local storage plugin"
+          },
+          {
+            "id": "DYL-20",
+            "title": "SillyNovel M1.2-B: Implement the pure manual scene reducer and lock scopes"
+          },
+          {
+            "id": "DYL-19",
+            "title": "SillyNovel M1.2-A: Prove chat/card identity and asset/metadata storage contracts"
+          },
+          {
+            "id": "DYL-61",
+            "title": "SillyNovel: Track public-beta and production storage hardening"
+          },
+          {
+            "id": "DYL-60",
+            "title": "SillyNovel M1.4: Prepare the frozen manual-stage owner-playtest candidate"
+          },
+          {
+            "id": "DYL-59",
+            "title": "SillyNovel: Reclaim unreferenced project assets safely"
+          },
+          {
+            "id": "DYL-57",
+            "title": "SillyNovel: Export and import portable project bundles"
+          },
+          {
+            "id": "DYL-56",
+            "title": "SillyNovel: Evaluate remembered project association hints"
+          },
+          {
+            "id": "DYL-53",
+            "title": "SillyNovel: Integrate saved projects with the manual VN stage"
+          },
+          {
+            "id": "DYL-55",
+            "title": "SillyNovel: Add portable project bundles and restore policy"
+          },
+          {
+            "id": "DYL-54",
+            "title": "SillyNovel: Validate project persistence and failure recovery"
+          },
+          {
+            "id": "DYL-52",
+            "title": "SillyNovel: Store manually imported project raster assets"
+          },
+          {
+            "id": "DYL-51",
+            "title": "SillyNovel: Implement versioned project create, load and save"
+          },
+          {
+            "id": "DYL-49",
+            "title": "SillyNovel: Adopt independent projects and optional local persistence"
+          },
+          {
+            "id": "DYL-48",
+            "title": "SillyNovel M1.2-N: Prepare a maintainer-ready upstream host capability proposal"
+          },
+          {
+            "id": "DYL-47",
+            "title": "SillyNovel M1.2-M: Decide production storage architecture and implementation path"
+          },
+          {
+            "id": "DYL-46",
+            "title": "SillyNovel M1.2-L: Prove safe external-authority reconciliation after failed native operations"
+          },
+          {
+            "id": "DYL-45",
+            "title": "SillyNovel M1.2-K: Prove external store incarnation and safe character re-enrollment"
+          },
+          {
+            "id": "DYL-44",
+            "title": "SillyNovel M1.2-J: Prove host-owned lifecycle reservations and write generations"
+          },
+          {
+            "id": "DYL-43",
+            "title": "SillyNovel M1.2-I: Prove native lifecycle invalidation and registry failure boundaries"
+          },
+          {
+            "id": "DYL-42",
+            "title": "SillyNovel M1.2-H: Prove native writer coverage for imports, groups, and branches"
+          },
+          {
+            "id": "DYL-28",
+            "title": "SillyNovel M1.2-G: Prove native transcript-load and activation correspondence"
+          },
+          {
+            "id": "DYL-27",
+            "title": "SillyNovel M1.2-F: Prove native chat identity and activation lifecycle"
+          },
+          {
+            "id": "DYL-26",
+            "title": "SillyNovel M1.2-E: Prove targeted visual-state storage with revision safety"
+          },
+          {
+            "id": "DYL-25",
+            "title": "SillyNovel M1.2: Decide supported storage architecture and host API requirements"
+          },
+          {
+            "id": "DYL-24",
+            "title": "SillyNovel M1.2-D0: Prototype session-only manual VN stage"
+          }
+        ],
+        "duplicateOf": null
+      }
+    },
+    {
+      "id": "DYL-23",
+      "title": "SillyNovel M1.2-D: Render stable manual scenes and source-scoped controls",
+      "status": "Done",
+      "url": "https://linear.app/devils17/issue/DYL-23/sillynovel-m12-d-render-stable-manual-scenes-and-source-scoped",
+      "description": "## Objective\n\nIntegrate the completed M1.1 reader with the **reviewed pure reducer** and **approved raster asset registry** to create a first usable manually controlled VN stage: one background, up to three stable character sprites, and source-scoped controls. **This downstream implementation is not authorized by ticket creation.**\n\n## Dependencies and owner gate\n\n* Blocked by <issue id=\"986b0ad5-1141-4d3f-9df8-ba8d6c898392\" href=\"https://linear.app/devils17/issue/DYL-20/sillynovel-m12-b-implement-the-pure-manual-scene-reducer-and-lock\">DYL-20</issue> (pure manual scene reducer) and <issue id=\"9a7c483c-4df5-4d13-82fb-98d473df1c64\" href=\"https://linear.app/devils17/issue/DYL-22/sillynovel-m12-c-import-and-register-a-small-approved-raster-asset\">DYL-22</issue> (verified/approved raster import registry). <issue id=\"7dff8082-00f8-4376-aaed-e1852be85c8c\" href=\"https://linear.app/devils17/issue/DYL-18/sillynovel-m11-b-ship-the-text-reader-backlog-handoff-and-composer\">DYL-18</issue> text reader is already Done.\n* <issue id=\"b8a967f8-9a16-4846-94ab-da12c61402ba\" href=\"https://linear.app/devils17/issue/DYL-21/sillynovel-m12-a2-investigate-safe-targeted-saves-and-owned-asset\">DYL-21</issue> may reveal remaining save/owner limitations. Do not ignore them. **Durable visual scene saving/reload is outside this ticket** and remains gated by <issue id=\"68a64d40-8ef5-4762-9d09-286440e02951\" href=\"https://linear.app/devils17/issue/DYL-19/sillynovel-m12-a-prove-chatcard-identity-and-assetmetadata-storage\">DYL-19</issue>/<issue id=\"b8a967f8-9a16-4846-94ab-da12c61402ba\" href=\"https://linear.app/devils17/issue/DYL-21/sillynovel-m12-a2-investigate-safe-targeted-saves-and-owned-asset\">DYL-21</issue> and later M1.3 work.\n* Obtain explicit owner authorization for this UI slice, especially any deliberately **session-only/unsaved visual choices** if durable state is still unsupported. Never imply a session-only demo satisfies Gate A's reload requirement.\n* Recheck actual main and read `AGENTS.md`, `docs/M1_PLAN.md`, `docs/DECISIONS.md`, `docs/M1_IDENTITY_STORAGE.md`, reviewed <issue id=\"986b0ad5-1141-4d3f-9df8-ba8d6c898392\" href=\"https://linear.app/devils17/issue/DYL-20/sillynovel-m12-b-implement-the-pure-manual-scene-reducer-and-lock\">DYL-20</issue>/22 contracts, and <issue id=\"7dff8082-00f8-4376-aaed-e1852be85c8c\" href=\"https://linear.app/devils17/issue/DYL-18/sillynovel-m11-b-ship-the-text-reader-backlog-handoff-and-composer\">DYL-18</issue> renderer tests.\n\n## Scope\n\n* Keep original selected-message reader, safe formatting, Previous/Next/Latest, Copy, Backlog, composer/send/stop, and explicit native-feed recovery intact.\n* Render one approved background plus at most three visible cutout sprites (left/center/right); maintain larger logical cast with distinct offstage labels and no arbitrary eviction. The visual stage is decorative; complete readable dialogue remains primary and independently scrollable.\n* Use only verified/manual character bindings. Duplicate-name/unresolved authors retain host labels, no guessed speaker spotlight. Manual focus/position changes cannot silently alter native chats.\n* User controls for background/location, visibility/presence, outfit, message-scoped expression, stable slot assignment and explicit swap/replace/release. Show lock scopes, invalidated historical choices and reasoned rejection/fallbacks. A deliberate user override is allowed even while that field is locked against automation/delayed results.\n* Renderer consumes reducer projections and immutable catalog refs; it must never directly mutate reducer state or host chats. Handle missing/incompatible art, stale image decoding, failed imports and deleted/revised messages with neutral placeholders. No incompatible outfit/expression substitution.\n* Preserve user interaction, native composer focus/drafts, source epoch, and stage lifecycle on A → B → A, Stop/Continue, swipes and disable. If visual controls or art fail, keep text reading/chat functional; fallback to standard host UI on core reader failure.\n* Responsive layout: on narrow or keyboard-reduced viewports art collapses/yields space to dialogue and composer. Controls remain touch/keyboard usable without global key interception. No decorative animation required.\n\n## Acceptance and evidence\n\n* Actual-entry behavioral tests: bounded sprite count; 4+ member group including two same-name cards; unresolved speaker; occupied-slot swap/refusal and locks; manual expressions and changes to an older selected message; valid/invalid source anchors; stale image loads after chat switch; missing outfit/background fallback; explicit unsaved state; native backlog; repeated reader/native toggles; full reply/copy, stream/stop/continue, and failure restoration.\n* Pinned-host synthetic run with one approved background/two sprite fixtures, actual controls, composer/draft preservation, group/same-name cases where reachable, desktop and narrow screenshots and failure scenario. Mark untested host behavior honestly.\n* All M0/M1.1, reducer and asset-registry regressions stay passing. Record exact code/fixture/tested/pushed SHAs and non-persistent limits.\n* One focused **OPEN/UNMERGED** PR; Linear In Review on handoff, not Done. An owner playtest of this initial manual stage is useful feedback but **does not** alone pass the full Gate A evaluation.\n\n## Exclusions\n\nNo scene director, automatic art inference, image generation/cloud providers, host fork, replacement composer, backend/server plugin without owner decision, durable scene saves/migration, speculative browser-local fallback, or M2. Gate A remains NOT_RUN until the separately frozen full M1 candidate and owner verdict.\n\n## Completion/readiness proposal — 2026-10-15 (not owner approval)\n\nVerified main ea65d84a521a39c9ccc977f4cb3643454963d4b8; <issue id=\"81c8cdaf-bc0d-4920-aa0a-8f92dab921b6\" href=\"https://linear.app/devils17/issue/DYL-24/sillynovel-m12-d0-prototype-session-only-manual-vn-stage\">DYL-24</issue> supported and <issue id=\"1af5b2ac-67e6-47c2-828e-90e1d655fd12\" href=\"https://linear.app/devils17/issue/DYL-53/sillynovel-integrate-saved-projects-with-the-manual-vn-stage\">DYL-53</issue> global project stage implemented. Credit existing one-background/three-slot/larger-manual-cast, explicit swaps/presence/outfit/locks, transient source invalidation, missing art, safe native reader/composer and project reload/explicit reopen. Original acceptance above remains intact.\n\nRecommendation: REVISE this ticket around remaining practical stage work, delivered in small reviewed slices after revised <issue id=\"9a7c483c-4df5-4d13-82fb-98d473df1c64\" href=\"https://linear.app/devils17/issue/DYL-22/sillynovel-m12-c-import-and-register-a-small-approved-raster-asset\">DYL-22</issue>. (1) Integrate reusable library and clear project/selected-entry/save/dirty/discard/detach/reopen/global-scope language. (2) Separately approved memory-only message-expression/source overlay while attached, source/swipe/edit/delete/continue/historical-correction invalidation, and explicit manual project use with four-member duplicate-name native groups. (3) Responsive, keyboard, touch/virtual-keyboard and error recovery verification. Reuse reducer/renderer; do not implement durable per-message history or invent native chat/card authority.\n\nAcceptance: ≤3 stable sprites with 4+ logical actors, duplicate labels/unresolved speakers without guessed spotlight; explicit replace/swap/release, correct compatibility/missing-art fallback; A→B→A and stale image/hash/save receipts; stream/stop/continue and exact draft/composer/native backlog preservation. Show global project saves separately from transient source overlays. Require actual-entry tests, real pinned-host individual/group controls, desktop/narrow screenshots and identified physical touch/keyboard evidence. Any missing surface remains NOT_TESTED.\n\nOwner must authorize revised group/overlay scope and Gate A persistence/writer amendment or retain those original gaps. Current project mode disables expressions and groups; global synthetic project anchor is not native correspondence. CAS is not a single-writer lease/read-only second tab. Keep Backlog and <issue id=\"7dff8082-00f8-4376-aaed-e1852be85c8c\" href=\"https://linear.app/devils17/issue/DYL-18/sillynovel-m11-b-ship-the-text-reader-backlog-handoff-and-composer\">DYL-18</issue>/20/22 blockers. No closure/unblock/implementation/M1.3/M2/Gate A verdict authorized. New planning-only <issue id=\"705ea7ac-3580-47a4-87a8-863cd76f1ea7\" href=\"https://linear.app/devils17/issue/DYL-60/sillynovel-m14-prepare-the-frozen-manual-stage-owner-playtest\">DYL-60</issue> is blocked by this ticket; <issue id=\"f2256cd4-2e37-4165-8c3c-7c041799e886\" href=\"https://linear.app/devils17/issue/DYL-61/sillynovel-track-public-beta-and-production-storage-hardening\">DYL-61</issue> release hardening does not block it.\n\n[Full gap matrix/decision package](<https://github.com/Sonoran-Solutions/SillyNovel/blob/codex/m12-storage-readiness/docs/M1_2_STORAGE_COMPLETION_AND_READINESS.md>).\n\n## <issue id=\"7e3bbfd3-e744-45e2-916d-36684b74b159\" href=\"https://linear.app/devils17/issue/DYL-23/sillynovel-m12-d-render-stable-manual-scenes-and-source-scoped\">DYL-23</issue>-A owner-authorized scope — 2026-10-16\n\nOwner explicitly authorized manual stage/project UX integration only: coherent Project, Scene and Artwork Library controls; attachment/save/recovery feedback; readable selection and locks; responsive/accessibility improvements; focused regressions and disposable pinned-host UI evidence; one focused draft PR for senior review. Reuse <issue id=\"81c8cdaf-bc0d-4920-aa0a-8f92dab921b6\" href=\"https://linear.app/devils17/issue/DYL-24/sillynovel-m12-d0-prototype-session-only-manual-vn-stage\">DYL-24</issue>, <issue id=\"1af5b2ac-67e6-47c2-828e-90e1d655fd12\" href=\"https://linear.app/devils17/issue/DYL-53/sillynovel-integrate-saved-projects-with-the-manual-vn-stage\">DYL-53</issue> and merged PR #29 catalog. This supersedes the historical implementation gate only for this bounded slice. Original acceptance and dependency relations remain. Attached source-expression overlays, native groups, persistent message history, remembered attachment, Decision F, Gate A, <issue id=\"918f7e83-b171-4601-b575-fa6c90f14884\" href=\"https://linear.app/devils17/issue/DYL-55/sillynovel-add-portable-project-bundles-and-restore-policy\">DYL-55</issue>, <issue id=\"705ea7ac-3580-47a4-87a8-863cd76f1ea7\" href=\"https://linear.app/devils17/issue/DYL-60/sillynovel-m14-prepare-the-frozen-manual-stage-owner-playtest\">DYL-60</issue> execution, M1.3/M2 and release remain outside authorization. No merge or auto-merge.\n\n## <issue id=\"7e3bbfd3-e744-45e2-916d-36684b74b159\" href=\"https://linear.app/devils17/issue/DYL-23/sillynovel-m12-d-render-stable-manual-scenes-and-source-scoped\">DYL-23</issue>-A implementation handoff — 2026-10-16\n\nDraft PR <pull-request id=\"2bd392fb-fe83-4a51-9a4b-ef6fac667f38\" href=\"https://linear.app/devils17/review/feat-integrate-manual-stage-and-project-ux-dyl-23-a-1b8183d038b7\">Sonoran-Solutions/SillyNovel#30</pull-request> is OPEN / DRAFT / UNMERGED with auto-merge disabled. Starting main ad70bb52e0f46155a5c7b1e5c3da957536612dc9 is the verified merge of PR #29. Frozen implementation/test/runner SHA 646ec9e7bd1439cb2137e97edba9c1526c808db9.\n\nImplemented Project/Scene/Artwork Library grouping and scene-action rows; always-visible attached project name/short UUID/revision and activation-only/global-scope text; current actor/background/outfit/presence/position/locks; explicit attached-UUID discard/reopen and cancellation; saved/dirty/pending/conflict/uncertain/error indicators; narrow dialogue/composer space and local Escape focus. Reused the existing catalog/reducer/CAS/model/session guards, cleanup preview/confirmation and selected-only portable v1. No schema, plugin, native association, reader, dependency or persistence-architecture change. Reopen after conflict/uncertain save is a conservative bounded engineering choice, not an owner amendment to Decision F.\n\nFrozen checks: 91/91 Node, 126/126 storage/library/recovery/cleanup, 46/46 actual-entry Chromium, 24/24 actual disposable-host checkpoint groups; no failures/skips/cancellations. SillyTavern 1.19.0 at 7e8663cd9c184a550b37238218bdd32c6efc68e9, Node 26.8.1/SQLite 3.53.4/Linux, Chromium 151.0.7922.34. Real UI: four manually registered actors/two Mira labels/three slots/seven entries, presence/outfit/locks/save/dirty/save, detached reload/reopen, discard cancel, A→B→A, real peer conflict/lost committed receipt, native user send/stream/stop/backlog. Eight desktop/narrow screenshots; named native-file maps match 36/36 stage, 34/34 library and 65/65 migration. Native reply occurs after the visual-only hash comparison. Physical touch/IME/virtual keyboard/assistive technology and real provider NOT_TESTED. Hosted checks/workflows unavailable.\n\nWorkflow/decisions: docs/M1_MANUAL_STAGE_UX.md. Exact commands/results, failures, pins, screenshots, inventory scope and limitations: docs/M1_MANUAL_STAGE_UX_IMPLEMENTATION.md and docs/evidence/project-stage-ux/ on the PR branch. Original description/acceptance and blocker relationships remain intact. <issue id=\"81c8cdaf-bc0d-4920-aa0a-8f92dab921b6\" href=\"https://linear.app/devils17/issue/DYL-24/sillynovel-m12-d0-prototype-session-only-manual-vn-stage\">DYL-24</issue> session stage, <issue id=\"1af5b2ac-67e6-47c2-828e-90e1d655fd12\" href=\"https://linear.app/devils17/issue/DYL-53/sillynovel-integrate-saved-projects-with-the-manual-vn-stage\">DYL-53</issue> global projects and merged <issue id=\"9a7c483c-4df5-4d13-82fb-98d473df1c64\" href=\"https://linear.app/devils17/issue/DYL-22/sillynovel-m12-c-import-and-register-a-small-approved-raster-asset\">DYL-22</issue> first PNG catalog are credited separately; <issue id=\"9a7c483c-4df5-4d13-82fb-98d473df1c64\" href=\"https://linear.app/devils17/issue/DYL-22/sillynovel-m12-c-import-and-register-a-small-approved-raster-asset\">DYL-22</issue>'s broader original format/revision criteria remain unfinished.\n\nGO for senior review of <issue id=\"7e3bbfd3-e744-45e2-916d-36684b74b159\" href=\"https://linear.app/devils17/issue/DYL-23/sillynovel-m12-d-render-stable-manual-scenes-and-source-scoped\">DYL-23</issue>-A only. Original remaining <issue id=\"7e3bbfd3-e744-45e2-916d-36684b74b159\" href=\"https://linear.app/devils17/issue/DYL-23/sillynovel-m12-d-render-stable-manual-scenes-and-source-scoped\">DYL-23</issue> acceptance includes attached source-expression overlays and source/history invalidation, native group/four-member duplicate-card integration, physical-device/accessibility evidence. Persistent message history/native correspondence, remembered attachment and single-writer/read-only-tab behavior remain excluded broader gate gaps. <issue id=\"7e3bbfd3-e744-45e2-916d-36684b74b159\" href=\"https://linear.app/devils17/issue/DYL-23/sillynovel-m12-d-render-stable-manual-scenes-and-source-scoped\">DYL-23</issue> is NOT Done; <issue id=\"705ea7ac-3580-47a4-87a8-863cd76f1ea7\" href=\"https://linear.app/devils17/issue/DYL-60/sillynovel-m14-prepare-the-frozen-manual-stage-owner-playtest\">DYL-60</issue> stays blocked. <issue id=\"918f7e83-b171-4601-b575-fa6c90f14884\" href=\"https://linear.app/devils17/issue/DYL-55/sillynovel-add-portable-project-bundles-and-restore-policy\">DYL-55</issue> unchanged, Decision F undecided, Gate A NOT_RUN, no M1.3/M2, release, live install, merge or auto-merge. Stop for senior review; do not begin later slices.",
+      "relations": {
+        "blocks": [
+          {
+            "id": "DYL-60",
+            "title": "SillyNovel M1.4: Prepare the frozen manual-stage owner-playtest candidate"
+          }
+        ],
+        "blockedBy": [
+          {
+            "id": "DYL-20",
+            "title": "SillyNovel M1.2-B: Implement the pure manual scene reducer and lock scopes"
+          },
+          {
+            "id": "DYL-22",
+            "title": "SillyNovel M1.2-C: Import and register a small approved raster asset library"
+          },
+          {
+            "id": "DYL-18",
+            "title": "SillyNovel M1.1-B: Ship the text reader, backlog handoff, and composer-safe controls"
+          }
+        ],
+        "relatedTo": [
+          {
+            "id": "DYL-61",
+            "title": "SillyNovel: Track public-beta and production storage hardening"
+          },
+          {
+            "id": "DYL-49",
+            "title": "SillyNovel: Adopt independent projects and optional local persistence"
+          },
+          {
+            "id": "DYL-51",
+            "title": "SillyNovel: Implement versioned project create, load and save"
+          },
+          {
+            "id": "DYL-53",
+            "title": "SillyNovel: Integrate saved projects with the manual VN stage"
+          },
+          {
+            "id": "DYL-52",
+            "title": "SillyNovel: Store manually imported project raster assets"
+          },
+          {
+            "id": "DYL-55",
+            "title": "SillyNovel: Add portable project bundles and restore policy"
+          },
+          {
+            "id": "DYL-54",
+            "title": "SillyNovel: Validate project persistence and failure recovery"
+          },
+          {
+            "id": "DYL-50",
+            "title": "SillyNovel: Build optional authenticated local storage plugin"
+          },
+          {
+            "id": "DYL-56",
+            "title": "SillyNovel: Evaluate remembered project association hints"
+          },
+          {
+            "id": "DYL-21",
+            "title": "SillyNovel M1.2-A2: Investigate safe targeted saves and owned asset storage"
+          },
+          {
+            "id": "DYL-19",
+            "title": "SillyNovel M1.2-A: Prove chat/card identity and asset/metadata storage contracts"
+          },
+          {
+            "id": "DYL-63",
+            "title": "DYL-23-C: Native Group Conversation Integration"
+          },
+          {
+            "id": "DYL-62",
+            "title": "SillyNovel DYL-23-B: Attached memory-only message expression overlays"
+          },
+          {
+            "id": "DYL-48",
+            "title": "SillyNovel M1.2-N: Prepare a maintainer-ready upstream host capability proposal"
+          },
+          {
+            "id": "DYL-47",
+            "title": "SillyNovel M1.2-M: Decide production storage architecture and implementation path"
+          },
+          {
+            "id": "DYL-46",
+            "title": "SillyNovel M1.2-L: Prove safe external-authority reconciliation after failed native operations"
+          },
+          {
+            "id": "DYL-45",
+            "title": "SillyNovel M1.2-K: Prove external store incarnation and safe character re-enrollment"
+          },
+          {
+            "id": "DYL-44",
+            "title": "SillyNovel M1.2-J: Prove host-owned lifecycle reservations and write generations"
+          },
+          {
+            "id": "DYL-43",
+            "title": "SillyNovel M1.2-I: Prove native lifecycle invalidation and registry failure boundaries"
+          },
+          {
+            "id": "DYL-42",
+            "title": "SillyNovel M1.2-H: Prove native writer coverage for imports, groups, and branches"
+          },
+          {
+            "id": "DYL-28",
+            "title": "SillyNovel M1.2-G: Prove native transcript-load and activation correspondence"
+          },
+          {
+            "id": "DYL-27",
+            "title": "SillyNovel M1.2-F: Prove native chat identity and activation lifecycle"
+          },
+          {
+            "id": "DYL-26",
+            "title": "SillyNovel M1.2-E: Prove targeted visual-state storage with revision safety"
+          },
+          {
+            "id": "DYL-25",
+            "title": "SillyNovel M1.2: Decide supported storage architecture and host API requirements"
+          },
+          {
+            "id": "DYL-24",
+            "title": "SillyNovel M1.2-D0: Prototype session-only manual VN stage"
+          }
+        ],
+        "duplicateOf": null
+      }
+    },
+    {
+      "id": "DYL-60",
+      "title": "SillyNovel M1.4: Prepare the frozen manual-stage owner-playtest candidate",
+      "status": "In Progress",
+      "url": "https://linear.app/devils17/issue/DYL-60/sillynovel-m14-prepare-the-frozen-manual-stage-owner-playtest",
+      "description": "## Current owner authorization — 2026-10-16 America/Phoenix\n\nThe owner explicitly approved the five scope recommendations and separately authorized <issue id=\"705ea7ac-3580-47a4-87a8-863cd76f1ea7\" href=\"https://linear.app/devils17/issue/DYL-60/sillynovel-m14-prepare-the-frozen-manual-stage-owner-playtest\">DYL-60</issue> technical candidate preparation. [Approved decision register and full exact F1 amendment](<https://github.com/Sonoran-Solutions/SillyNovel/blob/b90020db78db3e5099ecd1e8226747dfadd1236f/docs/DECISIONS.md#owner-approvals-and-dyl-60-authorization--2026-10-16>). F1 APPROVED for the first disposable Gate A playtest only; PNG-only persistence with broader <issue id=\"9a7c483c-4df5-4d13-82fb-98d473df1c64\" href=\"https://linear.app/devils17/issue/DYL-22/sillynovel-m12-c-import-and-register-a-small-approved-raster-asset\">DYL-22</issue> requirements preserved; explicit reopen/no remembered association; four native cards including duplicate names and four manual actors/three slots/offstage; established Galaxy Tab S8 technical testing when available. Original reader/source/group/native-data/device and human requirements remain.\n\nTechnical preparation is In Progress. Frozen candidate: 0985ca945617fd48c205d87d447817e8bd64e9c8. Starting main/PR #33 merge: c835afe6e274be3fab5a2862f517fd8e4bca32ad. Fresh integrated validation is running; development attempts are separate. ADB device and mDNS inventories are empty: physical testing BLOCKED, assistive technology separately NOT_TESTED. No new pairing or connection guesses. <issue id=\"07b1a431-367e-4f19-9a1e-30358b317d87\" href=\"https://linear.app/devils17/issue/DYL-62/sillynovel-dyl-23-b-attached-memory-only-message-expression-overlays\">DYL-62</issue>/63 remain In Review despite merged PRs. Preserve all original acceptance and blocker relations below. Gate A NOT_RUN. Owner session/verdict, M1.3/M2, <issue id=\"91c12d82-aa19-4cd8-b8ed-447085ba7d4b\" href=\"https://linear.app/devils17/issue/DYL-56/sillynovel-evaluate-remembered-project-association-hints\">DYL-56</issue>/<issue id=\"f2256cd4-2e37-4165-8c3c-7c041799e886\" href=\"https://linear.app/devils17/issue/DYL-61/sillynovel-track-public-beta-and-production-storage-hardening\">DYL-61</issue> implementation, live install, real providers and merge remain unauthorized.\n\n## Historical original requirements and preflight records (preserved)\n\nPlanning only; no implementation, owner session, scheduling, gate verdict, installation or release is authorized by creation.\n\n## Purpose and dependency\n\nAfter owner-approved revisions of <issue id=\"9a7c483c-4df5-4d13-82fb-98d473df1c64\" href=\"https://linear.app/devils17/issue/DYL-22/sillynovel-m12-c-import-and-register-a-small-approved-raster-asset\">DYL-22</issue>/23 and their remaining manual-library/stage work, freeze one integrated candidate for owner review. <issue id=\"7e3bbfd3-e744-45e2-916d-36684b74b159\" href=\"https://linear.app/devils17/issue/DYL-23/sillynovel-m12-d-render-stable-manual-scenes-and-source-scoped\">DYL-23</issue> is an actual blocker; <issue id=\"9a7c483c-4df5-4d13-82fb-98d473df1c64\" href=\"https://linear.app/devils17/issue/DYL-22/sillynovel-m12-c-import-and-register-a-small-approved-raster-asset\">DYL-22</issue> is transitive. Owner must settle the original Gate A versus independent-project persistence and CAS writer differences first.\n\n## Scope\n\nReuse existing disposable pinned-host runners and synthetic assets. Produce exact full candidate/host/runtime/browser/device/configuration and asset hashes, applicable TESTING T01–T14/T19/T22–T23/T27–T30 evidence, desktop/narrow screenshots and repeatable instructions. Validate explicit project selection, saved global layout, detached reload/reopen, A→B→A detachment, dirty/conflict/lost-response recovery, plugin absence, native reader/composer/draft, source-specific transient controls and four-member duplicate-name group behavior under the approved scope. Physical touch/virtual-keyboard evidence is separate from viewport emulation.\n\n## Acceptance and evidence\n\n* One clean frozen full SHA with applicable Node, storage, actual-entry browser and real disposable-host evidence; retain failures and classify NOT_TESTED.\n* A disposable setup/run/cleanup recipe needing no live-host modification or real provider; independently inspect named native-file bytes, not only screenshots.\n* Owner checklist explicitly distinguishes project-global saves, temporary message expressions and absent persistent scene history. No implied native association or single-writer lease.\n* Original \\~20-turn individual and short group sessions, physical-device requirements and any owner-approved amendments remain visible.\n* Owner reviews readiness; Gate A stays NOT_RUN until a separately authorized owner session and verdict. No automatic M1.3/M2.\n\n## Exclusions and owner decisions\n\nNo feature additions or generic storage investigation. Missing UX goes back to <issue id=\"9a7c483c-4df5-4d13-82fb-98d473df1c64\" href=\"https://linear.app/devils17/issue/DYL-22/sillynovel-m12-c-import-and-register-a-small-approved-raster-asset\">DYL-22</issue>/23 as a bounded correction. Do not schedule/execute the owner playtest. Independent-project gate wording, PNG-only deferral, group scope, CAS versus single-writer and device availability require explicit owner choices.\n\nExecution order: after <issue id=\"9a7c483c-4df5-4d13-82fb-98d473df1c64\" href=\"https://linear.app/devils17/issue/DYL-22/sillynovel-m12-c-import-and-register-a-small-approved-raster-asset\">DYL-22</issue> then <issue id=\"7e3bbfd3-e744-45e2-916d-36684b74b159\" href=\"https://linear.app/devils17/issue/DYL-23/sillynovel-m12-d-render-stable-manual-scenes-and-source-scoped\">DYL-23</issue>. Milestone: M1.4. Review basis: main ea65d84a521a39c9ccc977f4cb3643454963d4b8; [readiness decision package](<https://github.com/Sonoran-Solutions/SillyNovel/blob/091897c19ca048447add0464ea231907488be0bc/docs/M1_2_STORAGE_COMPLETION_AND_READINESS.md>). Documentation <pull-request id=\"b8886375-271c-41a3-90c5-0ef7c9e59c40\" href=\"https://linear.app/devils17/review/docs-review-dyl-55-completion-and-m12-manual-stage-readiness-bd38d6018a4d\">Sonoran-Solutions/SillyNovel#28</pull-request> is OPEN/UNMERGED at 091897c19ca048447add0464ea231907488be0bc; no implementation or owner approval follows.\n\n## M1.4-A preflight proposal — 2026-10-16 (not execution approval)\n\n<pull-request id=\"bf56561f-9a09-41d6-b49e-5872b4ea5cfb\" href=\"https://linear.app/devils17/review/docs-prepare-m14-gate-a-readiness-and-owner-decisions-13c8fc784929\">Sonoran-Solutions/SillyNovel#33</pull-request> prepares the [readiness matrix, exact Decision F wording, candidate recipe and owner/device checklists](<https://github.com/Sonoran-Solutions/SillyNovel/blob/82180bba823f8e71cb3dc4bda9c9016473a220f9/docs/M1_4_GATE_A_READINESS.md>). Inspected main f9497aebf59cbeae07a2b6391d0cff17e81bcc76 is the verified PR #32 merge; PRs #29–32 are merged. Documentation candidate/pushed head 82180bba823f8e71cb3dc4bda9c9016473a220f9. PR remains DRAFT / OPEN / UNMERGED, auto-merge disabled.\n\nRecommendation: REVISE before freeze; conditional GO for candidate preparation after separately recorded owner decisions and execution authorization. Recommend F1 limited to saved global layouts/catalog, explicit reopen, memory-only source expressions and CAS/refusal/uncertain-receipt recovery. F2 retains original persistent per-message/branch correspondence and single-writer/read-only requirements and needs separate implementation/proofs. Decision F remains undecided. Explicit PNG-only deferral, attachment/manual-group scope confirmation and physical-device access remain unresolved; F1 preserves reader/source/group/native-integrity/device and human acceptance requirements.\n\nLater proposed preparation: select one clean exact full merged SHA; run existing Node, storage/library/bundle/recovery, actual-entry Chromium and serial disposable native-host stage/library/migration, individual expressions, native groups, recovery and cleanup campaigns. Complete persona/connection/native-generation integrity and native branch/copy detachment evidence; retain phase-specific inventories, input/artifact hashes and desktop/narrow/device captures. Reuse existing fixtures/loopback provider and runners; no new architecture or real provider. Estimate 30–60 minutes machine time plus 2–4 hours engineering; physical-device technical testing adds 45–90 minutes once separately authorized access exists. No session is scheduled.\n\nChecks actually run for preflight: documentation validator (119 links/anchors; 21 required TESTING IDs; four merge ancestors; eight issue snapshots; 11 art hashes; 60 historical input hashes; 33 retained correction-artifact hashes), existing historical G artifact validator and git whitespace/diff checks. No fresh runtime/browser/native-host/device/owner campaign. No concrete runtime-blocking defect established; evidence completion is required, not an unsolicited runtime fix.\n\n<issue id=\"9a7c483c-4df5-4d13-82fb-98d473df1c64\" href=\"https://linear.app/devils17/issue/DYL-22/sillynovel-m12-c-import-and-register-a-small-approved-raster-asset\">DYL-22</issue>/23 remain Done with broad original criteria preserved; <issue id=\"07b1a431-367e-4f19-9a1e-30358b317d87\" href=\"https://linear.app/devils17/issue/DYL-62/sillynovel-dyl-23-b-attached-memory-only-message-expression-overlays\">DYL-62</issue>/63 still In Review despite merged PRs #31/32. Recommend owner reconciliation of bounded slices, not automatic state changes. This issue stays Backlog with <issue id=\"7e3bbfd3-e744-45e2-916d-36684b74b159\" href=\"https://linear.app/devils17/issue/DYL-23/sillynovel-m12-d-render-stable-manual-scenes-and-source-scoped\">DYL-23</issue> blocker intact; all original text/relations remain. No <issue id=\"918f7e83-b171-4601-b575-fa6c90f14884\" href=\"https://linear.app/devils17/issue/DYL-55/sillynovel-add-portable-project-bundles-and-restore-policy\">DYL-55</issue> acceptance change, <issue id=\"91c12d82-aa19-4cd8-b8ed-447085ba7d4b\" href=\"https://linear.app/devils17/issue/DYL-56/sillynovel-evaluate-remembered-project-association-hints\">DYL-56</issue> authorization, freeze, Gate A execution/verdict, M1.3/M2, live install, release or production/beta approval. Gate A NOT_RUN. Stop for senior/owner review.\n\n## Senior review and documentation merge — 2026-10-16\n\nOwner supplied APPROVED / GO for documentation merge of PR #33 at reviewed head 82180bba823f8e71cb3dc4bda9c9016473a220f9. Documentation PR merged at c835afe6e274be3fab5a2862f517fd8e4bca32ad: <pull-request id=\"bf56561f-9a09-41d6-b49e-5872b4ea5cfb\" href=\"https://linear.app/devils17/review/docs-prepare-m14-gate-a-readiness-and-owner-decisions-13c8fc784929\">Sonoran-Solutions/SillyNovel#33</pull-request> . Documentation and historical-artifact validators were rerun successfully before merge; no fresh runtime validation was performed.\n\nNon-blocking P3 for later candidate preparation: before the eventual human Gate A session, prepare a curated, varied synthetic conversation with meaningful scene changes, dialogue progression, multiple speakers and natural artwork-change opportunities across approximately 20 turns. Keep it offline and deterministic. Retain the existing short/\\[LONG\\] loopback responses for reproducible technical tests; their repetition alone is insufficient for judging immersion. This records a preparation recommendation only, not execution or real-provider authorization.\n\nDisposition remains: candidate freeze HOLD; Decision F UNDECIDED; Gate A NOT_RUN. This issue remains Backlog/unstarted with original acceptance and blocker relationships preserved. The senior review recommends F1 but does not select it or approve remaining playtest-scope choices. No candidate preparation, owner session/schedule, live installation, later milestone or release starts from this documentation approval.",
+      "relations": {
+        "blocks": [],
+        "blockedBy": [
+          {
+            "id": "DYL-23",
+            "title": "SillyNovel M1.2-D: Render stable manual scenes and source-scoped controls"
+          }
+        ],
+        "relatedTo": [
+          {
+            "id": "DYL-56",
+            "title": "SillyNovel: Evaluate remembered project association hints"
+          },
+          {
+            "id": "DYL-54",
+            "title": "SillyNovel: Validate project persistence and failure recovery"
+          },
+          {
+            "id": "DYL-55",
+            "title": "SillyNovel: Add portable project bundles and restore policy"
+          },
+          {
+            "id": "DYL-24",
+            "title": "SillyNovel M1.2-D0: Prototype session-only manual VN stage"
+          },
+          {
+            "id": "DYL-22",
+            "title": "SillyNovel M1.2-C: Import and register a small approved raster asset library"
+          },
+          {
+            "id": "DYL-63",
+            "title": "DYL-23-C: Native Group Conversation Integration"
+          },
+          {
+            "id": "DYL-62",
+            "title": "SillyNovel DYL-23-B: Attached memory-only message expression overlays"
+          },
+          {
+            "id": "DYL-61",
+            "title": "SillyNovel: Track public-beta and production storage hardening"
+          }
+        ],
+        "duplicateOf": null
+      }
+    },
+    {
+      "id": "DYL-61",
+      "title": "SillyNovel: Track public-beta and production storage hardening",
+      "status": "Backlog",
+      "url": "https://linear.app/devils17/issue/DYL-61/sillynovel-track-public-beta-and-production-storage-hardening",
+      "description": "Planning checklist only; no release, installation, migration, account repair or runtime work authorized. Do not make this an infrastructure prerequisite for <issue id=\"9a7c483c-4df5-4d13-82fb-98d473df1c64\" href=\"https://linear.app/devils17/issue/DYL-22/sillynovel-m12-c-import-and-register-a-small-approved-raster-asset\">DYL-22</issue>/23 or the bounded disposable owner-playtest candidate.\n\n## Scope and release gates\n\nPublic beta: verify advertised Node 22.13 floor separately for plugin and operator backup API; define actually supported Node/SQLite/SillyTavern/browser/OS/filesystem matrix; fresh plugin packaging/install/uninstall and fail-safe absence; private account/CSRF prerequisites; resource/latency budgets for SQLite and synchronous PNG upload/cleanup; understandable backup/retention/recovery instructions and cross-tab draft/lost-response warnings; production security review, license/demo-asset rights and physical-device/touch evidence. Untested configurations must be excluded from support claims.\n\nProduction release: actual disk-full and power-loss/fsync-failure campaigns on supported storage; account deletion/recreation/recovery policy (same handle is insufficient); an actual schema-transition campaign when a real new schema is proposed, preserving previous usable data and rollback instructions; retention/recovery drills and justified capacity budgets. Accounts-disabled mode is currently deliberately refused; either preserve the documented exclusion or separately approve and verify an incarnation design. No automatic account reassignment or live-store replacement.\n\n## Acceptance and evidence\n\nA dated matrix for each concern states PASS/PARTIAL/NOT_TESTED/UNSUPPORTED/BLOCKED, exact tested SHA/versions/platform, commands, raw results and remaining release blockers. Empirical fault tests distinguish process exceptions/kills from power failure, and logical quota from physical file shrink. No fabricated schema v2 or production certification from historical synthetic tests. Split implementation follow-ups only when a supported release target and bounded failing requirement are chosen; search duplicates first.\n\n## Dependencies, decisions and exclusions\n\nDepends technically on the current <issue id=\"5f2f5fef-8f8e-4016-b34d-fd811bce77c6\" href=\"https://linear.app/devils17/issue/DYL-50/sillynovel-build-optional-authenticated-local-storage-plugin\">DYL-50</issue>–59 implementation (Done children, parent still Backlog); no blocker relations to functional M1.2. Milestones are public beta then production release; intentionally no M1.3 assignment. Owner selects supported runtime/platform/account model, quotas, retention and any production scope. <issue id=\"91c12d82-aa19-4cd8-b8ed-447085ba7d4b\" href=\"https://linear.app/devils17/issue/DYL-56/sillynovel-evaluate-remembered-project-association-hints\">DYL-56</issue> remains Backlog, M1.3/M2 unauthorized, Gate A NOT_RUN, upstream on hold.\n\nExecution order: release work after/alongside separately approved functional work as appropriate; never start automatically. Review basis: main ea65d84a521a39c9ccc977f4cb3643454963d4b8; [readiness decision package](<https://github.com/Sonoran-Solutions/SillyNovel/blob/091897c19ca048447add0464ea231907488be0bc/docs/M1_2_STORAGE_COMPLETION_AND_READINESS.md>). Documentation <pull-request id=\"b8886375-271c-41a3-90c5-0ef7c9e59c40\" href=\"https://linear.app/devils17/review/docs-review-dyl-55-completion-and-m12-manual-stage-readiness-bd38d6018a4d\">Sonoran-Solutions/SillyNovel#28</pull-request> is OPEN/UNMERGED at 091897c19ca048447add0464ea231907488be0bc; no implementation or owner approval follows.",
+      "relations": {
+        "blocks": [],
+        "blockedBy": [],
+        "relatedTo": [
+          {
+            "id": "DYL-60",
+            "title": "SillyNovel M1.4: Prepare the frozen manual-stage owner-playtest candidate"
+          },
+          {
+            "id": "DYL-59",
+            "title": "SillyNovel: Reclaim unreferenced project assets safely"
+          },
+          {
+            "id": "DYL-55",
+            "title": "SillyNovel: Add portable project bundles and restore policy"
+          },
+          {
+            "id": "DYL-58",
+            "title": "SillyNovel: Define and verify database backup, restore and migrations"
+          },
+          {
+            "id": "DYL-50",
+            "title": "SillyNovel: Build optional authenticated local storage plugin"
+          },
+          {
+            "id": "DYL-56",
+            "title": "SillyNovel: Evaluate remembered project association hints"
+          },
+          {
+            "id": "DYL-22",
+            "title": "SillyNovel M1.2-C: Import and register a small approved raster asset library"
+          },
+          {
+            "id": "DYL-23",
+            "title": "SillyNovel M1.2-D: Render stable manual scenes and source-scoped controls"
+          }
+        ],
+        "duplicateOf": null
+      }
+    },
+    {
+      "id": "DYL-62",
+      "title": "SillyNovel DYL-23-B: Attached memory-only message expression overlays",
+      "status": "In Review",
+      "url": "https://linear.app/devils17/issue/DYL-62/sillynovel-dyl-23-b-attached-memory-only-message-expression-overlays",
+      "description": "Owner assignment 2026-10-16 explicitly authorizes <issue id=\"7e3bbfd3-e744-45e2-916d-36684b74b159\" href=\"https://linear.app/devils17/issue/DYL-23/sillynovel-m12-d-render-stable-manual-scenes-and-source-scoped\">DYL-23</issue>-B only: manual message-scoped expressions while an independent global project is attached. Preserve <issue id=\"7e3bbfd3-e744-45e2-916d-36684b74b159\" href=\"https://linear.app/devils17/issue/DYL-23/sillynovel-m12-d-render-stable-manual-scenes-and-source-scoped\">DYL-23</issue> Done status, original history/acceptance/relationships; this follow-up does not complete remaining native group or physical-device work.\n\nImplement a separate bounded memory-only source-expression layer over the existing global project projection, canonical reader object identities/revisions and sn-source-v1 prefix/reducer contracts. Explicit project actor UUID and exact outfit compatibility; temporary static PNG artwork with bounded decoding, stale-work validation and URL cleanup. Actual Scene controls for context, import/choice/apply/clear/status/refusal. Navigation revisits valid sources; historical/source/swipe/edit/delete/replace/reorder/continue changes invalidate dependent decisions. Preserve project-global source, locks, outfit and save/CAS recovery. No overlays in scene/catalog/bundle/backup/native metadata/browser persistence; expression-only edits never dirty persistent layout.\n\nAcceptance: focused unit/model/source/stale-work/persistence exclusion coverage, canonical Node/storage/Chromium regressions, actual-entry UI workflow and pinned disposable SillyTavern 1.19.0 individual conversation with deterministic loopback provider. Retain failures separately, exact frozen/pushed heads, counts, screenshots, native-file hashes and honest NOT_TESTED surfaces. One DRAFT/OPEN/UNMERGED PR, auto-merge disabled, stop for senior review.\n\nExcluded: native groups, persistent message history, new schema/storage/provider/editor, <issue id=\"705ea7ac-3580-47a4-87a8-863cd76f1ea7\" href=\"https://linear.app/devils17/issue/DYL-60/sillynovel-m14-prepare-the-frozen-manual-stage-owner-playtest\">DYL-60</issue> execution, Gate A verdict, Decision F resolution, live installation/release, merge. Gate A NOT_RUN; Decision F undecided.\n\n## Implementation handoff — 2026-10-16\n\n<pull-request id=\"a3e8c4fb-494f-4118-953d-ddda882e1560\" href=\"https://linear.app/devils17/review/feat-attached-temporary-message-expressions-dyl-23-b-1a4c5d1e4505\">Sonoran-Solutions/SillyNovel#31</pull-request> is OPEN / DRAFT / UNMERGED, auto-merge disabled. Starting main d3f5761c03fec7fc5d97b0698da718af7af9c187 is the verified PR #30 merge; supplied clean checkout e132b23b9766467ab88260eb3d507380dae4eba0. Frozen implementation/test/runner 7393cbb899030a3b78948c1220f267ba2ad3c70b; final pushed head 8e6e97020472a9a6c49e2376730f8563dcdd91c1 (later changes docs/evidence only).\n\nImplemented bounded memory-only expression choices for explicit project actor UUID + exact outfit context + verified reader source/swipe/prefix/session. Existing project-global reducer and single renderer remain; apply/clear/revisit and historical suffix invalidation, strict temporary PNG decode/resources, stale-work checks, base fallback, temporary status and accessible native file chooser. Expression edits do not dirty or revise global state; zero expression uploads and exact global scene/catalog save-body equality. PR #30 save-conflict/uncertain recovery remains.\n\nResults: 123/123 Node, 126/126 storage/library/bundle/backup/migration/cleanup, 57/57 actual-entry Chromium, 16/16 pinned disposable-host checkpoint groups. Storage started at edc9042 with byte-identical complete plugin/test/fixture inputs at final frozen SHA. SillyTavern 1.19.0 / 7e8663cd9c184a550b37238218bdd32c6efc68e9, Node 26.8.1/SQLite 3.53.4/Linux, Chromium 151.0.7922.34. Actual native edit/swipe/Continue/stream/Stop, native picker/focus/draft/reload/reopen/detach/A→B→A. 36/36 named native files unchanged across visual-only operations; deliberate native edits/generation recorded separately. Eight desktop/narrow screenshots; 87 frozen input hashes and 45 evidence checksums. Source changes, compatibility, 400-decision bounds and pending decode across source/actor/outfit/attachment/session boundaries pass. Failed project replacement preserves the old attachment's expression authority.\n\n[Contract](<https://github.com/Sonoran-Solutions/SillyNovel/blob/codex/dyl23-b-expression-overlays/docs/M1_PROJECT_EXPRESSIONS.md>) · [Exact commands, evidence, failures, screenshots and limitations](<https://github.com/Sonoran-Solutions/SillyNovel/blob/codex/dyl23-b-expression-overlays/docs/M1_PROJECT_EXPRESSIONS_IMPLEMENTATION.md>).\n\nGO for bounded senior review only. Physical touch/IME/virtual keyboard/assistive technology, other host/browser combinations, real provider and native host insertion/reorder/replacement/ambiguity UI surfaces NOT_TESTED; missing-image host error is explicitly instrumented. Completion provenance remains unresolved for an ended active generation and refuses overlays. <issue id=\"7e3bbfd3-e744-45e2-916d-36684b74b159\" href=\"https://linear.app/devils17/issue/DYL-23/sillynovel-m12-d-render-stable-manual-scenes-and-source-scoped\">DYL-23</issue> Done/history/acceptance/relationships preserved; native groups/device and persistent history remain separate gaps. Decision F undecided, Gate A NOT_RUN; <issue id=\"705ea7ac-3580-47a4-87a8-863cd76f1ea7\" href=\"https://linear.app/devils17/issue/DYL-60/sillynovel-m14-prepare-the-frozen-manual-stage-owner-playtest\">DYL-60</issue> remains Backlog/not started. No merge, auto-merge, live install, release or later milestone work. Stop for senior review.\n\n## PR #31 senior-review correction — 2026-10-16\n\nOwner review at 8e6e97020472a9a6c49e2376730f8563dcdd91c1 returned REQUEST CHANGES for P2: unchanged-object reordering advanced only the display revision, so the stage could skip expression reconciliation. Corrected with reader sourceOrderRevision for ordered source-key/count/availability changes, included in the shared evidenceStamp used by stage/transient/attached expression authority. Changed correspondence immediately removes the overlay and disables apply until prefix validation finishes. Scroll/unchanged refresh does not encode/hash visual history. Optional P3 corrected by explicitly labeling the selector Expression to apply, preserving imported pending choices separately from current-expression status.\n\nNew actual-entry regressions reorder unchanged objects with the selected source fixed: one retains its numeric index while earlier sources swap, one moves its index. Both fail before the fix and pass afterward; no direct overlay sync call. Delayed SHA-256 proves synchronous fallback, disabled apply, usable composer, automatic suffix invalidation and unchanged global layout. Encoder/digest instrumentation proves zero visual-history work on scroll/unchanged refresh. Reader unit test covers full/sample changes and availability.\n\nFrozen correction/test/runner eae12ff9b74d12363c12f6e5d7925955502a3767; final pushed head 334023a87a4bdc02bb70aaba65651e664e2b773a (later docs/evidence only). <pull-request id=\"a3e8c4fb-494f-4118-953d-ddda882e1560\" href=\"https://linear.app/devils17/review/feat-attached-temporary-message-expressions-dyl-23-b-1a4c5d1e4505\">Sonoran-Solutions/SillyNovel#31</pull-request> remains DRAFT / OPEN / UNMERGED, auto-merge disabled. Fresh results: 124/124 Node; 59/59 Chromium including all 57 prior regressions; 16/16 pinned disposable-host checkpoint groups. Prior 126/126 storage/recovery result is inherited, not rerun; full storage/plugin/test/fixture inputs unchanged. Host SillyTavern 1.19.0 / 7e8663cd9c184a550b37238218bdd32c6efc68e9, Chromium 151.0.7922.34, Node 26.8.1. 36/36 named native files unchanged across visual-only work, global-only save body, eight refreshed inspected screenshots. 87 frozen input hashes/19 new evidence checksums; all 45 original retained evidence files preserved unchanged.\n\n[Current correction, exact commands, before/after failure logs, screenshots, evidence and limits](<https://github.com/Sonoran-Solutions/SillyNovel/blob/codex/dyl23-b-expression-overlays/docs/M1_PROJECT_EXPRESSIONS_REVIEW.md>). Native host UI reorder remains NOT_TESTED; new reorder evidence is actual-entry synthetic Chromium. Existing physical touch/IME/virtual keyboard/accessibility, other hosts/browsers and real provider limits remain. GO for bounded re-review; <issue id=\"07b1a431-367e-4f19-9a1e-30358b317d87\" href=\"https://linear.app/devils17/issue/DYL-62/sillynovel-dyl-23-b-attached-memory-only-message-expression-overlays\">DYL-62</issue> stays In Review, no Done/merge/auto-merge. <issue id=\"7e3bbfd3-e744-45e2-916d-36684b74b159\" href=\"https://linear.app/devils17/issue/DYL-23/sillynovel-m12-d-render-stable-manual-scenes-and-source-scoped\">DYL-23</issue> recorded Done/history, <issue id=\"705ea7ac-3580-47a4-87a8-863cd76f1ea7\" href=\"https://linear.app/devils17/issue/DYL-60/sillynovel-m14-prepare-the-frozen-manual-stage-owner-playtest\">DYL-60</issue> Backlog/not started, Decision F undecided and Gate A NOT_RUN unchanged. Stop here.\n\n## Owner-approved merge — 2026-10-16\n\nThe owner explicitly stated “approved to merge” in the working chat. Verified PR #31 remained at approved head 334023a87a4bdc02bb70aaba65651e664e2b773a, draft/open, mergeable/CLEAN, with no hosted checks configured. Marked ready and merged using GitHub's expected-head guard. <pull-request id=\"a3e8c4fb-494f-4118-953d-ddda882e1560\" href=\"https://linear.app/devils17/review/feat-attached-temporary-message-expressions-dyl-23-b-1a4c5d1e4505\">Sonoran-Solutions/SillyNovel#31</pull-request> is now MERGED at 5a9b87f14d5a008e9801aa2260efe40d9e22f5b7; the tested correction remains eae12ff9b74d12363c12f6e5d7925955502a3767. No code or evidence changed during merge.\n\nThis approval authorizes the PR merge only. Preserve the previously requested In Review status pending any separate issue disposition; <issue id=\"7e3bbfd3-e744-45e2-916d-36684b74b159\" href=\"https://linear.app/devils17/issue/DYL-23/sillynovel-m12-d-render-stable-manual-scenes-and-source-scoped\">DYL-23</issue>'s recorded Done, <issue id=\"705ea7ac-3580-47a4-87a8-863cd76f1ea7\" href=\"https://linear.app/devils17/issue/DYL-60/sillynovel-m14-prepare-the-frozen-manual-stage-owner-playtest\">DYL-60</issue> Backlog/not started, Decision F undecided, Gate A NOT_RUN and remaining group/device/history limitations are unchanged. No later milestone or owner gate was started.",
+      "relations": {
+        "blocks": [],
+        "blockedBy": [],
+        "relatedTo": [
+          {
+            "id": "DYL-60",
+            "title": "SillyNovel M1.4: Prepare the frozen manual-stage owner-playtest candidate"
+          },
+          {
+            "id": "DYL-23",
+            "title": "SillyNovel M1.2-D: Render stable manual scenes and source-scoped controls"
+          },
+          {
+            "id": "DYL-63",
+            "title": "DYL-23-C: Native Group Conversation Integration"
+          }
+        ],
+        "duplicateOf": null
+      }
+    },
+    {
+      "id": "DYL-63",
+      "title": "DYL-23-C: Native Group Conversation Integration",
+      "status": "In Review",
+      "url": "https://linear.app/devils17/issue/DYL-63/dyl-23-c-native-group-conversation-integration",
+      "description": "Owner-authorized <issue id=\"7e3bbfd3-e744-45e2-916d-36684b74b159\" href=\"https://linear.app/devils17/issue/DYL-23/sillynovel-m12-d-render-stable-manual-scenes-and-source-scoped\">DYL-23</issue>-C only: native group conversations with explicit independent account-owned project attachment, 4+ manual actors/3 visible slots, duplicate-name safety and memory-only source-verified temporary expressions. No native speaker/card→actor inference, remembered attachment, persistent history, schema change, <issue id=\"705ea7ac-3580-47a4-87a8-863cd76f1ea7\" href=\"https://linear.app/devils17/issue/DYL-60/sillynovel-m14-prepare-the-frozen-manual-stage-owner-playtest\">DYL-60</issue> execution or merge. Gate A NOT_RUN; Decision F undecided.\n\nPrerequisite verified: fetched main 5a9b87f14d5a008e9801aa2260efe40d9e22f5b7 merges PR #31 reviewed head 334023a87a4bdc02bb70aaba65651e664e2b773a. Original checkout was clean at that reviewed head. Branch codex/dyl23-c-native-groups starts fetched main.\n\nDeliver automated regressions, real pinned disposable 1.19.0 group with four distinct cards including duplicate display names, source/lifecycle/save/async integrity evidence, desktop/narrow screenshots, precise contracts and one focused draft/open/unmerged PR with auto-merge off. Stop for senior review. Existing <issue id=\"7e3bbfd3-e744-45e2-916d-36684b74b159\" href=\"https://linear.app/devils17/issue/DYL-23/sillynovel-m12-d-render-stable-manual-scenes-and-source-scoped\">DYL-23</issue>/<issue id=\"918f7e83-b171-4601-b575-fa6c90f14884\" href=\"https://linear.app/devils17/issue/DYL-55/sillynovel-add-portable-project-bundles-and-restore-policy\">DYL-55</issue>/<issue id=\"07b1a431-367e-4f19-9a1e-30358b317d87\" href=\"https://linear.app/devils17/issue/DYL-62/sillynovel-dyl-23-b-attached-memory-only-message-expression-overlays\">DYL-62</issue> statuses/history preserved. Full acceptance follows the owner's pasted <issue id=\"7e3bbfd3-e744-45e2-916d-36684b74b159\" href=\"https://linear.app/devils17/issue/DYL-23/sillynovel-m12-d-render-stable-manual-scenes-and-source-scoped\">DYL-23</issue>-C assignment.\n\n## Implementation and senior-review handoff — 2026-10-16\n\nDraft PR <pull-request id=\"a2d0d31b-bda8-4433-a266-65f981a59442\" href=\"https://linear.app/devils17/review/feat-explicit-manual-projects-in-native-group-conversations-dyl-23-c-b17fde67f9b7\">Sonoran-Solutions/SillyNovel#32</pull-request> is DRAFT / OPEN / UNMERGED; auto-merge disabled. Starting fetched main / verified PR #31 merge: 5a9b87f14d5a008e9801aa2260efe40d9e22f5b7. Frozen tested runtime/runner: 0f736dbacd5f4959fd4200783447c85b0550805b. Final pushed head: daf1abebad890bb780473d011a0d0bc6d0b6aafa (later documentation/evidence only). 60 frozen input hashes and 56 evidence checksums retained.\n\nImplemented explicit account-owned project use in verified native group/chat activations, transient group-instance/verification epoch checks, ignoring drafted-member characterId changes, shared attachment/expression scope validation, completion-time fresh ownership checks, readable native/manual-binding notice, cleared empty-slot expression marker. Existing larger manual cast, three stable slots/offstage actors, UUID disambiguation, locks/outfits, reducer, incremental source prefixes, CAS/schema-v2/catalog/bundle/recovery remain. No native speaker/card-to-actor binding or guessed spotlight; no schema/dependency/host/provider/persistence expansion.\n\nFinal validation: 149/149 Node; 80/80 actual-entry Chromium; 126/126 storage; 22/22 actual disposable-host checkpoint groups. No final failures/skips/cancellations. Pristine SillyTavern 1.19.0 / 7e8663cd9c184a550b37238218bdd32c6efc68e9; Node 26.8.1 / SQLite 3.53.4 / Chromium 151.0.7922.34 / Linux / deterministic loopback provider. Four real native card API records, including two Mira names with distinct avatars/hashes, activated through native group UI. Four manual UUIDs/three sprites/offstage cast; refuse/swap/replace/presence/outfit/locks/save; equal-label/equal-text expression revisit/clear, native edit/swipe/Continue/Stop; user Send/group reply/Copy/Backlog/composer; actual member Move up; group/chat switching/new chat; native Delete group and same-name recreation; CAS/lost committed receipt and delayed group save receipt isolation; explicit saved-global reopen all pass.\n\n41/41 named native files unchanged during visual-only work; full maps, outgoing global-only save, committed SQLite scene/catalog, selected-art-only bundle v1 and full-store backup inspection retained. Intentional native edit/generation/member reorder/new-chat/deletion/recreation inventories are separate; card hashes remain unchanged. Temporary choices never dirty/increment/persist into global records. Eighteen inspected desktop/narrow screenshots. Exact commands, changed files, boundaries, retained development failures, checkpoint classifications and evidence: docs/M1_NATIVE_GROUPS_IMPLEMENTATION.md and docs/evidence/native-groups/ on the PR branch.\n\nGO for bounded senior review only. Physical touch/IME/virtual keyboard/assistive devices, other hosts/browsers and real providers remain NOT_TESTED. Eventless owner/source-order/delayed-decode cases have actual-entry synthetic evidence where identified; no native UI claim for every such operation. Unobserved same-object/same-locator lifecycle and accepted-load/durable incarnation remain public-context limitations. Backup standalone inspection does not claim new account-binding restore certification. Hosted workflows unavailable (zero configured). <issue id=\"7e3bbfd3-e744-45e2-916d-36684b74b159\" href=\"https://linear.app/devils17/issue/DYL-23/sillynovel-m12-d-render-stable-manual-scenes-and-source-scoped\">DYL-23</issue> historical Done/acceptance/history preserved; <issue id=\"918f7e83-b171-4601-b575-fa6c90f14884\" href=\"https://linear.app/devils17/issue/DYL-55/sillynovel-add-portable-project-bundles-and-restore-policy\">DYL-55</issue> and <issue id=\"07b1a431-367e-4f19-9a1e-30358b317d87\" href=\"https://linear.app/devils17/issue/DYL-62/sillynovel-dyl-23-b-attached-memory-only-message-expression-overlays\">DYL-62</issue> unchanged; <issue id=\"705ea7ac-3580-47a4-87a8-863cd76f1ea7\" href=\"https://linear.app/devils17/issue/DYL-60/sillynovel-m14-prepare-the-frozen-manual-stage-owner-playtest\">DYL-60</issue> unstarted, Decision F undecided, Gate A NOT_RUN. Stop for senior review; no merge/auto-merge, release, remembered association, automatic binding, persistent message history or later work.\n\n## PR #32 P2 correction submitted for re-review — 2026-10-16\n\nAddressed the owner's one P2 finding at reviewed head daf1abebad890bb780473d011a0d0bc6d0b6aafa. The reader no longer returns before processing GENERATION_STARTED when that event first exposes a different owner: it activates the new visit and continues through existing start logic. Other owner-transition observations retain activation-only behavior. Normal generation stays unbound; Continue/Swipe bind only the new verified assistant head; dry runs remain ignored. Explicitly reopening a project during generation refuses head expressions, unresolved end stays refused, and older stable sources remain usable. Host adapter, expression authority, identity and persistence are unchanged.\n\nFrozen tested correction: 11396926c0f0aed0028d5e8a3f320abd3bd486e4. Final pushed head: 758443b011274c179aac4f401043386f844620d4; later commit documentation/evidence only. PR <pull-request id=\"a2d0d31b-bda8-4433-a266-65f981a59442\" href=\"https://linear.app/devils17/review/feat-explicit-manual-projects-in-native-group-conversations-dyl-23-c-b17fde67f9b7\">Sonoran-Solutions/SillyNovel#32</pull-request> remains DRAFT / OPEN / UNMERGED with auto-merge disabled. Keep <issue id=\"487950d8-f787-4583-9f5b-bede63705d6c\" href=\"https://linear.app/devils17/issue/DYL-63/dyl-23-c-native-group-conversation-integration\">DYL-63</issue> In Review.\n\nFresh complete verification: 153/153 Node, 81/81 actual-entry Chromium, 126/126 storage/recovery, 22/22 disposable pinned-host checkpoint groups, zero final failures/skips/cancellations. 41/41 named native files unchanged across visual-only operations. Same pristine SillyTavern 1.19.0 / 7e8663cd9c184a550b37238218bdd32c6efc68e9, Node 26.8.1 / SQLite 3.53.4 / Chromium 151.0.7922.34 / deterministic loopback provider. All 56 original evidence files remain unchanged; 60 current frozen inputs, 33 new evidence checksums and 18 refreshed inspected screenshots retained. Before-fix focused Node has four failures/one dry-run pass; corrected focus passes 5/5, actual-entry Chromium focus passes 1/1. The first corrected browser assertion used the wrong label for an unbound generation; its retained failure was fixed to assert the existing precise label, with no production workaround.\n\nExact correction/commands/classifications/evidence: [https://github.com/Sonoran-Solutions/SillyNovel/blob/codex/dyl23-c-native-groups/docs/M1_NATIVE_GROUPS_REVIEW.md](<https://github.com/Sonoran-Solutions/SillyNovel/blob/codex/dyl23-c-native-groups/docs/M1_NATIVE_GROUPS_REVIEW.md>) . The eventless start reproduction is Node + actual-entry synthetic Chromium; real-host 22/22 is fresh full native group/persistence regression rather than a claim that native UI omitted CHAT_CHANGED. Original public-context, backup account-binding and physical touch/IME/virtual keyboard/assistive-device/other-host/real-provider NOT_TESTED limits remain. No hosted CI configured. GO for bounded re-review only. <issue id=\"7e3bbfd3-e744-45e2-916d-36684b74b159\" href=\"https://linear.app/devils17/issue/DYL-23/sillynovel-m12-d-render-stable-manual-scenes-and-source-scoped\">DYL-23</issue>/<issue id=\"918f7e83-b171-4601-b575-fa6c90f14884\" href=\"https://linear.app/devils17/issue/DYL-55/sillynovel-add-portable-project-bundles-and-restore-policy\">DYL-55</issue>/<issue id=\"07b1a431-367e-4f19-9a1e-30358b317d87\" href=\"https://linear.app/devils17/issue/DYL-62/sillynovel-dyl-23-b-attached-memory-only-message-expression-overlays\">DYL-62</issue> unchanged; Decision F undecided, Gate A NOT_RUN, <issue id=\"705ea7ac-3580-47a4-87a8-863cd76f1ea7\" href=\"https://linear.app/devils17/issue/DYL-60/sillynovel-m14-prepare-the-frozen-manual-stage-owner-playtest\">DYL-60</issue> unstarted. No merge, automatic speaker binding, persistent history, storage redesign, release or later milestone work.",
+      "relations": {
+        "blocks": [],
+        "blockedBy": [],
+        "relatedTo": [
+          {
+            "id": "DYL-60",
+            "title": "SillyNovel M1.4: Prepare the frozen manual-stage owner-playtest candidate"
+          },
+          {
+            "id": "DYL-23",
+            "title": "SillyNovel M1.2-D: Render stable manual scenes and source-scoped controls"
+          },
+          {
+            "id": "DYL-62",
+            "title": "SillyNovel DYL-23-B: Attached memory-only message expression overlays"
+          },
+          {
+            "id": "DYL-55",
+            "title": "SillyNovel: Add portable project bundles and restore policy"
+          }
+        ],
+        "duplicateOf": null
+      }
+    }
+  ]
+}

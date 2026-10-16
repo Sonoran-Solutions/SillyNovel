@@ -2,6 +2,8 @@
 
 ## Current M1.4 authorization — 2026-10-16
 
+[Frozen technical package](M1_4_DYL60_CANDIDATE.md) at `6f8252699dae3a92f639f94531bba221d5e1cc02` passes the integrated pinned desktop/native campaign. DYL-60 review is the current stopping point. Physical tablet evidence is BLOCKED, assistive coverage NOT_TESTED and human Gate A NOT_RUN; no later milestone or owner session starts automatically.
+
 The owner [approved all five rulings and separately authorized DYL-60](DECISIONS.md#owner-approvals-and-dyl-60-authorization--2026-10-16): F1 for the first disposable Gate A playtest, PNG-only assets, explicit project reopening, manual four-card groups and available established Galaxy Tab S8 technical testing. PR #33 merged at `c835afe6e274be3fab5a2862f517fd8e4bca32ad`, the starting main for this work. [Current preparation/evidence](M1_4_DYL60_CANDIDATE.md) distinguishes technical results and remaining gaps. Original history/writer requirements below are amended only by F1 for this playtest; broader DYL-22/23 criteria and historical blocker relations remain. DYL-62/63 remain In Review despite merged code. Gate A NOT_RUN; owner session and verdict, M1.3/M2, DYL-56 and DYL-61 release work remain separately gated. Older dated entries retain historical states.
 
 ## DYL-23-C native group integration — 2026-10-16
