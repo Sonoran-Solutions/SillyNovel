@@ -1,6 +1,6 @@
 # DYL-60 frozen technical candidate and evidence
 
-**Technical readiness recommendation: REVISE before full owner-playtest readiness.** The complete pinned desktop/integration campaign passes; mandatory physical Galaxy Tab S8 evidence is BLOCKED by access, and assistive coverage is separately NOT_TESTED. **GO for senior review of this bounded package only. Gate A remains NOT_RUN.** No owner session was executed or scheduled; no human PASS/REVISE/STOP verdict is supplied.
+**Technical readiness recommendation: REVISE before full owner-playtest readiness.** The complete pinned desktop/integration campaign passes; physical Galaxy Tab S8-family testing now exposes a keyboard/composer visibility blocker in both orientations; remaining scaling/motion/assistive coverage is separately NOT_TESTED. **GO for senior review of this bounded package only. Gate A remains NOT_RUN.** No owner session was executed or scheduled; no human PASS/REVISE/STOP verdict is supplied.
 
 ## Approval and immutable provenance
 
@@ -90,18 +90,24 @@ Limits remain explicit: native branch/copy evidence is for individual chats; nat
 
 ## Physical and remaining acceptance
 
-[Exact device discovery/access record](evidence/dyl60/device.txt): authorized `adb devices -l` and `adb mdns services` both return empty lists. The target is the owner's **Samsung Galaxy Tab S8**; model/Android/browser/display/IME were **not observed**. No connection endpoint was invented; no new pairing, unlock, unrelated install, setting change or private-data access occurred.
+The owner made the established paired tablet accessible and rotated it to portrait. [Physical technical evidence and limitations](evidence/dyl60/device/evidence.json), [actual device/browser facts](evidence/dyl60/device/facts.json), and [exact touch/action transcript](evidence/dyl60/device/actions.jsonl) supersede the earlier [empty discovery inventory](evidence/dyl60/device.txt), which remains historical. **Samsung SM-X800 / Galaxy Tab S8+; Android 16; Brave 1.97.57 / Chromium 155.0.8059.80; Samsung HoneyBoard 5.9.20.90; 1752×2800 physical pixels, density 340, DPR 2.125.** Existing desktop-site user agent, font scale 1.0 and reduced-motion false were unchanged. The pinned desktop Chromium campaign remains separate. All 109 frozen code/test inputs still match.
 
-| Scenario | Status / remaining evidence |
+**DYL60-DEVICE-01 — P1 readiness blocker:** opening the actual Samsung keyboard hides the native composer and Send controls below the visible viewport in both landscape and portrait. Landscape visual viewport height is 316.24 CSS px while composer top/bottom are 611.91/648.41; portrait is 769.88 versus 1105.09/1141.59. Native Back to Chat reproduces the portrait geometry, so extension-only attribution is unproven. Dismissing the keyboard recovers controls. [Landscape keyboard](evidence/dyl60/device/04-ime-native-cropped.png), [portrait keyboard](evidence/dyl60/device/07-ime-portrait-open-native-cropped.png). Crops exclude unrelated browser chrome. No runtime correction was folded into the frozen candidate.
+
+| Scenario | Actual outcome / limit |
 | --- | --- |
-| Established paired device access / approved local transport | BLOCKED: operator must make the already paired unlocked device reachable or supply its established endpoint; no reverse mapping was created |
-| Actual touch, portrait/landscape, long scrolling | NOT_TESTED on hardware |
-| Virtual keyboard/IME, composer visibility/focus/caret, draft | NOT_TESTED on hardware |
-| Native Send/Stop/Continue/Backlog and group/project/scene/library controls | Desktop pin PASS within campaign; physical NOT_TESTED |
-| Browser text scaling/zoom and device reduced motion | Physical NOT_TESTED; viewport/DOM checks are not substitutes |
-| Save/reload/explicit reopen on tablet | NOT_TESTED on hardware |
-| Screen reader / other assistive technology | NOT_TESTED separately |
-| Roughly 20-turn individual + short native-group owner experience | NOT_RUN; requires separate session authorization and later owner verdict |
+| Paired access / loopback / secure context | PASS; fresh synthetic data clone, host 8760, provider 8128 host-only, task-owned reverse and CDP forward removed afterward |
+| Touch navigation / complete long reply | PASS bounded; Previous/Next/Backlog/reader return; long field notes reached end by five touch scroll gestures; [end capture](evidence/dyl60/device/09-long-end-portrait.png) |
+| Actual IME / draft / caret | **FAIL visibility** both orientations; exact `Lantern IME drafta` draft and caret 17/17 survive Previous/Backlog with keyboard dismissed; complex composition/selection gestures untested |
+| Native Send / Stop / Continue | PASS bounded with keyboard dismissed; deterministic local streaming/stop/continuation only |
+| Save / reload / explicit reopen | PASS bounded: revision 4→5, reload detaches, explicit native chat selection/reopen restores revision 5 |
+| Actual group / manual slot refusal and replace | PASS bounded: six native messages, two Miras/four UUIDs/three sprites; occupied move refused, explicit replace preserves all actors; [slot evidence](evidence/dyl60/device/group-slot.json) |
+| Group discard/reopen attempt | UNVERIFIED: final cast still showed replacement; retained [capture](evidence/dyl60/device/12-group-after-discard-attempt.png); no recovery-success assertion |
+| All scene/library/file-picker/export/cleanup touch actions | PARTIAL; selects used programmatic setup. No full touch-target or hardware digitizer audit claimed |
+| Increased scaling / reduced motion / screen reader | NOT_TESTED: actual pinch left scale 1.0; system/browser preferences unchanged; assistive coverage separate |
+| Roughly 20-turn individual + short native-group owner experience | NOT_RUN; separately authorized human session and verdict still required |
+
+Touch events ran on the actual Android browser via its existing debugging socket; Android input entered a draft/caret command, and an observed Samsung on-screen A key was tapped. The operator rotated the hardware. Native API chat loading and programmatic select options were setup aids, not proof of touch-select menus. A transient ADB interruption and probe selector/setup failures remain in the evidence; there is no all-green physical campaign claim. [Device input verification](evidence/dyl60/device/input-verification.json), [retained synthetic data](evidence/dyl60/device/retained-device-data.json), [cleanup](evidence/dyl60/device/cleanup-verification.json). The synthetic tab is closed; owned ports/mappings/processes are removed, preferences unchanged, and the fresh root `/tmp/sn-dyl60-device-nn07uqaq` is retained. The earlier 20 roots remain untouched.
 
 Other unsupported/untested surfaces remain DYL-61 future work: advertised Node 22.13 floor, other hosts/OS/browsers/filesystems, public packaging/license/security/resource acceptance, live deployment, account deletion/recreation/repair, real disk-full/power-loss/fsync campaigns and release. Portable v1 still omits catalog labels/unselected alternatives; broader JPEG/WebP/revision/attribution criteria remain deferred, not completed. No real-provider quality or billing claim.
 
@@ -120,4 +126,4 @@ The incomplete `0985` campaign and every development attempt remain under [devel
 
 [Independent setup/reproduction/cleanup](M1_4_DYL60_REPRODUCTION.md). Full synthetic native data, SQLite stores, backup/migration inputs and troubleshooting remain locally in the named roots; selected logs/structured results/screenshots are committed. The retained-root manifest records their non-host output hashes. [Retention and process verification](evidence/dyl60/cleanup-verification.json) confirms 20 preserved roots / 11546 non-host output hashes, no matching task-owned Node processes, and the provider loopback port free. [Retained-root hashes](evidence/dyl60/retained-roots.json). Packaging/orchestration Python: 3.12.3. [Eight-frame representative fresh screenshot review](evidence/dyl60/screenshot-review.json); all 65 PNG files/hashes were checked. No live data was touched. Cleanup after reviewer release must use exact verified paths, never wildcard deletion.
 
-DYL-60 goes **In Review**, never Done before owner acceptance. DYL-62/63 remain In Review despite merged implementations; original DYL-23 blocker and broader DYL-22/23 acceptance remain. DYL-61 remains future hardening. **Next bounded action: senior review of this draft/unmerged package, then accessible Galaxy Tab S8 technical evidence on the same frozen inputs before full readiness.** The human Gate A session/verdict remains separately gated. No merge/auto-merge, owner playtest, M1.3/M2, beta/production or live installation follows automatically.
+DYL-60 goes **In Review**, never Done before owner acceptance. DYL-62/63 remain In Review despite merged implementations; original DYL-23 blocker and broader DYL-22/23 acceptance remain. DYL-61 remains future hardening. **Next bounded action: senior review of this draft/unmerged package and the concrete keyboard blocker; separately scope the smallest viewport investigation/correction, then repeat mandatory physical/assistive checks on the resulting exact candidate before full readiness.** The human Gate A session/verdict remains separately gated. No merge/auto-merge, owner playtest, M1.3/M2, beta/production or live installation follows automatically.

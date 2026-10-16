@@ -1,0 +1,31 @@
+{
+  "at": "2026-10-16T23:41:18.964Z",
+  "frozenCandidate": "6f8252699dae3a92f639f94531bba221d5e1cc02",
+  "browser": {
+    "protocolVersion": "1.3",
+    "product": "Chrome/155.0.8059.80",
+    "revision": "@7bfa200812971b7811541ae6e5b72620abebe3a",
+    "userAgent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+    "jsVersion": "15.5.35.23"
+  },
+  "configuration": {
+    "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+    "secure": true,
+    "viewport": [
+      824,
+      1143
+    ],
+    "screen": [
+      825,
+      1318
+    ],
+    "dpr": 2.125,
+    "scale": 1,
+    "reducedMotion": false
+  },
+  "group": {
+    "id": "1792192901752",
+    "messages": 6
+  },
+  "cast": "Cast: Mira [dbaecba7] offstage · locks: presence, slot, outfit / Mira [99b9ece1] right · locks: presence, slot, outfit / Rowan [7e31ce31] center · locks: presence, slot, outfit / Sage [98a086d2] left · locks: presence, slot, outfit"
+}

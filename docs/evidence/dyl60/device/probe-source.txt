@@ -1,0 +1,12 @@
+import {createRequire} from 'node:module';
+import {readFile,writeFile,appendFile} from 'node:fs/promises';
+const require=createRequire('/home/dq/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/x.cjs');
+const {chromium}=require('playwright');
+const browser=await chromium.connectOverCDP('http://127.0.0.1:9229');
+const page=browser.contexts().flatMap(c=>c.pages()).find(p=>p.url().startsWith('http://127.0.0.1:8760'));
+if(!page)throw Error('Synthetic tab absent');
+page.setDefaultTimeout(12000);const cdp=await page.context().newCDPSession(page);
+const tap=async locator=>{await locator.scrollIntoViewIfNeeded();const b=await locator.boundingBox();if(!b)throw Error('No bounds');const p={x:b.x+b.width/2,y:b.y+b.height/2};await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[p]});await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await page.waitForTimeout(350);};
+const button=name=>page.getByRole('button',{name,exact:true});
+const field=name=>page.locator('#sillynovel-stage').getByLabel(name,{exact:true});
+const originalLog=console.log;console.log=(...args)=>{originalLog(...args);void appendFile('/tmp/sn-dyl60-device-nn07uqaq/console.jsonl',JSON.stringify({time:new Date().toISOString(),args})+'\n');};const action=await readFile(process.argv[2],'utf8');await appendFile('/tmp/sn-dyl60-device-nn07uqaq/actions.jsonl',JSON.stringify({time:new Date().toISOString(),action})+'\n');try{await eval('(async()=>{'+action+'})()');process.exit(0);}catch(e){console.error(e);process.exit(1);}
