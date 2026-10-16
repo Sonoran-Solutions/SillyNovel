@@ -5,7 +5,13 @@ import {createHash} from 'node:crypto';
 const sha=b=>createHash('sha256').update(b).digest('hex');
 export async function runStageUX({root,data,repo,page,alice,peer,project,field,button,select,canonical,pass,evidence}) {
  const accept=d=>d.accept();page.on('dialog',accept);
- async function connect(){await page.locator('#API-status-top').click();await page.locator('#api_button_openai').click();await page.locator('#send_but').waitFor({state:'visible'});await page.locator('#API-status-top').click();}
+ async function connect(){
+  const icon=page.locator('#API-status-top'),drawer=page.locator('#rm_api_block');
+  if((await icon.getAttribute('class')).includes('closedIcon'))await icon.click();
+  await drawer.waitFor({state:'visible'});await page.locator('#api_button_openai').click();await page.locator('#send_but').waitFor({state:'visible'});
+  if((await drawer.getAttribute('class')).includes('openDrawer'))await icon.click();
+  await drawer.waitFor({state:'hidden'});
+ }
  await connect();
  await button('Detach project').click();assert.equal(await page.locator('.sillynovel-unsaved').getAttribute('data-state'),'session');
  // Named, invented lore/persona fixtures expand the native-file inventory.
@@ -48,7 +54,7 @@ export async function runStageUX({root,data,repo,page,alice,peer,project,field,b
   for(const [device,viewport]of [['desktop',{width:1440,height:1100}],['narrow',{width:390,height:800}]]){
    await page.setViewportSize(viewport);
    await page.locator('.sillynovel-controls').evaluate(e=>e.open=false);await page.screenshot({path:join(root,'stage-'+phase+'-'+device+'.png')});
-   await page.locator('.sillynovel-controls summary').click();await page.getByRole('group',{name:'Scene',exact:true}).locator('legend').evaluate(e=>e.scrollIntoView({block:'start'}));
+   await page.locator('.sillynovel-controls summary').click();await page.getByRole('group',{name:'Scene',exact:true}).locator('legend').evaluate(e=>{e.scrollIntoView({block:'start'});e.closest('details').scrollTop-=52;});
    await page.screenshot({path:join(root,'stage-'+phase+'-'+device+'-controls.png')});
    assert.equal(await page.locator('#send_textarea').isVisible(),true);assert.ok((await page.locator('.sillynovel-dialogue').boundingBox()).height>60);
   }
