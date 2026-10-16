@@ -1,5 +1,13 @@
 # Decision register
 
+## Completion review proposals — 2026-10-15 (NOT owner decisions)
+
+Owner assignment authorizes documentation, acceptance review, Linear planning and one open/unmerged documentation PR only. [Decision package A–G](M1_2_STORAGE_COMPLETION_AND_READINESS.md#11-owner-decision-package), reviewed main `ea65d84a521a39c9ccc977f4cb3643454963d4b8`: recommend **DYL-55 GO for bounded experimental completion; overall M1.2 REVISE**. PRs #23–27 are verified merged and DYL-49–54/57–59 Done; parent DYL-55 remains Backlog/unfinished until explicit owner acceptance/closure approval.
+
+Propose revising DYL-22/23 while preserving historical requirements and blocker relations, temporarily deferring persistent JPEG/WebP in favor of a reusable labeled PNG library, retaining explicit attachment, and explicitly amending Gate A's persistence/writer expectations to global-project reopen/temporary source overlays/CAS. Original group/touch/reader-safety and human-verdict requirements remain. None is approved here. Preferred next implementation is DYL-22's first revised PNG-library slice, only after owner scope authorization.
+
+Planning-only DYL-60 (M1.4 candidate preparation, blocked by DYL-23) and DYL-61 (separate release hardening) were created after duplicate search. No DYL-22/23 unblock/closure, DYL-55 Done, DYL-56 authorization, Gate A verdict/session/schedule, M1.3/M2, production release/live install, native modification, upstream contact or PR merge is authorized. Gate A remains NOT_RUN.
+
 **Status:** user-stated scope, proposed defaults, and measured facts remain distinct. The M1 planning entry records recommendations as they stood before DYL-16; the approved decisions are recorded in the dated owner entry below.
 
 ## Confirmed user-stated scope
@@ -149,6 +157,7 @@ The new failed-observation refusal and completed-revocation proofs pass; inherit
 This supersedes the prior pending owner decisions for those exact expectations. It does not authorize clearing indeterminate intent, treating partial writes as clean aborts, relaxing root-rollback refusal, or describing test-fixture resets as host recovery. The original campaign results/assertions remain historical evidence; updated overlay assertions must prove the approved refusal, unchanged old records and restart behavior before continuing independent fault episodes.
 
 The re-review also authorizes the narrow browser-assertion correction, verification against current main and PR, and an external-before-local forward-only proof. It does not approve a production recovery service, merge PR #20, mark DYL-46 Done, unblock DYL-22/23, authorize M1.3/M2, or supply Gate A PASS.
+
 # Tracking record — 2026-10-15, DYL-47
 
 The owner-provided M1.2-M checkpoint authorization created [DYL-47](https://linear.app/devils17/issue/DYL-47/sillynovel-m12-m-decide-production-storage-architecture-and) after searching for an equivalent post-DYL-46 issue. It is In Review, blocked by completed DYL-46, and related to DYL-25, DYL-22, and DYL-23. The checkpoint is documented in [M1_STORAGE_ARCHITECTURE_CHECKPOINT.md](M1_STORAGE_ARCHITECTURE_CHECKPOINT.md).

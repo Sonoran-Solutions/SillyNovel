@@ -1,5 +1,13 @@
 # M1 manual reader plan and UX contracts
 
+## Current readiness checkpoint — 2026-10-15
+
+The [completion review](M1_2_STORAGE_COMPLETION_AND_READINESS.md) reviews main `ea65d84a521a39c9ccc977f4cb3643454963d4b8`, merged PRs #23–27 and Done DYL-49–54/57–59. Bounded DYL-55 completion is recommended **GO**, pending owner acceptance; parent remains unfinished. **Overall M1.2 REVISE**: the usable reusable library, attached transient source controls/group support and integrated layout/device evidence are incomplete. DYL-22/23 remain Backlog/functionally blocked with original dependencies. Gate A NOT_RUN; DYL-24 supported; DYL-56 Backlog; M1.3/M2 unauthorized.
+
+Proposed next order is revised DYL-22 (first labeled/kinded PNG alternatives listed/reselected after reopen), revised DYL-23 (remaining practical manual-stage slices), then [DYL-60](https://linear.app/devils17/issue/DYL-60) (Backlog, M1.4, frozen disposable candidate). [DYL-61](https://linear.app/devils17/issue/DYL-61) holds release hardening separately. No duplicate asset/stage ticket is required. Owner must approve revised scopes and any deferral of JPEG/static WebP. A future metadata/schema change includes its real migration/backup/portable-format evidence; the existing v1 recovery policy is not an implemented version transition.
+
+The original contracts and frozen Gate A session below remain historical acceptance requirements. Current project saves restore **global** scene state after explicit reopen, not source history or native correspondence. CAS conflict refusal does not implement the original single-writer/read-only-tab policy. The review proposes an explicit owner amendment for those differences; group, touch, native safety and the owner verdict remain required. No amendment, waiver, implementation or owner session is authorized by this checkpoint.
+
 ## Active project-storage direction — 2026-10-15
 
 [Independent project storage](M1_INDEPENDENT_PROJECT_STORAGE.md) supersedes the upstream-API implementation path and earlier chat-metadata persistence proposals for this bounded slice. The owner authorizes planning and the first independent-project implementation with an optional local plugin, explicit attachment and project-global state only. Production release is not approved. Source-specific history remains transient/gated; existing renderer, source, lock and native-composer safeguards remain applicable. No project data enters native metadata or browser persistence. [Implementation and tracking](M1_PROJECT_STORAGE_IMPLEMENTATION.md).
@@ -14,7 +22,7 @@ DYL-48 is Done and PR #22 merged at `ca77bbf5e4ee5219e34e873b1680e8d644754149`. 
 
 The initial checkout was clean on `test/m0-final-compatibility` at `6eedb720e699b1194db41371975ddd07b4db46c6`. Fetched `main` was `a7f1a4a6299a459adce1e24ea7b1b3f4405d02b5`, the merge commit for [PR #3](https://github.com/Sonoran-Solutions/SillyNovel/pull/3). This docs branch starts at that main SHA. Linear was reviewed on 2026-10-12: DYL-15–DYL-19 are the five existing issues in this project, all labeled M1 and in Backlog at inspection. Later ticket titles in this plan are proposals, not created issues.
 
-Current assignment: the owner separately assigned DYL-18 on 2026-10-12 after DYL-17/19 merged. The [reader contract](M1_READER_SOURCE.md#dyl-18-reader-ui-contract) records this text-only implementation; later scope and Gates A/B/C remain gated. Earlier authorization states below are historical planning checkpoints.
+Historical DYL-18 assignment: the owner separately assigned DYL-18 on 2026-10-12 after DYL-17/19 merged. The [reader contract](M1_READER_SOURCE.md#dyl-18-reader-ui-contract) records this text-only implementation; later scope and Gates A/B/C remain gated. Earlier authorization states below are historical planning checkpoints; current progress is in the readiness checkpoint above.
 
 Read alongside [UX](UX_SPEC.md), [architecture](ARCHITECTURE.md), [state](STATE_AND_DIRECTOR.md), [assets](ASSETS_AND_PROVIDERS.md), [decisions](DECISIONS.md), [status](STATUS.md), [roadmap](ROADMAP.md), and [testing](TESTING.md). This plan narrows those designs for M1; owner-approved defaults and open technical proofs are identified separately.
 
