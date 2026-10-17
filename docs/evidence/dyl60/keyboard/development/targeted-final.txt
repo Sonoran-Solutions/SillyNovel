@@ -1,0 +1,10 @@
+✔ visual viewport keeps the original composer reachable through keyboard resize, pan and native chat; disable releases it (871.693838ms)
+✔ session stage: four manual actors, duplicate names, stable slots, refusal, swap, replace and locks (1113.749891ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2291.927211

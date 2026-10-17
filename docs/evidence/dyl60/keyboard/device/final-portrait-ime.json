@@ -1,0 +1,21 @@
+{
+  "layout": [
+    824,
+    1143
+  ],
+  "visible": {
+    "height": 769.88232421875,
+    "offsetTop": 0
+  },
+  "composer": {
+    "top": 732.441162109375,
+    "bottom": 768.941162109375,
+    "hit": true
+  },
+  "send": {
+    "top": 732.441162109375,
+    "bottom": 766.941162109375,
+    "hit": true
+  },
+  "sameNode": true
+}

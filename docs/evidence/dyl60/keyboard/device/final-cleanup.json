@@ -1,0 +1,28 @@
+{
+  "at": "2026-10-17T00:16:23.882779+00:00",
+  "syntheticTabClosed": true,
+  "reverse8762Removed": true,
+  "forward9229Removed": true,
+  "settingsChanged": false,
+  "frozenInputsMatched": 110,
+  "providerStoppedBeforeCampaign": true,
+  "stopped": [
+    {
+      "pid": 929431,
+      "args": [
+        "node",
+        "server.js",
+        "--configPath",
+        "/tmp/sn-dyl60-keyboard-final-kl_l0aog/config.yaml",
+        "--dataRoot",
+        "/tmp/sn-dyl60-keyboard-final-kl_l0aog/data",
+        "--port",
+        "8762",
+        "--listen",
+        "false",
+        "--browserLaunchEnabled",
+        "false"
+      ]
+    }
+  ]
+}

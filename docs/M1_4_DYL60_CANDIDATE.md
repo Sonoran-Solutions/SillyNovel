@@ -1,5 +1,7 @@
 # DYL-60 frozen technical candidate and evidence
 
+**Current follow-up:** [keyboard/composer correction, P3 runner fix and complete fresh rerun](M1_4_DYL60_KEYBOARD_FIX.md), frozen `c5c1699a48629ae761a093e13056f0b11fdc4b88`. Actual portrait/landscape keyboard visibility and named touch/native/group checks pass; broader physical/assistive gaps remain. **The original package below is historical**, including its source pins, counts and keyboard finding; no old count is reused as a new-candidate result.
+
 **Technical readiness recommendation: REVISE before full owner-playtest readiness.** The complete pinned desktop/integration campaign passes; physical Galaxy Tab S8-family testing now exposes a keyboard/composer visibility blocker in both orientations; remaining scaling/motion/assistive coverage is separately NOT_TESTED. **GO for senior review of this bounded package only. Gate A remains NOT_RUN.** No owner session was executed or scheduled; no human PASS/REVISE/STOP verdict is supplied.
 
 ## Approval and immutable provenance

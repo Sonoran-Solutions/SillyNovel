@@ -1,5 +1,7 @@
 # Reproducing the DYL-60 technical candidate
 
+For the current keyboard/P3 correction, use [the new frozen candidate, fresh campaign and tablet records](M1_4_DYL60_KEYBOARD_FIX.md). Runner discovery is independent of launch directory, validates expected suite files and records `discovery.json`; `run.py --list-tests` and `check-discovery.py` provide a small environment-free discovery check. The original setup/fixtures below remain historical and reusable with the new exact source pin; never relabel prior evidence as a fresh run.
+
 This is a disposable technical campaign. The human Gate A session remains NOT_RUN and requires separate authorization. No real provider or live installation is involved. [Approved scope](DECISIONS.md#owner-approvals-and-dyl-60-authorization--2026-10-16).
 
 Use the full frozen SHA and versions in [the package](M1_4_DYL60_CANDIDATE.md) / `evidence/dyl60/final/pins.json`. Install Node 26.8.1 and the exact Playwright package/Chromium already identified there; do not replace the browser with a system build. Prepare a pristine SillyTavern 1.19.0 checkout at `7e8663cd9c184a550b37238218bdd32c6efc68e9`, with its package-lock dependencies installed. The original run reused the clean `/tmp/SillyTavern-dyl22` source and external installed browser tooling; it did not upgrade either. No extension build step.

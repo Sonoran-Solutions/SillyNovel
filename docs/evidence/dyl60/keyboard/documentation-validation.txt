@@ -1,0 +1,2 @@
+PASS: 110 frozen inputs unchanged; 38 added local links; 8 Markdown fence checks; exact F1/decisions untouched; no post-freeze executable changes; git diff --check
+PASS staged whitespace: standard checks for all files except the archived incomplete browser.txt; that raw Node error log passes with blank-at-eol disabled for its two whitespace-only indentation lines. Original log bytes preserved.

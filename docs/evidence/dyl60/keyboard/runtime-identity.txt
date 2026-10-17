@@ -1,0 +1,2 @@
+Command: git diff --exit-code b238b9193d989256e3e53179b5a7b755b9dc73e6 c5c1699a48629ae761a093e13056f0b11fdc4b88 -- src style.css index.js manifest.json plugins
+PASS: empty runtime/plugin diff; the final freeze changes only the browser assertion.

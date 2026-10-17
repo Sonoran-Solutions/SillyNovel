@@ -1,5 +1,9 @@
 # Project status
 
+## DYL-60 keyboard and P3 correction — 2026-10-16
+
+**Frozen correction `c5c1699a48629ae761a093e13056f0b11fdc4b88`:** actual Galaxy Tab S8+ portrait/landscape IME, original draft/caret, native Send/Stop/Continue, complete long reply, save/reload/reopen and manual group recovery pass within the named scope. [Correction, raw evidence and remaining limits](M1_4_DYL60_KEYBOARD_FIX.md). P3 discovery is repository-root based and fails closed on unexpected/empty/missing suites; foreign-working-directory self-check passes. Fresh pinned campaign passes 153 Node / 126 storage / 82 Chromium and six serial native campaigns (24/16/22/17/21/18 checkpoint groups); interrupted expressions were rerun on the unchanged freeze, with the completed earlier rows retained. Full readiness remains REVISE for physical scaling/motion/assistive gaps; Gate A NOT_RUN; DYL-60 In Review and PR #34 draft/open/unmerged. The following original candidate entry retains its historical results and now-corrected keyboard finding.
+
 ## DYL-60 technical candidate preparation — 2026-10-16
 
 **Frozen candidate `6f8252699dae3a92f639f94531bba221d5e1cc02`: 153 Node / 126 storage / 81 Chromium pass; six serial native campaigns pass 24/16/22/17/21/18 checkpoint groups.** [Fresh package, raw logs, manifests and reproduction](M1_4_DYL60_CANDIDATE.md). Complete scoped native integrity is 84 files with full settings equality; actual individual copy/branch and active-persona request checks pass. **Technical readiness REVISE: actual Galaxy Tab S8+ keyboard hides composer in both orientations; physical coverage PARTIAL and assistive coverage NOT_TESTED. Gate A NOT_RUN.** DYL-60 is handed off In Review, unfinished pending owner acceptance; the draft PR must remain open/unmerged without auto-merge. Earlier incomplete candidate/fixture failures are retained separately.
