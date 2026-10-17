@@ -366,7 +366,10 @@ test('session stage: four manual actors, duplicate names, stable slots, refusal,
     assert.ok((await page.locator('.sillynovel-dialogue').boundingBox()).height>140,'Open controls yield art space to dialogue');
     await field(page,'Background').selectOption('tavern');await applyScene(page,'Apply background');
     await positionActor(page,a,'left');await positionActor(page,b,'center');await positionActor(page,r,'right');
+    assert.equal(await page.locator('.sillynovel-sprite:not([hidden])').count(),3);
+    await page.locator('.sillynovel-controls summary').click();
     assert.equal(await page.locator('.sillynovel-sprite:visible').count(),3);
+    await page.locator('.sillynovel-controls summary').click();
     assert.match(await page.locator('.sillynovel-cast').innerText(),/Sage.*offstage/);
     await field(page,'Session actor').selectOption(s);await field(page,'Position').selectOption('left');await button(page,'Apply position').click();
     await page.waitForFunction(()=>document.querySelector('.sillynovel-visual-status').textContent.includes('SLOT_OCCUPIED'));
@@ -376,8 +379,11 @@ test('session stage: four manual actors, duplicate names, stable slots, refusal,
     assert.match(await page.locator('.sillynovel-cast').innerText(),/Rowan.*offstage/);
     await field(page,'Lock field').selectOption('slot');await applyScene(page,'Release lock');
     await applyScene(page,'Lock choice');await positionActor(page,s,'','move');
-    await field(page,'Session actor').selectOption(a);await field(page,'Presence').selectOption('false');await applyScene(page,'Apply presence');assert.equal(await sprite(page,'center').isVisible(),false);
-    await field(page,'Presence').selectOption('true');await applyScene(page,'Apply presence');assert.equal(await sprite(page,'center').isVisible(),true);
+    await field(page,'Session actor').selectOption(a);await field(page,'Presence').selectOption('false');await applyScene(page,'Apply presence');
+    await page.locator('.sillynovel-controls summary').click();assert.equal(await page.locator('.sillynovel-art').isVisible(),true);assert.equal(await sprite(page,'center').isVisible(),false);
+    await page.locator('.sillynovel-controls summary').click();
+    await field(page,'Presence').selectOption('true');await applyScene(page,'Apply presence');
+    await page.locator('.sillynovel-controls summary').click();assert.equal(await sprite(page,'center').isVisible(),true);
     assert.equal(await page.evaluate(()=>JSON.stringify([fixture.context.chat,fixture.context.characters,fixture.context.chatMetadata,fixture.context.connection])),canonical);
     assert.match(await page.locator('.sillynovel-unsaved').innerText(),/Unsaved session visuals/);
 });
