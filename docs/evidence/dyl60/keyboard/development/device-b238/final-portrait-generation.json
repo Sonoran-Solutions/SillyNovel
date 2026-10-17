@@ -1,0 +1,22 @@
+{
+  "before": 41,
+  "during": {
+    "vv": 769.88232421875,
+    "composer": {
+      "bottom": 768.941162109375,
+      "hit": true
+    },
+    "stop": {
+      "bottom": 765.5808925628662,
+      "hit": true
+    }
+  },
+  "stopped": {
+    "count": 43,
+    "last": "*The lantern glows.*\n\n\"Welcome to the reading room,\" **Mira** says.\n\n- Read a complete reply\n- Keep the original composer\n\n`a quie"
+  },
+  "continued": {
+    "count": 43,
+    "last": "*The lantern glows.*\n\n\"Welcome to the reading room,\" **Mira** says.\n\n- Read a complete reply\n- Keep the original composer\n\n`a quie *The lantern glows.*\n\n\"Welcome to the reading room,\" **Mira** says.\n\n- Read a complete reply\n- Keep the original composer\n\n`a quiet moment`"
+  }
+}

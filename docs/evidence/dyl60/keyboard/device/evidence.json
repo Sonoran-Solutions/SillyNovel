@@ -1,0 +1,115 @@
+{
+  "candidate": "c5c1699a48629ae761a093e13056f0b11fdc4b88",
+  "starting": "4172a977e55608c906be32115bb0a6f0b55e910c",
+  "date": "2026-10-16 America/Phoenix",
+  "device": {
+    "model": "Samsung SM-X800 / Galaxy Tab S8+",
+    "android": "16",
+    "build": "BP2A.250605.031.A3.X800XXSBEZH3",
+    "securityPatch": "2026-08-05",
+    "displayPixels": [
+      1752,
+      2800
+    ],
+    "densityDpi": 340,
+    "fontScale": 1,
+    "keyboard": "Samsung HoneyBoard5.9.20.90, English US",
+    "brave": "1.97.57",
+    "engine": "155.0.8059.80",
+    "configuration": "Existing desktop-site user agent unchanged; scale1; reduced-motion false"
+  },
+  "result": "PASS for DYL60-DEVICE-01 correction and named bounded checks; full readiness still REVISE",
+  "humanGateA": "NOT_RUN",
+  "method": "Existing paired wireless ADB. Actual Android browser/CDP touch start/move/end; observed Samsung A-key tap and Android draft/caret input; operator rotation. Programmatic selectOption, native transcript loading and scrolling targets below sticky headings are setup aids, not a full finger/select-menu/digitizer audit. No emulated viewport/keyboard substituted for physical evidence.",
+  "portrait": {
+    "layout": [
+      824,
+      1143
+    ],
+    "visible": {
+      "height": 769.88232421875,
+      "offsetTop": 0
+    },
+    "composer": {
+      "top": 732.441162109375,
+      "bottom": 768.941162109375,
+      "hit": true
+    },
+    "send": {
+      "top": 732.441162109375,
+      "bottom": 766.941162109375,
+      "hit": true
+    },
+    "sameNode": true
+  },
+  "landscape": {
+    "layout": [
+      1317,
+      650
+    ],
+    "visible": {
+      "height": 316.23529052734375,
+      "offsetTop": 0
+    },
+    "composer": {
+      "top": 278.79412841796875,
+      "bottom": 315.29412841796875,
+      "hit": true
+    },
+    "send": {
+      "top": 279.79412841796875,
+      "bottom": 314.29412841796875,
+      "hit": true
+    }
+  },
+  "completed": [
+    "Portrait/landscape native composer and Send hit targets above actual open Samsung IME",
+    "Exact draft/caret preserved through Previous/Backlog/Return to Reader and native chat, with IME open",
+    "Native Send/Stop with composer and Stop hit targets above IME in both orientations; native Continue appends response in portrait; deterministic loopback only",
+    "Long fixture reply reaches complete marker after28 Previous touch actions and3 touch scroll gestures; final visual viewport1143.53 indicates IME dismissed during that reading interaction",
+    "Touch save revision4 to5, reload detaches, explicit saved-layout reopen restores5",
+    "Actual native six-message group/two Mira cards/four independent manual actor UUIDs; explicit swap, SLOT_OCCUPIED refusal, replace, presence2/3; confirmed discard/reopen restores original cast; collapsed controls show3 actual sprites"
+  ],
+  "remaining": [
+    "Increased text scale/200% physical zoom, reduced-motion-enabled behavior and assistive technology NOT_TESTED; existing preferences unchanged",
+    "Physical file-picker/import/export/cleanup and every library control not exhaustively tested",
+    "Native group branch/copy remains NOT_TESTED",
+    "Other host themes/movable layouts/browsers/platforms not certified",
+    "Human owner20-turn immersion/group session remains separately gated NOT_RUN"
+  ],
+  "probeNotes": [
+    "Earlier b238 development and incomplete browser campaign are retained separately; final automated and physical checks are repeated on this exact final source.",
+    "The final portrait short-response attempt completed before the Stop touch reached it; no failure/visibility pass was inferred. Retried using the unchanged [LONG] deterministic fixture, then Stop and Continue passed.",
+    "Probe setup scrolls controls below their sticky heading; source selects/native loading are setup aids. Final group uses one confirmation handler and checks semantic presence plus actual sprites after controls collapse."
+  ],
+  "retainedDataFiles": 472,
+  "cleanup": {
+    "at": "2026-10-17T00:16:23.882779+00:00",
+    "syntheticTabClosed": true,
+    "reverse8762Removed": true,
+    "forward9229Removed": true,
+    "settingsChanged": false,
+    "frozenInputsMatched": 110,
+    "providerStoppedBeforeCampaign": true,
+    "stopped": [
+      {
+        "pid": 929431,
+        "args": [
+          "node",
+          "server.js",
+          "--configPath",
+          "/tmp/sn-dyl60-keyboard-final-kl_l0aog/config.yaml",
+          "--dataRoot",
+          "/tmp/sn-dyl60-keyboard-final-kl_l0aog/data",
+          "--port",
+          "8762",
+          "--listen",
+          "false",
+          "--browserLaunchEnabled",
+          "false"
+        ]
+      }
+    ]
+  },
+  "physicalRoot": "/tmp/sn-dyl60-keyboard-final-kl_l0aog"
+}

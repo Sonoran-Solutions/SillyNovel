@@ -1,5 +1,45 @@
 # Decision register
 
+## Owner approvals and DYL-60 authorization — 2026-10-16
+
+**Approving owner: Dylan. Date: 2026-10-16, America/Phoenix. Status: APPROVED.** The owner stated “I agree with those recommendations.” The subsequent explicit assignment identifies all five rulings below and separately authorizes DYL-60 technical preparation. This supersedes the pending choices in the historical M1.4-A proposal below; older records remain historical.
+
+### Decision F — F1 APPROVED for the first disposable Gate A playtest
+
+The full exact amendment from merged PR #33 (`c835afe6e274be3fab5a2862f517fd8e4bca32ad`) follows unchanged:
+
+> For the first disposable SillyNovel Gate A owner playtest only, I amend the persistence and multi-tab writer acceptance as follows. A saved, account-owned independent project must restore its global layout and labeled static-PNG artwork catalog after explicit reopening. Reload and every observed native conversation activation, including A → B → A, start detached; no native chat/project association is remembered. Source-specific manual expression decisions and their artwork are temporary, source/revision/session checked, and disappear on reload, detach, project replacement, disable or conversation switching. Reopening restores the saved global layout, not message-specific scene history or branch history.
+>
+> For this playtest, atomic expected-revision compare-and-swap, visible conflict refusal, and explicit recovery from an uncertain save receipt replace the original mandatory single-writer/read-only-secondary-tab requirement. Concurrent editors may have unsaved changes; no automatic merge, overwrite, retry or assurance that another tab's draft references are protected is accepted. A conflict or uncertain receipt must retain current edits in memory and require deliberate discard/reopen to inspect committed state before another save or cleanup.
+>
+> All remaining complete-reader, native composer/draft/send/Stop/Continue/swipe, source-safety, delayed-result isolation, manual-lock, four-member duplicate-name group, native-data-integrity, physical touch/virtual-keyboard, accessibility and owner-usability requirements remain in force. Approximately 20 individual turns and a short native group session remain required on one exact validated candidate. This amendment grants no Gate A verdict and does not execute or schedule that session.
+>
+> This approval does not authorize persistent source history, durable chat/card/branch correspondence, remembered project attachment or DYL-56, automatic speaker binding/focus, M1.3 implementation, M2, live installation, public beta, production use, release, or a PR merge. Candidate preparation and the owner session require their respective separate authorization. Gate A remains NOT_RUN until the owner's later recorded verdict.
+
+F1 amends only the original persistent message/branch history and mandatory single-writer/read-only-secondary-tab acceptance for this first disposable playtest. F2 remains documented and unselected. Original requirements remain visible in M1_PLAN and TESTING; persistent history and writer exclusion are potential separately authorized future work, not completed capabilities. DYL-16's F rich-content decision is unrelated.
+
+### Decision 2 — PNG-only assets APPROVED
+
+Persistent static PNG support is sufficient for the first disposable Gate A candidate. Persistent JPEG and static WebP support are deferred until separately authorized. Original DYL-22 asset revisions, additional formats and optional attribution requirements remain recorded and are not fully satisfied. Existing actual-byte/decode validation, byte/dimension limits, content integrity, import refusal, backup, compatibility and missing-art protections remain mandatory.
+
+### Decision 3 — explicit project attachment APPROVED
+
+Users deliberately create or open a visual project. Reloading, disabling or switching native conversations detaches it; returning requires explicitly reopening. No native chat/project association is remembered automatically. DYL-56 remembered attachment hints remain unauthorized. The owner playtest will evaluate whether explicit reopening becomes tedious enough to justify future improvements.
+
+### Decision 4 — manual native groups APPROVED
+
+Use four real native cards, two with identical display names, and four distinct manually registered project actors, with three visible sprite slots and at least one offstage actor. Explicit presence, outfit, lock, swap and replace controls and temporary source-specific expressions are required. Manual actor UUIDs remain independent of cards; no automatic native speaker binding, guessed spotlight or stage movement. Technical passes do not establish whether this arrangement is enjoyable; owner usability acceptance remains required.
+
+### Decision 5 — Galaxy Tab S8 technical testing APPROVED
+
+Technical testing on the owner's Samsung Galaxy Tab S8 may use the established paired wireless-ADB connection when available and only a disposable synthetic host over an approved local transport such as ADB reverse. Cover actual touch, portrait/landscape, keyboard/IME, composer visibility/focus/caret, long dialogue/scrolling, project/scene/library controls, native Send/Stop/Continue/Backlog, text scaling/zoom, reduced motion, save/reload/explicit reopen and groups. No invented connection details, new pairing, unlocking, unrelated installation, system setting changes or private data access. If unavailable, continue desktop/integration work and report precise BLOCKED/NOT_TESTED physical and separately unavailable assistive-technology coverage. Viewport emulation is not physical evidence.
+
+### Separate authorization — DYL-60 technical preparation APPROVED
+
+After recording these decisions, begin DYL-60: In Progress, one clean frozen candidate, integrated automated and disposable pinned-host validation, expanded native integrity and branch/copy evidence, deterministic synthetic owner conversation, accessible authorized physical testing, reproducible evidence package and one focused draft PR for senior review. Move to In Review with the package; do not mark Done before owner acceptance. Preserve historical blockers and DYL-22/23 original criteria. Leave DYL-62/63 tracker states unchanged despite their merged implementations.
+
+Stop before the human Gate A playtest: no execution/scheduling or owner verdict, M1.3/M2, persistent message history, automatic speaker binding, writer leases, beta/production hardening, live installation, private data, real-provider requests or PR merge/auto-merge. **Gate A remains NOT_RUN.** DYL-61 remains future release hardening. [Preparation and evidence](M1_4_DYL60_CANDIDATE.md).
+
 ## M1.4-A owner decision proposals — 2026-10-16 (NOT approved)
 
 [Decision F comparison and exact proposed F1 amendment](M1_4_GATE_A_READINESS.md#2-decision-f--one-page-owner-comparison) recommend bounded global-project reopen/temporary expressions/CAS acceptance instead of original persistent history/branch restore/single-writer requirements. F2 retains those requirements and needs separately authorized implementation. PNG-only deferral, attachment/group scope and physical-device access remain explicit owner choices. Reader/source/group/native-integrity/device and human-verdict requirements are preserved. **Decision F undecided; Gate A NOT_RUN; DYL-60 Backlog/unstarted.** This is documentation readiness analysis on merged main `f9497aebf59cbeae07a2b6391d0cff17e81bcc76`, not an amendment, freeze, gate verdict, release, M1.3/M2 or execution authorization. DYL-16's historical F rich-content default is a different decision and is unchanged.

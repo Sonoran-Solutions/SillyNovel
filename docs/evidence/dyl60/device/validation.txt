@@ -1,0 +1,2 @@
+PASS: 109 frozen inputs unchanged; device identity; observed keyboard occlusion; exact draft/caret; local Send/Stop/Continue; complete touch scroll; actual group refusal/replacement; owned cleanup; evidence text redaction. Seven app/keyboard PNGs retained. Physical readiness REVISE; owner Gate A NOT_RUN.
+PASS: 82 new local links/anchors; 9 Markdown fence checks; exact original F1 retained; frozen executable inputs unchanged; git diff --check

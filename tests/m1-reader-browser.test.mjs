@@ -47,6 +47,40 @@ const button = (page, name) => page.getByRole('button', { name, exact: true });
 const message = page => page.locator('.sillynovel-dialogue__message');
 async function text(page, value, index) { await page.evaluate(({value,index}) => fixture.setText(value,index), {value,index}); }
 
+test('visual viewport keeps the original composer reachable through keyboard resize, pan and native chat; disable releases it', async t => {
+    const page = await fixture(t, '', () => {
+        window.testViewport = Object.assign(new EventTarget(), { height: 900, offsetTop: 0, scale: 1 });
+        Object.defineProperty(window, 'visualViewport', { value: testViewport });
+    });
+    await page.evaluate(() => {
+        window.originalComposer = document.getElementById('send_textarea');
+        originalComposer.value = 'Keyboard draft'; originalComposer.focus(); originalComposer.setSelectionRange(2, 7);
+    });
+    for (const [height, offsetTop] of [[350, 0], [210, 35], [900, 0]]) {
+        await page.evaluate(({height, offsetTop}) => {
+            Object.assign(testViewport, { height, offsetTop });
+            testViewport.dispatchEvent(new Event('resize')); testViewport.dispatchEvent(new Event('scroll'));
+        }, {height, offsetTop});
+        const controls = page.locator('.sillynovel-controls');
+        await controls.locator('summary').click();
+        assert.equal(await controls.evaluate(e => e.open), true);
+        await controls.locator('summary').click();
+        for (const name of ['Back to Chat', 'Return to Reader']) {
+            const form = await page.locator('#send_form').boundingBox();
+            assert.ok(form.y + form.height <= height + offsetTop + 1, JSON.stringify(form));
+            await button(page, name).click();
+        }
+    }
+    assert.deepEqual(await page.evaluate(() => ({same: originalComposer === document.getElementById('send_textarea'), value: originalComposer.value, selection: [originalComposer.selectionStart, originalComposer.selectionEnd]})), {same: true, value: 'Keyboard draft', selection: [2, 7]});
+    await page.evaluate(() => { testViewport.scale = 2; testViewport.dispatchEvent(new Event('resize')); });
+    assert.equal(await page.locator('#sheld').evaluate(e => e.classList.contains('sillynovel-viewport')), false);
+    await page.locator('#sillynovel-enabled').uncheck();
+    await page.evaluate(() => { testViewport.scale = 1; testViewport.dispatchEvent(new Event('resize')); });
+    assert.equal(await page.locator('#sheld').evaluate(e => e.classList.contains('sillynovel-viewport') || e.style.getPropertyValue('--sillynovel-available-height') !== ''), false);
+    const noViewport = await fixture(t, '', () => Object.defineProperty(window, 'visualViewport', { value: undefined }));
+    assert.equal(await noViewport.locator('#sheld').evaluate(e => e.classList.contains('sillynovel-viewport')), false);
+});
+
 test('actual entry mounts, updates, disposes and preserves canonical state', async t => {
     const page = await fixture(t);
     assert.equal(await page.locator('#sillynovel-stage').count(), 1);
@@ -332,7 +366,10 @@ test('session stage: four manual actors, duplicate names, stable slots, refusal,
     assert.ok((await page.locator('.sillynovel-dialogue').boundingBox()).height>140,'Open controls yield art space to dialogue');
     await field(page,'Background').selectOption('tavern');await applyScene(page,'Apply background');
     await positionActor(page,a,'left');await positionActor(page,b,'center');await positionActor(page,r,'right');
+    assert.equal(await page.locator('.sillynovel-sprite:not([hidden])').count(),3);
+    await page.locator('.sillynovel-controls summary').click();
     assert.equal(await page.locator('.sillynovel-sprite:visible').count(),3);
+    await page.locator('.sillynovel-controls summary').click();
     assert.match(await page.locator('.sillynovel-cast').innerText(),/Sage.*offstage/);
     await field(page,'Session actor').selectOption(s);await field(page,'Position').selectOption('left');await button(page,'Apply position').click();
     await page.waitForFunction(()=>document.querySelector('.sillynovel-visual-status').textContent.includes('SLOT_OCCUPIED'));
@@ -342,8 +379,11 @@ test('session stage: four manual actors, duplicate names, stable slots, refusal,
     assert.match(await page.locator('.sillynovel-cast').innerText(),/Rowan.*offstage/);
     await field(page,'Lock field').selectOption('slot');await applyScene(page,'Release lock');
     await applyScene(page,'Lock choice');await positionActor(page,s,'','move');
-    await field(page,'Session actor').selectOption(a);await field(page,'Presence').selectOption('false');await applyScene(page,'Apply presence');assert.equal(await sprite(page,'center').isVisible(),false);
-    await field(page,'Presence').selectOption('true');await applyScene(page,'Apply presence');assert.equal(await sprite(page,'center').isVisible(),true);
+    await field(page,'Session actor').selectOption(a);await field(page,'Presence').selectOption('false');await applyScene(page,'Apply presence');
+    await page.locator('.sillynovel-controls summary').click();assert.equal(await page.locator('.sillynovel-art').isVisible(),true);assert.equal(await sprite(page,'center').isVisible(),false);
+    await page.locator('.sillynovel-controls summary').click();
+    await field(page,'Presence').selectOption('true');await applyScene(page,'Apply presence');
+    await page.locator('.sillynovel-controls summary').click();assert.equal(await sprite(page,'center').isVisible(),true);
     assert.equal(await page.evaluate(()=>JSON.stringify([fixture.context.chat,fixture.context.characters,fixture.context.chatMetadata,fixture.context.connection])),canonical);
     assert.match(await page.locator('.sillynovel-unsaved').innerText(),/Unsaved session visuals/);
 });

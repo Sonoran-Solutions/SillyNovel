@@ -1,0 +1,9 @@
+{
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "ownedRootCount": 20,
+  "nonHostOutputFiles": 11546,
+  "matchingOwnedNodeProcesses": [],
+  "loopback8128Available": true,
+  "rootRemoval": "NONE; retained for senior review",
+  "browserCleanup": "Successful runner finally awaits browser.close; no outer campaign timeout occurred."
+}

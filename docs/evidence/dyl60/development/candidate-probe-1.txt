@@ -1,0 +1,25 @@
+Owned evidence root /tmp/sn-portability-host-vEnrTk
+PASS real host auth/CSRF, two-user project and asset isolation, two-client CAS, PNG hash and limits
+PASS browser create/import background + two sprites/arrange/save/reload/explicit reopen; named canonical files unchanged
+PASS candidate: complete scoped native inventory paths/counts/sizes/hashes and full settings unchanged across expression, artwork, save and explicit reopen; real persona/avatar, connection profile, lore, cards/groups/chats included
+PASS candidate: real native saveChat save-as/open identical copy detaches, drops expressions, ignores delayed committed parent save receipt; global project deliberately reopens
+AssertionError [ERR_ASSERTION]: default-user/characters/Project A.png
++ actual - expected
+
+  {
++   bytes: 78685,
++   sha256: 'e15da8472df8fbbe21b9f1ed34503ceed52fecdc5144a6998fce96b698fe56a5'
+-   bytes: 78653,
+-   sha256: '8f95d577238a38db2690b8892abb55f4b4dfa644443ca06e296a9dc75c823b86'
+  }
+
+    at runCandidate (file:///home/dq/Projects/SillyNovel/tests/probes/dyl60/host.mjs:95:98)
+    at async file:///home/dq/Projects/SillyNovel/tests/probes/project-portability/host.mjs:128:90 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: [Object],
+  expected: [Object],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+Evidence /tmp/sn-portability-host-vEnrTk/evidence.json

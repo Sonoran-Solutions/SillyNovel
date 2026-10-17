@@ -1,0 +1,12 @@
+{
+  "candidate": "b238b9193d989256e3e53179b5a7b755b9dc73e6",
+  "starting": "4172a977e55608c906be32115bb0a6f0b55e910c",
+  "at": "2026-10-16T23:55:18.550205+00:00",
+  "dataCopiedFrom": "/tmp/sn-portability-host-ont3YD/data",
+  "root": "/tmp/sn-dyl60-keyboard-g2ciwr_7",
+  "runtimeSymlink": "/home/dq/Projects/SillyNovel",
+  "host": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
+  "hostPort": 8761,
+  "providerPort": 8128,
+  "transport": "Established paired wireless ADB; device serial/address omitted"
+}

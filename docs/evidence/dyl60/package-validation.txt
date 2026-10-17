@@ -1,0 +1,1 @@
+PASS package SHA-256 verification; frozen input hashes and all final campaign exits separately verified; retained roots preserved and no owned host/provider process remains.

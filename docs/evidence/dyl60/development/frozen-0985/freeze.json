@@ -1,0 +1,12 @@
+{
+  "startingSuppliedCheckout": "82180bba823f8e71cb3dc4bda9c9016473a220f9",
+  "startingMain": "c835afe6e274be3fab5a2862f517fd8e4bca32ad",
+  "pr33Merge": "c835afe6e274be3fab5a2862f517fd8e4bca32ad",
+  "decisionCommit": "b90020db78db3e5099ecd1e8226747dfadd1236f",
+  "candidate": "0985ca945617fd48c205d87d447817e8bd64e9c8",
+  "branch": "codex/dyl60-candidate-preparation",
+  "ownerApprovalDate": "2026-10-16 America/Phoenix",
+  "GateA": "NOT_RUN",
+  "humanSession": "NOT_RUN / not scheduled",
+  "device": "BLOCKED: adb devices and mdns both empty"
+}

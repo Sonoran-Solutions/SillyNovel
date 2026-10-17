@@ -2,6 +2,10 @@
 .sillynovel-settings__toggle { align-items: center; }
 .sillynovel-settings__status { margin: 0.25rem 0 0 1.8rem; opacity: 0.8; }
 
+#sheld.sillynovel-viewport { max-height: var(--sillynovel-available-height); }
+#sheld.sillynovel-viewport .sillynovel-stage { overflow-y: auto; }
+#sheld.sillynovel-viewport .sillynovel-controls { flex-shrink: 0; }
+
 /* Visibility belongs to this class alone; native chat stays mounted for host observation. */
 #chat.sillynovel-native-hidden,
 .sillynovel-stage[hidden],

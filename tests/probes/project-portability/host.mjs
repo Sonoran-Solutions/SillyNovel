@@ -116,7 +116,7 @@ try {
  await button('Save project').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('revision 1'));
  const project=(await alice.api('/projects')).find(x=>x.name==='Browser project');const saved=await alice.api('/projects/'+project.projectId);
  assert.equal(saved.scene.actors.length,2);assert.deepEqual(saved.scene.actors.map(x=>x.slot),['left','right']);
- if(process.env.SN_CLEANUP_RUN){for(const file of ['forest.png','mira-a.png']){await field('Temporary image use').selectOption('background');await field('Temporary raster file').setInputFiles(join(repo,'tests/fixtures/m12-stage',file));await page.waitForFunction(()=>document.querySelector('.sillynovel-visual-status').textContent.startsWith('Imported'));}}
+ if(process.env.SN_CLEANUP_RUN){for(const file of ['tavern.png','mira-a-joy.png']){await field('Temporary image use').selectOption('background');await field('Temporary raster file').setInputFiles(join(repo,'tests/fixtures/m12-stage',file));await page.waitForFunction(()=>document.querySelector('.sillynovel-visual-status').textContent.startsWith('Imported'));}}
  await page.reload();await page.locator('#sillynovel-stage').waitFor();await select(page,'Project A');await page.locator('.sillynovel-controls summary').click();
  assert.equal(await page.locator('.sillynovel-sprite:visible').count(),0);
  await field('Saved project').selectOption(project.projectId);await button('Open project and use with this chat').click();
@@ -125,6 +125,7 @@ try {
  assert.deepEqual((await alice.api('/projects/'+project.projectId)).scene,saved.scene);
  await page.locator('.sillynovel-controls summary').click();await page.screenshot({path:join(root,'restored.png')});await page.locator('.sillynovel-controls summary').click();assert.deepEqual(await canonical(),before);evidence.files=before;
  pass('browser create/import background + two sprites/arrange/save/reload/explicit reopen; named canonical files unchanged');
+ if(process.env.SN_CANDIDATE_RUN){const {runCandidate}=await import('../dyl60/host.mjs');await runCandidate({root,data,config,repo,page,alice,project,field,button,select,pass,evidence});}
  if(process.env.SN_CLEANUP_RUN){const {runCleanup}=await import('../project-cleanup/host.mjs');await runCleanup({root,data,repo,page,alice,bob,peer,project,saved,field,button,select,pass,evidence});}
  // Portable copy: browser download/upload, actual host validation and committed inventory.
  if(process.env.SN_LIBRARY_RUN){const {runLibrary}=await import('../project-library/host.mjs');await runLibrary({root,data,repo,page,alice,bob,peer,project,field,button,select,canonical,pass,evidence});}

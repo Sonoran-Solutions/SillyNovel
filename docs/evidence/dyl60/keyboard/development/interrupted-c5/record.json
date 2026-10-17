@@ -1,0 +1,15 @@
+{
+  "at": "2026-10-17T00:21:53.586197+00:00",
+  "candidate": "c5c1699a48629ae761a093e13056f0b11fdc4b88",
+  "outerExitCode": 143,
+  "cause": "Unexplained SIGTERM of outer command/session; no failing assertion in captured expression log. No matching owned processes remained when inspected.",
+  "completedRowsRetained": [
+    "node",
+    "storage",
+    "browser",
+    "stage-library-migration"
+  ],
+  "interruptedExpressionRoot": "/tmp/sn-portability-host-g7IS2L",
+  "action": "Repeat expressions and run remaining four native campaigns serially, one command session each; preserve original completed same-candidate rows/times/logs. No prior-candidate counts reused.",
+  "matchedInputs": 110
+}

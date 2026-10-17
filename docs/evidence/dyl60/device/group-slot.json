@@ -1,0 +1,6 @@
+{
+  "refusal": "Visual action refused: That position is reserved. Choose Explicit swap (both actors need positions) or Explicit replace (moves the occupant offstage). [SLOT_OCCUPIED]",
+  "cast": "Cast: Mira [dbaecba7] offstage · locks: presence, slot, outfit / Mira [99b9ece1] right · locks: presence, slot, outfit / Rowan [7e31ce31] center · locks: presence, slot, outfit / Sage [98a086d2] left · locks: presence, slot, outfit",
+  "visible": 3,
+  "group": "1792192901752"
+}
