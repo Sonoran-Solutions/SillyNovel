@@ -1,5 +1,9 @@
 # Verification and acceptance
 
+## M2.3 rows adopted — 2026-11-02
+
+Per [F10](DECISIONS.md#owner-rulings-f1f10--m23-director-queueing--2026-11-02), rows T51–T57 from [plan section 9](M2_3_DIRECTOR_QUEUEING_PLAN.md#9-proposed-testing-rows) are added to the matrix below as NOT_RUN; T42, T46 and T49 are amended when the corresponding M2.3 PR merges. No evidence is claimed by this entry.
+
 ## M2.2 implementation candidate — 2026-11-01
 
 SYNTHETIC evidence on the disposable pinned host and loopback endpoint, frozen at `d5664119d060d72f90aee4e3a386fdf409843a5c`: rows T39–T50 added below; first host-level evidence for T17, T19 around a real request and T29; T05 now exercises `complete` in the actual entry. T18 still uncovered. [Commands, counts and limits](M2_2_DIRECTOR_IMPLEMENTATION.md#6-commands-and-results). `python3 tests/probes/dyl60/check-discovery.py` now expects 11/5/1 files, and `run.py` runs a seventh native campaign, `tests/probes/m2-director/host.mjs`.
@@ -131,6 +135,13 @@ Harness assertions model event shapes and do not prove host ordering. In the liv
 | T48 | Director default state and portability | Off for a new project; bundle export/import and database restore never enable it | M2.2 |
 | T49 | Accepted proposal with expression plus layout updates in attached mode | Expression applied to the memory-only journal; layout updates recorded `NO_AUTOMATIC_LAYOUT`; project not dirty; `globalState()` unchanged | M2.2 |
 | T50 | Manual expression at the anchored source, then automatic expression for the same actor | Manual decision kept; automatic recorded as ignored `LOCKED`; later manual clear or set replaces an automatic one | M2.2 |
+| T51 | Reply completes while a native generation runs or starts (next group member, another extension's `quiet`, user Send within the settle interval) | No director request while the reader reports a generation in progress; the pending target waits or is superseded; nothing counted for a superseded head. NOT_RUN | M2.3-A |
+| T52 | Reply completes; the user types, holds a draft, or clears it | No request within 5 s of a keystroke or while the draft is non-empty; clearing the draft releases the hold; the draft text never appears in any request input or wire body; the composer is byte-identical afterwards. NOT_RUN | M2.3-B |
+| T53 | User presses Send while a director request is outstanding (T46 to be amended) | Result discarded as stale before it is read, outcome `SUPERSEDED`, not a failure, counted; the user's message kept; on the concurrent loopback the reply completes; the rejecting single-slot backend case with typing shows no overlap. NOT_RUN | M2.3-A, host in B |
+| T54 | Reply completes while reading earlier; a newer reply may complete; the user returns to latest (T42 and E10 to be amended) | At most one target waits, the newest; one request on return; a second return issues nothing; enable or reopen issues nothing retroactively. NOT_RUN | M2.3-A |
+| T55 | Request abandoned at 90 s, then settles, with a target pending | One failure at abandonment; late result discarded; the pending target fires once after settlement; three abandonments pause. NOT_RUN | M2.3-A |
+| T56 | Accepted proposal with location and presence updates in attached mode (T49 to be amended) | Applied to the memory-only overlay forward from the anchored message; outfit still `NO_AUTOMATIC_LAYOUT`; locked field skipped `LOCKED`; `globalState()`, saved project, bundles and all non-chat files unchanged; project not dirty. NOT_RUN; PR C not authorized | M2.3-C |
+| T57 | Manual layout edit, lock, prefix change, detach, chat switch, A → B → A or reload after automatic layout applied | Manual edit clears and rebases the overlay; a lock keeps its field; prefix change invalidates from the first changed source; the rest discard the overlay; no overlay state from a first visit shows in a second. NOT_RUN; PR C not authorized | M2.3-C |
 
 ## 3. Fixture design
 

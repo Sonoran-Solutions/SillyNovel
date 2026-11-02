@@ -1,5 +1,9 @@
 # Project status
 
+## M2.3 authorized (PRs A and B) — 2026-11-02
+
+The owner [ruled on F1–F10](DECISIONS.md#owner-rulings-f1f10--m23-director-queueing--2026-11-02) after the [M2.3 plan](M2_3_DIRECTOR_QUEUEING_PLAN.md) merged at `8cef9a3`: PR A (pending target of depth one, explicit streaming gate, `SUPERSEDED` outcome, ordered stale-result and recovery rules, race matrix) and PR B (read-only composer hold) are authorized and tracked by [DYL-196](https://linear.app/devils17/issue/DYL-196/sillynovel-m23-director-pending-target-stale-rules-and-composer-hold); PR C (automatic layout overlay, background and presence only) is planned but needs its own authorization after A and B have their records. TESTING rows T51–T57 added as NOT_RUN. Runtime unchanged by this entry. Gate B NOT_RUN; DYL-193 open.
+
 ## M2.3 planning proposal (NOT approved) — 2026-11-02
 
 A docs-only [M2.3 director queueing plan](M2_3_DIRECTOR_QUEUEING_PLAN.md) is open for owner review on main `a86bf2c` (PR #47 merge, the M2.2 acceptance record; written against the PR #46 merge `f570484` and rebased). It proposes a depth-one pending target replacing E10's skip-and-count, an explicit streaming gate and a read-only composer hold against the user's own generation (E16 follow-through), `SUPERSEDED` as a named non-failure outcome for Send during a request, ordered stale-result and recovery rules on the existing stamps, a race matrix including A → B → A, and a memory-only automatic layout overlay for background and presence (E3 option B) as a separately authorized third PR. Owner decisions F1–F10 are listed with a recommendation each. **It authorizes nothing**; runtime and tests are unchanged. Gate B NOT_RUN; DYL-193 open. Older entries below are historical.
