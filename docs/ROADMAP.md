@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## M2.1 implementation authorized — 2026-11-01
+
+[D1 approved](DECISIONS.md#owner-authorization--m21-director-implementation--2026-11-01); [DYL-194](https://linear.app/devils17/issue/DYL-194/sillynovel-m21-director-proposals-lock-precedence-and-snapshot) implements plan sections 3–7 on the proposed defaults. M2.2 remains blocked on owner decisions O04 (first director transport) and O06 (usage limits/content scope). Gate B NOT_RUN. Older dated entries are historical.
+
 ## M2.1 planning proposal (NOT approved) — 2026-11-01
 
 The [M2.1 director proposal plan](M2_1_DIRECTOR_PLAN.md) proposes the first M2 slice as pure modules and fixtures on the merged manual reducer, with the owner decisions it needs listed in its section 8. It authorizes nothing: M2.1 implementation starts only after a separate owner authorization is recorded in [DECISIONS](DECISIONS.md). Later M2 slices, a director transport (O04) and Gate B remain separately gated. Older dated entries are historical.

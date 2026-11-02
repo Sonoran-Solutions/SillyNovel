@@ -1,5 +1,9 @@
 # Project status
 
+## M2.1 implementation authorized — 2026-11-01
+
+The owner [authorized M2.1 implementation](DECISIONS.md#owner-authorization--m21-director-implementation--2026-11-01) (plan decision D1) on main `a8fde515ac665c4cd892009c3574eef94dbfec57`; D2–D8 proceed on the plan's proposed defaults as recorded implementation choices, not rulings. Tracked by [DYL-194](https://linear.app/devils17/issue/DYL-194/sillynovel-m21-director-proposals-lock-precedence-and-snapshot): pure director proposal validation, reducer extension with manual-lock precedence and snapshot validation, deterministic fixtures, one draft PR. No transport, provider, persistence or schema change. Gate B NOT_RUN; DYL-193 coverage still precedes beta/release.
+
 ## M2.1 planning proposal (NOT approved) — 2026-11-01
 
 A docs-only [M2.1 director proposal plan](M2_1_DIRECTOR_PLAN.md) is open for owner review on main `737735bcd54e3fed7ff9de7e6ed6c53420de85bd`: strict proposal schema, pure translation onto the existing reducer with manual-lock precedence, evidence-stamp and override-revision checks, deterministic fixtures, and the owner decisions D1–D8 it needs. No transport, provider, UI, persistence or image work; O04 is not required for M2.1. **M2.1 implementation requires separate owner authorization recorded in [DECISIONS](DECISIONS.md).** Gates B and C NOT_RUN; runtime unchanged.
