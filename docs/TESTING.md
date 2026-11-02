@@ -1,5 +1,9 @@
 # Verification and acceptance
 
+## M2.4 PR A candidate — T58, T60 and T59's log half covered in Node — 2026-11-02
+
+Node-level SYNTHETIC evidence on frozen `f5de115`, unmerged: T58 and T60 covered in Node, and T59's log half (its render half stays NOT_RUN until PR B). Node 322/322 over the runner's 13 files; `python3 tests/probes/dyl60/check-discovery.py` PASS (13/5/1). Browser, storage and native suites NOT_RUN: a pure-module slice under the M2 evidence standard. T58's stale paths other than `STALE_JOURNAL` and `STALE_SCENE` are reached with a scripted journal; the [record](M2_4_EVIDENCE_UI_IMPLEMENTATION.md#implementation-choices-for-owner-review) says why. The matrix rows stay NOT_RUN until the owner accepts this candidate.
+
 ## M2.4 rows adopted — 2026-11-02
 
 Per [G14](DECISIONS.md#owner-rulings-g1g14--m24-evidence-ui-corrections-and-gate-b--2026-11-02), rows T58–T68 from [plan section 9](M2_4_EVIDENCE_UI_PLAN.md#9-proposed-testing-rows) are added to the matrix below as NOT_RUN; T50 and T57 are amended when M2.4 PR C merges. No evidence is claimed by this entry. The Gate B fixture run (T18, T67) spends against the owner's named connection and runs only on the owner's go-ahead.
