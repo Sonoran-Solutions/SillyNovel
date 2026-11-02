@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## Gate A PASS — 2026-11-01
+
+The owner [recorded PASS](DECISIONS.md#gate-a-verdict--pass--2026-11-01) on main `e8e9cf673b6455dace67d695ee45d1d3dcc2857c`. M1 is complete as judged by the owner, with [DYL-193](https://linear.app/devils17/issue/DYL-193/sillynovel-m14-deferred-physical-scaling-motion-assistive-and) coverage still owed before beta/release. The next bounded step is a planning proposal for M2.1 under the delivery rule below; no M2 implementation starts without a separate recorded authorization. Gates B and C NOT_RUN. Older dated entries are historical.
+
 ## Gate A playtest unblocked by owner deferral — 2026-11-01
 
 The owner deferred scaling/motion/assistive/secondary-flow coverage to [DYL-193](https://linear.app/devils17/issue/DYL-193/sillynovel-m14-deferred-physical-scaling-motion-assistive-and) for the first disposable playtest ([amendment](DECISIONS.md#owner-amendment--deferred-coverage-for-the-first-disposable-gate-a-playtest--2026-11-01)). The next step is the owner's own session on main `04ce6290c7bb5dab0dd0502e2cde931936796897` using the existing [playtest sheet](M1_4_GATE_A_READINESS.md#6-owner-playtest-sheet--draft-session-not_run) and [recipe](M1_4_DYL60_REPRODUCTION.md), followed by a recorded verdict. On PASS the roadmap continues at M2.1; on REVISE the reader is improved first. DYL-193 stays mandatory before beta/release. Gate A NOT_RUN; nothing below starts automatically. Older dated entries are historical.

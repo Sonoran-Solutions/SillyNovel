@@ -1,5 +1,18 @@
 # Decision register
 
+## Gate A verdict — PASS — 2026-11-01
+
+**Owner: Dylan. Date: 2026-11-01, America/Phoenix. Verdict: PASS.** Exact words: “Merge it, you can also record my overall PASS for the gate, I approve of the current build”. Candidate: merged main `e8e9cf673b6455dace67d695ee45d1d3dcc2857c`; runtime identical to frozen and tablet-tested `c5c1699a48629ae761a093e13056f0b11fdc4b88` (every commit after it is documentation or evidence only).
+
+| Field | Record |
+| --- | --- |
+| Tested surfaces | Not supplied to the repository. The owner did not file the [playtest sheet](M1_4_GATE_A_READINESS.md#6-owner-playtest-sheet--draft-session-not_run), host/browser/device, or per-observation notes; this entry records the owner's verdict statement, not a session log. The owner may append observations later without changing the verdict. |
+| Technical evidence behind the candidate | [Frozen campaign and actual Galaxy Tab S8+ keyboard replay](M1_4_DYL60_KEYBOARD_FIX.md) on `c5c1699a48629ae761a093e13056f0b11fdc4b88` |
+| Blockers | None stated by the owner. Deferred coverage in [DYL-193](https://linear.app/devils17/issue/DYL-193/sillynovel-m14-deferred-physical-scaling-motion-assistive-and) remains mandatory before public beta, release or non-disposable use. |
+| Next bounded step | M2.1 planning proposal (director proposals, base/overlay locks, snapshot validation on the manual reducer). M2 implementation still requires a separate owner authorization recorded here. |
+
+This PASS closes the M1 human gate for the reader experience as the owner judged it. It does not authorize M2 implementation, DYL-56, DYL-61, live installation, public beta, production use or release; the roadmap's own rule that a PASS does not authorize M2, beta or production stands. Gates B and C remain NOT_RUN. Older entries below are historical.
+
 ## Owner amendment — deferred coverage for the first disposable Gate A playtest — 2026-11-01
 
 **Approving owner: Dylan. Date: 2026-11-01, America/Phoenix. Status: APPROVED.** Presented with two options for the surfaces still NOT_TESTED on the merged candidate, a bounded coverage ticket before the playtest or a recorded deferral, the owner chose the deferral with the words “Defer, record amendment.”
