@@ -123,6 +123,8 @@ export function createDirectorController({ runtime, projectId, actions, expressi
         }, ABANDON_MS);
         say('Director request in progress' + MANUAL_OK);
         await settle(current, await runtime.send(request.messages));
+        // E7: a cap hit pauses at once, after the last permitted result has had its chance to apply.
+        if (!disposed && !state.paused && state.count >= runtime.ceiling()) { state.paused = 'CEILING'; say(notice + ' Director paused: session ceiling ' + runtime.ceiling() + ' reached' + MANUAL_OK); }
     }
     // Stale before anything else: E7 does not count a stale result as a failure, whatever it says.
     async function stillCurrent(current) {

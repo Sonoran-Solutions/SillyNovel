@@ -308,6 +308,8 @@ test('ceiling: the next completion sends nothing and pauses; survives a chat-swi
     const x = await setup(t, { ceiling: 3 });
     for (let i = 0; i < 3; i++) { await x.complete({ text: 'Mira turn ' + i }); await x.answer(i, ok(x.proposal(x.art))); }
     assert.equal(status(x).count, 3);
+    assert.equal(status(x).paused, 'CEILING', 'a cap hit pauses immediately');
+    assert.match(status(x).notice, /applied 1 temporary expression.*session ceiling 3 reached/);
     await x.complete({ text: 'Mira turn 4' });
     assert.equal(x.calls.length, 3);
     assert.match(status(x).notice, /Director paused: session ceiling 3 reached · manual controls remain available/);
@@ -498,7 +500,7 @@ test('loopback: held request then Stop aborts on the wire; ceiling hit sends not
     assert.equal(x.runtime.inFlight, true);
     x.stops[0].abort();
     await x.settled(1);
-    assert.equal(status(x).notice, 'Director request cancelled.');
+    assert.match(status(x).notice, /^Director request cancelled\./);
     await until(async () => (await log())[0].aborted);
     await x.complete({ text: 'Mira more.' });
     assert.equal((await log()).length, 1);
