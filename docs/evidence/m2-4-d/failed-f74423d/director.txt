@@ -1,0 +1,63 @@
+Owned evidence root /tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-fervent-tereshkova-0a0540/f0469615-7e4c-419a-99b5-1c89f8117603/scratchpad/tmp/sn-m2-director-LInSqP
+PASS off by default: a real reply issues no director request (T48)
+PASS director body is the two assembled messages; decoys absent; braces and legacy markers neutralized on the wire; instruction-like chat text travels as data (T39, T40, T29)
+PASS accepted proposal applied to the journal only; a locked background skipped LOCKED, suggestion shown as text; 80 native files byte-identical; no chat write, no lifecycle event, max tokens unchanged (T19, T49)
+PASS real continue reaches complete and issues exactly one request (T47)
+PASS real regenerate reaches complete and issues exactly one request (T47)
+PASS real swipe reaches complete and issues exactly one request (T47)
+PASS quiet generation, swipe back and a stopped reply never trigger (T47)
+PASS Send during an outstanding request completes normally on the concurrent loopback; the result is SUPERSEDED before it is read (not a failure, counted, user message kept, nothing re-anchored) and the new reply is requested once (T46 amended, T53, F4)
+PASS the user Stop aborts the outstanding director request on the wire; the Send before it made the result SUPERSEDED, not a failure; chat stays usable (T46, T53)
+PAGE ERROR Generation was aborted.
+PASS a draft the user keeps defers the request past settle and five idle seconds; Send supersedes the held head (never requested) and the next reply is requested once; composer byte-identical while held (T52, F3)
+PASS a draft cleared by the user releases the hold five seconds after the clearing event; the request body carries none of the draft; every non-chat native file byte-identical (T52, F3)
+PASS rejecting single-slot backend with the user typing: the director waits for the draft, Send succeeds with no overlap and no host toast; the next reply is then requested (T52, T53 host half, E16 narrowed)
+PASS chat switch mid-flight: nothing applied, attachment dropped, counter retained after explicit reopen (T45, E6)
+PASS malformed reply skips with a bounded code; manual expression still applies on that head (T41, T44)
+PASS ceiling 3: next completion sends nothing, pause notice, manual controls and native replies keep working (T43)
+PASS three consecutive failures pause; toggling off and on resumes with the same counter (E7)
+PASS 90 s abandonment on real time: late result discarded, no second request until settlement, then the pending head is requested once (T17, T55, E7)
+PASS 20-turn Last Lantern script: 20 director requests, 20 native replies, journal expressions only; every non-chat file byte-identical; project layout unchanged
+PASS a project bundle carries no director setting; the imported copy is off (T48, E5)
+PASS real four-card duplicate-name group: four native replies, one settled director request, expression on one UUID only, all native files byte-identical across the request, cards and settings across the whole turn (E15, T19)
+PASS T56: location and presence on real host generation apply to the memory-only overlay with (director) read-outs; outfit NO_AUTOMATIC_LAYOUT; saved project, bundle bytes and every native file byte-identical; not dirty
+PASS T61: Director line readable with the controls closed; the closed disclosure opens by keyboard on a real decision, names what is on stage, the decision, its dispositions and quote and the session summary, as lists; Escape closes; reply field reachable; nothing written
+PASS T56: forward scope: the next reply keeps the overlay, its request reports the stage as it is, and repeating the same values moves nothing
+PASS T56: an earlier message shows the global layout, and returning to the latest shows the overlay again
+PASS T62: Resume after three real failures keeps the overlay and the count, requests nothing retroactively, writes nothing; the next completed reply is requested once
+PASS T57: a lock clears and rebases the overlay; the next proposal keeps the locked field LOCKED and moves the rest (F8, D4)
+PASS T57: a manual background clears the overlay; the saved project is untouched until an explicit save
+PASS T61: a decision cleared by a manual layout command reads "cleared by your layout change" on the real host
+PASS T57: a real message edit at the anchor invalidates the automatic layout from the first changed source; not retried
+PASS T60: a real message edit deletes the excerpt from the disclosure and shows "message changed"; outcome and code stay
+PASS T57: disabling the director discards the overlay; enabling again brings nothing back
+PASS T57: detach discards the overlay; an explicit reopen shows the global layout
+PASS Director line reads idle when no expression artwork is imported (E11, G11)
+PASS T57: chat switch and A -> B -> A discard the overlay; no overlay state from a first visit shows in a second
+PASS T57: reload discards the overlay; the saved project, its revision and its bundle bytes never changed
+PASS T63: Revert on the row corrects one automatic background forward from the selected message only; the other field stays; the lock shows and the row says Not saved; project not dirty; saved scene, revision, bundle bytes and every native file byte-identical
+PASS T63: a later update on the corrected field skips LOCKED as "kept your correction" and the rest applies; the request reports the overlay lock; Release keeps the value and issues nothing; only a fresh proposal moves it
+PASS T63: a correction at an earlier message invalidates later overlay commands by the reducer rule, the notice says so, and the later row reads "invalidated by your correction"; canonical chat unchanged
+PASS T63: a correction while a request is outstanding makes the result STALE_SCENE: not a failure, nothing applies
+PASS T63: an explicit Save with corrections on stage writes the saved layout byte for byte: globalState() carries no correction and no lock
+PASS T64: Revert on an automatic expression row is the existing manual clear at that source; the suffix rule is named; project not dirty; every native file byte-identical
+PASS T64, T50: a later automatic choice at a source with a manual clear is recorded LOCKED and the manual choice is what shows
+PASS T65: a correction then a global manual command: the whole overlay, corrections and their locks included, cleared and rebased; the notice says so; the manual choice shows; nothing saved
+PASS T66: a LOCKED row releases in one click naming the field and the toggle marks presence; both are manual commands that go dirty; Save keeps the values with the existing flags false, schema v2 unchanged
+PASS T66: after reopen the value is kept and the lock false; the director moves what was marked, in the overlay, and nothing is dirty or saved
+PASS T66: export and import keep the value and the lock false, in the stage too; the imported copy has the director off (T48); schema v2 unchanged
+PASS T66: a new manual apply locks again unless "Apply and let the director move it" was used
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+3 !== 2
+
+    at assertSavedUntouched (file:///home/dq/Projects/SillyNovel/.claude/worktrees/fervent-tereshkova-0a0540/tests/probes/m2-director/host.mjs:532:187)
+    at async file:///home/dq/Projects/SillyNovel/.claude/worktrees/fervent-tereshkova-0a0540/tests/probes/m2-director/host.mjs:1072:13 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 3,
+  expected: 2,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+Evidence /tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-fervent-tereshkova-0a0540/f0469615-7e4c-419a-99b5-1c89f8117603/scratchpad/tmp/sn-m2-director-LInSqP/evidence.json

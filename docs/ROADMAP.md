@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## M2.4 PR D candidate — 2026-11-02
+
+The last M2.4 slice is a [draft PR](M2_4_EVIDENCE_UI_IMPLEMENTATION.md#pr-d--gate-b-readiness) on frozen `e37d6b5`, awaiting owner review; nothing is merged. The [Gate B sequence](M2_4_EVIDENCE_UI_PLAN.md#61-sequence) after it is unchanged and each step needs its own authorization. No accuracy figure exists, and none is promised.
+
 ## M2.4 PR D go-ahead — 2026-11-02
 
 [Go-ahead recorded](DECISIONS.md#owner-go-ahead--m24-pr-d-gate-b-readiness--2026-11-02); [DYL-206](https://linear.app/devils17/issue/DYL-206/sillynovel-m24-pr-d-gate-b-readiness-fixtures-scorer-runner-native) implements plan section 7 PR D, the last M2.4 slice. The Gate B sequence after it is unchanged and each step needs its own authorization.

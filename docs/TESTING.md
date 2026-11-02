@@ -1,5 +1,9 @@
 # Verification and acceptance
 
+## M2.4 PR D candidate — T67 and T68 covered — 2026-11-02
+
+Frozen `e37d6b5`, candidate and unmerged: Node 362/362, storage 126/126, browser 103/103, six portability scripts, director campaign 60 checkpoints on pinned SillyTavern 1.19.0 `7e8663cd9c184a550b37238218bdd32c6efc68e9`; `validate.py docs/evidence/m2-4-d/campaign` PASS; `check-discovery.py` PASS (14/5/1). T67 is covered by Node and a loopback-only runner proof. T68 is covered on the synthetic rejecting backend, with each flow's outcome recorded in the [record](M2_4_EVIDENCE_UI_IMPLEMENTATION.md#pr-d--gate-b-readiness). Also covered on the host, from earlier NOT_RUN rows: swipe, regenerate and Continue invalidating automatic layout; project replacement and removed art under the overlay; a manual edit while a request is outstanding; stage-view catch-up; “message changed” after a real swipe (regenerate leaves no row at the selected message; the record says so); a correction after a real swipe. The failed `f74423d` run is [retained](evidence/m2-4-d/failed-f74423d/). T67 and T68 row text changes only at merge, per G14. T18 stays NOT_RUN until the fixture run; Gate B NOT_RUN.
+
 ## M2.4 PR C merged; T50 and T57 amended — 2026-11-02
 
 PR C [accepted](DECISIONS.md#owner-acceptance--m24-pr-c-merged--2026-11-02) at `34dfcd8` (frozen `c6f6ec7`): `validate.py docs/evidence/m2-4-c/campaign` PASS reproduced from the repository (Node 346, storage 126, browser 103, six portability scripts, director campaign 47 checkpoints); T63–T66 covered per the [PR C record](M2_4_EVIDENCE_UI_IMPLEMENTATION.md#pr-c--corrections-and-the-director-may-move-control). T50 and T57 are amended below per G14. T56 and T57 also lose the “PR C not authorized” note left from the M2.3 plan: that PR C merged on 2026-11-02 and both rows were covered by its campaign. The failed campaign on `ed80339` is retained beside the package and is not evidence for any claim. T67 and T68 stay NOT_RUN pending the PR D go-ahead.
@@ -230,7 +234,7 @@ Before introducing numerical timing budgets, record the actual host, browser, ha
 
 ## 6. Human gate record
 
-Copy this record into a dated evidence file for each real candidate:
+Copy this record into a dated evidence file for each real candidate. Gate B uses the [Gate B record template](GATE_B_RECORD_TEMPLATE.md), which adds the fields of M2.4 plan section 6.4:
 
 ```text
 Gate: A / B / C

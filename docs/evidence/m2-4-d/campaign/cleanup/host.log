@@ -1,0 +1,27 @@
+Node version: v26.8.1. Running in undefined environment. Server directory: /tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-fervent-tereshkova-0a0540/f0469615-7e4c-419a-99b5-1c89f8117603/scratchpad/tmp/sn-portability-host-aXW3yC/host
+Using config path: /tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-fervent-tereshkova-0a0540/f0469615-7e4c-419a-99b5-1c89f8117603/scratchpad/tmp/sn-portability-host-aXW3yC/config.yaml
+
+CSRF protection is disabled. This will make your server vulnerable to CSRF attacks.
+
+Using data root: /tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-fervent-tereshkova-0a0540/f0469615-7e4c-419a-99b5-1c89f8117603/scratchpad/tmp/sn-portability-host-aXW3yC/data
+Preferring IPv4 for DNS resolution
+
+SillyTavern 1.19.0
+Running 'HEAD' (7e8663cd9) - 9/14/2026, 10:55:46 AM MST
+
+Initializing plugin from /tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-fervent-tereshkova-0a0540/f0469615-7e4c-419a-99b5-1c89f8117603/scratchpad/tmp/sn-portability-host-aXW3yC/host/plugins/sillynovel-storage/index.mjs
+1 server plugin(s) are currently loaded. Make sure you know exactly what they do, and only install plugins from trusted sources!
+
+Compiling frontend libraries...
+webpack 5.105.4 compiled [1m[32msuccessfully[39m[22m in 585 ms
+
+]2;SillyTavern WebServer\SillyTavern is listening on IPv4: 127.0.0.1:32893
+
+==================================================
+
+Go to: http://127.0.0.1:32893/ to open SillyTavern
+
+==================================================
+
+Login successful: default-user from 127.0.0.1 at 11/2/2026, 4:09:29 PM
+]2;/home/dq/.hermes/node/bin/node\
