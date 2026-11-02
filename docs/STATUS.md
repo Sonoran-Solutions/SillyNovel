@@ -1,5 +1,9 @@
 # Project status
 
+## M2.1 planning proposal (NOT approved) — 2026-11-01
+
+A docs-only [M2.1 director proposal plan](M2_1_DIRECTOR_PLAN.md) is open for owner review on main `737735bcd54e3fed7ff9de7e6ed6c53420de85bd`: strict proposal schema, pure translation onto the existing reducer with manual-lock precedence, evidence-stamp and override-revision checks, deterministic fixtures, and the owner decisions D1–D8 it needs. No transport, provider, UI, persistence or image work; O04 is not required for M2.1. **M2.1 implementation requires separate owner authorization recorded in [DECISIONS](DECISIONS.md).** Gates B and C NOT_RUN; runtime unchanged.
+
 ## Gate A PASS recorded — 2026-11-01
 
 The owner recorded [Gate A PASS](DECISIONS.md#gate-a-verdict--pass--2026-11-01) for merged main `e8e9cf673b6455dace67d695ee45d1d3dcc2857c` (runtime `c5c1699a48629ae761a093e13056f0b11fdc4b88`), approving the current build. No playtest sheet or session observations were supplied; the register says so explicitly. [DYL-193](https://linear.app/devils17/issue/DYL-193/sillynovel-m14-deferred-physical-scaling-motion-assistive-and) deferred coverage still precedes beta/release. Next bounded step is an M2.1 planning proposal; M2 implementation, DYL-56, DYL-61, live installation and release remain unauthorized. Gates B and C NOT_RUN.
