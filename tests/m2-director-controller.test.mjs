@@ -50,8 +50,8 @@ async function setup(t, { enabled = true, ceiling, request, group = false, onlin
     const model = await attach();
     const art = importArt ? await model.importExpression(png(), actor, 'Happy') : null;
     // Native lifecycle as the adapter would observe it; streamed order by default, as the pinned host does.
-    const complete = async ({ text = 'Mira laughs by the lantern.', type = 'normal', plain = false, target = model, settle = true, name = 'Mira', sync = true } = {}) => {
-        reader.apply({ type: 'generationStarted', generationType: type, dryRun: false });
+    const complete = async ({ text = 'Mira laughs by the lantern.', type = 'normal', plain = false, target = model, settle = true, name = 'Mira', sync = true, start = true } = {}) => {
+        if (start) reader.apply({ type: 'generationStarted', generationType: type, dryRun: false });
         if (type === 'normal') context.chat.push({ name, mes: text }); else context.chat.at(-1).mes = text;
         const index = context.chat.length - 1;
         const received = () => [{ type: 'messageReceived', source: host.readMessageAt(index), history: host.readHistory() }, { type: 'characterMessageRendered', source: host.readMessageAt(index), history: host.readHistory() }];
@@ -71,6 +71,9 @@ async function setup(t, { enabled = true, ceiling, request, group = false, onlin
 }
 const ok = text => ({ ok: true, text });
 const status = x => x.model.directorStatus();
+const until = async check => { for (let i = 0; i < 500; i++) { if (await check()) return; await new Promise(resolve => setTimeout(resolve, 5)); } throw Error('Condition not reached'); };
+// Settles request index and waits for the waiting target's request; answer() would spin on its in-progress notice.
+const resolveUntil = async (x, index, value, calls) => { x.calls[index].resolve(value); await until(() => x.calls.length >= calls); };
 
 test('off by default and per project; enabling writes only host director settings and is not retroactive', async t => {
     const x = await setup(t, { enabled: false });
@@ -242,7 +245,8 @@ for (const [name, change] of Object.entries({
     await x.answer(0, ok(proposal));
     assert.equal(x.expression(), null);
     assert.equal(x.runtime.session(x.record.projectId).consecutive, 0);
-    if (name !== 'detach' && name !== 'disable') assert.equal(status(x).notice, 'Director request cancelled.');
+    // F4: a started reply generation names its own outcome; the rest stay cancelled.
+    if (name !== 'detach' && name !== 'disable') assert.equal(status(x).notice, name === 'continue start' ? 'Director request superseded by your reply' : 'Director request cancelled.');
     assert.equal(x.runtime.inFlight, false);
     assert.equal(JSON.stringify(x.record.scene).includes('temporary-expression'), false);
 });
@@ -324,23 +328,22 @@ test('ceiling: the next completion sends nothing and pauses; survives a chat-swi
     assert.equal(reopened.directorStatus().count, 0);
     assert.equal(reopened.directorStatus().paused, null);
 });
-test('T42: one in flight under rapid completions; skipped replies are counted, not queued; slot outlives a detach', async t => {
+// F2 amends T42: at most one target waits, the newest, instead of counted and never revisited.
+test('T42: one in flight under rapid completions; the newest waits and fires on release; slot outlives a detach', async t => {
     const x = await setup(t);
     await x.complete({ text: 'First Mira.' });
     await x.complete({ text: 'Second Mira.' });
     await x.complete({ text: 'Third Mira.' });
     assert.equal(x.calls.length, 1);
-    assert.match(status(x).notice, /2 replies not directed while a request is outstanding/);
+    assert.doesNotMatch(status(x).notice, /not directed/);
     x.model.dispose();
     const reopened = await x.attach();
     await reopened.importExpression(png(), x.actor, 'Happy');
     await x.complete({ text: 'After reopen.', target: reopened });
     assert.equal(x.calls.length, 1, 'still one outstanding across attachments');
-    await x.answer(0, ok('{}'));
-    assert.equal(x.runtime.inFlight, false);
-    assert.equal(x.time.pending(), 0);
-    await x.complete({ text: 'After settlement.', target: reopened });
-    assert.equal(x.calls.length, 2, 'nothing was queued; only the new completion issues');
+    await resolveUntil(x, 0, ok('{}'), 2);
+    assert.match(x.calls[1].messages[1].content, /After reopen/, 'the second attachment fires on release; the first attachment\'s target died with it');
+    assert.equal(x.runtime.session(x.record.projectId).count, 2);
 });
 test('one request per key: an unchanged head is never repeated; continue and swipe are new keys', async t => {
     const x = await setup(t);
@@ -360,18 +363,57 @@ test('one request per key: an unchanged head is never repeated; continue and swi
     await x.complete({ type: 'swipe', text: 'Mira, another variant.' });
     assert.equal(x.calls.length, 3);
 });
-test('E10: reading earlier skips and counts, with no catch-up on return', async t => {
+// F2 amends E10: reading earlier waits, and returning to the head catches up once.
+test('T54: reading earlier waits with one notice; return fires once; a second return issues nothing', async t => {
     const x = await setup(t);
     x.refresh();
     x.reader.navigate(-1);
     await x.complete();
     assert.equal(x.calls.length, 0);
-    assert.match(status(x).notice, /1 reply not directed while reading earlier messages/);
+    assert.equal(status(x).notice, '1 reply waiting: Jump to Latest to direct it');
     assert.equal(status(x).count, 0);
+    await x.model.sync(false);
+    assert.equal(x.calls.length, 0, 'still reading earlier');
+    x.reader.jumpToLatest();
+    await x.model.sync(false);
+    await until(() => x.calls.length === 1);
+    assert.equal(status(x).count, 1);
+    await x.answer(0, ok(x.proposal(x.art)));
+    x.reader.navigate(-1);
+    await x.model.sync(false);
     x.reader.jumpToLatest();
     await x.model.sync(false);
     await x.time.advance(SETTLE_MS);
+    assert.equal(x.calls.length, 1, 'second return');
+    assert.equal(x.expression().id, x.art);
+});
+test('T54: a newer reply replaces the waiting one; one request, for the newest head', async t => {
+    const x = await setup(t);
+    x.refresh();
+    x.reader.navigate(-1);
+    await x.complete({ text: 'Older waiting reply.' });
+    await x.complete({ text: 'Newer waiting reply.' });
+    assert.match(status(x).notice, /^1 reply waiting/);
+    x.reader.jumpToLatest();
+    await x.model.sync(false);
+    await until(() => x.calls.length === 1);
+    assert.match(x.calls[0].messages[1].content, /Newer waiting reply/);
+    await flush();
+    assert.equal(x.calls.length, 1);
+    assert.equal(status(x).count, 1);
+});
+test('a waiting head edited before the return is dropped from fresh evidence, and its notice goes with it', async t => {
+    const x = await setup(t);
+    x.refresh();
+    x.reader.navigate(-1);
+    await x.complete();
+    x.context.chat.at(-1).mes = 'Edited while reading earlier.';
+    x.reader.jumpToLatest();
+    await x.model.sync();
+    await x.time.advance(SETTLE_MS);
     assert.equal(x.calls.length, 0);
+    assert.equal(status(x).notice, '');
+    assert.equal(status(x).count, 0);
 });
 test('90 s abandonment discards the late result, counts one failure, issues nothing until settlement', async t => {
     const x = await setup(t);
@@ -385,11 +427,11 @@ test('90 s abandonment discards the late result, counts one failure, issues noth
     assert.equal(x.runtime.session(x.record.projectId).consecutive, 1);
     await x.complete({ text: 'Mira after abandonment.' });
     assert.equal(x.calls.length, 1, 'no second request while the first is outstanding');
-    await x.answer(0, ok(proposal));
+    // F6: the waiting target fires once after settlement; M2.2 lost it.
+    await resolveUntil(x, 0, ok(proposal), 2);
     assert.equal(x.expression(), null, 'the late result is discarded');
-    assert.equal(x.runtime.inFlight, false);
-    await x.complete({ text: 'Mira after settlement.' });
-    assert.equal(x.calls.length, 2);
+    assert.match(x.calls[1].messages[1].content, /Mira after abandonment/);
+    assert.equal(x.runtime.session(x.record.projectId).consecutive, 1, 'settlement counts nothing more');
 });
 test('Stop while outstanding: cancelled, not a failure, slot released', async t => {
     const x = await setup(t);
@@ -399,6 +441,235 @@ test('Stop while outstanding: cancelled, not a failure, slot released', async t 
     assert.equal(x.runtime.session(x.record.projectId).consecutive, 0);
     assert.equal(x.runtime.inFlight, false);
     assert.equal(x.expression(), null);
+});
+// Plan section 4.6. Composer rows belong to PR B and the manual layout row to PR C.
+test('race: two completions inside the settle interval request only the later', async t => {
+    const x = await setup(t);
+    await x.complete({ text: 'A1 reply.', settle: false });
+    await x.time.advance(SETTLE_MS - 1);
+    await x.complete({ text: 'A2 reply.', settle: false });
+    await x.time.advance(SETTLE_MS - 1);
+    assert.equal(x.calls.length, 0, 'the interval restarts');
+    await x.time.advance(1);
+    assert.equal(x.calls.length, 1);
+    assert.match(x.calls[0].messages[1].content, /A2 reply/);
+    assert.equal(status(x).count, 1);
+});
+test('race: a completion during a request waits and fires after settlement; two requests, two keys', async t => {
+    const x = await setup(t);
+    await x.complete({ text: 'Mira A1 reply.' });
+    await x.complete({ text: 'Mira A2 reply.' });
+    assert.equal(x.calls.length, 1);
+    assert.equal(status(x).notice.startsWith('Director request in progress'), true, 'a busy slot has no notice of its own');
+    await resolveUntil(x, 0, ok('{"schemaVersion":1,"updates":[]}'), 2);
+    assert.match(x.calls[1].messages[1].content, /A2 reply/);
+    const state = x.runtime.session(x.record.projectId);
+    assert.equal(state.ledger.size, 2);
+    assert.equal(state.count, 2);
+    assert.equal(state.consecutive, 0);
+    await x.answer(1, ok(x.proposal(x.art)));
+    assert.equal(x.expression().id, x.art, 'the second result applies to the head it was anchored on');
+    await x.model.sync(false);
+    await x.time.advance(SETTLE_MS);
+    assert.equal(x.calls.length, 2, 'nothing further');
+});
+test('T53: Send while outstanding is SUPERSEDED before the result is read; not a failure, counted, never re-anchored', async t => {
+    for (const late of [ok('not json'), { ok: false, code: 'TRANSPORT_ERROR' }, { ok: false, code: 'ABORTED' }]) {
+        const x = await setup(t);
+        await x.complete({ text: 'A1 reply.' });
+        x.context.chat.push({ name: 'You', is_user: true, mes: 'Sent while outstanding.' });
+        x.reader.apply({ type: 'generationStarted', generationType: 'normal', dryRun: false });
+        await x.answer(0, late);
+        assert.equal(status(x).notice, 'Director request superseded by your reply');
+        const state = x.runtime.session(x.record.projectId);
+        assert.equal(state.consecutive, 0);
+        assert.equal(state.count, 1);
+        assert.equal(x.context.chat.at(-1).mes, 'Sent while outstanding.', 'the user message is untouched');
+        await x.time.advance(SETTLE_MS);
+        assert.equal(x.calls.length, 1, 'the superseded head is not retried');
+    }
+    const y = await setup(t);
+    await y.complete({ text: 'A1 reply.' });
+    const proposal = y.proposal(y.art);
+    y.context.chat.push({ name: 'You', is_user: true, mes: 'Sent.' });
+    await y.complete({ text: 'A2 reply.' });
+    assert.equal(y.calls.length, 1, 'A2 waits for the slot');
+    await resolveUntil(y, 0, ok(proposal), 2);
+    assert.equal(y.expression(), null, 'the result never applies to the old or the new head');
+    assert.equal(status(y).count, 2);
+    assert.match(y.calls[1].messages[1].content, /A2 reply/);
+});
+test('T53: another extension\'s quiet or impersonate generation while outstanding is stale but is not "your reply"', async t => {
+    for (const generationType of ['quiet', 'impersonate']) {
+        const x = await setup(t);
+        await x.complete();
+        x.reader.apply({ type: 'generationStarted', generationType, dryRun: false });
+        await x.answer(0, ok('not json'));
+        assert.equal(status(x).notice, 'Director request cancelled.', generationType);
+        assert.equal(x.runtime.session(x.record.projectId).consecutive, 0);
+    }
+});
+test('T51/F5: a reply that completes inside a running generation waits; replaced on completion, dropped on an end with no reply', async t => {
+    const x = await setup(t);
+    await x.complete({ text: 'First head.', settle: false });
+    x.reader.apply({ type: 'generationStarted', generationType: 'normal', dryRun: false });
+    await x.model.sync(false);
+    await x.time.advance(SETTLE_MS * 3);
+    assert.equal(x.calls.length, 0, 'no request while the reader reports a generation');
+    assert.equal(status(x).count, 0);
+    await x.complete({ text: 'Replacing head.', start: false, settle: false });
+    await x.time.advance(SETTLE_MS);
+    assert.equal(x.calls.length, 1);
+    assert.match(x.calls[0].messages[1].content, /Replacing head/);
+    assert.equal(status(x).count, 1, 'the superseded head spent nothing');
+    for (const [type, ends] of [['normal', [{ type: 'generationEnded' }]], ['quiet', [{ type: 'generationEnded' }]], ['impersonate', [{ type: 'generationEnded' }]], ['normal', [{ type: 'generationEnded' }, { type: 'generationStopped' }]]]) {
+        const y = await setup(t);
+        await y.complete({ settle: false });
+        y.reader.apply({ type: 'generationStarted', generationType: type, dryRun: false });
+        await y.model.sync(false);
+        await y.time.advance(SETTLE_MS);
+        assert.equal(y.calls.length, 0, type);
+        for (const step of ends) y.reader.apply(step);
+        await y.model.sync(false);
+        await y.time.advance(SETTLE_MS);
+        assert.equal(y.calls.length, 0, 'dropped: ' + type);
+        assert.equal(status(y).count, 0);
+    }
+});
+test('race: quiet generation starts and ends before settle; nothing requested or counted', async t => {
+    const x = await setup(t);
+    await x.complete({ settle: false });
+    x.reader.apply({ type: 'generationStarted', generationType: 'quiet', dryRun: false });
+    x.reader.apply({ type: 'generationEnded' });
+    await x.model.sync(false);
+    await x.time.advance(SETTLE_MS);
+    assert.equal(x.calls.length, 0);
+    assert.equal(status(x).count, 0);
+});
+test('race: four-member group turn with the streaming gate observed between members; one request after the last', async t => {
+    const x = await setup(t, { group: true });
+    for (const name of ['Mira', 'Rowan', 'Sage', 'Wren']) {
+        await x.complete({ name, text: name + ' speaks.', settle: false });
+        x.reader.apply({ type: 'generationStarted', generationType: 'normal', dryRun: false });
+        await x.model.sync(false);
+        await x.time.advance(SETTLE_MS);
+        assert.equal(x.calls.length, 0, name + ': the next member is generating');
+        await x.complete({ name, text: name + ' adds a line.', start: false, settle: false });
+    }
+    await x.time.advance(SETTLE_MS);
+    assert.equal(x.calls.length, 1);
+    assert.match(x.calls[0].messages[1].content, /Wren adds a line/);
+    assert.equal(status(x).count, 1);
+});
+const leaveAndReturn = x => { const saved = x.context.chat; x.context.chatId = 'B'; x.context.chat = [{ name: 'Mira', mes: 'Other chat' }]; x.refresh(); x.context.chatId = 'A'; x.context.chat = saved; x.refresh(); };
+test('A → B → A: a target pending in A dies on detach; reopen issues nothing; a new completion fires normally', async t => {
+    const x = await setup(t);
+    x.refresh();
+    x.reader.navigate(-1);
+    await x.complete();
+    assert.match(status(x).notice, /^1 reply waiting/);
+    x.model.dispose();
+    leaveAndReturn(x);
+    const reopened = await x.attach();
+    await reopened.importExpression(png(), x.actor, 'Happy');
+    await reopened.sync();
+    await x.time.advance(SETTLE_MS);
+    assert.equal(x.calls.length, 0, 'nothing retroactive');
+    assert.equal(reopened.directorStatus().count, 0);
+    assert.equal(reopened.directorStatus().notice, '');
+    await x.complete({ text: 'Second visit reply.', target: reopened });
+    assert.equal(x.calls.length, 1);
+    assert.match(x.calls[0].messages[1].content, /Second visit reply/);
+});
+test('A → B → A: a late first-visit result is dropped; the slot stays held; a second-visit completion waits, then fires once', async t => {
+    const x = await setup(t);
+    await x.complete({ text: 'First visit reply.' });
+    const proposal = x.proposal(x.art);
+    x.model.dispose();
+    leaveAndReturn(x);
+    const reopened = await x.attach();
+    const art = await reopened.importExpression(png(), x.actor, 'Happy');
+    await x.complete({ text: 'Second visit reply.', target: reopened });
+    assert.equal(x.calls.length, 1, 'the page-wide slot is still held');
+    assert.equal(x.runtime.inFlight, true);
+    assert.equal(reopened.directorStatus().count, 1);
+    await resolveUntil(x, 0, ok(proposal), 2);
+    assert.equal(x.expression(reopened), null, 'first-visit result never applied');
+    assert.equal(x.runtime.session(x.record.projectId).consecutive, 0);
+    assert.match(x.calls[1].messages[1].content, /Second visit reply/);
+    await x.answer(1, ok(x.proposal(art)));
+    await reopened.sync();
+    await x.time.advance(SETTLE_MS);
+    assert.equal(x.calls.length, 2, 'once');
+});
+test('T55: abandonment at 90 s with a target pending; one failure, late result discarded, fires once; three abandonments pause', async t => {
+    const x = await setup(t), state = x.runtime.session(x.record.projectId);
+    await x.complete({ text: 'Round 0' });
+    for (const round of [1, 2]) {
+        await x.time.advance(ABANDON_MS);
+        assert.equal(state.consecutive, round, 'one failure at abandonment');
+        await x.complete({ text: 'Round ' + round });
+        assert.equal(x.calls.length, round, 'held until settlement');
+        await resolveUntil(x, round - 1, ok('late garbage'), round + 1);
+        assert.equal(state.consecutive, round, 'the late result counts nothing more');
+        assert.match(x.calls[round].messages[1].content, new RegExp('Round ' + round));
+        await flush();
+        assert.equal(x.calls.length, round + 1, 'once');
+    }
+    await x.complete({ text: 'Cleared by the pause' });
+    await x.time.advance(ABANDON_MS);
+    assert.equal(status(x).paused, 'ABANDONED');
+    assert.equal(state.consecutive, 3);
+    x.calls[2].resolve(ok('late garbage'));
+    await flush();
+    await x.time.advance(SETTLE_MS);
+    assert.equal(x.calls.length, 3, 'the pause cleared the target');
+    assert.equal(x.runtime.inFlight, false);
+});
+test('race: a pause with a target pending clears it; toggle resumes with the counter; no retroactive request', async t => {
+    const x = await setup(t);
+    for (const i of [0, 1]) { await x.complete({ text: 'Fail ' + i }); await x.answer(i, ok('nope')); }
+    await x.complete({ text: 'Third request.' });
+    await x.complete({ text: 'Waiting target.' });
+    assert.equal(x.calls.length, 3);
+    await x.time.advance(ABANDON_MS);
+    assert.equal(status(x).paused, 'ABANDONED');
+    x.calls[2].resolve(ok('late'));
+    await flush();
+    const count = status(x).count;
+    x.model.setDirectorEnabled(false);
+    x.model.setDirectorEnabled(true);
+    await x.model.sync(false);
+    await x.time.advance(SETTLE_MS);
+    assert.equal(x.calls.length, 3, 'no replay after resume');
+    assert.equal(status(x).count, count);
+    await x.complete({ text: 'After resume.' });
+    assert.equal(x.calls.length, 4);
+});
+test('race: ceiling reached with a target pending; last result handled, pause at once, target cleared', async t => {
+    const x = await setup(t, { ceiling: 1 });
+    await x.complete({ text: 'Only permitted.' });
+    await x.complete({ text: 'Over the ceiling.' });
+    assert.equal(status(x).paused, null, 'the last permitted result still has its chance');
+    await x.answer(0, ok('{}'));
+    assert.equal(status(x).paused, 'CEILING');
+    assert.match(status(x).notice, /session ceiling 1 reached/);
+    await x.time.advance(SETTLE_MS);
+    assert.equal(x.calls.length, 1);
+    assert.equal(status(x).count, 1);
+});
+test('disable drops a waiting target; re-enabling is not a completion', async t => {
+    const x = await setup(t);
+    x.refresh();
+    x.reader.navigate(-1);
+    await x.complete();
+    x.model.setDirectorEnabled(false);
+    assert.equal(x.time.pending(), 0);
+    x.model.setDirectorEnabled(true);
+    x.reader.jumpToLatest();
+    await x.model.sync(false);
+    await x.time.advance(SETTLE_MS);
+    assert.equal(x.calls.length, 0);
 });
 test('adapter: exact E2/E8 arguments, copies, one extract call, classified errors, never throws', async () => {
     const calls = [];
@@ -448,7 +719,6 @@ function loopback(stops) {
         } };
     return createHostAdapter(() => context).requestDirectorText;
 }
-const until = async check => { for (let i = 0; i < 500; i++) { if (await check()) return; await new Promise(resolve => setTimeout(resolve, 5)); } throw Error('Loopback condition not reached'); };
 async function wired(t, options) {
     await control({ reset: true });
     const stops = [], request = loopback(stops);
@@ -527,4 +797,34 @@ test('loopback: held result after a chat switch is dropped; 90 s abandonment dis
     await control({ release: true });
     await y.settled(1);
     assert.equal(y.expression(), null);
+});
+test('loopback: held request then Send is SUPERSEDED on the wire; a held request then a completion issues one later request', async t => {
+    const x = await wired(t);
+    await x.complete({ text: 'First head.', settle: false });
+    await control({ script: [{ hold: true, content: x.proposal(x.art) }] });
+    await x.time.advance(SETTLE_MS);
+    await until(async () => (await log()).length === 1);
+    await x.complete({ text: 'Second head.' });
+    assert.equal((await log()).length, 1, 'one outstanding');
+    await control({ release: true });
+    await until(async () => (await log()).length === 2);
+    assert.equal(status(x).count, 2);
+    assert.equal(x.runtime.session(x.record.projectId).consecutive, 0);
+    assert.equal(x.expression(), null);
+    await x.settled(2);
+});
+test('loopback: abandonment, late reply, and the pending target fires once', async t => {
+    const x = await wired(t);
+    await x.complete({ text: 'First head.', settle: false });
+    await control({ script: [{ hold: true, content: 'late garbage' }] });
+    await x.time.advance(SETTLE_MS);
+    await until(async () => (await log()).length === 1);
+    await x.time.advance(ABANDON_MS);
+    await x.complete({ text: 'Waiting head.' });
+    await control({ release: true });
+    await until(async () => (await log()).length === 2);
+    await x.settled(2);
+    assert.equal(status(x).count, 2);
+    assert.equal(x.expression(), null);
+    assert.equal((await log()).length, 2);
 });
