@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## M2.3 authorized (PRs A and B) — 2026-11-02
+
+[F1–F10 ruled](DECISIONS.md#owner-rulings-f1f10--m23-director-queueing--2026-11-02); [DYL-196](https://linear.app/devils17/issue/DYL-196/sillynovel-m23-director-pending-target-stale-rules-and-composer-hold) implements plan section 6 PR A (pure controller change, Node evidence) and then PR B (composer hold, full native-host campaign), each reviewed by the owner before the next. PR C, the automatic layout overlay, is authorized separately after that or deferred to M2.4 (F9). M2.4 and Gate B stay gated.
+
 ## M2.3 planning proposal (NOT approved) — 2026-11-02
 
 The [M2.3 director queueing plan](M2_3_DIRECTOR_QUEUEING_PLAN.md) takes up the three M2.2 inputs: serialization with native generation (streaming gate, composer hold, `SUPERSEDED` outcome), a pending target with deduplication, stale-result rejection and timeout/refusal recovery with race tests including A → B → A, and the automatic layout overlay (E3-B) as a third, separately authorized PR. It authorizes nothing: M2.3 implementation starts only after a separate owner authorization recorded in [DECISIONS](DECISIONS.md), including rulings on its section 8 decisions F1–F10. M2.4, Gate B and DYL-193 closure remain separately gated. Older dated entries are historical.
