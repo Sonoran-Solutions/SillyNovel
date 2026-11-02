@@ -6,6 +6,8 @@
 
 **PR B merged — 2026-11-02.** The owner [accepted and merged](DECISIONS.md#owner-acceptance--m24-pr-b-merged--2026-11-02) PR B at `8203ea1`; its record is the [PR B section](#pr-b--evidence-ui-and-resume) below and its choices stand as the reversible baseline. PRs A and B complete the authorized M2.4 work; PR C waits on the owner's go-ahead.
 
+**PR C candidate — 2026-11-02.** Draft PR, unmerged, awaiting owner review: the [PR C section](#pr-c--corrections-and-the-director-may-move-control) below, frozen `c6f6ec7`, tracked by [DYL-205](https://linear.app/devils17/issue/DYL-205/sillynovel-m24-pr-c-manual-corrections-correction-locks-and-the-o08). Nothing in it is approved or merged.
+
 ## PR A — decision log and stale reasons
 
 **Starting main:** `3038dd5b44e9a1f6da3ac953251192b4bc002b37` (PR #58; `docs/DECISIONS.md` begins with the G1–G14 entry). **Frozen:** `f5de115050d61b9e6784038f8bb7395aaea0fea0`. The commit that adds this record changes only documentation, so the frozen runtime and tests are byte-identical at the final head, which is named in the PR description.
@@ -242,3 +244,140 @@ The log and tallies stay memory-only (G3), so the summary is lost on reload. A v
 ### Next bounded step
 
 Owner review of this draft PR and the choices above, the summary's reachability and the off-and-on wording first. PR C follows only on the owner's go-ahead under G1. This document starts nothing.
+
+## PR C — corrections and the director-may-move control
+
+**Candidate for owner review, draft PR, unmerged.** Implements PR C of the [M2.4 plan](M2_4_EVIDENCE_UI_PLAN.md#7-proposed-changes-as-four-sequential-prs) under [G5–G8](DECISIONS.md#owner-rulings-g1g14--m24-evidence-ui-corrections-and-gate-b--2026-11-02) and the owner's [go-ahead](DECISIONS.md#owner-go-ahead--m24-pr-c-corrections-and-the-o08-control--2026-11-02), tracked by [DYL-205](https://linear.app/devils17/issue/DYL-205/sillynovel-m24-pr-c-manual-corrections-correction-locks-and-the-o08). Nothing here is approved or merged. Gate B NOT_RUN; DYL-193 stays open.
+
+**Starting main:** `61f782469401fd06b71d5ed67bee8fcff44aea05` (PR #63; `docs/DECISIONS.md` begins with the PR C go-ahead). **Frozen:** `c6f6ec7486fca9059b4e62f2e6e64ac8685d0c60`. Every later commit on the branch is documentation or evidence only; the final pushed head is named in the PR description.
+
+### What changed
+
+| File | Change |
+| --- | --- |
+| `src/director-overlay.mjs` | `correct(command, authority)`: a manual `setBackground`, `clearBackground`, `setPresence` or background/presence `release` through the reducer, atomic on refusal, reporting how many later commands fell. `active()` counts everything after the base; new `corrected()` and `commandValid(revision)`. `project()` adds `origins`: which command decided each field at that source. `composeLayout` takes origin from that command and composes the overlay's background and presence locks |
+| `src/project-scene.mjs` | `correct`, `applyMovable`, `globalLocks`, `overlayCommandValid`; a manual expression that replaces an automatic one is tallied; the F8 notice names corrections |
+| `src/director-controller.mjs` | `backgrounds[].locked` reads the overlay; `noteCorrection(field)`; `corrections` in `runtime.session` and `status()`. Request shape and `PROMPT_VERSION` unchanged |
+| `src/stage-view.mjs`, `style.css` | Row actions in “Why this visual?”; `(corrected)` read-outs; per-field toggles and “Apply and let the director move it” in the Scene panel; `Corrections:` in the summary |
+| `docs/STATE_AND_DIRECTOR.md`, `docs/UX_SPEC.md` | Section 5 of each gains the sentence plan section 5.2 option A names. D4 is not amended |
+| `tests/m2-director-overlay.test.mjs`, `tests/m2-director-controller.test.mjs` | 8 and 10 new cases |
+| `tests/m1-reader-browser.test.mjs` | 6 new cases |
+| `tests/probes/m2-director/host.mjs` | 12 new checkpoints for T63–T66; one amended assertion, below |
+
+Not touched: `src/scene-reducer.mjs`, `src/director-proposal.mjs`, `src/director-request.mjs`, `src/director-log.mjs`, `src/director-session.mjs`, `src/project-expressions.mjs`, `src/reader-source-model.mjs`, `src/host-adapter.mjs`, `index.js`, the storage plugin, the project schema. No dependency. Nothing persisted beyond the existing lock flags on explicit Save.
+
+**One amended assertion, tied to G5.** `host.mjs`, T61 block: `[role]` inside the disclosure became `[role]:not(button[role="button"])`. Rows now carry action buttons, and the pinned host's `public/scripts/a11y.js` gives every `.menu_button` `role="button"`. Any other role, a live region, or an element from the text still fails.
+
+### Where G5–G8 are honoured
+
+| Ruling | Where | Evidence |
+| --- | --- | --- |
+| G5: background and presence are manual commands in the overlay, forward from the selected message | `correct`; the reducer's `manual` path | Node `T63: a correction applies forward…`; browser; native T63 |
+| G5: expressions through the journal | Row Revert dispatches `clearExpression`; Override is the existing Apply control | Browser and native T64 |
+| G5: other fields kept at the head; later commands invalidated otherwise, and the notice says so | Reducer rule; `invalidated` | Node, browser, native T63 |
+| G5: disabled while the journal is not ready | Every row control follows `expressions.get().ready`; `correct` also refuses on its own | Browser, streaming; Node `refused while the journal is not ready` |
+| G5: never `edit`, `dirty`, `globalState()`, export or bundles; “Not saved” | `correct` touches only the overlay | Native: saved scene, revision, bundle bytes and every native file byte-identical across the correction; an explicit Save with corrections on stage writes the saved scene byte for byte |
+| G6: locks forward, later update `LOCKED`, “kept your correction”, Release | The reducer's manual lock; `release` in the overlay | Node, browser, native |
+| G6: Release enables only a fresh proposal | Nothing waits behind a lock; `release` applies nothing | Native: value kept, no request issued, files identical, then a fresh proposal moves it |
+| G7: a global command discards corrections and locks | `clearOverlay` rebases | Node, browser, native T65 |
+| A correction makes `STALE_SCENE` | The identity check at settlement | Node; native with a held request |
+| G8: per-field toggle, movable action, one-click release on a `LOCKED` row, lock state shown | `renderMovable`, `applyMovable`, `lockedRow` | Browser and native T66 |
+| G8: slot and outfit have none (F7) | Exactly the background and each actor's presence | Browser and native count the controls; `applyMovable` and `correct` refuse others |
+| G8: no schema change, default locked, persists only on Save; T48 | Existing flags through existing `release`/`lock` | Native: Save, reopen, export, import, all with value kept and lock false; imported copy off; `locks` and `scene` keys unchanged |
+
+### The exact words on screen
+
+Row buttons, accessible names in brackets: `Revert` [`Revert background`, `Revert presence of <actor>`, `Revert expression of <actor>`]; `Override` [`Override background`] with a select [`Override background with`]; `Release` [`Release background`, `Release presence of <actor>`]; `Let the director move the background`, `Let the director move presence of <actor>`.
+
+On stage, added to PR B's words: `… · your correction, message <n> · <author> · Not saved · locked until Release`; `… · your layout · locked` or `· your layout · director may move it`.
+
+Rows, added: `LOCKED · kept your correction`; `LOCKED · kept your manual choice · released`; `· invalidated by your correction`. Summary, added: `Corrections: <field> <n>, …` or `none`.
+
+Read-outs: `(corrected)` beside `(director)`'s places.
+
+Scene panel: `Apply and let the director move it` [`…: background`, `…: presence`]; `Director may move the background`; `Director may move presence of <actor>`, each followed by `· locked`, `· movable` or `· movable · held by your correction`.
+
+Notices: `Corrected from this message and locked until Release. Not saved.`; `Released. Only a new director proposal can move this; nothing waiting is applied. Not saved.`; `Historical correction invalidated later director layout.`; `Applied · the director may move this · unsaved project changes.`; `Director layout cleared, your corrections included.`
+
+### Commands and results
+
+Frozen `c6f6ec7`, Node 26.8.1, Playwright 1.62.1, Chromium 151.0.7922.34, pinned SillyTavern 1.19.0 at `7e8663cd9c184a550b37238218bdd32c6efc68e9` on a disposable copy under the session scratchpad (clean at the pin, hashes in [pins.json](evidence/m2-4-c/campaign/pins.json)), loopback endpoint only, host user data in per-run temporary roots removed afterwards, no real provider. Deadline 3000 s, output to per-step log files; no owned process remains and port 8128 is free.
+
+```sh
+npm ci --prefix plugins/sillynovel-storage --ignore-scripts --no-audit --no-fund
+python3 tests/probes/dyl60/check-discovery.py
+SILLYTAVERN_ROOT=/path/to/pinned SN_PLAYWRIGHT_MODULE=/path/to/playwright/index.mjs timeout -k 15 3000 python3 tests/probes/dyl60/run.py /new/evidence/dir
+python3 tests/probes/dyl60/validate.py docs/evidence/m2-4-c/campaign
+```
+
+| Suite | Result | Elapsed |
+| --- | --- | --- |
+| `check-discovery.py` | PASS: 13/5/1 files; unexpected, empty and missing suites refused | Under 1 s |
+| Node (13 files) | 346/346; 18 more than PR B's 328 | 4 s |
+| Storage (5 files) | 126/126; plugin unchanged, run because the runner runs it | 134 s |
+| Browser, actual entry | 103/103; 6 new | 125 s |
+| stage-library-migration | PASS, 24 checkpoints | 77 s |
+| expressions | PASS, 16 | 60 s |
+| groups | PASS, 22 | 79 s |
+| recovery | PASS, 17 | 50 s |
+| cleanup | PASS, 21 | 71 s |
+| native-integrity-branches | PASS, 18 | 76 s |
+| **director (extended)** | PASS, 47 (35 in PR B plus 12 new) | 575 s |
+| `validate.py` | PASS: 127 frozen inputs, 110 artifact hashes | |
+
+Total 1251 s. The one page error is the existing `Generation was aborted.` from the Stop block. Retained: [full package](evidence/m2-4-c/campaign/), [runs](evidence/m2-4-c/campaign/runs.json), [director checkpoints](evidence/m2-4-c/campaign/director/evidence.json), screenshots of [a corrected row](evidence/m2-4-c/campaign/director/t63-correction-row.png) and [the toggles](evidence/m2-4-c/campaign/director/t66-director-may-move.png).
+
+Mutation check on a working copy restored afterwards, each failing at least one case over the two director Node files: `active()` ignoring corrections; a correction labelled the director's; the background lock not composed; slot or outfit correctable; the request's lock read from the global scene; a layout correction untallied; an expression correction untallied; a correction while the journal is not ready; a correction that dirties the project; the movable action leaving the lock on; the F8 notice silent on corrections.
+
+**Earlier attempts.** No product code changed between `ed80339` and the freeze; the diff is one test file.
+
+| Attempt | What happened | Outcome |
+| --- | --- | --- |
+| Shortened director script, uncommitted, never in the repository | Nine runs while the blocks were written. Stops were test defects (read-out wording, a closed panel, a row's `(was …)`, a library label bundles do not carry, a missing connection after a reload), plus two from the cut itself. Screenshots of a passing run showed the toggle's checkbox taking the generic full-width field style and its label a 140 px height | Development evidence only. The CSS was corrected before `ed80339` |
+| Full campaign on `ed80339` | Nine suites passed; **director FAILED at checkpoint 21**, on the T61 assertion above. [Retained](evidence/m2-4-c/failed-ed80339/) | The assertion was amended; this was the one recovery retry |
+| Director script alone, uncommitted, twice | First: 35 checkpoints, then stopped at the first new block, because the T57 block before it reloads the page and loses the connection. Second, with `connect()`: PASS, 47 | Development evidence only. The test commit is the freeze |
+
+Reproduce from the repository: `python3 tests/probes/dyl60/validate.py docs/evidence/m2-4-c/campaign`.
+
+### NOT_RUN and NOT_TESTED
+
+| Surface | Status and reason |
+| --- | --- |
+| Tablet replay, touch | **NOT_TESTED.** `adb devices` listed no attached device at the check. The row controls and toggles on touch are DYL-193 items under G12; a 390×550 desktop viewport was run (no sideways scroll, 44 px buttons, reply field in view) |
+| Soft keyboard, IME with the row controls | **NOT_TESTED**, DYL-193 |
+| Screen reader reading of the row buttons and toggles | **NOT_TESTED.** Names are asserted; no assistive technology was used |
+| Corrections in a native group | **NOT_RUN** as their own block; the same renderer and overlay run in the group block's request |
+| A correction after a real swipe, regenerate or delete | **NOT_RUN** on the host. Node covers the first-changed-source path, a real edit was run in PR B, and PR D's blocks reach swipe and regenerate |
+| T50 and T57 wording | **Pending.** Amended only at merge, per G14 |
+| Real providers, other backends and host versions | **NOT_TESTED**, unchanged |
+| Whether correcting feels right; the lock-on-correction trade-off; Gate B | **NOT_RUN**, owner-gated |
+
+### Implementation choices for owner review
+
+Not settled by the documents; each is reversible and none is an owner ruling.
+
+| Choice | Rationale |
+| --- | --- |
+| **Revert and Override sit on the “On stage” rows, Release on those and on `LOCKED` decision rows; applied decision rows stay a record.** | Plan 4.2 corrects from the selected message, including a decision made earlier that the reader only reaches at a later one. That decision has no row under “Decisions at this message”; “On stage” always has one |
+| **“kept your correction” is decided at render time, from the lock in force now.** After Release the same row reads `LOCKED · kept your manual choice · released`. | `src/director-log.mjs` is off limits and holds no such fact. A correction is a manual choice, so the words stay true |
+| **The director's own notice still says “1 kept your manual choice.”** Only the row says correction. | Existing notices are unchanged; the status line cannot name the lock's cause without new state |
+| `composeLayout` now labels a value `(director)` whenever an automatic command decided it, even one equal to the global value. Before, only a difference was marked. | The task says origin comes from the entry, and it is what makes a correction back to the saved value read `(corrected)`. No existing assertion needed changing |
+| A background's Revert goes to the decision's `before`, which may itself be an earlier automatic value. It is hidden if the decision fell off the 64, leaving Override. | As plan 4.2 says, and `before` has nowhere else to come from |
+| A corrected presence also offers Revert (the opposite value). A corrected background offers Override and Release only. | Presence has no Override, so otherwise a wrong correction could only be undone by a global command |
+| Release at an earlier message invalidates later overlay commands too. | The reducer's manual rule, one rule; the notice says so |
+| Corrections are tallied in `runtime.session.corrections`, not the log's tallies. Any manual expression that replaces an automatic one counts, from the panel too. A Release does not. | The log module is off limits. Its session lifetime is the same (E6). A correction through Apply expression is still a correction |
+| Row text gains `· locked` or `· director may move it` on “your layout”. | G8 asks for lock state shown, and the disclosure is where the reader asks about it |
+| The toggle shows the **project** flag, so a correction's lock reads `· movable · held by your correction` rather than unchecked. | Unchecking must mean a global lock. Two meanings on one box would invite a dirty project by accident |
+| The toggles live in the Scene panel, a list for every actor rather than the selected one. | “Beside the background and each actor's presence”; a list needs no actor select first |
+| “Apply and let the director move it” is one edit with no intermediate render, not two dispatches. | The plan says value then `release`; the user made one choice, so the notice and `edit` say one thing |
+| A row action checks the selection it was built for and refuses `STALE_SELECTION`. | AGENTS.md: source identities before applying. The row is rebuilt on navigation, so this is the second line |
+| A rebuilt disclosure keeps the override choice and the focused control, by accessible name. Focus is still lost when a streaming reply disables the control. | A reply otherwise yanks focus mid-choice. A disabled control cannot hold focus; moving it elsewhere would be worse |
+| The disclosure still closes on reaching a message with nothing to explain, so a new reply can close it during a correction. | PR B's choice, unchanged. The owner's session can judge it |
+
+### Limits
+
+Corrections are lost on detach, chat switch, reload, disable and project replacement, by design. The director goes quiet on a corrected field until Release; that is G6's trade-off, and Gate B measures it. Correcting a decision from a later message leaves the messages between as they were. A v1 bundle carries no library labels, so an imported background reads `Background`, as before.
+
+### Next bounded step
+
+Owner review of this draft PR and the choices above, the placement of the row actions and lock-on-correction first; then the owner's merge decision, which is when T50 and T57 are amended under G14; then the owner's go-ahead on PR D under G1. This document starts nothing.

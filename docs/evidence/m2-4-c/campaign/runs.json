@@ -1,0 +1,168 @@
+[
+  {
+    "name": "node",
+    "candidate": "c6f6ec7486fca9059b4e62f2e6e64ac8685d0c60",
+    "command": "node --test --test-isolation=none /home/dq/Projects/SillyNovel/.claude/worktrees/nervous-hypatia-a73027/tests/m0.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/nervous-hypatia-a73027/tests/m1-reader-source.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/nervous-hypatia-a73027/tests/m1-source-prefix.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/nervous-hypatia-a73027/tests/m1-scene-reducer.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/nervous-hypatia-a73027/tests/m1-project-scene.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/nervous-hypatia-a73027/tests/m1-project-expressions.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/nervous-hypatia-a73027/tests/m2-director-proposal.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/nervous-hypatia-a73027/tests/m2-director-request.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/nervous-hypatia-a73027/tests/m2-director-controller.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/nervous-hypatia-a73027/tests/m2-director-overlay.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/nervous-hypatia-a73027/tests/m2-director-log.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/nervous-hypatia-a73027/tests/probes/dyl19/owned-chat-probe.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/nervous-hypatia-a73027/tests/probes/dyl19/source-anchor.test.mjs",
+    "environment": {},
+    "startedUTC": "2026-11-02T21:33:00.656035+00:00",
+    "endedUTC": "2026-11-02T21:33:05.034688+00:00",
+    "elapsedSeconds": 4.379,
+    "exitCode": 0,
+    "log": "node.txt",
+    "checkpointCount": 0,
+    "tests": 346,
+    "pass": 346,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  {
+    "name": "storage",
+    "candidate": "c6f6ec7486fca9059b4e62f2e6e64ac8685d0c60",
+    "command": "node --test --test-isolation=none /home/dq/Projects/SillyNovel/.claude/worktrees/nervous-hypatia-a73027/plugins/sillynovel-storage/test/bundle.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/nervous-hypatia-a73027/plugins/sillynovel-storage/test/cleanup.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/nervous-hypatia-a73027/plugins/sillynovel-storage/test/library.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/nervous-hypatia-a73027/plugins/sillynovel-storage/test/recovery.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/nervous-hypatia-a73027/plugins/sillynovel-storage/test/store.test.mjs",
+    "environment": {},
+    "startedUTC": "2026-11-02T21:33:05.040612+00:00",
+    "endedUTC": "2026-11-02T21:35:18.714969+00:00",
+    "elapsedSeconds": 133.674,
+    "exitCode": 0,
+    "log": "storage.txt",
+    "checkpointCount": 0,
+    "tests": 126,
+    "pass": 126,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  {
+    "name": "browser",
+    "candidate": "c6f6ec7486fca9059b4e62f2e6e64ac8685d0c60",
+    "command": "node --test --test-isolation=none /home/dq/Projects/SillyNovel/.claude/worktrees/nervous-hypatia-a73027/tests/m1-reader-browser.test.mjs",
+    "environment": {},
+    "startedUTC": "2026-11-02T21:35:18.722267+00:00",
+    "endedUTC": "2026-11-02T21:37:24.080179+00:00",
+    "elapsedSeconds": 125.358,
+    "exitCode": 0,
+    "log": "browser.txt",
+    "checkpointCount": 0,
+    "tests": 103,
+    "pass": 103,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  {
+    "name": "stage-library-migration",
+    "candidate": "c6f6ec7486fca9059b4e62f2e6e64ac8685d0c60",
+    "command": "node tests/probes/project-portability/host.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-nervous-hypatia-a73027/2c303978-d3a0-47cf-9a31-ab89d89d215f/scratchpad/st-pinned",
+    "environment": {
+      "SN_STAGE_UX_RUN": "1",
+      "SN_LIBRARY_RUN": "1",
+      "SN_MIGRATION_RUN": "1"
+    },
+    "startedUTC": "2026-11-02T21:37:24.086602+00:00",
+    "endedUTC": "2026-11-02T21:38:40.903598+00:00",
+    "elapsedSeconds": 76.817,
+    "exitCode": 0,
+    "log": "stage-library-migration.txt",
+    "checkpointCount": 24,
+    "ownedRoot": "/tmp/sn-portability-host-56jUro",
+    "result": "PASS"
+  },
+  {
+    "name": "expressions",
+    "candidate": "c6f6ec7486fca9059b4e62f2e6e64ac8685d0c60",
+    "command": "node tests/probes/project-portability/host.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-nervous-hypatia-a73027/2c303978-d3a0-47cf-9a31-ab89d89d215f/scratchpad/st-pinned",
+    "environment": {
+      "SN_EXPRESSIONS_RUN": "1"
+    },
+    "startedUTC": "2026-11-02T21:38:40.910691+00:00",
+    "endedUTC": "2026-11-02T21:39:40.889366+00:00",
+    "elapsedSeconds": 59.979,
+    "exitCode": 0,
+    "log": "expressions.txt",
+    "checkpointCount": 16,
+    "ownedRoot": "/tmp/sn-portability-host-wOMYPz",
+    "result": "PASS"
+  },
+  {
+    "name": "groups",
+    "candidate": "c6f6ec7486fca9059b4e62f2e6e64ac8685d0c60",
+    "command": "node tests/probes/project-portability/host.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-nervous-hypatia-a73027/2c303978-d3a0-47cf-9a31-ab89d89d215f/scratchpad/st-pinned",
+    "environment": {
+      "SN_GROUP_RUN": "1"
+    },
+    "startedUTC": "2026-11-02T21:39:40.896359+00:00",
+    "endedUTC": "2026-11-02T21:41:00.008050+00:00",
+    "elapsedSeconds": 79.112,
+    "exitCode": 0,
+    "log": "groups.txt",
+    "checkpointCount": 22,
+    "ownedRoot": "/tmp/sn-portability-host-GmliZv",
+    "result": "PASS"
+  },
+  {
+    "name": "recovery",
+    "candidate": "c6f6ec7486fca9059b4e62f2e6e64ac8685d0c60",
+    "command": "node tests/probes/project-portability/host.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-nervous-hypatia-a73027/2c303978-d3a0-47cf-9a31-ab89d89d215f/scratchpad/st-pinned",
+    "environment": {
+      "SN_RECOVERY_RUN": "1"
+    },
+    "startedUTC": "2026-11-02T21:41:00.016621+00:00",
+    "endedUTC": "2026-11-02T21:41:50.356653+00:00",
+    "elapsedSeconds": 50.34,
+    "exitCode": 0,
+    "log": "recovery.txt",
+    "checkpointCount": 17,
+    "ownedRoot": "/tmp/sn-portability-host-94XCtR",
+    "result": "PASS"
+  },
+  {
+    "name": "cleanup",
+    "candidate": "c6f6ec7486fca9059b4e62f2e6e64ac8685d0c60",
+    "command": "node tests/probes/project-portability/host.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-nervous-hypatia-a73027/2c303978-d3a0-47cf-9a31-ab89d89d215f/scratchpad/st-pinned",
+    "environment": {
+      "SN_CLEANUP_RUN": "1"
+    },
+    "startedUTC": "2026-11-02T21:41:50.363010+00:00",
+    "endedUTC": "2026-11-02T21:43:00.979564+00:00",
+    "elapsedSeconds": 70.617,
+    "exitCode": 0,
+    "log": "cleanup.txt",
+    "checkpointCount": 21,
+    "ownedRoot": "/tmp/sn-portability-host-KfIKBU",
+    "result": "PASS"
+  },
+  {
+    "name": "native-integrity-branches",
+    "candidate": "c6f6ec7486fca9059b4e62f2e6e64ac8685d0c60",
+    "command": "node tests/probes/project-portability/host.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-nervous-hypatia-a73027/2c303978-d3a0-47cf-9a31-ab89d89d215f/scratchpad/st-pinned",
+    "environment": {
+      "SN_CANDIDATE_RUN": "1"
+    },
+    "startedUTC": "2026-11-02T21:43:00.986372+00:00",
+    "endedUTC": "2026-11-02T21:44:16.834965+00:00",
+    "elapsedSeconds": 75.849,
+    "exitCode": 0,
+    "log": "native-integrity-branches.txt",
+    "checkpointCount": 18,
+    "ownedRoot": "/tmp/sn-portability-host-YlwMhj",
+    "result": "PASS"
+  },
+  {
+    "name": "director",
+    "candidate": "c6f6ec7486fca9059b4e62f2e6e64ac8685d0c60",
+    "command": "node tests/probes/m2-director/host.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-nervous-hypatia-a73027/2c303978-d3a0-47cf-9a31-ab89d89d215f/scratchpad/st-pinned",
+    "environment": {},
+    "startedUTC": "2026-11-02T21:44:16.845631+00:00",
+    "endedUTC": "2026-11-02T21:53:51.774226+00:00",
+    "elapsedSeconds": 574.929,
+    "exitCode": 0,
+    "log": "director.txt",
+    "checkpointCount": 47,
+    "ownedRoot": "/tmp/sn-m2-director-2q4lZc",
+    "result": "PASS"
+  }
+]

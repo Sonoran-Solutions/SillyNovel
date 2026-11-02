@@ -1,0 +1,36 @@
+Owned evidence root /tmp/sn-m2-director-VIbiuU
+PASS off by default: a real reply issues no director request (T48)
+PASS director body is the two assembled messages; decoys absent; braces and legacy markers neutralized on the wire; instruction-like chat text travels as data (T39, T40, T29)
+PASS accepted proposal applied to the journal only; a locked background skipped LOCKED, suggestion shown as text; 80 native files byte-identical; no chat write, no lifecycle event, max tokens unchanged (T19, T49)
+PASS real continue reaches complete and issues exactly one request (T47)
+PASS real regenerate reaches complete and issues exactly one request (T47)
+PASS real swipe reaches complete and issues exactly one request (T47)
+PASS quiet generation, swipe back and a stopped reply never trigger (T47)
+PASS Send during an outstanding request completes normally on the concurrent loopback; the result is SUPERSEDED before it is read (not a failure, counted, user message kept, nothing re-anchored) and the new reply is requested once (T46 amended, T53, F4)
+PASS the user Stop aborts the outstanding director request on the wire; the Send before it made the result SUPERSEDED, not a failure; chat stays usable (T46, T53)
+PAGE ERROR Generation was aborted.
+PASS a draft the user keeps defers the request past settle and five idle seconds; Send supersedes the held head (never requested) and the next reply is requested once; composer byte-identical while held (T52, F3)
+PASS a draft cleared by the user releases the hold five seconds after the clearing event; the request body carries none of the draft; every non-chat native file byte-identical (T52, F3)
+PASS rejecting single-slot backend with the user typing: the director waits for the draft, Send succeeds with no overlap and no host toast; the next reply is then requested (T52, T53 host half, E16 narrowed)
+PASS chat switch mid-flight: nothing applied, attachment dropped, counter retained after explicit reopen (T45, E6)
+PASS malformed reply skips with a bounded code; manual expression still applies on that head (T41, T44)
+PASS ceiling 3: next completion sends nothing, pause notice, manual controls and native replies keep working (T43)
+PASS three consecutive failures pause; toggling off and on resumes with the same counter (E7)
+PASS 90 s abandonment on real time: late result discarded, no second request until settlement, then the pending head is requested once (T17, T55, E7)
+PASS 20-turn Last Lantern script: 20 director requests, 20 native replies, journal expressions only; every non-chat file byte-identical; project layout unchanged
+PASS a project bundle carries no director setting; the imported copy is off (T48, E5)
+PASS real four-card duplicate-name group: four native replies, one settled director request, expression on one UUID only, all native files byte-identical across the request, cards and settings across the whole turn (E15, T19)
+PASS T56: location and presence on real host generation apply to the memory-only overlay with (director) read-outs; outfit NO_AUTOMATIC_LAYOUT; saved project, bundle bytes and every native file byte-identical; not dirty
+AssertionError [ERR_ASSERTION]: lists only: no live region and no element from the text
+
+4 !== 0
+
+    at file:///home/dq/Projects/SillyNovel/.claude/worktrees/nervous-hypatia-a73027/tests/probes/m2-director/host.mjs:569:12 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 4,
+  expected: 0,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+Evidence /tmp/sn-m2-director-VIbiuU/evidence.json
