@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## M2.2 planning proposal (NOT approved) — 2026-11-01
+
+The [M2.2 director transport plan](M2_2_DIRECTOR_TRANSPORT_PLAN.md) proposes one quiet director request per completed message over the host's own raw generation path on the user's selected connection, bounded by O06, validated by the merged M2.1 module and applied through the memory-only expressions journal (D7), with the host entry point verified on the pinned 1.19.0 source and a synthetic loopback test plan. It authorizes nothing: M2.2 implementation starts only after a separate owner authorization is recorded in [DECISIONS](DECISIONS.md), including rulings on the decisions in its section 11. M2.3 queueing, M2.4 evidence UI, image work and Gate B remain separately gated. Older dated entries are historical.
+
 ## Open decisions ruled; M2.2 planning unblocked — 2026-11-01
 
 [Rulings](DECISIONS.md#owner-rulings-on-open-decisions--2026-11-01) settle O04 and O06, the two blockers named above, plus D7. The next bounded step is an M2.2 planning proposal: one quiet director request over the host's existing generation path on the user's selected connection, bounded context per O06, strict validation through the merged M2.1 module, and the host entry-point verification O04 requires. Implementation needs a separate recorded authorization. Gate B NOT_RUN.
