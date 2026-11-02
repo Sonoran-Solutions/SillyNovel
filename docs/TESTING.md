@@ -1,5 +1,9 @@
 # Verification and acceptance
 
+## M2.4 PR B merged — 2026-11-02
+
+PR B [accepted](DECISIONS.md#owner-acceptance--m24-pr-b-merged--2026-11-02) at `8203ea1` (frozen `98d4c27`): `validate.py docs/evidence/m2-4-b/campaign` PASS reproduced from the repository (Node 328, storage 126, browser 97, six portability scripts, director campaign 35 checkpoints); T59's render half, T61 and T62 covered per the [PR B record](M2_4_EVIDENCE_UI_IMPLEMENTATION.md#pr-b--evidence-ui-and-resume). The failed campaign on `43c7059` is retained beside it and is not evidence for any claim. T63–T68 stay NOT_RUN pending PR C and PR D go-aheads. No matrix row is amended by this entry.
+
 ## M2.4 PR B candidate — T59, T61 and T62 covered — 2026-11-02
 
 Frozen `98d4c27`, candidate and unmerged: Node 328/328, storage 126/126, browser 97/97, six portability scripts, director campaign 35 checkpoints on pinned SillyTavern 1.19.0 `7e8663cd9c184a550b37238218bdd32c6efc68e9`; `validate.py docs/evidence/m2-4-b/campaign` PASS; `check-discovery.py` PASS (13/5/1). T59's render half, T61 and T62 are covered, and T60's words are on screen, per the [record](M2_4_EVIDENCE_UI_IMPLEMENTATION.md#pr-b--evidence-ui-and-resume). A failed attempt on `43c7059` is [retained](evidence/m2-4-b/failed-43c7059/). Tablet NOT_TESTED; the reply field's reach with the disclosure open stays with DYL-193.

@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## M2.4 PRs A and B merged — 2026-11-02
+
+PR B [accepted](DECISIONS.md#owner-acceptance--m24-pr-b-merged--2026-11-02) at `8203ea1`; [DYL-204](https://linear.app/devils17/issue/DYL-204/sillynovel-m24-director-decision-log-and-evidence-ui-prs-a-and-b) Done. PR C (corrections and O08 control, renderer and overlay, full campaign) and PR D (Gate B readiness, tests and docs only) follow on the owner's separate go-aheads under G1. The Gate B sequence after PR D is unchanged: frozen candidate with the full campaign, DYL-193 replay, fixture evaluation on the owner's named connection, the owner's session, the owner's verdict.
+
 ## M2.4 PR B candidate (draft, unmerged) — 2026-11-02
 
 Renderer slice on frozen `98d4c27`, draft and unmerged; see the [record](M2_4_EVIDENCE_UI_IMPLEMENTATION.md#pr-b--evidence-ui-and-resume). PR C and PR D still wait for the owner's go-ahead after this review. Gate B sequence unchanged.
