@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## Current state after PR #34 merge — 2026-11-01
+
+Main `91d638ab933b4dc503b7b88e99be41bd5aa76504` carries the DYL-60 candidate; runtime is identical to frozen `c5c1699a48629ae761a093e13056f0b11fdc4b88`. DYL-60/62/63 are Done. The next step is the owner's own Gate A playtest on this merged head, preceded by a recorded owner decision on the remaining NOT_TESTED scaling/motion/assistive/file-picker/group-branch surfaces: either a bounded coverage ticket first, or an explicit amendment to run the first disposable playtest with those surfaces deferred. On PASS the roadmap continues at M2.1; on REVISE the reader is improved first, with DYL-56 remembered-attachment hints the most likely candidate. Gate A NOT_RUN; nothing below starts automatically. Older dated entries are historical.
+
 ## Current M1.4 authorization — 2026-10-16
 
 [Current frozen correction](M1_4_DYL60_KEYBOARD_FIX.md) at `c5c1699a48629ae761a093e13056f0b11fdc4b88` passes the integrated pinned desktop/native campaign; the original candidate package remains historical. DYL-60 review is the current stopping point. [The keyboard/P3 correction and actual tablet rerun](M1_4_DYL60_KEYBOARD_FIX.md) address the observed composer blocker; remaining physical scaling/motion/assistive coverage is NOT_TESTED and human Gate A NOT_RUN. No later milestone or owner session starts automatically.
