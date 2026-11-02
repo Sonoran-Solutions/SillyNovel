@@ -91,6 +91,7 @@ export async function createProjectScene(project,client,actions,changed,isCurren
         project:true,
         directorStatus:()=>director?.status()??null,
         setDirectorEnabled:on=>director?.setEnabled(on),
+        resumeDirector:()=>director?.resume()??false,
         endDirectorSession:()=>actions.director?.endSession(project.projectId),
         expressionStatus:()=>expressions.get(),
         importExpression:(file,key,name,selectionCurrent)=>expressions.importFile(file,key,name,selectionCurrent),

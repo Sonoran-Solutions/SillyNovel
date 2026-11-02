@@ -128,3 +128,18 @@
 .sillynovel-director-status { margin: 0.25rem 0; font-size: 0.9em; }
 .sillynovel-settings__ceiling { display: block; margin-top: 0.5rem; }
 .sillynovel-settings__ceiling input { width: 5em; }
+
+/* Director line and disclosure: outside the closed controls, bounded so the reply field stays reachable. */
+.sillynovel-director-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; flex-shrink: 0; }
+.sillynovel-director-line,
+.sillynovel-director-note { margin: 0; font-size: 0.75em; overflow-wrap: anywhere; }
+.sillynovel-director-line:focus,
+.sillynovel-why:focus { outline: none; }
+.sillynovel-why { flex-shrink: 0; min-width: 0; max-height: max(30%, 7rem); overflow: auto; overscroll-behavior: contain; font-size: 0.8em; overflow-wrap: anywhere; }
+.sillynovel-why summary { cursor: pointer; min-height: 44px; box-sizing: border-box; padding: 0.5rem; position: sticky; top: 0; z-index: 1; background: var(--SmartThemeBlurTintColor, #202020); }
+.sillynovel-why summary:focus-visible { outline: 2px solid #9acbff; outline-offset: -2px; }
+.sillynovel-why__body { padding: 0 0.5rem 0.5rem; }
+.sillynovel-why__body h4 { margin: 0.4rem 0 0.2rem; font-size: 1em; }
+.sillynovel-why__body ul { margin: 0; padding-inline-start: 1.1rem; }
+.sillynovel-why__quote { font-style: italic; white-space: pre-wrap; }
+@media (max-width: 600px), (max-height: 620px) { .sillynovel-why { max-height: max(24%, 6rem); } }

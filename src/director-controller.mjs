@@ -19,7 +19,7 @@ export const validCeiling = value => Number.isSafeInteger(value) && value >= 1 &
 export function createDirectorRuntime({ request, inspect, read, write, composer, setTimer = (fn, ms) => setTimeout(fn, ms), clearTimer = id => clearTimeout(id), now = () => performance.now() }) {
     const sessions = new Map(), released = new Set(), told = new Set();
     let inFlight = false;
-    const wakeAll = () => { for (const wake of released) wake(); };
+    const wakeAll = slotFreed => { for (const wake of released) wake(slotFreed === true); };
     const settings = () => { const value = read(); return value && typeof value === 'object' ? value : {}; };
     return {
         inspect, setTimer, clearTimer, now,
@@ -27,7 +27,7 @@ export function createDirectorRuntime({ request, inspect, read, write, composer,
         composer() { try { return composer?.() ?? null; } catch { return null; } },
         // True once per page for a key, so a missing composer is announced a single time.
         firstTime(key) { return !told.has(key) && Boolean(told.add(key)); },
-        composerInput: wakeAll,
+        composerInput: () => wakeAll(),
         enabled(projectId) { const projects = settings().enabledProjects; return Boolean(projects) && typeof projects === 'object' && Object.hasOwn(projects, projectId) && projects[projectId] === true; },
         setEnabled(projectId, on) {
             const current = settings(), projects = { ...(current.enabledProjects && typeof current.enabledProjects === 'object' ? current.enabledProjects : {}) };
@@ -44,7 +44,7 @@ export function createDirectorRuntime({ request, inspect, read, write, composer,
         async send(messages) {
             inFlight = true;
             // generateRawData takes no signal: the slot is released only by settlement.
-            try { return await request(messages); } catch { return { ok: false, code: 'TRANSPORT_ERROR' }; } finally { inFlight = false; wakeAll(); }
+            try { return await request(messages); } catch { return { ok: false, code: 'TRANSPORT_ERROR' }; } finally { inFlight = false; wakeAll(true); }
         },
     };
 }
@@ -80,8 +80,9 @@ export function createDirectorController({ runtime, projectId, actions, expressi
     // The typing notice must not outlive the hold, nor erase what it replaced (an outstanding request's notice, say).
     const releaseNotice = () => { if (notice === TYPING) say(beforeHold); };
     const clearHold = () => { if (holdTimer !== null) runtime.clearTimer(holdTimer); holdTimer = null; };
-    const dropPending = () => { if (settleTimer !== null) runtime.clearTimer(settleTimer); settleTimer = null; clearHold(); pending = null; if (notice === WAITING) say(''); releaseNotice(); };
-    const stopWaiting = runtime.onRelease(wake);
+    // A dropped target or a freed slot changes the Director line even when no notice does.
+    const dropPending = () => { const dropped = pending !== null; if (settleTimer !== null) runtime.clearTimer(settleTimer); settleTimer = null; clearHold(); pending = null; if (notice === WAITING) say(''); releaseNotice(); if (dropped && !disposed) changed(); };
+    const stopWaiting = runtime.onRelease(slotFreed => { if (slotFreed && !disposed) changed(); wake(); });
     const clearAbandon = () => { if (abandonTimer !== null) runtime.clearTimer(abandonTimer); abandonTimer = null; };
     function failure(code) {
         const state = session();
@@ -288,10 +289,24 @@ export function createDirectorController({ runtime, projectId, actions, expressi
             dropPending(); clearAbandon(); ticket = null; overlay.clear();
             say('Director off for this project.');
         },
+        // F6: clears the pause and nothing else. The overlay stays, and the reply before this press is not requested.
+        resume() {
+            const state = session();
+            if (disposed || !state.paused) return false;
+            if (state.count >= runtime.ceiling()) { say('Director paused: session ceiling ' + runtime.ceiling() + ' reached. The ceiling is set in the extension settings.' + MANUAL_OK); return false; }
+            // A reply that completed while paused may still be settling: it came before this press, so it must not fire.
+            dropPending();
+            state.paused = null; state.consecutive = 0;
+            seenGeneration = actions.getSnapshot().generation.id;
+            say('Director resumed. It reacts to the next completed reply.');
+            return true;
+        },
         status() {
             const host = runtime.inspect(), state = session();
             log.reconcile(expressions.sources());
-            return { available: host.ok, enabled: runtime.enabled(projectId), notice, count: state.count, ceiling: runtime.ceiling(), paused: state.paused, consecutive: state.consecutive, log: log.entries(overlay.epoch()), tallies: summarizeTallies(state.tallies) };
+            // The Director line's word: a paused director may still have an abandoned request in the slot.
+            const line = state.paused ? 'paused' : ticket || runtime.inFlight ? 'requesting' : pending ? 'waiting' : !host.ok || host.online === 'no_connection' || notice.startsWith('Director idle') ? 'idle' : 'on';
+            return { available: host.ok, enabled: runtime.enabled(projectId), state: line, notice, count: state.count, ceiling: runtime.ceiling(), paused: state.paused, consecutive: state.consecutive, log: log.entries(overlay.epoch()), tallies: summarizeTallies(state.tallies) };
         },
         dispose() { if (ticket) record(ticket, 'cancelled', 'CANCELLED'); disposed = true; stopWaiting(); dropPending(); clearAbandon(); ticket = null; },
     };

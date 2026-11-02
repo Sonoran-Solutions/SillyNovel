@@ -29,6 +29,14 @@ export function mountVisualStage({ document, stage, actions }) {
     const transientHelp=help.textContent;
     const feedback=make('p','sillynovel-visual-status');feedback.setAttribute('role','status');
     const cast=make('p','sillynovel-cast');
+    const directorBar=make('div','sillynovel-director-bar');directorBar.hidden=true;
+    const directorLine=make('p','sillynovel-director-line');directorLine.setAttribute('role','status');directorLine.tabIndex=-1;
+    const resumeDirector=make('button','menu_button sillynovel-button','Resume');resumeDirector.type='button';resumeDirector.hidden=true;
+    const ceilingNote=make('p','sillynovel-director-note','At the session ceiling. The ceiling is set in the extension settings.');ceilingNote.hidden=true;
+    directorBar.append(directorLine,resumeDirector,ceilingNote);
+    // Plain lists and no live region: excerpts are never announced as they arrive.
+    const why=make('details','sillynovel-why');why.hidden=true;why.tabIndex=-1; // A click inside must leave focus here, or Escape has nothing to act on: the lists hold no control.
+    const whySummary=make('summary','','Why this visual?'),whyBody=make('div','sillynovel-why__body');why.append(whySummary,whyBody);
     const controls=[], removers=[];
     let target=panel,currentArea=panel,displayedView=null,displayedActor=null,attachmentNotice='';
     function area(title,description) {
@@ -56,7 +64,7 @@ export function mountVisualStage({ document, stage, actions }) {
     const projectStatus=make('p','sillynovel-project-status','Checking optional project storage…');projectStatus.setAttribute('role','status');
     const scope=make('p','sillynovel-project-scope');
     const nativeContext=make('p','sillynovel-native-context');
-    stage.querySelector('header').after(unsaved,projectStatus,scope,nativeContext,details,art,cast,feedback);
+    stage.querySelector('header').after(unsaved,projectStatus,scope,nativeContext,details,art,cast,directorBar,why,feedback);
     area('Project','Choose a saved project explicitly. Attachment lasts only for this browser activation; it is never stored in the native conversation.');
     const projectName=field('Project name','input');projectName.maxLength=80;
     const projectList=field('Saved project');
@@ -188,6 +196,78 @@ export function mountVisualStage({ document, stage, actions }) {
     }
     listen(background,'error',()=>{background.hidden=true;feedback.textContent='Background unavailable · neutral stage. Text reading remains available.';});
     for(const {image:img,label} of slots.values())listen(img,'error',()=>{if(model.project&&img.dataset.expression){const id=img.dataset.expression;img.dataset.expression='';model.expressionFailed(id);}else{img.hidden=true;label.textContent+=' · art unavailable';}});
+    listen(why,'keydown',event=>{if(event.key==='Escape'){why.open=false;whySummary.focus();event.stopPropagation();}});
+    listen(why,'toggle',()=>render());
+    // The button hides once resumed, so focus moves to the line instead of being lost.
+    listen(resumeDirector,'click',()=>run(()=>{if(model.resumeDirector?.())directorLine.focus();}));
+    // The ceiling's input lives in the extension settings; raising it must re-enable Resume without another reply.
+    listen(document,'change',event=>{if(event.target?.id==='sillynovel-director-ceiling')render();});
+    const OUTCOMES={applied:'Applied',no_change:'No change',superseded:'Overtaken by your reply',cancelled:'Cancelled',stale:'Stale',not_built:'Not built',transport:'Transport failure',response_refused:'Response refused',proposal_refused:'Proposal refused',partial:'Partly applied',abandoned:'Abandoned'};
+    const DISPOSITIONS={applied:'applied',LOCKED:'LOCKED · kept your manual choice',NO_AUTOMATIC_LAYOUT:'NO_AUTOMATIC_LAYOUT · the director does not change outfits',unchanged:'unchanged · already on stage',suggestion:'suggestion only · not applied'};
+    const counts=tally=>Object.entries(tally).map(([key,count])=>key+' '+count).join(', ');
+    // Message and author come from the current history, labels from the catalog; of an entry's own text only the validated excerpt is shown.
+    function explanation(view,actors,media,director) {
+        const {snapshot,history}=actions.getSceneEvidence(false),selected=snapshot.cursor?.sourceKey;
+        const positionOf=key=>history.findIndex(item=>item.sourceKey===key);
+        const message=key=>{const item=history[positionOf(key)];return item?'message '+(item.index+1)+' · '+item.author.label:'a message no longer in the chat';};
+        const actorName=key=>{const actor=actors.find(item=>item.key===key);return actor?actor.label+' ['+shortId(key)+']':'Unknown actor';};
+        const artwork=id=>id?media.get(id)?.label??'artwork no longer available':'neutral';
+        const applied=(match,scope=entry=>positionOf(entry.source?.key)>=0&&positionOf(entry.source?.key)<=positionOf(selected))=>{
+            const entry=director.log.findLast(item=>scope(item)&&item.updates.some(update=>update.disposition==='applied'&&!update.cleared&&match(update)));
+            return entry?'director, '+message(entry.source.key):'director, decision no longer in the log';
+        };
+        const onStage=[];
+        if(view.background?.origin==='automatic')onStage.push('Background: '+artwork(view.background.id)+' · '+applied(update=>update.field==='background'&&update.targetId===view.background.id));
+        else onStage.push('Background: '+artwork(view.background?.id)+' · your layout');
+        for(const actor of view.cast){
+            onStage.push(actorName(actor.key)+': '+(actor.present?'present':'absent')+' · '+(actor.presenceOrigin==='automatic'?applied(update=>update.field==='presence'&&update.characterKey===actor.key&&update.before!==actor.present):'your layout'));
+            if(actor.expression)onStage.push(actorName(actor.key)+' expression: '+artwork(actor.expression.id)+' · '+(actor.expression.origin==='automatic'?applied(update=>update.field==='expression'&&update.characterKey===actor.key&&update.targetId===actor.expression.id,entry=>entry.source?.key===selected):'your choice'));
+        }
+        const rowName=update=>{
+            const was=update.before!==undefined&&update.before!==update.targetId?' (was '+artwork(update.before)+')':'';
+            if(update.disposition==='suggestion')return 'Background suggestion';
+            if(update.field==='background')return 'Background: '+artwork(update.targetId)+was;
+            if(update.field==='presence')return 'Presence of '+actorName(update.characterKey)+': '+((update.disposition==='unchanged'?update.before:!update.before)?'present':'absent');
+            return (update.field==='outfit'?'Outfit of ':'Expression of ')+actorName(update.characterKey)+': '+artwork(update.targetId)+was;
+        };
+        const decisions=director.log.filter(entry=>entry.source?.key===selected).map(entry=>({
+            text:'Decision '+entry.seq+': '+(OUTCOMES[entry.outcome]??entry.outcome)+' · '+entry.code+(entry.elapsedMs===null?'':' · '+entry.elapsedMs+' ms')+(entry.messageChanged?' · message changed':''),
+            items:entry.updates.map(update=>({
+                text:rowName(update)+' · '+(DISPOSITIONS[update.disposition]??update.disposition)+(update.cleared&&!entry.messageChanged?' · cleared by your layout change':''),
+                items:update.evidence?[{quote:true,text:'Quote from '+message(update.evidence.sourceMessageKey)+': “'+update.evidence.excerpt+'”'}]:[],
+            })),
+        }));
+        const {outcomes,codes,pauses,dispositions,elapsed}=director.tallies;
+        const summary=['Requests: '+director.count+' of '+director.ceiling,
+            'Consecutive failures: '+director.consecutive+(director.paused?' · Paused: '+director.paused:''),
+            'Outcomes: '+(counts(Object.fromEntries(Object.entries(outcomes).map(([key,count])=>[OUTCOMES[key]??key,count])))||'none yet'),
+            'Codes: '+(counts(codes)||'none yet'),
+            'Pauses: '+(counts(pauses)||'none'),
+            ...Object.entries(dispositions).map(([field,tally])=>'Dispositions, '+field+': '+counts(tally)),
+            'Elapsed: '+(elapsed?'minimum '+elapsed.min+' ms, median '+elapsed.median+' ms, maximum '+elapsed.max+' ms, over the latest '+elapsed.samples:'none yet')];
+        return [['On stage at this message',onStage],...(decisions.length?[['Decisions at this message',decisions]]:[]),['Session summary',summary]];
+    }
+    const list=items=>{const e=make('ul','');e.append(...items.map(item=>{const li=make('li',item.quote?'sillynovel-why__quote':'',item.text??item);if(item.items?.length)li.append(list(item.items));return li;}));return e;};
+    function renderDirectorEvidence(director,view,actors,media) {
+        const shown=Boolean(director?.enabled);
+        directorBar.hidden=!shown;
+        if(!shown){why.hidden=true;why.open=false;return;}
+        const line='Director: '+director.state+' · '+director.count+' of '+director.ceiling;
+        if(directorLine.textContent!==line)directorLine.textContent=line;
+        const atCeiling=director.count>=director.ceiling;
+        resumeDirector.hidden=!director.paused;resumeDirector.disabled=atCeiling;ceilingNote.hidden=!director.paused||!atCeiling;
+        // No verified view means no verified answer: hide without forgetting that the reader opened it.
+        if(!view){why.hidden=true;return;}
+        const selected=actions.getSnapshot().cursor?.sourceKey;
+        const explains=view.background?.origin==='automatic'||view.cast.some(a=>a.presenceOrigin==='automatic'||a.expression?.origin==='automatic')||director.log.some(entry=>entry.source?.key===selected);
+        why.hidden=!explains;
+        if(!explains){why.open=false;return;}
+        if(!why.open)return;
+        const sections=explanation(view,actors,media,director),signature=JSON.stringify(sections);
+        if(whyBody.dataset.signature===signature)return;
+        whyBody.dataset.signature=signature;
+        whyBody.replaceChildren(...sections.flatMap(([title,items])=>[make('h4','',title),list(items)]));
+    }
     function render() {
         if(disposed)return;
         const {scene,actors,assets,media,notice,verifiedStamp}=model.get();
@@ -262,6 +342,7 @@ export function mountVisualStage({ document, stage, actions }) {
         const director=state?model.directorStatus():null;
         directorArea.hidden=!director;
         if(director){directorToggle.checked=director.enabled;directorToggle.disabled=!director.available;directorStatus.textContent=director.available?director.notice+(director.enabled?' · '+director.count+' of '+director.ceiling+' requests this session':''):'Director unavailable: this host has no generation path for it.';}
+        renderDirectorEvidence(director,view,actors,media);
         const overlay=state?model.expressionStatus():null;
         expressionContext.textContent=state?'Selected message: '+(actions.getSnapshot().cursor?String(actions.getSnapshot().cursor.index+1)+' · '+actions.getSnapshot().cursor.author.label:'unresolved')+' / Actor: '+(member?member.label+' ['+shortId(member.key)+']':'select actor')+' / Current expression: '+artName(member?.expression)+(member?.expression?.origin==='automatic'?' (director)':'')+' · Temporary, not saved. '+overlay.notice:'';
         for(const e of [expression,applyExpression,clearExpression])e.disabled=e.disabled||Boolean(state&&!overlay.ready);
