@@ -4,6 +4,8 @@
 
 **Post-merge update — 2026-11-02.** The owner [accepted and merged](DECISIONS.md#owner-acceptance--m24-pr-a-merged--2026-11-02) PR A at `8d85158`; the choices below stand as the reversible baseline, including the pause-as-tally and `STALE_JOURNAL` departures. The rest of this section is the historical candidate record of PR A; PR B follows below.
 
+**PR B merged — 2026-11-02.** The owner [accepted and merged](DECISIONS.md#owner-acceptance--m24-pr-b-merged--2026-11-02) PR B at `8203ea1`; its record is the [PR B section](#pr-b--evidence-ui-and-resume) below and its choices stand as the reversible baseline. PRs A and B complete the authorized M2.4 work; PR C waits on the owner's go-ahead.
+
 ## PR A — decision log and stale reasons
 
 **Starting main:** `3038dd5b44e9a1f6da3ac953251192b4bc002b37` (PR #58; `docs/DECISIONS.md` begins with the G1–G14 entry). **Frozen:** `f5de115050d61b9e6784038f8bb7395aaea0fea0`. The commit that adds this record changes only documentation, so the frozen runtime and tests are byte-identical at the final head, which is named in the PR description.

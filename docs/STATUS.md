@@ -1,5 +1,9 @@
 # Project status
 
+## M2.4 PR B merged; PR C go-ahead next — 2026-11-02
+
+The owner [accepted and merged](DECISIONS.md#owner-acceptance--m24-pr-b-merged--2026-11-02) PR B at `8203ea1` (frozen `98d4c27`); [DYL-204](https://linear.app/devils17/issue/DYL-204/sillynovel-m24-director-decision-log-and-evidence-ui-prs-a-and-b) Done. The stage now shows a Director line with state and request count, a closed “Why this visual?” disclosure listing what is on stage at the selected message, the decisions behind it and the session summary, and a Resume button after a pause. Evidence validated from the repository: Node 328, storage 126, browser 97, seven native campaigns. Tablet, touch, IME and screen readers NOT_TESTED (DYL-193). PRs A and B complete the authorized M2.4 work. **Next owner decision:** go-ahead on PR C (revert and override at the selected message, correction locks, the O08 per-field “director may move this” control), then PR D (Gate B fixtures, scorer, E16 residual blocks). Gate B NOT_RUN.
+
 ## M2.4 PR B candidate (draft, unmerged) — 2026-11-02
 
 The Director line, the closed “Why this visual?” disclosure and Resume are implemented on frozen `98d4c27` for owner review under [DYL-204](https://linear.app/devils17/issue/DYL-204/sillynovel-m24-director-decision-log-and-evidence-ui-prs-a-and-b). Node 328, storage 126, browser 97, six portability scripts and the director campaign (35 checkpoints) pass on the disposable pinned host; `validate.py docs/evidence/m2-4-b/campaign` PASS. See the [record](M2_4_EVIDENCE_UI_IMPLEMENTATION.md#pr-b--evidence-ui-and-resume). Tablet, soft keyboard and assistive technology NOT_TESTED; the reply field's reach with the disclosure open is a DYL-193 item. Gate B NOT_RUN.
