@@ -1,5 +1,9 @@
 # Project status
 
+## Owner rulings recorded — 2026-11-01
+
+All open decisions are [ruled](DECISIONS.md#owner-rulings-on-open-decisions--2026-11-01): O04 director transport is the host's own generation path on the user's selected connection; O06 limits the director to the evidence window, one request in flight, a per-session ceiling of 40, off by default; D7 routes automatic expressions to the memory-only journal; O03 selects AGPL-3.0 and `LICENSE` is added; O02 closed by reference; DYL-193 runs before the Gate B session; DYL-56 stays Backlog; M2 pure-module slices need Node tests plus a record only; O05 deferred past Gate B; O07 closed. M2.2 planning is unblocked; M2.2 implementation, Gate B, beta and release remain gated.
+
 ## M2.1 merged — 2026-11-01
 
 The owner [accepted and merged](DECISIONS.md#owner-acceptance--m21-implementation-merged--2026-11-01) the M2.1 director module at `c5f1f3d3f8356cebc2805b7b67b22a6a8d76ed7b` (frozen `0d80dffc803aecf85a1d87e783d63f24212047a0`); DYL-194 Done. Main passes 182 Node tests; browser/storage suites NOT_RUN on this merge. The module is pure and unwired: no runtime path calls it yet. Next bounded step is M2.2 planning, which needs owner rulings O04 and O06 first. Gate B NOT_RUN; DYL-193 still precedes beta/release.

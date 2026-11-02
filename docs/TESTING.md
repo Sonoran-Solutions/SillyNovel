@@ -1,5 +1,9 @@
 # Verification and acceptance
 
+## M2 evidence standard — 2026-11-01
+
+Per the [owner process ruling](DECISIONS.md#owner-rulings-on-open-decisions--2026-11-01): pure-module slices need focused Node tests plus an implementation record; native-host campaigns, storage suites and device replays are required only when a slice touches the host adapter, persistence, the composer or the renderer, or when an owner gate names them. Reused evidence is cited by SHA. DYL-193 coverage runs before the Gate B owner session.
+
 ## M2.1 implementation candidate — 2026-11-01
 
 Unit-level SYNTHETIC evidence only, frozen at `0d80dffc803aecf85a1d87e783d63f24212047a0`: rows T31–T38 added below, partial T05, T09, T11, T15, T16, T19 and T29; T17 and T18 not covered. [Commands, counts and limits](M2_1_DIRECTOR_IMPLEMENTATION.md#commands-and-results). `python3 tests/probes/dyl60/check-discovery.py` now expects 9/5/1 suite files; the 8/5/1 entry below stays historical. Browser suite NOT_RUN; Gate B NOT_RUN.
