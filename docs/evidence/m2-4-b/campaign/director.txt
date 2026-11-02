@@ -1,0 +1,38 @@
+Owned evidence root /tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-fervent-tereshkova-0a0540/d2241476-78a7-42cb-8c3c-e1cede3a156d/scratchpad/sn-m2-director-eDvLth
+PASS off by default: a real reply issues no director request (T48)
+PASS director body is the two assembled messages; decoys absent; braces and legacy markers neutralized on the wire; instruction-like chat text travels as data (T39, T40, T29)
+PASS accepted proposal applied to the journal only; a locked background skipped LOCKED, suggestion shown as text; 80 native files byte-identical; no chat write, no lifecycle event, max tokens unchanged (T19, T49)
+PASS real continue reaches complete and issues exactly one request (T47)
+PASS real regenerate reaches complete and issues exactly one request (T47)
+PASS real swipe reaches complete and issues exactly one request (T47)
+PASS quiet generation, swipe back and a stopped reply never trigger (T47)
+PASS Send during an outstanding request completes normally on the concurrent loopback; the result is SUPERSEDED before it is read (not a failure, counted, user message kept, nothing re-anchored) and the new reply is requested once (T46 amended, T53, F4)
+PASS the user Stop aborts the outstanding director request on the wire; the Send before it made the result SUPERSEDED, not a failure; chat stays usable (T46, T53)
+PAGE ERROR Generation was aborted.
+PASS a draft the user keeps defers the request past settle and five idle seconds; Send supersedes the held head (never requested) and the next reply is requested once; composer byte-identical while held (T52, F3)
+PASS a draft cleared by the user releases the hold five seconds after the clearing event; the request body carries none of the draft; every non-chat native file byte-identical (T52, F3)
+PASS rejecting single-slot backend with the user typing: the director waits for the draft, Send succeeds with no overlap and no host toast; the next reply is then requested (T52, T53 host half, E16 narrowed)
+PASS chat switch mid-flight: nothing applied, attachment dropped, counter retained after explicit reopen (T45, E6)
+PASS malformed reply skips with a bounded code; manual expression still applies on that head (T41, T44)
+PASS ceiling 3: next completion sends nothing, pause notice, manual controls and native replies keep working (T43)
+PASS three consecutive failures pause; toggling off and on resumes with the same counter (E7)
+PASS 90 s abandonment on real time: late result discarded, no second request until settlement, then the pending head is requested once (T17, T55, E7)
+PASS 20-turn Last Lantern script: 20 director requests, 20 native replies, journal expressions only; every non-chat file byte-identical; project layout unchanged
+PASS a project bundle carries no director setting; the imported copy is off (T48, E5)
+PASS real four-card duplicate-name group: four native replies, one settled director request, expression on one UUID only, all native files byte-identical across the request, cards and settings across the whole turn (E15, T19)
+PASS T56: location and presence on real host generation apply to the memory-only overlay with (director) read-outs; outfit NO_AUTOMATIC_LAYOUT; saved project, bundle bytes and every native file byte-identical; not dirty
+PASS T61: Director line readable with the controls closed; the closed disclosure opens by keyboard on a real decision, names what is on stage, the decision, its dispositions and quote and the session summary, as lists; Escape closes; reply field reachable; nothing written
+PASS T56: forward scope: the next reply keeps the overlay, its request reports the stage as it is, and repeating the same values moves nothing
+PASS T56: an earlier message shows the global layout, and returning to the latest shows the overlay again
+PASS T62: Resume after three real failures keeps the overlay and the count, requests nothing retroactively, writes nothing; the next completed reply is requested once
+PASS T57: a lock clears and rebases the overlay; the next proposal keeps the locked field LOCKED and moves the rest (F8, D4)
+PASS T57: a manual background clears the overlay; the saved project is untouched until an explicit save
+PASS T61: a decision cleared by a manual layout command reads "cleared by your layout change" on the real host
+PASS T57: a real message edit at the anchor invalidates the automatic layout from the first changed source; not retried
+PASS T60: a real message edit deletes the excerpt from the disclosure and shows "message changed"; outcome and code stay
+PASS T57: disabling the director discards the overlay; enabling again brings nothing back
+PASS T57: detach discards the overlay; an explicit reopen shows the global layout
+PASS Director line reads idle when no expression artwork is imported (E11, G11)
+PASS T57: chat switch and A -> B -> A discard the overlay; no overlay state from a first visit shows in a second
+PASS T57: reload discards the overlay; the saved project, its revision and its bundle bytes never changed
+Evidence /tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-fervent-tereshkova-0a0540/d2241476-78a7-42cb-8c3c-e1cede3a156d/scratchpad/sn-m2-director-eDvLth/evidence.json
