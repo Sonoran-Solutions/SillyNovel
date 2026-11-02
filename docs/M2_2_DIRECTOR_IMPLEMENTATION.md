@@ -2,6 +2,8 @@
 
 **Candidate for owner review, draft PR, unmerged.** One quiet text-director request per completed head, over the host's own raw generation path on the connection the user selected, applying temporary expressions only. Off by default. Implemented under [E1–E14](DECISIONS.md#owner-rulings-e1e14--m22-director-transport--2026-11-01) as amended by the [rulings after the host probe](DECISIONS.md#owner-rulings-after-the-m22-host-probe--2026-11-01). Tracked by [DYL-195](https://linear.app/devils17/issue/DYL-195/sillynovel-m22-one-text-director-transport-over-the-hosts-generation). Gate B remains **NOT_RUN**; nothing here claims the director is useful or accurate.
 
+**Post-merge update — 2026-11-01.** The owner [accepted and merged](DECISIONS.md#owner-acceptance--m22-implementation-merged--2026-11-01) this candidate at `f570484dc9975ab543d4b116a198c9ba21dcd6ec`; section 8 choices stand as the reversible baseline. The rest of this document is the historical candidate record.
+
 **Date:** 2026-11-01, America/Phoenix. **Starting main:** `d9f975f886ce05b23682002f03de7c7f3adc4e90`; `origin/main` `2d41f386928a9c9f11c0d365a1ec8839c565c35d` merged before freezing. **Frozen implementation/test SHA:** `d5664119d060d72f90aee4e3a386fdf409843a5c`. Every later commit on the branch is documentation or evidence only.
 
 ## 1. Runtime probe

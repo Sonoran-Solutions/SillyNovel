@@ -1,5 +1,9 @@
 # Project status
 
+## M2.2 merged — 2026-11-01
+
+The owner [accepted and merged](DECISIONS.md#owner-acceptance--m22-implementation-merged--2026-11-01) the M2.2 director transport at `f570484dc9975ab543d4b116a198c9ba21dcd6ec` (frozen `d5664119d060d72f90aee4e3a386fdf409843a5c`); [DYL-195](https://linear.app/devils17/issue/DYL-195/sillynovel-m22-one-text-director-transport-over-the-hosts-generation) Done. Main now carries one quiet director request per completed head over the host's own raw generation path, off by default, expressions only, with the recorded E16 Send-during-request limitation. Evidence validated from the repository; tablet replay, real providers and non-chat-completion backends NOT_TESTED. Next bounded step is M2.3 planning (queueing and catch-up, serialization with native generation, automatic layout overlay E3-B), which needs owner authorization. Gate B NOT_RUN; DYL-193 still precedes beta/release.
+
 ## M2.2 implementation candidate for review — 2026-11-01
 
 Draft PR for [DYL-195](https://linear.app/devils17/issue/DYL-195/sillynovel-m22-one-text-director-transport-over-the-hosts-generation), frozen at `d5664119d060d72f90aee4e3a386fdf409843a5c`: one quiet director request per completed head over `generateRawData` on the user's selected connection, off by default, applying temporary expressions through the memory-only journal. Reader status `complete` is live, so manual temporary expressions can now apply to a freshly completed head. Synthetic evidence: 227 Node, 126 storage, 88 browser, seven native campaigns including a new director campaign on the pinned host. Tablet replay NOT_TESTED; real providers NOT_TESTED. [Record](M2_2_DIRECTOR_IMPLEMENTATION.md). Not merged. Gate B NOT_RUN. Older entries below are historical.
