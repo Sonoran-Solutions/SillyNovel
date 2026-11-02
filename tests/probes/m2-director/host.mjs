@@ -21,6 +21,12 @@ const field = name => page.locator('#sillynovel-stage').getByLabel(name, { exact
 const button = name => page.getByRole('button', { name, exact: true });
 const chatLength = () => page.evaluate(() => SillyTavern.getContext().chat.length);
 const until = async (check, message, ms = 20000) => { const end = Date.now() + ms; while (Date.now() < end) { if (await check()) return; await delay(50); } throw Error('Timed out: ' + message); };
+// Every director notice in order: a later notice may replace one before a poll could see it.
+const watchNotices = () => page.evaluate(() => { window.__notices = []; new MutationObserver(() => { const text = document.querySelector('.sillynovel-director-status')?.textContent; if (text !== undefined && text !== window.__notices.at(-1)) window.__notices.push(text); }).observe(document.body, { subtree: true, childList: true, characterData: true }); });
+const notices = () => page.evaluate(() => window.__notices);
+const untilNotice = (pattern, ms) => until(async () => (await notices()).some(text => pattern.test(text)), 'notice ' + pattern, ms);
+const click = async selector => { await page.locator(selector).evaluate(e => e.click()); await delay(300); await idle(); };
+const composerValue = () => page.locator('#send_textarea').inputValue();
 const untilDirector = n => until(async () => (await directorLog()).length >= n, n + ' director requests');
 const untilStatus = (pattern, ms) => until(async () => pattern.test(await statusText()), 'status ' + pattern, ms);
 const idle = () => page.waitForFunction(() => getComputedStyle(document.querySelector('#mes_stop')).display === 'none' && !document.querySelector('#send_but').classList.contains('displayNone') && !SillyTavern.getContext().chat.at(-1)?.is_user);
@@ -119,6 +125,7 @@ try {
     // Enable; the toggle is the only intended host-settings write.
     await toggle().setChecked(true);
     await importArt(mira.actorId);
+    await watchNotices();
     await delay(2500);
     const maxTokens = await page.evaluate(async () => (await import('/scripts/openai.js')).oai_settings.openai_max_tokens);
 
@@ -163,7 +170,6 @@ try {
 
     // T47: completion provenance on the real host for each reply type; quiet and Stop never trigger.
     await control({ reset: true, fallback: AUTO });
-    const click = async selector => { await page.locator(selector).evaluate(e => e.click()); await delay(300); await idle(); };
     let expected = 0;
     for (const [name, action] of [['continue', () => click('#option_continue')], ['regenerate', () => click('#option_regenerate')], ['swipe', () => click('#chat .last_mes .swipe_right')]]) {
         await action();
@@ -199,10 +205,18 @@ try {
     await turn('Send while the director is outstanding.');
     assert.equal(await chatLength(), beforeSend + 2);
     assert.match(await page.evaluate(() => SillyTavern.getContext().chat.at(-1).mes), /Mira says/);
+    const countAtSend = Number(/(\d+) of 40 requests/.exec(await statusText())[1]), mark = (await notices()).length;
     await control({ release: true });
-    await untilStatus(/cancelled|not directed|in progress/);
-    pass('Send during an outstanding request completes normally; the older result cannot apply to the new head (T46)');
+    await untilNotice(/Director request superseded by your reply/);
+    assert.equal(await expressionOn('left'), '', 'the superseded result never applied to the old head or the new one');
+    // The new reply's own target waits for the slot, then fires once; nothing is retried for the superseded head.
+    await untilDirector(2);
+    await untilStatus(/Director: no change/);
     await delay(2600);
+    assert.equal((await directorLog()).length, 2, 'two requests, two keys; the superseded head is not retried');
+    assert.equal(Number(/(\d+) of 40 requests/.exec(await statusText())[1]), countAtSend + 1, 'the superseded request stayed counted; the next reply counted once');
+    assert.doesNotMatch((await notices()).slice(mark).join('\n'), /Director skipped this reply|Director paused/);
+    pass('Send during an outstanding request completes normally on the concurrent loopback; the result is SUPERSEDED before it is read (not a failure, counted, user message kept, nothing re-anchored) and the new reply is requested once (T46 amended, T53, F4)');
     await control({ reset: true, script: [{ hold: true, ...AUTO }] });
     await turn('Held for Stop.');
     await untilDirector(1);
@@ -213,8 +227,81 @@ try {
     await page.locator('#mes_stop').waitFor({ state: 'hidden' });
     await control({ nativeDelayMs: 25 });
     await until(async () => (await directorLog())[0].aborted, 'director request aborted on the wire');
-    await untilStatus(/Director request cancelled\./);
-    pass('the user Stop aborts the outstanding director request on the wire; notice says cancelled only; chat stays usable (T46)');
+    // M2.3 PR A: the user's Send started a generation, so the outcome is SUPERSEDED; the ABORTED code is never read.
+    await untilNotice(/Director request superseded by your reply/);
+    pass('the user Stop aborts the outstanding director request on the wire; the Send before it made the result SUPERSEDED, not a failure; chat stays usable (T46, T53)');
+    await delay(2600);
+
+    // T52 (M2.3 PR B): the composer hold on the real host. A draft the user keeps holds a settled head;
+    // a cleared draft releases five seconds after its last event; the draft text is never on the wire.
+    // A sent draft is chat text and legitimately travels in the window; only a draft that was never sent must be absent.
+    const SECRET = 'PRIVATE-DRAFT-T52-5b1c', UNSENT = 'UNSENT-DRAFT-T52-e07a', composer = page.locator('#send_textarea');
+    await control({ reset: true, fallback: AUTO });
+    await turn('Reply before the draft.');
+    await untilDirector(1);
+    await untilNotice(/applied 1 temporary expression/);
+    await delay(1500);
+    await control({ reset: true, fallback: AUTO });
+    await composer.focus();
+    await composer.pressSequentially(SECRET + ' kept', { delay: 10 });
+    await click('#option_regenerate');
+    await delay(8500);
+    assert.equal((await directorLog()).length, 0, 'a draft holds the regenerated head past the settle interval and past five idle seconds');
+    assert.match(await statusText(), /Director waiting while you type/);
+    assert.equal(await composerValue(), SECRET + ' kept', 'the composer is byte-identical while the hold is active');
+    const keptBefore = await chatLength();
+    await page.locator('#send_but').click();
+    await page.waitForFunction(n => SillyTavern.getContext().chat.length >= n + 2, keptBefore);
+    await idle();
+    await untilDirector(1);
+    await delay(2600);
+    assert.equal((await directorLog()).length, 1, 'the held head was superseded by Send and never requested; the reply to the sent draft is requested once');
+    assert.equal(await composerValue(), '', 'the host cleared the composer on Send; SillyNovel never wrote to it');
+    pass('a draft the user keeps defers the request past settle and five idle seconds; Send supersedes the held head (never requested) and the next reply is requested once; composer byte-identical while held (T52, F3)');
+    await delay(1500);
+
+    await control({ reset: true, fallback: AUTO });
+    const typedBefore = await inventory();
+    await composer.focus();
+    await composer.pressSequentially(UNSENT + ' cleared', { delay: 10 });
+    await click('#option_regenerate');
+    await delay(3500);
+    assert.equal((await directorLog()).length, 0);
+    await composer.press('Control+A');
+    await composer.press('Backspace');
+    const clearedAt = Date.now();
+    await untilDirector(1);
+    evidence.counts.holdReleasedAfterClearMs = Date.now() - clearedAt;
+    assert.ok(evidence.counts.holdReleasedAfterClearMs >= 4500 && evidence.counts.holdReleasedAfterClearMs < 9000, 'released about five seconds after the clearing event: ' + evidence.counts.holdReleasedAfterClearMs);
+    const [clearedRequest] = await directorLog(), clearedWire = JSON.stringify(clearedRequest.body);
+    assert.equal(clearedWire.includes('UNSENT-DRAFT'), false, 'the draft text is in no part of the request body');
+    assert.equal(await composerValue(), '');
+    await untilNotice(/applied 1 temporary expression/);
+    await delay(1500);
+    nativeOnly(typedBefore, await inventory());
+    pass('a draft cleared by the user releases the hold five seconds after the clearing event; the request body carries none of the draft; every non-chat native file byte-identical (T52, F3)');
+
+    // T53 host half, rejecting single-slot backend: with the user typing, no director request is outstanding, so Send succeeds.
+    await control({ reset: true, busy503: true, script: [{ hold: true, ...AUTO }] });
+    await clearToasts();
+    await turn('Single slot warm-up.');
+    await composer.focus();
+    await composer.pressSequentially(SECRET + ' on one slot', { delay: 10 }); // sent below: chat text from then on
+    await delay(8500);
+    assert.equal((await directorLog()).length, 0, 'no overlap: nothing is outstanding while the user holds a draft');
+    const slotBefore = await chatLength();
+    await page.locator('#send_but').click();
+    await page.waitForFunction(n => SillyTavern.getContext().chat.length >= n + 2, slotBefore);
+    await idle();
+    assert.match(await page.evaluate(() => SillyTavern.getContext().chat.at(-1).mes), /Mira says/, 'the reply is the native answer, not a refusal');
+    assert.equal(await page.locator('#toast-container .toast-error').count(), 0, 'the single-slot backend never refused the user\'s reply');
+    await untilDirector(1);
+    const slotRequests = await requests();
+    assert.ok(slotRequests.filter(e => !e.director).every(e => e.replied && !e.aborted), 'every native request was served');
+    await control({ release: true, busy503: false });
+    await untilNotice(/applied 1 temporary expression/);
+    evidence.counts.singleSlotNativeServed = slotRequests.filter(e => !e.director).length;
+    pass('rejecting single-slot backend with the user typing: the director waits for the draft, Send succeeds with no overlap and no host toast; the next reply is then requested (T52, T53 host half, E16 narrowed)');
     await delay(2600);
 
     // T45 and E6: chat switch mid-flight, the counter survives, the slot survives, deliberate detach resets.
@@ -300,14 +387,19 @@ try {
     assert.ok(evidence.counts.abandonedAfterMs > 85000);
     const headExpression = await expressionOn('left');
     await turn('While abandoned.');
-    await delay(2600);
+    await delay(7600);
     assert.equal((await directorLog()).length, 1, 'one in flight until settlement');
-    assert.match(await statusText(), /not directed while a request is outstanding/);
+    assert.match(await statusText(), /still outstanding/, 'the slot wait has no notice of its own (M2.3 PR A)');
     await control({ release: true });
-    await delay(1000);
+    // M2.3 PR A: the head that arrived meanwhile is the pending target and fires once after settlement.
+    await untilDirector(2);
+    await untilStatus(/Director: no change/);
+    await delay(2600);
+    assert.equal((await directorLog()).length, 2, 'exactly one request for the pending head; the abandoned one is not retried');
     assert.equal(headExpression, '', 'late result never applied');
     assert.equal(await expressionOn('left'), '');
-    pass('90 s abandonment on real time: late result discarded, no second request until settlement (T17, E7)');
+    assert.equal(Number(/(\d+) of 40 requests/.exec(await statusText())[1]) > 0, true);
+    pass('90 s abandonment on real time: late result discarded, no second request until settlement, then the pending head is requested once (T17, T55, E7)');
 
     // The 20-turn script with the director on.
     const scenario = JSON.parse(await readFile(join(repo, 'tests/fixtures/dyl60-owner-conversation.json')));

@@ -6,7 +6,7 @@ import { spawn } from 'node:child_process';
 import { createProjectScene } from '../src/project-scene.mjs';
 import { createHostAdapter } from '../src/host-adapter.mjs';
 import { createReaderSourceModel } from '../src/reader-source-model.mjs';
-import { createDirectorRuntime, SETTLE_MS, ABANDON_MS } from '../src/director-controller.mjs';
+import { createDirectorRuntime, SETTLE_MS, ABANDON_MS, HOLD_MS } from '../src/director-controller.mjs';
 
 const bytes = await readFile(new URL('./fixtures/m12-stage/mira-a-joy.png', import.meta.url));
 const png = () => new Blob([bytes], { type: 'image/png' });
@@ -16,6 +16,7 @@ function clock() {
     let now = 0, next = 0;
     const timers = new Map();
     return {
+        now: () => now,
         setTimer: (fn, ms) => { timers.set(++next, { at: now + ms, fn }); return next; },
         clearTimer: id => timers.delete(id),
         async advance(ms) {
@@ -26,7 +27,7 @@ function clock() {
         pending: () => timers.size,
     };
 }
-async function setup(t, { enabled = true, ceiling, request, group = false, online = 'Valid', inspect, importArt = true } = {}) {
+async function setup(t, { enabled = true, ceiling, request, group = false, online = 'Valid', inspect, importArt = true, composer = false } = {}) {
     const previous = globalThis.Image, view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
     globalThis.Image = class { naturalWidth = view.getUint32(16); naturalHeight = view.getUint32(20); decode() { return Promise.resolve(); } };
     t.after(() => { globalThis.Image = previous; });
@@ -38,14 +39,19 @@ async function setup(t, { enabled = true, ceiling, request, group = false, onlin
     const calls = [];
     let settings = { sessionCeiling: ceiling };
     const respond = request ?? (messages => new Promise(resolve => calls.push({ messages, resolve })));
-    const runtime = createDirectorRuntime({ request: respond, inspect: inspect ?? (() => ({ ok: true, missing: [], online })), read: () => settings, write: value => { settings = value; }, setTimer: time.setTimer, clearTimer: time.clearTimer });
+    // Composer signal as the adapter reports it, on the fake clock; the draft text never exists here, only its length class.
+    const typing = { present: true, draft: false, last: null };
+    const inspectComposer = composer ? () => ({ present: typing.present, draft: typing.draft, idleMs: typing.last === null ? null : time.now() - typing.last }) : undefined;
+    const runtime = createDirectorRuntime({ request: respond, inspect: inspect ?? (() => ({ ok: true, missing: [], online })), composer: inspectComposer, read: () => settings, write: value => { settings = value; }, setTimer: time.setTimer, clearTimer: time.clearTimer });
     const actions = { getSnapshot: reader.getSnapshot, getSceneEvidence: (fresh = true) => ({ snapshot: fresh ? refresh() : reader.getSnapshot(), history: reader.getHistory() }), director: runtime };
     const actor = randomUUID(), other = randomUUID(), sprite = randomUUID(), background = randomUUID();
     const record = { schemaVersion: 2, projectId: randomUUID(), name: 'Director', revision: 3, catalog: [{ assetId: sprite, kind: 'sprite', actorId: actor, label: 'Base' }, { assetId: background, kind: 'background', actorId: null, label: 'Forest' }],
         scene: { backgroundAssetId: background, backgroundLocked: true, actors: [{ actorId: actor, name: 'Mira', present: true, slot: 'left', spriteAssetId: sprite, locks: { presence: true, outfit: true, slot: true } }, { actorId: other, name: 'Mira', present: true, slot: 'right', spriteAssetId: null, locks: { presence: true, outfit: false, slot: true } }] } };
     let saved = null, uploads = 0;
     const client = { asset: async () => ({ blob: png(), hash: 'a'.repeat(64) }), upload: async () => { uploads++; }, save: async (id, body) => { saved = body; return { projectId: id, revision: body.expectedRevision + 1 }; } };
-    const attach = async () => { const model = await createProjectScene(record, client, actions, () => {}, () => true); t.after(() => model.dispose()); return model; };
+    const notices = [];
+    let live = null;
+    const attach = async () => { const model = await createProjectScene(record, client, actions, () => { if (live) notices.push(live.directorStatus().notice); }, () => true); live = model; t.after(() => model.dispose()); return model; };
     if (enabled) runtime.setEnabled(record.projectId, true);
     const model = await attach();
     const art = importArt ? await model.importExpression(png(), actor, 'Happy') : null;
@@ -67,7 +73,9 @@ async function setup(t, { enabled = true, ceiling, request, group = false, onlin
         for (let i = 0; i < 200 && /in progress/.test(model.directorStatus().notice); i++) await new Promise(resolve => setTimeout(resolve, 5));
     };
     const expression = (target = model) => target.get().scene.view.cast[0].expression;
-    return { context, host, reader, time, calls, runtime, actions, record, actor, other, sprite, background, model, art, attach, complete, proposal, answer, expression, refresh, get settings() { return settings; }, get saved() { return saved; }, get uploads() { return uploads; } };
+    // A keystroke, or a draft change, as the adapter would observe it: record the event, then wake the runtime.
+    const type = (change = {}) => { Object.assign(typing, { last: time.now() }, change); runtime.composerInput(); };
+    return { typing, type, notices, context, host, reader, time, calls, runtime, actions, record, actor, other, sprite, background, model, art, attach, complete, proposal, answer, expression, refresh, get settings() { return settings; }, get saved() { return saved; }, get uploads() { return uploads; } };
 }
 const ok = text => ({ ok: true, text });
 const status = x => x.model.directorStatus();
@@ -827,4 +835,196 @@ test('loopback: abandonment, late reply, and the pending target fires once', asy
     assert.equal(status(x).count, 2);
     assert.equal(x.expression(), null);
     assert.equal((await log()).length, 2);
+});
+
+// ---- M2.3 PR B: composer hold (F3, T52). The controller sees only { present, draft, idleMs }.
+const HOLD_NOTICE = 'Director waiting while you type';
+test('T52: a keystroke inside the hold defers the request until five seconds after the last one; later keystrokes extend it', async t => {
+    const x = await setup(t, { composer: true });
+    x.type();
+    await x.complete();
+    assert.equal(x.calls.length, 0, 'typing within five seconds holds a settled target');
+    assert.equal(status(x).notice, HOLD_NOTICE);
+    await x.time.advance(1500);
+    x.type();
+    await x.time.advance(HOLD_MS - 1);
+    assert.equal(x.calls.length, 0, 'the second keystroke restarted the hold');
+    await x.time.advance(1);
+    assert.equal(x.calls.length, 1, 'released exactly HOLD_MS after the last keystroke');
+    assert.notEqual(status(x).notice, HOLD_NOTICE);
+    assert.equal(x.runtime.session(x.record.projectId).count, 1);
+});
+test('T52: a non-empty draft holds with no keystroke timer; clearing it releases at once from the input event', async t => {
+    const x = await setup(t, { composer: true });
+    x.type({ draft: true });
+    await x.complete();
+    await x.time.advance(HOLD_MS * 12);
+    assert.equal(x.calls.length, 0, 'an idle draft holds indefinitely');
+    assert.equal(status(x).notice, HOLD_NOTICE);
+    assert.equal(x.runtime.session(x.record.projectId).count, 0);
+    x.type({ draft: false });
+    await flush();
+    assert.equal(x.calls.length, 0, 'the clearing keystroke itself is within five seconds');
+    await x.time.advance(HOLD_MS);
+    assert.equal(x.calls.length, 1);
+    // Cleared by the host without any input event (Send does this): the periodic re-check still releases.
+    const y = await setup(t, { composer: true });
+    y.typing.draft = true;
+    await y.complete();
+    assert.equal(y.calls.length, 0);
+    y.typing.draft = false;
+    await y.time.advance(HOLD_MS);
+    assert.equal(y.calls.length, 1);
+});
+test('T52: Send while held requests nothing for the old head, counts nothing and leaves no timer; the new reply is held in turn', async t => {
+    const x = await setup(t, { composer: true });
+    x.type({ draft: true });
+    await x.complete();
+    assert.equal(status(x).notice, HOLD_NOTICE);
+    x.typing.draft = false;
+    x.context.chat.push({ name: 'You', is_user: true, mes: 'Sent.' });
+    x.reader.apply({ type: 'generationStarted', generationType: 'normal', dryRun: false });
+    await x.model.sync(false);
+    await x.time.advance(HOLD_MS * 3);
+    assert.equal(x.calls.length, 0, 'the streaming gate takes over');
+    assert.equal(x.time.pending(), 0);
+    assert.notEqual(status(x).notice, HOLD_NOTICE, 'the notice never outlives the Send');
+    // The reply completes: the old head is replaced, and the keystroke-free composer does not hold it.
+    await x.complete({ text: 'The answer.', start: false });
+    assert.equal(x.calls.length, 1);
+    assert.match(x.calls[0].messages[1].content, /The answer/);
+    assert.equal(x.runtime.session(x.record.projectId).count, 1);
+    // A Send that ends with no reply drops the target instead.
+    const y = await setup(t, { composer: true });
+    y.type({ draft: true });
+    await y.complete();
+    y.reader.apply({ type: 'generationStarted', generationType: 'normal', dryRun: false });
+    y.reader.apply({ type: 'generationStopped', history: y.host.readHistory() });
+    await y.model.sync(false);
+    await y.time.advance(HOLD_MS * 3);
+    assert.equal(y.calls.length, 0);
+    assert.equal(y.runtime.session(y.record.projectId).count, 0);
+    assert.equal(y.time.pending(), 0);
+});
+test('T52: the hold precedes selection and slot; disable and dispose leave no timer', async t => {
+    const x = await setup(t, { composer: true });
+    await x.complete({ settle: false });
+    x.refresh();
+    x.reader.navigate(-1);
+    x.type();
+    await x.time.advance(SETTLE_MS);
+    assert.equal(status(x).notice, HOLD_NOTICE, 'typing is reported before the reading-earlier wait');
+    await x.time.advance(HOLD_MS);
+    assert.equal(status(x).notice, '1 reply waiting: Jump to Latest to direct it');
+    assert.equal(x.calls.length, 0);
+    x.reader.jumpToLatest();
+    await x.model.sync(false);
+    await until(() => x.calls.length === 1);
+    assert.equal(x.calls.length, 1, 'returning to the head fires it once the hold is clear');
+    const y = await setup(t, { composer: true });
+    y.type({ draft: true });
+    await y.complete();
+    assert.ok(y.time.pending() > 0, 'the periodic re-check is armed while held');
+    y.model.setDirectorEnabled(false);
+    assert.equal(y.time.pending(), 0);
+    y.model.setDirectorEnabled(true);
+    await y.complete({ text: 'Again.' });
+    assert.equal(y.calls.length, 0);
+    y.model.dispose();
+    assert.equal(y.time.pending(), 0);
+});
+test('T52/F3: a missing composer disables the hold only, with one notice per page; no signal source means no hold and no notice', async t => {
+    const x = await setup(t, { composer: true });
+    x.typing.present = false;
+    await x.complete();
+    assert.equal(x.calls.length, 1, 'the director works as in M2.2');
+    const mentions = () => x.notices.filter((text, i) => text !== x.notices[i - 1] && /message box was not found/.test(text)).length;
+    assert.match(status(x).notice, /^The message box was not found, so the director will not wait while you type\. Director request in progress/);
+    assert.equal(mentions(), 1);
+    await x.answer(0, ok('{}'));
+    await x.complete({ text: 'Second head.' });
+    assert.equal(x.calls.length, 2);
+    assert.doesNotMatch(status(x).notice, /message box/);
+    assert.equal(mentions(), 1, 'announced once');
+    const bare = await setup(t);
+    await bare.complete();
+    assert.equal(bare.calls.length, 1);
+    assert.doesNotMatch(status(bare).notice, /message box|while you type/);
+    const throwing = createDirectorRuntime({ request: async () => {}, inspect: () => ({ ok: true }), composer() { throw Error('boom'); }, read: () => ({}), write() {} });
+    assert.equal(throwing.composer(), null, 'a failing adapter read disables the hold, never the director');
+});
+test('T52: the adapter reports only presence, whether a draft exists and the idle time; never the text, never retained', () => {
+    const listeners = [];
+    let now = 1000;
+    const secret = 'PRIVATE-DRAFT-TEXT';
+    // Anything but .length throws, so a read of the text would fail this test.
+    const value = { length: secret.length, toString() { throw Error('draft text read'); }, valueOf() { throw Error('draft text read'); }, [Symbol.toPrimitive]() { throw Error('draft text read'); } };
+    const composer = { id: 'send_textarea', value };
+    const other = { id: 'other', value };
+    const document = { getElementById: id => (id === 'send_textarea' ? composer : null), addEventListener: (type, fn, capture) => listeners.push({ type, fn, capture }), removeEventListener: (type, fn) => { const at = listeners.findIndex(item => item.type === type && item.fn === fn); if (at >= 0) listeners.splice(at, 1); } };
+    const previous = { document: globalThis.document, performance: globalThis.performance };
+    Object.defineProperty(globalThis, 'document', { value: document, configurable: true, writable: true });
+    Object.defineProperty(globalThis, 'performance', { value: { now: () => now }, configurable: true, writable: true });
+    try {
+        const eventSource = { on() {}, removeListener() {} };
+        const eventTypes = Object.fromEntries(['CHAT_CHANGED', 'MESSAGE_RECEIVED', 'CHARACTER_MESSAGE_RENDERED', 'STREAM_TOKEN_RECEIVED', 'GENERATION_STARTED', 'GENERATION_STOPPED', 'GENERATION_ENDED', 'MESSAGE_SWIPED', 'MESSAGE_EDITED', 'MESSAGE_DELETED'].map(name => [name, name.toLowerCase()]));
+        const context = { chat: [], chatId: 'A', characterId: 1, eventSource, eventTypes, extensionSettings: {}, saveSettingsDebounced() {} };
+        let wakes = 0;
+        const adapter = createHostAdapter(() => context, { onComposerInput: (...args) => { assert.deepEqual(args, [], 'the wake-up carries nothing'); wakes++; } });
+        assert.deepEqual(adapter.inspectComposer(), { present: true, draft: true, idleMs: null }, 'a draft typed before subscribe still holds; no event observed yet');
+        const dispose = adapter.subscribe(() => {});
+        assert.deepEqual(listeners.map(item => [item.type, item.capture]), [['input', true], ['keydown', true]]);
+        const input = listeners.find(item => item.type === 'input').fn, keydown = listeners.find(item => item.type === 'keydown').fn;
+        input({ target: other });
+        keydown({ target: { id: 'chat' } });
+        assert.equal(adapter.inspectComposer().idleMs, null, 'other elements are ignored');
+        assert.equal(wakes, 0);
+        now = 1500; input({ target: composer });
+        now = 4000;
+        assert.deepEqual(adapter.inspectComposer(), { present: true, draft: true, idleMs: 2500 });
+        now = 4100; keydown({ target: composer });
+        assert.equal(adapter.inspectComposer().idleMs, 0);
+        assert.equal(wakes, 2);
+        assert.deepEqual(Object.keys(adapter.inspectComposer()), ['present', 'draft', 'idleMs']);
+        assert.doesNotMatch(JSON.stringify(adapter.inspectComposer()), new RegExp(secret));
+        composer.value = { length: 0 };
+        assert.equal(adapter.inspectComposer().draft, false);
+        dispose();
+        assert.equal(listeners.length, 0, 'the disposer releases both listeners');
+        assert.equal(adapter.inspectComposer().idleMs, null, 'nothing is observed after dispose');
+        input({ target: composer });
+        assert.equal(wakes, 2);
+        assert.equal(adapter.inspectComposer().idleMs, null);
+        // Missing, or not a text field: present false, hold disabled.
+        document.getElementById = () => null;
+        assert.deepEqual(adapter.inspectComposer(), { present: false, draft: false, idleMs: null });
+        document.getElementById = () => ({ id: 'send_textarea' });
+        assert.equal(adapter.inspectComposer().present, false);
+        // A throwing wake-up never breaks typing.
+        document.getElementById = id => (id === 'send_textarea' ? composer : null);
+        const failing = createHostAdapter(() => context, { onComposerInput() { throw Error('wake failed'); } });
+        const disposeFailing = failing.subscribe(() => {});
+        assert.doesNotThrow(() => listeners.find(item => item.type === 'input').fn({ target: composer }));
+        disposeFailing();
+        assert.equal(listeners.length, 0);
+    } finally {
+        for (const [key, value] of Object.entries(previous)) Object.defineProperty(globalThis, key, { value, configurable: true, writable: true });
+        if (previous.document === undefined) delete globalThis.document;
+    }
+});
+test('T52: while a request is outstanding nothing is held or announced; the hold applies to the target once the result is handled', async t => {
+    const x = await setup(t, { composer: true });
+    await x.complete();
+    assert.match(status(x).notice, /in progress/);
+    x.type({ draft: true });
+    await x.complete({ text: 'Second head.' });
+    assert.match(status(x).notice, /in progress/, 'the outstanding request keeps the panel; the slot gate is not reached');
+    assert.equal(x.calls.length, 1);
+    await x.answer(0, ok('{}'));
+    assert.equal(status(x).notice, HOLD_NOTICE, 'the draft holds the waiting target after settlement');
+    assert.equal(x.calls.length, 1);
+    x.type({ draft: false });
+    await x.time.advance(HOLD_MS);
+    assert.equal(x.calls.length, 2);
+    assert.match(x.calls[1].messages[1].content, /Second head/);
 });

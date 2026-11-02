@@ -987,7 +987,7 @@ test('director actual entry: keyboard toggle and ceiling, one recorded request, 
  const toggle=page.getByLabel('Automatic director for this project',{exact:true});
  await page.waitForFunction(()=>!document.querySelector('.sillynovel-director input').disabled);
  assert.equal(await toggle.isChecked(),false,'off by default');
- assert.match(await page.locator('.sillynovel-director-help').innerText(),/one request at a time.*your message is kept, and a swipe or regenerate recovers/);
+ assert.match(await page.locator('.sillynovel-director-help').innerText(),/waits while you type; a regenerate or swipe pressed while a director request is running can fail on a backend that handles one request at a time, and a swipe or regenerate recovers/);
  await toggle.focus();await page.keyboard.press('Space');assert.equal(await toggle.isChecked(),true);
  const project=x.original.projectId;
  assert.deepEqual(await page.evaluate(()=>fixture.context.extensionSettings.sillynovel.director),{enabledProjects:{[project]:true}});
@@ -1027,4 +1027,76 @@ test('director default fixture with no project keeps the toggle out of session-s
  const page=await fixture(t);await page.locator('.sillynovel-controls summary').click();
  assert.equal(await page.locator('.sillynovel-director').isVisible(),false);
  assert.equal(await page.locator('#sillynovel-enabled').isChecked(),true);
+});
+
+// M2.3 PR B: the composer hold at the real entry point. Real time: the hold is five seconds by design.
+async function directorWithRecorder(t){
+ const x=await attachedExpressions(t),{page}=x;
+ await page.evaluate(()=>{const c=fixture.context;window.requests=[];c.mainApi='openai';c.onlineStatus='Valid';c.extractMessageFromData=data=>data.text;c.generateRawData=args=>new Promise(resolve=>window.requests.push({args,resolve,at:performance.now()}));fixture.setText('First message, edited.',0);});
+ await page.waitForFunction(()=>!document.querySelector('.sillynovel-director input').disabled);
+ await page.getByLabel('Automatic director for this project',{exact:true}).check();
+ await x.upload();
+ x.reply=text=>page.evaluate(text=>{const c=fixture.context;fixture.emit('GENERATION_STARTED','normal',{},false);c.chat.push({name:'Mira',mes:text,swipe_id:0});fixture.renderNative();const i=c.chat.length-1;fixture.emit('GENERATION_ENDED',c.chat.length);fixture.emit('MESSAGE_RECEIVED',i,'normal');fixture.emit('CHARACTER_MESSAGE_RENDERED',i,'normal');},text);
+ x.status=()=>page.locator('.sillynovel-director-status').innerText();
+ return x;
+}
+test('director composer hold: a keystroke defers the request to five seconds after the last one; the draft never reaches the request',async t=>{
+ const x=await directorWithRecorder(t),{page}=x,secret='PRIVATE-DRAFT-9c41';
+ const composer=page.locator('#send_textarea');
+ await composer.focus();
+ const before=await page.evaluate(()=>{const d=document.getElementById('send_textarea');window.originalComposer=d;return {same:true,disabled:d.disabled}});
+ await composer.pressSequentially(secret,{delay:20});
+ const last=await page.evaluate(()=>performance.now());
+ await composer.press('Control+A');await composer.press('Backspace');
+ const lastKey=await page.evaluate(()=>performance.now());
+ await x.reply('Mira laughs by the lantern.');
+ await page.waitForTimeout(3200);
+ assert.equal(await page.evaluate(()=>window.requests.length),0,'settle has passed, the hold has not');
+ assert.match(await x.status(),/Director waiting while you type/);
+ await page.waitForFunction(()=>window.requests.length===1,undefined,{timeout:8000});
+ const at=await page.evaluate(()=>window.requests[0].at);
+ assert.ok(at-lastKey>=4900,'released no earlier than five seconds after the last keystroke: '+(at-lastKey));assert.ok(at-lastKey<7000,'and promptly after: '+(at-lastKey));assert.ok(last<=lastKey);
+ const sent=await page.evaluate(()=>JSON.stringify(window.requests[0].args));
+ assert.equal(sent.includes(secret),false,'the draft text is in no part of the request');assert.equal(sent.includes(secret.slice(0,10)),false);
+ assert.equal(await page.evaluate(()=>document.getElementById('send_textarea')===originalComposer),true);
+ assert.equal(await composer.inputValue(),'','the composer holds exactly what the user left in it');
+ assert.deepEqual(before,{same:true,disabled:false});
+ assert.doesNotMatch(await x.status(),/waiting while you type/);
+});
+test('director composer hold: an idle non-empty draft holds, a cleared draft releases five seconds after its last event; the composer is untouched',async t=>{
+ const x=await directorWithRecorder(t),{page}=x,composer=page.locator('#send_textarea');
+ await composer.fill('An unsent draft with 日本語');
+ await x.reply('Mira laughs by the lantern.');
+ await page.waitForTimeout(5600);
+ assert.equal(await page.evaluate(()=>window.requests.length),0,'more than five seconds idle, but the draft is not empty');
+ assert.match(await x.status(),/Director waiting while you type/);
+ assert.equal(await composer.inputValue(),'An unsent draft with 日本語');
+ await composer.fill('');
+ const cleared=await page.evaluate(()=>performance.now());
+ await page.waitForFunction(()=>window.requests.length===1,undefined,{timeout:8000});
+ const at=await page.evaluate(()=>window.requests[0].at);
+ assert.ok(at-cleared>=4900&&at-cleared<7000,'released after the clearing event plus five seconds: '+(at-cleared));
+ assert.equal(await page.evaluate(()=>JSON.stringify(window.requests[0].args)).then(text=>text.includes('unsent draft')),false,'the draft that held the request is in no part of it');
+ assert.equal(await composer.inputValue(),'');
+});
+test('director composer hold: a missing composer disables only the hold, with one notice; disable releases the listeners',async t=>{
+ const x=await directorWithRecorder(t),{page}=x;
+ await page.evaluate(()=>document.getElementById('send_textarea').remove());
+ await x.reply('Mira laughs by the lantern.');
+ await page.waitForFunction(()=>window.requests.length===1,undefined,{timeout:8000});
+ assert.match(await x.status(),/The message box was not found, so the director will not wait while you type\. Director request in progress/);
+ await page.evaluate(()=>window.requests[0].resolve({text:'{}'}));
+ await page.waitForFunction(()=>!/in progress/.test(document.querySelector('.sillynovel-director-status').textContent));
+ await x.reply('Mira smiles again.');
+ await page.waitForFunction(()=>window.requests.length===2,undefined,{timeout:8000});
+ assert.doesNotMatch(await x.status(),/message box was not found/,'announced once');
+});
+test('director composer hold: the two composer listeners are added on enable and both released on disable',async t=>{
+ const x=await directorWithRecorder(t),{page}=x;
+ const counts=await page.evaluate(()=>{const seen=[];const add=document.addEventListener.bind(document),remove=document.removeEventListener.bind(document);document.addEventListener=(type,fn,capture)=>{seen.push(['add',type]);return add(type,fn,capture)};document.removeEventListener=(type,fn,capture)=>{seen.push(['remove',type]);return remove(type,fn,capture)};window.listenerLog=seen;return seen.length});
+ assert.equal(counts,0);
+ await page.locator('#sillynovel-enabled').uncheck();await page.locator('#sillynovel-enabled').check();
+ const log=await page.evaluate(()=>window.listenerLog.filter(([,type])=>type==='input'||type==='keydown'));
+ assert.deepEqual(log.filter(([kind])=>kind==='remove').map(([,type])=>type).sort(),['input','keydown']);
+ assert.deepEqual(log.filter(([kind])=>kind==='add').map(([,type])=>type).sort(),['input','keydown']);
 });

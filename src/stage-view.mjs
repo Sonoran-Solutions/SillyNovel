@@ -121,7 +121,7 @@ export function mountVisualStage({ document, stage, actions }) {
     const directorArea=make('div','sillynovel-director');
     const directorLabel=make('label','checkbox_label sillynovel-control','Automatic director for this project');
     const directorToggle=make('input','');directorToggle.type='checkbox';directorToggle.setAttribute('aria-describedby','sillynovel-director-help');directorLabel.prepend(directorToggle);
-    const directorHelp=make('p','sillynovel-director-help','Off by default. After each completed reply, sends the last messages and your artwork labels to the connection you selected, counts against the usage of that connection, and only ever changes temporary expressions. If your backend handles one request at a time, a reply you send while a director request is running can fail; your message is kept, and a swipe or regenerate recovers.');directorHelp.id='sillynovel-director-help';
+    const directorHelp=make('p','sillynovel-director-help','Off by default. After each completed reply, sends the last messages and your artwork labels to the connection you selected, counts against the usage of that connection, and only ever changes temporary expressions. The director waits while you type; a regenerate or swipe pressed while a director request is running can fail on a backend that handles one request at a time, and a swipe or regenerate recovers.');directorHelp.id='sillynovel-director-help';
     const directorStatus=make('p','sillynovel-director-status');directorStatus.setAttribute('role','status');
     directorArea.append(directorLabel,directorHelp,directorStatus);target.append(directorArea);
     listen(directorToggle,'change',()=>model.setDirectorEnabled?.(directorToggle.checked));

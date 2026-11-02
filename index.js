@@ -13,7 +13,9 @@ async function install() {
     if (document.getElementById('sillynovel-settings')) return;
 
     const getContext = () => globalThis.SillyTavern?.getContext?.();
-    const adapter = createHostAdapter(getContext);
+    let director;
+    // The adapter reports composer events; the runtime re-checks any held target. Neither carries the draft.
+    const adapter = createHostAdapter(getContext, { onComposerInput: () => director?.composerInput() });
     const root = document.createElement('div');
     root.id = 'sillynovel-settings';
     root.className = 'extension_container sillynovel-settings';
@@ -98,7 +100,7 @@ async function install() {
         context.saveSettingsDebounced();
     }
 
-    const director = createDirectorRuntime({ request: adapter.requestDirectorText, inspect: adapter.inspectDirector, read: readDirector, write: saveDirector });
+    director = createDirectorRuntime({ request: adapter.requestDirectorText, inspect: adapter.inspectDirector, composer: adapter.inspectComposer, read: readDirector, write: saveDirector });
     const showCeiling = () => { ceiling.value = String(director.ceiling()); };
     showCeiling();
     ceiling.addEventListener('change', () => {
