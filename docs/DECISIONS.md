@@ -1,5 +1,9 @@
 # Decision register
 
+## Owner acceptance — M2.1 implementation merged — 2026-11-01
+
+**Approving owner: Dylan. Date: 2026-11-01, America/Phoenix. Status: APPROVED.** The owner reviewed the [PR #40](https://github.com/Sonoran-Solutions/SillyNovel/pull/40) summary, including the six implementation choices it left open, and said “Yes, merge it.” Merge commit `c5f1f3d3f8356cebc2805b7b67b22a6a8d76ed7b`; frozen implementation/test SHA `0d80dffc803aecf85a1d87e783d63f24212047a0`. DYL-194 is Done. Independent check before merge: 182/182 Node tests, discovery self-check PASS, `src/scene-reducer.mjs` unchanged, no runtime import of `src/director-proposal.mjs`; browser and storage suites NOT_RUN (pinned host absent, plugin unchanged). This accepts the pure M2.1 module and its recorded D2–D8 defaults and open choices as the current baseline; any of them may still be reversed in a later bounded slice. It does not authorize M2.2 (O04 first text-director transport and O06 usage limits/content scope remain open), M2.3, M2.4, Gate B, DYL-193 closure, live installation or release. Gate B NOT_RUN.
+
 ## Owner authorization — M2.1 director implementation — 2026-11-01
 
 **Approving owner: Dylan. Date: 2026-11-01, America/Phoenix. Status: APPROVED (D1).** After merging the [M2.1 planning proposal](M2_1_DIRECTOR_PLAN.md) at `a8fde515ac665c4cd892009c3574eef94dbfec57`, the owner was asked whether the approval covered the plan merge only or also implementation and answered “Authorize M2.1 work.” This records plan decision **D1**: implementation of M2.1 as described in plan sections 3–7 is authorized, tracked by [DYL-194](https://linear.app/devils17/issue/DYL-194/sillynovel-m21-director-proposals-lock-precedence-and-snapshot).

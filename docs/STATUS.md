@@ -1,5 +1,9 @@
 # Project status
 
+## M2.1 merged — 2026-11-01
+
+The owner [accepted and merged](DECISIONS.md#owner-acceptance--m21-implementation-merged--2026-11-01) the M2.1 director module at `c5f1f3d3f8356cebc2805b7b67b22a6a8d76ed7b` (frozen `0d80dffc803aecf85a1d87e783d63f24212047a0`); DYL-194 Done. Main passes 182 Node tests; browser/storage suites NOT_RUN on this merge. The module is pure and unwired: no runtime path calls it yet. Next bounded step is M2.2 planning, which needs owner rulings O04 and O06 first. Gate B NOT_RUN; DYL-193 still precedes beta/release.
+
 ## M2.1 implementation candidate for review — 2026-11-01
 
 Draft PR for [DYL-194](https://linear.app/devils17/issue/DYL-194/sillynovel-m21-director-proposals-lock-precedence-and-snapshot), frozen at `0d80dffc803aecf85a1d87e783d63f24212047a0`: pure `src/director-proposal.mjs` with strict whole-proposal validation, atomic application with manual-lock precedence, and evidence-stamp checks, on an unmodified reducer. 29 new Node tests pass with the existing 144. [Implementation record](M2_1_DIRECTOR_IMPLEMENTATION.md) lists the D2–D8 defaults (not owner rulings) and six choices for owner review. Fixture-only: no transport, UI, persistence or runtime wiring; browser suite NOT_RUN (no pinned host checkout present); Gate B NOT_RUN. Unmerged. Older entries below are historical.
