@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## M2.1 planning proposal (NOT approved) — 2026-11-01
+
+The [M2.1 director proposal plan](M2_1_DIRECTOR_PLAN.md) proposes the first M2 slice as pure modules and fixtures on the merged manual reducer, with the owner decisions it needs listed in its section 8. It authorizes nothing: M2.1 implementation starts only after a separate owner authorization is recorded in [DECISIONS](DECISIONS.md). Later M2 slices, a director transport (O04) and Gate B remain separately gated. Older dated entries are historical.
+
 ## Gate A PASS — 2026-11-01
 
 The owner [recorded PASS](DECISIONS.md#gate-a-verdict--pass--2026-11-01) on main `e8e9cf673b6455dace67d695ee45d1d3dcc2857c`. M1 is complete as judged by the owner, with [DYL-193](https://linear.app/devils17/issue/DYL-193/sillynovel-m14-deferred-physical-scaling-motion-assistive-and) coverage still owed before beta/release. The next bounded step is a planning proposal for M2.1 under the delivery rule below; no M2 implementation starts without a separate recorded authorization. Gates B and C NOT_RUN. Older dated entries are historical.
