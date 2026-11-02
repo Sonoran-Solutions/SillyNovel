@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## M2.4 PR D go-ahead — 2026-11-02
+
+[Go-ahead recorded](DECISIONS.md#owner-go-ahead--m24-pr-d-gate-b-readiness--2026-11-02); [DYL-206](https://linear.app/devils17/issue/DYL-206/sillynovel-m24-pr-d-gate-b-readiness-fixtures-scorer-runner-native) implements plan section 7 PR D, the last M2.4 slice. The Gate B sequence after it is unchanged and each step needs its own authorization.
+
 ## M2.4 PRs A, B and C merged — 2026-11-02
 
 PR C [accepted](DECISIONS.md#owner-acceptance--m24-pr-c-merged--2026-11-02) at `34dfcd8`; [DYL-205](https://linear.app/devils17/issue/DYL-205/sillynovel-m24-pr-c-manual-corrections-correction-locks-and-the-o08) Done. PR D (Gate B readiness: fixtures, scorer, runner, native blocks, record template; runtime byte-identical to PR C) is the last M2.4 slice and follows on the owner's go-ahead under G1. The Gate B sequence after it is unchanged.
