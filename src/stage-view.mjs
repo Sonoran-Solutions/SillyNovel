@@ -248,21 +248,23 @@ export function mountVisualStage({ document, stage, actions }) {
         return [['On stage at this message',onStage],...(decisions.length?[['Decisions at this message',decisions]]:[]),['Session summary',summary]];
     }
     const list=items=>{const e=make('ul','');e.append(...items.map(item=>{const li=make('li',item.quote?'sillynovel-why__quote':'',item.text??item);if(item.items?.length)li.append(list(item.items));return li;}));return e;};
+    // Held only while open: a closed disclosure keeps no excerpt in the page, and cannot show an old one for a frame on opening (T60).
+    const emptyWhy=()=>{if(whyBody.firstChild)whyBody.replaceChildren();delete whyBody.dataset.signature;};
     function renderDirectorEvidence(director,view,actors,media) {
         const shown=Boolean(director?.enabled);
         directorBar.hidden=!shown;
-        if(!shown){why.hidden=true;why.open=false;return;}
+        if(!shown){why.hidden=true;why.open=false;emptyWhy();return;}
         const line='Director: '+director.state+' · '+director.count+' of '+director.ceiling;
         if(directorLine.textContent!==line)directorLine.textContent=line;
         const atCeiling=director.count>=director.ceiling;
         resumeDirector.hidden=!director.paused;resumeDirector.disabled=atCeiling;ceilingNote.hidden=!director.paused||!atCeiling;
         // No verified view means no verified answer: hide without forgetting that the reader opened it.
-        if(!view){why.hidden=true;return;}
+        if(!view){why.hidden=true;emptyWhy();return;}
         const selected=actions.getSnapshot().cursor?.sourceKey;
         const explains=view.background?.origin==='automatic'||view.cast.some(a=>a.presenceOrigin==='automatic'||a.expression?.origin==='automatic')||director.log.some(entry=>entry.source?.key===selected);
         why.hidden=!explains;
-        if(!explains){why.open=false;return;}
-        if(!why.open)return;
+        if(!explains)why.open=false;
+        if(!why.open){emptyWhy();return;}
         const sections=explanation(view,actors,media,director),signature=JSON.stringify(sections);
         if(whyBody.dataset.signature===signature)return;
         whyBody.dataset.signature=signature;

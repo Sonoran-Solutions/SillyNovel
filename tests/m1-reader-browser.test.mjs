@@ -1178,6 +1178,7 @@ test('T61: Director line with the controls closed, closed disclosure, contents, 
  await why.locator('h4').first().click();await page.keyboard.press('Escape');
  assert.equal(await why.getAttribute('open'),null,'Escape closes');
  assert.equal(await summary.evaluate(e=>e===document.activeElement),true,'focus returns to the summary');
+ await page.waitForFunction(()=>document.querySelector('.sillynovel-why__body').textContent==='');// T60: a closed disclosure holds no excerpt in the page
  await page.keyboard.press('Space');
  await page.waitForFunction(()=>document.querySelector('.sillynovel-why').open);
  // An earlier message has no decision and shows the global layout; returning shows it again, closed.
