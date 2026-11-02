@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## M2.3 PR C authorized — 2026-11-02
+
+[F9 resolved](DECISIONS.md#owner-authorization--m23-pr-c-automatic-layout-overlay--2026-11-02): the automatic layout overlay is built as M2.3's third PR under [DYL-203](https://linear.app/devils17/issue/DYL-203/sillynovel-m23-pr-c-automatic-layout-overlay-for-background-and), not deferred. On its merge M2.3 is complete; M2.4 planning and Gate B stay separately gated.
+
 ## M2.3 PRs A and B merged — 2026-11-02
 
 PR B [accepted](DECISIONS.md#owner-acceptance--m23-pr-b-merged--2026-11-02) at `4561888`; [DYL-196](https://linear.app/devils17/issue/DYL-196/sillynovel-m23-director-pending-target-stale-rules-and-composer-hold) Done. The authorized part of M2.3 is complete. PR C (automatic layout overlay, plan section 5) waits on the owner's F9 decision: a third M2.3 PR with its own authorization, or deferral to M2.4. M2.4 and Gate B stay gated.

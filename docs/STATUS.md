@@ -1,5 +1,9 @@
 # Project status
 
+## M2.3 PR C authorized — 2026-11-02
+
+The owner [authorized PR C](DECISIONS.md#owner-authorization--m23-pr-c-automatic-layout-overlay--2026-11-02) under F9: the memory-only automatic layout overlay for background and presence (E3 option B), tracked by [DYL-203](https://linear.app/devils17/issue/DYL-203/sillynovel-m23-pr-c-automatic-layout-overlay-for-background-and), built as plan section 5 describes under F7 and F8. It is a renderer change and carries the full native-host campaign and browser suite. Runtime unchanged by this entry. On merge, M2.3 is complete and M2.4 (evidence UI, Gate B candidate) is the next planning step, separately gated. Gate B NOT_RUN; DYL-193 open.
+
 ## M2.3 PR B merged; F9 decision next — 2026-11-02
 
 The owner [accepted and merged](DECISIONS.md#owner-acceptance--m23-pr-b-merged--2026-11-02) PR B at `4561888` (frozen `02a3a96`); [DYL-196](https://linear.app/devils17/issue/DYL-196/sillynovel-m23-director-pending-target-stale-rules-and-composer-hold) Done. The director now waits while the user types or holds a draft (reading only the draft's length), names a result overtaken by the user's reply `SUPERSEDED`, and the native director campaign passes again on the pinned host. Evidence validated from the repository: Node 251, storage 126, browser 92, seven native campaigns. Tablet replay, touch/IME composer behaviour and real providers NOT_TESTED; the E16 residual for Regenerate, Continue and swipes stays recorded. PRs A and B complete the authorized M2.3 work. **Next owner decision is F9:** PR C (automatic layout overlay for background and presence) as a third M2.3 PR, or deferral to M2.4. Gate B NOT_RUN; DYL-193 open.
