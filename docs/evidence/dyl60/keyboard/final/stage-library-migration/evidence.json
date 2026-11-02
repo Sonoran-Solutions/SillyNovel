@@ -1,0 +1,1250 @@
+{
+  "candidate": "c5c1699a48629ae761a093e13056f0b11fdc4b88",
+  "host": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
+  "node": "v26.8.1",
+  "root": "/tmp/sn-portability-host-UfNZWX",
+  "checks": [
+    "real host auth/CSRF, two-user project and asset isolation, two-client CAS, PNG hash and limits",
+    "browser create/import background + two sprites/arrange/save/reload/explicit reopen; named canonical files unchanged",
+    "library controls: two backgrounds/two actor sprites, duplicate labels/UUIDs, inert label edit, saved unused protection, failed PNG and composer/native-file isolation",
+    "real Chromium reload/detach/explicit reopen/reselect every alternative without import; positions/locks and desktop/narrow reader/composer remain usable",
+    "two independent project libraries and authenticated stale client conflict preserve committed catalog/selection and local dirty edits",
+    "native switch abandons delayed PNG receipt; stale cleanup refuses; explicit unregister/save/selected cleanup removes only chosen alternative",
+    "schema-v2 full backup validates all retained assets; portable v1 exports selected bytes only; named native hashes unchanged across library campaign",
+    "stage UI: session/create/four manual actors/two same-name labels/seven library alternatives/three slots/offstage/refuse/swap/replace/presence/outfit/locks/save/dirty/save",
+    "reload stays detached; explicit reopen restores arrangement/library; desktop/narrow controls and dialogue/composer; Escape focus; discard cancel/confirm",
+    "real stale-save conflict and lost committed receipt retain edits/block retry; A→B→A detaches; named native files and connection context unchanged",
+    "native send accepts a real user reply after stage failures and conversation switching",
+    "portable browser download/import preserves dirty stage; explicit reopen restores new identities, bytes, layout/locks; exact native inventory unchanged",
+    "HTTP failed project/second-asset/final-scene writes inspected in committed database: zero partial projects/assets",
+    "real two-account export refusal and import ownership; two-client import retry creates distinct copies; concurrent export/save is coherent",
+    "actual native switch during delayed import receipt never attaches visuals or changes stage ownership",
+    "native A to B to A detaches and never auto-restores project",
+    "actual host failed update preserves project; missing/corrupt assets restore neutral fallback",
+    "delayed successful save receipt cannot redirect switched chat",
+    "actual host native send/stream/stop, navigation and backlog remain functional",
+    "plugin/server restart preserves original and imported layout/assets; imported project explicitly reopens in real browser",
+    "real v1 plugin startup refuses migration without changing database/native hashes; reader/composer/transient controls remain usable",
+    "explicit operator CLI verifies preserved v1 backup and migrates only a new output; original/backup/native files remain unchanged",
+    "migrated pinned host explicitly reopens original layout/locks, preserves all UUIDs/revisions/PNG bytes and two-account isolation",
+    "plugin disabled at startup refuses bundle controls and retains session stage/native composer"
+  ],
+  "files": {
+    "default-user/characters/Project A.png": "9c9295d53ce280ec9b4f1016e734a3ab4fa8485766baca979418a632d0183cc2",
+    "default-user/characters/Project B.png": "eb8f369d2bb79785835f035777324cb201b5a1c31774b2d63d80f39bc33c6bc2",
+    "default-user/characters/Seraphina/admiration.png": "e451994487b3a5b7c72d6e6025c8cbe6bbcfbf01a490042b8b581522e6ba4f96",
+    "default-user/characters/Seraphina/amusement.png": "1cedaee06fb1c740c5c8c52de8973f733789d51fe9b23fcb633635e755ae6e6f",
+    "default-user/characters/Seraphina/anger.png": "d657d77b1bce609dd6006582cf687691871411eb041f9f4c41da4765b12ea069",
+    "default-user/characters/Seraphina/annoyance.png": "ee268f03244c8194abcc18664bde83f4488630a6a9095717eead8cfdb36048fe",
+    "default-user/characters/Seraphina/approval.png": "9ae62282e0b1dfd5b0ea0874f89b59814de4b031919ed44ed4cc3f848d5bf5ed",
+    "default-user/characters/Seraphina/caring.png": "3f0a3dd0c795b1a05660f55a3fd54219b2408e740354e8a15970d8e00ac0b1f2",
+    "default-user/characters/Seraphina/confusion.png": "d731ca04495b13e14e7df5c5b304a93c63769387131c995b1cbef6fdda39105b",
+    "default-user/characters/Seraphina/curiosity.png": "31275000dbcf06e6deca10971e8e48bb1605ab5aa26c177d836f5be4c9c0879e",
+    "default-user/characters/Seraphina/desire.png": "f77e1b8b6c2684011e81262c0ad5a28437da4ea1fef05ba8d073bec0988b725b",
+    "default-user/characters/Seraphina/disappointment.png": "e9a5e328ebaf3d36c8a69653f5c65b408cfbb4f65d4f24dee935e5eb2aa21c15",
+    "default-user/characters/Seraphina/disapproval.png": "690600866c8f31ad6acfc9db22769eede7a5b6a65b56e2706c6af868da2b38d5",
+    "default-user/characters/Seraphina/disgust.png": "a7717a440287608b12d1e4be0011b067554339b39803ea85a555c50b0502dd35",
+    "default-user/characters/Seraphina/embarrassment.png": "8400d251049220134cecd5dba6dc94268348db04bbf801e5d1b8a62b6d1ea441",
+    "default-user/characters/Seraphina/excitement.png": "1b82905f656458a2acff10c23b2cd4348c10e60f677f1dbd69be82b773b7d745",
+    "default-user/characters/Seraphina/fear.png": "baa30eebddb5913a006e322137d9b24b90a2ab99f8d2c2dbcf641b923df5cb76",
+    "default-user/characters/Seraphina/gratitude.png": "1693052da628f5a63e5de0dee18a67d8e1014e8680247eaede612a6edef18d63",
+    "default-user/characters/Seraphina/grief.png": "cbab6c5a10edbf20ed04350dbec06dc6177719904ab7b01ce30e65ac51d0638a",
+    "default-user/characters/Seraphina/joy.png": "b8da43db84d73a795a5f6044971bae9dfcc163684ab7078673b71ff2138ef716",
+    "default-user/characters/Seraphina/love.png": "830f0fffb386d4a152386fde6f49440b79daef40bbb7a4d1c164de560a03f95e",
+    "default-user/characters/Seraphina/nervousness.png": "abce8853dc1b75af7a9eca1d3cbd36e40a4830d3ed10cce52c0005cfd57c000c",
+    "default-user/characters/Seraphina/neutral.png": "aeefd83cd8768d9701d914dbe78775ad92e93c175079c33072c2ec22fbba7d26",
+    "default-user/characters/Seraphina/optimism.png": "4aa443a4446ca577cdd2e434ae949f599c624e907303c0744b73868e027d789d",
+    "default-user/characters/Seraphina/pride.png": "e6852d60291a6a37d1f29ca159ac80816d1c9ba24239601a76de2af12d36d34a",
+    "default-user/characters/Seraphina/realization.png": "597d3a5cf6e5a142dd9329559263e0a77a5aa26f8ef6d19e6e5b6d9000d6afb2",
+    "default-user/characters/Seraphina/relief.png": "89aba575c32b9341871a906ebd64b66fe0031b281108f9eee8c3734d70ec5e00",
+    "default-user/characters/Seraphina/remorse.png": "26e65c298abc03da60688a8b891e54d1faa701bb47a439ba817ecf1a72a65c31",
+    "default-user/characters/Seraphina/sadness.png": "3819c2bca59224f67767eb3762c846e35d5eb5272be03f35c21fc32163df67a6",
+    "default-user/characters/Seraphina/surprise.png": "f6a9f657d081f670a961649a5a21526ec251262ca06adf99626509059fbbb103",
+    "default-user/characters/default_Seraphina.png": "8a71e8270f54fafbccf905b1bdf053a6a55f57bea89c01fcd8c0e87ee76a2d52",
+    "default-user/chats/Project A/Project A - 2026-10-16@17h17m41s905ms.jsonl": "de7158174dd60c9d40d9f5376abb6d3c19f406aab1d4ac321613466ef728f360",
+    "default-user/chats/Project B/Project B - 2026-10-16@17h17m41s975ms.jsonl": "228892fa58fcd94a0e0638cb5f8a55a97b0086189c63d3df8aefe3223340cc34",
+    "default-user/worlds/Eldoria.json": "bfc2548443c890746a54d54e35e41265b02d1b59fd06d72552b305bf9b1e063c"
+  },
+  "notTested": [
+    "Production release",
+    "Physical devices",
+    "Other host versions",
+    "Owner Gate A",
+    "Power loss and administrative restore"
+  ],
+  "src/server-main.js": "567d8a9d52e70816e74f119409933f2b42ad03132d7ef01f8db3ae145c2fe7bf",
+  "src/plugin-loader.js": "994cbfde97c4ef3a2e2a8078e005e61698ded61a52741cad1efe049ee2bedee9",
+  "src/users.js": "3100591d000a28f6d3a548242c9de69060c2fd4777c170b13f38a99bc67f3476",
+  "src/constants.js": "a8e507bf5f9e335810247476b28428e6e44f1b0a371df41cea748b36e70d29a7",
+  "package.json": "5b6e0634a63872c33603bf803217613a388f2e5dbd5990f7b30d254bfbf027c2",
+  "forest.png": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
+  "mira-a.png": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
+  "rowan.png": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
+  "browser": "151.0.7922.34",
+  "library": {
+    "initial": {
+      "schemaVersion": 2,
+      "projectId": "1048e4b2-b106-44f4-8be7-6f0448f58fa7",
+      "name": "Reusable library",
+      "revision": 1,
+      "scene": {
+        "backgroundAssetId": "0b36d29e-1dd2-4711-a4f6-a068fc8aed42",
+        "backgroundLocked": true,
+        "actors": [
+          {
+            "actorId": "1a80e37d-9df7-4c04-b30f-f8799c42b8c0",
+            "name": "Manual actor",
+            "spriteAssetId": "aa8b5b57-abd8-43d8-a9f7-b10829b631f3",
+            "slot": "left",
+            "present": true,
+            "locks": {
+              "presence": true,
+              "slot": true,
+              "outfit": true
+            }
+          }
+        ]
+      },
+      "catalog": [
+        {
+          "assetId": "ae847c7f-142a-4c1f-8918-4741fc5391b0",
+          "label": "Same label",
+          "kind": "background",
+          "actorId": null
+        },
+        {
+          "assetId": "0b36d29e-1dd2-4711-a4f6-a068fc8aed42",
+          "label": "Same label",
+          "kind": "background",
+          "actorId": null
+        },
+        {
+          "assetId": "8ceb684c-2e87-45ff-9bd6-b536be71ffec",
+          "label": "Same label",
+          "kind": "sprite",
+          "actorId": "1a80e37d-9df7-4c04-b30f-f8799c42b8c0"
+        },
+        {
+          "assetId": "aa8b5b57-abd8-43d8-a9f7-b10829b631f3",
+          "label": "Same label",
+          "kind": "sprite",
+          "actorId": "1a80e37d-9df7-4c04-b30f-f8799c42b8c0"
+        }
+      ]
+    },
+    "artwork": [
+      {
+        "assetId": "ae847c7f-142a-4c1f-8918-4741fc5391b0",
+        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
+        "bytes": 11591
+      },
+      {
+        "assetId": "0b36d29e-1dd2-4711-a4f6-a068fc8aed42",
+        "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
+        "bytes": 6085
+      },
+      {
+        "assetId": "8ceb684c-2e87-45ff-9bd6-b536be71ffec",
+        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
+        "bytes": 4454
+      },
+      {
+        "assetId": "aa8b5b57-abd8-43d8-a9f7-b10829b631f3",
+        "sha256": "f583c391c970a2c8fc4b20519cc17b05984ecfb65231d36d3ba87021f7366c3a",
+        "bytes": 4538
+      }
+    ],
+    "independent": {
+      "schemaVersion": 2,
+      "projectId": "0aff3090-842e-49c7-8749-83a4f9688f43",
+      "name": "Independent library",
+      "revision": 1,
+      "scene": {
+        "backgroundAssetId": "d2c00c58-2f17-4329-8fd5-d9b075adf60c",
+        "backgroundLocked": true,
+        "actors": []
+      },
+      "catalog": [
+        {
+          "assetId": "d2c00c58-2f17-4329-8fd5-d9b075adf60c",
+          "label": "forest",
+          "kind": "background",
+          "actorId": null
+        }
+      ]
+    },
+    "final": {
+      "schemaVersion": 2,
+      "projectId": "1048e4b2-b106-44f4-8be7-6f0448f58fa7",
+      "name": "Reusable library",
+      "revision": 5,
+      "scene": {
+        "backgroundAssetId": "0b36d29e-1dd2-4711-a4f6-a068fc8aed42",
+        "backgroundLocked": true,
+        "actors": [
+          {
+            "actorId": "1a80e37d-9df7-4c04-b30f-f8799c42b8c0",
+            "name": "Manual actor",
+            "spriteAssetId": "aa8b5b57-abd8-43d8-a9f7-b10829b631f3",
+            "slot": "left",
+            "present": true,
+            "locks": {
+              "presence": true,
+              "slot": true,
+              "outfit": true
+            }
+          }
+        ]
+      },
+      "catalog": [
+        {
+          "assetId": "0b36d29e-1dd2-4711-a4f6-a068fc8aed42",
+          "label": "Same label",
+          "kind": "background",
+          "actorId": null
+        },
+        {
+          "assetId": "8ceb684c-2e87-45ff-9bd6-b536be71ffec",
+          "label": "Same label",
+          "kind": "sprite",
+          "actorId": "1a80e37d-9df7-4c04-b30f-f8799c42b8c0"
+        },
+        {
+          "assetId": "aa8b5b57-abd8-43d8-a9f7-b10829b631f3",
+          "label": "Same label",
+          "kind": "sprite",
+          "actorId": "1a80e37d-9df7-4c04-b30f-f8799c42b8c0"
+        }
+      ]
+    },
+    "cleanupStale": {
+      "projectId": "1048e4b2-b106-44f4-8be7-6f0448f58fa7",
+      "revision": 4,
+      "inventoryRevision": "eb20489d27465a10380aa821b4165ec4df141d08bc36dd3f6b733bdf61e9789a",
+      "candidates": [
+        {
+          "assetId": "d3ce3530-a2e4-4c8e-bb02-cb385ee08437",
+          "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
+          "width": 420,
+          "height": 660,
+          "byteCount": 4253
+        }
+      ],
+      "reclaimableBytes": 4253,
+      "warning": "Saved library alternatives are retained. Only saved scene and library references are checked. Other tabs or clients may have unsaved drafts that will lose access to removed artwork. Removal cannot be undone here; keep verified database backups."
+    },
+    "backup": {
+      "code": "VALID_BACKUP",
+      "byteLength": 114688,
+      "sha256": "4cca2f9e5a5d57aa7c14b196ef97987cd48725a8d9656c1b9851b7a5e658dd61",
+      "schemaVersion": 2,
+      "integrity": "ok",
+      "projects": 5,
+      "assets": 10,
+      "sqlite": "3.53.4",
+      "journalMode": "delete",
+      "accountBinding": "ACCOUNT_BINDING_UNVERIFIED"
+    },
+    "inventory": {
+      "projects": [
+        {
+          "id": "0aff3090-842e-49c7-8749-83a4f9688f43",
+          "owner": "[\"default-user\",1792196244366]",
+          "name": "Independent library",
+          "revision": 1,
+          "scene": "{\"backgroundAssetId\":\"d2c00c58-2f17-4329-8fd5-d9b075adf60c\",\"backgroundLocked\":true,\"actors\":[]}",
+          "catalog": "[{\"assetId\":\"d2c00c58-2f17-4329-8fd5-d9b075adf60c\",\"label\":\"forest\",\"kind\":\"background\",\"actorId\":null}]"
+        },
+        {
+          "id": "1048e4b2-b106-44f4-8be7-6f0448f58fa7",
+          "owner": "[\"default-user\",1792196244366]",
+          "name": "Reusable library",
+          "revision": 5,
+          "scene": "{\"backgroundAssetId\":\"0b36d29e-1dd2-4711-a4f6-a068fc8aed42\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"1a80e37d-9df7-4c04-b30f-f8799c42b8c0\",\"name\":\"Manual actor\",\"spriteAssetId\":\"aa8b5b57-abd8-43d8-a9f7-b10829b631f3\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
+          "catalog": "[{\"assetId\":\"0b36d29e-1dd2-4711-a4f6-a068fc8aed42\",\"label\":\"Same label\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"8ceb684c-2e87-45ff-9bd6-b536be71ffec\",\"label\":\"Same label\",\"kind\":\"sprite\",\"actorId\":\"1a80e37d-9df7-4c04-b30f-f8799c42b8c0\"},{\"assetId\":\"aa8b5b57-abd8-43d8-a9f7-b10829b631f3\",\"label\":\"Same label\",\"kind\":\"sprite\",\"actorId\":\"1a80e37d-9df7-4c04-b30f-f8799c42b8c0\"}]"
+        },
+        {
+          "id": "7986ef5a-5223-442d-9143-7cbe8c43b900",
+          "owner": "[\"default-user\",1792196244366]",
+          "name": "API project",
+          "revision": 1,
+          "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
+          "catalog": "[]"
+        },
+        {
+          "id": "872b4e2f-502e-4f5d-bd19-13b04e08cfaf",
+          "owner": "[\"sn-other\",1792196261577]",
+          "name": "Bob project",
+          "revision": 0,
+          "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
+          "catalog": "[]"
+        },
+        {
+          "id": "8c047d36-6602-484f-b120-e4bd28ea831e",
+          "owner": "[\"default-user\",1792196244366]",
+          "name": "Browser project",
+          "revision": 1,
+          "scene": "{\"backgroundAssetId\":\"2e44d9ff-f637-4a10-af0d-24f839a28577\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"ee99ffc9-e20b-44f2-ac01-e42e1433d2e0\",\"name\":\"One\",\"spriteAssetId\":\"2fc88ce2-2975-4ac7-865b-78eae30fa029\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"dff31767-f95d-4b9b-9ea5-0454deba200a\",\"name\":\"Two\",\"spriteAssetId\":\"756b3fa3-91cf-483f-830c-b4ea84334ed1\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
+          "catalog": "[{\"assetId\":\"2e44d9ff-f637-4a10-af0d-24f839a28577\",\"label\":\"forest\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"2fc88ce2-2975-4ac7-865b-78eae30fa029\",\"label\":\"mira-a\",\"kind\":\"sprite\",\"actorId\":\"ee99ffc9-e20b-44f2-ac01-e42e1433d2e0\"},{\"assetId\":\"756b3fa3-91cf-483f-830c-b4ea84334ed1\",\"label\":\"rowan\",\"kind\":\"sprite\",\"actorId\":\"dff31767-f95d-4b9b-9ea5-0454deba200a\"}]"
+        }
+      ],
+      "assets": [
+        {
+          "id": "0b36d29e-1dd2-4711-a4f6-a068fc8aed42",
+          "project": "1048e4b2-b106-44f4-8be7-6f0448f58fa7",
+          "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
+          "bytes": 6085
+        },
+        {
+          "id": "2e44d9ff-f637-4a10-af0d-24f839a28577",
+          "project": "8c047d36-6602-484f-b120-e4bd28ea831e",
+          "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
+          "bytes": 11591
+        },
+        {
+          "id": "2fc88ce2-2975-4ac7-865b-78eae30fa029",
+          "project": "8c047d36-6602-484f-b120-e4bd28ea831e",
+          "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
+          "bytes": 4454
+        },
+        {
+          "id": "756b3fa3-91cf-483f-830c-b4ea84334ed1",
+          "project": "8c047d36-6602-484f-b120-e4bd28ea831e",
+          "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
+          "bytes": 4253
+        },
+        {
+          "id": "88efe2f7-4a4e-4fea-9083-c62bfd6d9060",
+          "project": "1048e4b2-b106-44f4-8be7-6f0448f58fa7",
+          "sha256": "2ff97d72355e8c093e032d450746b4484212041ffee857359604fc080542ef88",
+          "bytes": 4560
+        },
+        {
+          "id": "8ceb684c-2e87-45ff-9bd6-b536be71ffec",
+          "project": "1048e4b2-b106-44f4-8be7-6f0448f58fa7",
+          "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
+          "bytes": 4454
+        },
+        {
+          "id": "aa8b5b57-abd8-43d8-a9f7-b10829b631f3",
+          "project": "1048e4b2-b106-44f4-8be7-6f0448f58fa7",
+          "sha256": "f583c391c970a2c8fc4b20519cc17b05984ecfb65231d36d3ba87021f7366c3a",
+          "bytes": 4538
+        },
+        {
+          "id": "d2c00c58-2f17-4329-8fd5-d9b075adf60c",
+          "project": "0aff3090-842e-49c7-8749-83a4f9688f43",
+          "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
+          "bytes": 11591
+        },
+        {
+          "id": "d3ce3530-a2e4-4c8e-bb02-cb385ee08437",
+          "project": "1048e4b2-b106-44f4-8be7-6f0448f58fa7",
+          "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
+          "bytes": 4253
+        },
+        {
+          "id": "ea3d752e-78d8-46c5-b175-4d1693f4464f",
+          "project": "7986ef5a-5223-442d-9143-7cbe8c43b900",
+          "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
+          "bytes": 11591
+        }
+      ]
+    },
+    "nativeBefore": {
+      "default-user/characters/Project A.png": "9c9295d53ce280ec9b4f1016e734a3ab4fa8485766baca979418a632d0183cc2",
+      "default-user/characters/Project B.png": "eb8f369d2bb79785835f035777324cb201b5a1c31774b2d63d80f39bc33c6bc2",
+      "default-user/characters/Seraphina/admiration.png": "e451994487b3a5b7c72d6e6025c8cbe6bbcfbf01a490042b8b581522e6ba4f96",
+      "default-user/characters/Seraphina/amusement.png": "1cedaee06fb1c740c5c8c52de8973f733789d51fe9b23fcb633635e755ae6e6f",
+      "default-user/characters/Seraphina/anger.png": "d657d77b1bce609dd6006582cf687691871411eb041f9f4c41da4765b12ea069",
+      "default-user/characters/Seraphina/annoyance.png": "ee268f03244c8194abcc18664bde83f4488630a6a9095717eead8cfdb36048fe",
+      "default-user/characters/Seraphina/approval.png": "9ae62282e0b1dfd5b0ea0874f89b59814de4b031919ed44ed4cc3f848d5bf5ed",
+      "default-user/characters/Seraphina/caring.png": "3f0a3dd0c795b1a05660f55a3fd54219b2408e740354e8a15970d8e00ac0b1f2",
+      "default-user/characters/Seraphina/confusion.png": "d731ca04495b13e14e7df5c5b304a93c63769387131c995b1cbef6fdda39105b",
+      "default-user/characters/Seraphina/curiosity.png": "31275000dbcf06e6deca10971e8e48bb1605ab5aa26c177d836f5be4c9c0879e",
+      "default-user/characters/Seraphina/desire.png": "f77e1b8b6c2684011e81262c0ad5a28437da4ea1fef05ba8d073bec0988b725b",
+      "default-user/characters/Seraphina/disappointment.png": "e9a5e328ebaf3d36c8a69653f5c65b408cfbb4f65d4f24dee935e5eb2aa21c15",
+      "default-user/characters/Seraphina/disapproval.png": "690600866c8f31ad6acfc9db22769eede7a5b6a65b56e2706c6af868da2b38d5",
+      "default-user/characters/Seraphina/disgust.png": "a7717a440287608b12d1e4be0011b067554339b39803ea85a555c50b0502dd35",
+      "default-user/characters/Seraphina/embarrassment.png": "8400d251049220134cecd5dba6dc94268348db04bbf801e5d1b8a62b6d1ea441",
+      "default-user/characters/Seraphina/excitement.png": "1b82905f656458a2acff10c23b2cd4348c10e60f677f1dbd69be82b773b7d745",
+      "default-user/characters/Seraphina/fear.png": "baa30eebddb5913a006e322137d9b24b90a2ab99f8d2c2dbcf641b923df5cb76",
+      "default-user/characters/Seraphina/gratitude.png": "1693052da628f5a63e5de0dee18a67d8e1014e8680247eaede612a6edef18d63",
+      "default-user/characters/Seraphina/grief.png": "cbab6c5a10edbf20ed04350dbec06dc6177719904ab7b01ce30e65ac51d0638a",
+      "default-user/characters/Seraphina/joy.png": "b8da43db84d73a795a5f6044971bae9dfcc163684ab7078673b71ff2138ef716",
+      "default-user/characters/Seraphina/love.png": "830f0fffb386d4a152386fde6f49440b79daef40bbb7a4d1c164de560a03f95e",
+      "default-user/characters/Seraphina/nervousness.png": "abce8853dc1b75af7a9eca1d3cbd36e40a4830d3ed10cce52c0005cfd57c000c",
+      "default-user/characters/Seraphina/neutral.png": "aeefd83cd8768d9701d914dbe78775ad92e93c175079c33072c2ec22fbba7d26",
+      "default-user/characters/Seraphina/optimism.png": "4aa443a4446ca577cdd2e434ae949f599c624e907303c0744b73868e027d789d",
+      "default-user/characters/Seraphina/pride.png": "e6852d60291a6a37d1f29ca159ac80816d1c9ba24239601a76de2af12d36d34a",
+      "default-user/characters/Seraphina/realization.png": "597d3a5cf6e5a142dd9329559263e0a77a5aa26f8ef6d19e6e5b6d9000d6afb2",
+      "default-user/characters/Seraphina/relief.png": "89aba575c32b9341871a906ebd64b66fe0031b281108f9eee8c3734d70ec5e00",
+      "default-user/characters/Seraphina/remorse.png": "26e65c298abc03da60688a8b891e54d1faa701bb47a439ba817ecf1a72a65c31",
+      "default-user/characters/Seraphina/sadness.png": "3819c2bca59224f67767eb3762c846e35d5eb5272be03f35c21fc32163df67a6",
+      "default-user/characters/Seraphina/surprise.png": "f6a9f657d081f670a961649a5a21526ec251262ca06adf99626509059fbbb103",
+      "default-user/characters/default_Seraphina.png": "8a71e8270f54fafbccf905b1bdf053a6a55f57bea89c01fcd8c0e87ee76a2d52",
+      "default-user/chats/Project A/Project A - 2026-10-16@17h17m41s905ms.jsonl": "de7158174dd60c9d40d9f5376abb6d3c19f406aab1d4ac321613466ef728f360",
+      "default-user/chats/Project B/Project B - 2026-10-16@17h17m41s975ms.jsonl": "228892fa58fcd94a0e0638cb5f8a55a97b0086189c63d3df8aefe3223340cc34",
+      "default-user/worlds/Eldoria.json": "bfc2548443c890746a54d54e35e41265b02d1b59fd06d72552b305bf9b1e063c"
+    },
+    "nativeAfter": {
+      "default-user/characters/Project A.png": "9c9295d53ce280ec9b4f1016e734a3ab4fa8485766baca979418a632d0183cc2",
+      "default-user/characters/Project B.png": "eb8f369d2bb79785835f035777324cb201b5a1c31774b2d63d80f39bc33c6bc2",
+      "default-user/characters/Seraphina/admiration.png": "e451994487b3a5b7c72d6e6025c8cbe6bbcfbf01a490042b8b581522e6ba4f96",
+      "default-user/characters/Seraphina/amusement.png": "1cedaee06fb1c740c5c8c52de8973f733789d51fe9b23fcb633635e755ae6e6f",
+      "default-user/characters/Seraphina/anger.png": "d657d77b1bce609dd6006582cf687691871411eb041f9f4c41da4765b12ea069",
+      "default-user/characters/Seraphina/annoyance.png": "ee268f03244c8194abcc18664bde83f4488630a6a9095717eead8cfdb36048fe",
+      "default-user/characters/Seraphina/approval.png": "9ae62282e0b1dfd5b0ea0874f89b59814de4b031919ed44ed4cc3f848d5bf5ed",
+      "default-user/characters/Seraphina/caring.png": "3f0a3dd0c795b1a05660f55a3fd54219b2408e740354e8a15970d8e00ac0b1f2",
+      "default-user/characters/Seraphina/confusion.png": "d731ca04495b13e14e7df5c5b304a93c63769387131c995b1cbef6fdda39105b",
+      "default-user/characters/Seraphina/curiosity.png": "31275000dbcf06e6deca10971e8e48bb1605ab5aa26c177d836f5be4c9c0879e",
+      "default-user/characters/Seraphina/desire.png": "f77e1b8b6c2684011e81262c0ad5a28437da4ea1fef05ba8d073bec0988b725b",
+      "default-user/characters/Seraphina/disappointment.png": "e9a5e328ebaf3d36c8a69653f5c65b408cfbb4f65d4f24dee935e5eb2aa21c15",
+      "default-user/characters/Seraphina/disapproval.png": "690600866c8f31ad6acfc9db22769eede7a5b6a65b56e2706c6af868da2b38d5",
+      "default-user/characters/Seraphina/disgust.png": "a7717a440287608b12d1e4be0011b067554339b39803ea85a555c50b0502dd35",
+      "default-user/characters/Seraphina/embarrassment.png": "8400d251049220134cecd5dba6dc94268348db04bbf801e5d1b8a62b6d1ea441",
+      "default-user/characters/Seraphina/excitement.png": "1b82905f656458a2acff10c23b2cd4348c10e60f677f1dbd69be82b773b7d745",
+      "default-user/characters/Seraphina/fear.png": "baa30eebddb5913a006e322137d9b24b90a2ab99f8d2c2dbcf641b923df5cb76",
+      "default-user/characters/Seraphina/gratitude.png": "1693052da628f5a63e5de0dee18a67d8e1014e8680247eaede612a6edef18d63",
+      "default-user/characters/Seraphina/grief.png": "cbab6c5a10edbf20ed04350dbec06dc6177719904ab7b01ce30e65ac51d0638a",
+      "default-user/characters/Seraphina/joy.png": "b8da43db84d73a795a5f6044971bae9dfcc163684ab7078673b71ff2138ef716",
+      "default-user/characters/Seraphina/love.png": "830f0fffb386d4a152386fde6f49440b79daef40bbb7a4d1c164de560a03f95e",
+      "default-user/characters/Seraphina/nervousness.png": "abce8853dc1b75af7a9eca1d3cbd36e40a4830d3ed10cce52c0005cfd57c000c",
+      "default-user/characters/Seraphina/neutral.png": "aeefd83cd8768d9701d914dbe78775ad92e93c175079c33072c2ec22fbba7d26",
+      "default-user/characters/Seraphina/optimism.png": "4aa443a4446ca577cdd2e434ae949f599c624e907303c0744b73868e027d789d",
+      "default-user/characters/Seraphina/pride.png": "e6852d60291a6a37d1f29ca159ac80816d1c9ba24239601a76de2af12d36d34a",
+      "default-user/characters/Seraphina/realization.png": "597d3a5cf6e5a142dd9329559263e0a77a5aa26f8ef6d19e6e5b6d9000d6afb2",
+      "default-user/characters/Seraphina/relief.png": "89aba575c32b9341871a906ebd64b66fe0031b281108f9eee8c3734d70ec5e00",
+      "default-user/characters/Seraphina/remorse.png": "26e65c298abc03da60688a8b891e54d1faa701bb47a439ba817ecf1a72a65c31",
+      "default-user/characters/Seraphina/sadness.png": "3819c2bca59224f67767eb3762c846e35d5eb5272be03f35c21fc32163df67a6",
+      "default-user/characters/Seraphina/surprise.png": "f6a9f657d081f670a961649a5a21526ec251262ca06adf99626509059fbbb103",
+      "default-user/characters/default_Seraphina.png": "8a71e8270f54fafbccf905b1bdf053a6a55f57bea89c01fcd8c0e87ee76a2d52",
+      "default-user/chats/Project A/Project A - 2026-10-16@17h17m41s905ms.jsonl": "de7158174dd60c9d40d9f5376abb6d3c19f406aab1d4ac321613466ef728f360",
+      "default-user/chats/Project B/Project B - 2026-10-16@17h17m41s975ms.jsonl": "228892fa58fcd94a0e0638cb5f8a55a97b0086189c63d3df8aefe3223340cc34",
+      "default-user/worlds/Eldoria.json": "bfc2548443c890746a54d54e35e41265b02d1b59fd06d72552b305bf9b1e063c"
+    }
+  },
+  "stageUX": {
+    "project": {
+      "schemaVersion": 2,
+      "projectId": "a1de9d38-5b6b-4205-9f55-d7c8a83ca3fa",
+      "name": "Manual stage UX",
+      "revision": 4,
+      "scene": {
+        "backgroundAssetId": "6c8f129a-0297-46ac-93b4-b0979ca27f8f",
+        "backgroundLocked": true,
+        "actors": [
+          {
+            "actorId": "c00b811e-fd43-4a16-809b-cfe646ac1b2d",
+            "name": "Mira",
+            "spriteAssetId": "7218eb2e-2bb5-48c8-b725-71e4fb34ca64",
+            "slot": "center",
+            "present": true,
+            "locks": {
+              "presence": true,
+              "slot": true,
+              "outfit": true
+            }
+          },
+          {
+            "actorId": "9d3fe290-ebbc-4be2-867f-364a5fba0118",
+            "name": "Mira",
+            "spriteAssetId": "1d51f7cd-593f-4baf-9b38-3dcfcb20b76a",
+            "slot": "left",
+            "present": true,
+            "locks": {
+              "presence": true,
+              "slot": true,
+              "outfit": true
+            }
+          },
+          {
+            "actorId": "b30fd172-5003-4767-9e9c-32437b39ab3a",
+            "name": "Rowan",
+            "spriteAssetId": "5582ea96-0798-42e4-9a96-e6c736fb53f6",
+            "slot": null,
+            "present": true,
+            "locks": {
+              "presence": true,
+              "slot": true,
+              "outfit": true
+            }
+          },
+          {
+            "actorId": "440350ba-c3da-437d-8bce-8c6ae4c0db7c",
+            "name": "Sage",
+            "spriteAssetId": "800bd48f-11b7-48d3-a511-c66f609fba90",
+            "slot": "right",
+            "present": true,
+            "locks": {
+              "presence": true,
+              "slot": true,
+              "outfit": true
+            }
+          }
+        ]
+      },
+      "catalog": [
+        {
+          "assetId": "7218eb2e-2bb5-48c8-b725-71e4fb34ca64",
+          "label": "Mira art",
+          "kind": "sprite",
+          "actorId": "c00b811e-fd43-4a16-809b-cfe646ac1b2d"
+        },
+        {
+          "assetId": "1d51f7cd-593f-4baf-9b38-3dcfcb20b76a",
+          "label": "Mira art",
+          "kind": "sprite",
+          "actorId": "9d3fe290-ebbc-4be2-867f-364a5fba0118"
+        },
+        {
+          "assetId": "5582ea96-0798-42e4-9a96-e6c736fb53f6",
+          "label": "Rowan art",
+          "kind": "sprite",
+          "actorId": "b30fd172-5003-4767-9e9c-32437b39ab3a"
+        },
+        {
+          "assetId": "800bd48f-11b7-48d3-a511-c66f609fba90",
+          "label": "Sage art",
+          "kind": "sprite",
+          "actorId": "440350ba-c3da-437d-8bce-8c6ae4c0db7c"
+        },
+        {
+          "assetId": "6c8f129a-0297-46ac-93b4-b0979ca27f8f",
+          "label": "Location",
+          "kind": "background",
+          "actorId": null
+        },
+        {
+          "assetId": "9ae6f0ff-449e-4592-a3ae-d06effe59177",
+          "label": "Location",
+          "kind": "background",
+          "actorId": null
+        },
+        {
+          "assetId": "6b561fe6-8431-4d0f-bc15-8ca5197fdf55",
+          "label": "Coat",
+          "kind": "sprite",
+          "actorId": "c00b811e-fd43-4a16-809b-cfe646ac1b2d"
+        }
+      ]
+    },
+    "nativeBefore": {
+      "default-user/characters/Project A.png": "9c9295d53ce280ec9b4f1016e734a3ab4fa8485766baca979418a632d0183cc2",
+      "default-user/characters/Project B.png": "eb8f369d2bb79785835f035777324cb201b5a1c31774b2d63d80f39bc33c6bc2",
+      "default-user/characters/Seraphina/admiration.png": "e451994487b3a5b7c72d6e6025c8cbe6bbcfbf01a490042b8b581522e6ba4f96",
+      "default-user/characters/Seraphina/amusement.png": "1cedaee06fb1c740c5c8c52de8973f733789d51fe9b23fcb633635e755ae6e6f",
+      "default-user/characters/Seraphina/anger.png": "d657d77b1bce609dd6006582cf687691871411eb041f9f4c41da4765b12ea069",
+      "default-user/characters/Seraphina/annoyance.png": "ee268f03244c8194abcc18664bde83f4488630a6a9095717eead8cfdb36048fe",
+      "default-user/characters/Seraphina/approval.png": "9ae62282e0b1dfd5b0ea0874f89b59814de4b031919ed44ed4cc3f848d5bf5ed",
+      "default-user/characters/Seraphina/caring.png": "3f0a3dd0c795b1a05660f55a3fd54219b2408e740354e8a15970d8e00ac0b1f2",
+      "default-user/characters/Seraphina/confusion.png": "d731ca04495b13e14e7df5c5b304a93c63769387131c995b1cbef6fdda39105b",
+      "default-user/characters/Seraphina/curiosity.png": "31275000dbcf06e6deca10971e8e48bb1605ab5aa26c177d836f5be4c9c0879e",
+      "default-user/characters/Seraphina/desire.png": "f77e1b8b6c2684011e81262c0ad5a28437da4ea1fef05ba8d073bec0988b725b",
+      "default-user/characters/Seraphina/disappointment.png": "e9a5e328ebaf3d36c8a69653f5c65b408cfbb4f65d4f24dee935e5eb2aa21c15",
+      "default-user/characters/Seraphina/disapproval.png": "690600866c8f31ad6acfc9db22769eede7a5b6a65b56e2706c6af868da2b38d5",
+      "default-user/characters/Seraphina/disgust.png": "a7717a440287608b12d1e4be0011b067554339b39803ea85a555c50b0502dd35",
+      "default-user/characters/Seraphina/embarrassment.png": "8400d251049220134cecd5dba6dc94268348db04bbf801e5d1b8a62b6d1ea441",
+      "default-user/characters/Seraphina/excitement.png": "1b82905f656458a2acff10c23b2cd4348c10e60f677f1dbd69be82b773b7d745",
+      "default-user/characters/Seraphina/fear.png": "baa30eebddb5913a006e322137d9b24b90a2ab99f8d2c2dbcf641b923df5cb76",
+      "default-user/characters/Seraphina/gratitude.png": "1693052da628f5a63e5de0dee18a67d8e1014e8680247eaede612a6edef18d63",
+      "default-user/characters/Seraphina/grief.png": "cbab6c5a10edbf20ed04350dbec06dc6177719904ab7b01ce30e65ac51d0638a",
+      "default-user/characters/Seraphina/joy.png": "b8da43db84d73a795a5f6044971bae9dfcc163684ab7078673b71ff2138ef716",
+      "default-user/characters/Seraphina/love.png": "830f0fffb386d4a152386fde6f49440b79daef40bbb7a4d1c164de560a03f95e",
+      "default-user/characters/Seraphina/nervousness.png": "abce8853dc1b75af7a9eca1d3cbd36e40a4830d3ed10cce52c0005cfd57c000c",
+      "default-user/characters/Seraphina/neutral.png": "aeefd83cd8768d9701d914dbe78775ad92e93c175079c33072c2ec22fbba7d26",
+      "default-user/characters/Seraphina/optimism.png": "4aa443a4446ca577cdd2e434ae949f599c624e907303c0744b73868e027d789d",
+      "default-user/characters/Seraphina/pride.png": "e6852d60291a6a37d1f29ca159ac80816d1c9ba24239601a76de2af12d36d34a",
+      "default-user/characters/Seraphina/realization.png": "597d3a5cf6e5a142dd9329559263e0a77a5aa26f8ef6d19e6e5b6d9000d6afb2",
+      "default-user/characters/Seraphina/relief.png": "89aba575c32b9341871a906ebd64b66fe0031b281108f9eee8c3734d70ec5e00",
+      "default-user/characters/Seraphina/remorse.png": "26e65c298abc03da60688a8b891e54d1faa701bb47a439ba817ecf1a72a65c31",
+      "default-user/characters/Seraphina/sadness.png": "3819c2bca59224f67767eb3762c846e35d5eb5272be03f35c21fc32163df67a6",
+      "default-user/characters/Seraphina/surprise.png": "f6a9f657d081f670a961649a5a21526ec251262ca06adf99626509059fbbb103",
+      "default-user/characters/default_Seraphina.png": "8a71e8270f54fafbccf905b1bdf053a6a55f57bea89c01fcd8c0e87ee76a2d52",
+      "default-user/chats/Project A/Project A - 2026-10-16@17h17m41s905ms.jsonl": "de7158174dd60c9d40d9f5376abb6d3c19f406aab1d4ac321613466ef728f360",
+      "default-user/chats/Project B/Project B - 2026-10-16@17h17m41s975ms.jsonl": "228892fa58fcd94a0e0638cb5f8a55a97b0086189c63d3df8aefe3223340cc34",
+      "default-user/worlds/Eldoria.json": "bfc2548443c890746a54d54e35e41265b02d1b59fd06d72552b305bf9b1e063c",
+      "default-user/worlds/stage-ux-fixture.json": "649252ea6c44516811fea03eca45bcca954f69d931d9895eea30a738a46210fb",
+      "default-user/avatars/stage-ux-persona.png": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f"
+    },
+    "nativeAfter": {
+      "default-user/characters/Project A.png": "9c9295d53ce280ec9b4f1016e734a3ab4fa8485766baca979418a632d0183cc2",
+      "default-user/characters/Project B.png": "eb8f369d2bb79785835f035777324cb201b5a1c31774b2d63d80f39bc33c6bc2",
+      "default-user/characters/Seraphina/admiration.png": "e451994487b3a5b7c72d6e6025c8cbe6bbcfbf01a490042b8b581522e6ba4f96",
+      "default-user/characters/Seraphina/amusement.png": "1cedaee06fb1c740c5c8c52de8973f733789d51fe9b23fcb633635e755ae6e6f",
+      "default-user/characters/Seraphina/anger.png": "d657d77b1bce609dd6006582cf687691871411eb041f9f4c41da4765b12ea069",
+      "default-user/characters/Seraphina/annoyance.png": "ee268f03244c8194abcc18664bde83f4488630a6a9095717eead8cfdb36048fe",
+      "default-user/characters/Seraphina/approval.png": "9ae62282e0b1dfd5b0ea0874f89b59814de4b031919ed44ed4cc3f848d5bf5ed",
+      "default-user/characters/Seraphina/caring.png": "3f0a3dd0c795b1a05660f55a3fd54219b2408e740354e8a15970d8e00ac0b1f2",
+      "default-user/characters/Seraphina/confusion.png": "d731ca04495b13e14e7df5c5b304a93c63769387131c995b1cbef6fdda39105b",
+      "default-user/characters/Seraphina/curiosity.png": "31275000dbcf06e6deca10971e8e48bb1605ab5aa26c177d836f5be4c9c0879e",
+      "default-user/characters/Seraphina/desire.png": "f77e1b8b6c2684011e81262c0ad5a28437da4ea1fef05ba8d073bec0988b725b",
+      "default-user/characters/Seraphina/disappointment.png": "e9a5e328ebaf3d36c8a69653f5c65b408cfbb4f65d4f24dee935e5eb2aa21c15",
+      "default-user/characters/Seraphina/disapproval.png": "690600866c8f31ad6acfc9db22769eede7a5b6a65b56e2706c6af868da2b38d5",
+      "default-user/characters/Seraphina/disgust.png": "a7717a440287608b12d1e4be0011b067554339b39803ea85a555c50b0502dd35",
+      "default-user/characters/Seraphina/embarrassment.png": "8400d251049220134cecd5dba6dc94268348db04bbf801e5d1b8a62b6d1ea441",
+      "default-user/characters/Seraphina/excitement.png": "1b82905f656458a2acff10c23b2cd4348c10e60f677f1dbd69be82b773b7d745",
+      "default-user/characters/Seraphina/fear.png": "baa30eebddb5913a006e322137d9b24b90a2ab99f8d2c2dbcf641b923df5cb76",
+      "default-user/characters/Seraphina/gratitude.png": "1693052da628f5a63e5de0dee18a67d8e1014e8680247eaede612a6edef18d63",
+      "default-user/characters/Seraphina/grief.png": "cbab6c5a10edbf20ed04350dbec06dc6177719904ab7b01ce30e65ac51d0638a",
+      "default-user/characters/Seraphina/joy.png": "b8da43db84d73a795a5f6044971bae9dfcc163684ab7078673b71ff2138ef716",
+      "default-user/characters/Seraphina/love.png": "830f0fffb386d4a152386fde6f49440b79daef40bbb7a4d1c164de560a03f95e",
+      "default-user/characters/Seraphina/nervousness.png": "abce8853dc1b75af7a9eca1d3cbd36e40a4830d3ed10cce52c0005cfd57c000c",
+      "default-user/characters/Seraphina/neutral.png": "aeefd83cd8768d9701d914dbe78775ad92e93c175079c33072c2ec22fbba7d26",
+      "default-user/characters/Seraphina/optimism.png": "4aa443a4446ca577cdd2e434ae949f599c624e907303c0744b73868e027d789d",
+      "default-user/characters/Seraphina/pride.png": "e6852d60291a6a37d1f29ca159ac80816d1c9ba24239601a76de2af12d36d34a",
+      "default-user/characters/Seraphina/realization.png": "597d3a5cf6e5a142dd9329559263e0a77a5aa26f8ef6d19e6e5b6d9000d6afb2",
+      "default-user/characters/Seraphina/relief.png": "89aba575c32b9341871a906ebd64b66fe0031b281108f9eee8c3734d70ec5e00",
+      "default-user/characters/Seraphina/remorse.png": "26e65c298abc03da60688a8b891e54d1faa701bb47a439ba817ecf1a72a65c31",
+      "default-user/characters/Seraphina/sadness.png": "3819c2bca59224f67767eb3762c846e35d5eb5272be03f35c21fc32163df67a6",
+      "default-user/characters/Seraphina/surprise.png": "f6a9f657d081f670a961649a5a21526ec251262ca06adf99626509059fbbb103",
+      "default-user/characters/default_Seraphina.png": "8a71e8270f54fafbccf905b1bdf053a6a55f57bea89c01fcd8c0e87ee76a2d52",
+      "default-user/chats/Project A/Project A - 2026-10-16@17h17m41s905ms.jsonl": "de7158174dd60c9d40d9f5376abb6d3c19f406aab1d4ac321613466ef728f360",
+      "default-user/chats/Project B/Project B - 2026-10-16@17h17m41s975ms.jsonl": "228892fa58fcd94a0e0638cb5f8a55a97b0086189c63d3df8aefe3223340cc34",
+      "default-user/worlds/Eldoria.json": "bfc2548443c890746a54d54e35e41265b02d1b59fd06d72552b305bf9b1e063c",
+      "default-user/worlds/stage-ux-fixture.json": "649252ea6c44516811fea03eca45bcca954f69d931d9895eea30a738a46210fb",
+      "default-user/avatars/stage-ux-persona.png": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f"
+    },
+    "connectionBeforeSha256": "2c6cfda38373938b016589a236ef23f388e744dcf9b9f90b8c0c0b5a191bee42",
+    "connectionAfterSha256": "2c6cfda38373938b016589a236ef23f388e744dcf9b9f90b8c0c0b5a191bee42",
+    "screenshots": [
+      "stage-before-reopen-desktop.png",
+      "stage-before-reopen-desktop-controls.png",
+      "stage-before-reopen-narrow.png",
+      "stage-before-reopen-narrow-controls.png",
+      "stage-after-reopen-desktop.png",
+      "stage-after-reopen-desktop-controls.png",
+      "stage-after-reopen-narrow.png",
+      "stage-after-reopen-narrow-controls.png",
+      "stage-conflict-desktop.png",
+      "stage-conflict-desktop-controls.png",
+      "stage-conflict-narrow.png",
+      "stage-conflict-narrow-controls.png",
+      "stage-uncertain-desktop.png",
+      "stage-uncertain-desktop-controls.png",
+      "stage-uncertain-narrow.png",
+      "stage-uncertain-narrow-controls.png"
+    ],
+    "nativeReplySent": true
+  },
+  "bundle": {
+    "sha256": "406dc1495b691f397a7d236c139d2ddf72f915acc0bac062fdb0c9b4a48dd99f",
+    "bytes": 28190,
+    "format": "sillynovel-project",
+    "version": 1
+  },
+  "portabilityNativeBefore": {
+    "default-user/characters/Project A.png": "9c9295d53ce280ec9b4f1016e734a3ab4fa8485766baca979418a632d0183cc2",
+    "default-user/characters/Project B.png": "eb8f369d2bb79785835f035777324cb201b5a1c31774b2d63d80f39bc33c6bc2",
+    "default-user/characters/Seraphina/admiration.png": "e451994487b3a5b7c72d6e6025c8cbe6bbcfbf01a490042b8b581522e6ba4f96",
+    "default-user/characters/Seraphina/amusement.png": "1cedaee06fb1c740c5c8c52de8973f733789d51fe9b23fcb633635e755ae6e6f",
+    "default-user/characters/Seraphina/anger.png": "d657d77b1bce609dd6006582cf687691871411eb041f9f4c41da4765b12ea069",
+    "default-user/characters/Seraphina/annoyance.png": "ee268f03244c8194abcc18664bde83f4488630a6a9095717eead8cfdb36048fe",
+    "default-user/characters/Seraphina/approval.png": "9ae62282e0b1dfd5b0ea0874f89b59814de4b031919ed44ed4cc3f848d5bf5ed",
+    "default-user/characters/Seraphina/caring.png": "3f0a3dd0c795b1a05660f55a3fd54219b2408e740354e8a15970d8e00ac0b1f2",
+    "default-user/characters/Seraphina/confusion.png": "d731ca04495b13e14e7df5c5b304a93c63769387131c995b1cbef6fdda39105b",
+    "default-user/characters/Seraphina/curiosity.png": "31275000dbcf06e6deca10971e8e48bb1605ab5aa26c177d836f5be4c9c0879e",
+    "default-user/characters/Seraphina/desire.png": "f77e1b8b6c2684011e81262c0ad5a28437da4ea1fef05ba8d073bec0988b725b",
+    "default-user/characters/Seraphina/disappointment.png": "e9a5e328ebaf3d36c8a69653f5c65b408cfbb4f65d4f24dee935e5eb2aa21c15",
+    "default-user/characters/Seraphina/disapproval.png": "690600866c8f31ad6acfc9db22769eede7a5b6a65b56e2706c6af868da2b38d5",
+    "default-user/characters/Seraphina/disgust.png": "a7717a440287608b12d1e4be0011b067554339b39803ea85a555c50b0502dd35",
+    "default-user/characters/Seraphina/embarrassment.png": "8400d251049220134cecd5dba6dc94268348db04bbf801e5d1b8a62b6d1ea441",
+    "default-user/characters/Seraphina/excitement.png": "1b82905f656458a2acff10c23b2cd4348c10e60f677f1dbd69be82b773b7d745",
+    "default-user/characters/Seraphina/fear.png": "baa30eebddb5913a006e322137d9b24b90a2ab99f8d2c2dbcf641b923df5cb76",
+    "default-user/characters/Seraphina/gratitude.png": "1693052da628f5a63e5de0dee18a67d8e1014e8680247eaede612a6edef18d63",
+    "default-user/characters/Seraphina/grief.png": "cbab6c5a10edbf20ed04350dbec06dc6177719904ab7b01ce30e65ac51d0638a",
+    "default-user/characters/Seraphina/joy.png": "b8da43db84d73a795a5f6044971bae9dfcc163684ab7078673b71ff2138ef716",
+    "default-user/characters/Seraphina/love.png": "830f0fffb386d4a152386fde6f49440b79daef40bbb7a4d1c164de560a03f95e",
+    "default-user/characters/Seraphina/nervousness.png": "abce8853dc1b75af7a9eca1d3cbd36e40a4830d3ed10cce52c0005cfd57c000c",
+    "default-user/characters/Seraphina/neutral.png": "aeefd83cd8768d9701d914dbe78775ad92e93c175079c33072c2ec22fbba7d26",
+    "default-user/characters/Seraphina/optimism.png": "4aa443a4446ca577cdd2e434ae949f599c624e907303c0744b73868e027d789d",
+    "default-user/characters/Seraphina/pride.png": "e6852d60291a6a37d1f29ca159ac80816d1c9ba24239601a76de2af12d36d34a",
+    "default-user/characters/Seraphina/realization.png": "597d3a5cf6e5a142dd9329559263e0a77a5aa26f8ef6d19e6e5b6d9000d6afb2",
+    "default-user/characters/Seraphina/relief.png": "89aba575c32b9341871a906ebd64b66fe0031b281108f9eee8c3734d70ec5e00",
+    "default-user/characters/Seraphina/remorse.png": "26e65c298abc03da60688a8b891e54d1faa701bb47a439ba817ecf1a72a65c31",
+    "default-user/characters/Seraphina/sadness.png": "3819c2bca59224f67767eb3762c846e35d5eb5272be03f35c21fc32163df67a6",
+    "default-user/characters/Seraphina/surprise.png": "f6a9f657d081f670a961649a5a21526ec251262ca06adf99626509059fbbb103",
+    "default-user/characters/default_Seraphina.png": "8a71e8270f54fafbccf905b1bdf053a6a55f57bea89c01fcd8c0e87ee76a2d52",
+    "default-user/chats/Project A/Project A - 2026-10-16@17h17m41s905ms.jsonl": "8a0ffd0cc9345069152020d08d20df070c60c5287a42074958be39549098d7b0",
+    "default-user/chats/Project B/Project B - 2026-10-16@17h17m41s975ms.jsonl": "228892fa58fcd94a0e0638cb5f8a55a97b0086189c63d3df8aefe3223340cc34",
+    "default-user/worlds/Eldoria.json": "bfc2548443c890746a54d54e35e41265b02d1b59fd06d72552b305bf9b1e063c",
+    "default-user/worlds/stage-ux-fixture.json": "649252ea6c44516811fea03eca45bcca954f69d931d9895eea30a738a46210fb",
+    "default-user/avatars/stage-ux-persona.png": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f"
+  },
+  "portabilityNativeAfter": {
+    "default-user/characters/Project A.png": "9c9295d53ce280ec9b4f1016e734a3ab4fa8485766baca979418a632d0183cc2",
+    "default-user/characters/Project B.png": "eb8f369d2bb79785835f035777324cb201b5a1c31774b2d63d80f39bc33c6bc2",
+    "default-user/characters/Seraphina/admiration.png": "e451994487b3a5b7c72d6e6025c8cbe6bbcfbf01a490042b8b581522e6ba4f96",
+    "default-user/characters/Seraphina/amusement.png": "1cedaee06fb1c740c5c8c52de8973f733789d51fe9b23fcb633635e755ae6e6f",
+    "default-user/characters/Seraphina/anger.png": "d657d77b1bce609dd6006582cf687691871411eb041f9f4c41da4765b12ea069",
+    "default-user/characters/Seraphina/annoyance.png": "ee268f03244c8194abcc18664bde83f4488630a6a9095717eead8cfdb36048fe",
+    "default-user/characters/Seraphina/approval.png": "9ae62282e0b1dfd5b0ea0874f89b59814de4b031919ed44ed4cc3f848d5bf5ed",
+    "default-user/characters/Seraphina/caring.png": "3f0a3dd0c795b1a05660f55a3fd54219b2408e740354e8a15970d8e00ac0b1f2",
+    "default-user/characters/Seraphina/confusion.png": "d731ca04495b13e14e7df5c5b304a93c63769387131c995b1cbef6fdda39105b",
+    "default-user/characters/Seraphina/curiosity.png": "31275000dbcf06e6deca10971e8e48bb1605ab5aa26c177d836f5be4c9c0879e",
+    "default-user/characters/Seraphina/desire.png": "f77e1b8b6c2684011e81262c0ad5a28437da4ea1fef05ba8d073bec0988b725b",
+    "default-user/characters/Seraphina/disappointment.png": "e9a5e328ebaf3d36c8a69653f5c65b408cfbb4f65d4f24dee935e5eb2aa21c15",
+    "default-user/characters/Seraphina/disapproval.png": "690600866c8f31ad6acfc9db22769eede7a5b6a65b56e2706c6af868da2b38d5",
+    "default-user/characters/Seraphina/disgust.png": "a7717a440287608b12d1e4be0011b067554339b39803ea85a555c50b0502dd35",
+    "default-user/characters/Seraphina/embarrassment.png": "8400d251049220134cecd5dba6dc94268348db04bbf801e5d1b8a62b6d1ea441",
+    "default-user/characters/Seraphina/excitement.png": "1b82905f656458a2acff10c23b2cd4348c10e60f677f1dbd69be82b773b7d745",
+    "default-user/characters/Seraphina/fear.png": "baa30eebddb5913a006e322137d9b24b90a2ab99f8d2c2dbcf641b923df5cb76",
+    "default-user/characters/Seraphina/gratitude.png": "1693052da628f5a63e5de0dee18a67d8e1014e8680247eaede612a6edef18d63",
+    "default-user/characters/Seraphina/grief.png": "cbab6c5a10edbf20ed04350dbec06dc6177719904ab7b01ce30e65ac51d0638a",
+    "default-user/characters/Seraphina/joy.png": "b8da43db84d73a795a5f6044971bae9dfcc163684ab7078673b71ff2138ef716",
+    "default-user/characters/Seraphina/love.png": "830f0fffb386d4a152386fde6f49440b79daef40bbb7a4d1c164de560a03f95e",
+    "default-user/characters/Seraphina/nervousness.png": "abce8853dc1b75af7a9eca1d3cbd36e40a4830d3ed10cce52c0005cfd57c000c",
+    "default-user/characters/Seraphina/neutral.png": "aeefd83cd8768d9701d914dbe78775ad92e93c175079c33072c2ec22fbba7d26",
+    "default-user/characters/Seraphina/optimism.png": "4aa443a4446ca577cdd2e434ae949f599c624e907303c0744b73868e027d789d",
+    "default-user/characters/Seraphina/pride.png": "e6852d60291a6a37d1f29ca159ac80816d1c9ba24239601a76de2af12d36d34a",
+    "default-user/characters/Seraphina/realization.png": "597d3a5cf6e5a142dd9329559263e0a77a5aa26f8ef6d19e6e5b6d9000d6afb2",
+    "default-user/characters/Seraphina/relief.png": "89aba575c32b9341871a906ebd64b66fe0031b281108f9eee8c3734d70ec5e00",
+    "default-user/characters/Seraphina/remorse.png": "26e65c298abc03da60688a8b891e54d1faa701bb47a439ba817ecf1a72a65c31",
+    "default-user/characters/Seraphina/sadness.png": "3819c2bca59224f67767eb3762c846e35d5eb5272be03f35c21fc32163df67a6",
+    "default-user/characters/Seraphina/surprise.png": "f6a9f657d081f670a961649a5a21526ec251262ca06adf99626509059fbbb103",
+    "default-user/characters/default_Seraphina.png": "8a71e8270f54fafbccf905b1bdf053a6a55f57bea89c01fcd8c0e87ee76a2d52",
+    "default-user/chats/Project A/Project A - 2026-10-16@17h17m41s905ms.jsonl": "8a0ffd0cc9345069152020d08d20df070c60c5287a42074958be39549098d7b0",
+    "default-user/chats/Project B/Project B - 2026-10-16@17h17m41s975ms.jsonl": "228892fa58fcd94a0e0638cb5f8a55a97b0086189c63d3df8aefe3223340cc34",
+    "default-user/worlds/Eldoria.json": "bfc2548443c890746a54d54e35e41265b02d1b59fd06d72552b305bf9b1e063c",
+    "default-user/worlds/stage-ux-fixture.json": "649252ea6c44516811fea03eca45bcca954f69d931d9895eea30a738a46210fb",
+    "default-user/avatars/stage-ux-persona.png": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f"
+  },
+  "databaseBeforeFailures": {
+    "projects": [
+      {
+        "id": "0aff3090-842e-49c7-8749-83a4f9688f43",
+        "owner": "[\"default-user\",1792196244366]",
+        "name": "Independent library",
+        "revision": 1,
+        "scene": "{\"backgroundAssetId\":\"d2c00c58-2f17-4329-8fd5-d9b075adf60c\",\"backgroundLocked\":true,\"actors\":[]}",
+        "catalog": "[{\"assetId\":\"d2c00c58-2f17-4329-8fd5-d9b075adf60c\",\"label\":\"forest\",\"kind\":\"background\",\"actorId\":null}]"
+      },
+      {
+        "id": "1048e4b2-b106-44f4-8be7-6f0448f58fa7",
+        "owner": "[\"default-user\",1792196244366]",
+        "name": "Reusable library",
+        "revision": 5,
+        "scene": "{\"backgroundAssetId\":\"0b36d29e-1dd2-4711-a4f6-a068fc8aed42\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"1a80e37d-9df7-4c04-b30f-f8799c42b8c0\",\"name\":\"Manual actor\",\"spriteAssetId\":\"aa8b5b57-abd8-43d8-a9f7-b10829b631f3\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
+        "catalog": "[{\"assetId\":\"0b36d29e-1dd2-4711-a4f6-a068fc8aed42\",\"label\":\"Same label\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"8ceb684c-2e87-45ff-9bd6-b536be71ffec\",\"label\":\"Same label\",\"kind\":\"sprite\",\"actorId\":\"1a80e37d-9df7-4c04-b30f-f8799c42b8c0\"},{\"assetId\":\"aa8b5b57-abd8-43d8-a9f7-b10829b631f3\",\"label\":\"Same label\",\"kind\":\"sprite\",\"actorId\":\"1a80e37d-9df7-4c04-b30f-f8799c42b8c0\"}]"
+      },
+      {
+        "id": "7986ef5a-5223-442d-9143-7cbe8c43b900",
+        "owner": "[\"default-user\",1792196244366]",
+        "name": "API project",
+        "revision": 1,
+        "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
+        "catalog": "[]"
+      },
+      {
+        "id": "872b4e2f-502e-4f5d-bd19-13b04e08cfaf",
+        "owner": "[\"sn-other\",1792196261577]",
+        "name": "Bob project",
+        "revision": 0,
+        "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
+        "catalog": "[]"
+      },
+      {
+        "id": "8c047d36-6602-484f-b120-e4bd28ea831e",
+        "owner": "[\"default-user\",1792196244366]",
+        "name": "Browser project",
+        "revision": 1,
+        "scene": "{\"backgroundAssetId\":\"2e44d9ff-f637-4a10-af0d-24f839a28577\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"ee99ffc9-e20b-44f2-ac01-e42e1433d2e0\",\"name\":\"One\",\"spriteAssetId\":\"2fc88ce2-2975-4ac7-865b-78eae30fa029\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"dff31767-f95d-4b9b-9ea5-0454deba200a\",\"name\":\"Two\",\"spriteAssetId\":\"756b3fa3-91cf-483f-830c-b4ea84334ed1\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
+        "catalog": "[{\"assetId\":\"2e44d9ff-f637-4a10-af0d-24f839a28577\",\"label\":\"forest\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"2fc88ce2-2975-4ac7-865b-78eae30fa029\",\"label\":\"mira-a\",\"kind\":\"sprite\",\"actorId\":\"ee99ffc9-e20b-44f2-ac01-e42e1433d2e0\"},{\"assetId\":\"756b3fa3-91cf-483f-830c-b4ea84334ed1\",\"label\":\"rowan\",\"kind\":\"sprite\",\"actorId\":\"dff31767-f95d-4b9b-9ea5-0454deba200a\"}]"
+      },
+      {
+        "id": "a1de9d38-5b6b-4205-9f55-d7c8a83ca3fa",
+        "owner": "[\"default-user\",1792196244366]",
+        "name": "Manual stage UX",
+        "revision": 4,
+        "scene": "{\"backgroundAssetId\":\"6c8f129a-0297-46ac-93b4-b0979ca27f8f\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"c00b811e-fd43-4a16-809b-cfe646ac1b2d\",\"name\":\"Mira\",\"spriteAssetId\":\"7218eb2e-2bb5-48c8-b725-71e4fb34ca64\",\"slot\":\"center\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"9d3fe290-ebbc-4be2-867f-364a5fba0118\",\"name\":\"Mira\",\"spriteAssetId\":\"1d51f7cd-593f-4baf-9b38-3dcfcb20b76a\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"b30fd172-5003-4767-9e9c-32437b39ab3a\",\"name\":\"Rowan\",\"spriteAssetId\":\"5582ea96-0798-42e4-9a96-e6c736fb53f6\",\"slot\":null,\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"440350ba-c3da-437d-8bce-8c6ae4c0db7c\",\"name\":\"Sage\",\"spriteAssetId\":\"800bd48f-11b7-48d3-a511-c66f609fba90\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
+        "catalog": "[{\"assetId\":\"7218eb2e-2bb5-48c8-b725-71e4fb34ca64\",\"label\":\"Mira art\",\"kind\":\"sprite\",\"actorId\":\"c00b811e-fd43-4a16-809b-cfe646ac1b2d\"},{\"assetId\":\"1d51f7cd-593f-4baf-9b38-3dcfcb20b76a\",\"label\":\"Mira art\",\"kind\":\"sprite\",\"actorId\":\"9d3fe290-ebbc-4be2-867f-364a5fba0118\"},{\"assetId\":\"5582ea96-0798-42e4-9a96-e6c736fb53f6\",\"label\":\"Rowan art\",\"kind\":\"sprite\",\"actorId\":\"b30fd172-5003-4767-9e9c-32437b39ab3a\"},{\"assetId\":\"800bd48f-11b7-48d3-a511-c66f609fba90\",\"label\":\"Sage art\",\"kind\":\"sprite\",\"actorId\":\"440350ba-c3da-437d-8bce-8c6ae4c0db7c\"},{\"assetId\":\"6c8f129a-0297-46ac-93b4-b0979ca27f8f\",\"label\":\"Location\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"9ae6f0ff-449e-4592-a3ae-d06effe59177\",\"label\":\"Location\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"6b561fe6-8431-4d0f-bc15-8ca5197fdf55\",\"label\":\"Coat\",\"kind\":\"sprite\",\"actorId\":\"c00b811e-fd43-4a16-809b-cfe646ac1b2d\"}]"
+      },
+      {
+        "id": "bdc1bec9-6c78-4ee2-bd82-22c10cb6cd85",
+        "owner": "[\"default-user\",1792196244366]",
+        "name": "Browser project",
+        "revision": 0,
+        "scene": "{\"backgroundAssetId\":\"091f4758-d41d-4603-91bc-534d9df56d9d\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"ad2cb0b9-c314-4ad0-b559-bb7f55bd8f1d\",\"name\":\"One\",\"spriteAssetId\":\"5bc80837-f238-4aec-826f-2ec8c3bf0f25\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"1a9f4073-2f54-4547-8110-3031aae67d9b\",\"name\":\"Two\",\"spriteAssetId\":\"59e5aea2-b81a-4ffc-bd82-4175fde3ea79\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
+        "catalog": "[]"
+      }
+    ],
+    "assets": [
+      {
+        "id": "091f4758-d41d-4603-91bc-534d9df56d9d",
+        "project": "bdc1bec9-6c78-4ee2-bd82-22c10cb6cd85",
+        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
+        "bytes": 11591
+      },
+      {
+        "id": "0b36d29e-1dd2-4711-a4f6-a068fc8aed42",
+        "project": "1048e4b2-b106-44f4-8be7-6f0448f58fa7",
+        "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
+        "bytes": 6085
+      },
+      {
+        "id": "1d51f7cd-593f-4baf-9b38-3dcfcb20b76a",
+        "project": "a1de9d38-5b6b-4205-9f55-d7c8a83ca3fa",
+        "sha256": "f583c391c970a2c8fc4b20519cc17b05984ecfb65231d36d3ba87021f7366c3a",
+        "bytes": 4538
+      },
+      {
+        "id": "2e44d9ff-f637-4a10-af0d-24f839a28577",
+        "project": "8c047d36-6602-484f-b120-e4bd28ea831e",
+        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
+        "bytes": 11591
+      },
+      {
+        "id": "2fc88ce2-2975-4ac7-865b-78eae30fa029",
+        "project": "8c047d36-6602-484f-b120-e4bd28ea831e",
+        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
+        "bytes": 4454
+      },
+      {
+        "id": "5582ea96-0798-42e4-9a96-e6c736fb53f6",
+        "project": "a1de9d38-5b6b-4205-9f55-d7c8a83ca3fa",
+        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
+        "bytes": 4253
+      },
+      {
+        "id": "59e5aea2-b81a-4ffc-bd82-4175fde3ea79",
+        "project": "bdc1bec9-6c78-4ee2-bd82-22c10cb6cd85",
+        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
+        "bytes": 4253
+      },
+      {
+        "id": "5bc80837-f238-4aec-826f-2ec8c3bf0f25",
+        "project": "bdc1bec9-6c78-4ee2-bd82-22c10cb6cd85",
+        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
+        "bytes": 4454
+      },
+      {
+        "id": "6b561fe6-8431-4d0f-bc15-8ca5197fdf55",
+        "project": "a1de9d38-5b6b-4205-9f55-d7c8a83ca3fa",
+        "sha256": "ef697948f70aacbe82c691c978678e03b5eb2b9b3e528ef553afe62786477542",
+        "bytes": 4266
+      },
+      {
+        "id": "6c8f129a-0297-46ac-93b4-b0979ca27f8f",
+        "project": "a1de9d38-5b6b-4205-9f55-d7c8a83ca3fa",
+        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
+        "bytes": 11591
+      },
+      {
+        "id": "7218eb2e-2bb5-48c8-b725-71e4fb34ca64",
+        "project": "a1de9d38-5b6b-4205-9f55-d7c8a83ca3fa",
+        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
+        "bytes": 4454
+      },
+      {
+        "id": "756b3fa3-91cf-483f-830c-b4ea84334ed1",
+        "project": "8c047d36-6602-484f-b120-e4bd28ea831e",
+        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
+        "bytes": 4253
+      },
+      {
+        "id": "800bd48f-11b7-48d3-a511-c66f609fba90",
+        "project": "a1de9d38-5b6b-4205-9f55-d7c8a83ca3fa",
+        "sha256": "2ff97d72355e8c093e032d450746b4484212041ffee857359604fc080542ef88",
+        "bytes": 4560
+      },
+      {
+        "id": "88efe2f7-4a4e-4fea-9083-c62bfd6d9060",
+        "project": "1048e4b2-b106-44f4-8be7-6f0448f58fa7",
+        "sha256": "2ff97d72355e8c093e032d450746b4484212041ffee857359604fc080542ef88",
+        "bytes": 4560
+      },
+      {
+        "id": "8ceb684c-2e87-45ff-9bd6-b536be71ffec",
+        "project": "1048e4b2-b106-44f4-8be7-6f0448f58fa7",
+        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
+        "bytes": 4454
+      },
+      {
+        "id": "9ae6f0ff-449e-4592-a3ae-d06effe59177",
+        "project": "a1de9d38-5b6b-4205-9f55-d7c8a83ca3fa",
+        "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
+        "bytes": 6085
+      },
+      {
+        "id": "aa8b5b57-abd8-43d8-a9f7-b10829b631f3",
+        "project": "1048e4b2-b106-44f4-8be7-6f0448f58fa7",
+        "sha256": "f583c391c970a2c8fc4b20519cc17b05984ecfb65231d36d3ba87021f7366c3a",
+        "bytes": 4538
+      },
+      {
+        "id": "d2c00c58-2f17-4329-8fd5-d9b075adf60c",
+        "project": "0aff3090-842e-49c7-8749-83a4f9688f43",
+        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
+        "bytes": 11591
+      },
+      {
+        "id": "d3ce3530-a2e4-4c8e-bb02-cb385ee08437",
+        "project": "1048e4b2-b106-44f4-8be7-6f0448f58fa7",
+        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
+        "bytes": 4253
+      },
+      {
+        "id": "ea3d752e-78d8-46c5-b175-4d1693f4464f",
+        "project": "7986ef5a-5223-442d-9143-7cbe8c43b900",
+        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
+        "bytes": 11591
+      }
+    ]
+  },
+  "databaseAfterFailures": {
+    "projects": [
+      {
+        "id": "0aff3090-842e-49c7-8749-83a4f9688f43",
+        "owner": "[\"default-user\",1792196244366]",
+        "name": "Independent library",
+        "revision": 1,
+        "scene": "{\"backgroundAssetId\":\"d2c00c58-2f17-4329-8fd5-d9b075adf60c\",\"backgroundLocked\":true,\"actors\":[]}",
+        "catalog": "[{\"assetId\":\"d2c00c58-2f17-4329-8fd5-d9b075adf60c\",\"label\":\"forest\",\"kind\":\"background\",\"actorId\":null}]"
+      },
+      {
+        "id": "1048e4b2-b106-44f4-8be7-6f0448f58fa7",
+        "owner": "[\"default-user\",1792196244366]",
+        "name": "Reusable library",
+        "revision": 5,
+        "scene": "{\"backgroundAssetId\":\"0b36d29e-1dd2-4711-a4f6-a068fc8aed42\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"1a80e37d-9df7-4c04-b30f-f8799c42b8c0\",\"name\":\"Manual actor\",\"spriteAssetId\":\"aa8b5b57-abd8-43d8-a9f7-b10829b631f3\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
+        "catalog": "[{\"assetId\":\"0b36d29e-1dd2-4711-a4f6-a068fc8aed42\",\"label\":\"Same label\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"8ceb684c-2e87-45ff-9bd6-b536be71ffec\",\"label\":\"Same label\",\"kind\":\"sprite\",\"actorId\":\"1a80e37d-9df7-4c04-b30f-f8799c42b8c0\"},{\"assetId\":\"aa8b5b57-abd8-43d8-a9f7-b10829b631f3\",\"label\":\"Same label\",\"kind\":\"sprite\",\"actorId\":\"1a80e37d-9df7-4c04-b30f-f8799c42b8c0\"}]"
+      },
+      {
+        "id": "7986ef5a-5223-442d-9143-7cbe8c43b900",
+        "owner": "[\"default-user\",1792196244366]",
+        "name": "API project",
+        "revision": 1,
+        "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
+        "catalog": "[]"
+      },
+      {
+        "id": "872b4e2f-502e-4f5d-bd19-13b04e08cfaf",
+        "owner": "[\"sn-other\",1792196261577]",
+        "name": "Bob project",
+        "revision": 0,
+        "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
+        "catalog": "[]"
+      },
+      {
+        "id": "8c047d36-6602-484f-b120-e4bd28ea831e",
+        "owner": "[\"default-user\",1792196244366]",
+        "name": "Browser project",
+        "revision": 1,
+        "scene": "{\"backgroundAssetId\":\"2e44d9ff-f637-4a10-af0d-24f839a28577\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"ee99ffc9-e20b-44f2-ac01-e42e1433d2e0\",\"name\":\"One\",\"spriteAssetId\":\"2fc88ce2-2975-4ac7-865b-78eae30fa029\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"dff31767-f95d-4b9b-9ea5-0454deba200a\",\"name\":\"Two\",\"spriteAssetId\":\"756b3fa3-91cf-483f-830c-b4ea84334ed1\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
+        "catalog": "[{\"assetId\":\"2e44d9ff-f637-4a10-af0d-24f839a28577\",\"label\":\"forest\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"2fc88ce2-2975-4ac7-865b-78eae30fa029\",\"label\":\"mira-a\",\"kind\":\"sprite\",\"actorId\":\"ee99ffc9-e20b-44f2-ac01-e42e1433d2e0\"},{\"assetId\":\"756b3fa3-91cf-483f-830c-b4ea84334ed1\",\"label\":\"rowan\",\"kind\":\"sprite\",\"actorId\":\"dff31767-f95d-4b9b-9ea5-0454deba200a\"}]"
+      },
+      {
+        "id": "a1de9d38-5b6b-4205-9f55-d7c8a83ca3fa",
+        "owner": "[\"default-user\",1792196244366]",
+        "name": "Manual stage UX",
+        "revision": 4,
+        "scene": "{\"backgroundAssetId\":\"6c8f129a-0297-46ac-93b4-b0979ca27f8f\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"c00b811e-fd43-4a16-809b-cfe646ac1b2d\",\"name\":\"Mira\",\"spriteAssetId\":\"7218eb2e-2bb5-48c8-b725-71e4fb34ca64\",\"slot\":\"center\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"9d3fe290-ebbc-4be2-867f-364a5fba0118\",\"name\":\"Mira\",\"spriteAssetId\":\"1d51f7cd-593f-4baf-9b38-3dcfcb20b76a\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"b30fd172-5003-4767-9e9c-32437b39ab3a\",\"name\":\"Rowan\",\"spriteAssetId\":\"5582ea96-0798-42e4-9a96-e6c736fb53f6\",\"slot\":null,\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"440350ba-c3da-437d-8bce-8c6ae4c0db7c\",\"name\":\"Sage\",\"spriteAssetId\":\"800bd48f-11b7-48d3-a511-c66f609fba90\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
+        "catalog": "[{\"assetId\":\"7218eb2e-2bb5-48c8-b725-71e4fb34ca64\",\"label\":\"Mira art\",\"kind\":\"sprite\",\"actorId\":\"c00b811e-fd43-4a16-809b-cfe646ac1b2d\"},{\"assetId\":\"1d51f7cd-593f-4baf-9b38-3dcfcb20b76a\",\"label\":\"Mira art\",\"kind\":\"sprite\",\"actorId\":\"9d3fe290-ebbc-4be2-867f-364a5fba0118\"},{\"assetId\":\"5582ea96-0798-42e4-9a96-e6c736fb53f6\",\"label\":\"Rowan art\",\"kind\":\"sprite\",\"actorId\":\"b30fd172-5003-4767-9e9c-32437b39ab3a\"},{\"assetId\":\"800bd48f-11b7-48d3-a511-c66f609fba90\",\"label\":\"Sage art\",\"kind\":\"sprite\",\"actorId\":\"440350ba-c3da-437d-8bce-8c6ae4c0db7c\"},{\"assetId\":\"6c8f129a-0297-46ac-93b4-b0979ca27f8f\",\"label\":\"Location\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"9ae6f0ff-449e-4592-a3ae-d06effe59177\",\"label\":\"Location\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"6b561fe6-8431-4d0f-bc15-8ca5197fdf55\",\"label\":\"Coat\",\"kind\":\"sprite\",\"actorId\":\"c00b811e-fd43-4a16-809b-cfe646ac1b2d\"}]"
+      },
+      {
+        "id": "bdc1bec9-6c78-4ee2-bd82-22c10cb6cd85",
+        "owner": "[\"default-user\",1792196244366]",
+        "name": "Browser project",
+        "revision": 0,
+        "scene": "{\"backgroundAssetId\":\"091f4758-d41d-4603-91bc-534d9df56d9d\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"ad2cb0b9-c314-4ad0-b559-bb7f55bd8f1d\",\"name\":\"One\",\"spriteAssetId\":\"5bc80837-f238-4aec-826f-2ec8c3bf0f25\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"1a9f4073-2f54-4547-8110-3031aae67d9b\",\"name\":\"Two\",\"spriteAssetId\":\"59e5aea2-b81a-4ffc-bd82-4175fde3ea79\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
+        "catalog": "[]"
+      }
+    ],
+    "assets": [
+      {
+        "id": "091f4758-d41d-4603-91bc-534d9df56d9d",
+        "project": "bdc1bec9-6c78-4ee2-bd82-22c10cb6cd85",
+        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
+        "bytes": 11591
+      },
+      {
+        "id": "0b36d29e-1dd2-4711-a4f6-a068fc8aed42",
+        "project": "1048e4b2-b106-44f4-8be7-6f0448f58fa7",
+        "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
+        "bytes": 6085
+      },
+      {
+        "id": "1d51f7cd-593f-4baf-9b38-3dcfcb20b76a",
+        "project": "a1de9d38-5b6b-4205-9f55-d7c8a83ca3fa",
+        "sha256": "f583c391c970a2c8fc4b20519cc17b05984ecfb65231d36d3ba87021f7366c3a",
+        "bytes": 4538
+      },
+      {
+        "id": "2e44d9ff-f637-4a10-af0d-24f839a28577",
+        "project": "8c047d36-6602-484f-b120-e4bd28ea831e",
+        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
+        "bytes": 11591
+      },
+      {
+        "id": "2fc88ce2-2975-4ac7-865b-78eae30fa029",
+        "project": "8c047d36-6602-484f-b120-e4bd28ea831e",
+        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
+        "bytes": 4454
+      },
+      {
+        "id": "5582ea96-0798-42e4-9a96-e6c736fb53f6",
+        "project": "a1de9d38-5b6b-4205-9f55-d7c8a83ca3fa",
+        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
+        "bytes": 4253
+      },
+      {
+        "id": "59e5aea2-b81a-4ffc-bd82-4175fde3ea79",
+        "project": "bdc1bec9-6c78-4ee2-bd82-22c10cb6cd85",
+        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
+        "bytes": 4253
+      },
+      {
+        "id": "5bc80837-f238-4aec-826f-2ec8c3bf0f25",
+        "project": "bdc1bec9-6c78-4ee2-bd82-22c10cb6cd85",
+        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
+        "bytes": 4454
+      },
+      {
+        "id": "6b561fe6-8431-4d0f-bc15-8ca5197fdf55",
+        "project": "a1de9d38-5b6b-4205-9f55-d7c8a83ca3fa",
+        "sha256": "ef697948f70aacbe82c691c978678e03b5eb2b9b3e528ef553afe62786477542",
+        "bytes": 4266
+      },
+      {
+        "id": "6c8f129a-0297-46ac-93b4-b0979ca27f8f",
+        "project": "a1de9d38-5b6b-4205-9f55-d7c8a83ca3fa",
+        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
+        "bytes": 11591
+      },
+      {
+        "id": "7218eb2e-2bb5-48c8-b725-71e4fb34ca64",
+        "project": "a1de9d38-5b6b-4205-9f55-d7c8a83ca3fa",
+        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
+        "bytes": 4454
+      },
+      {
+        "id": "756b3fa3-91cf-483f-830c-b4ea84334ed1",
+        "project": "8c047d36-6602-484f-b120-e4bd28ea831e",
+        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
+        "bytes": 4253
+      },
+      {
+        "id": "800bd48f-11b7-48d3-a511-c66f609fba90",
+        "project": "a1de9d38-5b6b-4205-9f55-d7c8a83ca3fa",
+        "sha256": "2ff97d72355e8c093e032d450746b4484212041ffee857359604fc080542ef88",
+        "bytes": 4560
+      },
+      {
+        "id": "88efe2f7-4a4e-4fea-9083-c62bfd6d9060",
+        "project": "1048e4b2-b106-44f4-8be7-6f0448f58fa7",
+        "sha256": "2ff97d72355e8c093e032d450746b4484212041ffee857359604fc080542ef88",
+        "bytes": 4560
+      },
+      {
+        "id": "8ceb684c-2e87-45ff-9bd6-b536be71ffec",
+        "project": "1048e4b2-b106-44f4-8be7-6f0448f58fa7",
+        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
+        "bytes": 4454
+      },
+      {
+        "id": "9ae6f0ff-449e-4592-a3ae-d06effe59177",
+        "project": "a1de9d38-5b6b-4205-9f55-d7c8a83ca3fa",
+        "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
+        "bytes": 6085
+      },
+      {
+        "id": "aa8b5b57-abd8-43d8-a9f7-b10829b631f3",
+        "project": "1048e4b2-b106-44f4-8be7-6f0448f58fa7",
+        "sha256": "f583c391c970a2c8fc4b20519cc17b05984ecfb65231d36d3ba87021f7366c3a",
+        "bytes": 4538
+      },
+      {
+        "id": "d2c00c58-2f17-4329-8fd5-d9b075adf60c",
+        "project": "0aff3090-842e-49c7-8749-83a4f9688f43",
+        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
+        "bytes": 11591
+      },
+      {
+        "id": "d3ce3530-a2e4-4c8e-bb02-cb385ee08437",
+        "project": "1048e4b2-b106-44f4-8be7-6f0448f58fa7",
+        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
+        "bytes": 4253
+      },
+      {
+        "id": "ea3d752e-78d8-46c5-b175-4d1693f4464f",
+        "project": "7986ef5a-5223-442d-9143-7cbe8c43b900",
+        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
+        "bytes": 11591
+      }
+    ]
+  },
+  "concurrentImportStatuses": [
+    201,
+    429
+  ],
+  "migration": {
+    "sourceSchema": 1,
+    "targetSchema": 2,
+    "sourceSHA256": "d0e4ea9fb2d153e5d2f0ef1356b25049f8bd2bb8d9273cf4b5df18ec794a41d8",
+    "backup": {
+      "code": "VALID_BACKUP",
+      "byteLength": 262144,
+      "sha256": "025713a8f34a68c0a4853dd40af4d11ffa3b4ed9f2b7828dbad8f76ee0125cbe",
+      "schemaVersion": 1,
+      "integrity": "ok",
+      "projects": 11,
+      "assets": 32,
+      "sqlite": "3.53.4",
+      "journalMode": "delete",
+      "accountBinding": "ACCOUNT_BINDING_UNVERIFIED"
+    },
+    "backupHashes": {
+      "snapshot.sqlite": "025713a8f34a68c0a4853dd40af4d11ffa3b4ed9f2b7828dbad8f76ee0125cbe",
+      "manifest.json": "fbafb97ad2ab717fbd302d571b00acbdce32f2d293729b63cee2b6da44a90c29"
+    },
+    "receipt": {
+      "code": "MIGRATED",
+      "byteLength": 266240,
+      "sha256": "f6eb78e386313c786e04e18869e62b549d824c178b22becb59e734ddf559c1d7",
+      "schemaVersion": 2,
+      "integrity": "ok",
+      "projects": 11,
+      "assets": 32,
+      "sqlite": "3.53.4",
+      "journalMode": "delete",
+      "accountBinding": "VERIFIED_SAME_ACCOUNT_INCARNATION"
+    },
+    "projects": 11,
+    "assets": 32,
+    "nativeBefore": {
+      "default-user/characters/Project A.png": "9c9295d53ce280ec9b4f1016e734a3ab4fa8485766baca979418a632d0183cc2",
+      "default-user/characters/Project B.png": "eb8f369d2bb79785835f035777324cb201b5a1c31774b2d63d80f39bc33c6bc2",
+      "default-user/characters/Seraphina/admiration.png": "e451994487b3a5b7c72d6e6025c8cbe6bbcfbf01a490042b8b581522e6ba4f96",
+      "default-user/characters/Seraphina/amusement.png": "1cedaee06fb1c740c5c8c52de8973f733789d51fe9b23fcb633635e755ae6e6f",
+      "default-user/characters/Seraphina/anger.png": "d657d77b1bce609dd6006582cf687691871411eb041f9f4c41da4765b12ea069",
+      "default-user/characters/Seraphina/annoyance.png": "ee268f03244c8194abcc18664bde83f4488630a6a9095717eead8cfdb36048fe",
+      "default-user/characters/Seraphina/approval.png": "9ae62282e0b1dfd5b0ea0874f89b59814de4b031919ed44ed4cc3f848d5bf5ed",
+      "default-user/characters/Seraphina/caring.png": "3f0a3dd0c795b1a05660f55a3fd54219b2408e740354e8a15970d8e00ac0b1f2",
+      "default-user/characters/Seraphina/confusion.png": "d731ca04495b13e14e7df5c5b304a93c63769387131c995b1cbef6fdda39105b",
+      "default-user/characters/Seraphina/curiosity.png": "31275000dbcf06e6deca10971e8e48bb1605ab5aa26c177d836f5be4c9c0879e",
+      "default-user/characters/Seraphina/desire.png": "f77e1b8b6c2684011e81262c0ad5a28437da4ea1fef05ba8d073bec0988b725b",
+      "default-user/characters/Seraphina/disappointment.png": "e9a5e328ebaf3d36c8a69653f5c65b408cfbb4f65d4f24dee935e5eb2aa21c15",
+      "default-user/characters/Seraphina/disapproval.png": "690600866c8f31ad6acfc9db22769eede7a5b6a65b56e2706c6af868da2b38d5",
+      "default-user/characters/Seraphina/disgust.png": "a7717a440287608b12d1e4be0011b067554339b39803ea85a555c50b0502dd35",
+      "default-user/characters/Seraphina/embarrassment.png": "8400d251049220134cecd5dba6dc94268348db04bbf801e5d1b8a62b6d1ea441",
+      "default-user/characters/Seraphina/excitement.png": "1b82905f656458a2acff10c23b2cd4348c10e60f677f1dbd69be82b773b7d745",
+      "default-user/characters/Seraphina/fear.png": "baa30eebddb5913a006e322137d9b24b90a2ab99f8d2c2dbcf641b923df5cb76",
+      "default-user/characters/Seraphina/gratitude.png": "1693052da628f5a63e5de0dee18a67d8e1014e8680247eaede612a6edef18d63",
+      "default-user/characters/Seraphina/grief.png": "cbab6c5a10edbf20ed04350dbec06dc6177719904ab7b01ce30e65ac51d0638a",
+      "default-user/characters/Seraphina/joy.png": "b8da43db84d73a795a5f6044971bae9dfcc163684ab7078673b71ff2138ef716",
+      "default-user/characters/Seraphina/love.png": "830f0fffb386d4a152386fde6f49440b79daef40bbb7a4d1c164de560a03f95e",
+      "default-user/characters/Seraphina/nervousness.png": "abce8853dc1b75af7a9eca1d3cbd36e40a4830d3ed10cce52c0005cfd57c000c",
+      "default-user/characters/Seraphina/neutral.png": "aeefd83cd8768d9701d914dbe78775ad92e93c175079c33072c2ec22fbba7d26",
+      "default-user/characters/Seraphina/optimism.png": "4aa443a4446ca577cdd2e434ae949f599c624e907303c0744b73868e027d789d",
+      "default-user/characters/Seraphina/pride.png": "e6852d60291a6a37d1f29ca159ac80816d1c9ba24239601a76de2af12d36d34a",
+      "default-user/characters/Seraphina/realization.png": "597d3a5cf6e5a142dd9329559263e0a77a5aa26f8ef6d19e6e5b6d9000d6afb2",
+      "default-user/characters/Seraphina/relief.png": "89aba575c32b9341871a906ebd64b66fe0031b281108f9eee8c3734d70ec5e00",
+      "default-user/characters/Seraphina/remorse.png": "26e65c298abc03da60688a8b891e54d1faa701bb47a439ba817ecf1a72a65c31",
+      "default-user/characters/Seraphina/sadness.png": "3819c2bca59224f67767eb3762c846e35d5eb5272be03f35c21fc32163df67a6",
+      "default-user/characters/Seraphina/surprise.png": "f6a9f657d081f670a961649a5a21526ec251262ca06adf99626509059fbbb103",
+      "default-user/characters/default_Seraphina.png": "8a71e8270f54fafbccf905b1bdf053a6a55f57bea89c01fcd8c0e87ee76a2d52",
+      "default-user/chats/Project A/Project A - 2026-10-16@17h17m41s905ms.jsonl": "8a0ffd0cc9345069152020d08d20df070c60c5287a42074958be39549098d7b0",
+      "default-user/chats/Project B/Project B - 2026-10-16@17h17m41s975ms.jsonl": "c98b2bc7c988b4fb9a33feb8a296564877dd6cb8cab4c1d0b7a6c7acb30c324b",
+      "default-user/worlds/Eldoria.json": "bfc2548443c890746a54d54e35e41265b02d1b59fd06d72552b305bf9b1e063c",
+      "default-user/worlds/stage-ux-fixture.json": "649252ea6c44516811fea03eca45bcca954f69d931d9895eea30a738a46210fb",
+      "sn-other/characters/Seraphina/admiration.png": "e451994487b3a5b7c72d6e6025c8cbe6bbcfbf01a490042b8b581522e6ba4f96",
+      "sn-other/characters/Seraphina/amusement.png": "1cedaee06fb1c740c5c8c52de8973f733789d51fe9b23fcb633635e755ae6e6f",
+      "sn-other/characters/Seraphina/anger.png": "d657d77b1bce609dd6006582cf687691871411eb041f9f4c41da4765b12ea069",
+      "sn-other/characters/Seraphina/annoyance.png": "ee268f03244c8194abcc18664bde83f4488630a6a9095717eead8cfdb36048fe",
+      "sn-other/characters/Seraphina/approval.png": "9ae62282e0b1dfd5b0ea0874f89b59814de4b031919ed44ed4cc3f848d5bf5ed",
+      "sn-other/characters/Seraphina/caring.png": "3f0a3dd0c795b1a05660f55a3fd54219b2408e740354e8a15970d8e00ac0b1f2",
+      "sn-other/characters/Seraphina/confusion.png": "d731ca04495b13e14e7df5c5b304a93c63769387131c995b1cbef6fdda39105b",
+      "sn-other/characters/Seraphina/curiosity.png": "31275000dbcf06e6deca10971e8e48bb1605ab5aa26c177d836f5be4c9c0879e",
+      "sn-other/characters/Seraphina/desire.png": "f77e1b8b6c2684011e81262c0ad5a28437da4ea1fef05ba8d073bec0988b725b",
+      "sn-other/characters/Seraphina/disappointment.png": "e9a5e328ebaf3d36c8a69653f5c65b408cfbb4f65d4f24dee935e5eb2aa21c15",
+      "sn-other/characters/Seraphina/disapproval.png": "690600866c8f31ad6acfc9db22769eede7a5b6a65b56e2706c6af868da2b38d5",
+      "sn-other/characters/Seraphina/disgust.png": "a7717a440287608b12d1e4be0011b067554339b39803ea85a555c50b0502dd35",
+      "sn-other/characters/Seraphina/embarrassment.png": "8400d251049220134cecd5dba6dc94268348db04bbf801e5d1b8a62b6d1ea441",
+      "sn-other/characters/Seraphina/excitement.png": "1b82905f656458a2acff10c23b2cd4348c10e60f677f1dbd69be82b773b7d745",
+      "sn-other/characters/Seraphina/fear.png": "baa30eebddb5913a006e322137d9b24b90a2ab99f8d2c2dbcf641b923df5cb76",
+      "sn-other/characters/Seraphina/gratitude.png": "1693052da628f5a63e5de0dee18a67d8e1014e8680247eaede612a6edef18d63",
+      "sn-other/characters/Seraphina/grief.png": "cbab6c5a10edbf20ed04350dbec06dc6177719904ab7b01ce30e65ac51d0638a",
+      "sn-other/characters/Seraphina/joy.png": "b8da43db84d73a795a5f6044971bae9dfcc163684ab7078673b71ff2138ef716",
+      "sn-other/characters/Seraphina/love.png": "830f0fffb386d4a152386fde6f49440b79daef40bbb7a4d1c164de560a03f95e",
+      "sn-other/characters/Seraphina/nervousness.png": "abce8853dc1b75af7a9eca1d3cbd36e40a4830d3ed10cce52c0005cfd57c000c",
+      "sn-other/characters/Seraphina/neutral.png": "aeefd83cd8768d9701d914dbe78775ad92e93c175079c33072c2ec22fbba7d26",
+      "sn-other/characters/Seraphina/optimism.png": "4aa443a4446ca577cdd2e434ae949f599c624e907303c0744b73868e027d789d",
+      "sn-other/characters/Seraphina/pride.png": "e6852d60291a6a37d1f29ca159ac80816d1c9ba24239601a76de2af12d36d34a",
+      "sn-other/characters/Seraphina/realization.png": "597d3a5cf6e5a142dd9329559263e0a77a5aa26f8ef6d19e6e5b6d9000d6afb2",
+      "sn-other/characters/Seraphina/relief.png": "89aba575c32b9341871a906ebd64b66fe0031b281108f9eee8c3734d70ec5e00",
+      "sn-other/characters/Seraphina/remorse.png": "26e65c298abc03da60688a8b891e54d1faa701bb47a439ba817ecf1a72a65c31",
+      "sn-other/characters/Seraphina/sadness.png": "3819c2bca59224f67767eb3762c846e35d5eb5272be03f35c21fc32163df67a6",
+      "sn-other/characters/Seraphina/surprise.png": "f6a9f657d081f670a961649a5a21526ec251262ca06adf99626509059fbbb103",
+      "sn-other/characters/default_Seraphina.png": "8a71e8270f54fafbccf905b1bdf053a6a55f57bea89c01fcd8c0e87ee76a2d52",
+      "sn-other/worlds/Eldoria.json": "bfc2548443c890746a54d54e35e41265b02d1b59fd06d72552b305bf9b1e063c"
+    },
+    "nativeAfter": {
+      "default-user/characters/Project A.png": "9c9295d53ce280ec9b4f1016e734a3ab4fa8485766baca979418a632d0183cc2",
+      "default-user/characters/Project B.png": "eb8f369d2bb79785835f035777324cb201b5a1c31774b2d63d80f39bc33c6bc2",
+      "default-user/characters/Seraphina/admiration.png": "e451994487b3a5b7c72d6e6025c8cbe6bbcfbf01a490042b8b581522e6ba4f96",
+      "default-user/characters/Seraphina/amusement.png": "1cedaee06fb1c740c5c8c52de8973f733789d51fe9b23fcb633635e755ae6e6f",
+      "default-user/characters/Seraphina/anger.png": "d657d77b1bce609dd6006582cf687691871411eb041f9f4c41da4765b12ea069",
+      "default-user/characters/Seraphina/annoyance.png": "ee268f03244c8194abcc18664bde83f4488630a6a9095717eead8cfdb36048fe",
+      "default-user/characters/Seraphina/approval.png": "9ae62282e0b1dfd5b0ea0874f89b59814de4b031919ed44ed4cc3f848d5bf5ed",
+      "default-user/characters/Seraphina/caring.png": "3f0a3dd0c795b1a05660f55a3fd54219b2408e740354e8a15970d8e00ac0b1f2",
+      "default-user/characters/Seraphina/confusion.png": "d731ca04495b13e14e7df5c5b304a93c63769387131c995b1cbef6fdda39105b",
+      "default-user/characters/Seraphina/curiosity.png": "31275000dbcf06e6deca10971e8e48bb1605ab5aa26c177d836f5be4c9c0879e",
+      "default-user/characters/Seraphina/desire.png": "f77e1b8b6c2684011e81262c0ad5a28437da4ea1fef05ba8d073bec0988b725b",
+      "default-user/characters/Seraphina/disappointment.png": "e9a5e328ebaf3d36c8a69653f5c65b408cfbb4f65d4f24dee935e5eb2aa21c15",
+      "default-user/characters/Seraphina/disapproval.png": "690600866c8f31ad6acfc9db22769eede7a5b6a65b56e2706c6af868da2b38d5",
+      "default-user/characters/Seraphina/disgust.png": "a7717a440287608b12d1e4be0011b067554339b39803ea85a555c50b0502dd35",
+      "default-user/characters/Seraphina/embarrassment.png": "8400d251049220134cecd5dba6dc94268348db04bbf801e5d1b8a62b6d1ea441",
+      "default-user/characters/Seraphina/excitement.png": "1b82905f656458a2acff10c23b2cd4348c10e60f677f1dbd69be82b773b7d745",
+      "default-user/characters/Seraphina/fear.png": "baa30eebddb5913a006e322137d9b24b90a2ab99f8d2c2dbcf641b923df5cb76",
+      "default-user/characters/Seraphina/gratitude.png": "1693052da628f5a63e5de0dee18a67d8e1014e8680247eaede612a6edef18d63",
+      "default-user/characters/Seraphina/grief.png": "cbab6c5a10edbf20ed04350dbec06dc6177719904ab7b01ce30e65ac51d0638a",
+      "default-user/characters/Seraphina/joy.png": "b8da43db84d73a795a5f6044971bae9dfcc163684ab7078673b71ff2138ef716",
+      "default-user/characters/Seraphina/love.png": "830f0fffb386d4a152386fde6f49440b79daef40bbb7a4d1c164de560a03f95e",
+      "default-user/characters/Seraphina/nervousness.png": "abce8853dc1b75af7a9eca1d3cbd36e40a4830d3ed10cce52c0005cfd57c000c",
+      "default-user/characters/Seraphina/neutral.png": "aeefd83cd8768d9701d914dbe78775ad92e93c175079c33072c2ec22fbba7d26",
+      "default-user/characters/Seraphina/optimism.png": "4aa443a4446ca577cdd2e434ae949f599c624e907303c0744b73868e027d789d",
+      "default-user/characters/Seraphina/pride.png": "e6852d60291a6a37d1f29ca159ac80816d1c9ba24239601a76de2af12d36d34a",
+      "default-user/characters/Seraphina/realization.png": "597d3a5cf6e5a142dd9329559263e0a77a5aa26f8ef6d19e6e5b6d9000d6afb2",
+      "default-user/characters/Seraphina/relief.png": "89aba575c32b9341871a906ebd64b66fe0031b281108f9eee8c3734d70ec5e00",
+      "default-user/characters/Seraphina/remorse.png": "26e65c298abc03da60688a8b891e54d1faa701bb47a439ba817ecf1a72a65c31",
+      "default-user/characters/Seraphina/sadness.png": "3819c2bca59224f67767eb3762c846e35d5eb5272be03f35c21fc32163df67a6",
+      "default-user/characters/Seraphina/surprise.png": "f6a9f657d081f670a961649a5a21526ec251262ca06adf99626509059fbbb103",
+      "default-user/characters/default_Seraphina.png": "8a71e8270f54fafbccf905b1bdf053a6a55f57bea89c01fcd8c0e87ee76a2d52",
+      "default-user/chats/Project A/Project A - 2026-10-16@17h17m41s905ms.jsonl": "8a0ffd0cc9345069152020d08d20df070c60c5287a42074958be39549098d7b0",
+      "default-user/chats/Project B/Project B - 2026-10-16@17h17m41s975ms.jsonl": "c98b2bc7c988b4fb9a33feb8a296564877dd6cb8cab4c1d0b7a6c7acb30c324b",
+      "default-user/worlds/Eldoria.json": "bfc2548443c890746a54d54e35e41265b02d1b59fd06d72552b305bf9b1e063c",
+      "default-user/worlds/stage-ux-fixture.json": "649252ea6c44516811fea03eca45bcca954f69d931d9895eea30a738a46210fb",
+      "sn-other/characters/Seraphina/admiration.png": "e451994487b3a5b7c72d6e6025c8cbe6bbcfbf01a490042b8b581522e6ba4f96",
+      "sn-other/characters/Seraphina/amusement.png": "1cedaee06fb1c740c5c8c52de8973f733789d51fe9b23fcb633635e755ae6e6f",
+      "sn-other/characters/Seraphina/anger.png": "d657d77b1bce609dd6006582cf687691871411eb041f9f4c41da4765b12ea069",
+      "sn-other/characters/Seraphina/annoyance.png": "ee268f03244c8194abcc18664bde83f4488630a6a9095717eead8cfdb36048fe",
+      "sn-other/characters/Seraphina/approval.png": "9ae62282e0b1dfd5b0ea0874f89b59814de4b031919ed44ed4cc3f848d5bf5ed",
+      "sn-other/characters/Seraphina/caring.png": "3f0a3dd0c795b1a05660f55a3fd54219b2408e740354e8a15970d8e00ac0b1f2",
+      "sn-other/characters/Seraphina/confusion.png": "d731ca04495b13e14e7df5c5b304a93c63769387131c995b1cbef6fdda39105b",
+      "sn-other/characters/Seraphina/curiosity.png": "31275000dbcf06e6deca10971e8e48bb1605ab5aa26c177d836f5be4c9c0879e",
+      "sn-other/characters/Seraphina/desire.png": "f77e1b8b6c2684011e81262c0ad5a28437da4ea1fef05ba8d073bec0988b725b",
+      "sn-other/characters/Seraphina/disappointment.png": "e9a5e328ebaf3d36c8a69653f5c65b408cfbb4f65d4f24dee935e5eb2aa21c15",
+      "sn-other/characters/Seraphina/disapproval.png": "690600866c8f31ad6acfc9db22769eede7a5b6a65b56e2706c6af868da2b38d5",
+      "sn-other/characters/Seraphina/disgust.png": "a7717a440287608b12d1e4be0011b067554339b39803ea85a555c50b0502dd35",
+      "sn-other/characters/Seraphina/embarrassment.png": "8400d251049220134cecd5dba6dc94268348db04bbf801e5d1b8a62b6d1ea441",
+      "sn-other/characters/Seraphina/excitement.png": "1b82905f656458a2acff10c23b2cd4348c10e60f677f1dbd69be82b773b7d745",
+      "sn-other/characters/Seraphina/fear.png": "baa30eebddb5913a006e322137d9b24b90a2ab99f8d2c2dbcf641b923df5cb76",
+      "sn-other/characters/Seraphina/gratitude.png": "1693052da628f5a63e5de0dee18a67d8e1014e8680247eaede612a6edef18d63",
+      "sn-other/characters/Seraphina/grief.png": "cbab6c5a10edbf20ed04350dbec06dc6177719904ab7b01ce30e65ac51d0638a",
+      "sn-other/characters/Seraphina/joy.png": "b8da43db84d73a795a5f6044971bae9dfcc163684ab7078673b71ff2138ef716",
+      "sn-other/characters/Seraphina/love.png": "830f0fffb386d4a152386fde6f49440b79daef40bbb7a4d1c164de560a03f95e",
+      "sn-other/characters/Seraphina/nervousness.png": "abce8853dc1b75af7a9eca1d3cbd36e40a4830d3ed10cce52c0005cfd57c000c",
+      "sn-other/characters/Seraphina/neutral.png": "aeefd83cd8768d9701d914dbe78775ad92e93c175079c33072c2ec22fbba7d26",
+      "sn-other/characters/Seraphina/optimism.png": "4aa443a4446ca577cdd2e434ae949f599c624e907303c0744b73868e027d789d",
+      "sn-other/characters/Seraphina/pride.png": "e6852d60291a6a37d1f29ca159ac80816d1c9ba24239601a76de2af12d36d34a",
+      "sn-other/characters/Seraphina/realization.png": "597d3a5cf6e5a142dd9329559263e0a77a5aa26f8ef6d19e6e5b6d9000d6afb2",
+      "sn-other/characters/Seraphina/relief.png": "89aba575c32b9341871a906ebd64b66fe0031b281108f9eee8c3734d70ec5e00",
+      "sn-other/characters/Seraphina/remorse.png": "26e65c298abc03da60688a8b891e54d1faa701bb47a439ba817ecf1a72a65c31",
+      "sn-other/characters/Seraphina/sadness.png": "3819c2bca59224f67767eb3762c846e35d5eb5272be03f35c21fc32163df67a6",
+      "sn-other/characters/Seraphina/surprise.png": "f6a9f657d081f670a961649a5a21526ec251262ca06adf99626509059fbbb103",
+      "sn-other/characters/default_Seraphina.png": "8a71e8270f54fafbccf905b1bdf053a6a55f57bea89c01fcd8c0e87ee76a2d52",
+      "sn-other/worlds/Eldoria.json": "bfc2548443c890746a54d54e35e41265b02d1b59fd06d72552b305bf9b1e063c"
+    }
+  },
+  "result": "PASS"
+}

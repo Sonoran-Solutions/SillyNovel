@@ -1,0 +1,109 @@
+✔ visual viewport keeps the original composer reachable through keyboard resize, pan and native chat; disable releases it (858.862651ms)
+✔ actual entry mounts, updates, disposes and preserves canonical state (338.347187ms)
+✔ long ordinary Markdown is formatted, selectable and copied completely (227.339049ms)
+✔ unsafe HTML, encoded protocols, media and malformed markup never execute or lose raw text (222.86453ms)
+✔ Previous/Next pin the cursor; new messages stay bounded until Latest (328.587554ms)
+✔ streaming follows text bottom independently; scrolling up and selecting text survive updates (209.994161ms)
+✔ stop and continuation stay readable; disable does not stop generation (225.449737ms)
+✔ deleted/replaced pinned source is explicit and never silently retargeted (333.402667ms)
+✔ backlog never claims an exact match against a stale native revision (313.326223ms)
+✔ backlog re-resolves reordered objects, returns pinned selection and reports locator fallback (327.677979ms)
+✔ draft, caret, native composer node and focus survive repeated view transitions (371.089992ms)
+✔ missing capability and mount failure leave native chat usable (222.876956ms)
+✔ format exception releases stage/listeners, restores native feed and keeps exact draft (180.779897ms)
+✔ A to B to A discards queued old-epoch reads and starts each visit at latest (220.916784ms)
+✔ IME and editable-field key events remain unconsumed (133.448472ms)
+✔ empty and unresolved-author sources are explicit; narrow reduced-height composer remains reachable (147.14482ms)
+✖ session stage: four manual actors, duplicate names, stable slots, refusal, swap, replace and locks (564.329856ms)
+✔ session stage: forward projection, selected-source expressions, outfits and incompatible/missing fallback (793.766315ms)
+✔ session stage: temporary raster decode, replacement/reset/disable cleanup and stale delayed work (473.850994ms)
+✔ session stage: chat return, A to B to A, reload, narrow/keyboard layout and transparent fixtures (698.939782ms)
+✔ session stage: delayed image cannot apply after same-source reset, manual override or unobserved source edit (310.483976ms)
+✔ session stage: denied subtle leaves a complete text reader (556.619617ms)
+✔ session stage: denied randomUUID leaves a complete text reader (549.467875ms)
+✔ session stage: delayed historical hashing neutralizes art before navigation and rejects obsolete work (449.431501ms)
+✔ session stage: history size refusal leaves neutral art and a usable text reader (312.505301ms)
+✔ project replacement pauses all visual mutations and success replaces the original scene (416.701212ms)
+✔ project replacement pauses all visual mutations and failure preserves the original scene (432.93832ms)
+✔ portable bundle import preserves current visuals: success (459.82593ms)
+✔ portable bundle import preserves current visuals: failure (463.513177ms)
+✔ portable bundle import preserves current visuals: chat switch (471.129197ms)
+✔ portable bundle import preserves current visuals: project replacement (542.968539ms)
+✔ portable export downloads only a successful bundle, with explicit errors and size refusal (1127.369263ms)
+✔ unused artwork controls and delayed results: cancel (484.268581ms)
+✔ unused artwork controls and delayed results: success (605.056166ms)
+✔ unused artwork controls and delayed results: stale (565.601696ms)
+✔ unused artwork controls and delayed results: lost response (632.041041ms)
+✔ unused artwork controls and delayed results: wrong receipt (599.814346ms)
+✔ unused artwork controls and delayed results: chat switch (607.060192ms)
+✔ unused artwork controls and delayed results: project replacement (688.223337ms)
+✔ unused artwork controls and delayed results: disable (617.429373ms)
+✔ project library actual entry edits labels, unregisters, saves and reloads/reopens compatible alternatives (877.823039ms)
+✔ migration-required storage leaves original reader, composer and transient controls usable (287.484469ms)
+✔ project UX: identity, pending and durable save recovery status · saved (486.080131ms)
+✔ project UX: identity, pending and durable save recovery status · conflict (632.839937ms)
+✔ project UX: identity, pending and durable save recovery status · uncertain (599.715329ms)
+✔ project UX: identity, pending and durable save recovery status · invalid (616.873477ms)
+✔ project UX: discard cancel, actor feedback, local Escape focus and narrow composer (585.782299ms)
+✔ attached message expressions: actual UI, navigation/revisit, save exclusion, invalidation and reload (1125.204383ms)
+✔ group attached message expressions: actual UI, navigation/revisit, save exclusion, invalidation and reload (1083.387142ms)
+✔ attached PNG delayed actual-entry decode rejects selection (398.666818ms)
+✔ attached PNG delayed actual-entry decode rejects edit (355.106899ms)
+✔ attached PNG delayed actual-entry decode rejects swipe (371.622969ms)
+✔ attached PNG delayed actual-entry decode rejects outfit (400.316208ms)
+✔ attached PNG delayed actual-entry decode rejects actor (365.017006ms)
+✔ attached PNG delayed actual-entry decode rejects chat (352.672611ms)
+✔ attached PNG delayed actual-entry decode rejects replace (381.374597ms)
+✔ attached PNG delayed actual-entry decode rejects detach (363.79155ms)
+✔ attached PNG delayed actual-entry decode rejects disable (363.944927ms)
+✔ group attached PNG delayed actual-entry decode rejects selection (377.282709ms)
+✔ group attached PNG delayed actual-entry decode rejects edit (354.133118ms)
+✔ group attached PNG delayed actual-entry decode rejects swipe (357.039812ms)
+✔ group attached PNG delayed actual-entry decode rejects outfit (417.82747ms)
+✔ group attached PNG delayed actual-entry decode rejects actor (347.245879ms)
+✔ group attached PNG delayed actual-entry decode rejects chat (384.915978ms)
+✔ group attached PNG delayed actual-entry decode rejects replace (381.498549ms)
+✔ group attached PNG delayed actual-entry decode rejects detach (416.632061ms)
+✔ group attached PNG delayed actual-entry decode rejects disable (415.449263ms)
+✔ attached missing expression image falls back to base outfit; clear, no dirty changes (442.877035ms)
+✔ attached expressions automatically reconcile unchanged-object reorder: prefix-only (589.932138ms)
+✔ attached expressions automatically reconcile unchanged-object reorder: selected-index (580.292527ms)
+✔ group attached expressions automatically reconcile unchanged-object reorder: prefix-only (586.814652ms)
+✔ group attached expressions automatically reconcile unchanged-object reorder: selected-index (593.272386ms)
+✔ group attachment invalidates on eventless native owner change: group (531.158257ms)
+✔ group attachment invalidates on eventless native owner change: chat (553.758065ms)
+✔ group attachment invalidates on eventless native owner change: individual (565.047134ms)
+✔ group attachment invalidates on eventless native owner change: replacement (530.249922ms)
+✔ group attachment invalidates on eventless native owner change: deleted (533.307826ms)
+✔ group attachment invalidates on eventless native owner change: contradictory (566.611873ms)
+✔ group member reorder/drafted speaker leaves manual UUIDs, selection, three-slot cast and expression unchanged (628.412219ms)
+✔ group delayed load completion refreshes unannounced ownership before accepting authority (410.258109ms)
+✔ group delayed save completion refreshes unannounced ownership before accepting authority (367.81251ms)
+✔ eventless group generation start survives activation and refuses expressions on explicitly reopened head (486.727532ms)
+ℹ tests 82
+ℹ suites 0
+ℹ pass 81
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 39458.113868
+
+✖ failing tests:
+
+test at tests/m1-reader-browser.test.mjs:361:1
+✖ session stage: four manual actors, duplicate names, stable slots, refusal, swap, replace and locks (564.329856ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 3
+  
+      at TestContext.<anonymous> (file:///home/dq/Projects/SillyNovel/tests/m1-reader-browser.test.mjs:369:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 3,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

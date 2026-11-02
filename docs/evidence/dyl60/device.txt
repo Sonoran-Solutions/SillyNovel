@@ -1,0 +1,11 @@
+Authorized discovery: adb devices -l (unsandboxed retry), exit 0.
+* daemon not running; starting now at tcp:5037
+* daemon started successfully
+List of devices attached
+
+Physical status: BLOCKED. No device serial/model/Android/browser/IME/display configuration available.
+Needed: operator provides an already paired, connected, unlocked Samsung Galaxy Tab S8 using the established wireless-ADB setup. No new pairing, unlocking or settings change attempted.
+Actual touch, virtual keyboard/IME, composer caret with keyboard, rotation, scaling/zoom, device reduced motion and native actions: NOT_TESTED.
+Assistive technology: NOT_TESTED separately. Mouse/viewport/semantic assertions do not substitute.
+
+Additional authorized discovery: adb mdns services, exit 0. List of discovered mdns services was empty. No advertised established endpoint was available; no adb connect/pair or reverse mapping attempted.

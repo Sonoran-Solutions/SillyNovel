@@ -1,0 +1,19 @@
+Owned evidence root /tmp/sn-portability-host-CAB6pJ
+PASS real host auth/CSRF, two-user project and asset isolation, two-client CAS, PNG hash and limits
+PASS browser create/import background + two sprites/arrange/save/reload/explicit reopen; named canonical files unchanged
+PASS expressions: two native sources/two compatible PNG choices/revisit/base fallback/composer draft-focus/global save exclusion/native-file equality
+PASS expressions: real native edit invalidates selected expression; global outfit/layout/locks retained; desktop and narrow fallback screenshots
+PAGE ERROR Generation was aborted.
+PASS expressions: native swipe invalidates stopped-reply expression; real Continue/stream/Stop retain base layout and usable reader
+PASS expressions: instrumented missing PNG falls back; reload/reopen, explicit detach and A B A clear temporary assets/decisions
+PASS portable browser download/import preserves dirty stage; explicit reopen restores new identities, bytes, layout/locks; exact native inventory unchanged
+PASS HTTP failed project/second-asset/final-scene writes inspected in committed database: zero partial projects/assets
+PASS real two-account export refusal and import ownership; two-client import retry creates distinct copies; concurrent export/save is coherent
+PASS actual native switch during delayed import receipt never attaches visuals or changes stage ownership
+PASS native A to B to A detaches and never auto-restores project
+PASS actual host failed update preserves project; missing/corrupt assets restore neutral fallback
+PASS delayed successful save receipt cannot redirect switched chat
+PASS actual host native send/stream/stop, navigation and backlog remain functional
+PASS plugin/server restart preserves original and imported layout/assets; imported project explicitly reopens in real browser
+PASS plugin disabled at startup refuses bundle controls and retains session stage/native composer
+Evidence /tmp/sn-portability-host-CAB6pJ/evidence.json

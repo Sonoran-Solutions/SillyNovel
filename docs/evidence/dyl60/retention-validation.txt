@@ -1,0 +1,1 @@
+PASS retained-root hashes and process/listener cleanup: 20 roots, 11546 files; no task-owned Node process or provider listener; roots preserved

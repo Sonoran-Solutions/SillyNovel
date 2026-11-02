@@ -1,0 +1,14 @@
+{
+  "visibleCollapsed": 3,
+  "group": {
+    "id": "1792192901752",
+    "messages": 6
+  },
+  "original": "Cast: Mira [dbaecba7] left · locks: presence, slot, outfit / Mira [99b9ece1] right · locks: presence, slot, outfit / Rowan [7e31ce31] center · locks: presence, slot, outfit / Sage [98a086d2] offstage · locks: presence, outfit",
+  "swapped": "Cast: Mira [dbaecba7] right · locks: presence, slot, outfit / Mira [99b9ece1] left · locks: presence, slot, outfit / Rowan [7e31ce31] center · locks: presence, slot, outfit / Sage [98a086d2] offstage · locks: presence, outfit",
+  "refusal": "Visual action refused: That position is reserved. Choose Explicit swap (both actors need positions) or Explicit replace (moves the occupant offstage). [SLOT_OCCUPIED]",
+  "replaced": "Cast: Mira [dbaecba7] right · locks: presence, slot, outfit / Mira [99b9ece1] offstage · locks: presence, slot, outfit / Rowan [7e31ce31] center · locks: presence, slot, outfit / Sage [98a086d2] left · locks: presence, slot, outfit",
+  "absent": 2,
+  "present": 3,
+  "restored": "Cast: Mira [dbaecba7] left · locks: presence, slot, outfit / Mira [99b9ece1] right · locks: presence, slot, outfit / Rowan [7e31ce31] center · locks: presence, slot, outfit / Sage [98a086d2] offstage · locks: presence, outfit"
+}

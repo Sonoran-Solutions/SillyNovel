@@ -1,0 +1,159 @@
+[
+  {
+    "name": "node",
+    "candidate": "c5c1699a48629ae761a093e13056f0b11fdc4b88",
+    "command": "node --test --test-isolation=none /home/dq/Projects/SillyNovel/tests/m0.test.mjs /home/dq/Projects/SillyNovel/tests/m1-reader-source.test.mjs /home/dq/Projects/SillyNovel/tests/m1-source-prefix.test.mjs /home/dq/Projects/SillyNovel/tests/m1-scene-reducer.test.mjs /home/dq/Projects/SillyNovel/tests/m1-project-scene.test.mjs /home/dq/Projects/SillyNovel/tests/m1-project-expressions.test.mjs /home/dq/Projects/SillyNovel/tests/probes/dyl19/owned-chat-probe.test.mjs /home/dq/Projects/SillyNovel/tests/probes/dyl19/source-anchor.test.mjs",
+    "environment": {},
+    "startedUTC": "2026-10-17T00:13:33.935405+00:00",
+    "endedUTC": "2026-10-17T00:13:35.253106+00:00",
+    "elapsedSeconds": 1.318,
+    "exitCode": 0,
+    "log": "node.txt",
+    "checkpointCount": 0,
+    "tests": 153,
+    "pass": 153,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  {
+    "name": "storage",
+    "candidate": "c5c1699a48629ae761a093e13056f0b11fdc4b88",
+    "command": "node --test --test-isolation=none /home/dq/Projects/SillyNovel/plugins/sillynovel-storage/test/bundle.test.mjs /home/dq/Projects/SillyNovel/plugins/sillynovel-storage/test/cleanup.test.mjs /home/dq/Projects/SillyNovel/plugins/sillynovel-storage/test/library.test.mjs /home/dq/Projects/SillyNovel/plugins/sillynovel-storage/test/recovery.test.mjs /home/dq/Projects/SillyNovel/plugins/sillynovel-storage/test/store.test.mjs",
+    "environment": {},
+    "startedUTC": "2026-10-17T00:13:35.257906+00:00",
+    "endedUTC": "2026-10-17T00:16:25.916955+00:00",
+    "elapsedSeconds": 170.659,
+    "exitCode": 0,
+    "log": "storage.txt",
+    "checkpointCount": 0,
+    "tests": 126,
+    "pass": 126,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  {
+    "name": "browser",
+    "candidate": "c5c1699a48629ae761a093e13056f0b11fdc4b88",
+    "command": "node --test --test-isolation=none /home/dq/Projects/SillyNovel/tests/m1-reader-browser.test.mjs",
+    "environment": {},
+    "startedUTC": "2026-10-17T00:16:25.922053+00:00",
+    "endedUTC": "2026-10-17T00:17:22.456042+00:00",
+    "elapsedSeconds": 56.534,
+    "exitCode": 0,
+    "log": "browser.txt",
+    "checkpointCount": 0,
+    "tests": 82,
+    "pass": 82,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  {
+    "name": "stage-library-migration",
+    "candidate": "c5c1699a48629ae761a093e13056f0b11fdc4b88",
+    "command": "node tests/probes/project-portability/host.mjs /tmp/SillyTavern-dyl22",
+    "environment": {
+      "SN_STAGE_UX_RUN": "1",
+      "SN_LIBRARY_RUN": "1",
+      "SN_MIGRATION_RUN": "1"
+    },
+    "startedUTC": "2026-10-17T00:17:22.461983+00:00",
+    "endedUTC": "2026-10-17T00:19:27.710916+00:00",
+    "elapsedSeconds": 125.249,
+    "exitCode": 0,
+    "log": "stage-library-migration.txt",
+    "checkpointCount": 24,
+    "ownedRoot": "/tmp/sn-portability-host-UfNZWX",
+    "result": "PASS"
+  },
+  {
+    "name": "expressions",
+    "candidate": "c5c1699a48629ae761a093e13056f0b11fdc4b88",
+    "command": "node tests/probes/project-portability/host.mjs /tmp/SillyTavern-dyl22",
+    "environment": {
+      "SN_EXPRESSIONS_RUN": "1"
+    },
+    "startedUTC": "2026-10-17T00:21:54.432621+00:00",
+    "endedUTC": "2026-10-17T00:23:07.348566+00:00",
+    "elapsedSeconds": 72.916,
+    "exitCode": 0,
+    "log": "expressions.txt",
+    "checkpointCount": 16,
+    "resumedAfterOuterTermination": true,
+    "ownedRoot": "/tmp/sn-portability-host-EoraDa",
+    "result": "PASS"
+  },
+  {
+    "name": "groups",
+    "candidate": "c5c1699a48629ae761a093e13056f0b11fdc4b88",
+    "command": "node tests/probes/project-portability/host.mjs /tmp/SillyTavern-dyl22",
+    "environment": {
+      "SN_GROUP_RUN": "1"
+    },
+    "startedUTC": "2026-10-17T00:24:20.533065+00:00",
+    "endedUTC": "2026-10-17T00:26:00.012984+00:00",
+    "elapsedSeconds": 99.48,
+    "exitCode": 0,
+    "log": "groups.txt",
+    "checkpointCount": 22,
+    "resumedAfterOuterTermination": true,
+    "ownedRoot": "/tmp/sn-portability-host-xVmK3P",
+    "result": "PASS"
+  },
+  {
+    "name": "recovery",
+    "candidate": "c5c1699a48629ae761a093e13056f0b11fdc4b88",
+    "command": "node tests/probes/project-portability/host.mjs /tmp/SillyTavern-dyl22",
+    "environment": {
+      "SN_RECOVERY_RUN": "1"
+    },
+    "startedUTC": "2026-10-17T00:26:09.369558+00:00",
+    "endedUTC": "2026-10-17T00:27:19.538704+00:00",
+    "elapsedSeconds": 70.169,
+    "exitCode": 0,
+    "log": "recovery.txt",
+    "checkpointCount": 17,
+    "resumedAfterOuterTermination": true,
+    "ownedRoot": "/tmp/sn-portability-host-FM7JKN",
+    "result": "PASS"
+  },
+  {
+    "name": "cleanup",
+    "candidate": "c5c1699a48629ae761a093e13056f0b11fdc4b88",
+    "command": "node tests/probes/project-portability/host.mjs /tmp/SillyTavern-dyl22",
+    "environment": {
+      "SN_CLEANUP_RUN": "1"
+    },
+    "startedUTC": "2026-10-17T00:27:27.599224+00:00",
+    "endedUTC": "2026-10-17T00:28:35.551221+00:00",
+    "elapsedSeconds": 67.952,
+    "exitCode": 0,
+    "log": "cleanup.txt",
+    "checkpointCount": 21,
+    "resumedAfterOuterTermination": true,
+    "ownedRoot": "/tmp/sn-portability-host-wnB37i",
+    "result": "PASS"
+  },
+  {
+    "name": "native-integrity-branches",
+    "candidate": "c5c1699a48629ae761a093e13056f0b11fdc4b88",
+    "command": "node tests/probes/project-portability/host.mjs /tmp/SillyTavern-dyl22",
+    "environment": {
+      "SN_CANDIDATE_RUN": "1"
+    },
+    "startedUTC": "2026-10-17T00:28:41.061729+00:00",
+    "endedUTC": "2026-10-17T00:30:01.824343+00:00",
+    "elapsedSeconds": 80.763,
+    "exitCode": 0,
+    "log": "native-integrity-branches.txt",
+    "checkpointCount": 18,
+    "resumedAfterOuterTermination": true,
+    "ownedRoot": "/tmp/sn-portability-host-YFuqyc",
+    "result": "PASS"
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "at": "2026-10-16T23:41:52.398108+00:00",
+  "ownedLocalPortsClosed": {
+    "8760": true,
+    "8128": true,
+    "9229": true
+  },
+  "syntheticTabClosed": true,
+  "deviceReverse8760Removed": true,
+  "localForward9229Removed": true,
+  "scaleRestored": 1,
+  "systemSettingsChanged": false,
+  "retainedRoot": "/tmp/sn-dyl60-device-nn07uqaq"
+}

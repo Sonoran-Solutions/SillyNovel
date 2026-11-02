@@ -1,0 +1,19 @@
+{
+  "before": {
+    "value": "Lantern IME drafta",
+    "start": 17,
+    "end": 17
+  },
+  "after": {
+    "value": "Lantern IME drafta",
+    "start": 17,
+    "end": 17
+  },
+  "native": {
+    "bottom": 768.941162109375,
+    "vv": 769.88232421875,
+    "focused": "send_textarea"
+  },
+  "unchanged": true,
+  "canonicalUnchanged": true
+}

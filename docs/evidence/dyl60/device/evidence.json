@@ -1,0 +1,120 @@
+{
+  "candidate": "6f8252699dae3a92f639f94531bba221d5e1cc02",
+  "date": "2026-10-16 America/Phoenix",
+  "result": "REVISE",
+  "gateA": "NOT_RUN",
+  "access": "Established paired wireless ADB; serial/address omitted from public evidence",
+  "root": "/tmp/sn-dyl60-device-nn07uqaq",
+  "device": {
+    "model": "Samsung SM-X800 (Galaxy Tab S8 family; Tab S8+)",
+    "android": "16",
+    "build": "BP2A.250605.031.A3.X800XXSBEZH3",
+    "securityPatch": "2026-08-05",
+    "displayPixels": [
+      1752,
+      2800
+    ],
+    "densityDpi": 340,
+    "fontScale": 1.0,
+    "keyboard": "Samsung HoneyBoard 5.9.20.90, English US",
+    "brave": "1.97.57",
+    "engine": "155.0.8059.80",
+    "siteConfiguration": "Existing desktop user agent, unchanged",
+    "reducedMotion": false
+  },
+  "method": "Actual Android browser via existing CDP socket. Touch start/move/end events delivered to the tablet, Android input for draft/caret and one observed on-screen keyboard key tap. Operator rotated the hardware. selectOption and native openCharacterChat were setup aids, not proof of touch-select menus. No viewport/IME emulation, new pairing, install or system-setting changes.",
+  "checks": [
+    {
+      "name": "access/secure context",
+      "result": "PASS",
+      "details": "Loopback host8760 via device reverse8760; provider8128 remains host-only. crypto/secure context observed."
+    },
+    {
+      "name": "portrait and landscape reading",
+      "result": "PASS bounded",
+      "details": "Layout viewports1317x650 and824x1143, DPR2.125. Selected story/layout and native navigation touch actions completed."
+    },
+    {
+      "name": "physical keyboard composer visibility",
+      "result": "FAIL",
+      "details": "Samsung keyboard reduces visual viewport but composer remains below it in both orientations. Also reproduced in native Back to Chat mode. No extension-only attribution."
+    },
+    {
+      "name": "draft/caret navigation",
+      "result": "PASS bounded",
+      "details": "Android input draft Lantern IME draft, actual Samsung A key appended a, native left key moved caret to17. Before/after Previous+Backlog exactly Lantern IME drafta, selection17/17. Keyboard dismissed for navigation. Complex IME composition and selection-range gestures NOT_TESTED."
+    },
+    {
+      "name": "native Send/Stop/Continue",
+      "result": "PASS bounded",
+      "details": "With keyboard dismissed, touch Send increased41 to43 native messages and streamed; Stop retained partial reply; Continue appended local response without new native message. No real model."
+    },
+    {
+      "name": "long formatted text",
+      "result": "PASS bounded",
+      "details": "24 Previous touch actions selected field notes.4939 rendered characters; full end marker present. Five touch scroll gestures reached scroll1487.0588/client381/total1868."
+    },
+    {
+      "name": "save/reload/reopen",
+      "result": "PASS bounded",
+      "details": "Touch save advanced Lantern layout4 to5. Reload detached and returned native welcome; select Project A and prepared chat, explicit reopen restored revision5. Initial probes waited on expected disabled/no-chat controls and hidden drawer; corrected setup, not candidate failures."
+    },
+    {
+      "name": "actual group and manual cast",
+      "result": "PASS bounded",
+      "details": "Touch Character Management activated native group1792192901752 with6 messages. Prior project detached. Explicit layout has4 actor UUIDs/two Miras/3 sprites/Sage offstage. Occupied move refused SLOT_OCCUPIED; explicit replace moves first Mira offstage and Sage left,3 sprites retained."
+    },
+    {
+      "name": "discard/reopen after group replacement",
+      "result": "UNVERIFIED",
+      "details": "Touch attempted but final cast still reflected replacement. No assertion of recovery success; screenshot retained as after-discard-attempt. Did not investigate whether touch targeting or app behavior caused it."
+    },
+    {
+      "name": "increased scaling/zoom",
+      "result": "NOT_TESTED",
+      "details": "Actual touch pinch request2.0 left visualViewport.scale1.0; no 200% claim. Restored request0.5 left scale1.0. fontScale1 unchanged."
+    },
+    {
+      "name": "reduced motion / assistive technology",
+      "result": "NOT_TESTED",
+      "details": "Existing preference false. Did not change system/browser preferences or enable screen reader."
+    },
+    {
+      "name": "every scene/library/import/export/cleanup action by touch",
+      "result": "PARTIAL",
+      "details": "Only the named navigation/project/group/slot actions completed. selectOption was programmatic; no physical file-picker/import/export, full touch-target audit or hardware digitizer/finger evaluation."
+    },
+    {
+      "name": "human owner session",
+      "result": "NOT_RUN",
+      "details": "Technical scripted checks only; no owner immersion/usability verdict."
+    }
+  ],
+  "defect": {
+    "id": "DYL60-DEVICE-01",
+    "severity": "P1 readiness blocker",
+    "expected": "Opening the Android IME keeps native composer, draft and generation actions visible/reachable.",
+    "actual": "Landscape visual viewport height316.2353 while composer top611.9117/bottom648.4117 (layout650); portrait visual viewport769.8823 while composer top1105.0883/bottom1141.5883 (layout1143). Native Back to Chat gives same portrait geometry.",
+    "reproduction": "Use current Brave desktop-site configuration, open prepared layout, touch native composer, open Samsung keyboard. Repeat after rotation and in Back to Chat. Dismiss keyboard to recover reply controls.",
+    "next": "Separately bounded host/browser viewport investigation and minimal correction, then repeat the exact-candidate mandatory device checks. No speculative runtime patch in this frozen evidence update."
+  },
+  "probeLimitations": [
+    "One transient ADB daemon/socket drop interrupted an action; established device rediscovered and only owned mappings restored.",
+    "Retained failed probe attempts include disabled/hidden controls and unscoped label collisions. Later completed actions are reported individually.",
+    "Group discard attempt is unresolved; no all-green campaign claim."
+  ],
+  "cleanup": {
+    "at": "2026-10-16T23:41:52.398108+00:00",
+    "ownedLocalPortsClosed": {
+      "8760": true,
+      "8128": true,
+      "9229": true
+    },
+    "syntheticTabClosed": true,
+    "deviceReverse8760Removed": true,
+    "localForward9229Removed": true,
+    "scaleRestored": 1,
+    "systemSettingsChanged": false,
+    "retainedRoot": "/tmp/sn-dyl60-device-nn07uqaq"
+  }
+}

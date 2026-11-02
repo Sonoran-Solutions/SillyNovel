@@ -1,0 +1,33 @@
+{
+  "candidate": "0985ca945617fd48c205d87d447817e8bd64e9c8",
+  "host": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
+  "hostVersion": "1.19.0",
+  "node": "v26.8.1",
+  "npm": "11.19.0",
+  "nodeExecutableSha256": "19235a9b678f84729464c52623f92de130a165452747c6826d3fdc13df3abcc3",
+  "sqlite": "3.53.4",
+  "browser": {
+    "version": "151.0.7922.34",
+    "executable": "/home/dq/.cache/ms-playwright/chromium-1234/chrome-linux64/chrome",
+    "sha256": "0b20b130e7edd9dd51873be867761295fe0cfad490c2b9a64f95bd3cfc08fa71"
+  },
+  "hostRoot": "/tmp/SillyTavern-dyl22",
+  "playwrightModule": "/home/dq/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+  "playwrightVersion": "1.62.1",
+  "hostHashes": {
+    "package.json": "5b6e0634a63872c33603bf803217613a388f2e5dbd5990f7b30d254bfbf027c2",
+    "package-lock.json": "5ee4095a82d2b326e30290480b33529553cba60d2f418bc086ed3c08d874d888",
+    "public/script.js": "955c603d0bad84bac5a716f0818d85c2543e44d4c43878e0d63ef1e55ca91855",
+    "public/scripts/bookmarks.js": "5c3a68aa82e58c0d82777065b8466572fc1b202cad98a92ba4daa852c386ad1b",
+    "public/scripts/group-chats.js": "862eb24dfe1f596a2bd6d039a69397667829e0fc34471d22d2028d7781a5c73c",
+    "src/constants.js": "a8e507bf5f9e335810247476b28428e6e44f1b0a371df41cea748b36e70d29a7",
+    "src/users.js": "3100591d000a28f6d3a548242c9de69060c2fd4777c170b13f38a99bc67f3476",
+    "src/plugin-loader.js": "994cbfde97c4ef3a2e2a8078e005e61698ded61a52741cad1efe049ee2bedee9"
+  },
+  "platform": "Linux 7.0.0-38-generic x86_64",
+  "toolingHashes": {
+    "/home/dq/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs": "a0f5715ea22354f922791a9c53dc012d5d5c067ff9cc4cd35ffb7cd272071a9f",
+    "/home/dq/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/package.json": "ca170ec143a88ed3043ac953eb3b2377b2b97304104f4e1e23316684ce2c35af",
+    "/home/dq/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright-core/browsers.json": "f306eed529599b1eaf2f8a85db9de2b23e1a3fe36c2b66434b7c9434fb627a99"
+  }
+}

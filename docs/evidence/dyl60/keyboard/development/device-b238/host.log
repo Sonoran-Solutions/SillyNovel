@@ -1,0 +1,786 @@
+Node version: v26.8.1. Running in undefined environment. Server directory: /tmp/sn-portability-host-ont3YD/host
+Using config path: /tmp/sn-dyl60-keyboard-g2ciwr_7/config.yaml
+Using data root: /tmp/sn-dyl60-keyboard-g2ciwr_7/data
+Preferring IPv4 for DNS resolution
+
+SillyTavern 1.19.0
+Running 'HEAD' (7e8663cd9) - 9/14/2026, 10:55:46 AM MST
+
+Initializing plugin from /tmp/sn-portability-host-ont3YD/host/plugins/sillynovel-storage/index.mjs
+1 server plugin(s) are currently loaded. Make sure you know exactly what they do, and only install plugins from trusted sources!
+
+Compiling frontend libraries...
+webpack 5.105.4 compiled [1m[32msuccessfully[39m[22m in 416 ms
+
+]2;SillyTavern WebServer\SillyTavern is listening on IPv4: 127.0.0.1:8761
+
+=================================================
+
+Go to: http://127.0.0.1:8761/ to open SillyTavern
+
+=================================================
+
+Extensions available for default-user [
+  { type: 'system', name: 'assets' },
+  { type: 'system', name: 'attachments' },
+  { type: 'system', name: 'caption' },
+  { type: 'system', name: 'connection-manager' },
+  { type: 'system', name: 'expressions' },
+  { type: 'system', name: 'gallery' },
+  { type: 'system', name: 'memory' },
+  { type: 'system', name: 'quick-reply' },
+  { type: 'system', name: 'regex' },
+  { type: 'system', name: 'stable-diffusion' },
+  { type: 'system', name: 'token-counter' },
+  { type: 'system', name: 'translate' },
+  { type: 'system', name: 'tts' },
+  { type: 'system', name: 'vectors' },
+  { type: 'global', name: 'third-party/SillyNovel' }
+]
+Instantiated the tokenizer for gpt-3.5-turbo
+Extensions available for default-user [
+  { type: 'system', name: 'assets' },
+  { type: 'system', name: 'attachments' },
+  { type: 'system', name: 'caption' },
+  { type: 'system', name: 'connection-manager' },
+  { type: 'system', name: 'expressions' },
+  { type: 'system', name: 'gallery' },
+  { type: 'system', name: 'memory' },
+  { type: 'system', name: 'quick-reply' },
+  { type: 'system', name: 'regex' },
+  { type: 'system', name: 'stable-diffusion' },
+  { type: 'system', name: 'token-counter' },
+  { type: 'system', name: 'translate' },
+  { type: 'system', name: 'tts' },
+  { type: 'system', name: 'vectors' },
+  { type: 'global', name: 'third-party/SillyNovel' }
+]
+Available models: [ 'sn-reader-local' ]
+Chat Completion request: {
+  messages: [
+    {
+      role: 'system',
+      content: "Write Project A's next reply in a fictional chat between Project A and Synthetic Traveller."
+    },
+    {
+      role: 'system',
+      content: 'An invented traveller testing a reading room.'
+    },
+    { role: 'system', content: 'Public synthetic fixture' },
+    { role: 'system', content: '[Start a new Chat]' },
+    {
+      role: 'assistant',
+      content: 'The lantern is waiting. Public synthetic fixture.'
+    },
+    {
+      role: 'user',
+      content: 'We have one lamp and a closed road. Where do we start?'
+    },
+    {
+      role: 'assistant',
+      content: 'Mira sets a brass lantern between two cups. “At the bridge. The keeper left us a map, but the ink runs whenever it rains.” Rowan points to a dry corner. “Then we read it together.”'
+    },
+    {
+      role: 'user',
+      content: 'What does the keeper’s note actually say?'
+    },
+    {
+      role: 'assistant',
+      content: '**Keep this route for later:**\n' +
+        '\n' +
+        '1. Take the eastern path.\n' +
+        '2. Count three white stones.\n' +
+        '3. Turn toward the bell, not the river.\n' +
+        '\n' +
+        'Mira taps the last line. “It sounds like someone expected us to get lost.”'
+    },
+    { role: 'user', content: 'Rowan, do you trust the route?' },
+    {
+      role: 'assistant',
+      content: '“I trust the stones,” Rowan says. “Bells move. People carry them.” Mira laughs into her cup. “Good. One cautious traveller is enough for this expedition.”'
+    },
+    { role: 'user', content: 'Let’s get our coats before we leave.' },
+    {
+      role: 'assistant',
+      content: 'Mira exchanges her light jacket for a blue travelling coat. Rowan checks the lantern latch. “If it goes out, we stop walking. That is the whole safety plan.”'
+    },
+    { role: 'user', content: 'We take the eastern path.' },
+    {
+      role: 'assistant',
+      content: 'The tavern light falls away behind them. Wet leaves catch the lantern glow, and somewhere ahead a small bell rings once. Mira raises a hand. “No river yet. We still have time to choose.”'
+    },
+    {
+      role: 'user',
+      content: 'I see two stones. Is that the third under the fern?'
+    },
+    {
+      role: 'assistant',
+      content: 'Rowan kneels beside the fern without touching it. “Paint, not chalk. Someone marked this deliberately.” Mira holds the lantern low; three pale stones form an arrow into the trees.'
+    },
+    {
+      role: 'user',
+      content: 'Rowan, can you scout the fork while we check the map?'
+    },
+    {
+      role: 'assistant',
+      content: 'Rowan walks beyond the next bend, still within calling distance. Mira stays beside the stones. “Put him offstage for a moment. I would like to hear my own thoughts.”'
+    },
+    { role: 'user', content: 'The bell sounds nearer the river now.' },
+    {
+      role: 'assistant',
+      content: 'Mira listens, then closes her eyes. “The water is carrying the sound around us. The note said *toward the bell*, not toward the loudest echo.” She opens the map again.'
+    },
+    {
+      role: 'user',
+      content: 'Read every part of the map, even the tiny writing.'
+    },
+    {
+      role: 'assistant',
+      content: '## Keeper’s field notes\n' +
+        '\n' +
+        'Mira lays the map on a flat stone.\n' +
+        '\n' +
+        '> A route is a promise to the next traveller. Leave enough detail for someone who does not know what you know.\n' +
+        '\n' +
+        '**Margin 1.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 2.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 3.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 4.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 5.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 6.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 7.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 8.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 9.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 10.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 11.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 12.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 13.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 14.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 15.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 16.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 17.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 18.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '`MARKER: THREE STONES / EAST / BELL`\n' +
+        '\n' +
+        '**End of complete field notes.**'
+    },
+    {
+      role: 'user',
+      content: 'That last note is kinder than I expected.'
+    },
+    {
+      role: 'assistant',
+      content: '“The keeper was practical,” Mira says. “Kindness is sometimes a good set of directions.” A second light appears beyond the trees: Rowan returning with a hooded lamp.'
+    },
+    { role: 'user', content: 'Rowan, what did you find?' },
+    {
+      role: 'assistant',
+      content: 'Rowan steps back beside Mira. “A footbridge, an empty shelter, and a bell tied to a branch. Nobody is stranded. The keeper marked a safe crossing.”'
+    },
+    {
+      role: 'user',
+      content: 'Let’s revisit the original three instructions before crossing.'
+    },
+    {
+      role: 'assistant',
+      content: 'Mira waits while you turn back to the folded route. “Do not let my confidence become another kind of guesswork. Tell us what the second line said.” Rowan steadies the lantern.'
+    },
+    {
+      role: 'user',
+      content: 'It said three white stones. I nearly remembered four.'
+    },
+    {
+      role: 'assistant',
+      content: '“Then the map did its job,” Rowan says. Mira moves aside to give you a clear view. “Correct the stage too if I am blocking him. None of us has to stand where we started.”'
+    },
+    { role: 'user', content: 'We cross one at a time and regroup.' },
+    {
+      role: 'assistant',
+      content: 'The bridge holds. Mira crosses last, blue coat bright against the dark rail. Rowan waits on the other side. The bell rings behind them now, a confirmation rather than a warning.'
+    },
+    { role: 'user', content: 'What is in the shelter?' },
+    {
+      role: 'assistant',
+      content: 'A dry bench, spare cord, and a tin box labelled **FOR THE NEXT PERSON**. Inside is a fresh map. Mira leaves the old one folded beside it. “A useful ending can be this small.”'
+    },
+    {
+      role: 'user',
+      content: 'Let’s bring the lantern back before closing time.'
+    },
+    {
+      role: 'assistant',
+      content: 'Warm windows replace wet branches. Rowan returns the lantern to its hook. Mira hangs her coat by the door and takes the same seat as before. The room feels familiar without being unchanged.'
+    },
+    {
+      role: 'user',
+      content: 'I want to remember how we arranged the table.'
+    },
+    {
+      role: 'assistant',
+      content: '“Save the room, then,” Mira says. “Tomorrow we can open it deliberately. The expressions belonged to tonight.” Rowan slides the map into the tin box, leaving the tabletop clear.'
+    },
+    {
+      role: 'user',
+      content: 'Someone calls from the other room. I’ll check and return.'
+    },
+    {
+      role: 'assistant',
+      content: 'Mira nods. “We will be here. If the room looks empty when you return, open the saved arrangement again.” Rowan lifts a cup in acknowledgement.'
+    },
+    {
+      role: 'user',
+      content: 'I’m back. Let’s open our saved room and check the map.'
+    },
+    {
+      role: 'assistant',
+      content: 'The table is as you saved it, with room for both travellers. Mira’s face is calm. “Tonight’s little expressions are gone. The route is still in the conversation.”'
+    },
+    {
+      role: 'user',
+      content: 'What should we leave for the next traveller?'
+    },
+    {
+      role: 'assistant',
+      content: 'Rowan writes **Count carefully. Ask twice. Bring the lamp back.** Mira adds a small drawing of three stones. Outside, the rain stops. They leave the lantern ready for whoever needs it next.'
+    },
+    { role: 'user', content: 'Lantern IME drafta' }
+  ],
+  prompt: undefined,
+  model: 'sn-reader-local',
+  temperature: 1,
+  max_tokens: 300,
+  max_completion_tokens: undefined,
+  stream: true,
+  presence_penalty: 0,
+  frequency_penalty: 0,
+  top_p: 1,
+  top_k: undefined,
+  stop: undefined,
+  logit_bias: undefined,
+  seed: undefined,
+  n: undefined,
+  logprobs: undefined,
+  top_logprobs: undefined
+}
+Streaming request in progress
+Chat Completion request: {
+  messages: [
+    {
+      role: 'system',
+      content: "Write Project A's next reply in a fictional chat between Project A and Synthetic Traveller."
+    },
+    {
+      role: 'system',
+      content: 'An invented traveller testing a reading room.'
+    },
+    { role: 'system', content: 'Public synthetic fixture' },
+    { role: 'system', content: '[Start a new Chat]' },
+    {
+      role: 'assistant',
+      content: 'The lantern is waiting. Public synthetic fixture.'
+    },
+    {
+      role: 'user',
+      content: 'We have one lamp and a closed road. Where do we start?'
+    },
+    {
+      role: 'assistant',
+      content: 'Mira sets a brass lantern between two cups. “At the bridge. The keeper left us a map, but the ink runs whenever it rains.” Rowan points to a dry corner. “Then we read it together.”'
+    },
+    {
+      role: 'user',
+      content: 'What does the keeper’s note actually say?'
+    },
+    {
+      role: 'assistant',
+      content: '**Keep this route for later:**\n' +
+        '\n' +
+        '1. Take the eastern path.\n' +
+        '2. Count three white stones.\n' +
+        '3. Turn toward the bell, not the river.\n' +
+        '\n' +
+        'Mira taps the last line. “It sounds like someone expected us to get lost.”'
+    },
+    { role: 'user', content: 'Rowan, do you trust the route?' },
+    {
+      role: 'assistant',
+      content: '“I trust the stones,” Rowan says. “Bells move. People carry them.” Mira laughs into her cup. “Good. One cautious traveller is enough for this expedition.”'
+    },
+    { role: 'user', content: 'Let’s get our coats before we leave.' },
+    {
+      role: 'assistant',
+      content: 'Mira exchanges her light jacket for a blue travelling coat. Rowan checks the lantern latch. “If it goes out, we stop walking. That is the whole safety plan.”'
+    },
+    { role: 'user', content: 'We take the eastern path.' },
+    {
+      role: 'assistant',
+      content: 'The tavern light falls away behind them. Wet leaves catch the lantern glow, and somewhere ahead a small bell rings once. Mira raises a hand. “No river yet. We still have time to choose.”'
+    },
+    {
+      role: 'user',
+      content: 'I see two stones. Is that the third under the fern?'
+    },
+    {
+      role: 'assistant',
+      content: 'Rowan kneels beside the fern without touching it. “Paint, not chalk. Someone marked this deliberately.” Mira holds the lantern low; three pale stones form an arrow into the trees.'
+    },
+    {
+      role: 'user',
+      content: 'Rowan, can you scout the fork while we check the map?'
+    },
+    {
+      role: 'assistant',
+      content: 'Rowan walks beyond the next bend, still within calling distance. Mira stays beside the stones. “Put him offstage for a moment. I would like to hear my own thoughts.”'
+    },
+    { role: 'user', content: 'The bell sounds nearer the river now.' },
+    {
+      role: 'assistant',
+      content: 'Mira listens, then closes her eyes. “The water is carrying the sound around us. The note said *toward the bell*, not toward the loudest echo.” She opens the map again.'
+    },
+    {
+      role: 'user',
+      content: 'Read every part of the map, even the tiny writing.'
+    },
+    {
+      role: 'assistant',
+      content: '## Keeper’s field notes\n' +
+        '\n' +
+        'Mira lays the map on a flat stone.\n' +
+        '\n' +
+        '> A route is a promise to the next traveller. Leave enough detail for someone who does not know what you know.\n' +
+        '\n' +
+        '**Margin 1.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 2.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 3.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 4.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 5.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 6.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 7.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 8.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 9.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 10.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 11.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 12.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 13.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 14.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 15.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 16.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 17.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 18.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '`MARKER: THREE STONES / EAST / BELL`\n' +
+        '\n' +
+        '**End of complete field notes.**'
+    },
+    {
+      role: 'user',
+      content: 'That last note is kinder than I expected.'
+    },
+    {
+      role: 'assistant',
+      content: '“The keeper was practical,” Mira says. “Kindness is sometimes a good set of directions.” A second light appears beyond the trees: Rowan returning with a hooded lamp.'
+    },
+    { role: 'user', content: 'Rowan, what did you find?' },
+    {
+      role: 'assistant',
+      content: 'Rowan steps back beside Mira. “A footbridge, an empty shelter, and a bell tied to a branch. Nobody is stranded. The keeper marked a safe crossing.”'
+    },
+    {
+      role: 'user',
+      content: 'Let’s revisit the original three instructions before crossing.'
+    },
+    {
+      role: 'assistant',
+      content: 'Mira waits while you turn back to the folded route. “Do not let my confidence become another kind of guesswork. Tell us what the second line said.” Rowan steadies the lantern.'
+    },
+    {
+      role: 'user',
+      content: 'It said three white stones. I nearly remembered four.'
+    },
+    {
+      role: 'assistant',
+      content: '“Then the map did its job,” Rowan says. Mira moves aside to give you a clear view. “Correct the stage too if I am blocking him. None of us has to stand where we started.”'
+    },
+    { role: 'user', content: 'We cross one at a time and regroup.' },
+    {
+      role: 'assistant',
+      content: 'The bridge holds. Mira crosses last, blue coat bright against the dark rail. Rowan waits on the other side. The bell rings behind them now, a confirmation rather than a warning.'
+    },
+    { role: 'user', content: 'What is in the shelter?' },
+    {
+      role: 'assistant',
+      content: 'A dry bench, spare cord, and a tin box labelled **FOR THE NEXT PERSON**. Inside is a fresh map. Mira leaves the old one folded beside it. “A useful ending can be this small.”'
+    },
+    {
+      role: 'user',
+      content: 'Let’s bring the lantern back before closing time.'
+    },
+    {
+      role: 'assistant',
+      content: 'Warm windows replace wet branches. Rowan returns the lantern to its hook. Mira hangs her coat by the door and takes the same seat as before. The room feels familiar without being unchanged.'
+    },
+    {
+      role: 'user',
+      content: 'I want to remember how we arranged the table.'
+    },
+    {
+      role: 'assistant',
+      content: '“Save the room, then,” Mira says. “Tomorrow we can open it deliberately. The expressions belonged to tonight.” Rowan slides the map into the tin box, leaving the tabletop clear.'
+    },
+    {
+      role: 'user',
+      content: 'Someone calls from the other room. I’ll check and return.'
+    },
+    {
+      role: 'assistant',
+      content: 'Mira nods. “We will be here. If the room looks empty when you return, open the saved arrangement again.” Rowan lifts a cup in acknowledgement.'
+    },
+    {
+      role: 'user',
+      content: 'I’m back. Let’s open our saved room and check the map.'
+    },
+    {
+      role: 'assistant',
+      content: 'The table is as you saved it, with room for both travellers. Mira’s face is calm. “Tonight’s little expressions are gone. The route is still in the conversation.”'
+    },
+    {
+      role: 'user',
+      content: 'What should we leave for the next traveller?'
+    },
+    {
+      role: 'assistant',
+      content: 'Rowan writes **Count carefully. Ask twice. Bring the lamp back.** Mira adds a small drawing of three stones. Outside, the rain stops. They leave the lantern ready for whoever needs it next.'
+    },
+    { role: 'user', content: 'Lantern IME drafta' },
+    {
+      role: 'assistant',
+      content: '*The lantern glows.*\n' +
+        '\n' +
+        '"Welcome to the reading room," **Mira** says.\n' +
+        '\n' +
+        '- Read a complete reply\n' +
+        '- Keep the original composer\n' +
+        '\n' +
+        '`a quie'
+    },
+    {
+      role: 'system',
+      content: '[Continue your last message without repeating its original content.]'
+    }
+  ],
+  prompt: undefined,
+  model: 'sn-reader-local',
+  temperature: 1,
+  max_tokens: 300,
+  max_completion_tokens: undefined,
+  stream: true,
+  presence_penalty: 0,
+  frequency_penalty: 0,
+  top_p: 1,
+  top_k: undefined,
+  stop: undefined,
+  logit_bias: undefined,
+  seed: undefined,
+  n: undefined,
+  logprobs: undefined,
+  top_logprobs: undefined
+}
+Streaming request in progress
+Streaming request finished
+Chat Completion request: {
+  messages: [
+    {
+      role: 'system',
+      content: "Write Project A's next reply in a fictional chat between Project A and Synthetic Traveller."
+    },
+    {
+      role: 'system',
+      content: 'An invented traveller testing a reading room.'
+    },
+    { role: 'system', content: 'Public synthetic fixture' },
+    { role: 'system', content: '[Start a new Chat]' },
+    {
+      role: 'assistant',
+      content: 'The lantern is waiting. Public synthetic fixture.'
+    },
+    {
+      role: 'user',
+      content: 'We have one lamp and a closed road. Where do we start?'
+    },
+    {
+      role: 'assistant',
+      content: 'Mira sets a brass lantern between two cups. “At the bridge. The keeper left us a map, but the ink runs whenever it rains.” Rowan points to a dry corner. “Then we read it together.”'
+    },
+    {
+      role: 'user',
+      content: 'What does the keeper’s note actually say?'
+    },
+    {
+      role: 'assistant',
+      content: '**Keep this route for later:**\n' +
+        '\n' +
+        '1. Take the eastern path.\n' +
+        '2. Count three white stones.\n' +
+        '3. Turn toward the bell, not the river.\n' +
+        '\n' +
+        'Mira taps the last line. “It sounds like someone expected us to get lost.”'
+    },
+    { role: 'user', content: 'Rowan, do you trust the route?' },
+    {
+      role: 'assistant',
+      content: '“I trust the stones,” Rowan says. “Bells move. People carry them.” Mira laughs into her cup. “Good. One cautious traveller is enough for this expedition.”'
+    },
+    { role: 'user', content: 'Let’s get our coats before we leave.' },
+    {
+      role: 'assistant',
+      content: 'Mira exchanges her light jacket for a blue travelling coat. Rowan checks the lantern latch. “If it goes out, we stop walking. That is the whole safety plan.”'
+    },
+    { role: 'user', content: 'We take the eastern path.' },
+    {
+      role: 'assistant',
+      content: 'The tavern light falls away behind them. Wet leaves catch the lantern glow, and somewhere ahead a small bell rings once. Mira raises a hand. “No river yet. We still have time to choose.”'
+    },
+    {
+      role: 'user',
+      content: 'I see two stones. Is that the third under the fern?'
+    },
+    {
+      role: 'assistant',
+      content: 'Rowan kneels beside the fern without touching it. “Paint, not chalk. Someone marked this deliberately.” Mira holds the lantern low; three pale stones form an arrow into the trees.'
+    },
+    {
+      role: 'user',
+      content: 'Rowan, can you scout the fork while we check the map?'
+    },
+    {
+      role: 'assistant',
+      content: 'Rowan walks beyond the next bend, still within calling distance. Mira stays beside the stones. “Put him offstage for a moment. I would like to hear my own thoughts.”'
+    },
+    { role: 'user', content: 'The bell sounds nearer the river now.' },
+    {
+      role: 'assistant',
+      content: 'Mira listens, then closes her eyes. “The water is carrying the sound around us. The note said *toward the bell*, not toward the loudest echo.” She opens the map again.'
+    },
+    {
+      role: 'user',
+      content: 'Read every part of the map, even the tiny writing.'
+    },
+    {
+      role: 'assistant',
+      content: '## Keeper’s field notes\n' +
+        '\n' +
+        'Mira lays the map on a flat stone.\n' +
+        '\n' +
+        '> A route is a promise to the next traveller. Leave enough detail for someone who does not know what you know.\n' +
+        '\n' +
+        '**Margin 1.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 2.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 3.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 4.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 5.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 6.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 7.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 8.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 9.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 10.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 11.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 12.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 13.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 14.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 15.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 16.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 17.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '**Margin 18.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n' +
+        '\n' +
+        '`MARKER: THREE STONES / EAST / BELL`\n' +
+        '\n' +
+        '**End of complete field notes.**'
+    },
+    {
+      role: 'user',
+      content: 'That last note is kinder than I expected.'
+    },
+    {
+      role: 'assistant',
+      content: '“The keeper was practical,” Mira says. “Kindness is sometimes a good set of directions.” A second light appears beyond the trees: Rowan returning with a hooded lamp.'
+    },
+    { role: 'user', content: 'Rowan, what did you find?' },
+    {
+      role: 'assistant',
+      content: 'Rowan steps back beside Mira. “A footbridge, an empty shelter, and a bell tied to a branch. Nobody is stranded. The keeper marked a safe crossing.”'
+    },
+    {
+      role: 'user',
+      content: 'Let’s revisit the original three instructions before crossing.'
+    },
+    {
+      role: 'assistant',
+      content: 'Mira waits while you turn back to the folded route. “Do not let my confidence become another kind of guesswork. Tell us what the second line said.” Rowan steadies the lantern.'
+    },
+    {
+      role: 'user',
+      content: 'It said three white stones. I nearly remembered four.'
+    },
+    {
+      role: 'assistant',
+      content: '“Then the map did its job,” Rowan says. Mira moves aside to give you a clear view. “Correct the stage too if I am blocking him. None of us has to stand where we started.”'
+    },
+    { role: 'user', content: 'We cross one at a time and regroup.' },
+    {
+      role: 'assistant',
+      content: 'The bridge holds. Mira crosses last, blue coat bright against the dark rail. Rowan waits on the other side. The bell rings behind them now, a confirmation rather than a warning.'
+    },
+    { role: 'user', content: 'What is in the shelter?' },
+    {
+      role: 'assistant',
+      content: 'A dry bench, spare cord, and a tin box labelled **FOR THE NEXT PERSON**. Inside is a fresh map. Mira leaves the old one folded beside it. “A useful ending can be this small.”'
+    },
+    {
+      role: 'user',
+      content: 'Let’s bring the lantern back before closing time.'
+    },
+    {
+      role: 'assistant',
+      content: 'Warm windows replace wet branches. Rowan returns the lantern to its hook. Mira hangs her coat by the door and takes the same seat as before. The room feels familiar without being unchanged.'
+    },
+    {
+      role: 'user',
+      content: 'I want to remember how we arranged the table.'
+    },
+    {
+      role: 'assistant',
+      content: '“Save the room, then,” Mira says. “Tomorrow we can open it deliberately. The expressions belonged to tonight.” Rowan slides the map into the tin box, leaving the tabletop clear.'
+    },
+    {
+      role: 'user',
+      content: 'Someone calls from the other room. I’ll check and return.'
+    },
+    {
+      role: 'assistant',
+      content: 'Mira nods. “We will be here. If the room looks empty when you return, open the saved arrangement again.” Rowan lifts a cup in acknowledgement.'
+    },
+    {
+      role: 'user',
+      content: 'I’m back. Let’s open our saved room and check the map.'
+    },
+    {
+      role: 'assistant',
+      content: 'The table is as you saved it, with room for both travellers. Mira’s face is calm. “Tonight’s little expressions are gone. The route is still in the conversation.”'
+    },
+    {
+      role: 'user',
+      content: 'What should we leave for the next traveller?'
+    },
+    {
+      role: 'assistant',
+      content: 'Rowan writes **Count carefully. Ask twice. Bring the lamp back.** Mira adds a small drawing of three stones. Outside, the rain stops. They leave the lantern ready for whoever needs it next.'
+    },
+    { role: 'user', content: 'Lantern IME drafta' },
+    {
+      role: 'assistant',
+      content: '*The lantern glows.*\n' +
+        '\n' +
+        '"Welcome to the reading room," **Mira** says.\n' +
+        '\n' +
+        '- Read a complete reply\n' +
+        '- Keep the original composer\n' +
+        '\n' +
+        '`a quie *The lantern glows.*\n' +
+        '\n' +
+        '"Welcome to the reading room," **Mira** says.\n' +
+        '\n' +
+        '- Read a complete reply\n' +
+        '- Keep the original composer\n' +
+        '\n' +
+        '`a quiet moment`'
+    },
+    { role: 'user', content: 'Landscape IME draft' }
+  ],
+  prompt: undefined,
+  model: 'sn-reader-local',
+  temperature: 1,
+  max_tokens: 300,
+  max_completion_tokens: undefined,
+  stream: true,
+  presence_penalty: 0,
+  frequency_penalty: 0,
+  top_p: 1,
+  top_k: undefined,
+  stop: undefined,
+  logit_bias: undefined,
+  seed: undefined,
+  n: undefined,
+  logprobs: undefined,
+  top_logprobs: undefined
+}
+Streaming request in progress
+Extensions available for default-user [
+  { type: 'system', name: 'assets' },
+  { type: 'system', name: 'attachments' },
+  { type: 'system', name: 'caption' },
+  { type: 'system', name: 'connection-manager' },
+  { type: 'system', name: 'expressions' },
+  { type: 'system', name: 'gallery' },
+  { type: 'system', name: 'memory' },
+  { type: 'system', name: 'quick-reply' },
+  { type: 'system', name: 'regex' },
+  { type: 'system', name: 'stable-diffusion' },
+  { type: 'system', name: 'token-counter' },
+  { type: 'system', name: 'translate' },
+  { type: 'system', name: 'tts' },
+  { type: 'system', name: 'vectors' },
+  { type: 'global', name: 'third-party/SillyNovel' }
+]
+]2;node\

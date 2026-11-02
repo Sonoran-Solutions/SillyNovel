@@ -91,6 +91,13 @@ export function mountReader({ document, snapshot, formatMessage, actions }) {
         element.addEventListener(type, callback);
         listeners.push(() => element.removeEventListener(type, callback));
     };
+    const viewport = document.defaultView?.visualViewport;
+    function fitViewport() {
+        // Desktop-site Android can ignore the host's interactive-widget policy.
+        shell.classList.toggle('sillynovel-viewport', viewport.scale === 1);
+        shell.style.setProperty('--sillynovel-available-height', Math.max(0,
+            viewport.offsetTop + viewport.height - shell.getBoundingClientRect().top) + 'px');
+    }
     const make = (tag, className, text) => {
         const element = document.createElement(tag);
         element.className = className;
@@ -286,12 +293,19 @@ export function mountReader({ document, snapshot, formatMessage, actions }) {
         chat.classList.remove('sillynovel-native-hidden');
         visuals?.dispose();
         for (const remove of listeners.splice(0)) remove();
+        shell.classList.remove('sillynovel-viewport');
+        shell.style.removeProperty('--sillynovel-available-height');
         stage.remove();
         nativeBar.remove();
     }
     try {
         shell.insertBefore(stage, chat);
         shell.insertBefore(nativeBar, chat);
+        if (viewport) {
+            listen(viewport, 'resize', fitViewport);
+            listen(viewport, 'scroll', fitViewport);
+            fitViewport();
+        }
         render({ reader: snapshot });
         visuals = mountVisualStage({ document, stage, actions });
         chat.classList.add('sillynovel-native-hidden');

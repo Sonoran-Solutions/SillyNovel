@@ -1,0 +1,25 @@
+from pathlib import Path
+import os,sys,subprocess,json,hashlib,datetime,time,re,shutil,shlex
+repo=Path('/home/dq/Projects/SillyNovel');out=repo/'docs/evidence/dyl60/keyboard/final';name=sys.argv[1];pins=json.loads((out/'pins.json').read_text());candidate=pins['candidate'];inputs=json.loads((out/'inputs.json').read_text());runs=json.loads((out/'runs.json').read_text());flags={'expressions':{'SN_EXPRESSIONS_RUN':'1'},'groups':{'SN_GROUP_RUN':'1'},'recovery':{'SN_RECOVERY_RUN':'1'},'cleanup':{'SN_CLEANUP_RUN':'1'},'native-integrity-branches':{'SN_CANDIDATE_RUN':'1'}};order=['node','storage','browser','stage-library-migration',*flags];assert [r['name']for r in runs]==order[:order.index(name)]
+sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
+assert subprocess.check_output(['git','rev-parse','HEAD'],cwd=repo,text=True).strip()==candidate
+assert all(sha(repo/p)==h for p,h in inputs.items())
+assert sha(Path(shutil.which('node')).resolve())==pins['nodeExecutableSha256']
+assert subprocess.check_output(['git','-C',pins['hostRoot'],'rev-parse','HEAD'],text=True).strip()==pins['host']
+assert sha(pins['browser']['executable'])==pins['browser']['sha256']
+assert all(sha(p)==h for p,h in pins['toolingHashes'].items())
+env={k:v for k,v in os.environ.items()if not(k.startswith('SN_')and k.endswith('_RUN'))};env['SN_PLAYWRIGHT_MODULE']=pins['playwrightModule'];command=['node','tests/probes/project-portability/host.mjs',pins['hostRoot']];started=datetime.datetime.now(datetime.timezone.utc).isoformat();tick=time.monotonic();print('START resumed',name,flush=True)
+with(out/(name+'.txt')).open('w')as log:
+ try:code=subprocess.run(command,cwd=repo,env=env|flags[name],stdout=log,stderr=subprocess.STDOUT,timeout=600).returncode
+ except subprocess.TimeoutExpired:code=124
+text=(out/(name+'.txt')).read_text();run={'name':name,'candidate':candidate,'command':shlex.join(command),'environment':flags[name],'startedUTC':started,'endedUTC':datetime.datetime.now(datetime.timezone.utc).isoformat(),'elapsedSeconds':round(time.monotonic()-tick,3),'exitCode':code,'log':name+'.txt','checkpointCount':len(re.findall(r'^PASS ',text,re.M)),'resumedAfterOuterTermination':True};found=re.search(r'Owned evidence root (\S+)',text)
+if found:
+ owned=Path(found[1]);run['ownedRoot']=str(owned);dest=out/name;dest.mkdir()
+ for p in sorted(owned.iterdir()):
+  if p.is_file()and p.suffix in('.json','.log','.png','.yaml','.mjs'):shutil.copy2(p,dest/p.name)
+ if(owned/'evidence.json').exists():
+  record=json.loads((owned/'evidence.json').read_text());assert record['candidate']==candidate;run['result']=record['result']
+runs.append(run);(out/'runs.json').write_text(json.dumps(runs,indent=2)+'\n');print('END resumed',name,'exit',code,'elapsed',run['elapsedSeconds'],flush=True)
+assert all(sha(repo/p)==h for p,h in inputs.items())
+if code:sys.exit(code)
+if name==order[-1]:(out/'artifacts.json').write_text(json.dumps({str(p.relative_to(out)):sha(p)for p in sorted(out.rglob('*'))if p.is_file()and p.name!='artifacts.json'},indent=2)+'\n')

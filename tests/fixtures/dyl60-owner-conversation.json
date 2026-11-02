@@ -1,0 +1,336 @@
+{
+  "title": "The Last Lantern",
+  "scope": "Prepared synthetic fixture only; human Gate A NOT_RUN",
+  "date": "2026-10-16",
+  "individual": [
+    {
+      "turn": 1,
+      "title": "The Last Lantern",
+      "user": "We have one lamp and a closed road. Where do we start?",
+      "reply": "Mira sets a brass lantern between two cups. “At the bridge. The keeper left us a map, but the ink runs whenever it rains.” Rowan points to a dry corner. “Then we read it together.”",
+      "speaker": "Mira",
+      "manualCue": {
+        "background": "tavern",
+        "expression": "neutral",
+        "actors": [
+          "Mira",
+          "Rowan"
+        ]
+      }
+    },
+    {
+      "turn": 2,
+      "title": "A folded route",
+      "user": "What does the keeper’s note actually say?",
+      "reply": "**Keep this route for later:**\n\n1. Take the eastern path.\n2. Count three white stones.\n3. Turn toward the bell, not the river.\n\nMira taps the last line. “It sounds like someone expected us to get lost.”",
+      "speaker": "Mira",
+      "manualCue": {
+        "background": "tavern",
+        "expression": "stern",
+        "actors": [
+          "Mira",
+          "Rowan"
+        ]
+      }
+    },
+    {
+      "turn": 3,
+      "title": "A useful disagreement",
+      "user": "Rowan, do you trust the route?",
+      "reply": "“I trust the stones,” Rowan says. “Bells move. People carry them.” Mira laughs into her cup. “Good. One cautious traveller is enough for this expedition.”",
+      "speaker": "Rowan",
+      "manualCue": {
+        "background": "tavern",
+        "expression": "joy",
+        "actors": [
+          "Mira",
+          "Rowan"
+        ]
+      }
+    },
+    {
+      "turn": 4,
+      "title": "Ready for rain",
+      "user": "Let’s get our coats before we leave.",
+      "reply": "Mira exchanges her light jacket for a blue travelling coat. Rowan checks the lantern latch. “If it goes out, we stop walking. That is the whole safety plan.”",
+      "speaker": "Mira",
+      "manualCue": {
+        "background": "tavern",
+        "expression": "coat",
+        "actors": [
+          "Mira",
+          "Rowan"
+        ]
+      }
+    },
+    {
+      "turn": 5,
+      "title": "Through the trees",
+      "user": "We take the eastern path.",
+      "reply": "The tavern light falls away behind them. Wet leaves catch the lantern glow, and somewhere ahead a small bell rings once. Mira raises a hand. “No river yet. We still have time to choose.”",
+      "speaker": "Mira",
+      "manualCue": {
+        "background": "forest",
+        "expression": "coat",
+        "actors": [
+          "Mira",
+          "Rowan"
+        ]
+      }
+    },
+    {
+      "turn": 6,
+      "title": "Three white stones",
+      "user": "I see two stones. Is that the third under the fern?",
+      "reply": "Rowan kneels beside the fern without touching it. “Paint, not chalk. Someone marked this deliberately.” Mira holds the lantern low; three pale stones form an arrow into the trees.",
+      "speaker": "Rowan",
+      "manualCue": {
+        "background": "forest",
+        "expression": "stern",
+        "actors": [
+          "Mira",
+          "Rowan"
+        ]
+      }
+    },
+    {
+      "turn": 7,
+      "title": "A missing voice",
+      "user": "Rowan, can you scout the fork while we check the map?",
+      "reply": "Rowan walks beyond the next bend, still within calling distance. Mira stays beside the stones. “Put him offstage for a moment. I would like to hear my own thoughts.”",
+      "speaker": "Mira",
+      "manualCue": {
+        "background": "forest",
+        "expression": "neutral",
+        "actors": [
+          "Mira"
+        ]
+      }
+    },
+    {
+      "turn": 8,
+      "title": "The water’s trick",
+      "user": "The bell sounds nearer the river now.",
+      "reply": "Mira listens, then closes her eyes. “The water is carrying the sound around us. The note said *toward the bell*, not toward the loudest echo.” She opens the map again.",
+      "speaker": "Mira",
+      "manualCue": {
+        "background": "forest",
+        "expression": "stern",
+        "actors": [
+          "Mira"
+        ]
+      }
+    },
+    {
+      "turn": 9,
+      "title": "Read the margins",
+      "user": "Read every part of the map, even the tiny writing.",
+      "reply": "## Keeper’s field notes\n\nMira lays the map on a flat stone.\n\n> A route is a promise to the next traveller. Leave enough detail for someone who does not know what you know.\n\n**Margin 1.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n\n**Margin 2.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n\n**Margin 3.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n\n**Margin 4.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n\n**Margin 5.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n\n**Margin 6.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n\n**Margin 7.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n\n**Margin 8.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n\n**Margin 9.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n\n**Margin 10.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n\n**Margin 11.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n\n**Margin 12.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n\n**Margin 13.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n\n**Margin 14.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n\n**Margin 15.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n\n**Margin 16.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n\n**Margin 17.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n\n**Margin 18.** The path bends around a shallow hollow. Old roots hold the slope together; keep the lantern away from dry bark. Rowan’s earlier footprints stop at the bend, so there is no reason to guess where he went. Mira reads slowly, leaving room for questions.\n\n`MARKER: THREE STONES / EAST / BELL`\n\n**End of complete field notes.**",
+      "speaker": "Mira",
+      "manualCue": {
+        "background": "forest",
+        "expression": "neutral",
+        "actors": [
+          "Mira"
+        ]
+      }
+    },
+    {
+      "turn": 10,
+      "title": "A borrowed light",
+      "user": "That last note is kinder than I expected.",
+      "reply": "“The keeper was practical,” Mira says. “Kindness is sometimes a good set of directions.” A second light appears beyond the trees: Rowan returning with a hooded lamp.",
+      "speaker": "Mira",
+      "manualCue": {
+        "background": "forest",
+        "expression": "joy",
+        "actors": [
+          "Mira",
+          "Rowan"
+        ]
+      }
+    },
+    {
+      "turn": 11,
+      "title": "Back in company",
+      "user": "Rowan, what did you find?",
+      "reply": "Rowan steps back beside Mira. “A footbridge, an empty shelter, and a bell tied to a branch. Nobody is stranded. The keeper marked a safe crossing.”",
+      "speaker": "Rowan",
+      "manualCue": {
+        "background": "forest",
+        "expression": "neutral",
+        "actors": [
+          "Mira",
+          "Rowan"
+        ]
+      }
+    },
+    {
+      "turn": 12,
+      "title": "Check our memory",
+      "user": "Let’s revisit the original three instructions before crossing.",
+      "reply": "Mira waits while you turn back to the folded route. “Do not let my confidence become another kind of guesswork. Tell us what the second line said.” Rowan steadies the lantern.",
+      "speaker": "Mira",
+      "manualCue": {
+        "background": "forest",
+        "expression": "stern",
+        "actors": [
+          "Mira",
+          "Rowan"
+        ]
+      }
+    },
+    {
+      "turn": 13,
+      "title": "An honest correction",
+      "user": "It said three white stones. I nearly remembered four.",
+      "reply": "“Then the map did its job,” Rowan says. Mira moves aside to give you a clear view. “Correct the stage too if I am blocking him. None of us has to stand where we started.”",
+      "speaker": "Rowan",
+      "manualCue": {
+        "background": "forest",
+        "expression": "joy",
+        "actors": [
+          "Mira",
+          "Rowan"
+        ]
+      }
+    },
+    {
+      "turn": 14,
+      "title": "Across safely",
+      "user": "We cross one at a time and regroup.",
+      "reply": "The bridge holds. Mira crosses last, blue coat bright against the dark rail. Rowan waits on the other side. The bell rings behind them now, a confirmation rather than a warning.",
+      "speaker": "Mira",
+      "manualCue": {
+        "background": "forest",
+        "expression": "coat",
+        "actors": [
+          "Mira",
+          "Rowan"
+        ]
+      }
+    },
+    {
+      "turn": 15,
+      "title": "An ordinary discovery",
+      "user": "What is in the shelter?",
+      "reply": "A dry bench, spare cord, and a tin box labelled **FOR THE NEXT PERSON**. Inside is a fresh map. Mira leaves the old one folded beside it. “A useful ending can be this small.”",
+      "speaker": "Mira",
+      "manualCue": {
+        "background": "forest",
+        "expression": "neutral",
+        "actors": [
+          "Mira",
+          "Rowan"
+        ]
+      }
+    },
+    {
+      "turn": 16,
+      "title": "Homeward",
+      "user": "Let’s bring the lantern back before closing time.",
+      "reply": "Warm windows replace wet branches. Rowan returns the lantern to its hook. Mira hangs her coat by the door and takes the same seat as before. The room feels familiar without being unchanged.",
+      "speaker": "Mira",
+      "manualCue": {
+        "background": "tavern",
+        "expression": "neutral",
+        "actors": [
+          "Mira",
+          "Rowan"
+        ]
+      }
+    },
+    {
+      "turn": 17,
+      "title": "What survives",
+      "user": "I want to remember how we arranged the table.",
+      "reply": "“Save the room, then,” Mira says. “Tomorrow we can open it deliberately. The expressions belonged to tonight.” Rowan slides the map into the tin box, leaving the tabletop clear.",
+      "speaker": "Mira",
+      "manualCue": {
+        "background": "tavern",
+        "expression": "joy",
+        "actors": [
+          "Mira",
+          "Rowan"
+        ]
+      }
+    },
+    {
+      "turn": 18,
+      "title": "An interruption",
+      "user": "Someone calls from the other room. I’ll check and return.",
+      "reply": "Mira nods. “We will be here. If the room looks empty when you return, open the saved arrangement again.” Rowan lifts a cup in acknowledgement.",
+      "speaker": "Mira",
+      "manualCue": {
+        "background": "tavern",
+        "expression": "stern",
+        "actors": [
+          "Mira",
+          "Rowan"
+        ]
+      }
+    },
+    {
+      "turn": 19,
+      "title": "A deliberate return",
+      "user": "I’m back. Let’s open our saved room and check the map.",
+      "reply": "The table is as you saved it, with room for both travellers. Mira’s face is calm. “Tonight’s little expressions are gone. The route is still in the conversation.”",
+      "speaker": "Mira",
+      "manualCue": {
+        "background": "tavern",
+        "expression": "neutral",
+        "actors": [
+          "Mira",
+          "Rowan"
+        ]
+      }
+    },
+    {
+      "turn": 20,
+      "title": "A light for someone else",
+      "user": "What should we leave for the next traveller?",
+      "reply": "Rowan writes **Count carefully. Ask twice. Bring the lamp back.** Mira adds a small drawing of three stones. Outside, the rain stops. They leave the lantern ready for whoever needs it next.",
+      "speaker": "Rowan",
+      "manualCue": {
+        "background": "tavern",
+        "expression": "joy",
+        "actors": [
+          "Mira",
+          "Rowan"
+        ]
+      }
+    }
+  ],
+  "group": [
+    {
+      "speaker": "Mira",
+      "cardIndex": 0,
+      "text": "I brought the map back."
+    },
+    {
+      "speaker": "Mira",
+      "cardIndex": 1,
+      "text": "I brought the map back."
+    },
+    {
+      "speaker": "Rowan",
+      "cardIndex": 2,
+      "text": "Two Miras, two different errands. Please choose your actor deliberately."
+    },
+    {
+      "speaker": "Sage",
+      "cardIndex": 3,
+      "text": "I will wait offstage while you make room."
+    },
+    {
+      "speaker": "Mira",
+      "cardIndex": 1,
+      "text": "Swap our places if the labels are clearer that way."
+    },
+    {
+      "speaker": "Sage",
+      "cardIndex": 3,
+      "text": "Now replace one visible slot deliberately; nobody needs to disappear from the cast."
+    }
+  ]
+}

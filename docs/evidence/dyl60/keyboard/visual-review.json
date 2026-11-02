@@ -1,0 +1,18 @@
+{
+  "candidate": "c5c1699a48629ae761a093e13056f0b11fdc4b88",
+  "reviewedUTC": "2026-10-17T00:25:32.036130+00:00",
+  "method": "Manual visual inspection of rendered pixels; additional geometry and hit-target assertions recorded separately.",
+  "frames": {
+    "device/final-portrait-ime.png": "a188783858c6642fec693a1e83a99990d514de7aa2a89555f8d45fe247c036b4",
+    "device/final-group-controls.png": "7340dcefeb8d8228a4fbd8f7d0aa85561428523b9df279026334b054b1d6d846",
+    "final/stage-library-migration/stage-after-reopen-narrow-controls.png": "6f948d9434a0e50972f0af1fac46ff35653bc0a0970564095a4d17268f7d94fd",
+    "final/stage-library-migration/library-desktop.png": "96ee42f208e5434115b218b417604cc4c556daa004be72c4fd149c2476e144b0"
+  },
+  "findings": [
+    "Actual portrait IME composer and Send visible above keyboard; original node/draft verified separately.",
+    "Actual group controls restored saved actor arrangement; three sprites verified with controls collapsed.",
+    "Narrow host controls scroll within the allotted space and native composer remains visible.",
+    "Desktop restored library artwork, text and native composer render without overlap."
+  ],
+  "limits": "Representative frames only; no screen-reader, increased physical scaling or reduced-motion audit."
+}

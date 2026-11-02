@@ -1,0 +1,17 @@
+{
+  "at": "2026-10-17T00:30:18.632720+00:00",
+  "candidate": "c5c1699a48629ae761a093e13056f0b11fdc4b88",
+  "frozenInputsMatched": 110,
+  "ownedNodeProcesses": [],
+  "loopbackPorts": {
+    "8128": "closed",
+    "8761": "closed",
+    "8762": "closed",
+    "9229": "closed"
+  },
+  "newRetainedRoots": 9,
+  "nonHostFileHashes": 5419,
+  "physicalCleanup": "device/final-cleanup.json; synthetic tab closed and named transport removed",
+  "priorRoots": "Untouched; original retained roots/physical evidence remain historical.",
+  "settingsChanged": false
+}

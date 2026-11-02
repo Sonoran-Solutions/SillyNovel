@@ -1,5 +1,9 @@
 # Architecture
 
+## Active-reader visible viewport — 2026-10-16
+
+[The DYL-60 keyboard correction](M1_4_DYL60_KEYBOARD_FIX.md) caps the existing chat shell at the unzoomed VisualViewport bottom on resize/pan while the reader is mounted, including Back to Chat. Short reader content scrolls; manual controls retain their heading. It preserves the native composer and handlers, makes no canonical/settings write, and removes its namespaced class/property/listeners on disable/failure. Missing API and zoom use the existing host layout. No browser meta policy or host source is changed.
+
 ## DYL-23-C native group integration — 2026-10-16
 
 Owner explicitly authorizes [native groups with manual independent-project attachment](M1_NATIVE_GROUPS.md), tracked by [DYL-63](https://linear.app/devils17/issue/DYL-63/dyl-23-c-native-group-conversation-integration), after PR #31 merged at `5a9b87f14d5a008e9801aa2260efe40d9e22f5b7`. Native group/chat/activation authority remains separate from account-owned project/manual actor UUIDs and memory-only source expressions. Four or more actors retain three visible slots; duplicate names never bind cards to actors. No schema, native metadata, automatic attachment or persistence expansion. DYL-23 Done/history/acceptance, DYL-55 and DYL-62 unchanged; Decision F undecided; Gate A NOT_RUN; DYL-60 unstarted. [Implementation/evidence](M1_NATIVE_GROUPS_IMPLEMENTATION.md). Older dated entries below are historical.

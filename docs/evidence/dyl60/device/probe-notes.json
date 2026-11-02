@@ -1,0 +1,16 @@
+{
+  "observedProbeFailures": [
+    "Node REPL import wrapper failed; createRequire worked, but that runtime denied local CDP socket. Switched to escalated task-owned Node process.",
+    "Transient ADB daemon/socket interruption: synthetic touch action interrupted with target closed; established device auto-rediscovered, two owned mappings restored.",
+    "After reload, Saved project correctly disabled while welcome/no native chat selected; setup timeout.",
+    "Native drawer and controls visibility required inspecting open/closed state; hidden control setup timeout.",
+    "Project actor is the attached-mode label; Session actor probe timed out.",
+    "Unscoped Position matched a hidden native prompt editor and scene selector; scoped probe to stage.",
+    "Group discard/reopen touch attempted; final cast still replaced. Cause unresolved; no recovery pass claimed."
+  ],
+  "review": [
+    "Keyboard crops verified to exclude unrelated browser chrome; actual IME hides composer.",
+    "Long-end capture visibly includes complete field-note marker and reachable native composer when IME dismissed."
+  ],
+  "validation": "Earlier frozen validator still prints its original physical NOT_TESTED/owner NOT_RUN summary; it validates the desktop campaign only. Device results are explicitly separate, PARTIAL/REVISE."
+}

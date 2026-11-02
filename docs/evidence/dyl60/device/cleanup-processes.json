@@ -1,0 +1,29 @@
+{
+  "at": "2026-10-16T23:41:36.742583+00:00",
+  "stopped": [
+    {
+      "pid": 873213,
+      "args": [
+        "node",
+        "server.js",
+        "--configPath",
+        "/tmp/sn-dyl60-device-nn07uqaq/config.yaml",
+        "--dataRoot",
+        "/tmp/sn-dyl60-device-nn07uqaq/data",
+        "--port",
+        "8760",
+        "--listen",
+        "false",
+        "--browserLaunchEnabled",
+        "false"
+      ]
+    },
+    {
+      "pid": 873400,
+      "args": [
+        "node",
+        "/tmp/sn-dyl60-device-nn07uqaq/provider.mjs"
+      ]
+    }
+  ]
+}

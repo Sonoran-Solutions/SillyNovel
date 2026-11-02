@@ -1,0 +1,12 @@
+import {createRequire} from 'node:module';
+import {readFile,writeFile,appendFile} from 'node:fs/promises';
+const require=createRequire('/home/dq/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/x.cjs');
+const {chromium}=require('playwright');
+const browser=await chromium.connectOverCDP('http://127.0.0.1:9229');
+const page=browser.contexts().flatMap(c=>c.pages()).find(p=>p.url().startsWith('http://127.0.0.1:8761'));
+if(!page)throw Error('Synthetic tab absent');
+page.setDefaultTimeout(12000);const cdp=await page.context().newCDPSession(page);
+const tap=async locator=>{await locator.scrollIntoViewIfNeeded();await page.waitForTimeout(150);let b=await locator.boundingBox();if(!b)throw Error('No bounds');let p={x:b.x+b.width/2,y:b.y+b.height/2};if(await locator.evaluate((e,p)=>{const d=e.closest('.sillynovel-controls');return d?.querySelector('summary')?.contains(document.elementFromPoint(p.x,p.y))&&!e.contains(document.elementFromPoint(p.x,p.y));},p)){await locator.evaluate(e=>{const d=e.closest('.sillynovel-controls');d.scrollTop-=d.querySelector('summary').getBoundingClientRect().height+8;});await page.waitForTimeout(150);b=await locator.boundingBox();p={x:b.x+b.width/2,y:b.y+b.height/2};}if(!await locator.evaluate((e,p)=>e.contains(document.elementFromPoint(p.x,p.y)),p))throw Error('Touch target obscured: '+await locator.getAttribute('class'));await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[p]});await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await page.waitForTimeout(350);};
+const button=name=>page.getByRole('button',{name,exact:true});
+const field=name=>page.locator('#sillynovel-stage').getByLabel(name,{exact:true});
+const originalLog=console.log;console.log=(...args)=>{originalLog(...args);void appendFile('/tmp/sn-dyl60-keyboard-g2ciwr_7/console.jsonl',JSON.stringify({time:new Date().toISOString(),args})+'\n');};const action=await readFile(process.argv[2],'utf8');await appendFile('/tmp/sn-dyl60-keyboard-g2ciwr_7/actions.jsonl',JSON.stringify({time:new Date().toISOString(),action})+'\n');try{await eval('(async()=>{'+action+'})()');process.exit(0);}catch(e){console.error(e);process.exit(1);}

@@ -1,0 +1,15 @@
+Owned evidence root /tmp/sn-portability-host-herzxG
+PASS real host auth/CSRF, two-user project and asset isolation, two-client CAS, PNG hash and limits
+PASS browser create/import background + two sprites/arrange/save/reload/explicit reopen; named canonical files unchanged
+AssertionError [ERR_ASSERTION]: default-user/characters/Seraphina/admiration.png
+    at inventory (file:///home/dq/Projects/SillyNovel/tests/probes/dyl60/host.mjs:51:536)
+    at async runCandidate (file:///home/dq/Projects/SillyNovel/tests/probes/dyl60/host.mjs:55:15)
+    at async file:///home/dq/Projects/SillyNovel/tests/probes/project-portability/host.mjs:128:90 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: undefined,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+Evidence /tmp/sn-portability-host-herzxG/evidence.json

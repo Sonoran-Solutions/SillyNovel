@@ -1,0 +1,22 @@
+{
+  "node": [
+    "tests/m0.test.mjs",
+    "tests/m1-reader-source.test.mjs",
+    "tests/m1-source-prefix.test.mjs",
+    "tests/m1-scene-reducer.test.mjs",
+    "tests/m1-project-scene.test.mjs",
+    "tests/m1-project-expressions.test.mjs",
+    "tests/probes/dyl19/owned-chat-probe.test.mjs",
+    "tests/probes/dyl19/source-anchor.test.mjs"
+  ],
+  "storage": [
+    "plugins/sillynovel-storage/test/bundle.test.mjs",
+    "plugins/sillynovel-storage/test/cleanup.test.mjs",
+    "plugins/sillynovel-storage/test/library.test.mjs",
+    "plugins/sillynovel-storage/test/recovery.test.mjs",
+    "plugins/sillynovel-storage/test/store.test.mjs"
+  ],
+  "browser": [
+    "tests/m1-reader-browser.test.mjs"
+  ]
+}

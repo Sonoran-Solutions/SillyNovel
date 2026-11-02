@@ -1,5 +1,9 @@
 # M1 manual reader plan and UX contracts
 
+## Current Gate A scope amendment — 2026-10-16
+
+The owner [approved all five rulings and separately authorized DYL-60](DECISIONS.md#owner-approvals-and-dyl-60-authorization--2026-10-16): F1 for the first disposable Gate A playtest, PNG-only assets, explicit project reopening, manual four-card groups and available established Galaxy Tab S8 technical testing. PR #33 merged at `c835afe6e274be3fab5a2862f517fd8e4bca32ad`, the starting main for this work. [Current preparation/evidence](M1_4_DYL60_CANDIDATE.md) distinguishes technical results and remaining gaps. Original history/writer requirements below are amended only by F1 for this playtest; broader DYL-22/23 criteria and historical blocker relations remain. DYL-62/63 remain In Review despite merged code. Gate A NOT_RUN; owner session and verdict, M1.3/M2, DYL-56 and DYL-61 release work remain separately gated. Older dated entries retain historical states.
+
 ## Current readiness checkpoint — 2026-10-15
 
 The [completion review](M1_2_STORAGE_COMPLETION_AND_READINESS.md) reviews main `ea65d84a521a39c9ccc977f4cb3643454963d4b8`, merged PRs #23–27 and Done DYL-49–54/57–59. Bounded DYL-55 completion is recommended **GO**, pending owner acceptance; parent remains unfinished. **Overall M1.2 REVISE**: the usable reusable library, attached transient source controls/group support and integrated layout/device evidence are incomplete. DYL-22/23 remain Backlog/functionally blocked with original dependencies. Gate A NOT_RUN; DYL-24 supported; DYL-56 Backlog; M1.3/M2 unauthorized.

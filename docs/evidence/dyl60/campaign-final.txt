@@ -1,0 +1,19 @@
+START node
+END node exit 0 elapsed 1.672
+START storage
+END storage exit 0 elapsed 177.063
+START browser
+END browser exit 0 elapsed 40.245
+START stage-library-migration
+END stage-library-migration exit 0 elapsed 91.22
+START expressions
+END expressions exit 0 elapsed 52.985
+START groups
+END groups exit 0 elapsed 72.438
+START recovery
+END recovery exit 0 elapsed 42.011
+START cleanup
+END cleanup exit 0 elapsed 64.658
+START native-integrity-branches
+END native-integrity-branches exit 0 elapsed 81.487
+PASS frozen campaign 6f8252699dae3a92f639f94531bba221d5e1cc02

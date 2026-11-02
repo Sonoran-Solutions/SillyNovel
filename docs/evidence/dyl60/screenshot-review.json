@@ -1,0 +1,14 @@
+{
+  "candidate": "6f8252699dae3a92f639f94531bba221d5e1cc02",
+  "manuallyInspectedFreshFrames": [
+    "stage-library-migration/stage-uncertain-narrow.png",
+    "groups/group-cast-desktop.png",
+    "native-integrity-branches/lantern-desktop.png",
+    "native-integrity-branches/lantern-group-narrow.png",
+    "stage-library-migration/library-controls-narrow.png",
+    "stage-library-migration/stage-conflict-desktop.png",
+    "groups/group-invalidated-narrow.png",
+    "stage-library-migration/migration-reopened.png"
+  ],
+  "result": "PASS representative desktop/narrow technical visual inspection: readable saved/conflict/uncertain/invalidation notices, UUID-disambiguated cast, long formatted story, visible original composer and navigation. Eight selected frames inspected; all 65 frame files/signatures/hashes independently checked. No human usability, hardware touch/IME or assistive verdict inferred."
+}

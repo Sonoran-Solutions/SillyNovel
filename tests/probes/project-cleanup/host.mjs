@@ -43,7 +43,7 @@ export async function runCleanup({root,data,repo,page,alice,bob,peer,project,sav
   for(const id of [saved.scene.backgroundAssetId,...saved.scene.actors.map(a=>a.spriteAssetId)]){const response=await alice.request('/api/plugins/sillynovel-storage'+api+'/assets/'+id);assert.equal(hash(await response.body()),before.assets.find(a=>a.id===id).sha256);}
   pass('browser review/select/cancel/confirm removes exact unused row; saved background/two sprites, IDs, locks, positions and revision preserved');
   // Changed inventory invalidates captured authorization even if the selected row survives.
-  await peer.api(api+'/assets','POST',await readFile(join(repo,'tests/fixtures/m12-stage/rowan.png')),201,'image/png');
+  await peer.api(api+'/assets','POST',await readFile(join(repo,'tests/fixtures/m12-stage/mira-a-stern.png')),201,'image/png');
   const inventoryBefore=rows();const stale=await alice.api(api+'/unused-assets/remove','POST',body(remaining),409);assert.equal(stale.code,'CLEANUP_STALE');assert.deepEqual(rows(),inventoryBefore);
   // A failed transaction must roll back the first deletion before a later selected deletion fails.
   const faultPreview=await preview(),ids=faultPreview.candidates.map(a=>a.assetId),faultBefore=rows();
@@ -56,7 +56,7 @@ export async function runCleanup({root,data,repo,page,alice,bob,peer,project,sav
   await page.route('**/api/plugins/sillynovel-storage'+api+'/unused-assets/remove',async route=>{await route.fetch();await route.abort('failed');});
   page.once('dialog',d=>d.accept());await button('Remove selected unused artwork').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-cleanup-status').textContent.includes('outcome uncertain'));
   assert.ok(!rows().assets.some(a=>a.id===doomed));assert.deepEqual((await alice.api(api)).scene,saved.scene);await page.unrouteAll({behavior:'wait'});
-  const unchanged=rows(),draft={schemaVersion:1,expectedRevision:saved.revision,name:saved.name,scene:{...saved.scene,backgroundAssetId:doomed}};
+  const unchanged=rows(),draft={schemaVersion:2,expectedRevision:saved.revision,name:saved.name,scene:{...saved.scene,backgroundAssetId:doomed},catalog:saved.catalog};
   const missing=await peer.api(api,'PUT',draft,409);assert.equal(missing.code,'ASSET_MISSING');assert.deepEqual(rows(),unchanged);
   pass('lost deletion response reports uncertainty despite committed removal; another unsaved draft receives ASSET_MISSING without changing scene');
   await button('Review unused artwork').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-cleanup-list input'));
@@ -73,8 +73,8 @@ export async function runCleanup({root,data,repo,page,alice,bob,peer,project,sav
   page.once('dialog',d=>d.accept());await button('Open project and use with this chat').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-unsaved').textContent==='Saved project layout');
   pass('real browser late preview cannot cross native A/B/A; dirty edits and pending PNG upload disable cleanup; explicit reopen preserves original saved layout');
   // Real HTTP quota fills with valid incompressible PNGs, no direct quota/row bypass.
-  const quota=await alice.api('/projects','POST',{name:'Cleanup quota'},201),image=new PNG({width:1000,height:1000});randomFillSync(image.data);const large=PNG.sync.write(image,{deflateLevel:0});
-  let uploaded=0;while(true){const response=await alice.context.request.post(alice.origin+'/api/plugins/sillynovel-storage/projects/'+quota.projectId+'/assets',{headers:{'X-CSRF-Token':alice.token,'Content-Type':'image/png'},data:large});if(response.status()===413){assert.equal((await response.json()).code,'ASSET_QUOTA');break;}assert.equal(response.status(),201);uploaded++;assert.ok(uploaded<30);}
+  const quota=await alice.api('/projects','POST',{name:'Cleanup quota'},201),image=new PNG({width:1000,height:1000});randomFillSync(image.data);let large;
+  let uploaded=0;while(true){image.data.writeUInt32BE(uploaded,0);large=PNG.sync.write(image,{deflateLevel:0});const response=await alice.context.request.post(alice.origin+'/api/plugins/sillynovel-storage/projects/'+quota.projectId+'/assets',{headers:{'X-CSRF-Token':alice.token,'Content-Type':'image/png'},data:large});if(response.status()===413){assert.equal((await response.json()).code,'ASSET_QUOTA');break;}assert.equal(response.status(),201);uploaded++;assert.ok(uploaded<30);}
   const measure=async()=>({logical:db.prepare('SELECT coalesce(sum(length(bytes)),0) AS n FROM assets JOIN projects ON assets.project=projects.id WHERE owner=(SELECT owner FROM projects WHERE id=?)').get(quota.projectId).n,fileBytes:(await stat(path)).size,freePages:db.prepare('PRAGMA freelist_count').get().freelist_count});
   await createBackup(path,join(root,'cleanup-quota-before'));assert.equal(inspectBackup(join(root,'cleanup-quota-before'),data).code,'VALID_BACKUP');
   const quotaBefore=await measure(),qv=await alice.api('/projects/'+quota.projectId+'/unused-assets');

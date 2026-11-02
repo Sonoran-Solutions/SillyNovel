@@ -1,0 +1,27 @@
+Node version: v26.8.1. Running in undefined environment. Server directory: /tmp/sn-portability-host-83rtWR/host
+Using config path: /tmp/sn-portability-host-83rtWR/config.yaml
+
+CSRF protection is disabled. This will make your server vulnerable to CSRF attacks.
+
+Using data root: /tmp/sn-portability-host-83rtWR/data
+Preferring IPv4 for DNS resolution
+
+SillyTavern 1.19.0
+Running 'HEAD' (7e8663cd9) - 9/14/2026, 10:55:46 AM MST
+
+Initializing plugin from /tmp/sn-portability-host-83rtWR/host/plugins/sillynovel-storage/index.mjs
+1 server plugin(s) are currently loaded. Make sure you know exactly what they do, and only install plugins from trusted sources!
+
+Compiling frontend libraries...
+webpack 5.105.4 compiled [1m[32msuccessfully[39m[22m in 557 ms
+
+]2;SillyTavern WebServer\SillyTavern is listening on IPv4: 127.0.0.1:42073
+
+==================================================
+
+Go to: http://127.0.0.1:42073/ to open SillyTavern
+
+==================================================
+
+Login successful: default-user from 127.0.0.1 at 10/16/2026, 4:09:45 PM
+]2;/home/dq/.hermes/node/bin/node\

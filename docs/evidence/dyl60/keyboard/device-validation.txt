@@ -1,0 +1,1 @@
+PASS: final c5c1699 / 110 frozen inputs; portrait/landscape actual IME geometry/hit targets; exact draft/caret; canonical navigation equality; native local Send/Stop/Continue; complete touch scroll; save/reload/reopen; group swap/refusal/replace/presence/restored cast; named physical cleanup and serial/address redaction. Full readiness REVISE; owner Gate A NOT_RUN.

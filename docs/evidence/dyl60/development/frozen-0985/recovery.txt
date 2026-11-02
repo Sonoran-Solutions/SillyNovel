@@ -1,0 +1,19 @@
+Owned evidence root /tmp/sn-portability-host-CfyxYS
+PASS real host auth/CSRF, two-user project and asset isolation, two-client CAS, PNG hash and limits
+PASS browser create/import background + two sprites/arrange/save/reload/explicit reopen; named canonical files unchanged
+PASS portable browser download/import preserves dirty stage; explicit reopen restores new identities, bytes, layout/locks; exact native inventory unchanged
+PASS HTTP failed project/second-asset/final-scene writes inspected in committed database: zero partial projects/assets
+PASS real two-account export refusal and import ownership; two-client import retry creates distinct copies; concurrent export/save is coherent
+PASS actual native switch during delayed import receipt never attaches visuals or changes stage ownership
+PASS native A to B to A detaches and never auto-restores project
+PASS actual host failed update preserves project; missing/corrupt assets restore neutral fallback
+PASS delayed successful save receipt cannot redirect switched chat
+PASS actual host native send/stream/stop, navigation and backlog remain functional
+PASS plugin/server restart preserves original and imported layout/assets; imported project explicitly reopens in real browser
+PASS online SQLite backup on running pinned host; verified counts, exact rows/PNG hashes and original native inventory
+PASS offline empty-slot restore; exact project IDs/revisions/owners/actors/PNG rows, unchanged backup and host account files
+PASS restored pinned host serves every original project/PNG and retains two-account separation
+PASS explicit browser reopen renders original background/two sprites; native reader/composer/draft work; inventoried canonical files unchanged
+PASS restored installation restart preserves complete rows/ownership and native file inventory
+PASS plugin disabled at startup refuses bundle controls and retains session stage/native composer
+Evidence /tmp/sn-portability-host-CfyxYS/evidence.json
