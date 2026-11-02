@@ -1,5 +1,9 @@
 # Project status
 
+## M2.4 PR C candidate (draft, unmerged) — 2026-11-02
+
+Corrections and the director-may-move control are implemented on frozen `c6f6ec7` for owner review under [DYL-205](https://linear.app/devils17/issue/DYL-205/sillynovel-m24-pr-c-manual-corrections-correction-locks-and-the-o08): Revert, Override and Release on “Why this visual?” in the memory-only overlay, a correction lock until Release, and a per-field toggle over the existing lock flags with no schema change. Node 346, storage 126, browser 103, six portability scripts, director campaign 47 checkpoints on the pinned host; `validate.py` PASS. See the [record](M2_4_EVIDENCE_UI_IMPLEMENTATION.md#pr-c--corrections-and-the-director-may-move-control). Tablet NOT_TESTED, Gate B NOT_RUN, DYL-193 open. The next step is owner review.
+
 ## M2.4 PR C go-ahead — 2026-11-02
 
 The owner [gave the go-ahead](DECISIONS.md#owner-go-ahead--m24-pr-c-corrections-and-the-o08-control--2026-11-02) on PR C under G5–G8: revert and override at the selected message without clearing the rest of the overlay, correction locks with Release, and the per-field “director may move this” control that resolves O08 with no schema change. Tracked by [DYL-205](https://linear.app/devils17/issue/DYL-205/sillynovel-m24-pr-c-manual-corrections-correction-locks-and-the-o08); renderer and overlay change with the full native-host campaign. Runtime unchanged by this entry. PR D (Gate B readiness) follows on its own go-ahead. Gate B NOT_RUN; DYL-193 reopened.

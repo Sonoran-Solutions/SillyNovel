@@ -24,7 +24,7 @@ export async function createProjectScene(project,client,actions,changed,isCurren
     // Nothing automatic means nothing to keep current: a capture reconciles for itself, so an unused director costs nothing here.
     const syncOverlay=()=>{if(directorOverlay?.active())directorOverlay.reconcile(expressions.sources(),overlaySelection());};
     // F8: every manual layout command discards the whole overlay and rebases it on the new global layout.
-    const clearOverlay=()=>{const moved=directorOverlay.active();directorOverlay.rebase({view:scene.view,actors},expressions.sources(),overlaySelection());return moved?' Director layout cleared.':'';};
+    const clearOverlay=()=>{const moved=directorOverlay.active(),corrected=directorOverlay.corrected();directorOverlay.rebase({view:scene.view,actors},expressions.sources(),overlaySelection());return corrected?' Director layout cleared, your corrections included.':moved?' Director layout cleared.':'';};
     const bytes=new TextEncoder().encode('sillynovel-project-global-v1:'+project.projectId);
     const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),x=>x.toString(16).padStart(2,'0')).join('');
     const source={key:'project-global:'+project.projectId,revision:0,swipeRevision:0,fingerprintVersion:'sn-source-v1',prefixSha256:hash};
@@ -92,6 +92,30 @@ export async function createProjectScene(project,client,actions,changed,isCurren
         directorStatus:()=>director?.status()??null,
         setDirectorEnabled:on=>director?.setEnabled(on),
         resumeDirector:()=>director?.resume()??false,
+        // A correction is a manual command in the memory-only overlay: never edit, dirty, globalState, export or bundles (G5, G6).
+        async correct(command){
+            if(importing||cleanupBusy)throw Error('Wait for the PNG import or cleanup to finish.');
+            if(!current())return false;
+            if(!await expressions.sync())throw Error('UNRESOLVED_SOURCE: select a stable verified message; completion may be unresolved.');
+            if(!current())return false;
+            const stage=directorOverlay.reconcile(expressions.sources(),overlaySelection()),sourceKey=actions.getSnapshot().cursor?.sourceKey,context=stage?.context,at=context?.sources.find(s=>s.key===sourceKey);
+            if(!at||context.selectedSourceKey!==sourceKey)throw Error('UNRESOLVED_SOURCE: select a stable verified message; completion may be unresolved.');
+            const result=directorOverlay.correct(command,{ownerKey:context.ownerKey,sessionEpoch:context.sessionEpoch,historyRevision:context.historyRevision,selectionRevision:context.selectionRevision,catalogRevision:context.catalog.revision,expectedRevision:stage.revision,source:at,origin:'manual'});
+            if(!result.accepted)throw Error(result.code);
+            const later=result.invalidated?' Historical correction invalidated later director layout.':'';
+            if(command.type==='release')notice='Released. Only a new director proposal can move this; nothing waiting is applied.'+later+' Not saved.';
+            else {notice='Corrected from this message and locked until Release.'+later+' Not saved.';director?.noteCorrection(command.type==='setPresence'?'presence':'background');}
+            notify();return true;
+        },
+        async applyMovable(command){
+            if(!['setBackground','clearBackground','setPresence'].includes(command.type))throw Error('INVALID_COMMAND');
+            if(importing||cleanupBusy)throw Error('Wait for the PNG import or cleanup to finish.');
+            invalidateCleanup();if(!current())return false;
+            apply(command);apply({type:'release',...(command.type==='setPresence'?{field:'presence',characterKey:command.characterKey}:{field:'background'})});
+            const cleared=clearOverlay();await expressions.sync();edit++;notice='Applied · the director may move this · unsaved project changes.'+cleared;notify();return true;
+        },
+        globalLocks:()=>({background:scene.view.backgroundLocked,presence:Object.fromEntries(scene.view.cast.map(a=>[a.key,a.locks.presence]))}),
+        overlayCommandValid:revision=>directorOverlay.commandValid(revision),
         endDirectorSession:()=>actions.director?.endSession(project.projectId),
         expressionStatus:()=>expressions.get(),
         importExpression:(file,key,name,selectionCurrent)=>expressions.importFile(file,key,name,selectionCurrent),
@@ -141,7 +165,7 @@ export async function createProjectScene(project,client,actions,changed,isCurren
         get:()=>{const overlay=expressions.get(),view=composeLayout(overlay.view,directorOverlay.active()?directorOverlay.project(actions.getSnapshot().cursor?.sourceKey):null);return {scene:{...scene,view},actors,assets:[...assets,...overlay.assets],media:new Map([...media,...overlay.media]),notice:notice+' '+overlay.notice,verifiedStamp:!disposed&&actions.getSnapshot().sessionEpoch===epoch?evidenceStamp(actions.getSnapshot()):null};},
         status:()=>({projectId:project.projectId,name:project.name,revision:project.revision,dirty:edit!==savedEdit,saveState,busy,importing,cleanupBusy,cleanupPreview,cleanupNotice}),
         async sync(refresh=true){if(!current()){if(actions.getSnapshot().sessionEpoch!==epoch)expressions.dispose();return false;}await expressions.sync(refresh);syncOverlay();director?.observe();notify();return true;},
-        async dispatch(command){if(['setExpression','clearExpression'].includes(command.type))return expressions.dispatch(command);if(importing||cleanupBusy)throw Error('Wait for the PNG import or cleanup to finish.');invalidateCleanup();if(!current())return false;apply(command);const cleared=clearOverlay();await expressions.sync();edit++;notice='Applied · unsaved project changes.'+cleared;notify();return true;},
+        async dispatch(command){if(['setExpression','clearExpression'].includes(command.type)){const replaced=expressions.get().view.cast.find(a=>a.key===command.characterKey)?.expression?.origin==='automatic',done=await expressions.dispatch(command);if(replaced)director?.noteCorrection('expression');return done;}if(importing||cleanupBusy)throw Error('Wait for the PNG import or cleanup to finish.');invalidateCleanup();if(!current())return false;apply(command);const cleared=clearOverlay();await expressions.sync();edit++;notice='Applied · unsaved project changes.'+cleared;notify();return true;},
         async register(_preset,name){if(importing||cleanupBusy)throw Error('Wait for the PNG import or cleanup to finish.');invalidateCleanup();if(!current())return;if(!label(name)||actors.length>=20)throw Error('Use a name of 1–80 characters; maximum 20 actors.');const key=crypto.randomUUID();actors.push({key,label:name,description:'Project actor',defaultURL:null});refresh();apply({type:'addCharacter',characterKey:key});clearOverlay();edit++;notify();return key;},
         async importFile(file,kind,key,displayLabel){
             if(!current())return;

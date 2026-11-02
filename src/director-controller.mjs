@@ -36,7 +36,7 @@ export function createDirectorRuntime({ request, inspect, read, write, composer,
         },
         ceiling() { const value = settings().sessionCeiling; return validCeiling(value) ? value : DEFAULT_CEILING; },
         session(projectId) {
-            if (!sessions.has(projectId)) sessions.set(projectId, { count: 0, consecutive: 0, paused: null, ledger: new Set(), tallies: createTallies() });
+            if (!sessions.has(projectId)) sessions.set(projectId, { count: 0, consecutive: 0, paused: null, ledger: new Set(), tallies: createTallies(), corrections: {} });
             return sessions.get(projectId);
         },
         endSession(projectId) { sessions.delete(projectId); },
@@ -110,7 +110,7 @@ export function createDirectorController({ runtime, projectId, actions, expressi
             // What is on stage, including earlier automatic layout: the contract's previous scene.
             cast: stage.view.cast.map(actor => ({ characterKey: actor.key, label: actor.label, present: actor.present, outfitId: actor.outfit?.id ?? null, presenceLocked: actor.locks.presence, outfitLocked: actor.locks.outfit })),
             expressions: expressionAssets.filter(asset => scene.view.cast.some(actor => actor.key === asset.characterKey && (actor.outfit?.id ?? null) === asset.outfitId)).map(asset => ({ expressionId: asset.id, label: label(asset.id), characterKey: asset.characterKey })),
-            backgrounds: scene.context.catalog.assets.filter(asset => asset.kind === 'background').map(asset => ({ backgroundId: asset.id, label: label(asset.id), locked: scene.view.backgroundLocked })),
+            backgrounds: scene.context.catalog.assets.filter(asset => asset.kind === 'background').map(asset => ({ backgroundId: asset.id, label: label(asset.id), locked: stage.view.backgroundLocked })),
             scene: { backgroundId: stage.view.background?.id ?? null } };
     }
     // E11: at least one present actor with a compatible temporary expression.
@@ -301,12 +301,14 @@ export function createDirectorController({ runtime, projectId, actions, expressi
             say('Director resumed. It reacts to the next completed reply.');
             return true;
         },
+        // Tallied beside the outcomes, with their lifetime (E6); Gate B reads corrections per field.
+        noteCorrection(field) { const { corrections } = session(); corrections[field] = (corrections[field] ?? 0) + 1; if (!disposed) changed(); },
         status() {
             const host = runtime.inspect(), state = session();
             log.reconcile(expressions.sources());
             // The Director line's word: a paused director may still have an abandoned request in the slot.
             const line = state.paused ? 'paused' : ticket || runtime.inFlight ? 'requesting' : pending ? 'waiting' : !host.ok || host.online === 'no_connection' || notice.startsWith('Director idle') ? 'idle' : 'on';
-            return { available: host.ok, enabled: runtime.enabled(projectId), state: line, notice, count: state.count, ceiling: runtime.ceiling(), paused: state.paused, consecutive: state.consecutive, log: log.entries(overlay.epoch()), tallies: summarizeTallies(state.tallies) };
+            return { available: host.ok, enabled: runtime.enabled(projectId), state: line, notice, count: state.count, ceiling: runtime.ceiling(), paused: state.paused, consecutive: state.consecutive, log: log.entries(overlay.epoch()), tallies: summarizeTallies(state.tallies), corrections: { ...state.corrections } };
         },
         dispose() { if (ticket) record(ticket, 'cancelled', 'CANCELLED'); disposed = true; stopWaiting(); dropPending(); clearAbandon(); ticket = null; },
     };

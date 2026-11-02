@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## M2.4 PR C candidate (draft, unmerged) — 2026-11-02
+
+Renderer and overlay slice on frozen `c6f6ec7`, draft and unmerged; see the [record](M2_4_EVIDENCE_UI_IMPLEMENTATION.md#pr-c--corrections-and-the-director-may-move-control). PR D still waits for the owner's go-ahead after this review. Gate B sequence unchanged.
+
 ## M2.4 PR C go-ahead — 2026-11-02
 
 [Go-ahead recorded](DECISIONS.md#owner-go-ahead--m24-pr-c-corrections-and-the-o08-control--2026-11-02); [DYL-205](https://linear.app/devils17/issue/DYL-205/sillynovel-m24-pr-c-manual-corrections-correction-locks-and-the-o08) implements plan section 7 PR C (corrections and the O08 control). PR D follows on its own go-ahead; the Gate B sequence after it is unchanged.
