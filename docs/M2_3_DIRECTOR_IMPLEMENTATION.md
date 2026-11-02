@@ -1,5 +1,7 @@
 # M2.3 director queueing — implementation record
 
+**PR C candidate — 2026-11-02.** The [PR C record](#pr-c--automatic-layout-overlay) is the last section below. It is a draft PR, unmerged and unreviewed. The entries that follow are older.
+
 **Candidate for owner review, draft PR, unmerged.** Implements PR A of the [M2.3 plan](M2_3_DIRECTOR_QUEUEING_PLAN.md) under [rulings F1–F10](DECISIONS.md#owner-rulings-f1f10--m23-director-queueing--2026-11-02). Tracked by [DYL-196](https://linear.app/devils17/issue/DYL-196/sillynovel-m23-director-pending-target-stale-rules-and-composer-hold). PR B follows only after the owner reviews this one; PR C is not authorized (F9). Gate B remains **NOT_RUN**.
 
 **PR B merged — 2026-11-02.** The owner [accepted and merged](DECISIONS.md#owner-acceptance--m23-pr-b-merged--2026-11-02) PR B at `4561888`; its record is the last section below, [PR B — composer hold](#pr-b--composer-hold), and its choices stand as the reversible baseline. T46 is amended in TESTING. PRs A and B complete the authorized M2.3 work; PR C waits on F9.
@@ -203,3 +205,116 @@ The hold covers typing and an unsent draft. It cannot see Regenerate, Continue, 
 ### Next bounded step
 
 Owner review of this draft PR and the choices above, then a decision on PR C under F9 (a third PR in M2.3, or deferral to M2.4). This document starts nothing.
+
+## PR C — automatic layout overlay
+
+**Candidate for owner review, draft PR, unmerged.** Implements PR C of the [M2.3 plan](M2_3_DIRECTOR_QUEUEING_PLAN.md#5-automatic-layout-overlay-e3-option-b) under [F7 and F8](DECISIONS.md#owner-rulings-f1f10--m23-director-queueing--2026-11-02) and the owner's [PR C authorization](DECISIONS.md#owner-authorization--m23-pr-c-automatic-layout-overlay--2026-11-02), tracked by [DYL-203](https://linear.app/devils17/issue/DYL-203/sillynovel-m23-pr-c-automatic-layout-overlay-for-background-and). Nothing here is approved or merged. Gate B remains **NOT_RUN**; DYL-193 stays open.
+
+**Date:** 2026-11-02, America/Phoenix. **Starting main:** `d4fc583ba508397f66f89cec3603495a49ed6c03` (PR #54; `docs/DECISIONS.md` begins with the PR C authorization). **Frozen implementation/test SHA:** `67c1aedd5214ad47902d0edfdb2948d356c4b45e`. Every later commit on the branch is documentation or evidence only; the final pushed head is named in the PR description.
+
+### What changed
+
+| File | Change |
+| --- | --- |
+| `src/director-overlay.mjs` (new, pure) | `createDirectorOverlay({ ownerKey, sessionEpoch })` owns one reducer scene: `rebase(layout, sources, { selectedSourceKey, assets })`, `reconcile(sources, { selectedSourceKey, assets })`, `apply(proposal, token, evidence)` through the merged `applyProposal`, `project(sourceKey)`, `clear()`, plus `active()`, `scene()` and `dispose()`. `composeLayout(view, projection)` overlays background and presence on a view |
+| `src/director-session.mjs` | `mirrorScene` removed; its replay is the overlay's rebase. `routeProposal` returns a layout-only proposal for `setLocation` and `setCharacter.present`; outfit stays `NO_AUTOMATIC_LAYOUT`; expressions and suggestions as before |
+| `src/director-controller.mjs` | Captures the overlay scene (revision and override revision in the token, otherwise as before); the request reports the overlay's background and presence; settlement compares that scene by identity; the layout applies before the first expression; notices name the changes; disable clears |
+| `src/project-scene.mjs` | `get()` composes global → expressions → overlay at the selected source; every manual `dispatch`, actor registration and art import rebases the overlay after `apply`; catalog refreshes reconcile it; dispose discards it. `globalState()`, `save`, export, bundles, `dirty` and `edit` are unchanged |
+| `src/stage-view.mjs` | “(director)” on the background and presence read-outs (selected-art line and cast line); the toggle's help sentence now names background and presence |
+| `tests/m2-director-overlay.test.mjs` (new) | 12 pure cases |
+| `tests/m2-director-controller.test.mjs` | 20 new or generated cases; the E3-A case amended (below); the fake client's upload returns a receipt |
+| `tests/m1-reader-browser.test.mjs` | 1 new case; the fixture serves the new module, a free-layout project and, for that project only, the asset digest |
+| `tests/probes/m2-director/host.mjs`, `tests/fixtures/m2-director-endpoint.mjs` | 10 new native blocks; the T49 assertion amended (below); the endpoint's `auto` reply takes `background` and `presence` |
+| `tests/probes/dyl60/run.py`, `check-discovery.py` | The new suite file, 12/5/1; the director step's deadline raised from 600 s to 900 s, since the amended script takes about 470 s |
+
+No change to `src/scene-reducer.mjs`, `src/director-proposal.mjs`, `src/director-request.mjs`, `src/project-expressions.mjs`, `src/reader-source-model.mjs`, the storage plugin or the project schema. No dependency. Nothing is persisted beyond the existing `extensionSettings.sillynovel.director` keys.
+
+### Rulings and where each is honoured
+
+| Ruling | Implementation | Test |
+| --- | --- | --- |
+| F7: background and presence only | `routeProposal`; `replay` carries no slot; `applyProposal` receives no outfit or expression | Node `F7 routing`, `T56: outfit…`; native T56 |
+| F7: outfit `NO_AUTOMATIC_LAYOUT`, slot never automatic | `skip('outfit')`; composition takes `slot` from the global view | Same; `composition…` |
+| F8: locked fields skip as `LOCKED` (D4) | Locks replayed into the base; `applyProposal` records them; the rest applies | Node `D4…`, `T56…LOCKED`; native T57 lock block |
+| F8: any manual layout command clears and rebases | `clearOverlay()` after `apply` in `dispatch`, `register`, `importFile` | Node `T57/F8` six commands and registration/import; browser; native |
+| F8: manual expressions unaffected | Expression commands return from `dispatch` before the overlay is touched | Node `T57/F8: manual expressions…` |
+| Plan 5.5: invalidation | `reconcileScene` from the first changed source; a changed first source rebases | Node prefix cases; native real edit |
+| Plan 5.5: discard | Overlay lives in the project model: detach, replacement, chat switch and reload dispose it; disable calls `clear()` | Node `T57` disable and A → B → A; native four blocks |
+| Authorization: saved project and non-chat files byte-identical | `globalState` reads only the global `scene` variable, never the composed view | Node save case; browser save; native scene, revision, bundle bytes and full file inventory |
+
+### Amended tests, each tied to a ruling
+
+| Test | Was | Now |
+| --- | --- | --- |
+| Node `E3-A…` | Two layout changes “not applied”, location included | F7, F8: with every field locked the presence update skips as `LOCKED`. The location update is dropped from the case because it named the background already showing, which is now no change |
+| `host.mjs` T49 block | “1 layout change not applied” | D4, F7: that project locks its background, so “1 kept your manual choice” |
+
+### Commands and results
+
+Frozen `67c1aed`, Node 26.8.1, Playwright 1.62.1, Chromium 151.0.7922.34, pinned SillyTavern 1.19.0 at `7e8663cd9c184a550b37238218bdd32c6efc68e9` on a disposable clone under the session scratchpad (clean at the pin, hashes in [pins.json](evidence/m2-3-c/campaign/pins.json)), loopback endpoint only, host user data isolated in per-run temporary roots that were removed afterwards, no real provider. One campaign, deadline 3000 s, output to per-step log files; no owned process remains.
+
+```sh
+npm ci --prefix plugins/sillynovel-storage --ignore-scripts --no-audit --no-fund
+python3 tests/probes/dyl60/check-discovery.py
+SILLYTAVERN_ROOT=/path/to/pinned SN_PLAYWRIGHT_MODULE=/path/to/playwright/index.mjs timeout -k 15 3000 python3 tests/probes/dyl60/run.py /new/evidence/dir
+python3 tests/probes/dyl60/validate.py docs/evidence/m2-3-c/campaign
+```
+
+| Suite | Result | Elapsed |
+| --- | --- | --- |
+| `check-discovery.py` | PASS: 12/5/1 files; unexpected, empty and missing suites refused | Under 1 s |
+| Node (12 files) | 283/283; 32 more than PR B's 251 | 5 s |
+| Storage (5 files) | 126/126; plugin unchanged, run because the runner runs it | 158 s |
+| Browser, actual entry | 93/93; 1 new | 80 s |
+| stage-library-migration | PASS, 24 checkpoints | 102 s |
+| expressions | PASS, 16 | 70 s |
+| groups | PASS, 22 | 95 s |
+| recovery | PASS, 17 | 56 s |
+| cleanup | PASS, 21 | 82 s |
+| native-integrity-branches | PASS, 18 | 83 s |
+| **director (amended)** | PASS, 30 (20 in PR B plus 10 new) | 468 s |
+| `validate.py` | PASS: 125 frozen inputs, 108 artifact hashes | |
+
+Total 1198 s. Before freezing, the director script was run four times against the pinned host while its new blocks were written. One attempt never started (a duplicate identifier in the script). Two stopped at test defects: an assertion that forgot PR B's typing notice restores the previous notice, and a `fill` on an edit box the reader covers. The fourth passed, and no product code changed between those runs. The browser's first overlay run also corrected two test assumptions: the fixture omitted the asset digest, so art read as missing, and `isVisible` is false for sprites in that fixture, so the test reads the `hidden` attribute. Retained: [full package](evidence/m2-3-c/campaign/), [runs](evidence/m2-3-c/campaign/runs.json), [director checkpoints](evidence/m2-3-c/campaign/director/evidence.json).
+
+Reproduce from the repository: `python3 tests/probes/dyl60/validate.py docs/evidence/m2-3-c/campaign`.
+
+### NOT_RUN and NOT_TESTED
+
+| Surface | Status and reason |
+| --- | --- |
+| Tablet replay | **NOT_TESTED.** No paired device was used or checked for availability; no device in use was taken over. This slice changes what the stage draws, so the DYL-193 question stands |
+| Swipe, regenerate and Continue invalidating automatic layout on the real host | **NOT_RUN** as an overlay assertion. They reach the same first-changed-source path as the real edit that was run; Node covers the path |
+| Project replacement while automatic layout is applied, on the real host | **NOT_RUN** separately; detach and reopen were run, and replacement disposes the same model |
+| Removed art under the overlay on the real host | **NOT_RUN.** Node covers the missing reference; the stage's fallback is the existing one |
+| The manual layout row of plan 4.6 on the real host (edit while a request is outstanding) | **NOT_RUN.** Node covers it |
+| Real providers, text-completion backends, queueing single-slot backends, other host versions | **NOT_TESTED**, as in M2.2 |
+| Whether a self-moving stage reads well; usefulness, accuracy; Gate B | **NOT_RUN**, owner-gated |
+
+### Implementation choices for owner review
+
+Not settled by the documents; each is reversible and none is an owner ruling.
+
+| Choice | Rationale |
+| --- | --- |
+| **A project's fields are locked by default in practice, so automatic layout rarely moves anything until a lock is released.** The reducer locks every manual background and presence choice, including adding an actor. I changed nothing here. | D4 and the contract's section 5 say so. It is the largest practical consequence of this slice and affects what Gate B would see: the owner may want a way to mark a choice as a default the director may move. That would be a separate decision |
+| E11 is unchanged: with no temporary expression artwork the director stays idle, even if it could move layout. The check reads the global layout, not the composed one. | E11 is a ruling. Reading the composed view would let the director make every actor absent, then never run again |
+| The overlay owns its history, selection and catalog revisions instead of taking the journal's, so `rebase` and `reconcile` take `{ selectedSourceKey, assets }`, not revisions as the plan's signature suggests. | Replaying the base needs a selection at the first source and then a move, which needs its own advance; the journal's numbers could not stay in step. The token reads them from the overlay, as plan 5.2 asks |
+| Settlement compares the captured overlay scene by identity. | A rebase restarts the scene's own `revision`, so a manual change could reproduce the same number; a new scene is always a new object. `reconcile` keeps the same object when nothing changed |
+| The layout applies synchronously before the first expression. If an expression then throws, the layout stands and the notice says so. | Nothing can change between the identity check and the apply. A failure after an expression's await could otherwise leave a layout half-validated against a moved scene |
+| A value already on stage is dropped before `applyProposal`, so it is no move, no notice and no command, even on a locked field. | A model repeating “still at the harbor” would otherwise fill the journal and report a move each turn |
+| “(director)” shows only when the value differs from the global layout. | An automatic choice equal to the global value is not visibly the director's |
+| A cursor the overlay has not fingerprinted yet keeps the last selection's projection, and the overlay stays on stage while a reply streams, unlike expressions. | Forward-scoped layout falling back to the global scene would flash the background on every reply |
+| An unused overlay is not reconciled on sync; a capture reconciles for itself. | The director is off by default and a streaming reply syncs on every change |
+| The toggle's help sentence “only ever changes temporary expressions” became “…temporary expressions, the background and who is present, for this attachment; none of it is saved”. | The old sentence is now false. The rest of the help text is F4's wording, unchanged |
+| The notice for a cleared overlay is appended to the existing “Applied · unsaved project changes.” and shows only when something was cleared. | The stage changes more than the user's command said; the panel should say why |
+| Outfit updates are reported as “N outfit changes not applied: the director does not change outfits.” | “Not available yet” promised a later slice nobody has authorized |
+| Native T56 and T57 run at the end of the director script, after the four-card group. | No earlier block's expectations change, and T57's reload cannot disturb them |
+
+### Limits
+
+The overlay is lost on reload and on a chat switch by design, like temporary expressions. Its command list is not pruned; it is bounded by the session ceiling (at most 200 requests of at most 16 updates) and released with the attachment. T49 is amended per F10 only when this PR merges and is unchanged in the matrix until then. M2.4 is not started.
+
+### Next bounded step
+
+Owner review of this draft PR and the choices above. On merge, M2.3 is complete and T49 is amended; M2.4 planning follows only on separate authorization. This document starts nothing.

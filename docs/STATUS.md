@@ -1,5 +1,9 @@
 # Project status
 
+## M2.3 PR C candidate — 2026-11-02
+
+Draft PR, unmerged, awaiting owner review: the [memory-only automatic layout overlay](M2_3_DIRECTOR_IMPLEMENTATION.md#pr-c--automatic-layout-overlay) for background and presence under F7 and F8 ([DYL-203](https://linear.app/devils17/issue/DYL-203/sillynovel-m23-pr-c-automatic-layout-overlay-for-background-and)), frozen at `67c1aed`. Node 283, storage 126, browser 93, six portability scripts and the amended director campaign (30 checkpoints) pass on the disposable pinned host; `validate.py docs/evidence/m2-3-c/campaign` PASS. The saved project, its bundle and all non-chat files stayed byte-identical. Tablet replay NOT_TESTED; DYL-193 open; Gate B NOT_RUN. For review: manual choices lock their fields by default, so the director moves little until a lock is released. The rest of M2.3 and M2.4 are not changed by this entry.
+
 ## M2.3 PR C authorized — 2026-11-02
 
 The owner [authorized PR C](DECISIONS.md#owner-authorization--m23-pr-c-automatic-layout-overlay--2026-11-02) under F9: the memory-only automatic layout overlay for background and presence (E3 option B), tracked by [DYL-203](https://linear.app/devils17/issue/DYL-203/sillynovel-m23-pr-c-automatic-layout-overlay-for-background-and), built as plan section 5 describes under F7 and F8. It is a renderer change and carries the full native-host campaign and browser suite. Runtime unchanged by this entry. On merge, M2.3 is complete and M2.4 (evidence UI, Gate B candidate) is the next planning step, separately gated. Gate B NOT_RUN; DYL-193 open.

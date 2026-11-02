@@ -27,7 +27,7 @@ function clock() {
         pending: () => timers.size,
     };
 }
-async function setup(t, { enabled = true, ceiling, request, group = false, online = 'Valid', inspect, importArt = true, composer = false } = {}) {
+async function setup(t, { enabled = true, ceiling, request, group = false, online = 'Valid', inspect, importArt = true, composer = false, free = false } = {}) {
     const previous = globalThis.Image, view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
     globalThis.Image = class { naturalWidth = view.getUint32(16); naturalHeight = view.getUint32(20); decode() { return Promise.resolve(); } };
     t.after(() => { globalThis.Image = previous; });
@@ -47,8 +47,11 @@ async function setup(t, { enabled = true, ceiling, request, group = false, onlin
     const actor = randomUUID(), other = randomUUID(), sprite = randomUUID(), background = randomUUID();
     const record = { schemaVersion: 2, projectId: randomUUID(), name: 'Director', revision: 3, catalog: [{ assetId: sprite, kind: 'sprite', actorId: actor, label: 'Base' }, { assetId: background, kind: 'background', actorId: null, label: 'Forest' }],
         scene: { backgroundAssetId: background, backgroundLocked: true, actors: [{ actorId: actor, name: 'Mira', present: true, slot: 'left', spriteAssetId: sprite, locks: { presence: true, outfit: true, slot: true } }, { actorId: other, name: 'Mira', present: true, slot: 'right', spriteAssetId: null, locks: { presence: true, outfit: false, slot: true } }] } };
+    // Layout that automation may move: nothing locked but positions, and a second background to move to.
+    const harbor = randomUUID();
+    if (free) { record.catalog.push({ assetId: harbor, kind: 'background', actorId: null, label: 'Harbor' }); record.scene.backgroundLocked = false; for (const item of record.scene.actors) item.locks.presence = false; }
     let saved = null, uploads = 0;
-    const client = { asset: async () => ({ blob: png(), hash: 'a'.repeat(64) }), upload: async () => { uploads++; }, save: async (id, body) => { saved = body; return { projectId: id, revision: body.expectedRevision + 1 }; } };
+    const client = { asset: async () => ({ blob: png(), hash: 'a'.repeat(64) }), upload: async () => { uploads++; return { assetId: randomUUID() }; }, save: async (id, body) => { saved = body; return { projectId: id, revision: body.expectedRevision + 1 }; } };
     const notices = [];
     let live = null;
     const attach = async () => { const model = await createProjectScene(record, client, actions, () => { if (live) notices.push(live.directorStatus().notice); }, () => true); live = model; t.after(() => model.dispose()); return model; };
@@ -75,7 +78,7 @@ async function setup(t, { enabled = true, ceiling, request, group = false, onlin
     const expression = (target = model) => target.get().scene.view.cast[0].expression;
     // A keystroke, or a draft change, as the adapter would observe it: record the event, then wake the runtime.
     const type = (change = {}) => { Object.assign(typing, { last: time.now() }, change); runtime.composerInput(); };
-    return { typing, type, notices, context, host, reader, time, calls, runtime, actions, record, actor, other, sprite, background, model, art, attach, complete, proposal, answer, expression, refresh, get settings() { return settings; }, get saved() { return saved; }, get uploads() { return uploads; } };
+    return { harbor, typing, type, notices, context, host, reader, time, calls, runtime, actions, record, actor, other, sprite, background, model, art, attach, complete, proposal, answer, expression, refresh, get settings() { return settings; }, get saved() { return saved; }, get uploads() { return uploads; } };
 }
 const ok = text => ({ ok: true, text });
 const status = x => x.model.directorStatus();
@@ -196,18 +199,230 @@ test('valid proposal applies to the memory-only journal; canonical chat, project
     assert.deepEqual(x.saved.scene, x.record.scene);
     assert.doesNotMatch(JSON.stringify(x.saved), /temporary-expression|prefixSha256|session-source/);
 });
-test('E3-A: layout updates recorded, suggestion shown as text, expression for an unapplied outfit falls, nothing saved', async t => {
+// F7, F8: T49's layout half is now the overlay; with every field locked each update skips as LOCKED and nothing moves.
+test('locked layout: updates skip as LOCKED, suggestion shown as text, nothing saved', async t => {
     const x = await setup(t);
     await x.complete();
     const key = x.host.readHistory().at(-1).sourceKey, evidence = { sourceMessageKey: key, excerpt: 'Mira' };
-    await x.answer(0, ok(JSON.stringify({ schemaVersion: 1, updates: [{ op: 'setLocation', backgroundId: x.background, evidence }, { op: 'setCharacter', characterKey: x.other, present: false, evidence }, { op: 'suggestLocation', label: 'Harbor', evidence }] })));
+    await x.answer(0, ok(JSON.stringify({ schemaVersion: 1, updates: [{ op: 'setCharacter', characterKey: x.other, present: false, evidence }, { op: 'suggestLocation', label: 'Harbor', evidence }] })));
     assert.equal(x.expression(), null);
     const notice = status(x).notice;
-    assert.match(notice, /2 layout changes not applied/);
+    assert.match(notice, /1 kept your manual choice/);
     assert.match(notice, /Suggested location: Harbor/);
     assert.match(notice, /no change/);
     assert.equal(x.model.status().dirty, false);
     assert.equal(x.model.get().scene.view.cast[1].present, true);
+});
+const LAYOUT = x => { const evidence = { sourceMessageKey: x.host.readHistory().at(-1).sourceKey, excerpt: 'Mira' }; return { evidence, propose: (...updates) => ok(JSON.stringify({ schemaVersion: 1, updates: updates.map(update => ({ ...update, evidence })) })) }; };
+const view = x => x.model.get().scene.view;
+const harborRef = x => x.model.get().assets.find(item => item.kind === 'background' && item.id === x.harbor).id;
+test('T56: location and presence apply to the overlay forward from the anchored message; global layout, save and dirty untouched', async t => {
+    const x = await setup(t, { free: true });
+    const global = () => x.model.get().scene.commands.length;
+    await x.complete();
+    const commands = global(), revision = x.model.get().scene.revision, chat = JSON.stringify(x.context.chat);
+    await x.answer(0, LAYOUT(x).propose({ op: 'setLocation', backgroundId: harborRef(x) }, { op: 'setCharacter', characterKey: x.other, present: false }));
+    const notice = status(x).notice;
+    assert.match(notice, /^Director moved the scene to Harbor\. Director marked Mira absent\. Not saved\./);
+    assert.equal(view(x).background.id, x.harbor);
+    assert.equal(view(x).background.origin, 'automatic');
+    assert.equal(view(x).cast[1].present, false);
+    assert.equal(view(x).cast[1].presenceOrigin, 'automatic');
+    assert.equal(view(x).cast[1].visible, false);
+    assert.equal(view(x).cast[1].slot, 'right', 'the position stays reserved');
+    assert.equal(view(x).slots.right, null);
+    assert.equal(view(x).cast[0].present, true);
+    // Global scene: same command list and revision; the composed view is the only place the change lives.
+    assert.equal(global(), commands);
+    assert.equal(x.model.get().scene.revision, revision);
+    assert.equal(x.model.status().dirty, false);
+    assert.equal(x.model.status().revision, 3);
+    assert.equal(JSON.stringify(x.context.chat), chat);
+    await x.model.save();
+    assert.deepEqual(x.saved.scene, x.record.scene);
+    assert.doesNotMatch(JSON.stringify(x.saved), /automatic|origin|director/);
+    // Forward: an earlier message shows the global layout, a later one the overlay.
+    x.reader.navigate(-1);
+    await x.model.sync(false);
+    assert.equal(view(x).background.id, x.background);
+    assert.equal(view(x).background.origin, undefined);
+    assert.equal(view(x).cast[1].present, true);
+    x.reader.jumpToLatest();
+    await x.model.sync(false);
+    await x.complete({ text: 'Mira walks on.' });
+    assert.equal(view(x).background.id, x.harbor);
+    assert.equal(view(x).cast[1].present, false);
+    // The next request sees what is on stage.
+    assert.match(x.calls[1].messages[1].content, new RegExp('Current background: ' + x.harbor));
+    assert.match(x.calls[1].messages[1].content, new RegExp(x.other + ': Mira \\| absent'));
+});
+test('T56: while a reply streams the overlay stays on stage; an earlier anchor survives it', async t => {
+    const x = await setup(t, { free: true });
+    await x.complete();
+    await x.answer(0, LAYOUT(x).propose({ op: 'setLocation', backgroundId: x.harbor }));
+    x.reader.apply({ type: 'generationStarted', generationType: 'normal', dryRun: false });
+    await x.model.sync(false);
+    assert.equal(view(x).background.id, x.harbor);
+    x.context.chat.push({ name: 'Mira', mes: 'Mira sta' });
+    x.refresh();
+    assert.equal(view(x).background.id, x.harbor, 'not fingerprinted yet: no flash back to the global layout');
+    await x.model.sync(false);
+    assert.equal(view(x).background.id, x.harbor);
+});
+test('T56: outfit is NO_AUTOMATIC_LAYOUT with the expression chosen for it; a locked field is LOCKED; the rest applies', async t => {
+    const x = await setup(t, { free: true });
+    await x.complete();
+    const outfit = x.model.get().assets.find(item => item.kind === 'outfit').id;
+    await x.answer(0, LAYOUT(x).propose({ op: 'setCharacter', characterKey: x.actor, outfitId: outfit }, { op: 'setLocation', backgroundId: x.harbor }));
+    assert.match(status(x).notice, /Director moved the scene to Harbor\. Not saved\. 1 outfit change not applied: the director does not change outfits\./);
+    assert.equal(view(x).cast[0].outfit.id, outfit);
+    await x.model.dispatch({ type: 'lock', field: 'presence', characterKey: x.other });
+    await x.complete({ text: 'Mira waves at the harbor.' });
+    await x.answer(1, LAYOUT(x).propose({ op: 'setCharacter', characterKey: x.other, present: false }, { op: 'setCharacter', characterKey: x.actor, present: false }));
+    assert.match(status(x).notice, /Director marked Mira absent\. Not saved\. 1 kept your manual choice/);
+    assert.equal(view(x).cast[1].present, true, 'locked');
+    assert.equal(view(x).cast[0].present, false);
+    assert.equal(x.runtime.session(x.record.projectId).consecutive, 0);
+});
+test('a value already on stage is not a change: no command, no notice of a move', async t => {
+    const x = await setup(t, { free: true });
+    await x.complete();
+    await x.answer(0, LAYOUT(x).propose({ op: 'setLocation', backgroundId: x.background }, { op: 'setCharacter', characterKey: x.other, present: true }));
+    assert.match(status(x).notice, /Director: no change/);
+    assert.equal(view(x).background.origin, undefined);
+});
+const applied = async (t, updates = x => [{ op: 'setLocation', backgroundId: x.harbor }, { op: 'setCharacter', characterKey: x.other, present: false }]) => {
+    const x = await setup(t, { free: true });
+    await x.complete();
+    await x.answer(0, LAYOUT(x).propose(...updates(x)));
+    assert.equal(view(x).background.id, x.harbor);
+    return x;
+};
+for (const [name, command, expected] of [
+    ['background', x => ({ type: 'setBackground', assetId: x.background }), x => x.background],
+    ['presence', x => ({ type: 'setPresence', characterKey: x.actor, present: true }), x => x.background],
+    ['outfit', x => ({ type: 'clearOutfit', characterKey: x.actor }), x => x.background],
+    ['slot', x => ({ type: 'setSlot', characterKey: x.actor, slot: 'center' }), x => x.background],
+    ['lock', x => ({ type: 'lock', field: 'background' }), x => x.background],
+    ['release', x => ({ type: 'release', field: 'slot', characterKey: x.actor }), x => x.background],
+]) test('T57/F8: a manual ' + name + ' command clears and rebases the whole overlay', async t => {
+    const x = await applied(t);
+    await x.model.dispatch(command(x));
+    assert.equal(view(x).background.id, expected(x));
+    assert.equal(view(x).background.origin, undefined);
+    assert.equal(view(x).cast[1].present, true, 'an untouched field goes too');
+    assert.equal(view(x).cast[1].presenceOrigin, undefined);
+    assert.match(x.model.get().notice, /Director layout cleared/);
+    assert.equal(x.model.status().dirty, true, 'the manual command is the project edit');
+});
+test('T57/F8: registering an actor and importing art clear it too; a failed command does not', async t => {
+    const x = await applied(t);
+    await assert.rejects(x.model.dispatch({ type: 'setBackground', assetId: 'nope' }));
+    assert.equal(view(x).background.id, x.harbor);
+    await x.model.register('', 'Sage');
+    assert.equal(view(x).background.id, x.background);
+    const y = await applied(t);
+    await assert.rejects(y.model.importFile(new Blob([bytes], { type: 'application/json' }), 'background', undefined, 'X'), /static PNG/);
+    assert.equal(view(y).background.id, y.harbor, 'a refused import is not a command');
+    await y.model.importFile(png(), 'background', undefined, 'Imported');
+    assert.equal(view(y).background.origin, undefined);
+    assert.equal(view(y).cast[1].present, true);
+    assert.match(y.model.get().notice, /Imported · unsaved project arrangement\. Director layout cleared\./);
+});
+test('T57/F8: manual expressions are unaffected in both directions', async t => {
+    const x = await applied(t);
+    await x.model.dispatch({ type: 'setExpression', characterKey: x.actor, assetId: x.art });
+    assert.equal(view(x).background.id, x.harbor);
+    assert.equal(x.expression().origin, 'manual');
+    await x.model.dispatch({ type: 'clearExpression', characterKey: x.actor });
+    assert.equal(view(x).background.id, x.harbor);
+    await x.model.dispatch({ type: 'setExpression', characterKey: x.actor, assetId: x.art });
+    await x.model.dispatch({ type: 'setBackground', assetId: x.background });
+    assert.equal(x.expression().id, x.art, 'clearing the overlay does not touch the journal');
+    assert.equal(x.expression().origin, 'manual');
+});
+test('T57: a lock set later keeps its field against the next proposal, after clearing the overlay', async t => {
+    const x = await applied(t);
+    await x.model.dispatch({ type: 'lock', field: 'background' });
+    await x.complete({ text: 'Mira turns back.' });
+    await x.answer(1, LAYOUT(x).propose({ op: 'setLocation', backgroundId: x.harbor }, { op: 'setCharacter', characterKey: x.other, present: false }));
+    assert.match(status(x).notice, /Director marked Mira absent\. Not saved\. 1 kept your manual choice/);
+    assert.equal(view(x).background.id, x.background);
+    assert.equal(view(x).backgroundLocked, true);
+});
+test('T57: a manual layout command while a request is outstanding makes the result stale, not a failure; nothing applies', async t => {
+    const x = await setup(t, { free: true });
+    await x.complete();
+    const late = LAYOUT(x).propose({ op: 'setLocation', backgroundId: x.harbor });
+    await x.model.dispatch({ type: 'clearOutfit', characterKey: x.actor });
+    await x.answer(0, late);
+    assert.equal(status(x).notice, 'Director request cancelled.');
+    assert.equal(view(x).background.id, x.background);
+    assert.equal(x.runtime.session(x.record.projectId).consecutive, 0);
+});
+test('T57: the overlay is compared by identity at settlement: importing artwork while outstanding is stale, and the result does not apply', async t => {
+    const x = await setup(t, { free: true });
+    await x.complete();
+    const late = LAYOUT(x).propose({ op: 'setLocation', backgroundId: x.harbor });
+    await x.model.importExpression(png(), x.actor, 'Sad');
+    await x.answer(0, late);
+    assert.equal(status(x).notice, 'Director request cancelled.');
+    assert.equal(view(x).background.id, x.background);
+});
+test('T57: a prefix change invalidates from the first changed source and the result is not retried', async t => {
+    const x = await applied(t);
+    x.context.chat.at(-1).mes = 'Mira smiles differently, edited.';
+    x.refresh();
+    await x.model.sync(false);
+    assert.equal(view(x).background.id, x.background);
+    assert.equal(view(x).cast[1].present, true);
+    await x.time.advance(SETTLE_MS * 2);
+    assert.equal(x.calls.length, 1, 'an edit is no completion');
+    assert.equal(x.model.status().dirty, false);
+});
+test('T57: an edit after the anchor keeps it; an append keeps it', async t => {
+    const x = await applied(t);
+    await x.complete({ text: 'Mira goes on.' });
+    assert.equal(view(x).background.id, x.harbor);
+    x.context.chat.at(-1).mes = 'Mira goes on, edited.';
+    x.refresh();
+    await x.model.sync(false);
+    assert.equal(view(x).background.id, x.harbor, 'the anchor is before the first changed source');
+    await x.answer(1, ok(JSON.stringify({ schemaVersion: 1, updates: [] })));
+});
+test('T57: disable discards the overlay; enabling again does not bring it back', async t => {
+    const x = await applied(t);
+    x.model.setDirectorEnabled(false);
+    assert.equal(view(x).background.id, x.background);
+    assert.equal(view(x).cast[1].present, true);
+    x.model.setDirectorEnabled(true);
+    await x.model.sync(false);
+    assert.equal(view(x).background.id, x.background);
+});
+test('T57: A → B → A and detach: nothing from a first visit shows in a second; a late first-visit result never lands', async t => {
+    const x = await applied(t);
+    await x.complete({ text: 'Mira goes on.' });
+    const late = LAYOUT(x).propose({ op: 'setCharacter', characterKey: x.actor, present: false });
+    assert.equal(x.calls.length, 2);
+    x.model.dispose();
+    leaveAndReturn(x);
+    const reopened = await x.attach();
+    await reopened.sync();
+    const second = reopened.get().scene.view;
+    assert.equal(second.background.id, x.background);
+    assert.equal(second.background.origin, undefined);
+    assert.equal(second.cast[1].present, true);
+    x.calls[1].resolve(late);
+    await flush();
+    assert.equal(reopened.get().scene.view.cast[0].present, true);
+    assert.equal(reopened.directorStatus().paused, null);
+});
+test('catalog: removing the overlay\'s art from the library shows it as missing with the neutral fallback, never a crash', async t => {
+    const x = await applied(t);
+    await x.model.unregisterAsset(x.harbor, () => true);
+    assert.equal(view(x).background.id, x.harbor);
+    assert.equal(view(x).background.status, 'missing');
+    assert.equal(x.model.get().media.get(x.harbor), undefined);
 });
 test('T50: a manual set or clear at the source outranks; a later manual choice replaces an automatic one', async t => {
     const x = await setup(t);

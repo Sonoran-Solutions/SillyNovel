@@ -1,7 +1,7 @@
 /** One quiet director request per completed head; one target waits. See docs/M2_2_DIRECTOR_IMPLEMENTATION.md and docs/M2_3_DIRECTOR_IMPLEMENTATION.md. */
 import { checkProposalEvidence, validateProposal } from './director-proposal.mjs';
 import { buildDirectorRequest, parseDirectorResponse } from './director-request.mjs';
-import { mirrorScene, routeProposal } from './director-session.mjs';
+import { routeProposal } from './director-session.mjs';
 import { evidenceStamp } from './transient-scene.mjs';
 
 export const SETTLE_MS = 2000, ABANDON_MS = 90000, HOLD_MS = 5000, DEFAULT_CEILING = 40, FAILURE_LIMIT = 3;
@@ -49,10 +49,10 @@ export function createDirectorRuntime({ request, inspect, read, write, composer,
 }
 
 /**
- * Lifetime is one project attachment. Only ever writes through the memory-only journal.
- * @param {{runtime: object, projectId: string, actions: object, expressions: object, layout: Function, changed: Function}} deps
+ * Lifetime is one project attachment. Only ever writes through the memory-only journal and overlay.
+ * @param {{runtime: object, projectId: string, actions: object, expressions: object, overlay: object, layout: Function, changed: Function}} deps
  */
-export function createDirectorController({ runtime, projectId, actions, expressions, layout, changed }) {
+export function createDirectorController({ runtime, projectId, actions, expressions, overlay, layout, changed }) {
     let disposed = false, pending = null, settleTimer = null, holdTimer = null, composerNote = '', beforeHold = '', firing = false, again = false, ticket = null, abandonTimer = null, notice = '';
     // Attaching or enabling is not a completion: only a later reply can spend the ceiling.
     let seenGeneration = actions.getSnapshot().generation.id;
@@ -69,29 +69,29 @@ export function createDirectorController({ runtime, projectId, actions, expressi
         state.consecutive++;
         if (state.consecutive >= FAILURE_LIMIT) { state.paused = code; dropPending(); say('Director paused: ' + code + MANUAL_OK); } else say('Director skipped this reply: ' + code + MANUAL_OK);
     }
-    function capture(snapshot, history, token) {
-        const { scene, actors, assets, media } = layout(), journal = expressions.get();
+    function capture(snapshot, history) {
+        const { scene, assets, media } = layout(), journal = expressions.get();
         const expressionAssets = journal.assets.filter(asset => asset.kind === 'expression');
         const position = history.findIndex(item => item.sourceKey === snapshot.cursor.sourceKey);
-        const mirror = mirrorScene({ ownerKey: 'director:' + projectId, sessionEpoch: snapshot.sessionEpoch, historyRevision: token.historyRevision, selectionRevision: token.selectionRevision,
-            catalogRevision: scene.context.catalog.revision, selectedSourceKey: snapshot.cursor.sourceKey, sources: expressions.sources(), actors, assets: [...assets, ...expressionAssets], view: scene.view });
-        return { scene, expressionAssets, journal, media, mirror, position };
+        const stage = overlay.reconcile(expressions.sources(), { selectedSourceKey: snapshot.cursor.sourceKey, assets: [...assets, ...expressionAssets] });
+        return { scene, expressionAssets, journal, media, stage, position };
     }
     const proposalToken = (captured, snapshot, token, promptVersion) => {
-        const { mirror } = captured, context = mirror.context;
+        const { stage } = captured, context = stage.context;
         return { authority: { ownerKey: context.ownerKey, sessionEpoch: context.sessionEpoch, historyRevision: context.historyRevision, selectionRevision: context.selectionRevision,
-            catalogRevision: context.catalog.revision, expectedRevision: mirror.revision, source: token.source, origin: 'automatic' },
-        expectedOverrideRevision: mirror.overrideRevision, evidenceStamp: evidenceStamp(snapshot), selectionRevision: context.selectionRevision,
-        historyRevision: context.historyRevision, globalRevision: mirror.revision, source: token.source, promptVersion };
+            catalogRevision: context.catalog.revision, expectedRevision: stage.revision, source: token.source, origin: 'automatic' },
+        expectedOverrideRevision: stage.overrideRevision, evidenceStamp: evidenceStamp(snapshot), selectionRevision: context.selectionRevision,
+        historyRevision: context.historyRevision, globalRevision: stage.revision, source: token.source, promptVersion };
     };
     function requestInput(captured, history) {
-        const { scene, journal, media, expressionAssets, position } = captured;
+        const { scene, stage, journal, media, expressionAssets, position } = captured;
         const label = id => journal.media.get(id)?.label ?? media.get(id)?.label ?? id;
         return { window: history.slice(Math.max(0, position - 5), position + 1).map(({ sourceKey, author, text }) => ({ key: sourceKey, author: { kind: author.kind, label: author.label }, text })),
-            cast: scene.view.cast.map(actor => ({ characterKey: actor.key, label: actor.label, present: actor.present, outfitId: actor.outfit?.id ?? null, presenceLocked: actor.locks.presence, outfitLocked: actor.locks.outfit })),
+            // What is on stage, including earlier automatic layout: the contract's previous scene.
+            cast: stage.view.cast.map(actor => ({ characterKey: actor.key, label: actor.label, present: actor.present, outfitId: actor.outfit?.id ?? null, presenceLocked: actor.locks.presence, outfitLocked: actor.locks.outfit })),
             expressions: expressionAssets.filter(asset => scene.view.cast.some(actor => actor.key === asset.characterKey && (actor.outfit?.id ?? null) === asset.outfitId)).map(asset => ({ expressionId: asset.id, label: label(asset.id), characterKey: asset.characterKey })),
             backgrounds: scene.context.catalog.assets.filter(asset => asset.kind === 'background').map(asset => ({ backgroundId: asset.id, label: label(asset.id), locked: scene.view.backgroundLocked })),
-            scene: { backgroundId: scene.view.background?.id ?? null } };
+            scene: { backgroundId: stage.view.background?.id ?? null } };
     }
     // E11: at least one present actor with a compatible temporary expression.
     function hasExpressionWork(scene, expressionAssets) {
@@ -147,14 +147,14 @@ export function createDirectorController({ runtime, projectId, actions, expressi
         if (!key) return;
         dropPending();
         const state = session();
-        const token = expressions.token(), captured = capture(snapshot, history, token);
+        const token = expressions.token(), captured = capture(snapshot, history);
         if (!hasExpressionWork(captured.scene, captured.expressionAssets)) return say('Director idle: no expression artwork imported');
-        if (!captured.mirror || !token.source) return failure('INVALID_SCENE');
+        if (!captured.stage || !token.source) return failure('INVALID_SCENE');
         let request;
         try { request = buildDirectorRequest(requestInput(captured, history)); } catch (error) { return failure(error.message); }
         state.ledger.add(key);
         state.count++;
-        const current = ticket = { token, proposalToken: proposalToken(captured, snapshot, token, request.promptVersion), mirror: captured.mirror, window: request.window, texts: request.texts, abandoned: false, anchored: target.key, generationId: target.generationId };
+        const current = ticket = { token, proposalToken: proposalToken(captured, snapshot, token, request.promptVersion), stage: captured.stage, window: request.window, texts: request.texts, abandoned: false, anchored: target.key, generationId: target.generationId };
         abandonTimer = runtime.setTimer(() => {
             abandonTimer = null;
             if (ticket !== current) return;
@@ -176,10 +176,11 @@ export function createDirectorController({ runtime, projectId, actions, expressi
         if (disposed || ticket !== current) return null;
         const { snapshot, history } = actions.getSceneEvidence(true);
         if (snapshot.cursor?.sourceKey !== current.anchored) return null;
-        const captured = capture(snapshot, history, current.token);
-        if (!captured.mirror || JSON.stringify([captured.mirror.context, captured.mirror.view]) !== JSON.stringify([current.mirror.context, current.mirror.view])) return null;
+        const captured = capture(snapshot, history);
+        // Identity: any overlay change makes a new scene, and a rebase restarts the scene's own revisions.
+        if (!captured.stage || captured.stage !== current.stage) return null;
         const source = expressions.sources().find(item => item.key === current.anchored);
-        return checkProposalEvidence(current.proposalToken, snapshot, captured.mirror, source).accepted && !session().paused ? captured : null;
+        return checkProposalEvidence(current.proposalToken, snapshot, captured.stage, source).accepted && !session().paused ? captured : null;
     }
     // F4: a reply generation started after capture. Epoch: a chat switch is not a reply. Quiet and impersonate generations produce none.
     function superseded(current) {
@@ -197,24 +198,35 @@ export function createDirectorController({ runtime, projectId, actions, expressi
         if (!result.ok) return failure(result.code);
         const parsed = parseDirectorResponse(result.text);
         if (!parsed.ok) return failure(parsed.code);
-        const valid = validateProposal(parsed.proposal, { scene: captured.mirror, texts: current.texts, window: current.window });
+        const valid = validateProposal(parsed.proposal, { scene: captured.stage, texts: current.texts, window: current.window });
         if (!valid.accepted) return failure(valid.code);
-        const route = routeProposal(parsed.proposal, captured.mirror.view);
-        let applied = 0, kept = 0;
+        const route = routeProposal(parsed.proposal, captured.stage.view);
+        // Applied before the first await, so nothing can change between the identity check and here.
+        const layoutResult = overlay.apply(route.layout, current.proposalToken, { texts: current.texts, window: current.window });
+        if (!layoutResult.accepted) return failure(layoutResult.code);
+        const artLabel = id => captured.media.get(id)?.label ?? id;
+        const moved = layoutResult.applied.map(({ index }) => {
+            const update = route.layout.updates[index];
+            return update.op === 'setLocation' ? 'Director moved the scene to ' + artLabel(update.backgroundId) + '.'
+                : 'Director marked ' + captured.scene.view.cast.find(actor => actor.key === update.characterKey).label + (update.present ? ' present.' : ' absent.');
+        });
+        let applied = 0, kept = layoutResult.ignored.length;
         for (const item of route.expressions) {
             try {
                 const outcome = await expressions.dispatch({ type: 'setExpression', characterKey: item.characterKey, assetId: item.assetId, origin: 'automatic', source: current.token.source });
                 if (outcome === 'LOCKED') kept++; else applied++;
             } catch (error) {
                 if (disposed) return;
-                return say(error.message.startsWith('Temporary expression limit') ? 'Director skipped this reply: ' + error.message : 'Director request cancelled.');
+                const already = moved.length ? moved.join(' ') + ' Not saved. ' : '';
+                return say(already + (error.message.startsWith('Temporary expression limit') ? 'Director skipped this reply: ' + error.message : 'Director request cancelled.'));
             }
         }
         if (disposed) return;
         session().consecutive = 0;
-        const parts = [applied ? 'Director applied ' + applied + (applied === 1 ? ' temporary expression' : ' temporary expressions') + '. Not saved.' : 'Director: no change.'];
+        const changes = applied ? [...moved, 'Director applied ' + applied + (applied === 1 ? ' temporary expression.' : ' temporary expressions.')] : moved;
+        const parts = [changes.length ? changes.join(' ') + ' Not saved.' : 'Director: no change.'];
         if (kept) parts.push(kept + ' kept your manual choice.');
-        if (route.ignored.length) parts.push(route.ignored.length + (route.ignored.length === 1 ? ' layout change' : ' layout changes') + ' not applied: automatic layout is not available in attached projects yet.');
+        if (route.ignored.length) parts.push(route.ignored.length + (route.ignored.length === 1 ? ' outfit change' : ' outfit changes') + ' not applied: the director does not change outfits.');
         for (const { label } of route.suggestions) parts.push('Suggested location: ' + label);
         say(parts.join(' '));
     }
@@ -235,7 +247,7 @@ export function createDirectorController({ runtime, projectId, actions, expressi
         setEnabled(on) {
             runtime.setEnabled(projectId, on);
             if (on) { session().paused = null; session().consecutive = 0; seenGeneration = actions.getSnapshot().generation.id; say('Director on for this project. It reacts to the next completed reply.'); return; }
-            dropPending(); clearAbandon(); ticket = null;
+            dropPending(); clearAbandon(); ticket = null; overlay.clear();
             say('Director off for this project.');
         },
         status() { const host = runtime.inspect(), state = session(); return { available: host.ok, enabled: runtime.enabled(projectId), notice, count: state.count, ceiling: runtime.ceiling(), paused: state.paused }; },

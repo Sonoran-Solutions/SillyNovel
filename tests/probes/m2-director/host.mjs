@@ -88,6 +88,11 @@ try {
     const group = await (await native('/api/groups/create', { name: 'Lantern council', members, activation_strategy: 1 })).json();
     const solo = await makeProject('Director solo', [['Mira', 'left'], ['Rowan', 'right']], ['mira-a.png', 'rowan.png']);
     const council = await makeProject('Director council', [['Mira', 'left'], ['Mira', 'center'], ['Rowan', 'right'], ['Sage', null]], ['mira-a.png', 'mira-b.png', 'rowan.png', 'sage.png']);
+    // T56 and T57: a project whose background and presence automation may move, with a second background to move to.
+    const roaming = await makeProject('Director roaming', [['Mira', 'left'], ['Rowan', 'right']], ['mira-a.png', 'rowan.png']);
+    const harborAsset = (await plugin('/projects/' + roaming.projectId + '/assets', 'POST', await art('rowan.png'), 201, 'image/png')).assetId;
+    const savedRoaming = await plugin('/projects/' + roaming.projectId, 'PUT', { schemaVersion: 2, expectedRevision: roaming.revision, name: roaming.name, catalog: [...roaming.catalog, { assetId: harborAsset, kind: 'background', actorId: null, label: 'Harbor' }],
+        scene: { ...roaming.scene, backgroundLocked: false, backgroundAssetId: roaming.catalog.find(a => a.kind === 'background').assetId, actors: roaming.scene.actors.map(a => ({ ...a, locks: { ...a.locks, presence: false } })) } });
     await native('/api/chats/save', { avatar_url: 'Project A.png', file_name: 'Planted', chat: [{ user_name: DECOYS.personaName, character_name: 'Project A', create_date: '2026-11-01T12:00:00.000Z', chat_metadata: {} }, message('Project A', 'The lantern is waiting.'), message(DECOYS.personaName, PLANTED, true), message('Project A', 'She lifts the lantern.')] });
     await page.reload();
     await page.locator('#sillynovel-settings').waitFor({ state: 'attached' });
@@ -155,7 +160,7 @@ try {
     await untilStatus(/applied 1 temporary expression/);
     assert.ok(await expressionOn('left'));
     const notice = await statusText();
-    assert.match(notice, /1 layout change not applied/);
+    assert.match(notice, /1 kept your manual choice/, 'M2.3 PR C: this project locks its background, so the update skips as LOCKED (D4, F7)');
     assert.match(notice, /Suggested location: Harbor/);
     await delay(2500);
     const after = await inventory();
@@ -166,7 +171,7 @@ try {
     assert.equal(await page.evaluate(async () => (await import('/scripts/openai.js')).oai_settings.openai_max_tokens), maxTokens);
     assert.equal(await page.locator('.sillynovel-unsaved').getAttribute('data-state'), 'saved');
     assert.deepEqual((await plugin('/projects/' + solo.projectId)).scene, solo.scene);
-    pass('accepted proposal applied to the journal only; layout recorded as ignored, suggestion shown as text; ' + Object.keys(after.files).length + ' native files byte-identical; no chat write, no lifecycle event, max tokens unchanged (T19, T49)');
+    pass('accepted proposal applied to the journal only; a locked background skipped LOCKED, suggestion shown as text; ' + Object.keys(after.files).length + ' native files byte-identical; no chat write, no lifecycle event, max tokens unchanged (T19, T49)');
 
     // T47: completion provenance on the real host for each reply type; quiet and Stop never trigger.
     await control({ reset: true, fallback: AUTO });
@@ -482,6 +487,155 @@ try {
     assert.deepEqual((await plugin('/projects/' + council.projectId)).scene, council.scene);
     assert.equal(await page.locator('.sillynovel-cast').getAttribute('data-count'), '4');
     pass('real four-card duplicate-name group: four native replies, one settled director request, expression on one UUID only, all native files byte-identical across the request, cards and settings across the whole turn (E15, T19)');
+
+    // T56 and T57 (M2.3 PR C): automatic layout on real host generation, against a project on disk and its bundle.
+    const [roamMira, roamRowan] = savedRoaming.scene.actors, forestAsset = savedRoaming.scene.backgroundAssetId;
+    const byDirector = text => /\(director\)/.test(text);
+    const readout = () => page.locator('.sillynovel-selected-art').textContent();
+    const castLine = () => page.locator('.sillynovel-cast').textContent();
+    const unsavedState = () => page.locator('.sillynovel-unsaved').getAttribute('data-state');
+    const untilOverlay = () => page.waitForFunction(() => /Selected background: Harbor \(director\)/.test(document.querySelector('.sillynovel-selected-art').textContent));
+    const untilNoOverlay = () => page.waitForFunction(() => !document.querySelector('.sillynovel-selected-art').textContent.includes('(director)'));
+    const exportRoaming = async () => (await (await h.context.request.get(h.origin + '/api/plugins/sillynovel-storage/projects/' + roaming.projectId + '/export')).body()).toString('base64');
+    const bundleBefore = await exportRoaming();
+    const assertSavedUntouched = async () => { const now = await plugin('/projects/' + roaming.projectId); assert.deepEqual(now.scene, savedRoaming.scene, 'saved project scene'); assert.equal(now.revision, savedRoaming.revision); assert.equal(await exportRoaming(), bundleBefore, 'bundle bytes'); };
+    const drawn = side => page.locator('.sillynovel-sprite--' + side).evaluate(e => !e.hidden);
+    const toPlanted = async () => { await select('Project A'); await page.evaluate(async () => { await (await import('/script.js')).openCharacterChat('Planted'); }); await page.waitForFunction(() => document.querySelector('.sillynovel-project-status').textContent.includes('No project attached')); };
+    const noticesAfter = (mark, pattern) => until(async () => (await notices()).slice(mark).some(text => pattern.test(text)), 'notice ' + pattern);
+    await toPlanted();
+    await watchNotices();
+    await open(roaming.projectId, 2);
+    await toggle().setChecked(true);
+    await importArt(roamMira.actorId);
+    const forestSrc = await page.locator('.sillynovel-art__background').getAttribute('src');
+    const MOVE = { excerpt: 'lantern glows', background: harborAsset, presence: { characterKey: roamRowan.actorId, present: false } };
+    await control({ reset: true, script: [{ hold: true, auto: { ...MOVE, presence: { ...MOVE.presence, outfitId: roamRowan.actorId + ':' + roamRowan.spriteAssetId } } }] });
+    await turn('The caravan reaches the harbor.');
+    await untilDirector(1);
+    await delay(1500);
+    const heldLayout = await inventory();
+    await control({ release: true });
+    await untilNotice(/Director moved the scene to Harbor\. Director marked Rowan absent\. .*Not saved\./);
+    await untilOverlay();
+    assert.match(await statusText(), /1 outfit change not applied/, 'F7: outfit stays NO_AUTOMATIC_LAYOUT');
+    assert.match(await castLine(), /Rowan \[[^\]]+\] absent \(director\)/);
+    assert.notEqual(await page.locator('.sillynovel-art__background').getAttribute('src'), forestSrc, 'the stage draws the overlay background');
+    assert.equal(await drawn('right'), false, 'an absent actor is not drawn');
+    assert.equal(await drawn('left'), true);
+    assert.equal(await unsavedState(), 'saved', 'project not dirty');
+    await assertSavedUntouched();
+    await delay(2500);
+    assert.deepEqual(await inventory(), heldLayout, 'every native file byte-identical across the applied layout');
+    pass('T56: location and presence on real host generation apply to the memory-only overlay with (director) read-outs; outfit NO_AUTOMATIC_LAYOUT; saved project, bundle bytes and every native file byte-identical; not dirty');
+
+    // Forward from the anchored message into the next reply; the request reports the stage as it is; a repeated value is not a move.
+    let noticeMark = (await notices()).length;
+    await control({ reset: true, fallback: { auto: MOVE } });
+    await turn('Walking the pier.');
+    await untilDirector(1);
+    const nextBody = (await directorLog())[0].body.messages[1].content;
+    assert.match(nextBody, new RegExp('Current background: ' + harborAsset));
+    assert.match(nextBody, new RegExp(roamRowan.actorId + ': Rowan \\| absent'));
+    // Anchored at the start: the outcome names no move. The typing notice restores the previous notice (PR B), so an older one may reappear before this.
+    await noticesAfter(noticeMark, /^Director applied 1 temporary expression\. Not saved\./);
+    assert.match(await readout(), /Harbor \(director\)/);
+    assert.equal(await drawn('right'), false);
+    pass('T56: forward scope: the next reply keeps the overlay, its request reports the stage as it is, and repeating the same values moves nothing');
+
+    // Earlier messages keep the global layout; returning to the head shows the overlay again.
+    await button('Previous').click();
+    await button('Previous').click();
+    await button('Previous').click();
+    await untilNoOverlay();
+    assert.match(await readout(), /Selected background: Forest/);
+    assert.equal(await drawn('right'), true);
+    await button('Jump to Latest').click();
+    await untilOverlay();
+    pass('T56: an earlier message shows the global layout, and returning to the latest shows the overlay again');
+
+    // A lock is a manual command: it clears and rebases; the next proposal keeps that field LOCKED and moves the rest (F8, D4).
+    await untilOverlay();
+    await field('Project actor').selectOption(roamRowan.actorId);
+    await field('Lock field').selectOption('presence');
+    await button('Lock choice').click();
+    await untilNoOverlay();
+    assert.match(await readout(), /Selected background: Forest/);
+    assert.equal(await drawn('right'), true);
+    assert.match(await page.locator('.sillynovel-visual-status').textContent(), /Director layout cleared/);
+    assert.equal(await unsavedState(), 'dirty', 'the lock is the user\'s edit');
+    noticeMark = (await notices()).length;
+    await control({ reset: true, script: [{ auto: MOVE }] });
+    await turn('Rowan stays; the scene moves.');
+    await untilDirector(1);
+    await noticesAfter(noticeMark, /Director moved the scene to Harbor\..*Not saved\. 1 kept your manual choice/);
+    await untilOverlay();
+    assert.equal(await drawn('right'), true, 'locked presence kept');
+    assert.equal(byDirector(await castLine()), false);
+    pass('T57: a lock clears and rebases the overlay; the next proposal keeps the locked field LOCKED and moves the rest (F8, D4)');
+
+    // A manual background clears the whole overlay; nothing reaches the saved project without an explicit save.
+    await field('Background').selectOption(forestAsset);
+    await button('Apply background').click();
+    await untilNoOverlay();
+    await assertSavedUntouched();
+    pass('T57: a manual background clears the overlay; the saved project is untouched until an explicit save');
+
+    // A real message edit at the anchor invalidates; it is not a completion and nothing is retried.
+    await button('Release lock').click();
+    await field('Lock field').selectOption('background');
+    await button('Release lock').click();
+    await control({ reset: true, script: [{ auto: { excerpt: 'lantern glows', background: harborAsset } }] });
+    await turn('Move again.');
+    await untilDirector(1);
+    await untilOverlay();
+    await page.locator('#chat .last_mes .mes_edit').evaluate(e => e.click());
+    // The reader covers the native chat, so its edit box is driven directly, as the clicks around it are.
+    await page.locator('#chat .last_mes .edit_textarea').evaluate(e => { e.value = 'The lantern glows, edited.'; e.dispatchEvent(new Event('input', { bubbles: true })); });
+    await page.locator('#chat .last_mes .mes_edit_done').evaluate(e => e.click());
+    await untilNoOverlay();
+    assert.match(await readout(), /Selected background: Forest/);
+    await delay(2600);
+    assert.equal((await directorLog()).length, 1, 'an edit is not a completion, and an invalidated change is not retried');
+    pass('T57: a real message edit at the anchor invalidates the automatic layout from the first changed source; not retried');
+
+    // Disable, detach, chat switch, A -> B -> A and reload each discard it.
+    const moveAgain = async text => { const n = (await directorLog()).length; await control({ script: [{ auto: MOVE }] }); await turn(text); await untilDirector(n + 1); await untilOverlay(); };
+    const reopenClean = async () => { await open(roaming.projectId, 2); assert.equal(byDirector(await readout()), false); assert.equal(byDirector(await castLine()), false); assert.match(await readout(), /Selected background: Forest/); assert.equal(await drawn('right'), true); };
+    await field('Project actor').selectOption(roamRowan.actorId);
+    await field('Lock field').selectOption('presence');
+    await button('Release lock').click();
+    await moveAgain('Before disable.');
+    await toggle().setChecked(false);
+    await untilNoOverlay();
+    assert.match(await readout(), /Selected background: Forest/);
+    await toggle().setChecked(true);
+    await delay(300);
+    assert.equal(byDirector(await readout()), false, 'enabling again brings nothing back');
+    pass('T57: disabling the director discards the overlay; enabling again brings nothing back');
+    await moveAgain('Before detach.');
+    await button('Detach project').click();
+    await page.waitForFunction(() => document.querySelector('.sillynovel-director').hidden);
+    await reopenClean();
+    pass('T57: detach discards the overlay; an explicit reopen shows the global layout');
+    await importArt(roamMira.actorId);
+    await moveAgain('First visit of A.');
+    await select('Project B');
+    await page.waitForFunction(() => document.querySelector('.sillynovel-project-status').textContent.includes('No project attached'));
+    assert.equal(await page.locator('.sillynovel-sprite:visible').count(), 0);
+    assert.doesNotMatch(await readout(), /Harbor|\(director\)/, 'nothing crosses into chat B');
+    await toPlanted();
+    assert.doesNotMatch(await readout(), /Harbor|\(director\)/);
+    await reopenClean();
+    pass('T57: chat switch and A -> B -> A discard the overlay; no overlay state from a first visit shows in a second');
+    await importArt(roamMira.actorId);
+    await moveAgain('Before reload.');
+    await page.reload();
+    await page.locator('#sillynovel-stage').waitFor();
+    await page.waitForFunction(() => SillyTavern.getContext().characters.length > 0);
+    await toPlanted();
+    await reopenClean();
+    await assertSavedUntouched();
+    pass('T57: reload discards the overlay; the saved project, its revision and its bundle bytes never changed');
     assert.deepEqual(h.pageErrors.filter(text => !/Clicked stop button|Generation was aborted|Got response status|Internal Server Error/.test(text)), []);
     evidence.result = 'PASS';
     async function clearToasts() { await page.evaluate(() => { for (const e of document.querySelectorAll('#toast-container .toast')) e.remove(); }); }
