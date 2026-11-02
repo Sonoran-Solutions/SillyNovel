@@ -1,5 +1,9 @@
 # Verification and acceptance
 
+## M2.4 rows adopted — 2026-11-02
+
+Per [G14](DECISIONS.md#owner-rulings-g1g14--m24-evidence-ui-corrections-and-gate-b--2026-11-02), rows T58–T68 from [plan section 9](M2_4_EVIDENCE_UI_PLAN.md#9-proposed-testing-rows) are added to the matrix below as NOT_RUN; T50 and T57 are amended when M2.4 PR C merges. No evidence is claimed by this entry. The Gate B fixture run (T18, T67) spends against the owner's named connection and runs only on the owner's go-ahead.
+
 ## M2.3 PR C merged; T49 amended — 2026-11-02
 
 PR C [accepted](DECISIONS.md#owner-acceptance--m23-pr-c-merged-m23-complete--2026-11-02) at `174d380` (frozen `67c1aed`): `validate.py docs/evidence/m2-3-c/campaign` PASS reproduced from the repository (Node 283 over twelve files, storage 126, browser 93, six portability scripts, director campaign 30 checkpoints); `check-discovery.py` now expects 12/5/1. T56 and T57 covered per the [PR C record](M2_3_DIRECTOR_IMPLEMENTATION.md#pr-c--automatic-layout-overlay). T49's required outcome is amended below per F10 (layout applied in the overlay). All M2.3 amendments (T42, T46, T49) are now in the matrix.
@@ -166,6 +170,17 @@ Harness assertions model event shapes and do not prove host ordering. In the liv
 | T55 | Request abandoned at 90 s, then settles, with a target pending | One failure at abandonment; late result discarded; the pending target fires once after settlement; three abandonments pause. Node on `be6a422` (unmerged); host NOT_RUN | M2.3-A |
 | T56 | Accepted proposal with location and presence updates in attached mode (T49 to be amended) | Applied to the memory-only overlay forward from the anchored message; outfit still `NO_AUTOMATIC_LAYOUT`; locked field skipped `LOCKED`; `globalState()`, saved project, bundles and all non-chat files unchanged; project not dirty. NOT_RUN; PR C not authorized | M2.3-C |
 | T57 | Manual layout edit, lock, prefix change, detach, chat switch, A → B → A or reload after automatic layout applied | Manual edit clears and rebases the overlay; a lock keeps its field; prefix change invalidates from the first changed source; the rest discard the overlay; no overlay state from a first visit shows in a second. NOT_RUN; PR C not authorized | M2.3-C |
+| T58 | Each outcome of M2.4 plan section 3.2 occurs | One log entry per issued request or build refusal with the right code; no entry for a wait or idle; stale decided before the result is read; counters as tabulated; nothing written to settings, project or wire. NOT_RUN | M2.4-A |
+| T59 | Model output or chat text with markup, an instruction or a URL reaches the log | Only a validated excerpt is held and rendered, as text; no raw response, refusal detail or suggestion label in the log; no element created, nothing executed (T29 instance). NOT_RUN | M2.4-A, UI in B |
+| T60 | Source of a logged decision is edited, swiped, regenerated, deleted or reordered | Excerpts deleted; outcome kept; “message changed” shown; no text of the old message remains in the log. NOT_RUN | M2.4-A |
+| T61 | Evidence UI on the stage | Director line readable with the controls closed; disclosure closed by default; keyboard operable; reply field reachable; reading and replying unaffected when the director is off, paused or failing. NOT_RUN | M2.4-B |
+| T62 | Paused director, then Resume | Overlay kept; count kept; `consecutive` cleared; nothing retroactive; refused at the ceiling with a note. NOT_RUN | M2.4-B |
+| T63 | Correct one automatic background or presence at the selected message | Forward from that message only; other fields kept at the head; later overlay commands invalidated when not at the head; field shows its lock and later updates skip `LOCKED`; Release enables only a fresh proposal; `globalState()`, saved project, bundles and all non-chat files unchanged; project not dirty. NOT_RUN; PR C awaits go-ahead | M2.4-C |
+| T64 | Correct one automatic expression | Existing manual clear or set at that source; later automatic choice there recorded `LOCKED` (T50); suffix rule named in the notice. NOT_RUN; PR C awaits go-ahead | M2.4-C |
+| T65 | Correction, then a manual global layout command | Whole overlay, corrections included, cleared and rebased (F8); notice says so; the manual choice is what shows. NOT_RUN; PR C awaits go-ahead | M2.4-C |
+| T66 | Mark a background or presence movable, Save, reopen, export, import | Value kept, lock false after each; director may move it; a new manual apply locks again unless the movable action was used; director enablement does not travel (T48); schema v2 unchanged. NOT_RUN; PR C awaits go-ahead | M2.4-C |
+| T67 | Gate B fixture scorer | Counts per category and field; refused apart; no aggregate percentage; changed expected answers refused against the recorded SHA. NOT_RUN; PR D awaits go-ahead | M2.4-D |
+| T68 | Regenerate, Continue or swipe during an outstanding request on the synthetic rejecting backend (E16 residual) | Outcome recorded per flow; the user's message kept; recovery by swipe or regenerate demonstrated; not asserted away. Real backend stays with the owner's session. NOT_RUN; PR D awaits go-ahead | M2.4-D |
 
 ## 3. Fixture design
 

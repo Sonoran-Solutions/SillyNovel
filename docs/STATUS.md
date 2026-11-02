@@ -1,5 +1,9 @@
 # Project status
 
+## M2.4 authorized (PRs A and B) — 2026-11-02
+
+The owner [ruled on G1–G14](DECISIONS.md#owner-rulings-g1g14--m24-evidence-ui-corrections-and-gate-b--2026-11-02) after the [M2.4 plan](M2_4_EVIDENCE_UI_PLAN.md) merged at `628a3b4`: PR A (memory-only decision log, outcome taxonomy, stale reasons) and PR B (Director line, “Why this visual?” disclosure, Resume) are authorized and tracked by [DYL-204](https://linear.app/devils17/issue/DYL-204/sillynovel-m24-director-decision-log-and-evidence-ui-prs-a-and-b); PR C (corrections, O08 option A) and PR D (Gate B fixture scorer and runner, E16 residual blocks) are ruled but each waits for the owner's go-ahead. O08 is resolved. [DYL-193](https://linear.app/devils17/issue/DYL-193/sillynovel-m14-deferred-physical-scaling-motion-assistive-and) is reopened and extended; it runs on the frozen Gate B candidate before the fixture run and the owner's session. TESTING rows T58–T68 added as NOT_RUN. Runtime unchanged by this entry. Gate B NOT_RUN.
+
 ## M2.4 planning proposal (NOT approved) — 2026-11-02
 
 The [M2.4 evidence UI plan](M2_4_EVIDENCE_UI_PLAN.md) proposes a memory-only decision log with the outcome taxonomy and an on-stage “Why this visual?”, per-decision corrections in the overlay, an answer to open question O08 over the existing lock flags with no schema change, and the Gate B candidate's fixtures, protocol and record. It lists owner decisions G1–G14 with a recommendation each and authorizes nothing. It also records a conflict for the owner: Linear shows DYL-193 Done, with no replay evidence in the repository, while the documents call it open (G12). Runtime unchanged. Gate B NOT_RUN.
