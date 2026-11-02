@@ -566,7 +566,8 @@ try {
     assert.match(explained, /Rowan \[[^\]]+\]: absent · director, message \d+ · Project A/);
     assert.match(explained, /Outfit of Rowan \[[^\]]+\]: Rowan base · NO_AUTOMATIC_LAYOUT · the director does not change outfits/);
     assert.match(explained, /Mira \[[^\]]+\] expression: Happy · director, message \d+ · Project A/);
-    assert.equal(await why().locator('[role],[aria-live],img,a,script').count(), 0, 'lists only: no live region and no element from the text');
+    // G5: rows now carry action buttons, and the host itself marks every .menu_button role="button"; anything else with a role is still refused.
+    assert.equal(await why().locator('[role]:not(button[role="button"]),[aria-live],img,a,script').count(), 0, 'no live region and no element from the text');
     const reach = await page.evaluate(() => { const c = document.getElementById('send_textarea'), r = c.getBoundingClientRect(), hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2); return { bottom: document.getElementById('send_form').getBoundingClientRect().bottom, height: innerHeight, hit: hit === c || c.contains(hit) }; });
     assert.ok(reach.hit && reach.bottom <= reach.height + 1, 'reply field reachable with the disclosure open: ' + JSON.stringify(reach));
     assert.deepEqual(await inventory(), heldLayout, 'reading the disclosure writes nothing');
@@ -743,6 +744,7 @@ try {
     const untilLineStatus = pattern => until(async () => pattern.test(await statusLine()), 'status ' + pattern);
     const actorLabel = actor => actor.name + ' [' + actor.actorId.slice(0, 8) + ']';
     const lastMoves = async (expected, turnText, step) => { await control({ reset: true, script: [step] }); await turn(turnText); await untilDirector(1); await until(async () => /^Director: on/.test(await line().textContent()), 'request settled ' + expected); };
+    await connect(); // the T57 block above reloaded the page
     await watchNotices();
     await importArt(roamMira.actorId);
     {
