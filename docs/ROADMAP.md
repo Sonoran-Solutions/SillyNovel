@@ -1,5 +1,8 @@
 # Staged implementation roadmap
 
+## M2.3 planning proposal (NOT approved) — 2026-11-02
+
+The [M2.3 director queueing plan](M2_3_DIRECTOR_QUEUEING_PLAN.md) takes up the three M2.2 inputs: serialization with native generation (streaming gate, composer hold, `SUPERSEDED` outcome), a pending target with deduplication, stale-result rejection and timeout/refusal recovery with race tests including A → B → A, and the automatic layout overlay (E3-B) as a third, separately authorized PR. It authorizes nothing: M2.3 implementation starts only after a separate owner authorization recorded in [DECISIONS](DECISIONS.md), including rulings on its section 8 decisions F1–F10. M2.4, Gate B and DYL-193 closure remain separately gated. Older dated entries are historical.
 ## M2.2 merged — 2026-11-01
 
 [Accepted and merged](DECISIONS.md#owner-acceptance--m22-implementation-merged--2026-11-01) at `f570484dc9975ab543d4b116a198c9ba21dcd6ec`. M2.3 planning is the next bounded step and should take up queueing and catch-up, serialization between native generation and director requests (E16), and the automatic layout overlay (E3 option B); it starts only on a recorded owner authorization. M2.4 and Gate B stay gated.
