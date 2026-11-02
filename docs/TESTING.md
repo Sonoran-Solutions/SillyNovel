@@ -1,5 +1,9 @@
 # Verification and acceptance
 
+## M2.1 implementation candidate — 2026-11-01
+
+Unit-level SYNTHETIC evidence only, frozen at `0d80dffc803aecf85a1d87e783d63f24212047a0`: rows T31–T38 added below, partial T05, T09, T11, T15, T16, T19 and T29; T17 and T18 not covered. [Commands, counts and limits](M2_1_DIRECTOR_IMPLEMENTATION.md#commands-and-results). `python3 tests/probes/dyl60/check-discovery.py` now expects 9/5/1 suite files; the 8/5/1 entry below stays historical. Browser suite NOT_RUN; Gate B NOT_RUN.
+
 ## Gate A PASS — 2026-11-01
 
 Owner verdict [PASS](DECISIONS.md#gate-a-verdict--pass--2026-11-01) on main `e8e9cf673b6455dace67d695ee45d1d3dcc2857c`; session details were not supplied to the repository. Matrix rows, frozen `c5c1699a48629ae761a093e13056f0b11fdc4b88` evidence and the [DYL-193](https://linear.app/devils17/issue/DYL-193/sillynovel-m14-deferred-physical-scaling-motion-assistive-and) deferral are unchanged. Gates B and C NOT_RUN.
@@ -99,6 +103,14 @@ Harness assertions model event shapes and do not prove host ordering. In the liv
 | T28 | Reduced motion, zoom, touch keyboard | Readable, usable controls; reply field accessible | M1 |
 | T29 | Prompt text containing slash/HTML instructions | Data stays data; no command or script execution | M2/M3 |
 | T30 | Metadata save overlaps chat change | Write targets correct owner or is safely deferred/refused | M1 |
+| T31 | Proposal with one locked and several unlocked field changes | Locked change recorded as ignored; unlocked changes apply atomically; no lock altered | M2.1 |
+| T32 | Manual change or lock release after a proposal token was captured | `STALE_OVERRIDE`; nothing applied; next fresh proposal may apply | M2.1 |
+| T33 | `sourceOrderRevision` or source revision changes between capture and application | Evidence stamp refuses; nothing applied; stage unchanged | M2.1 |
+| T34 | Empty `updates` | `NO_CHANGE`; same scene reference; no revision advance | M2.1 |
+| T35 | Two updates to the same character or two location updates in one proposal | Whole proposal rejected; no later-wins | M2.1 |
+| T36 | `suggestLocation` | No scene, asset or job change; label returned as bounded plain text only | M2.1 |
+| T37 | Automatic presence or expression for a character never manually registered | Refused; no cast registration from a mention | M2.1 |
+| T38 | Identical proposal sequence replayed from the same scene | Identical journal and projections | M2.1 |
 
 ## 3. Fixture design
 

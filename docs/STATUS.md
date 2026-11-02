@@ -1,5 +1,9 @@
 # Project status
 
+## M2.1 implementation candidate for review — 2026-11-01
+
+Draft PR for [DYL-194](https://linear.app/devils17/issue/DYL-194/sillynovel-m21-director-proposals-lock-precedence-and-snapshot), frozen at `0d80dffc803aecf85a1d87e783d63f24212047a0`: pure `src/director-proposal.mjs` with strict whole-proposal validation, atomic application with manual-lock precedence, and evidence-stamp checks, on an unmodified reducer. 29 new Node tests pass with the existing 144. [Implementation record](M2_1_DIRECTOR_IMPLEMENTATION.md) lists the D2–D8 defaults (not owner rulings) and six choices for owner review. Fixture-only: no transport, UI, persistence or runtime wiring; browser suite NOT_RUN (no pinned host checkout present); Gate B NOT_RUN. Unmerged. Older entries below are historical.
+
 ## M2.1 implementation authorized — 2026-11-01
 
 The owner [authorized M2.1 implementation](DECISIONS.md#owner-authorization--m21-director-implementation--2026-11-01) (plan decision D1) on main `a8fde515ac665c4cd892009c3574eef94dbfec57`; D2–D8 proceed on the plan's proposed defaults as recorded implementation choices, not rulings. Tracked by [DYL-194](https://linear.app/devils17/issue/DYL-194/sillynovel-m21-director-proposals-lock-precedence-and-snapshot): pure director proposal validation, reducer extension with manual-lock precedence and snapshot validation, deterministic fixtures, one draft PR. No transport, provider, persistence or schema change. Gate B NOT_RUN; DYL-193 coverage still precedes beta/release.
