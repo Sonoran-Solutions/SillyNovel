@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## M2.2 merged — 2026-11-01
+
+[Accepted and merged](DECISIONS.md#owner-acceptance--m22-implementation-merged--2026-11-01) at `f570484dc9975ab543d4b116a198c9ba21dcd6ec`. M2.3 planning is the next bounded step and should take up queueing and catch-up, serialization between native generation and director requests (E16), and the automatic layout overlay (E3 option B); it starts only on a recorded owner authorization. M2.4 and Gate B stay gated.
+
 ## M2.2 implementation candidate for review — 2026-11-01
 
 [Implementation record](M2_2_DIRECTOR_IMPLEMENTATION.md), frozen at `d5664119d060d72f90aee4e3a386fdf409843a5c`, is an unmerged draft for owner review. M2.3 inputs recorded there: serialization with native generation (E16) and the automatic layout overlay (E3 option B). M2.3, M2.4 and Gate B stay gated.
