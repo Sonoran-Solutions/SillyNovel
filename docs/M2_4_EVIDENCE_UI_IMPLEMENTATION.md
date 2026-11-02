@@ -103,4 +103,4 @@ The log and tallies are lost on reload by design (G3). The median covers only th
 
 ### Next bounded step
 
-Owner review of this draft PR and the choices above, the pause entry and the `STALE_JOURNAL` consequence first. PR B (Director line, “Why this visual?”, Resume) follows on that review under G1. T58, T59 and T60 stay as recorded in TESTING until the owner accepts. This document starts nothing.
+Owner review of this draft PR and the choices above, the pause entry and the `STALE_JOURNAL` consequence first. PR B (Director line, “Why this visual?”, Resume) follows on that review under G1. The TESTING rows for T58, T59 and T60 name this candidate's Node evidence, unmerged. This document starts nothing.
