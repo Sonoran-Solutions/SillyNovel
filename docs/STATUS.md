@@ -1,5 +1,9 @@
 # Project status
 
+## M2.3 PR A merged — 2026-11-02
+
+The owner [accepted and merged](DECISIONS.md#owner-acceptance--m23-pr-a-merged--2026-11-02) PR A at `89d5abd` (frozen `be6a422`): the director now keeps one pending target of depth one, waits through native generation and while the reader is on an earlier message, fires once on return to the head, and names a result overtaken by the user's reply `SUPERSEDED` without counting a failure. Node 244/244 from the repository; browser, storage and native suites NOT_RUN for this pure-module slice. The native director campaign script still asserts a removed notice and cannot pass until PR B. Next bounded step is PR B, the read-only composer hold, on the owner's go-ahead under [DYL-196](https://linear.app/devils17/issue/DYL-196/sillynovel-m23-director-pending-target-stale-rules-and-composer-hold). PR C not authorized. Gate B NOT_RUN; DYL-193 open.
+
 ## M2.3 PR A candidate (draft, unmerged) — 2026-11-02
 
 Draft for owner review under [DYL-196](https://linear.app/devils17/issue/DYL-196/sillynovel-m23-director-pending-target-stale-rules-and-composer-hold): one pending target, an explicit streaming gate, catch-up on returning to the head and the `SUPERSEDED` outcome, in `src/director-controller.mjs` only. Frozen `be6a422`: Node 244/244, discovery PASS. Browser, storage and native suites NOT_RUN under the M2 evidence standard. [PR A record](M2_3_DIRECTOR_IMPLEMENTATION.md). PR B waits for the owner's review; PR C is not authorized. Gate B NOT_RUN.

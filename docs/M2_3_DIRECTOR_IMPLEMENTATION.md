@@ -2,6 +2,8 @@
 
 **Candidate for owner review, draft PR, unmerged.** Implements PR A of the [M2.3 plan](M2_3_DIRECTOR_QUEUEING_PLAN.md) under [rulings F1–F10](DECISIONS.md#owner-rulings-f1f10--m23-director-queueing--2026-11-02). Tracked by [DYL-196](https://linear.app/devils17/issue/DYL-196/sillynovel-m23-director-pending-target-stale-rules-and-composer-hold). PR B follows only after the owner reviews this one; PR C is not authorized (F9). Gate B remains **NOT_RUN**.
 
+**Post-merge update — 2026-11-02.** The owner [accepted and merged](DECISIONS.md#owner-acceptance--m23-pr-a-merged--2026-11-02) PR A at `89d5abd`; the choices below stand as the reversible baseline, and T42 is amended in TESTING. PR B starts only on the owner's go-ahead. The rest of this section is the historical candidate record.
+
 ## PR A — pending target and stale rules
 
 **Date:** 2026-11-02, America/Phoenix. **Starting main:** `c5d3f50217a8124bbb70170e48acd162ac50e66d` (PR #49 merge). **Frozen implementation/test SHA:** `be6a42221fab60119256dcc4c6454e671cb4f57e`. Later commits on the branch are documentation only.
