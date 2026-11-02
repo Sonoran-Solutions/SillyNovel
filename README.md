@@ -96,7 +96,7 @@ The behavioral browser check runs the actual entry and renderer. Its external Pl
 
 ## License and attribution
 
-A repository license has not been selected in this starter. Choose one before publishing an installable release. Record licenses and attribution for any reused code or bundled assets; a public repository is not a substitute for a license decision. This documentation imports no third-party extension code or art.
+The repository is licensed under the [GNU AGPL-3.0](LICENSE), matching SillyTavern, by [owner ruling on 2026-11-01](docs/DECISIONS.md#owner-rulings-on-open-decisions--2026-11-01). Record licenses and attribution for any reused code or bundled assets; a public repository is not a substitute for a license decision. This documentation imports no third-party extension code or art.
 
 ## Optional project persistence review candidate
 

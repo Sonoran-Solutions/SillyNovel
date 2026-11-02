@@ -1,5 +1,24 @@
 # Decision register
 
+## Owner rulings on open decisions — 2026-11-01
+
+**Approving owner: Dylan. Date: 2026-11-01, America/Phoenix. Status: APPROVED.** The owner asked for the list of open rulings with a recommendation on each, then said “Record all as rulings.” Each row below is therefore an owner ruling adopting the stated recommendation. Verification notes inside a ruling (for example confirming a host entry point) are implementation obligations, not conditions on the ruling.
+
+| ID | Ruling |
+| --- | --- |
+| O04 | The first text-director transport is the host's own generation path on the connection the user already has selected, exposed through the pinned host adapter as a quiet background request that never writes to the chat. No new credential or billing route. A separate director connection profile is a later option, considered only after Gate B evidence. M2.2 planning must verify the quiet-generation entry point on the pinned 1.19.0 host before relying on it. |
+| O06 | Director off by default and enabled per project. Content sent is limited to the evidence window the M2.1 module enforces (anchored source plus up to five prior sources, excerpts ≤ 200 characters) and catalog labels; never persona, cards, lorebooks, system prompt, connection settings or images. At most one in-flight request, at most one request per completed message, and a user-settable per-session ceiling defaulting to 40. Any failure or cap hit degrades to manual with a visible notice. |
+| D7 | In attached-project mode, director expression changes go to the memory-only expressions journal, the same path as manual expressions. Automatic output never reaches the global reducer's persistent project layout or the plugin schema. |
+| O03 | Repository license is GNU AGPL-3.0, matching SillyTavern. `LICENSE` is added with this ruling. Third-party assets and reused code still need their own recorded attribution before release. |
+| O02 | Closed by reference: host storage/asset routes were decided by [DYL-47](#tracking-record--2026-10-15-dyl-47) and [DYL-49](#owner-decision--2026-10-15-independent-project-storage) (independent projects with the optional local plugin). No further ruling. |
+| DYL-193 | Deferred scaling/200% zoom, reduced-motion, assistive-technology, tablet file-picker/import/export/cleanup and native group branch/copy coverage runs before the Gate B owner session and no later than public beta. It does not precede M2.2. |
+| DYL-56 | Remembered project attachment hints stay Backlog. Revisit only if explicit reopening proves tedious during the Gate B session. |
+| Process | M2 evidence standard: a pure-module slice (no host adapter, persistence, composer or renderer change) needs focused Node tests plus an implementation record. Full native-host campaigns, storage suites and device replays are required only for slices that touch the host adapter, persistence, the composer or the renderer, or that an owner gate names. Reused evidence is cited by SHA, never presented as fresh. |
+| O05 | First image route deferred until Gate B PASS. When taken, local-first through the host's existing image integration before any new cloud adapter. |
+| O07 | Plan-backed ChatGPT text access is closed as not pursued. No supported API exists for it and nothing depends on it. |
+
+Not changed by these rulings: Gate B NOT_RUN; M2.2 planning may now start but M2.2 implementation needs its own recorded authorization; no live installation, beta or release. Older entries below are historical.
+
 ## Owner acceptance — M2.1 implementation merged — 2026-11-01
 
 **Approving owner: Dylan. Date: 2026-11-01, America/Phoenix. Status: APPROVED.** The owner reviewed the [PR #40](https://github.com/Sonoran-Solutions/SillyNovel/pull/40) summary, including the six implementation choices it left open, and said “Yes, merge it.” Merge commit `c5f1f3d3f8356cebc2805b7b67b22a6a8d76ed7b`; frozen implementation/test SHA `0d80dffc803aecf85a1d87e783d63f24212047a0`. DYL-194 is Done. Independent check before merge: 182/182 Node tests, discovery self-check PASS, `src/scene-reducer.mjs` unchanged, no runtime import of `src/director-proposal.mjs`; browser and storage suites NOT_RUN (pinned host absent, plugin unchanged). This accepts the pure M2.1 module and its recorded D2–D8 defaults and open choices as the current baseline; any of them may still be reversed in a later bounded slice. It does not authorize M2.2 (O04 first text-director transport and O06 usage limits/content scope remain open), M2.3, M2.4, Gate B, DYL-193 closure, live installation or release. Gate B NOT_RUN.
@@ -151,14 +170,16 @@ O01 records the tested environment, not owner approval of a product compatibilit
 
 ## Decisions still needed
 
-| ID | Question | When it must be resolved |
+All rows below were ruled on in the [2026-11-01 owner rulings](#owner-rulings-on-open-decisions--2026-11-01); the table is retained for the original questions.
+
+| ID | Question | Resolution |
 | --- | --- | --- |
-| O02 | Which host-supported storage/asset routes meet user scoping and save-safety needs? | M0/M1, before persistence is advertised |
-| O03 | Which source license should the repository use? | Before an installable public release |
-| O04 | Which one text-director transport should be exercised first? | M2 planning; never required for M1 |
-| O05 | Which image route should be the first real adapter? | M3 planning after Gate B |
-| O06 | What usage limits and content-sharing scope will the owner enable? | Before any automatic paid/cloud work |
-| O07 | Is plan-backed ChatGPT text access worth a separate integration spike? | Optional; not a reader or image milestone prerequisite |
+| O02 | Which host-supported storage/asset routes meet user scoping and save-safety needs? | RESOLVED by DYL-47/DYL-49; closed by reference 2026-11-01 |
+| O03 | Which source license should the repository use? | RESOLVED: AGPL-3.0, 2026-11-01 |
+| O04 | Which one text-director transport should be exercised first? | RESOLVED: host generation path on the user's selected connection, 2026-11-01 |
+| O05 | Which image route should be the first real adapter? | DEFERRED until Gate B PASS; local-first, 2026-11-01 |
+| O06 | What usage limits and content-sharing scope will the owner enable? | RESOLVED: evidence window only, one in flight, per-session ceiling 40, 2026-11-01 |
+| O07 | Is plan-backed ChatGPT text access worth a separate integration spike? | CLOSED, not pursued, 2026-11-01 |
 
 These questions do not block documentation or the manual compatibility shell. Do not answer them by silently treating an example configuration as a user decision.
 

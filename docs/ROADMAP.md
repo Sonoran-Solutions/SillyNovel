@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## Open decisions ruled; M2.2 planning unblocked — 2026-11-01
+
+[Rulings](DECISIONS.md#owner-rulings-on-open-decisions--2026-11-01) settle O04 and O06, the two blockers named above, plus D7. The next bounded step is an M2.2 planning proposal: one quiet director request over the host's existing generation path on the user's selected connection, bounded context per O06, strict validation through the merged M2.1 module, and the host entry-point verification O04 requires. Implementation needs a separate recorded authorization. Gate B NOT_RUN.
+
 ## M2.1 merged — 2026-11-01
 
 [Accepted](DECISIONS.md#owner-acceptance--m21-implementation-merged--2026-11-01) at `c5f1f3d3f8356cebc2805b7b67b22a6a8d76ed7b`. M2.2 (one configured text-director path, bounded context, strict proposal validation over a real transport) is next and is blocked on owner decisions O04 and O06; no planning or implementation starts without them. Gate B NOT_RUN.
