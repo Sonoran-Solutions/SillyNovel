@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## M2.3 PR A merged — 2026-11-02
+
+[Accepted](DECISIONS.md#owner-acceptance--m23-pr-a-merged--2026-11-02) at `89d5abd`. PR B (composer hold, adapter touch, full native-host campaign, amends `tests/probes/m2-director/host.mjs`) follows on the owner's go-ahead under [DYL-196](https://linear.app/devils17/issue/DYL-196/sillynovel-m23-director-pending-target-stale-rules-and-composer-hold); PR C (automatic layout overlay) needs its own authorization or deferral to M2.4 (F9). M2.4 and Gate B stay gated.
+
 ## M2.3 PR A candidate (draft, unmerged) — 2026-11-02
 
 Plan section 6 PR A is implemented on a draft PR with Node evidence ([PR A record](M2_3_DIRECTOR_IMPLEMENTATION.md)). Next bounded step: owner review, then PR B. PR C needs its own authorization (F9).

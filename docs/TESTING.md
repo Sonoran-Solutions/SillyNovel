@@ -1,5 +1,9 @@
 # Verification and acceptance
 
+## M2.3 PR A merged; T42 amended — 2026-11-02
+
+PR A [accepted](DECISIONS.md#owner-acceptance--m23-pr-a-merged--2026-11-02) at `89d5abd` (frozen `be6a422`): Node 244/244 and discovery PASS reproduced from the repository; T51, T54, T55 and T53's controller half are covered in Node per the [PR A record](M2_3_DIRECTOR_IMPLEMENTATION.md#commands-and-results). T42's required outcome is amended below per F10 (“counted, not queued” → “at most one waits”). The native director campaign in `tests/probes/m2-director/host.mjs` asserts a notice PR A removed and is NOT_RUN until PR B amends it; the retained M2.2 campaign evidence applies to `d566411` only.
+
 ## M2.3 PR A candidate — 2026-11-02
 
 Node-level SYNTHETIC evidence on frozen `be6a422`, unmerged: T51, T54 and T55 covered in Node, and T53's controller half (its host half stays NOT_RUN until PR B). Node 244/244 over the runner's 11 files; `python3 tests/probes/dyl60/check-discovery.py` PASS at 11/5/1. Browser, storage and native NOT_RUN per the M2 evidence standard. T42 is amended when PR A merges, per F10; it is unchanged here. `tests/probes/m2-director/host.mjs:305` still expects the removed notice and is amended in PR B. [Commands and limits](M2_3_DIRECTOR_IMPLEMENTATION.md#commands-and-results).
@@ -130,7 +134,7 @@ Harness assertions model event shapes and do not prove host ordering. In the liv
 | T39 | Director request on the disposable pinned host with decoy persona, lorebook and cards seeded | Request body contains only window texts, author kinds/labels, catalog labels, compact scene and the instruction; decoy strings absent | M2.2 |
 | T40 | Chat message or label containing `{{persona}}`, `{{input}}`, `{{getvar::x}}` or a legacy marker such as `<USER>` or `<GROUP>` inside the window | Arrives neutralized; no expansion; evidence check still runs against original text | M2.2 |
 | T41 | Raw response over 32 KiB, non-JSON, two objects, prose around JSON, array | Refused before validation; nothing applied; failure counted with a notice; manual controls work | M2.2 |
-| T42 | Several replies complete in quick succession, including a four-member group turn | At most one request outstanding; at most one per message key; a head superseded within the settle interval is never requested or counted; others counted, not queued | M2.2 |
+| T42 | Several replies complete in quick succession, including a four-member group turn | At most one request outstanding; at most one per message key; a head superseded within the settle interval is never requested or counted; at most one later head waits as the pending target, the newest replaces an older one, never more than one request per key (amended M2.3 PR A per F10) | M2.2, amended M2.3-A |
 | T43 | Ceiling (configured to 3) reached | Pauses at once; the next completion sends nothing; manual expressions, layout and composer unaffected; counter survives a chat-switch detach and reopen, resets on deliberate detach | M2.2 |
 | T44 | Host error, refusal or disconnected backend during a request (T17 instance) | Last valid scene survives; chat remains usable; message skipped with the bounded code; pause after three consecutive failures | M2.2 |
 | T45 | Chat switch, A → B → A, swipe, edit or disable while a request is outstanding (T08/T09 instance) | Late result dropped by ticket and stamp checks; no journal write; not a failure; no notice beyond “cancelled” | M2.2 |
