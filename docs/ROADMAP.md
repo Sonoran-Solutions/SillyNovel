@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## Gate A playtest unblocked by owner deferral — 2026-11-01
+
+The owner deferred scaling/motion/assistive/secondary-flow coverage to [DYL-193](https://linear.app/devils17/issue/DYL-193/sillynovel-m14-deferred-physical-scaling-motion-assistive-and) for the first disposable playtest ([amendment](DECISIONS.md#owner-amendment--deferred-coverage-for-the-first-disposable-gate-a-playtest--2026-11-01)). The next step is the owner's own session on main `04ce6290c7bb5dab0dd0502e2cde931936796897` using the existing [playtest sheet](M1_4_GATE_A_READINESS.md#6-owner-playtest-sheet--draft-session-not_run) and [recipe](M1_4_DYL60_REPRODUCTION.md), followed by a recorded verdict. On PASS the roadmap continues at M2.1; on REVISE the reader is improved first. DYL-193 stays mandatory before beta/release. Gate A NOT_RUN; nothing below starts automatically. Older dated entries are historical.
+
 ## Current state after PR #34 merge — 2026-11-01
 
 Main `91d638ab933b4dc503b7b88e99be41bd5aa76504` carries the DYL-60 candidate; runtime is identical to frozen `c5c1699a48629ae761a093e13056f0b11fdc4b88`. DYL-60/62/63 are Done. The next step is the owner's own Gate A playtest on this merged head, preceded by a recorded owner decision on the remaining NOT_TESTED scaling/motion/assistive/file-picker/group-branch surfaces: either a bounded coverage ticket first, or an explicit amendment to run the first disposable playtest with those surfaces deferred. On PASS the roadmap continues at M2.1; on REVISE the reader is improved first, with DYL-56 remembered-attachment hints the most likely candidate. Gate A NOT_RUN; nothing below starts automatically. Older dated entries are historical.
