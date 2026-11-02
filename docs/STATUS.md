@@ -1,5 +1,9 @@
 # Project status
 
+## M2.3 PR A candidate (draft, unmerged) — 2026-11-02
+
+Draft for owner review under [DYL-196](https://linear.app/devils17/issue/DYL-196/sillynovel-m23-director-pending-target-stale-rules-and-composer-hold): one pending target, an explicit streaming gate, catch-up on returning to the head and the `SUPERSEDED` outcome, in `src/director-controller.mjs` only. Frozen `be6a422`: Node 244/244, discovery PASS. Browser, storage and native suites NOT_RUN under the M2 evidence standard. [PR A record](M2_3_DIRECTOR_IMPLEMENTATION.md). PR B waits for the owner's review; PR C is not authorized. Gate B NOT_RUN.
+
 ## M2.3 authorized (PRs A and B) — 2026-11-02
 
 The owner [ruled on F1–F10](DECISIONS.md#owner-rulings-f1f10--m23-director-queueing--2026-11-02) after the [M2.3 plan](M2_3_DIRECTOR_QUEUEING_PLAN.md) merged at `8cef9a3`: PR A (pending target of depth one, explicit streaming gate, `SUPERSEDED` outcome, ordered stale-result and recovery rules, race matrix) and PR B (read-only composer hold) are authorized and tracked by [DYL-196](https://linear.app/devils17/issue/DYL-196/sillynovel-m23-director-pending-target-stale-rules-and-composer-hold); PR C (automatic layout overlay, background and presence only) is planned but needs its own authorization after A and B have their records. TESTING rows T51–T57 added as NOT_RUN. Runtime unchanged by this entry. Gate B NOT_RUN; DYL-193 open.
