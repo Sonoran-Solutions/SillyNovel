@@ -60,6 +60,24 @@ async function importArt(actorId) {
     await page.waitForFunction(() => document.querySelector('.sillynovel-expression-context').textContent.includes('Temporary expression ready'));
 }
 const toggle = () => page.locator('.sillynovel-director input');
+// M2.4 PR B: the Director line and the disclosure, read as a user reads them.
+const line = () => page.locator('.sillynovel-director-line');
+const untilLine = (pattern, ms) => until(async () => pattern.test(await line().textContent()), 'line ' + pattern, ms);
+const why = () => page.locator('.sillynovel-why');
+const closeControls = () => page.locator('.sillynovel-controls').evaluate(e => { e.open = false; });
+async function openWhy() {
+    await why().waitFor({ state: 'visible' });
+    assert.equal(await why().getAttribute('open'), null, 'closed by default');
+    await why().locator('summary').focus();
+    await page.keyboard.press('Enter');
+    await page.waitForFunction(() => document.querySelector('.sillynovel-why__body').textContent.includes('Session summary'));
+    return why().locator('.sillynovel-why__body');
+}
+async function closeWhy() {
+    await why().locator('summary').focus();
+    await page.keyboard.press('Escape');
+    assert.equal(await why().getAttribute('open'), null, 'Escape closes');
+}
 async function setCeiling(value) {
     const drawer = page.locator('.drawer-icon[title="Extensions"]');
     await drawer.click();
@@ -122,6 +140,7 @@ try {
     // T48 and off by default: a native reply sends nothing extra.
     assert.equal(await toggle().isChecked(), false);
     await control({ reset: true });
+    assert.equal(await page.locator('.sillynovel-director-bar').isVisible(), false, 'no Director line while the director is off');
     await turn('First turn with the director off.');
     await delay(2500);
     assert.deepEqual((await requests()).map(e => e.director), [false]);
@@ -132,6 +151,7 @@ try {
     await importArt(mira.actorId);
     await watchNotices();
     await delay(2500);
+    assert.equal(await line().textContent(), 'Director: on · 0 of 40');
     const maxTokens = await page.evaluate(async () => (await import('/scripts/openai.js')).oai_settings.openai_max_tokens);
 
     // T39, T40, T19, T49: exact payload, decoys absent, neutralized, bytes identical, journal only.
@@ -142,6 +162,8 @@ try {
     await untilDirector(1);
     await delay(1500);
     const held = await inventory();
+    assert.equal(await line().textContent(), 'Director: requesting · 1 of 40');
+    assert.equal(await line().getAttribute('role'), 'status');
     const before = { chat: await page.evaluate(() => JSON.stringify(SillyTavern.getContext().chat)), dom: await page.locator('#chat .mes').count() };
     await page.evaluate(() => { window.__events = []; });
     const [entry] = await directorLog(), wire = JSON.stringify(entry.body);
@@ -159,6 +181,7 @@ try {
     await control({ release: true });
     await untilStatus(/applied 1 temporary expression/);
     assert.ok(await expressionOn('left'));
+    assert.equal(await line().textContent(), 'Director: on · 1 of 40');
     const notice = await statusText();
     assert.match(notice, /1 kept your manual choice/, 'M2.3 PR C: this project locks its background, so the update skips as LOCKED (D4, F7)');
     assert.match(notice, /Suggested location: Harbor/);
@@ -253,6 +276,7 @@ try {
     await delay(8500);
     assert.equal((await directorLog()).length, 0, 'a draft holds the regenerated head past the settle interval and past five idle seconds');
     assert.match(await statusText(), /Director waiting while you type/);
+    assert.match(await line().textContent(), /^Director: waiting · \d+ of 40$/);
     assert.equal(await composerValue(), SECRET + ' kept', 'the composer is byte-identical while the hold is active');
     const keptBefore = await chatLength();
     await page.locator('#send_but').click();
@@ -358,6 +382,9 @@ try {
     await turn('Ceiling reached.');
     await untilStatus(/Director paused: session ceiling 3 reached · manual controls remain available/);
     assert.equal((await directorLog()).length, 3);
+    assert.equal(await line().textContent(), 'Director: paused · 3 of 3');
+    assert.equal(await button('Resume').isDisabled(), true, 'T62: refused at the ceiling');
+    assert.equal(await page.locator('.sillynovel-director-note').textContent(), 'At the session ceiling. The ceiling is set in the extension settings.');
     await button('Clear expression').click();
     await page.waitForFunction(() => document.querySelector('.sillynovel-sprite--left img').dataset.expression === '');
     await turn('Native replies continue while paused.');
@@ -375,6 +402,8 @@ try {
     await turn('While paused.');
     await delay(2600);
     assert.equal((await directorLog()).length, 3);
+    assert.equal(await line().textContent(), 'Director: paused · 3 of 40');
+    assert.equal(await button('Resume').isEnabled(), true);
     await toggle().setChecked(false);
     await toggle().setChecked(true);
     await turn('Resumed.');
@@ -528,6 +557,23 @@ try {
     assert.deepEqual(await inventory(), heldLayout, 'every native file byte-identical across the applied layout');
     pass('T56: location and presence on real host generation apply to the memory-only overlay with (director) read-outs; outfit NO_AUTOMATIC_LAYOUT; saved project, bundle bytes and every native file byte-identical; not dirty');
 
+    // T61, T59 render half (M2.4 PR B): the Director line and "Why this visual?" on a real decision. Reading it writes nothing.
+    await closeControls();
+    assert.equal(await line().isVisible(), true, 'Director line readable with the controls closed');
+    assert.equal(await line().textContent(), 'Director: on · 1 of 40');
+    const anchored = await chatLength(), whyBody = await openWhy(), explained = await whyBody.innerText();
+    for (const expected of ['On stage at this message', 'Background: Harbor · director, message ' + anchored + ' · Project A', 'Decision 1: Applied · APPLIED', 'Background: Harbor (was Forest) · applied', 'Quote from message ' + anchored + ' · Project A: “lantern glows”', 'Session summary', 'Requests: 1 of 40', 'Consecutive failures: 0', 'Outcomes: Applied 1', 'Codes: APPLIED 1', 'Elapsed: minimum ']) assert.ok(explained.includes(expected), expected + ' in ' + explained);
+    assert.match(explained, /Rowan \[[^\]]+\]: absent · director, message \d+ · Project A/);
+    assert.match(explained, /Outfit of Rowan \[[^\]]+\]: Rowan base · NO_AUTOMATIC_LAYOUT · the director does not change outfits/);
+    assert.match(explained, /Mira \[[^\]]+\] expression: Happy · director, message \d+ · Project A/);
+    assert.equal(await why().locator('[role],[aria-live],img,a,script').count(), 0, 'lists only: no live region and no element from the text');
+    const reach = await page.evaluate(() => { const c = document.getElementById('send_textarea'), r = c.getBoundingClientRect(), hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2); return { bottom: document.getElementById('send_form').getBoundingClientRect().bottom, height: innerHeight, hit: hit === c || c.contains(hit) }; });
+    assert.ok(reach.hit && reach.bottom <= reach.height + 1, 'reply field reachable with the disclosure open: ' + JSON.stringify(reach));
+    assert.deepEqual(await inventory(), heldLayout, 'reading the disclosure writes nothing');
+    await closeWhy();
+    await openControls();
+    pass('T61: Director line readable with the controls closed; the closed disclosure opens by keyboard on a real decision, names what is on stage, the decision, its dispositions and quote and the session summary, as lists; Escape closes; reply field reachable; nothing written');
+
     // Forward from the anchored message into the next reply; the request reports the stage as it is; a repeated value is not a move.
     let noticeMark = (await notices()).length;
     await control({ reset: true, fallback: { auto: MOVE } });
@@ -552,6 +598,39 @@ try {
     await button('Jump to Latest').click();
     await untilOverlay();
     pass('T56: an earlier message shows the global layout, and returning to the latest shows the overlay again');
+
+    // T62 (M2.4 PR B): three real failures pause, with the overlay on stage; replying and reading go on; Resume keeps it and requests nothing retroactively.
+    await control({ reset: true, script: [{ content: 'Prose one.' }, { content: 'Prose two.' }, { content: 'Prose three.' }] });
+    for (let i = 1; i <= 3; i++) { await turn('Failure ' + i); await untilDirector(i); await until(async () => (await page.evaluate(() => !!document.querySelector('.sillynovel-director-status'))) && /skipped this reply|Director paused/.test(await statusText()), 'failure ' + i); await delay(200); }
+    await untilLine(/^Director: paused · \d+ of 40$/);
+    const pausedCount = /paused · (\d+) of/.exec(await line().textContent())[1];
+    await closeControls();
+    const pausedWhy = await (await openWhy()).innerText();
+    assert.match(pausedWhy, /Response refused · NOT_SINGLE_JSON/);
+    assert.match(pausedWhy, /Consecutive failures: 3 · Paused: NOT_SINGLE_JSON/);
+    const pausedTurn = await chatLength();
+    await turn('Replying with the disclosure open and the director paused.');
+    assert.equal(await chatLength(), pausedTurn + 2, 'reading and replying unaffected while paused');
+    await delay(2600);
+    assert.equal((await directorLog()).length, 3, 'paused: nothing issued');
+    assert.match(await readout(), /Harbor \(director\)/);
+    await why().evaluate(e => { e.open = false; });
+    await openControls();
+    const beforeResume = await inventory();
+    await button('Resume').click();
+    await untilLine(new RegExp('^Director: on · ' + pausedCount + ' of 40$'));
+    assert.equal(await button('Resume').isVisible(), false);
+    await delay(2600);
+    assert.equal((await directorLog()).length, 3, 'nothing retroactive: the reply before the press is not requested (F6)');
+    assert.match(await readout(), /Harbor \(director\)/, 'overlay kept');
+    assert.equal(await drawn('right'), false, 'overlay presence kept');
+    assert.deepEqual(await inventory(), beforeResume, 'Resume writes nothing: not to chat, cards or settings');
+    await control({ script: [{ auto: AUTO.auto }] });
+    await turn('The next reply after Resume.');
+    await untilDirector(4);
+    await untilLine(new RegExp('^Director: on · ' + (Number(pausedCount) + 1) + ' of 40$'));
+    await assertSavedUntouched();
+    pass('T62: Resume after three real failures keeps the overlay and the count, requests nothing retroactively, writes nothing; the next completed reply is requested once');
 
     // A lock is a manual command: it clears and rebases; the next proposal keeps that field LOCKED and moves the rest (F8, D4).
     await untilOverlay();
@@ -579,6 +658,13 @@ try {
     await untilNoOverlay();
     await assertSavedUntouched();
     pass('T57: a manual background clears the overlay; the saved project is untouched until an explicit save');
+    // M2.4 PR B: the disclosure says what happened to the cleared decision, and the quote stays because the message did not change.
+    const clearedBody = await (await openWhy()).innerText();
+    assert.match(clearedBody, /Background: Harbor \(was Forest\) · applied · cleared by your layout change/);
+    assert.match(clearedBody, /Background: Forest · your layout/);
+    assert.match(clearedBody, /“lantern glows”/);
+    await closeWhy();
+    pass('T61: a decision cleared by a manual layout command reads "cleared by your layout change" on the real host');
 
     // A real message edit at the anchor invalidates; it is not a completion and nothing is retried.
     await button('Release lock').click();
@@ -597,6 +683,12 @@ try {
     await delay(2600);
     assert.equal((await directorLog()).length, 1, 'an edit is not a completion, and an invalidated change is not retried');
     pass('T57: a real message edit at the anchor invalidates the automatic layout from the first changed source; not retried');
+    // T60's words on a real edit: the excerpt is gone, the outcome and code stay.
+    const editedBody = await (await openWhy()).innerText();
+    assert.match(editedBody, /Decision \d+: Applied · APPLIED · \d+ ms · message changed/);
+    assert.doesNotMatch(editedBody, /Quote from|lantern glows/);
+    await closeWhy();
+    pass('T60: a real message edit deletes the excerpt from the disclosure and shows "message changed"; outcome and code stay');
 
     // Disable, detach, chat switch, A -> B -> A and reload each discard it.
     const moveAgain = async text => { const n = (await directorLog()).length; await control({ script: [{ auto: MOVE }] }); await turn(text); await untilDirector(n + 1); await untilOverlay(); };
@@ -617,6 +709,11 @@ try {
     await page.waitForFunction(() => document.querySelector('.sillynovel-director').hidden);
     await reopenClean();
     pass('T57: detach discards the overlay; an explicit reopen shows the global layout');
+    // No temporary expression artwork after the reopen: E11 keeps the director idle, and the line says so.
+    await turn('No artwork this time.');
+    await untilStatus(/Director idle: no expression artwork imported/);
+    assert.equal(await line().textContent(), 'Director: idle · 0 of 40');
+    pass('Director line reads idle when no expression artwork is imported (E11, G11)');
     await importArt(roamMira.actorId);
     await moveAgain('First visit of A.');
     await select('Project B');

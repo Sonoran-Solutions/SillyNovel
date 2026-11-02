@@ -78,7 +78,7 @@ async function setup(t, { enabled = true, ceiling, request, group = false, onlin
     const expression = (target = model) => target.get().scene.view.cast[0].expression;
     // A keystroke, or a draft change, as the adapter would observe it: record the event, then wake the runtime.
     const type = (change = {}) => { Object.assign(typing, { last: time.now() }, change); runtime.composerInput(); };
-    return { harbor, typing, type, notices, context, host, reader, time, calls, runtime, actions, record, actor, other, sprite, background, model, art, attach, complete, proposal, answer, expression, refresh, get settings() { return settings; }, get saved() { return saved; }, get uploads() { return uploads; } };
+    return { harbor, typing, type, notices, context, host, reader, time, calls, runtime, actions, record, actor, other, sprite, background, model, art, attach, complete, proposal, answer, expression, refresh, get settings() { return settings; }, setSettings: value => { settings = value; }, get saved() { return saved; }, get uploads() { return uploads; } };
 }
 const ok = text => ({ ok: true, text });
 const status = x => x.model.directorStatus();
@@ -1488,4 +1488,122 @@ test('F8: an entry whose layout commands were cleared by a manual layout command
     assert.equal(entry.code, 'APPLIED');
     assert.equal(entry.messageChanged, false, 'cleared is not message changed');
     assert.equal(entry.updates[0].evidence.excerpt, 'Mira');
+});
+
+// M2.4 PR B: T62 and the Director line's word.
+const failTimes = async (x, n, from = 0) => { for (let i = 0; i < n; i++) { await x.complete({ text: 'Failure ' + (from + i) }); await x.answer(from + i, ok('Prose instead of JSON.')); } };
+test('T62: Resume clears the pause and the failure run, keeps overlay, count, log and tallies, and issues nothing retroactively', async t => {
+    const x = await setup(t, { free: true });
+    await x.complete();
+    await x.answer(0, LAYOUT(x).propose({ op: 'setLocation', backgroundId: harborRef(x) }));
+    assert.equal(view(x).background.id, x.harbor);
+    await failTimes(x, 3, 1);
+    assert.equal(status(x).paused, 'NOT_SINGLE_JSON');
+    assert.equal(status(x).consecutive, 3);
+    await x.complete({ text: 'A reply while paused.' });
+    const { count, log, tallies } = status(x), scene = x.model.get().scene.view.background.id;
+    assert.equal(x.model.resumeDirector(), true);
+    assert.equal(status(x).paused, null);
+    assert.equal(status(x).consecutive, 0);
+    assert.equal(status(x).count, count, 'count kept');
+    assert.deepEqual(status(x).log, log, 'log kept');
+    assert.deepEqual(status(x).tallies, tallies, 'tallies kept');
+    assert.equal(view(x).background.id, scene, 'overlay kept');
+    assert.equal(view(x).background.origin, 'automatic');
+    assert.match(status(x).notice, /^Director resumed\./);
+    await x.model.sync(false);
+    await x.time.advance(SETTLE_MS * 3);
+    assert.equal(x.calls.length, 4, 'the reply before the press is not requested (F6)');
+    await x.complete({ text: 'The next reply.' });
+    assert.equal(x.calls.length, 5, 'the next completed reply is');
+});
+test('T62: a reply that completed while paused and is still settling when Resume is pressed is not requested (F6)', async t => {
+    const x = await setup(t);
+    await failTimes(x, 3);
+    assert.equal(status(x).paused, 'NOT_SINGLE_JSON');
+    await x.complete({ text: 'Settling when Resume is pressed.', settle: false });
+    assert.equal(x.model.resumeDirector(), true);
+    await x.time.advance(SETTLE_MS * 2);
+    assert.equal(x.calls.length, 3);
+    await x.complete({ text: 'The next reply.' });
+    assert.equal(x.calls.length, 4);
+});
+test('T62: Resume is refused at the ceiling with a note, stays paused, and works once the ceiling is raised; a director that is not paused has nothing to resume', async t => {
+    const x = await setup(t, { ceiling: 1 });
+    assert.equal(x.model.resumeDirector(), false);
+    assert.equal(status(x).notice, '', 'nothing to resume: no notice');
+    await x.complete();
+    await x.answer(0, ok(x.proposal(x.art)));
+    assert.equal(status(x).paused, 'CEILING');
+    assert.equal(x.model.resumeDirector(), false);
+    assert.equal(status(x).paused, 'CEILING');
+    assert.match(status(x).notice, /session ceiling 1 reached\. The ceiling is set in the extension settings\./);
+    await x.complete({ text: 'Refused means no request.' });
+    assert.equal(x.calls.length, 1);
+    const raised = { ...x.settings, sessionCeiling: 2 };
+    x.runtime.setEnabled(x.record.projectId, true);
+    x.setSettings(raised);
+    const settings = x.settings;
+    assert.equal(x.model.resumeDirector(), true);
+    assert.equal(status(x).paused, null);
+    assert.deepEqual(x.settings, settings, 'Resume writes no setting');
+    await x.complete({ text: 'Within the raised ceiling.' });
+    assert.equal(x.calls.length, 2);
+});
+test('T62: Resume during an abandoned request leaves the slot held; the late result is discarded and the next reply fires once', async t => {
+    const x = await setup(t);
+    for (let i = 0; i < 3; i++) { await x.complete({ text: 'Hung ' + i }); assert.equal(x.calls.length, i + 1); await x.time.advance(ABANDON_MS); if (i < 2) { x.calls[i].resolve(ok('late')); await flush(); } }
+    assert.equal(status(x).paused, 'ABANDONED');
+    assert.equal(x.model.resumeDirector(), true);
+    assert.equal(status(x).state, 'requesting', 'the third is still in the slot');
+    await x.complete({ text: 'Waits for the slot.' });
+    assert.equal(x.calls.length, 3);
+    x.calls[2].resolve(ok(x.proposal(x.art)));
+    await until(() => x.calls.length === 4);
+    assert.notEqual(x.expression()?.origin, 'automatic', 'the late result never applied');
+});
+test('Director line word: idle, on, waiting, requesting, paused, each visible through a change notification', async t => {
+    const x = await setup(t, { importArt: false });
+    assert.equal(status(x).state, 'on');
+    await x.complete();
+    assert.equal(status(x).state, 'idle', 'no expression artwork');
+    assert.match(status(x).notice, /no expression artwork/);
+    const y = await setup(t);
+    assert.equal(status(y).state, 'on');
+    await y.complete({ settle: false });
+    assert.equal(status(y).state, 'waiting', 'a target waits through the settle interval');
+    await y.time.advance(SETTLE_MS);
+    assert.equal(status(y).state, 'requesting');
+    await y.answer(0, ok(y.proposal(y.art)));
+    assert.equal(status(y).state, 'on');
+    await failTimes(y, 3, 1);
+    assert.equal(status(y).state, 'paused');
+    const z = await setup(t, { online: 'no_connection' });
+    assert.equal(status(z).state, 'idle', 'no connection');
+    const u = await setup(t, { inspect: () => ({ ok: false, missing: ['generateRawData'] }), enabled: false, importArt: false });
+    assert.equal(status(u).state, 'idle', 'no host path');
+});
+test('Director line word: a target dropped without a notice and a freed slot still notify the renderer', async t => {
+    const x = await setup(t);
+    await x.complete({ settle: false });
+    assert.equal(status(x).state, 'waiting');
+    let told = 0;
+    const before = x.notices.length;
+    x.context.chat.pop();
+    x.refresh();
+    await x.model.sync(false);
+    await x.time.advance(SETTLE_MS);
+    told += x.notices.length - before;
+    assert.equal(status(x).state, 'on', 'dropped: a superseded head is never requested');
+    assert.ok(told > 0);
+    assert.equal(x.calls.length, 0);
+    const y = await setup(t);
+    await y.complete();
+    await y.time.advance(ABANDON_MS);
+    const mark = y.notices.length;
+    assert.equal(status(y).state, 'requesting', 'abandoned, yet still in the slot');
+    y.calls[0].resolve(ok('late'));
+    await flush();
+    assert.equal(status(y).state, 'on');
+    assert.ok(y.notices.length > mark, 'the freed slot told the renderer');
 });
