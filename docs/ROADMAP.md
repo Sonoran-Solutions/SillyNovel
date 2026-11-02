@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## M2.3 complete — 2026-11-02
+
+PR C [accepted](DECISIONS.md#owner-acceptance--m23-pr-c-merged-m23-complete--2026-11-02) at `174d380`; [DYL-203](https://linear.app/devils17/issue/DYL-203/sillynovel-m23-pr-c-automatic-layout-overlay-for-background-and) Done. M2.3 is complete. M2.4 planning (evidence UI, Gate B candidate) is the next bounded step and should take up open question O08 (a default the director may move) and the DYL-193 device replay before the Gate B session; it starts only on a recorded owner authorization. Gate B stays gated.
+
 ## M2.3 PR C candidate — 2026-11-02
 
 The automatic layout overlay is implemented as a [draft PR](M2_3_DIRECTOR_IMPLEMENTATION.md#pr-c--automatic-layout-overlay) awaiting owner review. If it merges, M2.3 is complete; M2.4 planning and Gate B stay separately gated. Nothing is marked done here.
