@@ -1,5 +1,9 @@
 # Decision register
 
+## Owner acceptance of DYL-60 candidate and PR #34 merge — 2026-11-01
+
+**Approving owner: Dylan. Date: 2026-11-01, America/Phoenix. Status: APPROVED.** The owner reviewed the prepared [PR #34](https://github.com/Sonoran-Solutions/SillyNovel/pull/34) summary and instructed the merge; the owner also accepted closing DYL-60, DYL-62 and DYL-63 as Done. Merge commit `91d638ab933b4dc503b7b88e99be41bd5aa76504`; tested runtime `c5c1699a48629ae761a093e13056f0b11fdc4b88`. This records acceptance of the bounded technical correction and candidate preparation only. It is not a Gate A verdict, not an amendment of F1 or of the remaining physical/assistive acceptance requirements, and not authorization for M1.3/M2, DYL-56, DYL-61, live installation or release. **Gate A remains NOT_RUN.** A separate owner decision on the NOT_TESTED surfaces listed in [STATUS](STATUS.md) is still required before the playtest.
+
 ## Owner approvals and DYL-60 authorization — 2026-10-16
 
 **Approving owner: Dylan. Date: 2026-10-16, America/Phoenix. Status: APPROVED.** The owner stated “I agree with those recommendations.” The subsequent explicit assignment identifies all five rulings below and separately authorizes DYL-60 technical preparation. This supersedes the pending choices in the historical M1.4-A proposal below; older records remain historical.

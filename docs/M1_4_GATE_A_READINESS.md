@@ -6,6 +6,8 @@
 
 DYL-60 current correction at `c5c1699a48629ae761a093e13056f0b11fdc4b88` fixes keyboard/composer visibility on the tested Galaxy Tab S8+ configuration and the P3 launch-directory discovery finding. [New exact-candidate campaign and physical evidence](M1_4_DYL60_KEYBOARD_FIX.md). Original `6f8252699dae3a92f639f94531bba221d5e1cc02` desktop/native evidence remains historical. Scaling/motion/assistive coverage remains NOT_TESTED; full readiness REVISE. Gate A NOT_RUN and separately gated. No later milestone, live installation, release or merge authorization.
 
+**Update 2026-11-01:** PR #34 merged at `91d638ab933b4dc503b7b88e99be41bd5aa76504`, runtime equal to `c5c1699a48629ae761a093e13056f0b11fdc4b88`; DYL-60 Done. Gate A still NOT_RUN pending the owner's decision on the remaining NOT_TESTED surfaces. See [STATUS](STATUS.md).
+
 ## Historical PR #33 preflight
 
 Review: **2026-10-16, America/Phoenix**. Documentation/evidence only; stop for senior and owner review. **Decision F: undecided. Gate A: NOT_RUN. DYL-60: Backlog, execution not started.**
