@@ -1,11 +1,11 @@
-/** One quiet director request per completed head. See docs/M2_2_DIRECTOR_IMPLEMENTATION.md. */
+/** One quiet director request per completed head; one target waits. See docs/M2_2_DIRECTOR_IMPLEMENTATION.md and docs/M2_3_DIRECTOR_IMPLEMENTATION.md. */
 import { checkProposalEvidence, validateProposal } from './director-proposal.mjs';
 import { buildDirectorRequest, parseDirectorResponse } from './director-request.mjs';
 import { mirrorScene, routeProposal } from './director-session.mjs';
 import { evidenceStamp } from './transient-scene.mjs';
 
 export const SETTLE_MS = 2000, ABANDON_MS = 90000, DEFAULT_CEILING = 40, FAILURE_LIMIT = 3;
-const MANUAL_OK = ' · manual controls remain available';
+const MANUAL_OK = ' · manual controls remain available', WAITING = '1 reply waiting: Jump to Latest to direct it';
 export const validCeiling = value => Number.isSafeInteger(value) && value >= 1 && value <= 200;
 
 /**
@@ -14,7 +14,7 @@ export const validCeiling = value => Number.isSafeInteger(value) && value >= 1 &
  * @param {{request: Function, inspect: Function, read: Function, write: Function, setTimer?: Function, clearTimer?: Function}} host
  */
 export function createDirectorRuntime({ request, inspect, read, write, setTimer = (fn, ms) => setTimeout(fn, ms), clearTimer = id => clearTimeout(id) }) {
-    const sessions = new Map();
+    const sessions = new Map(), released = new Set();
     let inFlight = false;
     const settings = () => { const value = read(); return value && typeof value === 'object' ? value : {}; };
     return {
@@ -28,14 +28,15 @@ export function createDirectorRuntime({ request, inspect, read, write, setTimer 
         },
         ceiling() { const value = settings().sessionCeiling; return validCeiling(value) ? value : DEFAULT_CEILING; },
         session(projectId) {
-            if (!sessions.has(projectId)) sessions.set(projectId, { count: 0, consecutive: 0, paused: null, skipped: 0, ledger: new Set() });
+            if (!sessions.has(projectId)) sessions.set(projectId, { count: 0, consecutive: 0, paused: null, ledger: new Set() });
             return sessions.get(projectId);
         },
         endSession(projectId) { sessions.delete(projectId); },
+        onRelease(wake) { released.add(wake); return () => released.delete(wake); },
         async send(messages) {
             inFlight = true;
             // generateRawData takes no signal: the slot is released only by settlement.
-            try { return await request(messages); } catch { return { ok: false, code: 'TRANSPORT_ERROR' }; } finally { inFlight = false; }
+            try { return await request(messages); } catch { return { ok: false, code: 'TRANSPORT_ERROR' }; } finally { inFlight = false; for (const wake of released) wake(); }
         },
     };
 }
@@ -45,17 +46,18 @@ export function createDirectorRuntime({ request, inspect, read, write, setTimer 
  * @param {{runtime: object, projectId: string, actions: object, expressions: object, layout: Function, changed: Function}} deps
  */
 export function createDirectorController({ runtime, projectId, actions, expressions, layout, changed }) {
-    let disposed = false, armed = null, settleTimer = null, ticket = null, abandonTimer = null, notice = '';
+    let disposed = false, pending = null, settleTimer = null, firing = false, ticket = null, abandonTimer = null, notice = '';
     // Attaching or enabling is not a completion: only a later reply can spend the ceiling.
     let seenGeneration = actions.getSnapshot().generation.id;
     const session = () => runtime.session(projectId);
     const say = text => { notice = text; if (!disposed) changed(); };
-    const clearSettle = () => { if (settleTimer !== null) runtime.clearTimer(settleTimer); settleTimer = null; armed = null; };
+    const dropPending = () => { if (settleTimer !== null) runtime.clearTimer(settleTimer); settleTimer = null; pending = null; if (notice === WAITING) say(''); };
+    const stopWaiting = runtime.onRelease(wake);
     const clearAbandon = () => { if (abandonTimer !== null) runtime.clearTimer(abandonTimer); abandonTimer = null; };
     function failure(code) {
         const state = session();
         state.consecutive++;
-        if (state.consecutive >= FAILURE_LIMIT) { state.paused = code; say('Director paused: ' + code + MANUAL_OK); } else say('Director skipped this reply: ' + code + MANUAL_OK);
+        if (state.consecutive >= FAILURE_LIMIT) { state.paused = code; dropPending(); say('Director paused: ' + code + MANUAL_OK); } else say('Director skipped this reply: ' + code + MANUAL_OK);
     }
     function capture(snapshot, history, token) {
         const { scene, actors, assets, media } = layout(), journal = expressions.get();
@@ -85,25 +87,40 @@ export function createDirectorController({ runtime, projectId, actions, expressi
     function hasExpressionWork(scene, expressionAssets) {
         return scene.view.cast.some(actor => actor.present && expressionAssets.some(asset => asset.characterKey === actor.key && asset.outfitId === (actor.outfit?.id ?? null)));
     }
-    async function fire(target) {
-        if (disposed || !runtime.enabled(projectId)) return;
-        const fresh = actions.getSceneEvidence(true), g = fresh.snapshot.generation;
+    // Plan 4.2: the first failing gate decides whether the target waits or is dropped. Returns the ledger key when all hold.
+    function gates(target, snapshot) {
+        const g = snapshot.generation, state = session();
+        if (state.paused || !runtime.enabled(projectId)) return dropPending();
+        // F5: before the identity check, because a started generation always has a new id. It then replaces or drops the target.
+        if (g.status === 'streaming') return null;
         // E15: a head superseded during the interval is never requested and spends nothing.
-        if (g.id !== target.generationId || g.status !== 'complete' || g.sourceKey !== target.key || g.sourceRevision !== target.revision || fresh.snapshot.head?.sourceKey !== target.key) return;
-        const state = session();
-        if (state.paused) return;
+        if (g.id !== target.generationId || g.status !== 'complete' || g.sourceKey !== target.key || g.sourceRevision !== target.revision || snapshot.head?.sourceKey !== target.key) return dropPending();
+        const head = snapshot.head, key = JSON.stringify([snapshot.sessionEpoch, snapshot.owner, target.key, head.revision, head.swipeId ?? 0]);
+        if (state.ledger.has(key)) return dropPending();
+        if (snapshot.cursor?.sourceKey !== target.key) { if (notice !== WAITING) say(WAITING); return null; }
+        if (runtime.inFlight) return null;
         const host = runtime.inspect();
-        if (!host.ok) return say('Director unavailable: this host has no generation path for it.');
-        if (host.online === 'no_connection') return say('Director idle: no connection selected');
-        const head = fresh.snapshot.head;
-        const key = JSON.stringify([fresh.snapshot.sessionEpoch, fresh.snapshot.owner, target.key, head.revision, head.swipeId ?? 0]);
-        if (state.ledger.has(key)) return;
-        if (fresh.snapshot.cursor?.sourceKey !== target.key) { state.skipped++; return say(state.skipped + (state.skipped === 1 ? ' reply' : ' replies') + ' not directed while reading earlier messages'); }
-        if (runtime.inFlight) { state.skipped++; return say(state.skipped + (state.skipped === 1 ? ' reply' : ' replies') + ' not directed while a request is outstanding'); }
-        if (state.count >= runtime.ceiling()) { state.paused = 'CEILING'; return say('Director paused: session ceiling ' + runtime.ceiling() + ' reached' + MANUAL_OK); }
-        if (!await expressions.sync()) return;
-        const { snapshot, history } = actions.getSceneEvidence(false);
-        if (disposed || runtime.inFlight || snapshot.generation.id !== target.generationId || snapshot.cursor?.sourceKey !== target.key) return;
+        if (!host.ok) { dropPending(); say('Director unavailable: this host has no generation path for it.'); return null; }
+        if (host.online === 'no_connection') { dropPending(); say('Director idle: no connection selected'); return null; }
+        // After the slot: the last permitted result must still get its chance to apply (E7).
+        if (state.count >= runtime.ceiling()) { state.paused = 'CEILING'; dropPending(); say('Director paused: session ceiling ' + runtime.ceiling() + ' reached' + MANUAL_OK); return null; }
+        return key;
+    }
+    // Every entry re-checks from fresh evidence; firing spans settlement, so a waiting target fires only after the result is handled (F6).
+    function wake() {
+        if (disposed || firing || !pending?.settled) return;
+        const target = pending;
+        firing = true;
+        fire(target).catch(error => { if (pending === target) dropPending(); if (!disposed) say('Director skipped this reply: ' + error.message); }).finally(() => { firing = false; if (pending !== target) wake(); });
+    }
+    async function fire(target) {
+        if (!gates(target, actions.getSceneEvidence(true).snapshot)) return;
+        // An unresolved or superseded sync leaves the target for the next observe to re-check.
+        if (!await expressions.sync() || disposed || pending !== target) return;
+        const { snapshot, history } = actions.getSceneEvidence(false), key = gates(target, snapshot);
+        if (!key) return;
+        dropPending();
+        const state = session();
         const token = expressions.token(), captured = capture(snapshot, history, token);
         if (!hasExpressionWork(captured.scene, captured.expressionAssets)) return say('Director idle: no expression artwork imported');
         if (!captured.mirror || !token.source) return failure('INVALID_SCENE');
@@ -111,20 +128,20 @@ export function createDirectorController({ runtime, projectId, actions, expressi
         try { request = buildDirectorRequest(requestInput(captured, history)); } catch (error) { return failure(error.message); }
         state.ledger.add(key);
         state.count++;
-        const current = ticket = { token, proposalToken: proposalToken(captured, snapshot, token, request.promptVersion), mirror: captured.mirror, window: request.window, texts: request.texts, abandoned: false, anchored: target.key };
+        const current = ticket = { token, proposalToken: proposalToken(captured, snapshot, token, request.promptVersion), mirror: captured.mirror, window: request.window, texts: request.texts, abandoned: false, anchored: target.key, generationId: target.generationId };
         abandonTimer = runtime.setTimer(() => {
             abandonTimer = null;
             if (ticket !== current) return;
             current.abandoned = true;
             ticket = null;
             session().consecutive++;
-            if (session().consecutive >= FAILURE_LIMIT) session().paused = 'ABANDONED';
+            if (session().consecutive >= FAILURE_LIMIT) { session().paused = 'ABANDONED'; dropPending(); }
             say(session().paused === 'ABANDONED' ? 'Director paused: ABANDONED' + MANUAL_OK : 'Director request still outstanding' + MANUAL_OK);
         }, ABANDON_MS);
         say('Director request in progress' + MANUAL_OK);
         await settle(current, await runtime.send(request.messages));
         // E7: a cap hit pauses at once, after the last permitted result has had its chance to apply.
-        if (!disposed && !state.paused && state.count >= runtime.ceiling()) { state.paused = 'CEILING'; say(notice + ' Director paused: session ceiling ' + runtime.ceiling() + ' reached' + MANUAL_OK); }
+        if (!disposed && !state.paused && state.count >= runtime.ceiling()) { state.paused = 'CEILING'; dropPending(); say(notice + ' Director paused: session ceiling ' + runtime.ceiling() + ' reached' + MANUAL_OK); }
     }
     // Stale before anything else: E7 does not count a stale result as a failure, whatever it says.
     async function stillCurrent(current) {
@@ -137,12 +154,18 @@ export function createDirectorController({ runtime, projectId, actions, expressi
         const source = expressions.sources().find(item => item.key === current.anchored);
         return checkProposalEvidence(current.proposalToken, snapshot, captured.mirror, source).accepted && !session().paused ? captured : null;
     }
+    // F4: a reply generation started after capture. Epoch: a chat switch is not a reply. Quiet and impersonate generations produce none.
+    function superseded(current) {
+        const { sessionEpoch, generation: g } = actions.getSceneEvidence(true).snapshot;
+        return sessionEpoch === current.proposalToken.authority.sessionEpoch && g.id !== null && g.id !== current.generationId && g.type !== 'quiet' && g.type !== 'impersonate';
+    }
     async function settle(current, result) {
         if (disposed || ticket !== current) return;
         clearAbandon();
         const captured = await stillCurrent(current);
         if (disposed || ticket !== current) return;
         ticket = null;
+        if (!captured && superseded(current)) return say('Director request superseded by your reply');
         if (!captured || result.code === 'ABORTED') return say('Director request cancelled.');
         if (!result.ok) return failure(result.code);
         const parsed = parseDirectorResponse(result.text);
@@ -172,21 +195,23 @@ export function createDirectorController({ runtime, projectId, actions, expressi
         observe() {
             if (disposed) return;
             const snapshot = actions.getSnapshot(), g = snapshot.generation;
-            if (armed && armed.generationId !== g.id) clearSettle();
-            if (g.status !== 'complete' || g.id === seenGeneration) return;
-            seenGeneration = g.id;
-            if (!runtime.enabled(projectId) || g.sourceKey !== snapshot.head?.sourceKey) return;
-            clearSettle();
-            const target = armed = { generationId: g.id, key: g.sourceKey, revision: g.sourceRevision };
-            settleTimer = runtime.setTimer(() => { settleTimer = null; armed = null; fire(target).catch(error => { if (!disposed) say('Director skipped this reply: ' + error.message); }); }, SETTLE_MS);
+            if (g.status === 'complete' && g.id !== seenGeneration) {
+                seenGeneration = g.id;
+                dropPending();
+                if (runtime.enabled(projectId) && g.sourceKey === snapshot.head?.sourceKey) {
+                    const target = pending = { generationId: g.id, key: g.sourceKey, revision: g.sourceRevision, settled: false };
+                    settleTimer = runtime.setTimer(() => { settleTimer = null; target.settled = true; wake(); }, SETTLE_MS);
+                }
+            }
+            wake();
         },
         setEnabled(on) {
             runtime.setEnabled(projectId, on);
             if (on) { session().paused = null; session().consecutive = 0; seenGeneration = actions.getSnapshot().generation.id; say('Director on for this project. It reacts to the next completed reply.'); return; }
-            clearSettle(); clearAbandon(); ticket = null;
+            dropPending(); clearAbandon(); ticket = null;
             say('Director off for this project.');
         },
         status() { const host = runtime.inspect(), state = session(); return { available: host.ok, enabled: runtime.enabled(projectId), notice, count: state.count, ceiling: runtime.ceiling(), paused: state.paused }; },
-        dispose() { disposed = true; clearSettle(); clearAbandon(); ticket = null; },
+        dispose() { disposed = true; stopWaiting(); dropPending(); clearAbandon(); ticket = null; },
     };
 }

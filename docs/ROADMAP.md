@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## M2.3 PR A candidate (draft, unmerged) — 2026-11-02
+
+Plan section 6 PR A is implemented on a draft PR with Node evidence ([PR A record](M2_3_DIRECTOR_IMPLEMENTATION.md)). Next bounded step: owner review, then PR B. PR C needs its own authorization (F9).
+
 ## M2.3 authorized (PRs A and B) — 2026-11-02
 
 [F1–F10 ruled](DECISIONS.md#owner-rulings-f1f10--m23-director-queueing--2026-11-02); [DYL-196](https://linear.app/devils17/issue/DYL-196/sillynovel-m23-director-pending-target-stale-rules-and-composer-hold) implements plan section 6 PR A (pure controller change, Node evidence) and then PR B (composer hold, full native-host campaign), each reviewed by the owner before the next. PR C, the automatic layout overlay, is authorized separately after that or deferred to M2.4 (F9). M2.4 and Gate B stay gated.
