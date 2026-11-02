@@ -20,6 +20,9 @@ function ownerKey(owner) {
     return JSON.stringify([owner.chatId ?? null, owner.groupId ?? null, owner.characterId ?? null, owner.scope ?? 'unknown', owner.groupSessionKey ?? null, owner.groupVerified ?? null]);
 }
 
+// quiet and impersonate never write a reply; their end must not resolve the head.
+const REPLY_TYPES = ['normal', 'continue', 'regenerate', 'swipe'];
+
 export function createReaderSourceModel() {
     let sessionEpoch = 0;
     let owner = null;
@@ -32,6 +35,7 @@ export function createReaderSourceModel() {
     let generationSequence = 0;
     let generation = null;
     let generationStartMessageCount = 0;
+    let generationStartKeys = new Set();
     let sourceRevision = 0;
     let sourceOrderRevision = 0;
     let viewRevision = 0;
@@ -104,7 +108,7 @@ function revise(snapshot, previous) {
             }
             if (addedAtEnd) newMessageCount = Math.min(99, newMessageCount + addedAtEnd);
         }
-        if (generation?.status === 'streaming' && !generation.sourceKey) {
+        if (generation?.status === 'streaming' && !generation.sourceKey && REPLY_TYPES.includes(generation.type)) {
             const candidate = records.find((record) => record?.index >= generationStartMessageCount
                 && record.author.kind === 'character' && !priorKeys.includes(record.sourceKey));
             if (candidate) generation = { ...generation, sourceKey: candidate.sourceKey, sourceRevision: candidate.revision };
@@ -152,7 +156,7 @@ function revise(snapshot, previous) {
             } else {
                 newMessageCount = Math.min(99, newMessageCount + 1);
             }
-            if (generation?.status === 'streaming' && !generation.sourceKey
+            if (generation?.status === 'streaming' && !generation.sourceKey && REPLY_TYPES.includes(generation.type)
                 && head?.index >= generationStartMessageCount && head.author.kind === 'character') {
                 generation = { ...generation, sourceKey: head.sourceKey, sourceRevision: head.revision };
             }
@@ -203,21 +207,43 @@ function revise(snapshot, previous) {
                 sourceRevision: mayReuseHead ? head.revision : null,
                 status: 'streaming',
                 stopped: false,
+                observed: false,
+                ended: false,
             };
             generationStartMessageCount = records.length;
+            generationStartKeys = new Set(records.filter(Boolean).map((record) => record.sourceKey));
             viewRevision++;
         } else if (observation.type === 'generationStopped') {
             if (generation) generation = { ...generation, status: 'stopped-partial', stopped: true };
             viewRevision++;
         } else if (observation.type === 'generationEnded') {
-            if (generation && !generation.stopped) generation = { ...generation, status: 'unknown' };
+            if (generation && !generation.stopped && generation.status !== 'complete') generation = { ...generation, status: 'unknown', ended: true };
             viewRevision++;
         }
 
-        if (Array.isArray(observation.history)) return reconcile(observation.history, { kind: observation.type });
-        if (Array.isArray(observation.sources)) return reconcileSample(observation.sources, observation.messageCount);
-        if (observation.source) return updateTracked([observation.source]);
+        if (Array.isArray(observation.history)) reconcile(observation.history, { kind: observation.type });
+        else if (Array.isArray(observation.sources)) reconcileSample(observation.sources, observation.messageCount);
+        else if (observation.source) updateTracked([observation.source]);
+        resolveCompletion(observation);
         return getSnapshot();
+    }
+
+    // E4 as amended: a reply observation and a generation end for the same generation, in
+    // either order, with no stop. The pinned host ends streamed replies before announcing them.
+    function resolveCompletion(observation) {
+        if (!generation || generation.stopped || !REPLY_TYPES.includes(generation.type)) return;
+        if (observation.type === 'messageReceived' || observation.type === 'characterMessageRendered') {
+            const key = observation.source?.sourceKey;
+            const record = records.find((item) => item?.sourceKey === key);
+            // Message events report 'normal' for regenerate and 'appendFinal' for continue; only the start type is used.
+            if (record?.author.kind === 'character' && (generation.sourceKey === key || (!generation.sourceKey && !generationStartKeys.has(key)))) {
+                generation = { ...generation, sourceKey: key, sourceRevision: record.revision, observed: true };
+            }
+        }
+        if (generation.observed && generation.ended && generation.status !== 'complete') {
+            generation = { ...generation, status: 'complete' };
+            viewRevision++;
+        }
     }
 
     function adjacent(direction) {

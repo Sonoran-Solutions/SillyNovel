@@ -462,3 +462,43 @@ test('owner-transition dry run resets the visit without inventing an active gene
  assert.equal(after.sessionEpoch,before.sessionEpoch+1);assert.equal(after.owner.chatId,'B');assert.equal(after.cursor.sourceKey,'new');
  assert.equal(after.generation.id,null);assert.equal(after.generation.status,'unknown');
 });
+
+test('E4 complete: reply observation and end for one generation, either order; stop, quiet and unnamed sources never complete', () => {
+    const reply = (key, text = 'reply') => ({ ...message(key, text, 1), author: { kind: 'character', label: 'Mira' } });
+    const user = message('user', 'hello', 0, { kind: 'user' });
+    const run = (type, steps, seed = [user]) => {
+        const model = createReaderSourceModel();
+        model.activate(seed, { chatId: 'A', characterId: 1, scope: 'character' });
+        model.apply({ type: 'generationStarted', generationType: type, dryRun: false });
+        for (const step of steps) model.apply(step);
+        return model.getSnapshot().generation;
+    };
+    const received = { type: 'messageReceived', generationType: 'normal', source: reply('new'), history: [user, reply('new')] };
+    const rendered = { ...received, type: 'characterMessageRendered' };
+    const ended = { type: 'generationEnded', history: [user, reply('new')] };
+    const stopped = { type: 'generationStopped' };
+    for (const type of ['normal', 'regenerate']) {
+        assert.equal(run(type, [received, rendered, ended]).status, 'complete', type + ' plain order');
+        assert.equal(run(type, [ended, received, rendered]).status, 'complete', type + ' streamed order');
+    }
+    assert.equal(run('normal', [ended, received]).sourceKey, 'new');
+    assert.equal(run('normal', [ended]).status, 'unknown');
+    assert.equal(run('normal', [received]).status, 'streaming');
+    assert.equal(run('normal', [ended, stopped, received, rendered]).status, 'stopped-partial', 'pinned streamed Stop');
+    assert.equal(run('normal', [ended, stopped]).status, 'stopped-partial', 'pinned plain Stop');
+    for (const type of ['quiet', 'impersonate']) {
+        const quiet = run(type, [received, rendered, ended]);
+        assert.equal(quiet.status, 'unknown', type);
+        assert.equal(quiet.sourceKey, null, type);
+    }
+    const head = reply('head');
+    for (const type of ['continue', 'swipe']) {
+        const again = { type: 'messageReceived', generationType: 'appendFinal', source: reply('head', 'more'), history: [user, reply('head', 'more')] };
+        assert.equal(run(type, [again, { type: 'generationEnded' }], [user, head]).status, 'complete', type);
+        assert.equal(run(type, [{ type: 'generationEnded' }, again], [user, head]).sourceKey, 'head', type);
+    }
+    // A reply to something already in the chat, not this generation's reply, proves nothing.
+    assert.equal(run('normal', [{ ...received, source: head, history: [user, head] }, { type: 'generationEnded' }], [user, head]).status, 'unknown');
+    const later = run('normal', [received, ended, { type: 'generationEnded' }, { type: 'messageEdited', source: reply('new', 'edited'), history: [user, reply('new', 'edited')] }]);
+    assert.equal(later.status, 'complete', 'duplicate end and a later edit keep the status; the revision moves');
+});

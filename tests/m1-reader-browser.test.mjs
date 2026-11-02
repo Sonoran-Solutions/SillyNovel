@@ -957,3 +957,27 @@ test('eventless group generation start survives activation and refuses expressio
  await button(page,'Previous').click();await page.waitForFunction(()=>!document.querySelector('[aria-label="Expression to apply · selected source only"]').disabled);assert.equal(await message(page).innerText(),'Stable older B');
  assert.equal(await page.locator('#send_textarea').isEnabled(),true);assert.equal(await page.locator('.sillynovel-unsaved').getAttribute('data-state'),'saved');
 });
+for(const order of ['streamed','plain','stopped'])test('T05/E4 actual entry: freshly generated head, '+order+' order, manual expression availability',async t=>{
+ const x=await attachedExpressions(t),{page}=x,draft='Draft kept';
+ await page.locator('#send_textarea').fill(draft);
+ await page.evaluate(order=>{
+  const c=fixture.context,fired=name=>fixture.emit(name,c.chat.length-1,'normal');
+  fixture.emit('GENERATION_STARTED','normal',{},false);
+  c.chat.push({name:'Mira',mes:'A freshly generated reply.',swipe_id:0});fixture.renderNative();
+  if(order==='plain'){fired('MESSAGE_RECEIVED');fired('CHARACTER_MESSAGE_RENDERED');fixture.emit('GENERATION_ENDED',c.chat.length);}
+  else if(order==='streamed'){fixture.emit('GENERATION_ENDED',c.chat.length);fired('MESSAGE_RECEIVED');fired('CHARACTER_MESSAGE_RENDERED');}
+  else{fixture.emit('GENERATION_ENDED',c.chat.length);fixture.emit('GENERATION_STOPPED');fired('MESSAGE_RECEIVED');fired('CHARACTER_MESSAGE_RENDERED');}
+ },order);
+ assert.equal(await message(page).innerText(),'A freshly generated reply.');
+ if(order==='stopped'){
+  // Node covers the status itself; here a stopped head stays readable and writes nothing.
+  assert.equal(await page.evaluate(()=>fixture.context.chat.length),3);
+ }else{
+  await page.waitForFunction(()=>!document.querySelector('[aria-label="Expression to apply · selected source only"]').disabled);
+  const id=await x.upload();await x.apply(id);assert.ok(await x.image.getAttribute('data-expression'));
+  assert.equal(await page.locator('.sillynovel-unsaved').getAttribute('data-state'),'saved');
+  await page.evaluate(()=>fixture.emit('GENERATION_STARTED','continue',{},false));
+  await page.waitForFunction(()=>document.querySelector('[aria-label="Expression to apply · selected source only"]').disabled,undefined,{timeout:5000});
+ }
+ assert.equal(await page.locator('#send_textarea').inputValue(),draft);
+});

@@ -80,6 +80,12 @@ Section 4 states nothing blocks replying, and `AGENTS.md` says failed providers 
 
 A group turn completes each member in turn with the next `started` immediately after, so requesting on every member's completion would issue up to four requests per turn, three of them stale but still counted toward the ceiling under E6. Proposed: wait a short settle interval after completion and re-check before issuing, with the interval measured in the native campaign.
 
+## E4 as implemented
+
+`generation.status` gains `complete`, with `observed` and `ended` fields on the record, under the amended ruling: a `messageReceived` or `characterMessageRendered` naming the generation's source and a `generationEnded`, in either order, with no `generationStopped`. A source already in the chat before the generation started cannot bind a `normal` or `regenerate` generation. `quiet` and `impersonate` never bind a source and never complete.
+
+**Behaviour change to merged M1:** a manual temporary expression can now be applied to a freshly completed head, without first navigating away. `GENERATION_ENDED` with no reply observation still stays `unknown` and still refuses the head. A later edit or swipe-back keeps `complete` on the record; the source revision moves and the director's request rule (section 7) keys on generation, so neither triggers a request.
+
 ## 4. Not done
 
 Everything after the probe: E4 reader change, adapter method, request assembly, parser, controller, journal origin, UI, tests, `tests/probes/dyl60/run.py` registration, TESTING rows, STATUS and ROADMAP entries, draft PR. No runtime file changed, so no Node, browser, storage or native campaign suite was run, and none is claimed.
