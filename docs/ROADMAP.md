@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## M2.4 PR C go-ahead — 2026-11-02
+
+[Go-ahead recorded](DECISIONS.md#owner-go-ahead--m24-pr-c-corrections-and-the-o08-control--2026-11-02); [DYL-205](https://linear.app/devils17/issue/DYL-205/sillynovel-m24-pr-c-manual-corrections-correction-locks-and-the-o08) implements plan section 7 PR C (corrections and the O08 control). PR D follows on its own go-ahead; the Gate B sequence after it is unchanged.
+
 ## M2.4 PRs A and B merged — 2026-11-02
 
 PR B [accepted](DECISIONS.md#owner-acceptance--m24-pr-b-merged--2026-11-02) at `8203ea1`; [DYL-204](https://linear.app/devils17/issue/DYL-204/sillynovel-m24-director-decision-log-and-evidence-ui-prs-a-and-b) Done. PR C (corrections and O08 control, renderer and overlay, full campaign) and PR D (Gate B readiness, tests and docs only) follow on the owner's separate go-aheads under G1. The Gate B sequence after PR D is unchanged: frozen candidate with the full campaign, DYL-193 replay, fixture evaluation on the owner's named connection, the owner's session, the owner's verdict.
