@@ -122,3 +122,9 @@
 .sillynovel-controls summary { position: sticky; top: 0; z-index: 1; background: var(--SmartThemeBlurTintColor, #202020); }
 /* The host hides file inputs globally; these native pickers must remain focusable. */
 .sillynovel-control input[type="file"] { display: block; }
+
+.sillynovel-director[hidden] { display: none; }
+.sillynovel-director-help,
+.sillynovel-director-status { margin: 0.25rem 0; font-size: 0.9em; }
+.sillynovel-settings__ceiling { display: block; margin-top: 0.5rem; }
+.sillynovel-settings__ceiling input { width: 5em; }

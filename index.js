@@ -1,6 +1,7 @@
 import { createHostAdapter } from './src/host-adapter.mjs';
 import { createShellController } from './src/shell.mjs';
 import { createMessageFormatter, mountReader } from './src/reader-view.mjs';
+import { createDirectorRuntime, DEFAULT_CEILING, validCeiling } from './src/director-controller.mjs';
 
 async function install() {
     const document = globalThis.document;
@@ -31,7 +32,17 @@ async function install() {
     status.id = 'sillynovel-settings-status';
     status.setAttribute('role', 'status');
     status.setAttribute('aria-live', 'polite');
-    root.append(label, status);
+    const ceilingLabel = document.createElement('label');
+    ceilingLabel.className = 'sillynovel-settings__ceiling';
+    ceilingLabel.textContent = 'Director requests per project session ';
+    const ceiling = document.createElement('input');
+    ceiling.type = 'number';
+    ceiling.id = 'sillynovel-director-ceiling';
+    ceiling.min = '1';
+    ceiling.max = '200';
+    ceiling.step = '1';
+    ceilingLabel.append(ceiling);
+    root.append(label, ceilingLabel, status);
     settingsHost.appendChild(root);
     checkbox.setAttribute('aria-describedby', status.id);
 
@@ -71,6 +82,32 @@ async function install() {
         }
     }
 
+    function readDirector() {
+        try {
+            return getContext()?.extensionSettings?.sillynovel?.director ?? null;
+        } catch {
+            return null;
+        }
+    }
+
+    // Host settings only (E5): never in the project schema, never carried by bundles.
+    function saveDirector(director) {
+        const context = getContext();
+        const current = context?.extensionSettings?.sillynovel;
+        context.extensionSettings.sillynovel = { ...(current && typeof current === 'object' ? current : {}), director };
+        context.saveSettingsDebounced();
+    }
+
+    const director = createDirectorRuntime({ request: adapter.requestDirectorText, inspect: adapter.inspectDirector, read: readDirector, write: saveDirector });
+    const showCeiling = () => { ceiling.value = String(director.ceiling()); };
+    showCeiling();
+    ceiling.addEventListener('change', () => {
+        const value = Number(ceiling.value);
+        if (validCeiling(value)) saveDirector({ ...(readDirector() ?? {}), sessionCeiling: value });
+        else setStatus('Use a whole number from 1 to 200. The default is ' + DEFAULT_CEILING + '.');
+        showCeiling();
+    });
+
     let controller;
     const view = {
         mountStage(_source, snapshot) {
@@ -82,6 +119,7 @@ async function install() {
                 getSnapshot: controller.getReaderSnapshot,
                 getRequestHeaders: () => getContext().getRequestHeaders(),
                 getSceneEvidence: controller.getSceneEvidence,
+                director,
                 fail: view.reportFailure,
             } });
         },

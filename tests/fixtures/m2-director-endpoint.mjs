@@ -61,4 +61,4 @@ const server = createServer(async (req, res) => {
     res.once('close', () => { if (!res.writableFinished) entry.aborted = true; });
     await (isDirector ? director(req, res, entry) : native(res, body, entry));
 });
-if (process.argv[1] === new URL(import.meta.url).pathname) server.listen(PORT, '127.0.0.1', () => console.log('director endpoint listening on ' + PORT));
+if (process.argv[1] === new URL(import.meta.url).pathname) server.listen(PORT, '127.0.0.1', () => console.log('director endpoint listening on ' + server.address().port));
