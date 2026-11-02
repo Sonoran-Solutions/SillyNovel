@@ -1,0 +1,168 @@
+[
+  {
+    "name": "node",
+    "candidate": "02a3a966b79a4a3db909fa86281707bcf5927032",
+    "command": "node --test --test-isolation=none /home/dq/Projects/SillyNovel/.claude/worktrees/fervent-tereshkova-0a0540/tests/m0.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/fervent-tereshkova-0a0540/tests/m1-reader-source.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/fervent-tereshkova-0a0540/tests/m1-source-prefix.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/fervent-tereshkova-0a0540/tests/m1-scene-reducer.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/fervent-tereshkova-0a0540/tests/m1-project-scene.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/fervent-tereshkova-0a0540/tests/m1-project-expressions.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/fervent-tereshkova-0a0540/tests/m2-director-proposal.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/fervent-tereshkova-0a0540/tests/m2-director-request.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/fervent-tereshkova-0a0540/tests/m2-director-controller.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/fervent-tereshkova-0a0540/tests/probes/dyl19/owned-chat-probe.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/fervent-tereshkova-0a0540/tests/probes/dyl19/source-anchor.test.mjs",
+    "environment": {},
+    "startedUTC": "2026-11-02T15:09:10.626753+00:00",
+    "endedUTC": "2026-11-02T15:09:14.563081+00:00",
+    "elapsedSeconds": 3.936,
+    "exitCode": 0,
+    "log": "node.txt",
+    "checkpointCount": 0,
+    "tests": 251,
+    "pass": 251,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  {
+    "name": "storage",
+    "candidate": "02a3a966b79a4a3db909fa86281707bcf5927032",
+    "command": "node --test --test-isolation=none /home/dq/Projects/SillyNovel/.claude/worktrees/fervent-tereshkova-0a0540/plugins/sillynovel-storage/test/bundle.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/fervent-tereshkova-0a0540/plugins/sillynovel-storage/test/cleanup.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/fervent-tereshkova-0a0540/plugins/sillynovel-storage/test/library.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/fervent-tereshkova-0a0540/plugins/sillynovel-storage/test/recovery.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/fervent-tereshkova-0a0540/plugins/sillynovel-storage/test/store.test.mjs",
+    "environment": {},
+    "startedUTC": "2026-11-02T15:09:14.569759+00:00",
+    "endedUTC": "2026-11-02T15:11:27.788919+00:00",
+    "elapsedSeconds": 133.219,
+    "exitCode": 0,
+    "log": "storage.txt",
+    "checkpointCount": 0,
+    "tests": 126,
+    "pass": 126,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  {
+    "name": "browser",
+    "candidate": "02a3a966b79a4a3db909fa86281707bcf5927032",
+    "command": "node --test --test-isolation=none /home/dq/Projects/SillyNovel/.claude/worktrees/fervent-tereshkova-0a0540/tests/m1-reader-browser.test.mjs",
+    "environment": {},
+    "startedUTC": "2026-11-02T15:11:27.795844+00:00",
+    "endedUTC": "2026-11-02T15:12:41.790782+00:00",
+    "elapsedSeconds": 73.995,
+    "exitCode": 0,
+    "log": "browser.txt",
+    "checkpointCount": 0,
+    "tests": 92,
+    "pass": 92,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  {
+    "name": "stage-library-migration",
+    "candidate": "02a3a966b79a4a3db909fa86281707bcf5927032",
+    "command": "node tests/probes/project-portability/host.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-fervent-tereshkova-0a0540/869a5f8e-ef46-4e3d-8c7c-0f2323983c3d/scratchpad/st-pinned",
+    "environment": {
+      "SN_STAGE_UX_RUN": "1",
+      "SN_LIBRARY_RUN": "1",
+      "SN_MIGRATION_RUN": "1"
+    },
+    "startedUTC": "2026-11-02T15:12:41.797684+00:00",
+    "endedUTC": "2026-11-02T15:14:24.273150+00:00",
+    "elapsedSeconds": 102.475,
+    "exitCode": 0,
+    "log": "stage-library-migration.txt",
+    "checkpointCount": 24,
+    "ownedRoot": "/tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-fervent-tereshkova-0a0540/869a5f8e-ef46-4e3d-8c7c-0f2323983c3d/scratchpad/tmp/sn-portability-host-X3ucmm",
+    "result": "PASS"
+  },
+  {
+    "name": "expressions",
+    "candidate": "02a3a966b79a4a3db909fa86281707bcf5927032",
+    "command": "node tests/probes/project-portability/host.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-fervent-tereshkova-0a0540/869a5f8e-ef46-4e3d-8c7c-0f2323983c3d/scratchpad/st-pinned",
+    "environment": {
+      "SN_EXPRESSIONS_RUN": "1"
+    },
+    "startedUTC": "2026-11-02T15:14:24.285734+00:00",
+    "endedUTC": "2026-11-02T15:15:27.049711+00:00",
+    "elapsedSeconds": 62.764,
+    "exitCode": 0,
+    "log": "expressions.txt",
+    "checkpointCount": 16,
+    "ownedRoot": "/tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-fervent-tereshkova-0a0540/869a5f8e-ef46-4e3d-8c7c-0f2323983c3d/scratchpad/tmp/sn-portability-host-jtJB4r",
+    "result": "PASS"
+  },
+  {
+    "name": "groups",
+    "candidate": "02a3a966b79a4a3db909fa86281707bcf5927032",
+    "command": "node tests/probes/project-portability/host.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-fervent-tereshkova-0a0540/869a5f8e-ef46-4e3d-8c7c-0f2323983c3d/scratchpad/st-pinned",
+    "environment": {
+      "SN_GROUP_RUN": "1"
+    },
+    "startedUTC": "2026-11-02T15:15:27.057927+00:00",
+    "endedUTC": "2026-11-02T15:16:53.233598+00:00",
+    "elapsedSeconds": 86.176,
+    "exitCode": 0,
+    "log": "groups.txt",
+    "checkpointCount": 22,
+    "ownedRoot": "/tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-fervent-tereshkova-0a0540/869a5f8e-ef46-4e3d-8c7c-0f2323983c3d/scratchpad/tmp/sn-portability-host-JeOnQG",
+    "result": "PASS"
+  },
+  {
+    "name": "recovery",
+    "candidate": "02a3a966b79a4a3db909fa86281707bcf5927032",
+    "command": "node tests/probes/project-portability/host.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-fervent-tereshkova-0a0540/869a5f8e-ef46-4e3d-8c7c-0f2323983c3d/scratchpad/st-pinned",
+    "environment": {
+      "SN_RECOVERY_RUN": "1"
+    },
+    "startedUTC": "2026-11-02T15:16:53.243304+00:00",
+    "endedUTC": "2026-11-02T15:17:51.409674+00:00",
+    "elapsedSeconds": 58.166,
+    "exitCode": 0,
+    "log": "recovery.txt",
+    "checkpointCount": 17,
+    "ownedRoot": "/tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-fervent-tereshkova-0a0540/869a5f8e-ef46-4e3d-8c7c-0f2323983c3d/scratchpad/tmp/sn-portability-host-XOqbO1",
+    "result": "PASS"
+  },
+  {
+    "name": "cleanup",
+    "candidate": "02a3a966b79a4a3db909fa86281707bcf5927032",
+    "command": "node tests/probes/project-portability/host.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-fervent-tereshkova-0a0540/869a5f8e-ef46-4e3d-8c7c-0f2323983c3d/scratchpad/st-pinned",
+    "environment": {
+      "SN_CLEANUP_RUN": "1"
+    },
+    "startedUTC": "2026-11-02T15:17:51.419286+00:00",
+    "endedUTC": "2026-11-02T15:19:12.712902+00:00",
+    "elapsedSeconds": 81.294,
+    "exitCode": 0,
+    "log": "cleanup.txt",
+    "checkpointCount": 21,
+    "ownedRoot": "/tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-fervent-tereshkova-0a0540/869a5f8e-ef46-4e3d-8c7c-0f2323983c3d/scratchpad/tmp/sn-portability-host-ZytqU5",
+    "result": "PASS"
+  },
+  {
+    "name": "native-integrity-branches",
+    "candidate": "02a3a966b79a4a3db909fa86281707bcf5927032",
+    "command": "node tests/probes/project-portability/host.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-fervent-tereshkova-0a0540/869a5f8e-ef46-4e3d-8c7c-0f2323983c3d/scratchpad/st-pinned",
+    "environment": {
+      "SN_CANDIDATE_RUN": "1"
+    },
+    "startedUTC": "2026-11-02T15:19:12.721771+00:00",
+    "endedUTC": "2026-11-02T15:20:37.494121+00:00",
+    "elapsedSeconds": 84.772,
+    "exitCode": 0,
+    "log": "native-integrity-branches.txt",
+    "checkpointCount": 18,
+    "ownedRoot": "/tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-fervent-tereshkova-0a0540/869a5f8e-ef46-4e3d-8c7c-0f2323983c3d/scratchpad/tmp/sn-portability-host-DiXWgx",
+    "result": "PASS"
+  },
+  {
+    "name": "director",
+    "candidate": "02a3a966b79a4a3db909fa86281707bcf5927032",
+    "command": "node tests/probes/m2-director/host.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-fervent-tereshkova-0a0540/869a5f8e-ef46-4e3d-8c7c-0f2323983c3d/scratchpad/st-pinned",
+    "environment": {},
+    "startedUTC": "2026-11-02T15:20:37.512861+00:00",
+    "endedUTC": "2026-11-02T15:27:30.089560+00:00",
+    "elapsedSeconds": 412.577,
+    "exitCode": 0,
+    "log": "director.txt",
+    "checkpointCount": 20,
+    "ownedRoot": "/tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-fervent-tereshkova-0a0540/869a5f8e-ef46-4e3d-8c7c-0f2323983c3d/scratchpad/tmp/sn-m2-director-e7gd5i",
+    "result": "PASS"
+  }
+]

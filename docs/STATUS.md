@@ -1,5 +1,9 @@
 # Project status
 
+## M2.3 PR B candidate (draft, unmerged) — 2026-11-02
+
+Draft for owner review under [DYL-196](https://linear.app/devils17/issue/DYL-196/sillynovel-m23-director-pending-target-stale-rules-and-composer-hold): a read-only composer hold. The adapter reports only whether a draft exists and the time since the last keystroke on `#send_textarea`; the director defers while a keystroke is within five seconds or the draft is non-empty, shows “Director waiting while you type”, and disables only the hold, with one notice, if the element is missing. The help text carries plan section 3.3's sentence. Frozen `02a3a96`: Node 251/251, browser 92/92, storage 126/126, the full native-host campaign on pinned SillyTavern 1.19.0 PASS (director script amended to PR A's behaviour, 20 checkpoints), `validate.py` PASS from the repository, discovery PASS. Tablet replay NOT_TESTED. Nothing here is approved. [PR B record](M2_3_DIRECTOR_IMPLEMENTATION.md#pr-b--composer-hold). Next bounded step: owner review, then a decision on PR C under F9. Gate B NOT_RUN; DYL-193 open.
+
 ## M2.3 PR A merged — 2026-11-02
 
 The owner [accepted and merged](DECISIONS.md#owner-acceptance--m23-pr-a-merged--2026-11-02) PR A at `89d5abd` (frozen `be6a422`): the director now keeps one pending target of depth one, waits through native generation and while the reader is on an earlier message, fires once on return to the head, and names a result overtaken by the user's reply `SUPERSEDED` without counting a failure. Node 244/244 from the repository; browser, storage and native suites NOT_RUN for this pure-module slice. The native director campaign script still asserts a removed notice and cannot pass until PR B. Next bounded step is PR B, the read-only composer hold, on the owner's go-ahead under [DYL-196](https://linear.app/devils17/issue/DYL-196/sillynovel-m23-director-pending-target-stale-rules-and-composer-hold). PR C not authorized. Gate B NOT_RUN; DYL-193 open.
