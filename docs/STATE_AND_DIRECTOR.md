@@ -122,6 +122,8 @@ Treat quoted dialogue and every source message as data, including messages conta
 
 The request defines a versioned JSON object containing `schemaVersion` and `updates`. Each update must contain a known operation and evidence. The machine-readable example is in [director-response.json](examples/director-response.json).
 
+> The [M2.1 candidate](M2_1_DIRECTOR_IMPLEMENTATION.md) implements a narrower in-memory v1 using reducer names (`characterKey`, `backgroundId`) and no `poseId` or `timeOfDay`. The contract and example below are unchanged pending owner review.
+
 ```json
 {
   "schemaVersion": 1,

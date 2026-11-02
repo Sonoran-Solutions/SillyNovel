@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## M2.1 implementation candidate for review — 2026-11-01
+
+[Candidate record](M2_1_DIRECTOR_IMPLEMENTATION.md): pure proposal validation, lock precedence and snapshot checks with deterministic fixtures, in one draft PR awaiting owner review. Nothing is wired into the runtime. M2.2 stays blocked on O04 and O06 and needs separate authorization. Gate B NOT_RUN. Older dated entries are historical.
+
 ## M2.1 implementation authorized — 2026-11-01
 
 [D1 approved](DECISIONS.md#owner-authorization--m21-director-implementation--2026-11-01); [DYL-194](https://linear.app/devils17/issue/DYL-194/sillynovel-m21-director-proposals-lock-precedence-and-snapshot) implements plan sections 3–7 on the proposed defaults. M2.2 remains blocked on owner decisions O04 (first director transport) and O06 (usage limits/content scope). Gate B NOT_RUN. Older dated entries are historical.
