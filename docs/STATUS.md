@@ -1,5 +1,9 @@
 # Project status
 
+## Gate A deferral amendment recorded — 2026-11-01
+
+The owner [deferred the remaining NOT_TESTED surfaces](DECISIONS.md#owner-amendment--deferred-coverage-for-the-first-disposable-gate-a-playtest--2026-11-01) to [DYL-193](https://linear.app/devils17/issue/DYL-193/sillynovel-m14-deferred-physical-scaling-motion-assistive-and) for the first disposable playtest only. The playtest candidate is merged main `04ce6290c7bb5dab0dd0502e2cde931936796897` (runtime equal to `c5c1699a48629ae761a093e13056f0b11fdc4b88`). Nothing else changed: the [playtest sheet](M1_4_GATE_A_READINESS.md#6-owner-playtest-sheet--draft-session-not_run) and [setup recipe](M1_4_DYL60_REPRODUCTION.md) are the session materials; the disposable pinned host checkout must be recreated before the session because the earlier `/tmp` roots are gone. **Gate A remains NOT_RUN** until the owner records a verdict. No M1.3/M2, DYL-56, DYL-61, live installation or release authorization.
+
 ## DYL-60 owner acceptance and PR #34 merge — 2026-11-01
 
 **Owner (Dylan) accepted and merged [PR #34](https://github.com/Sonoran-Solutions/SillyNovel/pull/34) at merge commit `91d638ab933b4dc503b7b88e99be41bd5aa76504` on 2026-11-01, America/Phoenix.** The merged runtime is byte-identical to frozen correction `c5c1699a48629ae761a093e13056f0b11fdc4b88`; the frozen campaign and actual Galaxy Tab S8+ evidence in [the keyboard correction record](M1_4_DYL60_KEYBOARD_FIX.md) apply to the merged head. Before merging, the Node suites, `tests/probes/dyl60/check-discovery.py` and `tests/probes/dyl60/validate.py` were rerun on the head and passed; the browser, storage and native campaigns were not rerun because the disposable pinned host checkout no longer existed, so that evidence is reused, not fresh. DYL-60, DYL-62 and DYL-63 are now Done in Linear with their original acceptance text and remaining limits preserved.

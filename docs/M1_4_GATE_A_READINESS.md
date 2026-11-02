@@ -220,6 +220,8 @@ After evidence/hash verification and reviewer release, remove only the individua
 
 An independent reviewer uses a fresh checkout of the same full SHA, the same host/runtime/browser pins and manifest assets, then runs the same serial commands and compares scenario outcomes/input hashes, not random UUIDs or timestamp-dependent native filenames across runs. Record new evidence roots and maps for that run. Any candidate input change requires a new full SHA and fresh applicable validation; do not assemble a freeze from unrelated PR runs.
 
+**Session preparation note — 2026-11-01:** the candidate for the first disposable session is merged main `04ce6290c7bb5dab0dd0502e2cde931936796897` (runtime equal to `c5c1699a48629ae761a093e13056f0b11fdc4b88`). The owner [deferred](DECISIONS.md#owner-amendment--deferred-coverage-for-the-first-disposable-gate-a-playtest--2026-11-01) the section 7 scaling/motion/assistive/secondary-flow rows to [DYL-193](https://linear.app/devils17/issue/DYL-193/sillynovel-m14-deferred-physical-scaling-motion-assistive-and) for this session only. Recreate the disposable pinned host per [the reproduction recipe](M1_4_DYL60_REPRODUCTION.md); the earlier `/tmp` roots no longer exist. Fill the header fields below before starting. Session still NOT_RUN.
+
 ## 6. Owner playtest sheet — draft, session NOT_RUN
 
 Before starting a later separately authorized session, fill: `candidate full SHA / approved Decision F and format scope record / host full SHA+version / browser+device / theme+extensions / assets / tester/date / evidence location`. Use synthetic conversation/art for shareable captures; keep private owner observations/art outside Git. Technical evidence must already identify remaining limits.
