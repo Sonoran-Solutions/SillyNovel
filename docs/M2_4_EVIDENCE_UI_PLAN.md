@@ -332,4 +332,4 @@ This document could not settle G5–G8 (corrections and O08), G9–G11 (evaluati
 
 Recommended next bounded step: owner review of this plan and a recorded statement on G1–G14, with G12 first since it may change the sequence. If G1 is approved, PR A is one focused branch owning `src/director-log.mjs`, the controller and session changes, their Node tests and `docs/M2_4_EVIDENCE_UI_IMPLEMENTATION.md`, with dated entries in STATUS, ROADMAP, TESTING and DECISIONS; later PRs follow only after the owner's review of the previous one. This document starts nothing.
 
-**Final pushed head:** FINAL_HEAD_PLACEHOLDER
+**Plan content frozen at** `c68c212ece97083cc3da3c626741f7e05a32f22c`. The commit that adds this line changes only this line and is the final pushed head; a commit cannot name its own SHA, so the exact head is in the PR description and the shared hand-over note.
