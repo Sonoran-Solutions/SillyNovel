@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## M2.1 merged — 2026-11-01
+
+[Accepted](DECISIONS.md#owner-acceptance--m21-implementation-merged--2026-11-01) at `c5f1f3d3f8356cebc2805b7b67b22a6a8d76ed7b`. M2.2 (one configured text-director path, bounded context, strict proposal validation over a real transport) is next and is blocked on owner decisions O04 and O06; no planning or implementation starts without them. Gate B NOT_RUN.
+
 ## M2.1 implementation candidate for review — 2026-11-01
 
 [Candidate record](M2_1_DIRECTOR_IMPLEMENTATION.md): pure proposal validation, lock precedence and snapshot checks with deterministic fixtures, in one draft PR awaiting owner review. Nothing is wired into the runtime. M2.2 stays blocked on O04 and O06 and needs separate authorization. Gate B NOT_RUN. Older dated entries are historical.
