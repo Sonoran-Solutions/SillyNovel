@@ -1,5 +1,9 @@
 # Project status
 
+## M2.2 implementation candidate for review — 2026-11-01
+
+Draft PR for [DYL-195](https://linear.app/devils17/issue/DYL-195/sillynovel-m22-one-text-director-transport-over-the-hosts-generation), frozen at `d5664119d060d72f90aee4e3a386fdf409843a5c`: one quiet director request per completed head over `generateRawData` on the user's selected connection, off by default, applying temporary expressions through the memory-only journal. Reader status `complete` is live, so manual temporary expressions can now apply to a freshly completed head. Synthetic evidence: 227 Node, 126 storage, 88 browser, seven native campaigns including a new director campaign on the pinned host. Tablet replay NOT_TESTED; real providers NOT_TESTED. [Record](M2_2_DIRECTOR_IMPLEMENTATION.md). Not merged. Gate B NOT_RUN. Older entries below are historical.
+
 ## M2.2 probe rulings — 2026-11-01
 
 The M2.2 host probe contradicted the plan in three places; the owner [accepted all four resulting proposals](DECISIONS.md#owner-rulings-after-the-m22-host-probe--2026-11-01): E4 completion in either event order, E9 extended to angle-bracket name markers, E15 settle interval, E16 Send-during-request recorded as a limitation and Gate B question. [DYL-195](https://linear.app/devils17/issue/DYL-195/sillynovel-m22-one-text-director-transport-over-the-hosts-generation) implementation resumes at E4. Gate B NOT_RUN.

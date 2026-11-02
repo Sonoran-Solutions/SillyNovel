@@ -1,0 +1,1248 @@
+{
+  "host": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
+  "node": "v26.8.1",
+  "personaActive": {
+    "name1": "Decoy Traveller",
+    "description": "DECOY-PERSONA-DESCRIPTION-7f3a"
+  },
+  "onlineStatus": {
+    "beforeConnect": "no_connection",
+    "mainApi": "openai",
+    "requestWhileNoConnection": {
+      "ok": true,
+      "endpointSaw": 1,
+      "thrown": null
+    },
+    "afterConnect": "Valid"
+  },
+  "wire": {
+    "result": {
+      "ok": true,
+      "text": "{\"schemaVersion\":1,\"updates\":[]}",
+      "dataKeys": [
+        "id",
+        "created",
+        "model",
+        "object",
+        "choices"
+      ]
+    },
+    "events": [
+      {
+        "name": "chat_completion_prompt_ready",
+        "args": [
+          "[object]"
+        ]
+      },
+      {
+        "name": "chat_completion_settings_ready",
+        "args": [
+          "[object]"
+        ]
+      }
+    ],
+    "endpointMessages": [
+      {
+        "role": "system",
+        "name": "",
+        "content": "SillyNovel visual director probe"
+      },
+      {
+        "role": "user",
+        "name": "",
+        "content": "Exact data block."
+      }
+    ],
+    "endpointBodyKeys": [
+      "messages",
+      "model",
+      "temperature",
+      "max_tokens",
+      "stream",
+      "presence_penalty",
+      "frequency_penalty",
+      "top_p"
+    ],
+    "stream": false,
+    "maxTokens": 300,
+    "hostRequestKeys": [
+      "type",
+      "messages",
+      "model",
+      "temperature",
+      "frequency_penalty",
+      "presence_penalty",
+      "top_p",
+      "max_tokens",
+      "stream",
+      "chat_completion_source",
+      "user_name",
+      "char_name",
+      "group_names",
+      "include_reasoning",
+      "enable_web_search",
+      "request_images",
+      "request_image_resolution",
+      "request_image_aspect_ratio",
+      "custom_prompt_post_processing",
+      "custom_url",
+      "custom_include_body",
+      "custom_exclude_body",
+      "custom_include_headers"
+    ],
+    "hostType": "quiet",
+    "hostUserName": "Decoy Traveller",
+    "hostCharName": "Probe Card",
+    "hostGroupNames": [],
+    "decoysAbsent": true,
+    "personaNameInHostRequest": true,
+    "personaNameAtEndpoint": false,
+    "cardNameAtEndpoint": false
+  },
+  "bytes": {
+    "files": 78,
+    "changed": [],
+    "chatUnchanged": true,
+    "domUnchanged": true,
+    "maxTokensUnchanged": true,
+    "maxTokens": 300
+  },
+  "mutation": {
+    "sameArray": true,
+    "inputAfter": [
+      {
+        "role": "user",
+        "name": "",
+        "content": "x y"
+      }
+    ]
+  },
+  "macros": {
+    "{{persona}}": {
+      "arrived": "[DECOY-PERSONA-DESCRIPTION-7f3a]",
+      "unchanged": false
+    },
+    "{{input}}": {
+      "arrived": "[COMPOSER-DRAFT]",
+      "unchanged": false
+    },
+    "{{getvar::x}}": {
+      "arrived": "[]",
+      "unchanged": false
+    },
+    "{{char}}": {
+      "arrived": "[Probe Card]",
+      "unchanged": false
+    },
+    "{{user}}": {
+      "arrived": "[Decoy Traveller]",
+      "unchanged": false
+    },
+    "{{{persona}}}": {
+      "arrived": "[{DECOY-PERSONA-DESCRIPTION-7f3a}]",
+      "unchanged": false
+    },
+    "{{time_UTC-10}}": {
+      "arrived": "[6:01 PM]",
+      "unchanged": false
+    },
+    "{ {persona} }": {
+      "arrived": "[{ {persona} }]",
+      "unchanged": true
+    },
+    "{ {input} }": {
+      "arrived": "[{ {input} }]",
+      "unchanged": true
+    },
+    "{ {char} }": {
+      "arrived": "[{ {char} }]",
+      "unchanged": true
+    },
+    "{ {user} }": {
+      "arrived": "[{ {user} }]",
+      "unchanged": true
+    },
+    "{ { {persona} } }": {
+      "arrived": "[{ { {persona} } }]",
+      "unchanged": true
+    },
+    "{ { {": {
+      "arrived": "[{ { {]",
+      "unchanged": true
+    },
+    "} } }": {
+      "arrived": "[} } }]",
+      "unchanged": true
+    },
+    "{ {// comment} }": {
+      "arrived": "[{ {// comment} }]",
+      "unchanged": true
+    },
+    "<USER>": {
+      "arrived": "[Decoy Traveller]",
+      "unchanged": false
+    },
+    "<BOT>": {
+      "arrived": "[Probe Card]",
+      "unchanged": false
+    },
+    "<CHAR>": {
+      "arrived": "[Probe Card]",
+      "unchanged": false
+    },
+    "<GROUP>": {
+      "arrived": "[Probe Card]",
+      "unchanged": false
+    },
+    "<CHARIFNOTGROUP>": {
+      "arrived": "[Probe Card]",
+      "unchanged": false
+    },
+    "<user>": {
+      "arrived": "[Decoy Traveller]",
+      "unchanged": false
+    },
+    "<bot>": {
+      "arrived": "[Probe Card]",
+      "unchanged": false
+    },
+    "< USER>": {
+      "arrived": "[< USER>]",
+      "unchanged": true
+    },
+    "<USER >": {
+      "arrived": "[<USER >]",
+      "unchanged": true
+    },
+    "{ {#if x} }": {
+      "arrived": "[{ {#if x} }]",
+      "unchanged": true
+    },
+    "\\{\\{persona\\}\\}": {
+      "arrived": "[{{persona}}]",
+      "unchanged": false
+    },
+    "\\{ \\{persona\\} \\}": {
+      "arrived": "[{ {persona} }]",
+      "unchanged": false
+    },
+    "$1": {
+      "arrived": "[$1]",
+      "unchanged": true
+    },
+    "%%": {
+      "arrived": "[%%]",
+      "unchanged": true
+    },
+    "${x}": {
+      "arrived": "[${x}]",
+      "unchanged": true
+    }
+  },
+  "textCompletion": {
+    "plain": "INSTRUCTION\nDATA\n",
+    "instruct": "### Input:\nINSTRUCTION\n\n### Instruction:\nDATA\n\n### Response:\n",
+    "instructPreset": "Alpaca"
+  },
+  "failures": {
+    "http500": {
+      "ok": false,
+      "thrown": {
+        "name": "Error",
+        "message": "Internal Server Error"
+      },
+      "toasts": [
+        {
+          "cls": "toast toast-error interactable",
+          "text": "API returned an errorInternal Server Error"
+        }
+      ]
+    },
+    "http429": {
+      "ok": false,
+      "thrown": {
+        "name": "Error",
+        "message": "Too Many Requests"
+      },
+      "toasts": [
+        {
+          "cls": "toast toast-error interactable",
+          "text": "API returned an errorToo Many Requests"
+        }
+      ]
+    },
+    "ok200error": {
+      "ok": false,
+      "thrown": {
+        "name": "Error",
+        "message": "refused by provider"
+      },
+      "toasts": [
+        {
+          "cls": "toast toast-error interactable",
+          "text": "API returned an errorrefused by provider"
+        }
+      ]
+    },
+    "emptyChoices": {
+      "ok": true,
+      "text": "",
+      "toasts": []
+    },
+    "emptyContent": {
+      "ok": true,
+      "text": "",
+      "toasts": []
+    },
+    "nullContent": {
+      "ok": true,
+      "text": "",
+      "toasts": []
+    },
+    "refusal": {
+      "ok": true,
+      "text": "",
+      "toasts": []
+    },
+    "contentParts": {
+      "ok": true,
+      "text": "part-apart-b",
+      "toasts": []
+    },
+    "reasoningField": {
+      "ok": true,
+      "text": "visible",
+      "toasts": []
+    }
+  },
+  "sendDuring": {
+    "stopVisibleForDirectorOnly": false,
+    "sendVisible": true,
+    "replyText": "*The lantern glows.* \"Welcome to the reading room,\" Mira says.",
+    "chatGrewBy": 2,
+    "directorResult": {
+      "ok": true,
+      "text": "{\"late\":true}"
+    },
+    "events": [
+      {
+        "name": "generation_started",
+        "args": [
+          "normal",
+          "[object]",
+          false
+        ]
+      },
+      {
+        "name": "GENERATION_AFTER_COMMANDS",
+        "args": [
+          "normal",
+          "[object]",
+          false
+        ]
+      },
+      {
+        "name": "message_sent",
+        "args": [
+          1
+        ]
+      },
+      {
+        "name": "generation_ended",
+        "args": [
+          3
+        ]
+      },
+      {
+        "name": "message_received",
+        "args": [
+          2,
+          "normal"
+        ]
+      },
+      {
+        "name": "character_message_rendered",
+        "args": [
+          2,
+          "normal"
+        ]
+      }
+    ]
+  },
+  "sendBusy503": {
+    "chatGrewBy": 1,
+    "lastIsUser": true,
+    "toasts": [
+      {
+        "cls": "toast toast-error interactable",
+        "text": "Chat Completion APIsynthetic single-slot backend busy"
+      }
+    ],
+    "stopVisible": false,
+    "directorResult": {
+      "ok": true,
+      "text": "{}"
+    }
+  },
+  "stopDuring": {
+    "directorResult": {
+      "ok": false,
+      "thrown": {
+        "name": "Error",
+        "message": "Cancelled by stop event"
+      }
+    },
+    "endpoint": [
+      {
+        "director": true,
+        "aborted": true,
+        "replied": false
+      }
+    ],
+    "events": [
+      {
+        "name": "generation_started",
+        "args": [
+          "normal",
+          "[object]",
+          false
+        ]
+      },
+      {
+        "name": "GENERATION_AFTER_COMMANDS",
+        "args": [
+          "normal",
+          "[object]",
+          false
+        ]
+      },
+      {
+        "name": "generation_ended",
+        "args": [
+          5
+        ]
+      },
+      {
+        "name": "generation_stopped",
+        "args": []
+      },
+      {
+        "name": "message_sent",
+        "args": [
+          4
+        ]
+      },
+      {
+        "name": "generation_ended",
+        "args": [
+          5
+        ]
+      }
+    ],
+    "toasts": []
+  },
+  "stopApiOnly": {
+    "hasStopApi": "function",
+    "directorResult": {
+      "ok": false,
+      "thrown": {
+        "name": "Error",
+        "message": "Cancelled by stop event"
+      }
+    }
+  },
+  "lifecycle": {
+    "normal:stream": {
+      "chatDelta": 2,
+      "events": [
+        {
+          "name": "generation_started",
+          "args": [
+            "normal",
+            "[object]",
+            false
+          ]
+        },
+        {
+          "name": "GENERATION_AFTER_COMMANDS",
+          "args": [
+            "normal",
+            "[object]",
+            false
+          ]
+        },
+        {
+          "name": "message_sent",
+          "args": [
+            5
+          ]
+        },
+        {
+          "name": "generation_ended",
+          "args": [
+            7
+          ]
+        },
+        {
+          "name": "message_received",
+          "args": [
+            6,
+            "normal"
+          ]
+        },
+        {
+          "name": "character_message_rendered",
+          "args": [
+            6,
+            "normal"
+          ]
+        }
+      ]
+    },
+    "regenerate:stream": {
+      "chatDelta": 0,
+      "events": [
+        {
+          "name": "generation_started",
+          "args": [
+            "regenerate",
+            "[object]",
+            false
+          ]
+        },
+        {
+          "name": "GENERATION_AFTER_COMMANDS",
+          "args": [
+            "regenerate",
+            "[object]",
+            false
+          ]
+        },
+        {
+          "name": "message_deleted",
+          "args": [
+            6
+          ]
+        },
+        {
+          "name": "generation_ended",
+          "args": [
+            7
+          ]
+        },
+        {
+          "name": "message_received",
+          "args": [
+            6,
+            "regenerate"
+          ]
+        },
+        {
+          "name": "character_message_rendered",
+          "args": [
+            6,
+            "regenerate"
+          ]
+        }
+      ]
+    },
+    "continue:stream": {
+      "chatDelta": 0,
+      "events": [
+        {
+          "name": "generation_started",
+          "args": [
+            "continue",
+            "[object]",
+            false
+          ]
+        },
+        {
+          "name": "GENERATION_AFTER_COMMANDS",
+          "args": [
+            "continue",
+            "[object]",
+            false
+          ]
+        },
+        {
+          "name": "generation_ended",
+          "args": [
+            7
+          ]
+        },
+        {
+          "name": "message_received",
+          "args": [
+            6,
+            "continue"
+          ]
+        },
+        {
+          "name": "character_message_rendered",
+          "args": [
+            6,
+            "continue"
+          ]
+        }
+      ]
+    },
+    "swipe-new:stream": {
+      "chatDelta": 0,
+      "events": [
+        {
+          "name": "message_swiped",
+          "args": [
+            6
+          ]
+        },
+        {
+          "name": "generation_started",
+          "args": [
+            "swipe",
+            "[object]",
+            false
+          ]
+        },
+        {
+          "name": "GENERATION_AFTER_COMMANDS",
+          "args": [
+            "swipe",
+            "[object]",
+            false
+          ]
+        },
+        {
+          "name": "generation_ended",
+          "args": [
+            7
+          ]
+        },
+        {
+          "name": "message_received",
+          "args": [
+            6,
+            "swipe"
+          ]
+        },
+        {
+          "name": "character_message_rendered",
+          "args": [
+            6,
+            "swipe"
+          ]
+        },
+        {
+          "name": "generation_started",
+          "args": [
+            "normal",
+            "[object]",
+            true
+          ]
+        },
+        {
+          "name": "GENERATION_AFTER_COMMANDS",
+          "args": [
+            "normal",
+            "[object]",
+            true
+          ]
+        }
+      ]
+    },
+    "swipe-back:stream": {
+      "chatDelta": 0,
+      "events": [
+        {
+          "name": "message_swiped",
+          "args": [
+            6
+          ]
+        },
+        {
+          "name": "generation_started",
+          "args": [
+            "normal",
+            "[object]",
+            true
+          ]
+        },
+        {
+          "name": "GENERATION_AFTER_COMMANDS",
+          "args": [
+            "normal",
+            "[object]",
+            true
+          ]
+        }
+      ]
+    },
+    "normal:plain": {
+      "chatDelta": 2,
+      "events": [
+        {
+          "name": "generation_started",
+          "args": [
+            "normal",
+            "[object]",
+            false
+          ]
+        },
+        {
+          "name": "GENERATION_AFTER_COMMANDS",
+          "args": [
+            "normal",
+            "[object]",
+            false
+          ]
+        },
+        {
+          "name": "message_sent",
+          "args": [
+            7
+          ]
+        },
+        {
+          "name": "message_received",
+          "args": [
+            8,
+            "normal"
+          ]
+        },
+        {
+          "name": "character_message_rendered",
+          "args": [
+            8,
+            "normal"
+          ]
+        },
+        {
+          "name": "generation_ended",
+          "args": [
+            9
+          ]
+        }
+      ]
+    },
+    "regenerate:plain": {
+      "chatDelta": 0,
+      "events": [
+        {
+          "name": "generation_started",
+          "args": [
+            "regenerate",
+            "[object]",
+            false
+          ]
+        },
+        {
+          "name": "GENERATION_AFTER_COMMANDS",
+          "args": [
+            "regenerate",
+            "[object]",
+            false
+          ]
+        },
+        {
+          "name": "message_deleted",
+          "args": [
+            8
+          ]
+        },
+        {
+          "name": "message_received",
+          "args": [
+            8,
+            "normal"
+          ]
+        },
+        {
+          "name": "character_message_rendered",
+          "args": [
+            8,
+            "normal"
+          ]
+        },
+        {
+          "name": "generation_ended",
+          "args": [
+            9
+          ]
+        }
+      ]
+    },
+    "continue:plain": {
+      "chatDelta": 0,
+      "events": [
+        {
+          "name": "generation_started",
+          "args": [
+            "continue",
+            "[object]",
+            false
+          ]
+        },
+        {
+          "name": "GENERATION_AFTER_COMMANDS",
+          "args": [
+            "continue",
+            "[object]",
+            false
+          ]
+        },
+        {
+          "name": "message_received",
+          "args": [
+            8,
+            "appendFinal"
+          ]
+        },
+        {
+          "name": "character_message_rendered",
+          "args": [
+            8,
+            "appendFinal"
+          ]
+        },
+        {
+          "name": "generation_ended",
+          "args": [
+            9
+          ]
+        }
+      ]
+    },
+    "swipe-new:plain": {
+      "chatDelta": 0,
+      "events": [
+        {
+          "name": "message_swiped",
+          "args": [
+            8
+          ]
+        },
+        {
+          "name": "generation_started",
+          "args": [
+            "swipe",
+            "[object]",
+            false
+          ]
+        },
+        {
+          "name": "GENERATION_AFTER_COMMANDS",
+          "args": [
+            "swipe",
+            "[object]",
+            false
+          ]
+        },
+        {
+          "name": "message_received",
+          "args": [
+            8,
+            "swipe"
+          ]
+        },
+        {
+          "name": "character_message_rendered",
+          "args": [
+            8,
+            "swipe"
+          ]
+        },
+        {
+          "name": "generation_ended",
+          "args": [
+            9
+          ]
+        },
+        {
+          "name": "generation_started",
+          "args": [
+            "normal",
+            "[object]",
+            true
+          ]
+        },
+        {
+          "name": "GENERATION_AFTER_COMMANDS",
+          "args": [
+            "normal",
+            "[object]",
+            true
+          ]
+        }
+      ]
+    },
+    "swipe-back:plain": {
+      "chatDelta": 0,
+      "events": [
+        {
+          "name": "message_swiped",
+          "args": [
+            8
+          ]
+        },
+        {
+          "name": "generation_started",
+          "args": [
+            "normal",
+            "[object]",
+            true
+          ]
+        },
+        {
+          "name": "GENERATION_AFTER_COMMANDS",
+          "args": [
+            "normal",
+            "[object]",
+            true
+          ]
+        }
+      ]
+    },
+    "stop:stream": {
+      "chatDelta": 2,
+      "events": [
+        {
+          "name": "generation_started",
+          "args": [
+            "normal",
+            "[object]",
+            false
+          ]
+        },
+        {
+          "name": "GENERATION_AFTER_COMMANDS",
+          "args": [
+            "normal",
+            "[object]",
+            false
+          ]
+        },
+        {
+          "name": "message_sent",
+          "args": [
+            9
+          ]
+        },
+        {
+          "name": "generation_ended",
+          "args": [
+            11
+          ]
+        },
+        {
+          "name": "generation_stopped",
+          "args": []
+        },
+        {
+          "name": "message_received",
+          "args": [
+            10,
+            "normal"
+          ]
+        },
+        {
+          "name": "character_message_rendered",
+          "args": [
+            10,
+            "normal"
+          ]
+        }
+      ]
+    },
+    "stop:plain": {
+      "chatDelta": 1,
+      "events": [
+        {
+          "name": "generation_started",
+          "args": [
+            "normal",
+            "[object]",
+            false
+          ]
+        },
+        {
+          "name": "GENERATION_AFTER_COMMANDS",
+          "args": [
+            "normal",
+            "[object]",
+            false
+          ]
+        },
+        {
+          "name": "generation_ended",
+          "args": [
+            12
+          ]
+        },
+        {
+          "name": "generation_stopped",
+          "args": []
+        },
+        {
+          "name": "message_sent",
+          "args": [
+            11
+          ]
+        },
+        {
+          "name": "generation_ended",
+          "args": [
+            12
+          ]
+        },
+        {
+          "name": "generation_started",
+          "args": [
+            "normal",
+            "[object]",
+            true
+          ]
+        },
+        {
+          "name": "GENERATION_AFTER_COMMANDS",
+          "args": [
+            "normal",
+            "[object]",
+            true
+          ]
+        }
+      ]
+    },
+    "dryRunOrQuiet": {
+      "chatDelta": 0,
+      "events": [
+        {
+          "name": "generation_started",
+          "args": [
+            "quiet",
+            "[object]",
+            false
+          ]
+        },
+        {
+          "name": "GENERATION_AFTER_COMMANDS",
+          "args": [
+            "quiet",
+            "[object]",
+            false
+          ]
+        },
+        {
+          "name": "generation_ended",
+          "args": [
+            12
+          ]
+        }
+      ]
+    },
+    "group:stream": {
+      "chatDelta": 3,
+      "events": [
+        {
+          "name": "generation_started",
+          "args": [
+            "normal",
+            "[object]",
+            false
+          ]
+        },
+        {
+          "name": "GENERATION_AFTER_COMMANDS",
+          "args": [
+            "normal",
+            "[object]",
+            false
+          ]
+        },
+        {
+          "name": "generation_started",
+          "args": [
+            "normal",
+            "[object]",
+            false
+          ]
+        },
+        {
+          "name": "GENERATION_AFTER_COMMANDS",
+          "args": [
+            "normal",
+            "[object]",
+            false
+          ]
+        },
+        {
+          "name": "message_sent",
+          "args": [
+            4
+          ]
+        },
+        {
+          "name": "generation_ended",
+          "args": [
+            6
+          ]
+        },
+        {
+          "name": "message_received",
+          "args": [
+            5,
+            "normal"
+          ]
+        },
+        {
+          "name": "character_message_rendered",
+          "args": [
+            5,
+            "normal"
+          ]
+        },
+        {
+          "name": "generation_started",
+          "args": [
+            "normal",
+            "[object]",
+            false
+          ]
+        },
+        {
+          "name": "GENERATION_AFTER_COMMANDS",
+          "args": [
+            "normal",
+            "[object]",
+            false
+          ]
+        },
+        {
+          "name": "generation_ended",
+          "args": [
+            7
+          ]
+        },
+        {
+          "name": "message_received",
+          "args": [
+            6,
+            "normal"
+          ]
+        },
+        {
+          "name": "character_message_rendered",
+          "args": [
+            6,
+            "normal"
+          ]
+        },
+        {
+          "name": "generation_started",
+          "args": [
+            "normal",
+            "[object]",
+            false
+          ]
+        },
+        {
+          "name": "GENERATION_AFTER_COMMANDS",
+          "args": [
+            "normal",
+            "[object]",
+            false
+          ]
+        },
+        {
+          "name": "generation_ended",
+          "args": [
+            8
+          ]
+        },
+        {
+          "name": "message_received",
+          "args": [
+            7,
+            "normal"
+          ]
+        },
+        {
+          "name": "character_message_rendered",
+          "args": [
+            7,
+            "normal"
+          ]
+        },
+        {
+          "name": "generation_started",
+          "args": [
+            "normal",
+            "[object]",
+            false
+          ]
+        },
+        {
+          "name": "GENERATION_AFTER_COMMANDS",
+          "args": [
+            "normal",
+            "[object]",
+            false
+          ]
+        },
+        {
+          "name": "generation_ended",
+          "args": [
+            9
+          ]
+        },
+        {
+          "name": "message_received",
+          "args": [
+            8,
+            "normal"
+          ]
+        },
+        {
+          "name": "character_message_rendered",
+          "args": [
+            8,
+            "normal"
+          ]
+        }
+      ],
+      "authors": [
+        [
+          "Decoy Traveller",
+          true
+        ],
+        [
+          "Mira",
+          false
+        ],
+        [
+          "Mira",
+          false
+        ],
+        [
+          "Rowan",
+          false
+        ],
+        [
+          "Sage",
+          false
+        ]
+      ]
+    }
+  },
+  "groupOwner": {
+    "groupId": "1793592075140",
+    "characterId": null,
+    "chatId": "1793592075140"
+  },
+  "groupMarkers": "[Decoy Traveller|||Mira, Mira, Rowan, Sage|Mira, Mira, Rowan, Sage]",
+  "pageErrors": [
+    "Got response status 503",
+    "Generation was aborted.",
+    "Clicked stop button"
+  ],
+  "result": "PASS"
+}

@@ -78,7 +78,7 @@ export function createHostAdapter(getContext) {
     function inspectCapabilities() {
         const missing = [];
         const context = contextOrNull();
-        if (!context) return { ok: false, missing: ['SillyTavern.getContext'] };
+        if (!context) return { ok: false, missing: ['SillyTavern.getContext'], director: inspectDirector(null) };
         if (!Array.isArray(context.chat)) missing.push('context.chat');
         if (!context.eventSource || typeof context.eventSource.on !== 'function' || typeof context.eventSource.removeListener !== 'function') {
             missing.push('context.eventSource.on/removeListener');
@@ -92,7 +92,27 @@ export function createHostAdapter(getContext) {
         }
         if (!context.extensionSettings || typeof context.extensionSettings !== 'object') missing.push('context.extensionSettings');
         if (typeof context.saveSettingsDebounced !== 'function') missing.push('context.saveSettingsDebounced');
-        return { ok: missing.length === 0, missing };
+        return { ok: missing.length === 0, missing, director: inspectDirector(context) };
+    }
+
+    // Optional: a missing entry point disables the director only, never the reader.
+    function inspectDirector(context = contextOrNull()) {
+        const missing = ['generateRawData', 'extractMessageFromData'].filter((name) => typeof context?.[name] !== 'function');
+        return { ok: missing.length === 0, missing, online: typeof context?.onlineStatus === 'string' ? context.onlineStatus : null };
+    }
+
+    // E2/E8: one call on the user's selected connection. Never throws, never retries.
+    async function requestDirectorText(messages) {
+        const context = contextOrNull();
+        const director = inspectDirector(context);
+        if (!director.ok || director.online === 'no_connection') return { ok: false, code: 'HOST_REFUSED' };
+        try {
+            // createRawPrompt expands macros into the objects it is given, so it gets copies.
+            const data = await context.generateRawData({ prompt: messages.map((message) => ({ ...message })), api: null, instructOverride: false, quietToLoud: false, systemPrompt: '', responseLength: null, prefill: '', jsonSchema: null });
+            return { ok: true, text: context.extractMessageFromData(data, context.mainApi) };
+        } catch (error) {
+            return { ok: false, code: /^Cancelled by (stop event|extension)$/.test(error?.message ?? '') || error?.name === 'AbortError' ? 'ABORTED' : 'TRANSPORT_ERROR' };
+        }
     }
 
     function readChatIdentity(context = contextOrNull()) {
@@ -362,5 +382,5 @@ export function createHostAdapter(getContext) {
         return false;
     }
 
-    return { inspectCapabilities, readChatIdentity, readMessageAt, readCurrentSource, readHistory, subscribe, openOriginalMessage };
+    return { inspectCapabilities, inspectDirector, requestDirectorText, readChatIdentity, readMessageAt, readCurrentSource, readHistory, subscribe, openOriginalMessage };
 }

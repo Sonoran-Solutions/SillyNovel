@@ -1,5 +1,6 @@
 import { createScene, reduceScene, reconcileScene } from './scene-reducer.mjs';
 import { createProjectExpressions } from './project-expressions.mjs';
+import { createDirectorController } from './director-controller.mjs';
 import { evidenceStamp } from './transient-scene.mjs';
 import { validateScene, validId, label, validateCleanupPreview, validateCatalog, selectedCatalog } from '../plugins/sillynovel-storage/schema.mjs';
 
@@ -77,8 +78,12 @@ export async function createProjectScene(project,client,actions,changed,isCurren
     }
     const expressions=createProjectExpressions(actions,()=>scene,()=>!disposed&&isCurrent()&&actions.getSnapshot().sessionEpoch===epoch,notify);
     await expressions.sync();
+    const director=actions.director?createDirectorController({runtime:actions.director,projectId:project.projectId,actions,expressions,layout:()=>({scene,actors,assets,media}),changed:notify}):null;
     return {
         project:true,
+        directorStatus:()=>director?.status()??null,
+        setDirectorEnabled:on=>director?.setEnabled(on),
+        endDirectorSession:()=>actions.director?.endSession(project.projectId),
         expressionStatus:()=>expressions.get(),
         importExpression:(file,key,name,selectionCurrent)=>expressions.importFile(file,key,name,selectionCurrent),
         expressionFailed:id=>expressions.failed(id),
@@ -126,7 +131,7 @@ export async function createProjectScene(project,client,actions,changed,isCurren
         },
         get:()=>{const overlay=expressions.get();return {scene:{...scene,view:overlay.view},actors,assets:[...assets,...overlay.assets],media:new Map([...media,...overlay.media]),notice:notice+' '+overlay.notice,verifiedStamp:!disposed&&actions.getSnapshot().sessionEpoch===epoch?evidenceStamp(actions.getSnapshot()):null};},
         status:()=>({projectId:project.projectId,name:project.name,revision:project.revision,dirty:edit!==savedEdit,saveState,busy,importing,cleanupBusy,cleanupPreview,cleanupNotice}),
-        async sync(refresh=true){if(!current()){if(actions.getSnapshot().sessionEpoch!==epoch)expressions.dispose();return false;}await expressions.sync(refresh);notify();return true;},
+        async sync(refresh=true){if(!current()){if(actions.getSnapshot().sessionEpoch!==epoch)expressions.dispose();return false;}await expressions.sync(refresh);director?.observe();notify();return true;},
         async dispatch(command){if(['setExpression','clearExpression'].includes(command.type))return expressions.dispatch(command);if(importing||cleanupBusy)throw Error('Wait for the PNG import or cleanup to finish.');invalidateCleanup();if(!current())return false;apply(command);await expressions.sync();edit++;notice='Applied · unsaved project changes.';notify();return true;},
         async register(_preset,name){if(importing||cleanupBusy)throw Error('Wait for the PNG import or cleanup to finish.');invalidateCleanup();if(!current())return;if(!label(name)||actors.length>=20)throw Error('Use a name of 1–80 characters; maximum 20 actors.');const key=crypto.randomUUID();actors.push({key,label:name,description:'Project actor',defaultURL:null});refresh();apply({type:'addCharacter',characterKey:key});edit++;notify();return key;},
         async importFile(file,kind,key,displayLabel){
@@ -170,6 +175,6 @@ export async function createProjectScene(project,client,actions,changed,isCurren
             finally{busy=false;notify();}
         },
         reset(){throw Error('Detach the project before resetting session visuals.');},
-        dispose(){disposed=true;expressions.dispose();for(const item of media.values())if(item.url)URL.revokeObjectURL(item.url);},
+        dispose(){disposed=true;director?.dispose();expressions.dispose();for(const item of media.values())if(item.url)URL.revokeObjectURL(item.url);},
     };
 }

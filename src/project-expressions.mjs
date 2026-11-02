@@ -7,14 +7,16 @@ export function createProjectExpressions(actions, globalScene, current, changed)
     const epoch=actions.getSnapshot().sessionEpoch,ownerKey='project-expressions:'+crypto.randomUUID();
     let cache=null,sources=[],stamp=null,work=0,selectionRevision=0,historyRevision=0,disposed=false,busy=false;
     let notice='Temporary message expressions are not saved.',decisions=[];
+    // A manual clear also outranks automation at its exact source; kept apart so it uses no decision capacity.
+    const cleared=new Set(),clearKey=(s,key)=>JSON.stringify([s.key,s.prefixSha256,key]);
     const assets=[],media=new Map(),pending=new Map();
     const signature=s=>JSON.stringify([evidenceStamp(s),s.owner,s.selectionRevision,s.generation]);
     const same=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
     const live=()=>!disposed&&current()&&actions.getSnapshot().sessionEpoch===epoch;
     const notify=text=>{if(text)notice=text;if(!disposed)changed();};
     function release(id){const item=media.get(id);if(item)URL.revokeObjectURL(item.url);media.delete(id);const i=assets.findIndex(a=>a.id===id);if(i>=0)assets.splice(i,1);}
-    function discard(entries){decisions=decisions.filter(d=>!entries.includes(d));for(const d of entries)if(!decisions.some(v=>v.assetId===d.assetId))release(d.assetId);}
-    function clear(){stamp=null;cache=null;sources=[];decisions=[];for(const id of [...media.keys()])release(id);for(const url of pending.keys())URL.revokeObjectURL(url);pending.clear();}
+    function discard(entries){decisions=decisions.filter(d=>!entries.includes(d));for(const d of entries)if(d.origin==='manual'&&!decisions.some(v=>v.assetId===d.assetId))release(d.assetId);}
+    function clear(){stamp=null;cache=null;sources=[];decisions=[];cleared.clear();for(const id of [...media.keys()])release(id);for(const url of pending.keys())URL.revokeObjectURL(url);pending.clear();}
     function compatible(asset){const actor=globalScene().view.cast.find(a=>a.key===asset.characterKey);return actor&&same(actor.outfit,asset.outfit);}
     function authority(snapshot){
         const key=snapshot.cursor?.sourceKey,g=snapshot.generation;
@@ -44,20 +46,28 @@ export function createProjectExpressions(actions, globalScene, current, changed)
     async function valid(t){return await sync()&&t.stamp===stamp&&t.selectionRevision===selectionRevision&&t.historyRevision===historyRevision&&t.globalRevision===globalScene().revision&&same(t.source,sources.find(s=>s.key===t.source?.key));}
     async function dispatch(command){
         if(!['setExpression','clearExpression'].includes(command.type))throw Error('INVALID_COMMAND');
+        const automatic=command.origin==='automatic';
+        if(automatic&&command.type!=='setExpression')throw Error('INVALID_COMMAND');
         if(!await sync())throw Error('UNRESOLVED_SOURCE: select a stable verified message; completion may be unresolved.');
         const actor=globalScene().view.cast.find(a=>a.key===command.characterKey);
         if(!actor)throw Error('Select a manually registered project actor.');
         const asset=assets.find(a=>a.id===command.assetId);
         if(command.type==='setExpression'&&(!asset||asset.characterKey!==actor.key||!compatible(asset)))throw Error('INCOMPATIBLE_ASSET');
         const source=sources.find(s=>s.key===actions.getSnapshot().cursor.sourceKey),index=sources.indexOf(source);
+        if(automatic){
+            if(!same(source,command.source))throw Error('STALE_SOURCE');
+            if(cleared.has(clearKey(source,actor.key))||decisions.some(d=>d.source.key===source.key&&d.characterKey===actor.key&&d.origin==='manual'))return 'LOCKED';
+        } else if(command.type==='clearExpression')cleared.add(clearKey(source,actor.key));
+        else cleared.delete(clearKey(source,actor.key));
         const retained=decisions.filter(d=>sources.findIndex(s=>s.key===d.source.key)<=index&&!(d.source.key===source.key&&d.characterKey===actor.key));
         if(command.type==='setExpression'&&retained.length>=400)throw Error('Temporary expression limit: 400 decisions. Clear choices or detach/reopen.');
         const corrected=decisions.some(d=>sources.findIndex(s=>s.key===d.source.key)>index);
         const suffix=decisions.filter(d=>sources.findIndex(s=>s.key===d.source.key)>index);
         decisions=retained;
-        if(command.type==='setExpression')decisions.push({source,characterKey:actor.key,assetId:asset.id,revision:asset.revision});
-        for(const d of suffix)if(!decisions.some(v=>v.assetId===d.assetId))release(d.assetId);
-        notify((command.type==='setExpression'?'Applied temporary expression.':'Cleared expression · base outfit restored.')+(corrected?' Historical correction invalidated later expressions.':'')+' Not saved.');return true;
+        if(command.type==='setExpression')decisions.push({source,characterKey:actor.key,assetId:asset.id,revision:asset.revision,origin:automatic?'automatic':'manual'});
+        // The director's catalog is this art: invalidating its own choice must not spend it.
+        for(const d of suffix)if(d.origin==='manual'&&!decisions.some(v=>v.assetId===d.assetId))release(d.assetId);
+        notify(automatic?'Director applied a temporary expression. Not saved.':(command.type==='setExpression'?'Applied temporary expression.':'Cleared expression · base outfit restored.')+(corrected?' Historical correction invalidated later expressions.':'')+' Not saved.');return true;
     }
     async function importFile(file,key,name,selectionCurrent=()=>true){
         if(busy)throw Error('Wait for the temporary PNG decode to finish.');
@@ -89,13 +99,13 @@ export function createProjectExpressions(actions, globalScene, current, changed)
             notify('Temporary expression ready: '+name+'. Choose Apply expression for this message. Not saved.');return id;
         } finally {if(url){pending.delete(url);URL.revokeObjectURL(url);}busy=false;if(!disposed)changed();}
     }
-    return {sync,dispatch,importFile,
+    return {sync,dispatch,importFile,token,valid,sources:()=>sources,
         get(){const snapshot=actions.getSnapshot(),ready=stamp===signature(snapshot)&&authority(snapshot);
             const view=globalScene().view;
             return {assets,media,notice:notice+(ready?'':' Expressions unavailable: select a stable verified message; streaming or unresolved completion cannot accept expressions.'),busy,ready,view:{...view,cast:view.cast.map(actor=>{
                 const d=ready?decisions.find(d=>d.source.key===snapshot.cursor.sourceKey&&d.characterKey===actor.key):null;
                 const a=d&&assets.find(a=>a.id===d.assetId&&a.revision===d.revision);
-                return {...actor,expression:a&&compatible(a)?{id:a.id,revision:a.revision,status:a.available?'ready':'missing'}:null};
+                return {...actor,expression:a&&compatible(a)?{id:a.id,revision:a.revision,status:a.available?'ready':'missing',origin:d.origin}:null};
             })}};},
         failed(id){const asset=assets.find(a=>a.id===id);if(!asset)return;asset.available=false;const item=media.get(id);if(item?.url){URL.revokeObjectURL(item.url);item.url=null;}notify('Temporary expression art unavailable · base outfit restored.');},
         dispose(){disposed=true;work++;clear();},

@@ -1,5 +1,9 @@
 # Verification and acceptance
 
+## M2.2 implementation candidate — 2026-11-01
+
+SYNTHETIC evidence on the disposable pinned host and loopback endpoint, frozen at `d5664119d060d72f90aee4e3a386fdf409843a5c`: rows T39–T50 added below; first host-level evidence for T17, T19 around a real request and T29; T05 now exercises `complete` in the actual entry. T18 still uncovered. [Commands, counts and limits](M2_2_DIRECTOR_IMPLEMENTATION.md#6-commands-and-results). `python3 tests/probes/dyl60/check-discovery.py` now expects 11/5/1 files, and `run.py` runs a seventh native campaign, `tests/probes/m2-director/host.mjs`.
+
 ## M2 evidence standard — 2026-11-01
 
 Per the [owner process ruling](DECISIONS.md#owner-rulings-on-open-decisions--2026-11-01): pure-module slices need focused Node tests plus an implementation record; native-host campaigns, storage suites and device replays are required only when a slice touches the host adapter, persistence, the composer or the renderer, or when an owner gate names them. Reused evidence is cited by SHA. DYL-193 coverage runs before the Gate B owner session.
@@ -115,6 +119,18 @@ Harness assertions model event shapes and do not prove host ordering. In the liv
 | T36 | `suggestLocation` | No scene, asset or job change; label returned as bounded plain text only | M2.1 |
 | T37 | Automatic presence or expression for a character never manually registered | Refused; no cast registration from a mention | M2.1 |
 | T38 | Identical proposal sequence replayed from the same scene | Identical journal and projections | M2.1 |
+| T39 | Director request on the disposable pinned host with decoy persona, lorebook and cards seeded | Request body contains only window texts, author kinds/labels, catalog labels, compact scene and the instruction; decoy strings absent | M2.2 |
+| T40 | Chat message or label containing `{{persona}}`, `{{input}}`, `{{getvar::x}}` or a legacy marker such as `<USER>` or `<GROUP>` inside the window | Arrives neutralized; no expansion; evidence check still runs against original text | M2.2 |
+| T41 | Raw response over 32 KiB, non-JSON, two objects, prose around JSON, array | Refused before validation; nothing applied; failure counted with a notice; manual controls work | M2.2 |
+| T42 | Several replies complete in quick succession, including a four-member group turn | At most one request outstanding; at most one per message key; a head superseded within the settle interval is never requested or counted; others counted, not queued | M2.2 |
+| T43 | Ceiling (configured to 3) reached | Pauses at once; the next completion sends nothing; manual expressions, layout and composer unaffected; counter survives a chat-switch detach and reopen, resets on deliberate detach | M2.2 |
+| T44 | Host error, refusal or disconnected backend during a request (T17 instance) | Last valid scene survives; chat remains usable; message skipped with the bounded code; pause after three consecutive failures | M2.2 |
+| T45 | Chat switch, A → B → A, swipe, edit or disable while a request is outstanding (T08/T09 instance) | Late result dropped by ticket and stamp checks; no journal write; not a failure; no notice beyond “cancelled” | M2.2 |
+| T46 | User presses Stop or Send while a director request is outstanding | Stop aborts the director request; on a concurrent backend Send's reply completes normally. A rejecting single-slot backend can fail that reply; the message is kept (E16, recorded limit) | M2.2 |
+| T47 | Completion provenance on the pinned host | Normal, continue, regenerate and swipe replies reach `complete` in streamed and plain order; stopped replies stay `stopped-partial`; another extension's `quiet` generation never marks the head complete | M2.2 |
+| T48 | Director default state and portability | Off for a new project; bundle export/import and database restore never enable it | M2.2 |
+| T49 | Accepted proposal with expression plus layout updates in attached mode | Expression applied to the memory-only journal; layout updates recorded `NO_AUTOMATIC_LAYOUT`; project not dirty; `globalState()` unchanged | M2.2 |
+| T50 | Manual expression at the anchored source, then automatic expression for the same actor | Manual decision kept; automatic recorded as ignored `LOCKED`; later manual clear or set replaces an automatic one | M2.2 |
 
 ## 3. Fixture design
 

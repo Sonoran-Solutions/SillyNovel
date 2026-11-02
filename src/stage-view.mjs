@@ -80,7 +80,7 @@ export function mountVisualStage({ document, stage, actions }) {
             if(!current())return;
             candidate=await createProjectScene(record,client,actions,render,current);
             if(!current()){candidate.dispose();return;}
-            model.dispose();model=candidate;installed=true;attachmentNotice='';await model.sync();render();
+            if(reopen)model.endDirectorSession?.();model.dispose();model=candidate;installed=true;attachmentNotice='';await model.sync();render();
             const list=await client.list();if(current()){options(projectList,list.map(p=>[p.projectId,p.name+' · '+p.projectId.slice(0,8)]));projectList.value=record.projectId;}
         } finally {if(token===projectEpoch){if(!installed)projectEpoch--;projectBusy=false;}if(!disposed)render();}
     }
@@ -90,7 +90,7 @@ export function mountVisualStage({ document, stage, actions }) {
     const save=projectButton('Save project',()=>model.project&&model.save());
     const detach=projectButton('Detach project',()=>{
         if(model.project&&(model.status().dirty||model.status().busy||['conflict','uncertain'].includes(model.status().saveState))&&!globalThis.confirm('Discard current visual edits and detach this project? Pending operations may already have committed on the server.'))return;
-        attachmentNotice='Project detached by you. Saved global layouts remain available for explicit reopen.';bundleStatus.textContent='';projectEpoch++;model.dispose();model=createTransientScene(actions,render);return model.sync();
+        attachmentNotice='Project detached by you. Saved global layouts remain available for explicit reopen.';bundleStatus.textContent='';projectEpoch++;model.endDirectorSession?.();model.dispose();model=createTransientScene(actions,render);return model.sync();
     });
     listen(projectList,'change',render);
     const bundleStatus=make('p','sillynovel-bundle-status');bundleStatus.setAttribute('role','status');target.append(bundleStatus);
@@ -118,6 +118,13 @@ export function mountVisualStage({ document, stage, actions }) {
     const bundleFile=field('Import project bundle','input');bundleFile.type='file';bundleFile.accept='.sillynovel';
     listen(bundleFile,'change',()=>{const selected=bundleFile.files[0];bundleFile.value='';if(selected)run(()=>portable(selected));});
     run(async()=>{try{const cap=await client.capabilities();if(disposed)return;if(cap.apiVersion!==1||cap.schemaVersion!==2 || cap.catalogVersion!==1)throw Error('Incompatible storage');const list=await client.list();if(disposed)return;capable=true;cleanupCapable=cap.cleanupVersion===1;bundleCapable=cap.bundleVersion===1;if(!bundleCapable)bundleStatus.textContent='Project bundles require an updated compatible storage plugin.';options(projectList,list.map(p=>[p.projectId,p.name+' · '+p.projectId.slice(0,8)]));}catch(error){if(disposed)return;capable=false;unavailable='Plugin unavailable or incompatible ['+error.message+'] · session visuals remain available.';if(error.message==='AUTHENTICATED_ACCOUNT_REQUIRED')unavailable='Project storage requires a signed-in SillyTavern account. Session visuals remain available.';else if(error.message==='MIGRATION_REQUIRED')unavailable='Project storage needs explicit v1 backup/migration with the operator recovery tool. The original database is unchanged; session visuals remain available.';else if(error.message==='CSRF_REQUIRED')unavailable='Project storage requires host CSRF protection. Session visuals remain available.';}render();});
+    const directorArea=make('div','sillynovel-director');
+    const directorLabel=make('label','checkbox_label sillynovel-control','Automatic director for this project');
+    const directorToggle=make('input','');directorToggle.type='checkbox';directorToggle.setAttribute('aria-describedby','sillynovel-director-help');directorLabel.prepend(directorToggle);
+    const directorHelp=make('p','sillynovel-director-help','Off by default. After each completed reply, sends the last messages and your artwork labels to the connection you selected, counts against the usage of that connection, and only ever changes temporary expressions. If your backend handles one request at a time, a reply you send while a director request is running can fail; your message is kept, and a swipe or regenerate recovers.');directorHelp.id='sillynovel-director-help';
+    const directorStatus=make('p','sillynovel-director-status');directorStatus.setAttribute('role','status');
+    directorArea.append(directorLabel,directorHelp,directorStatus);target.append(directorArea);
+    listen(directorToggle,'change',()=>model.setDirectorEnabled?.(directorToggle.checked));
     const sceneArea=area('Scene','Arrange the manual cast. Presence hides artwork but keeps its position reserved. Offstage releases a position. Manual choices can replace locks; releasing a lock keeps its value.');
     row();
     const bg=field('Background');
@@ -251,8 +258,11 @@ export function mountVisualStage({ document, stage, actions }) {
         for(const e of projectButtons)if(e!==detach&&e!==exportProject)e.disabled=e.disabled||Boolean(state?.busy);
         open.disabled=open.disabled||!projectList.value;
         save.disabled=save.disabled||!state||state.busy||recovery;detach.disabled=detach.disabled||!state;reopen.disabled=reopen.disabled||!state;
+        const director=state?model.directorStatus():null;
+        directorArea.hidden=!director;
+        if(director){directorToggle.checked=director.enabled;directorToggle.disabled=!director.available;directorStatus.textContent=director.available?director.notice+(director.enabled?' · '+director.count+' of '+director.ceiling+' requests this session':''):'Director unavailable: this host has no generation path for it.';}
         const overlay=state?model.expressionStatus():null;
-        expressionContext.textContent=state?'Selected message: '+(actions.getSnapshot().cursor?String(actions.getSnapshot().cursor.index+1)+' · '+actions.getSnapshot().cursor.author.label:'unresolved')+' / Actor: '+(member?member.label+' ['+shortId(member.key)+']':'select actor')+' / Current expression: '+artName(member?.expression)+' · Temporary, not saved. '+overlay.notice:'';
+        expressionContext.textContent=state?'Selected message: '+(actions.getSnapshot().cursor?String(actions.getSnapshot().cursor.index+1)+' · '+actions.getSnapshot().cursor.author.label:'unresolved')+' / Actor: '+(member?member.label+' ['+shortId(member.key)+']':'select actor')+' / Current expression: '+artName(member?.expression)+(member?.expression?.origin==='automatic'?' (director)':'')+' · Temporary, not saved. '+overlay.notice:'';
         for(const e of [expression,applyExpression,clearExpression])e.disabled=e.disabled||Boolean(state&&!overlay.ready);
         for(const e of [expressionFile,expressionLabel]){e.parentElement.hidden=!state;e.disabled=e.disabled||!state||!overlay?.ready||overlay?.busy;}
         expressionContext.hidden=!state;

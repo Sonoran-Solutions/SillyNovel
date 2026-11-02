@@ -1,0 +1,20 @@
+Owned evidence root /tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-eloquent-lalande-2ef985/21e8a52d-c69c-40c6-95bb-ef66c73b8250/scratchpad/sn-m2-director-3wDTt5
+PASS off by default: a real reply issues no director request (T48)
+PASS director body is the two assembled messages; decoys absent; braces and legacy markers neutralized on the wire; instruction-like chat text travels as data (T39, T40, T29)
+PASS accepted proposal applied to the journal only; layout recorded as ignored, suggestion shown as text; 80 native files byte-identical; no chat write, no lifecycle event, max tokens unchanged (T19, T49)
+PASS real continue reaches complete and issues exactly one request (T47)
+PASS real regenerate reaches complete and issues exactly one request (T47)
+PASS real swipe reaches complete and issues exactly one request (T47)
+PASS quiet generation, swipe back and a stopped reply never trigger (T47)
+PASS Send during an outstanding request completes normally; the older result cannot apply to the new head (T46)
+PASS the user Stop aborts the outstanding director request on the wire; notice says cancelled only; chat stays usable (T46)
+PAGE ERROR Generation was aborted.
+PASS chat switch mid-flight: nothing applied, attachment dropped, counter retained after explicit reopen (T45, E6)
+PASS malformed reply skips with a bounded code; manual expression still applies on that head (T41, T44)
+PASS ceiling 3: next completion sends nothing, pause notice, manual controls and native replies keep working (T43)
+PASS three consecutive failures pause; toggling off and on resumes with the same counter (E7)
+PASS 90 s abandonment on real time: late result discarded, no second request until settlement (T17, E7)
+PASS 20-turn Last Lantern script: 20 director requests, 20 native replies, journal expressions only; every non-chat file byte-identical; project layout unchanged
+PASS a project bundle carries no director setting; the imported copy is off (T48, E5)
+PASS real four-card duplicate-name group: four native replies, one settled director request, expression on one UUID only, all native files byte-identical across the request, cards and settings across the whole turn (E15, T19)
+Evidence /tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-eloquent-lalande-2ef985/21e8a52d-c69c-40c6-95bb-ef66c73b8250/scratchpad/sn-m2-director-3wDTt5/evidence.json

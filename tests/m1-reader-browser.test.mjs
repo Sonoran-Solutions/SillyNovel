@@ -14,7 +14,7 @@ const files = new Map([
     ['/', resolve(root, 'tests/fixtures/reader-browser.html')],
     ['/vendor/showdown.js', resolve(hostRoot, 'node_modules/showdown/dist/showdown.js')],
     ['/vendor/purify.js', resolve(hostRoot, 'node_modules/dompurify/dist/purify.js')],
-    ...['index.js', 'style.css', 'src/shell.mjs', 'src/reader-view.mjs', 'src/reader-source-model.mjs', 'src/host-adapter.mjs', 'src/stage-view.mjs', 'src/transient-scene.mjs', 'src/source-prefix.mjs', 'src/scene-reducer.mjs', 'src/project-client.mjs', 'src/project-scene.mjs', 'src/project-expressions.mjs', 'plugins/sillynovel-storage/schema.mjs'].map(path => ['/' + path, resolve(root, path)]),
+    ...['index.js', 'style.css', 'src/shell.mjs', 'src/reader-view.mjs', 'src/reader-source-model.mjs', 'src/host-adapter.mjs', 'src/stage-view.mjs', 'src/transient-scene.mjs', 'src/source-prefix.mjs', 'src/scene-reducer.mjs', 'src/project-client.mjs', 'src/project-scene.mjs', 'src/project-expressions.mjs', 'src/director-controller.mjs', 'src/director-proposal.mjs', 'src/director-request.mjs', 'src/director-session.mjs', 'plugins/sillynovel-storage/schema.mjs'].map(path => ['/' + path, resolve(root, path)]),
 ]);
 for (const asset of JSON.parse(await readFile(resolve(root,'tests/fixtures/m12-stage/manifest.json')))) files.set('/tests/fixtures/m12-stage/'+asset.file,resolve(root,'tests/fixtures/m12-stage',asset.file));
 before(async () => {
@@ -956,4 +956,75 @@ test('eventless group generation start survives activation and refuses expressio
  assert.equal(await x.expression.isDisabled(),true,'unresolved end does not grant head authority');
  await button(page,'Previous').click();await page.waitForFunction(()=>!document.querySelector('[aria-label="Expression to apply · selected source only"]').disabled);assert.equal(await message(page).innerText(),'Stable older B');
  assert.equal(await page.locator('#send_textarea').isEnabled(),true);assert.equal(await page.locator('.sillynovel-unsaved').getAttribute('data-state'),'saved');
+});
+for(const order of ['streamed','plain','stopped'])test('T05/E4 actual entry: freshly generated head, '+order+' order, manual expression availability',async t=>{
+ const x=await attachedExpressions(t),{page}=x,draft='Draft kept';
+ await page.locator('#send_textarea').fill(draft);
+ await page.evaluate(order=>{
+  const c=fixture.context,fired=name=>fixture.emit(name,c.chat.length-1,'normal');
+  fixture.emit('GENERATION_STARTED','normal',{},false);
+  c.chat.push({name:'Mira',mes:'A freshly generated reply.',swipe_id:0});fixture.renderNative();
+  if(order==='plain'){fired('MESSAGE_RECEIVED');fired('CHARACTER_MESSAGE_RENDERED');fixture.emit('GENERATION_ENDED',c.chat.length);}
+  else if(order==='streamed'){fixture.emit('GENERATION_ENDED',c.chat.length);fired('MESSAGE_RECEIVED');fired('CHARACTER_MESSAGE_RENDERED');}
+  else{fixture.emit('GENERATION_ENDED',c.chat.length);fixture.emit('GENERATION_STOPPED');fired('MESSAGE_RECEIVED');fired('CHARACTER_MESSAGE_RENDERED');}
+ },order);
+ assert.equal(await message(page).innerText(),'A freshly generated reply.');
+ if(order==='stopped'){
+  // Node covers the status itself; here a stopped head stays readable and writes nothing.
+  assert.equal(await page.evaluate(()=>fixture.context.chat.length),3);
+ }else{
+  await page.waitForFunction(()=>!document.querySelector('[aria-label="Expression to apply · selected source only"]').disabled);
+  const id=await x.upload();await x.apply(id);assert.ok(await x.image.getAttribute('data-expression'));
+  assert.equal(await page.locator('.sillynovel-unsaved').getAttribute('data-state'),'saved');
+  await page.evaluate(()=>fixture.emit('GENERATION_STARTED','continue',{},false));
+  await page.waitForFunction(()=>document.querySelector('[aria-label="Expression to apply · selected source only"]').disabled,undefined,{timeout:5000});
+ }
+ assert.equal(await page.locator('#send_textarea').inputValue(),draft);
+});
+test('director actual entry: keyboard toggle and ceiling, one recorded request, journal only, canonical chat and project unchanged',async t=>{
+ const x=await attachedExpressions(t),{page}=x;
+ await page.evaluate(()=>{const c=fixture.context;window.requests=[];c.mainApi='openai';c.onlineStatus='Valid';c.extractMessageFromData=data=>data.text;c.generateRawData=args=>new Promise(resolve=>window.requests.push({args,resolve}));fixture.setText('First message, edited.',0);});
+ const toggle=page.getByLabel('Automatic director for this project',{exact:true});
+ await page.waitForFunction(()=>!document.querySelector('.sillynovel-director input').disabled);
+ assert.equal(await toggle.isChecked(),false,'off by default');
+ assert.match(await page.locator('.sillynovel-director-help').innerText(),/one request at a time.*your message is kept, and a swipe or regenerate recovers/);
+ await toggle.focus();await page.keyboard.press('Space');assert.equal(await toggle.isChecked(),true);
+ const project=x.original.projectId;
+ assert.deepEqual(await page.evaluate(()=>fixture.context.extensionSettings.sillynovel.director),{enabledProjects:{[project]:true}});
+ const ceiling=page.locator('#sillynovel-director-ceiling');assert.equal(await ceiling.inputValue(),'40');
+ await ceiling.focus();await ceiling.fill('500');await page.keyboard.press('Tab');assert.equal(await ceiling.inputValue(),'40');
+ await ceiling.focus();await ceiling.fill('3');await page.keyboard.press('Tab');assert.equal(await page.evaluate(()=>fixture.context.extensionSettings.sillynovel.director.sessionCeiling),3);
+ await x.upload();
+ const before=await page.evaluate(()=>{const c=fixture.context;c.chat.push({name:'Mira',mes:'Mira laughs and says {{persona}} to <USER>.',swipe_id:0});fixture.renderNative();const copy=JSON.stringify(c.chat);c.chat.pop();fixture.emit('GENERATION_STARTED','normal',{},false);c.chat.push(JSON.parse(copy).at(-1));fixture.renderNative();const i=c.chat.length-1;fixture.emit('GENERATION_ENDED',c.chat.length);fixture.emit('MESSAGE_RECEIVED',i,'normal');fixture.emit('CHARACTER_MESSAGE_RENDERED',i,'normal');return copy;});
+ await page.waitForFunction(()=>window.requests.length===1,undefined,{timeout:8000});
+ const args=await page.evaluate(()=>{const {prompt,...rest}=window.requests[0].args;return {prompt,rest};});
+ assert.deepEqual(args.rest,{api:null,instructOverride:false,quietToLoud:false,systemPrompt:'',responseLength:null,prefill:'',jsonSchema:null});
+ assert.deepEqual(args.prompt.map(m=>[m.role,m.name]),[['system',''],['user','']]);
+ assert.match(args.prompt[1].content,/\{ \{persona\} \} to < USER>/);assert.doesNotMatch(JSON.stringify(args.prompt),/\{\{|<USER>/);
+ assert.match(await page.locator('.sillynovel-director-status').innerText(),/in progress/);assert.equal(await page.locator('#send_textarea').isEnabled(),true);
+ const content=args.prompt[1].content,key=[...content.matchAll(/<<message key="([^"]+)"/g)].at(-1)[1],expressionId=/^(temporary-expression:[^:]+): /m.exec(content)[1];
+ await page.evaluate(({actor,key,expressionId})=>window.requests[0].resolve({text:JSON.stringify({schemaVersion:1,updates:[{op:'setCharacter',characterKey:actor,expressionId,evidence:{sourceMessageKey:key,excerpt:'Mira laughs'}},{op:'suggestLocation',label:'Harbor <b>x</b>',evidence:{sourceMessageKey:key,excerpt:'Mira'}}]})}),{actor:x.actors[0],key,expressionId});
+ await page.waitForFunction(()=>document.querySelector('.sillynovel-sprite--left img').dataset.expression!=='');
+ const status=page.locator('.sillynovel-director-status');
+ assert.match(await status.innerText(),/applied 1 temporary expression.*Suggested location: Harbor <b>x<\/b>/);assert.equal(await status.locator('b').count(),0,'model text stays plain text');
+ assert.match(await page.locator('.sillynovel-expression-context').innerText(),/\(director\)/);
+ assert.equal(await page.evaluate(()=>JSON.stringify(fixture.context.chat)),before);
+ assert.equal(await page.locator('.sillynovel-unsaved').getAttribute('data-state'),'saved');
+ await button(page,'Save project').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('revision 5'));
+ assert.deepEqual(x.saves[0].scene,x.original.scene);assert.doesNotMatch(JSON.stringify(x.saves[0]),/director|expression|enabledProjects/);
+ assert.equal(await page.evaluate(()=>window.requests.length),1);
+});
+test('director missing generateRawData disables only the director; the reader, stage and composer keep working',async t=>{
+ const x=await attachedExpressions(t),{page}=x;
+ const toggle=page.getByLabel('Automatic director for this project',{exact:true});
+ assert.equal(await toggle.isDisabled(),true);
+ assert.match(await page.locator('.sillynovel-director-status').innerText(),/Director unavailable/);
+ const id=await x.upload();await x.apply(id);assert.ok(await x.image.getAttribute('data-expression'));
+ assert.equal(await page.locator('#send_textarea').isEnabled(),true);
+ await button(page,'Detach project').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-director').hidden);
+});
+test('director default fixture with no project keeps the toggle out of session-stage mode',async t=>{
+ const page=await fixture(t);await page.locator('.sillynovel-controls summary').click();
+ assert.equal(await page.locator('.sillynovel-director').isVisible(),false);
+ assert.equal(await page.locator('#sillynovel-enabled').isChecked(),true);
 });
