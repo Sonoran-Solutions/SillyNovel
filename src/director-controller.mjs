@@ -13,7 +13,7 @@ export const validCeiling = value => Number.isSafeInteger(value) && value >= 1 &
  * because a chat switch detaches the project: neither may be a free reset (E6, E7).
  * @param {{request: Function, inspect: Function, read: Function, write: Function, setTimer?: Function, clearTimer?: Function}} host
  */
-export function createDirectorRuntime({ request, inspect, read, write, setTimer = setTimeout, clearTimer = clearTimeout }) {
+export function createDirectorRuntime({ request, inspect, read, write, setTimer = (fn, ms) => setTimeout(fn, ms), clearTimer = id => clearTimeout(id) }) {
     const sessions = new Map();
     let inFlight = false;
     const settings = () => { const value = read(); return value && typeof value === 'object' ? value : {}; };

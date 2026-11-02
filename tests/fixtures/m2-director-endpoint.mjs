@@ -12,6 +12,16 @@ const send = (res, status, body) => { if (!res.destroyed && !res.headersSent) re
 const completion = content => ({ id: 'sn-director-local', created: 1, model: 'sn-reader-local', object: 'chat.completion', choices: [{ index: 0, message: { role: 'assistant', content }, finish_reason: 'stop' }] });
 const chunk = delta => 'data: ' + JSON.stringify({ id: 'sn-director-local', created: 1, model: 'sn-reader-local', object: 'chat.completion.chunk', choices: [{ index: 0, delta, finish_reason: delta.content ? null : 'stop' }] }) + '\n\n';
 
+// Builds a schema-valid reply from what the request itself lists; model text is otherwise canned.
+function autoProposal(content, { excerpt, layout, suggest }) {
+    const sourceMessageKey = [...content.matchAll(/<<message key="([^"]+)"/g)].at(-1)[1], evidence = { sourceMessageKey, excerpt };
+    const found = /^(temporary-expression:\S+): .* \| for (\S+)$/m.exec(content), background = /^Backgrounds:\n([^:\n]+): /m.exec(content);
+    return JSON.stringify({ schemaVersion: 1, updates: [
+        ...(found ? [{ op: 'setCharacter', characterKey: found[2], expressionId: found[1], evidence }] : []),
+        ...(layout && background ? [{ op: 'setLocation', backgroundId: background[1], evidence }] : []),
+        ...(suggest ? [{ op: 'suggestLocation', label: suggest, evidence }] : []),
+    ] });
+}
 async function director(req, res, entry) {
     const step = script.shift() ?? fallback;
     outstandingDirector++;
@@ -21,7 +31,7 @@ async function director(req, res, entry) {
         if (res.destroyed) return;
         entry.replied = true;
         if (step.status) return send(res, step.status, step.json ?? { error: { message: 'synthetic failure' } });
-        send(res, 200, step.json ?? completion(step.content));
+        send(res, 200, step.json ?? completion(step.auto ? autoProposal(entry.body.messages[1].content, step.auto) : step.content));
     } finally { outstandingDirector--; }
 }
 async function native(res, body, entry) {
@@ -46,7 +56,7 @@ const server = createServer(async (req, res) => {
     let body;
     try { body = JSON.parse(raw); } catch { return send(res, 400, {}); }
     if (req.url === '/control') {
-        if (body.reset) { log = []; script = []; busy503 = false; nativeDelayMs = 25; }
+        if (body.reset) { log = []; script = []; busy503 = false; nativeDelayMs = 25; fallback = { content: '{"schemaVersion":1,"updates":[]}' }; }
         if (body.script) script.push(...body.script);
         if (body.fallback) fallback = body.fallback;
         if (body.nativeDelayMs !== undefined) nativeDelayMs = body.nativeDelayMs;

@@ -981,3 +981,50 @@ for(const order of ['streamed','plain','stopped'])test('T05/E4 actual entry: fre
  }
  assert.equal(await page.locator('#send_textarea').inputValue(),draft);
 });
+test('director actual entry: keyboard toggle and ceiling, one recorded request, journal only, canonical chat and project unchanged',async t=>{
+ const x=await attachedExpressions(t),{page}=x;
+ await page.evaluate(()=>{const c=fixture.context;window.requests=[];c.mainApi='openai';c.onlineStatus='Valid';c.extractMessageFromData=data=>data.text;c.generateRawData=args=>new Promise(resolve=>window.requests.push({args,resolve}));fixture.setText('First message, edited.',0);});
+ const toggle=page.getByLabel('Automatic director for this project',{exact:true});
+ await page.waitForFunction(()=>!document.querySelector('.sillynovel-director input').disabled);
+ assert.equal(await toggle.isChecked(),false,'off by default');
+ assert.match(await page.locator('.sillynovel-director-help').innerText(),/one request at a time.*your message is kept, and a swipe or regenerate recovers/);
+ await toggle.focus();await page.keyboard.press('Space');assert.equal(await toggle.isChecked(),true);
+ const project=x.original.projectId;
+ assert.deepEqual(await page.evaluate(()=>fixture.context.extensionSettings.sillynovel.director),{enabledProjects:{[project]:true}});
+ const ceiling=page.locator('#sillynovel-director-ceiling');assert.equal(await ceiling.inputValue(),'40');
+ await ceiling.focus();await ceiling.fill('500');await page.keyboard.press('Tab');assert.equal(await ceiling.inputValue(),'40');
+ await ceiling.focus();await ceiling.fill('3');await page.keyboard.press('Tab');assert.equal(await page.evaluate(()=>fixture.context.extensionSettings.sillynovel.director.sessionCeiling),3);
+ await x.upload();
+ const before=await page.evaluate(()=>{const c=fixture.context;c.chat.push({name:'Mira',mes:'Mira laughs and says {{persona}} to <USER>.',swipe_id:0});fixture.renderNative();const copy=JSON.stringify(c.chat);c.chat.pop();fixture.emit('GENERATION_STARTED','normal',{},false);c.chat.push(JSON.parse(copy).at(-1));fixture.renderNative();const i=c.chat.length-1;fixture.emit('GENERATION_ENDED',c.chat.length);fixture.emit('MESSAGE_RECEIVED',i,'normal');fixture.emit('CHARACTER_MESSAGE_RENDERED',i,'normal');return copy;});
+ await page.waitForFunction(()=>window.requests.length===1,undefined,{timeout:8000});
+ const args=await page.evaluate(()=>{const {prompt,...rest}=window.requests[0].args;return {prompt,rest};});
+ assert.deepEqual(args.rest,{api:null,instructOverride:false,quietToLoud:false,systemPrompt:'',responseLength:null,prefill:'',jsonSchema:null});
+ assert.deepEqual(args.prompt.map(m=>[m.role,m.name]),[['system',''],['user','']]);
+ assert.match(args.prompt[1].content,/\{ \{persona\} \} to < USER>/);assert.doesNotMatch(JSON.stringify(args.prompt),/\{\{|<USER>/);
+ assert.match(await page.locator('.sillynovel-director-status').innerText(),/in progress/);assert.equal(await page.locator('#send_textarea').isEnabled(),true);
+ const content=args.prompt[1].content,key=[...content.matchAll(/<<message key="([^"]+)"/g)].at(-1)[1],expressionId=/^(temporary-expression:[^:]+): /m.exec(content)[1];
+ await page.evaluate(({actor,key,expressionId})=>window.requests[0].resolve({text:JSON.stringify({schemaVersion:1,updates:[{op:'setCharacter',characterKey:actor,expressionId,evidence:{sourceMessageKey:key,excerpt:'Mira laughs'}},{op:'suggestLocation',label:'Harbor <b>x</b>',evidence:{sourceMessageKey:key,excerpt:'Mira'}}]})}),{actor:x.actors[0],key,expressionId});
+ await page.waitForFunction(()=>document.querySelector('.sillynovel-sprite--left img').dataset.expression!=='');
+ const status=page.locator('.sillynovel-director-status');
+ assert.match(await status.innerText(),/applied 1 temporary expression.*Suggested location: Harbor <b>x<\/b>/);assert.equal(await status.locator('b').count(),0,'model text stays plain text');
+ assert.match(await page.locator('.sillynovel-expression-context').innerText(),/\(director\)/);
+ assert.equal(await page.evaluate(()=>JSON.stringify(fixture.context.chat)),before);
+ assert.equal(await page.locator('.sillynovel-unsaved').getAttribute('data-state'),'saved');
+ await button(page,'Save project').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('revision 5'));
+ assert.deepEqual(x.saves[0].scene,x.original.scene);assert.doesNotMatch(JSON.stringify(x.saves[0]),/director|expression|enabledProjects/);
+ assert.equal(await page.evaluate(()=>window.requests.length),1);
+});
+test('director missing generateRawData disables only the director; the reader, stage and composer keep working',async t=>{
+ const x=await attachedExpressions(t),{page}=x;
+ const toggle=page.getByLabel('Automatic director for this project',{exact:true});
+ assert.equal(await toggle.isDisabled(),true);
+ assert.match(await page.locator('.sillynovel-director-status').innerText(),/Director unavailable/);
+ const id=await x.upload();await x.apply(id);assert.ok(await x.image.getAttribute('data-expression'));
+ assert.equal(await page.locator('#send_textarea').isEnabled(),true);
+ await button(page,'Detach project').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-director').hidden);
+});
+test('director default fixture with no project keeps the toggle out of session-stage mode',async t=>{
+ const page=await fixture(t);await page.locator('.sillynovel-controls summary').click();
+ assert.equal(await page.locator('.sillynovel-director').isVisible(),false);
+ assert.equal(await page.locator('#sillynovel-enabled').isChecked(),true);
+});
