@@ -1,5 +1,9 @@
 # Verification and acceptance
 
+## Gate A PASS — 2026-11-01
+
+Owner verdict [PASS](DECISIONS.md#gate-a-verdict--pass--2026-11-01) on main `e8e9cf673b6455dace67d695ee45d1d3dcc2857c`; session details were not supplied to the repository. Matrix rows, frozen `c5c1699a48629ae761a093e13056f0b11fdc4b88` evidence and the [DYL-193](https://linear.app/devils17/issue/DYL-193/sillynovel-m14-deferred-physical-scaling-motion-assistive-and) deferral are unchanged. Gates B and C NOT_RUN.
+
 ## Gate A deferral — 2026-11-01
 
 For the first disposable owner playtest only, the owner [deferred](DECISIONS.md#owner-amendment--deferred-coverage-for-the-first-disposable-gate-a-playtest--2026-11-01) increased scaling/200% zoom, reduced motion, assistive technology, tablet file-picker/import/export/cleanup touch flows and native group branch/copy to [DYL-193](https://linear.app/devils17/issue/DYL-193/sillynovel-m14-deferred-physical-scaling-motion-assistive-and). Those rows stay NOT_TESTED and mandatory before beta/release. All other matrix rows and the frozen `c5c1699a48629ae761a093e13056f0b11fdc4b88` evidence are unchanged; the playtest candidate is main `04ce6290c7bb5dab0dd0502e2cde931936796897`. Gate A NOT_RUN.

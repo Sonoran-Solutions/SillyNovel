@@ -1,5 +1,9 @@
 # Project status
 
+## Gate A PASS recorded — 2026-11-01
+
+The owner recorded [Gate A PASS](DECISIONS.md#gate-a-verdict--pass--2026-11-01) for merged main `e8e9cf673b6455dace67d695ee45d1d3dcc2857c` (runtime `c5c1699a48629ae761a093e13056f0b11fdc4b88`), approving the current build. No playtest sheet or session observations were supplied; the register says so explicitly. [DYL-193](https://linear.app/devils17/issue/DYL-193/sillynovel-m14-deferred-physical-scaling-motion-assistive-and) deferred coverage still precedes beta/release. Next bounded step is an M2.1 planning proposal; M2 implementation, DYL-56, DYL-61, live installation and release remain unauthorized. Gates B and C NOT_RUN.
+
 ## Gate A deferral amendment recorded — 2026-11-01
 
 The owner [deferred the remaining NOT_TESTED surfaces](DECISIONS.md#owner-amendment--deferred-coverage-for-the-first-disposable-gate-a-playtest--2026-11-01) to [DYL-193](https://linear.app/devils17/issue/DYL-193/sillynovel-m14-deferred-physical-scaling-motion-assistive-and) for the first disposable playtest only. The playtest candidate is merged main `04ce6290c7bb5dab0dd0502e2cde931936796897` (runtime equal to `c5c1699a48629ae761a093e13056f0b11fdc4b88`). Nothing else changed: the [playtest sheet](M1_4_GATE_A_READINESS.md#6-owner-playtest-sheet--draft-session-not_run) and [setup recipe](M1_4_DYL60_REPRODUCTION.md) are the session materials; the disposable pinned host checkout must be recreated before the session because the earlier `/tmp` roots are gone. **Gate A remains NOT_RUN** until the owner records a verdict. No M1.3/M2, DYL-56, DYL-61, live installation or release authorization.

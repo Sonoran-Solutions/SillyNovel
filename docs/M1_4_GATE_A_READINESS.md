@@ -250,7 +250,9 @@ For each answer, record a concrete moment and screenshot/scenario reference: mor
 | --- | --- | --- | --- |
 | To be filled by owner | | | |
 
-Later owner record: `PASS / REVISE / STOP / exact words / owner / date / candidate full SHA / tested surfaces / blockers / next bounded step`. Until supplied, **Gate A NOT_RUN**. Do not infer PASS from completing checkboxes or from an automated campaign. A PASS does not authorize M2, beta or production.
+Later owner record: `PASS / REVISE / STOP / exact words / owner / date / candidate full SHA / tested surfaces / blockers / next bounded step`. Until supplied, **Gate A NOT_RUN**.
+
+**Owner record supplied 2026-11-01: PASS.** See the [decision register entry](DECISIONS.md#gate-a-verdict--pass--2026-11-01) for exact words, candidate `e8e9cf673b6455dace67d695ee45d1d3dcc2857c`, the unsupplied session fields and the next bounded step. Do not infer PASS from completing checkboxes or from an automated campaign. A PASS does not authorize M2, beta or production.
 
 ## 7. Physical-device technical checklist — access authorized, evidence PARTIAL
 
