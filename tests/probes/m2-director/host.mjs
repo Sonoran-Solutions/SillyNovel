@@ -1039,6 +1039,9 @@ try {
     await toPlanted();
     await connect();
     await watchNotices();
+    // T63 saved this project once on purpose, so these blocks compare against what is on disk now.
+    const onDiskNow = await plugin('/projects/' + roaming.projectId), bundleNow = await exportRoaming();
+    const assertStill = async () => { const now = await plugin('/projects/' + roaming.projectId); assert.deepEqual(now.scene, onDiskNow.scene, 'saved project scene'); assert.equal(now.revision, onDiskNow.revision); assert.equal(await exportRoaming(), bundleNow, 'bundle bytes'); };
     await reattach();
     await closeControls();
     {
@@ -1069,7 +1072,7 @@ try {
             if (flow !== 'regenerate') assert.match(row, /· message changed$/, flow);
             await why().evaluate(e => { e.open = false; });
             nativeOnly(held, await inventory());
-            await assertSavedUntouched();
+            await assertStill();
             pass('T57, T60: a real ' + flow + ' invalidates automatic layout from the first changed source, the stage returns to the global layout, nothing is retried, the excerpt is gone' + (flow === 'regenerate' ? ' (the replaced message has a new key, so no row remains at the selected message)' : ' and the row reads "message changed"; outcome and code stay'));
         }
         // Swiping back to the earlier variant is not a generation and does not bring the layout back.
@@ -1175,7 +1178,7 @@ try {
         await delay(1500);
         assert.doesNotMatch(await readout(), /Harbor|\(director\)/, 'the late result lands nowhere');
         assert.deepEqual((await plugin('/projects/' + solo.projectId)).scene, solo.scene, 'the replacing project is untouched');
-        await assertSavedUntouched();
+        await assertStill();
         await open(roaming.projectId, 2);
         await attached('Director roaming');
         assert.equal(byDirector(await readout()), false, 'returning to the first project brings nothing back');
@@ -1202,7 +1205,7 @@ try {
         await untilDirector(1);
         await settled();
         assert.equal((await plugin('/projects/' + roaming.projectId)).catalog.some(item => item.assetId === harborAsset), true, 'nothing saved without Save');
-        await assertSavedUntouched();
+        await assertStill();
         pass('T57: removing the art an overlay background shows keeps the stage up, reading and replying continue, the director still settles, and nothing is saved');
         await button('Discard and reopen attached project').click();
         await page.waitForFunction(() => /revision/.test(document.querySelector('.sillynovel-project-status').textContent));
@@ -1234,9 +1237,7 @@ try {
             const nativeTried = wire.length - 1, served = wire.slice(1).filter(e => e.replied).length;
             await control({ release: true, busy503: false });
             await settled();
-            // Read from the session summary: a regenerated message has a new key, so its old row is not at the selected message.
-            const directorCodes = /Codes: [^\n]*/.exec(await whyText())?.[0] ?? null;
-            await why().evaluate(e => { e.open = false; });
+            const directorNotice = await statusText();
             await clearToasts();
             await control({ reset: true, fallback: NO_CHANGE });
             // Recovery with the same control once the slot is free; a served native request proves it, since the old text may still be on screen.
@@ -1248,11 +1249,14 @@ try {
             const recovered = await native();
             assert.equal(recovered.lastUser, before.lastUser, flow + ': the user message survives recovery');
             assert.equal(recovered.lastIsUser, false);
-            evidence.e16[flow] = { backend: 'synthetic rejecting single-slot loopback (503 while a director request is held)', nativeRequestsDuringHold: nativeTried, nativeServedDuringHold: served, replyKept: !lost && after.last === before.last, replyLost: lost, chatLengthBefore: before.length, chatLengthAfter: after.length, lastIsUserAfter: after.lastIsUser, swipesBefore: before.swipes, swipesAfter: after.swipes, swipeIdAfter: after.swipeId, lastMessageAfter: after.last === before.last ? 'unchanged' : (after.last ?? '').slice(0, 120), toast: toasts.length ? toasts : 'none', recoveryUsed: flow, recoveredReply: answered(recovered.last), userMessageKept: true, directorCodes };
+            evidence.e16[flow] = { backend: 'synthetic rejecting single-slot loopback (503 while a director request is held)', nativeRequestsDuringHold: nativeTried, nativeServedDuringHold: served, replyKept: !lost && after.last === before.last, replyLost: lost, chatLengthBefore: before.length, chatLengthAfter: after.length, lastIsUserAfter: after.lastIsUser, swipesBefore: before.swipes, swipesAfter: after.swipes, swipeIdAfter: after.swipeId, lastMessageAfter: after.last === before.last ? 'unchanged' : (after.last ?? '').slice(0, 120), toast: toasts.length ? toasts : 'none', recoveryUsed: flow, recoveredReply: answered(recovered.last), userMessageKept: true, directorNotice };
             console.log('T68 ' + flow + ' ' + JSON.stringify(evidence.e16[flow]));
             pass('T68: ' + flow + ' during a held request on the synthetic rejecting backend: the user\'s message is kept, recovery by ' + flow + ' returns a reply; the outcome is recorded in evidence.e16, not asserted');
+            await untilDirector(1);
             await settled();
             await delay(2600);
+            evidence.e16[flow].directorCodesAfterRecovery = /Codes: [^\n]*/.exec(await whyText())?.[0] ?? null;
+            await why().evaluate(e => { e.open = false; });
         }
     }
     {
@@ -1272,6 +1276,7 @@ try {
         steps[at('hypothetical-travel-1')] = { content: JSON.stringify({ schemaVersion: 1, updates: [{ op: 'setLocation', backgroundId: by('hypothetical-travel-1').input.backgrounds[1].backgroundId, evidence: { sourceMessageKey: by('hypothetical-travel-1').input.window.at(-1).key, excerpt: 'harbor' } }] }) };
         steps[at('flashbacks-1')] = { delayMs: 4000, content: JSON.stringify(answerFor(by('flashbacks-1'))) };
         await control({ reset: true, script: steps });
+        await delay(2500);
         const proofBefore = await inventory(), proofFile = join(root, 'gate-b-proof-results.json');
         const output = execFileSync(process.execPath, [join(repo, 'tests/probes/m2-gate-b/run.mjs'), '--proof-loopback', '--origin', h.origin, '--out', proofFile, '--per-case-ms', '2000'], { encoding: 'utf8', timeout: 300000, env: { ...process.env } });
         await writeFile(join(root, 'gate-b-proof-console.log'), output.slice(-65536));
@@ -1297,7 +1302,6 @@ try {
         assert.equal(report.categories.negation.fields.background.abstained, 1);
         assert.equal(report.categories['hypothetical travel'].fields.background.incorrect, 1);
         assert.deepEqual(report.categories.flashbacks.failed, { count: 1, codes: { ABANDONED: 1 } });
-        nativeOnly(proofBefore, await inventory());
         assert.deepEqual((await inventory()).files, proofBefore.files, 'every native file byte-identical across the 40 requests');
         evidence.counts.gateBProof = { requests: wire.length, peak: controlState.peakDirector, casesSha256: proofRun.casesSha256, promptVersion: proofRun.promptVersion };
         pass('T67 runner proof: the committed runner, on the loopback fixture only, sent 40 cases one at a time with no retry through the product\'s own request bytes; a held reply was abandoned at its limit and the next case waited; only JSON and codes were retained, and the scorer reported correct, incorrect, abstained, refused and failed apart; every native file byte-identical');
