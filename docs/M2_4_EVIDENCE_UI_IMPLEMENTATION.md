@@ -517,7 +517,7 @@ Not settled by the documents; each is reversible and none is an owner ruling. **
 | **A suggestion moves nothing, so it is noted, not scored.** Where a move was expected it abstains | It changes no field |
 | **A proposal against a lock counts as correct** when the field stays, with `LOCKED` noted apart. | The stage is what the hard gate protects; the case states what should show, and a request that proposes it changes nothing |
 | **Fields are scored per actor; outfit only in its own category.** Elsewhere an outfit update is noted | Scoring outfit everywhere would pad every category with always-correct rows |
-| **Each category except presence, outfit and locks has a control case with a real change** (`mentions-5`, `negation-5`, `hypothetical-travel-5`, `flashbacks-5`). | Otherwise a model that never answers would score perfectly on these categories |
+| **The four categories that are mostly traps each have a control case with a real change** (`mentions-5`, `negation-5`, `hypothetical-travel-5`, `flashbacks-5`). | Otherwise a model that never answers would score perfectly on these categories |
 | **`group-authorship-4` expects neither Mira to move**, on two cards with one name. | Nothing says which left; abstaining is what “no unsupported change” asks. Its answer is a judgment call |
 | Expression labels are only Happy and Sad | Small catalog, plainly right or wrong answers |
 | Failed (`TRANSPORT_ERROR`, `HOST_REFUSED`, `ABANDONED`) and not run are reported apart from refused | G9 names refused only; folding transport trouble into model refusals would misstate the model |
