@@ -14,7 +14,7 @@ const files = new Map([
     ['/', resolve(root, 'tests/fixtures/reader-browser.html')],
     ['/vendor/showdown.js', resolve(hostRoot, 'node_modules/showdown/dist/showdown.js')],
     ['/vendor/purify.js', resolve(hostRoot, 'node_modules/dompurify/dist/purify.js')],
-    ...['index.js', 'style.css', 'src/shell.mjs', 'src/reader-view.mjs', 'src/reader-source-model.mjs', 'src/host-adapter.mjs', 'src/stage-view.mjs', 'src/transient-scene.mjs', 'src/source-prefix.mjs', 'src/scene-reducer.mjs', 'src/project-client.mjs', 'src/project-scene.mjs', 'src/project-expressions.mjs', 'src/director-controller.mjs', 'src/director-proposal.mjs', 'src/director-request.mjs', 'src/director-session.mjs', 'plugins/sillynovel-storage/schema.mjs'].map(path => ['/' + path, resolve(root, path)]),
+    ...['index.js', 'style.css', 'src/shell.mjs', 'src/reader-view.mjs', 'src/reader-source-model.mjs', 'src/host-adapter.mjs', 'src/stage-view.mjs', 'src/transient-scene.mjs', 'src/source-prefix.mjs', 'src/scene-reducer.mjs', 'src/project-client.mjs', 'src/project-scene.mjs', 'src/project-expressions.mjs', 'src/director-controller.mjs', 'src/director-proposal.mjs', 'src/director-request.mjs', 'src/director-session.mjs', 'src/director-overlay.mjs', 'plugins/sillynovel-storage/schema.mjs'].map(path => ['/' + path, resolve(root, path)]),
 ]);
 for (const asset of JSON.parse(await readFile(resolve(root,'tests/fixtures/m12-stage/manifest.json')))) files.set('/tests/fixtures/m12-stage/'+asset.file,resolve(root,'tests/fixtures/m12-stage',asset.file));
 before(async () => {
@@ -808,16 +808,23 @@ test('project UX: discard cancel, actor feedback, local Escape focus and narrow 
  assert.match(await page.locator('.sillynovel-project-status').innerText(),/No project attached/);
 });
 
-async function attachedExpressions(t,group=false){
+async function attachedExpressions(t,group=false,free=false){
  const page=await fixture(t);page.setDefaultTimeout(6000);await page.locator('#sillynovel-enabled').uncheck();await page.evaluate(()=>{fixture.context.getRequestHeaders=()=>({});});
  if(group)await page.evaluate(()=>{fixture.context.groupId='G';fixture.context.groups=[{id:'G',name:'Four member group',chat_id:fixture.context.chatId,members:['Mira.png','Mira1.png','Rowan.png','Sage.png']}];fixture.context.chat[0]={name:'Mira',mes:'First message.'};});
  const aid='22222222-2222-4222-8222-222222222222',bid='33333333-3333-4333-8333-333333333333',bgid='44444444-4444-4444-8444-444444444444';
  const actors=['11111111-1111-4111-8111-111111111111','55555555-5555-4555-8555-555555555555'];
  let record={schemaVersion:2,projectId:'12345678-1111-4111-8111-111111111111',name:'Expression project',revision:4,catalog:[{assetId:aid,kind:'sprite',actorId:actors[0],label:'Base'},{assetId:bid,kind:'sprite',actorId:actors[1],label:'Other Mira'},{assetId:bgid,kind:'background',actorId:null,label:'Forest'}],scene:{backgroundAssetId:bgid,backgroundLocked:true,actors:actors.map((actorId,i)=>({actorId,name:'Mira',present:true,slot:i?'right':'left',spriteAssetId:i?bid:aid,locks:{presence:true,slot:true,outfit:true}}))}};
+ // Layout automation may move: nothing locked but positions, and a second background.
+ const harbor='66666666-6666-4666-8666-666666666666';
+ if(free){record.catalog.push({assetId:harbor,kind:'background',actorId:null,label:'Harbor'});record.scene.backgroundLocked=false;for(const a of record.scene.actors)a.locks.presence=false;}
  const original=structuredClone(record),saves=[];
  await page.route('**/api/plugins/sillynovel-storage/**',async route=>{
   const req=route.request(),path=new URL(req.url()).pathname;
-  if(path.includes('/assets/'))return route.fulfill({contentType:'image/png',body:await readFile(resolve(root,'tests/fixtures/m12-stage',path.endsWith(bgid)?'forest.png':path.endsWith(aid)?'mira-a.png':'rowan.png'))});
+  if(path.includes('/assets/')){
+   const body=await readFile(resolve(root,'tests/fixtures/m12-stage',path.endsWith(bgid)||path.endsWith(harbor)?'forest.png':path.endsWith(aid)?'mira-a.png':'rowan.png'));
+   // Only the overlay case draws art: without the digest the older cases keep their unavailable-art fallback.
+   return route.fulfill({contentType:'image/png',headers:free?{'X-Content-SHA256':(await import('node:crypto')).createHash('sha256').update(body).digest('hex')}:{},body});
+  }
   if(req.method()==='PUT'){saves.push(req.postDataJSON());record={...record,...req.postDataJSON(),revision:record.revision+1};return route.fulfill({json:record});}
   return route.fulfill({json:path.endsWith('/capabilities')?{apiVersion:1,schemaVersion:2,catalogVersion:1}:path.endsWith('/projects')?[record]:record});
  });
@@ -1030,8 +1037,8 @@ test('director default fixture with no project keeps the toggle out of session-s
 });
 
 // M2.3 PR B: the composer hold at the real entry point. Real time: the hold is five seconds by design.
-async function directorWithRecorder(t){
- const x=await attachedExpressions(t),{page}=x;
+async function directorWithRecorder(t,free=false){
+ const x=await attachedExpressions(t,false,free),{page}=x;
  await page.evaluate(()=>{const c=fixture.context;window.requests=[];c.mainApi='openai';c.onlineStatus='Valid';c.extractMessageFromData=data=>data.text;c.generateRawData=args=>new Promise(resolve=>window.requests.push({args,resolve,at:performance.now()}));fixture.setText('First message, edited.',0);});
  await page.waitForFunction(()=>!document.querySelector('.sillynovel-director input').disabled);
  await page.getByLabel('Automatic director for this project',{exact:true}).check();
@@ -1040,6 +1047,41 @@ async function directorWithRecorder(t){
  x.status=()=>page.locator('.sillynovel-director-status').innerText();
  return x;
 }
+test('director overlay: composed background and presence with (director) read-outs; manual edit clears; project and chat untouched',async t=>{
+ const x=await directorWithRecorder(t,true),{page}=x,harbor='66666666-6666-4666-8666-666666666666';
+ const chat=()=>page.evaluate(()=>JSON.stringify(fixture.context.chat));
+ await x.reply('Mira leaves for the harbor.');
+ await page.waitForFunction(()=>window.requests.length===1,undefined,{timeout:8000});
+ const content=await page.evaluate(()=>window.requests[0].args.prompt[1].content),key=[...content.matchAll(/<<message key="([^"]+)"/g)].at(-1)[1];
+ assert.match(content,new RegExp(harbor+': Harbor'));
+ const before=await chat(),forest=await page.locator('.sillynovel-art__background').getAttribute('src');
+ const evidence={sourceMessageKey:key,excerpt:'harbor'};
+ await page.evaluate(({actor,harbor,evidence})=>window.requests[0].resolve({text:JSON.stringify({schemaVersion:1,updates:[{op:'setLocation',backgroundId:harbor,evidence},{op:'setCharacter',characterKey:actor,present:false,evidence}]})}),{actor:x.actors[0],harbor,evidence});
+ await page.waitForFunction(()=>/moved the scene/.test(document.querySelector('.sillynovel-director-status').textContent));
+ assert.match(await x.status(),/^Director moved the scene to Harbor\. Director marked Mira absent\. Not saved\./);
+ const art=page.locator('.sillynovel-selected-art');
+ await page.waitForFunction(()=>document.querySelector('.sillynovel-selected-art').textContent.includes('Harbor'));
+ assert.match(await art.textContent(),/Selected background: Harbor \(director\)/);
+ assert.match(await art.textContent(),/absent \(director\) · left/);
+ assert.match(await page.locator('.sillynovel-cast').textContent(),/absent \(director\)/);
+ assert.notEqual(await page.locator('.sillynovel-art__background').getAttribute('src'),forest,'the composed background is drawn');
+ const drawn=side=>page.locator('.sillynovel-sprite--'+side).evaluate(e=>!e.hidden);
+ assert.equal(await drawn('left'),false,'absent: hidden');
+ assert.equal(await drawn('right'),true);
+ assert.equal(await page.locator('.sillynovel-unsaved').getAttribute('data-state'),'saved','not dirty');
+ assert.equal(await chat(),before);
+ await button(page,'Save project').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('revision 5'));
+ assert.deepEqual(x.saves[0].scene,x.original.scene,'the save holds the global layout only');
+ assert.doesNotMatch(JSON.stringify(x.saves[0]),/director|origin|automatic/);
+ assert.match(await art.textContent(),/\(director\)/,'saving does not clear or absorb it');
+ await page.getByLabel('Lock field',{exact:true}).selectOption('background');await button(page,'Lock choice').click();
+ await page.waitForFunction(()=>!document.querySelector('.sillynovel-selected-art').textContent.includes('(director)'));
+ assert.match(await art.textContent(),/Selected background: Forest/);assert.match(await art.textContent(),/present/);
+ assert.equal(await drawn('left'),true);
+ assert.match(await page.locator('.sillynovel-visual-status').textContent(),/Director layout cleared/);
+ assert.equal(await page.locator('.sillynovel-unsaved').getAttribute('data-state'),'dirty','the manual command is the edit');
+ assert.match(await page.locator('.sillynovel-director-help').innerText(),/temporary expressions, the background and who is present, for this attachment; none of it is saved/);
+});
 test('director composer hold: a keystroke defers the request to five seconds after the last one; the draft never reaches the request',async t=>{
  const x=await directorWithRecorder(t),{page}=x,secret='PRIVATE-DRAFT-9c41';
  const composer=page.locator('#send_textarea');

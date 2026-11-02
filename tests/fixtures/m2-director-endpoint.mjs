@@ -13,12 +13,14 @@ const completion = content => ({ id: 'sn-director-local', created: 1, model: 'sn
 const chunk = delta => 'data: ' + JSON.stringify({ id: 'sn-director-local', created: 1, model: 'sn-reader-local', object: 'chat.completion.chunk', choices: [{ index: 0, delta, finish_reason: delta.content ? null : 'stop' }] }) + '\n\n';
 
 // Builds a schema-valid reply from what the request itself lists; model text is otherwise canned.
-function autoProposal(content, { excerpt, layout, suggest }) {
+function autoProposal(content, { excerpt, layout, background: chosen, presence, suggest }) {
     const sourceMessageKey = [...content.matchAll(/<<message key="([^"]+)"/g)].at(-1)[1], evidence = { sourceMessageKey, excerpt };
     const found = /^(temporary-expression:\S+): .* \| for (\S+)$/m.exec(content), background = /^Backgrounds:\n([^:\n]+): /m.exec(content);
     return JSON.stringify({ schemaVersion: 1, updates: [
         ...(found ? [{ op: 'setCharacter', characterKey: found[2], expressionId: found[1], evidence }] : []),
         ...(layout && background ? [{ op: 'setLocation', backgroundId: background[1], evidence }] : []),
+        ...(chosen ? [{ op: 'setLocation', backgroundId: chosen, evidence }] : []),
+        ...(presence ? [{ op: 'setCharacter', ...presence, evidence }] : []),
         ...(suggest ? [{ op: 'suggestLocation', label: suggest, evidence }] : []),
     ] });
 }

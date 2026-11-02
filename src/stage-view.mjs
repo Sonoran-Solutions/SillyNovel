@@ -121,7 +121,7 @@ export function mountVisualStage({ document, stage, actions }) {
     const directorArea=make('div','sillynovel-director');
     const directorLabel=make('label','checkbox_label sillynovel-control','Automatic director for this project');
     const directorToggle=make('input','');directorToggle.type='checkbox';directorToggle.setAttribute('aria-describedby','sillynovel-director-help');directorLabel.prepend(directorToggle);
-    const directorHelp=make('p','sillynovel-director-help','Off by default. After each completed reply, sends the last messages and your artwork labels to the connection you selected, counts against the usage of that connection, and only ever changes temporary expressions. The director waits while you type; a regenerate or swipe pressed while a director request is running can fail on a backend that handles one request at a time, and a swipe or regenerate recovers.');directorHelp.id='sillynovel-director-help';
+    const directorHelp=make('p','sillynovel-director-help','Off by default. After each completed reply, sends the last messages and your artwork labels to the connection you selected, counts against the usage of that connection, and only ever changes temporary expressions, the background and who is present, for this attachment; none of it is saved. The director waits while you type; a regenerate or swipe pressed while a director request is running can fail on a backend that handles one request at a time, and a swipe or regenerate recovers.');directorHelp.id='sillynovel-director-help';
     const directorStatus=make('p','sillynovel-director-status');directorStatus.setAttribute('role','status');
     directorArea.append(directorLabel,directorHelp,directorStatus);target.append(directorArea);
     listen(directorToggle,'change',()=>model.setDirectorEnabled?.(directorToggle.checked));
@@ -201,14 +201,15 @@ export function mountVisualStage({ document, stage, actions }) {
         options(libraryAsset,assets.filter(a=>a.kind!=='expression').map(a=>[a.id,(a.kind==='background'?'Background':'Actor sprite')+' · '+(media.get(a.id)?.label??a.id)+' · '+media.get(a.id)?.assetId?.slice(0,8)+(a.characterKey?' · '+(actors.find(actor=>actor.key===a.characterKey)?.label??'Unknown actor')+' ['+a.characterKey.slice(0,8)+']':'')+(a.available?'':' · art unavailable')]));
         if(libraryLabel.dataset.ref!==libraryAsset.value){libraryLabel.dataset.ref=libraryAsset.value;libraryLabel.value=media.get(libraryAsset.value)?.label??'';}
         const artName=ref=>ref?(media.get(ref.id)?.label??ref.id)+(ref.status==='ready'?'':' · '+ref.status+' artwork'):'neutral / no artwork';
-        selectedArt.textContent='Selected background: '+artName(view?.background)+(model.project&&view?.background?' · '+media.get(view.background.id)?.assetId:'')+' / Active actor: '+(member?member.label+' ['+shortId(member.key)+'] · '+(member.present?'present':'absent')+' · '+(member.slot??'offstage')+' · outfit: '+artName(member.outfit)+(model.project&&member.outfit?' · '+media.get(member.outfit.id)?.assetId:'')+' · locks: '+(Object.entries(member.locks).filter(([,v])=>v).map(([k])=>k).join(', ')||'none'):'none');
+        const byDirector=origin=>origin==='automatic'?' (director)':'';
+        selectedArt.textContent='Selected background: '+artName(view?.background)+byDirector(view?.background?.origin)+(model.project&&view?.background?' · '+media.get(view.background.id)?.assetId:'')+' / Active actor: '+(member?member.label+' ['+shortId(member.key)+'] · '+(member.present?'present':'absent')+byDirector(member.presenceOrigin)+' · '+(member.slot??'offstage')+' · outfit: '+artName(member.outfit)+(model.project&&member.outfit?' · '+media.get(member.outfit.id)?.assetId:'')+' · locks: '+(Object.entries(member.locks).filter(([,v])=>v).map(([k])=>k).join(', ')||'none'):'none');
         if(view!==displayedView||active!==displayedActor){
             if(view!==displayedView)bg.value=view?.background?.id??'';
             presence.value=String(member?.present??true);slot.value=member?.slot??'';outfit.value=member?.outfit?.id??'';
             displayedView=view;displayedActor=active;
         }
         options(expression,[['','Clear · neutral'],...assets.filter(a=>a.kind==='expression'&&(!model.project||a.characterKey===active&&a.outfitId===(member?.outfit?.id??null))).map(a=>[a.id,(a.characterKey===active && a.outfitId===(member?.outfit?.id??null)?'':'Incompatible · ')+(media.get(a.id)?.label??a.id)])]);
-        const labels=view?.cast.map(a=>a.label+' ['+shortId(a.key)+'] '+(!a.present?'absent':a.slot??'offstage')+' · locks: '+Object.entries(a.locks).filter(([,v])=>v).map(([k])=>k).join(', '))??[];
+        const labels=view?.cast.map(a=>a.label+' ['+shortId(a.key)+'] '+(!a.present?'absent':a.slot??'offstage')+byDirector(a.presenceOrigin)+' · locks: '+Object.entries(a.locks).filter(([,v])=>v).map(([k])=>k).join(', '))??[];
         cast.textContent=labels.length?'Cast: '+labels.join(' / '):'No manual cast. Register actors in Scene.';
         cast.dataset.count=String(view?.cast.length??0);
         feedback.textContent=notice+(view?.backgroundLocked?' Background locked.':'');

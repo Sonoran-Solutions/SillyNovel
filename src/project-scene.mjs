@@ -1,11 +1,12 @@
 import { createScene, reduceScene, reconcileScene } from './scene-reducer.mjs';
 import { createProjectExpressions } from './project-expressions.mjs';
 import { createDirectorController } from './director-controller.mjs';
+import { createDirectorOverlay, composeLayout } from './director-overlay.mjs';
 import { evidenceStamp } from './transient-scene.mjs';
 import { validateScene, validId, label, validateCleanupPreview, validateCatalog, selectedCatalog } from '../plugins/sillynovel-storage/schema.mjs';
 
 /** Global project commands use a project anchor, never a native message anchor.
- * This journal is memory-only; persistence serializes only the global projection. */
+ * This journal and the director overlay are memory-only; persistence serializes only the global projection. */
 export async function createProjectScene(project,client,actions,changed,isCurrent) {
     validateScene(project.scene);
     if(project.schemaVersion!==2 || !validId(project.projectId) || !label(project.name) || !Number.isSafeInteger(project.revision))throw Error('INVALID_PROJECT');
@@ -18,13 +19,19 @@ export async function createProjectScene(project,client,actions,changed,isCurren
     let saveState='clean';
     let cleanupBusy=false,cleanupPreview=null,cleanupNotice='Save or discard current changes before cleanup. Other tabs may hold unsaved drafts.';
     const assets=[],media=new Map();
+    let directorOverlay=null,expressions=null;
+    const overlaySelection=()=>({selectedSourceKey:actions.getSnapshot().cursor?.sourceKey??null,assets:[...assets,...expressions.get().assets]});
+    // Nothing automatic means nothing to keep current: a capture reconciles for itself, so an unused director costs nothing here.
+    const syncOverlay=()=>{if(directorOverlay?.active())directorOverlay.reconcile(expressions.sources(),overlaySelection());};
+    // F8: every manual layout command discards the whole overlay and rebases it on the new global layout.
+    const clearOverlay=()=>{const moved=directorOverlay.active();directorOverlay.rebase({view:scene.view,actors},expressions.sources(),overlaySelection());return moved?' Director layout cleared.':'';};
     const bytes=new TextEncoder().encode('sillynovel-project-global-v1:'+project.projectId);
     const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),x=>x.toString(16).padStart(2,'0')).join('');
     const source={key:'project-global:'+project.projectId,revision:0,swipeRevision:0,fingerprintVersion:'sn-source-v1',prefixSha256:hash};
     const current=()=>!disposed && isCurrent() && actions.getSceneEvidence().snapshot.sessionEpoch===epoch;
     const notify=()=>{if(!disposed)changed();};
     const context=()=>({ownerKey:'project:'+project.projectId,sessionEpoch:epoch,historyRevision:0,selectionRevision:0,selectedSourceKey:source.key,sources:[source],characters:actors.map(({key,label})=>({key,label})),catalog:{revision:catalogRevision,assets}});
-    const refresh=()=>{const result=scene?reconcileScene(scene,context()):createScene(context());if(!result.result.accepted)throw Error(result.result.code);scene=result.scene;};
+    const refresh=()=>{const result=scene?reconcileScene(scene,context()):createScene(context());if(!result.result.accepted)throw Error(result.result.code);scene=result.scene;syncOverlay();};
     function apply(command) {
         const c=scene.context;
         const outcome=reduceScene(scene,command,{ownerKey:c.ownerKey,sessionEpoch:epoch,historyRevision:0,selectionRevision:0,catalogRevision,expectedRevision:scene.revision,source,origin:'manual'});
@@ -76,9 +83,10 @@ export async function createProjectScene(project,client,actions,changed,isCurren
             CLEANUP_UNCERTAIN:'Cleanup outcome uncertain after a lost or invalid response. Removal may have committed. Review again; do not assume rollback.'};
         return messages[error.message]??('Cleanup refused: '+error.message+'. Review again before retrying.');
     }
-    const expressions=createProjectExpressions(actions,()=>scene,()=>!disposed&&isCurrent()&&actions.getSnapshot().sessionEpoch===epoch,notify);
+    expressions=createProjectExpressions(actions,()=>scene,()=>!disposed&&isCurrent()&&actions.getSnapshot().sessionEpoch===epoch,notify);
     await expressions.sync();
-    const director=actions.director?createDirectorController({runtime:actions.director,projectId:project.projectId,actions,expressions,layout:()=>({scene,actors,assets,media}),changed:notify}):null;
+    directorOverlay=createDirectorOverlay({ownerKey:'director:'+project.projectId,sessionEpoch:epoch});clearOverlay();
+    const director=actions.director?createDirectorController({runtime:actions.director,projectId:project.projectId,actions,expressions,overlay:directorOverlay,layout:()=>({scene,actors,assets,media}),changed:notify}):null;
     return {
         project:true,
         directorStatus:()=>director?.status()??null,
@@ -129,11 +137,11 @@ export async function createProjectScene(project,client,actions,changed,isCurren
             } catch(error){if(current()){if(error.message==='CLEANUP_UNCERTAIN')evictCleanupAssets(assetIds);cleanupNotice=cleanupError(error);}}
             finally {cleanupBusy=false;notify();}
         },
-        get:()=>{const overlay=expressions.get();return {scene:{...scene,view:overlay.view},actors,assets:[...assets,...overlay.assets],media:new Map([...media,...overlay.media]),notice:notice+' '+overlay.notice,verifiedStamp:!disposed&&actions.getSnapshot().sessionEpoch===epoch?evidenceStamp(actions.getSnapshot()):null};},
+        get:()=>{const overlay=expressions.get(),view=composeLayout(overlay.view,directorOverlay.active()?directorOverlay.project(actions.getSnapshot().cursor?.sourceKey):null);return {scene:{...scene,view},actors,assets:[...assets,...overlay.assets],media:new Map([...media,...overlay.media]),notice:notice+' '+overlay.notice,verifiedStamp:!disposed&&actions.getSnapshot().sessionEpoch===epoch?evidenceStamp(actions.getSnapshot()):null};},
         status:()=>({projectId:project.projectId,name:project.name,revision:project.revision,dirty:edit!==savedEdit,saveState,busy,importing,cleanupBusy,cleanupPreview,cleanupNotice}),
-        async sync(refresh=true){if(!current()){if(actions.getSnapshot().sessionEpoch!==epoch)expressions.dispose();return false;}await expressions.sync(refresh);director?.observe();notify();return true;},
-        async dispatch(command){if(['setExpression','clearExpression'].includes(command.type))return expressions.dispatch(command);if(importing||cleanupBusy)throw Error('Wait for the PNG import or cleanup to finish.');invalidateCleanup();if(!current())return false;apply(command);await expressions.sync();edit++;notice='Applied · unsaved project changes.';notify();return true;},
-        async register(_preset,name){if(importing||cleanupBusy)throw Error('Wait for the PNG import or cleanup to finish.');invalidateCleanup();if(!current())return;if(!label(name)||actors.length>=20)throw Error('Use a name of 1–80 characters; maximum 20 actors.');const key=crypto.randomUUID();actors.push({key,label:name,description:'Project actor',defaultURL:null});refresh();apply({type:'addCharacter',characterKey:key});edit++;notify();return key;},
+        async sync(refresh=true){if(!current()){if(actions.getSnapshot().sessionEpoch!==epoch)expressions.dispose();return false;}await expressions.sync(refresh);syncOverlay();director?.observe();notify();return true;},
+        async dispatch(command){if(['setExpression','clearExpression'].includes(command.type))return expressions.dispatch(command);if(importing||cleanupBusy)throw Error('Wait for the PNG import or cleanup to finish.');invalidateCleanup();if(!current())return false;apply(command);const cleared=clearOverlay();await expressions.sync();edit++;notice='Applied · unsaved project changes.'+cleared;notify();return true;},
+        async register(_preset,name){if(importing||cleanupBusy)throw Error('Wait for the PNG import or cleanup to finish.');invalidateCleanup();if(!current())return;if(!label(name)||actors.length>=20)throw Error('Use a name of 1–80 characters; maximum 20 actors.');const key=crypto.randomUUID();actors.push({key,label:name,description:'Project actor',defaultURL:null});refresh();apply({type:'addCharacter',characterKey:key});clearOverlay();edit++;notify();return key;},
         async importFile(file,kind,key,displayLabel){
             if(!current())return;
             displayLabel=displayLabel?.trim() || file.name?.replace(/\.png$/i,'').slice(0,80) || 'Imported PNG';
@@ -154,7 +162,7 @@ export async function createProjectScene(project,client,actions,changed,isCurren
                 const ref=await install(result.assetId,kind,kind==='background'?undefined:key,displayLabel);
                 if(!current())return;
                 if(prior<0)library.push(entry);else library[prior]=entry;
-                refresh();apply({type:kind==='background'?'setBackground':'setOutfit',assetId:ref,...(kind==='background'?{}:{characterKey:key})});edit++;notice='Imported · unsaved project arrangement.';
+                refresh();apply({type:kind==='background'?'setBackground':'setOutfit',assetId:ref,...(kind==='background'?{}:{characterKey:key})});notice='Imported · unsaved project arrangement.'+clearOverlay();edit++;
             } catch(error){notice='Import failed: '+error.message;throw error;}
             finally{importing=false;notify();}
         },
@@ -175,6 +183,6 @@ export async function createProjectScene(project,client,actions,changed,isCurren
             finally{busy=false;notify();}
         },
         reset(){throw Error('Detach the project before resetting session visuals.');},
-        dispose(){disposed=true;director?.dispose();expressions.dispose();for(const item of media.values())if(item.url)URL.revokeObjectURL(item.url);},
+        dispose(){disposed=true;director?.dispose();directorOverlay.dispose();expressions.dispose();for(const item of media.values())if(item.url)URL.revokeObjectURL(item.url);},
     };
 }
