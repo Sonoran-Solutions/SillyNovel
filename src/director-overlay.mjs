@@ -5,6 +5,8 @@ import { createScene, projectScene, reconcileScene, reduceScene } from './scene-
 const assetOf = ({ id, revision, kind, characterKey, outfitId, available }) => ({ id, revision, kind, available,
     ...(characterKey === undefined ? {} : { characterKey }), ...(outfitId === undefined ? {} : { outfitId }) });
 const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+// A correction is a manual command on the two fields automation can move, nothing else (F7, G5).
+const correctable = ({ type, field } = {}) => ['setBackground', 'clearBackground', 'setPresence'].includes(type) || type === 'release' && ['background', 'presence'].includes(field);
 /**
  * One reducer scene per attachment, never saved. The base is the project layout replayed as manual
  * commands at the first source, so it applies at every message and its locks stay locks (D4).
@@ -13,7 +15,7 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
  * @param {{ownerKey: string, sessionEpoch: number}} identity
  */
 export function createDirectorOverlay({ ownerKey, sessionEpoch }) {
-    let scene = null, args = null, history = 0, selection = 0, catalog = 0, memo = null, epoch = 0;
+    let scene = null, args = null, history = 0, selection = 0, catalog = 0, memo = null, epoch = 0, baseLength = 0;
     const install = next => { scene = next; memo = null; return scene; };
     const contextOf = (layout, sources, selectedSourceKey, assets) => ({ ownerKey, sessionEpoch, historyRevision: history, selectionRevision: selection, selectedSourceKey, sources,
         characters: layout.actors.map(({ key, label }) => ({ key, label })), catalog: { revision: catalog, assets } });
@@ -38,7 +40,20 @@ export function createDirectorOverlay({ ownerKey, sessionEpoch }) {
             if (actor.outfit && !apply({ type: 'setOutfit', characterKey, assetId: actor.outfit.id })) return null;
             if (!lock('presence', actor.locks.presence, characterKey) || !lock('outfit', actor.locks.outfit, characterKey)) return null;
         }
+        baseLength = current.commands.length;
         return current;
+    }
+    // Which command decided each field at a source: the base, a correction, or the director. The projection carries no origin.
+    function originsAt(sourceKey) {
+        const { sources } = scene.context, index = key => sources.findIndex(item => item.key === key), limit = index(sourceKey), origins = { background: null, presence: {} };
+        const standing = scene.commands.map((entry, position) => ({ entry, position })).filter(({ entry }) => entry.valid && index(entry.source.key) <= limit);
+        standing.sort((a, b) => index(a.entry.source.key) - index(b.entry.source.key) || a.entry.revision - b.entry.revision);
+        for (const { entry, position } of standing) {
+            const { type, characterKey } = entry.command, origin = { origin: position < baseLength ? 'base' : entry.origin === 'manual' ? 'correction' : 'automatic', revision: entry.revision, sourceKey: entry.source.key };
+            if (type === 'setBackground' || type === 'clearBackground') origins.background = origin;
+            else if (type === 'setPresence' || type === 'addCharacter') origins.presence[characterKey] = origin;
+        }
+        return origins;
     }
     /** Discards every automatic command. Returns the new scene, or null when the layout cannot be replayed. */
     function rebase(layout, sources, { selectedSourceKey, assets }) {
@@ -66,6 +81,16 @@ export function createDirectorOverlay({ ownerKey, sessionEpoch }) {
             const outcome = reconcileScene(scene, contextOf(args.layout, sources, target, mapped));
             return outcome.result.code === 'UNCHANGED' ? scene : install(outcome.result.accepted ? outcome.scene : null);
         },
+        /** A manual command forward from the selected message, in memory only; later overlay commands fall by the reducer's rule. A refusal keeps the exact scene. */
+        correct(command, authority) {
+            if (authority?.origin !== 'manual') return { accepted: false, code: 'MANUAL_ONLY' };
+            if (!correctable(command)) return { accepted: false, code: 'INVALID_COMMAND' };
+            if (!scene) return { accepted: false, code: 'INVALID_SCENE' };
+            const standing = scene.commands.filter(entry => entry.valid).length, { scene: next, result } = reduceScene(scene, command, authority);
+            if (!result.accepted) return { accepted: false, code: result.code };
+            install(next);
+            return { accepted: true, code: result.code, invalidated: standing + 1 - next.commands.filter(entry => entry.valid).length };
+        },
         /** Layout-only proposal through the merged atomic path; a refusal keeps the exact scene. */
         apply(proposal, token, evidence) {
             const { scene: next, result } = applyProposal(scene, proposal, token, evidence);
@@ -75,26 +100,37 @@ export function createDirectorOverlay({ ownerKey, sessionEpoch }) {
         project(sourceKey) {
             if (!scene) return null;
             const key = selectable(scene.context.sources, sourceKey);
-            if (memo?.key !== key) memo = { key, projection: projectScene(scene, key).projection ?? null };
+            if (memo?.key !== key) { const { projection } = projectScene(scene, key); memo = { key, projection: projection ? { ...projection, origins: originsAt(key) } : null }; }
             return memo.projection;
         },
         clear() { return args ? rebase(args.layout, args.sources, args.selection) : null; },
-        active: () => Boolean(scene?.commands.some(entry => entry.valid && entry.origin === 'automatic')),
+        active: () => Boolean(scene?.commands.slice(baseLength).some(entry => entry.valid)),
+        corrected: () => Boolean(scene?.commands.slice(baseLength).some(entry => entry.valid && entry.origin === 'manual')),
+        commandValid: revision => Boolean(scene?.commands.some(entry => entry.revision === revision && entry.valid)),
         scene: () => scene,
         /** Advanced by every rebase, because a rebase restarts command revisions. */
         epoch: () => epoch,
         dispose() { install(null); args = null; },
     };
 }
-/** Global view (with expressions composed) under the overlay's background and presence. Only what differs is marked as the director's. */
+/**
+ * Global view (with expressions composed) under the overlay's background, presence and their locks.
+ * Origin comes from the command that decided the field; slots and outfits stay global. A lock only the overlay holds is a correction's.
+ */
 export function composeLayout(view, projection) {
     if (!projection) return view;
+    const { origins } = projection;
     const cast = view.cast.map(actor => {
-        const present = projection.cast.find(item => item.key === actor.key)?.present ?? actor.present;
-        return present === actor.present ? actor : { ...actor, present, visible: present && actor.slot !== null, presenceOrigin: 'automatic' };
+        const at = projection.cast.find(item => item.key === actor.key), origin = origins.presence[actor.key]?.origin;
+        if (!at) return actor;
+        const lockOnly = at.locks.presence && !actor.locks.presence, locks = at.locks.presence === actor.locks.presence ? actor.locks : { ...actor.locks, presence: at.locks.presence };
+        if (origin === 'base' || !origin) return locks === actor.locks ? actor : { ...actor, locks };
+        return { ...actor, locks, present: at.present, visible: at.present && actor.slot !== null, presenceOrigin: origin, ...(lockOnly ? { presenceLockOrigin: 'correction' } : {}) };
     });
     const slots = { left: null, center: null, right: null };
     for (const actor of cast) if (actor.visible) slots[actor.slot] = actor.key;
-    const moved = projection.background && projection.background.id !== view.background?.id;
-    return { ...view, cast, slots, background: moved ? { ...projection.background, origin: 'automatic' } : view.background };
+    const origin = origins.background?.origin, moved = origin && origin !== 'base';
+    return { ...view, cast, slots, overlayOrigins: origins, backgroundLocked: projection.backgroundLocked,
+        background: moved ? projection.background && { ...projection.background, origin } : view.background,
+        ...(moved ? { backgroundOrigin: origin } : {}), ...(projection.backgroundLocked && !view.backgroundLocked ? { backgroundLockOrigin: 'correction' } : {}) };
 }

@@ -85,7 +85,7 @@ Provide controls for background/location, cast visibility, stage slot, outfit, e
 
 A manual visual correction is a display instruction, not an instruction to the roleplay model. Changing the background to a beach does not secretly append a message saying the characters traveled there.
 
-Locks are explicit and visible. Location, presence, and outfit locks persist until released. A manual expression defaults to the current selected message only. Persist the lock scope so a reload does not change its meaning.
+Locks are explicit and visible. Location, presence, and outfit locks persist until released. A manual choice stays locked by default, and the user can mark a background or presence as one the director may move. A manual expression defaults to the current selected message only. Persist the lock scope so a reload does not change its meaning.
 
 Provide **Reset visual state** with clear scope: current chat only, with confirmation and a recoverable export where available. It must never delete the conversation, host settings, or asset library.
 

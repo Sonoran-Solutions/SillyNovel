@@ -1286,3 +1286,223 @@ test('T61: the reply field stays reachable with the disclosure open on a narrow 
   assert.equal(await page.evaluate(()=>{const c=document.getElementById('send_textarea'),r=c.getBoundingClientRect(),hit=document.elementFromPoint(r.left+r.width/2,r.top+r.height/2);return hit===c||c.contains(hit);}),true,'the composer receives the tap');
  }
 });
+
+// M2.4 PR C: corrections on the row, the lock read-outs and the director-may-move control.
+const FOREST='44444444-4444-4444-8444-444444444444';
+const openWhyBody=async page=>{const why=page.locator('.sillynovel-why');await why.waitFor({state:'visible'});if(await why.getAttribute('open')===null)await why.locator('summary').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-why__body').textContent.includes('Session summary'));return why;};
+const untilWhy=(page,text)=>page.waitForFunction(text=>document.querySelector('.sillynovel-why__body').textContent.includes(text),text,{timeout:8000});
+const untilArt=(page,text)=>page.waitForFunction(text=>document.querySelector('.sillynovel-selected-art').textContent.includes(text),text,{timeout:8000});
+test('T63: Revert on the row is forward only, keeps other fields, locks the field, is not saved; Override takes a catalog background; a later update is kept with Release; a fresh proposal moves it',async t=>{
+ const x=await directorWithRecorder(t,true),{page}=x,other=x.actors[1];
+ await page.locator('.sillynovel-controls').evaluate(e=>{e.open=false;});
+ await x.reply('Mira and the other leave for the harbor.');
+ await decide(x,0,[{op:'setLocation',backgroundId:HARBOR,excerpt:'harbor'},{op:'setCharacter',characterKey:other,present:false,excerpt:'leave'}]);
+ await untilArt(page,'Harbor (director)');
+ const why=await openWhyBody(page),chat=await page.evaluate(()=>JSON.stringify(fixture.context.chat));
+ assert.equal(await page.getByRole('button',{name:'Revert background',exact:true}).textContent(),'Revert');
+ assert.deepEqual(await page.getByLabel('Override background with',{exact:true}).locator('option').allTextContents(),['Forest']);
+ assert.equal(await why.getByRole('button',{name:/^Release/}).count(),0);
+ await page.getByRole('button',{name:'Revert background',exact:true}).click();
+ await untilWhy(page,'your correction, message 3 · Mira · Not saved · locked until Release');
+ assert.equal(await why.evaluate(e=>e===document.activeElement),true,'focus stays in the disclosure, so Escape works');
+ const body=await why.innerText();
+ assert.match(body,/Background: Forest · your correction, message 3 · Mira · Not saved · locked until Release/);
+ assert.match(body,/absent · director, message 3 · Mira/,'the other field is kept');
+ assert.match(body,/Corrections: background 1/);
+ assert.match(await page.locator('.sillynovel-selected-art').textContent(),/Selected background: Forest \(corrected\)/);
+ assert.match(await page.locator('.sillynovel-visual-status').textContent(),/Corrected from this message and locked until Release\. Not saved\..*Background locked\./);
+ assert.equal(await page.locator('.sillynovel-unsaved').getAttribute('data-state'),'saved','project not dirty');
+ assert.equal(await page.evaluate(()=>JSON.stringify(fixture.context.chat)),chat);
+ assert.equal(x.saves.length,0);
+ // Forward only.
+ await button(page,'Previous').click();
+ await untilArt(page,'Selected background: Forest ·');
+ assert.doesNotMatch(await page.locator('.sillynovel-selected-art').textContent(),/corrected/);
+ await button(page,'Jump to Latest').click();
+ await untilArt(page,'(corrected)');
+ // Override on the corrected row.
+ await openWhyBody(page);
+ await page.getByLabel('Override background with',{exact:true}).selectOption(HARBOR);
+ await page.getByRole('button',{name:'Override background',exact:true}).click();
+ await untilArt(page,'Harbor (corrected)');
+ // A later automatic update there is kept, and says whose choice kept it.
+ await x.reply('They head back to the forest.');
+ await untilLine(page,'Director: requesting · 2 of 40');
+ const sent=await page.evaluate(()=>window.requests[1].args.prompt[1].content);
+ assert.match(sent,new RegExp(FOREST+': Forest \\| locked'),'the request carries the overlay lock');
+ assert.match(sent,new RegExp(other+': Mira \\| absent'));
+ await decide(x,1,[{op:'setLocation',backgroundId:FOREST,excerpt:'forest'}]);
+ await untilLine(page,'Director: on · 2 of 40');
+ await untilWhy(page,'LOCKED · kept your correction');
+ assert.match(await why.innerText(),/Dispositions, background: applied 1, LOCKED 1|Dispositions, background: LOCKED 1, applied 1/);
+ assert.match(await page.locator('.sillynovel-selected-art').textContent(),/Harbor \(corrected\)/);
+ // Release moves nothing and offers no way to apply the old proposal; the fresh one moves it.
+ const releases=why.getByRole('button',{name:'Release background',exact:true});
+ assert.equal(await releases.count(),2,'on stage and on the LOCKED row');
+ await releases.first().click();
+ await untilWhy(page,'LOCKED · kept your manual choice · released');
+ assert.match(await page.locator('.sillynovel-selected-art').textContent(),/Harbor \(corrected\)/,'the value stays');
+ await page.waitForTimeout(2300);
+ assert.equal(await page.evaluate(()=>window.requests.length),2,'Release issues nothing');
+ await x.reply('Back in the forest.');
+ await decide(x,2,[{op:'setLocation',backgroundId:FOREST,excerpt:'forest'}]);
+ await untilArt(page,'Forest (director)');
+ assert.equal(await page.locator('.sillynovel-unsaved').getAttribute('data-state'),'saved');
+});
+test('T63: presence reverts on the row; at an earlier message the notice names the invalidated suffix; controls are disabled while the journal is not ready',async t=>{
+ const x=await directorWithRecorder(t,true),{page}=x,other=x.actors[1],name='Revert presence of Mira [55555555]';
+ await page.locator('.sillynovel-controls').evaluate(e=>{e.open=false;});
+ await x.reply('Mira waves as the other leaves.');
+ await decide(x,0,[{op:'setCharacter',characterKey:other,present:false,excerpt:'leaves'}]);
+ await page.waitForFunction(()=>document.querySelector('.sillynovel-cast').textContent.includes('absent (director)'));
+ await x.reply('They reach the harbor.');
+ await decide(x,1,[{op:'setLocation',backgroundId:HARBOR,excerpt:'harbor'}]);
+ await untilArt(page,'Harbor (director)');
+ await button(page,'Previous').click();
+ await untilArt(page,'Selected background: Forest');
+ const why=await openWhyBody(page);
+ await page.getByRole('button',{name,exact:true}).click();
+ await page.waitForFunction(()=>document.querySelector('.sillynovel-visual-status').textContent.includes('Historical correction invalidated later director layout. Not saved.'));
+ await untilWhy(page,'your correction, message 3');
+ assert.match(await page.locator('.sillynovel-cast').textContent(),/right \(corrected\) · locks: presence/);
+ await button(page,'Jump to Latest').click();
+ await untilArt(page,'Selected background: Forest');
+ await untilWhy(page,'· invalidated by your correction');
+ assert.match(await why.innerText(),/Background: Harbor \(was Forest\) · applied · invalidated by your correction/);
+ // Streaming on the selected message: nothing acts until it resolves.
+ await page.evaluate(()=>fixture.emit('GENERATION_STARTED','normal',{},false));
+ await page.waitForFunction(()=>[...document.querySelectorAll('.sillynovel-why__body button')].every(b=>b.disabled));
+ await page.evaluate(()=>fixture.emit('GENERATION_STOPPED'));
+ await page.waitForFunction(()=>[...document.querySelectorAll('.sillynovel-why__body button')].some(b=>!b.disabled),undefined,{timeout:8000});
+});
+test('T64: Revert on an automatic expression row is the journal clear; a later automatic choice there is LOCKED; Override stays the Apply control; the suffix rule is named',async t=>{
+ const x=await directorWithRecorder(t),{page}=x,[mira]=x.actors,name='Revert expression of Mira [11111111]';
+ const expressionId=async i=>/^(temporary-expression:\S+): /m.exec(await page.evaluate(i=>window.requests[i].args.prompt[1].content,i))[1];
+ await x.reply('Mira laughs at the lantern.');
+ await page.waitForFunction(()=>window.requests.length===1,undefined,{timeout:8000});
+ const art=await expressionId(0);
+ await decide(x,0,[{op:'setCharacter',characterKey:mira,expressionId:art,excerpt:'laughs'}]);
+ await page.waitForFunction(()=>document.querySelector('.sillynovel-sprite--left img').dataset.expression!=='');
+ await x.reply('Mira laughs again.');
+ await decide(x,1,[{op:'setCharacter',characterKey:mira,expressionId:art,excerpt:'laughs'}]);
+ await untilLine(page,'Director: on · 2 of 40');
+ await page.waitForFunction(()=>document.querySelector('.sillynovel-sprite--left img').dataset.expression!=='');
+ await button(page,'Previous').click();
+ await page.waitForFunction(()=>document.querySelector('.sillynovel-sprite--left img').dataset.expression!=='');
+ const why=await openWhyBody(page);
+ assert.equal(await why.getByRole('button',{name:'Override background'}).count(),0,'this project has one background and it is locked');
+ await page.getByRole('button',{name,exact:true}).click();
+ await page.waitForFunction(()=>document.querySelector('.sillynovel-visual-status').textContent.includes('Cleared expression · base outfit restored. Historical correction invalidated later expressions. Not saved.'));
+ assert.equal(await x.image.getAttribute('data-expression'),'');
+ assert.equal(await page.locator('.sillynovel-unsaved').getAttribute('data-state'),'saved');
+ await untilWhy(page,'Corrections: expression 1');
+ await button(page,'Jump to Latest').click();
+ await page.waitForFunction(()=>document.querySelector('.sillynovel-sprite--left img').dataset.expression==='');
+ // T50: at the head, a manual clear with a request outstanding outranks the result.
+ await x.reply('Mira laughs a third time.');
+ await untilLine(page,'Director: requesting · 3 of 40');
+ await page.locator('.sillynovel-controls').evaluate(e=>{e.open=true;});
+ await button(page,'Clear expression').click();
+ await decide(x,2,[{op:'setCharacter',characterKey:mira,expressionId:art,excerpt:'laughs'}]);
+ await untilLine(page,'Director: on · 3 of 40');
+ await openWhyBody(page);// a new message with nothing to explain yet closed it
+ await untilWhy(page,'LOCKED · kept your manual choice');
+ assert.equal(await x.image.getAttribute('data-expression'),'');
+ assert.equal(await why.getByRole('button',{name:/^(Release|Let the director)/}).count(),0,'an expression has no lock flag to release');
+});
+test('T65: a global manual command clears corrections and their locks too; the notice says so; the manual choice shows',async t=>{
+ const x=await directorWithRecorder(t,true),{page}=x;
+ await x.reply('Mira leaves for the harbor.');
+ await decide(x,0,[{op:'setLocation',backgroundId:HARBOR,excerpt:'harbor'}]);
+ await untilArt(page,'Harbor (director)');
+ await openWhyBody(page);
+ await page.getByRole('button',{name:'Revert background',exact:true}).click();
+ await untilArt(page,'Forest (corrected)');
+ await page.getByLabel('Background',{exact:true}).selectOption(HARBOR);
+ await button(page,'Apply background').click();
+ await untilArt(page,'Selected background: Harbor ·');
+ assert.doesNotMatch(await page.locator('.sillynovel-selected-art').textContent(),/corrected|director/);
+ assert.match(await page.locator('.sillynovel-visual-status').textContent(),/Director layout cleared, your corrections included\./);
+ assert.equal(await page.locator('.sillynovel-unsaved').getAttribute('data-state'),'dirty');
+ await untilWhy(page,'cleared by your layout change');
+});
+test('T66: the toggle and the movable action over the existing flags: read-outs, dirty, Save body, reopen; a LOCKED row releases in one click naming the field; slot and outfit have none',async t=>{
+ const x=await directorWithRecorder(t),{page}=x,other=x.actors[1];
+ const background=page.getByLabel('Director may move the background',{exact:true}),presence=page.getByLabel('Director may move presence of Mira [55555555]',{exact:true});
+ assert.equal(await background.isChecked(),false,'default stays locked');
+ assert.equal(await presence.isChecked(),false);
+ assert.equal(await page.getByLabel(/^Director may move/).count(),3,'the background and each actor\'s presence, nothing else');
+ assert.match(await page.locator('.sillynovel-movable').first().textContent(),/ · locked$/);
+ // A LOCKED row: one click, naming the field, a global release.
+ await x.reply('The other leaves.');
+ await decide(x,0,[{op:'setCharacter',characterKey:other,present:false,excerpt:'leaves'}]);
+ await untilLine(page,'Director: on · 1 of 40');
+ const why=await openWhyBody(page);
+ await untilWhy(page,'LOCKED · kept your manual choice');
+ assert.equal(await page.locator('.sillynovel-unsaved').getAttribute('data-state'),'saved');
+ await why.getByRole('button',{name:'Let the director move presence of Mira [55555555]',exact:true}).click();
+ await page.waitForFunction(()=>document.querySelector('.sillynovel-unsaved').dataset.state==='dirty');
+ assert.equal(await presence.isChecked(),true);
+ await untilWhy(page,'LOCKED · kept your manual choice · released');
+ assert.match(await page.locator('.sillynovel-movable-list').textContent(),/\[55555555\] · movable/);
+ // The toggle: release and lock are ordinary manual commands.
+ await background.check();
+ await page.waitForFunction(()=>document.querySelector('.sillynovel-visual-status').textContent.includes('Applied · unsaved project changes.'));
+ assert.equal(await background.isChecked(),true);
+ await presence.uncheck();
+ await page.waitForFunction(()=>/\[55555555\] · locked/.test(document.querySelector('.sillynovel-movable-list').textContent));
+ // Apply and let the director move it, then a plain apply locks again.
+ await page.getByLabel('Presence',{exact:true}).selectOption('true');
+ await page.getByLabel('Project actor',{exact:true}).selectOption(other);
+ await page.getByRole('button',{name:'Apply and let the director move it: presence',exact:true}).click();
+ await page.waitForFunction(()=>/\[55555555\] · movable/.test(document.querySelector('.sillynovel-movable-list').textContent));
+ assert.match(await page.locator('.sillynovel-visual-status').textContent(),/Applied · the director may move this · unsaved project changes\./);
+ await button(page,'Apply presence').click();
+ await page.waitForFunction(()=>/\[55555555\] · locked/.test(document.querySelector('.sillynovel-movable-list').textContent));
+ await page.getByRole('button',{name:'Apply and let the director move it: presence',exact:true}).click();
+ await page.waitForFunction(()=>/\[55555555\] · movable/.test(document.querySelector('.sillynovel-movable-list').textContent));
+ // Save carries the flags in the existing fields; a reopen reads them back.
+ await button(page,'Save project').click();
+ await page.waitForFunction(()=>document.querySelector('.sillynovel-unsaved').dataset.state==='saved');
+ const saved=x.saves.at(-1).scene;
+ assert.equal(saved.backgroundLocked,false);
+ assert.deepEqual(saved.actors.map(a=>a.locks.presence),[true,false]);
+ assert.deepEqual(Object.keys(saved.actors[1].locks).sort(),['outfit','presence','slot']);
+ assert.doesNotMatch(JSON.stringify(x.saves.at(-1)),/movable|director/i);
+ await button(page,'Discard and reopen attached project').click();
+ await page.waitForFunction(()=>/\[55555555\] · movable/.test(document.querySelector('.sillynovel-movable-list').textContent)&&document.querySelector('.sillynovel-unsaved').dataset.state==='saved');
+ assert.equal(await page.getByLabel('Director may move the background',{exact:true}).isChecked(),true);
+ assert.equal(await page.getByLabel('Director may move presence of Mira [11111111]',{exact:true}).isChecked(),false);
+});
+test('a held correction reads as movable and held; the disclosure keeps the reader\'s choice across a rebuild; no project means no toggle',async t=>{
+ const x=await directorWithRecorder(t,true),{page}=x;
+ await x.reply('Mira leaves for the harbor.');
+ await decide(x,0,[{op:'setLocation',backgroundId:HARBOR,excerpt:'harbor'}]);
+ await untilArt(page,'Harbor (director)');
+ await openWhyBody(page);
+ await page.getByRole('button',{name:'Revert background',exact:true}).click();
+ await untilArt(page,'Forest (corrected)');
+ assert.match(await page.locator('.sillynovel-movable').first().textContent(),/ · movable · held by your correction$/);
+ assert.equal(await page.getByLabel('Director may move the background',{exact:true}).isChecked(),true,'the project flag, not the correction');
+ const choice=page.getByLabel('Override background with',{exact:true});
+ await choice.selectOption(HARBOR);
+ await x.reply('Another reply.');
+ await untilLine(page,'Director: requesting · 2 of 40');
+ await untilWhy(page,'Requests: 2 of 40');
+ assert.equal(await page.getByLabel('Override background with',{exact:true}).inputValue(),HARBOR,'kept across the reply');
+ await page.getByLabel('Override background with',{exact:true}).focus();
+ await decide(x,1,[]);
+ await untilWhy(page,'No change');
+ assert.equal(await page.getByLabel('Override background with',{exact:true}).inputValue(),HARBOR,'kept across the result');
+ assert.equal(await page.getByLabel('Override background with',{exact:true}).evaluate(e=>e===document.activeElement),true);
+ // Row controls on a narrow, short stage: wrapped inside the bounded disclosure, the reply field still in reach.
+ await page.locator('.sillynovel-controls').evaluate(e=>{e.open=false;});
+ await page.setViewportSize({width:390,height:550});await page.waitForTimeout(100);
+ const why=page.locator('.sillynovel-why'),form=await page.locator('#send_form').boundingBox();
+ assert.ok(form.y+form.height<=551,'reply field within the viewport: '+JSON.stringify(form));
+ assert.equal(await why.evaluate(e=>e.scrollWidth<=e.clientWidth),true,'no sideways scroll');
+ for(const box of await page.locator('.sillynovel-why__action').evaluateAll(list=>list.map(e=>e.getBoundingClientRect().height)))assert.ok(box>=44,'touch target '+box);
+ const bare=await fixture(t);await bare.locator('.sillynovel-controls summary').click();
+ assert.equal(await bare.locator('.sillynovel-movable:visible').count(),0);
+ assert.equal(await bare.locator('button:visible',{hasText:'let the director move'}).count(),0);
+});

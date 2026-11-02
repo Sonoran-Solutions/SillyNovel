@@ -136,7 +136,19 @@ export function mountVisualStage({ document, stage, actions }) {
     const sceneArea=area('Scene','Arrange the manual cast. Presence hides artwork but keeps its position reserved. Offstage releases a position. Manual choices can replace locks; releasing a lock keeps its value.');
     row();
     const bg=field('Background');
-    button('Apply background',()=>model.dispatch(bg.value ? {type:'setBackground',assetId:bg.value}:{type:'clearBackground'}));
+    const backgroundCommand=()=>bg.value?{type:'setBackground',assetId:bg.value}:{type:'clearBackground'};
+    button('Apply background',()=>model.dispatch(backgroundCommand()));
+    const movableAction=(what,command)=>{const e=button('Apply and let the director move it',()=>model.applyMovable?.(command()));e.setAttribute('aria-label','Apply and let the director move it: '+what);return e;};
+    const applyBackgroundMovable=movableAction('background',backgroundCommand);
+    // O08: the existing lock flag is the mark. A toggle is a global release or lock, so F8 clears the overlay and the project goes dirty.
+    const movableToggle=(name,field,characterKey)=>{
+        const wrap=make('label','checkbox_label sillynovel-control sillynovel-movable',name),input=make('input',''),state=make('span','sillynovel-movable__state');
+        input.type='checkbox';input.setAttribute('aria-label',name);input.dataset.field=field;if(characterKey)input.dataset.actor=characterKey;
+        wrap.prepend(input);wrap.append(state);return wrap;
+    };
+    const movableChange=event=>{const {checked,dataset:{field,actor:key}}=event.target;run(()=>model.dispatch({type:checked?'release':'lock',field,...(key?{characterKey:key}:{})}),true);};
+    const movableBackground=movableToggle('Director may move the background','background');target.append(movableBackground);
+    listen(movableBackground,'change',movableChange);
     row();
     const preset=field('Test actor art');options(preset,[['','No art · manual actor'],...TEST_ACTORS.map(a=>[a.preset,a.description])]);preset.value='mira-a';
     const name=field('Session actor name','input');name.value='Mira';name.maxLength=80;
@@ -146,7 +158,11 @@ export function mountVisualStage({ document, stage, actions }) {
     const actor=field('Session actor');
     row();
     const presence=field('Presence');options(presence,[['true','Present'],['false','Absent']]);
-    button('Apply presence',()=>model.dispatch({type:'setPresence',characterKey:actor.value,present:presence.value==='true'}));
+    const presenceCommand=()=>({type:'setPresence',characterKey:actor.value,present:presence.value==='true'});
+    button('Apply presence',()=>model.dispatch(presenceCommand()));
+    const applyPresenceMovable=movableAction('presence',presenceCommand);
+    row();
+    const movableActors=make('div','sillynovel-movable-list');target.append(movableActors);listen(movableActors,'change',movableChange);
     row();
     const slot=field('Position');options(slot,[['','Offstage'],['left','Left'],['center','Center'],['right','Right']]);
     const mode=field('Occupied slot action');options(mode,[['move','Move · refuse occupied'],['swap','Explicit swap'],['replace','Explicit replace']]);
@@ -206,7 +222,7 @@ export function mountVisualStage({ document, stage, actions }) {
     const DISPOSITIONS={applied:'applied',LOCKED:'LOCKED · kept your manual choice',NO_AUTOMATIC_LAYOUT:'NO_AUTOMATIC_LAYOUT · the director does not change outfits',unchanged:'unchanged · already on stage',suggestion:'suggestion only · not applied'};
     const counts=tally=>Object.entries(tally).map(([key,count])=>key+' '+count).join(', ');
     // Message and author come from the current history, labels from the catalog; of an entry's own text only the validated excerpt is shown.
-    function explanation(view,actors,media,director) {
+    function explanation(view,actors,media,director,catalog) {
         const {snapshot,history}=actions.getSceneEvidence(false),selected=snapshot.cursor?.sourceKey;
         const positionOf=key=>history.findIndex(item=>item.sourceKey===key);
         const message=key=>{const item=history[positionOf(key)];return item?'message '+(item.index+1)+' · '+item.author.label:'a message no longer in the chat';};
@@ -216,12 +232,41 @@ export function mountVisualStage({ document, stage, actions }) {
             const entry=director.log.findLast(item=>scope(item)&&item.updates.some(update=>update.disposition==='applied'&&!update.cleared&&match(update)));
             return entry?'director, '+message(entry.source.key):'director, decision no longer in the log';
         };
+        // The update behind what is on stage, by the overlay command that put it there.
+        const decided=revision=>{for(const entry of director.log.toReversed()){const update=entry.updates.find(item=>item.commandRevision===revision&&!item.cleared);if(update)return {entry,update};}return null;};
+        const madeBy=revision=>{const found=decided(revision);return found?'director, '+message(found.entry.source.key):'director, decision no longer in the log';};
+        const correction=(lock,sourceKey)=>'your correction, '+message(sourceKey)+' · Not saved'+(lock?' · locked until Release':'');
+        const layoutLock=locked=>locked?' · locked':' · director may move it';
+        const correct=(aria,command)=>({label:'Revert',aria,command,kind:'correct'});
+        const backgroundOverride=()=>{
+            const options=catalog.filter(a=>a.kind==='background'&&a.id!==view.background?.id).map(a=>[a.id,media.get(a.id)?.label??a.id]);
+            return options.length?[{label:'Override',aria:'Override background',kind:'override',options}]:[];
+        };
+        // A presence Revert is the opposite value: the field is binary, so Override would be the same button.
+        const release=(field,name,characterKey)=>({label:'Release',aria:'Release '+name,kind:'correct',command:{type:'release',field,...(characterKey?{characterKey}:{})}});
         const onStage=[];
-        if(view.background?.origin==='automatic')onStage.push('Background: '+artwork(view.background.id)+' · '+applied(update=>update.field==='background'&&update.targetId===view.background.id));
-        else onStage.push('Background: '+artwork(view.background?.id)+' · your layout');
+        const backgroundAt=view.overlayOrigins?.background;
+        if(view.backgroundOrigin==='automatic'){
+            const before=decided(backgroundAt.revision)?.update.before;
+            onStage.push({text:'Background: '+artwork(view.background?.id)+' · '+madeBy(backgroundAt.revision),actions:[...(before===undefined?[]:[correct('Revert background',before?{type:'setBackground',assetId:before}:{type:'clearBackground'})]),...backgroundOverride()]});
+        } else if(view.backgroundOrigin==='correction'){
+            const lock=view.backgroundLockOrigin==='correction';
+            onStage.push({text:'Background: '+artwork(view.background?.id)+' · '+correction(lock,backgroundAt.sourceKey),actions:[...backgroundOverride(),...(lock?[release('background','background')]:[])]});
+        } else onStage.push('Background: '+artwork(view.background?.id)+' · your layout'+layoutLock(view.backgroundLocked));
         for(const actor of view.cast){
-            onStage.push(actorName(actor.key)+': '+(actor.present?'present':'absent')+' · '+(actor.presenceOrigin==='automatic'?applied(update=>update.field==='presence'&&update.characterKey===actor.key&&update.before!==actor.present):'your layout'));
-            if(actor.expression)onStage.push(actorName(actor.key)+' expression: '+artwork(actor.expression.id)+' · '+(actor.expression.origin==='automatic'?applied(update=>update.field==='expression'&&update.characterKey===actor.key&&update.targetId===actor.expression.id,entry=>entry.source?.key===selected):'your choice'));
+            const name=actorName(actor.key),at=view.overlayOrigins?.presence[actor.key];
+            const flip=correct('Revert presence of '+name,{type:'setPresence',characterKey:actor.key,present:!actor.present});
+            if(actor.presenceOrigin==='automatic')onStage.push({text:name+': '+(actor.present?'present':'absent')+' · '+madeBy(at.revision),actions:[flip]});
+            else if(actor.presenceOrigin==='correction'){
+                const lock=actor.presenceLockOrigin==='correction';
+                onStage.push({text:name+': '+(actor.present?'present':'absent')+' · '+correction(lock,at.sourceKey),actions:[flip,...(lock?[release('presence','presence of '+name,actor.key)]:[])]});
+            } else onStage.push(name+': '+(actor.present?'present':'absent')+' · your layout'+layoutLock(actor.locks.presence));
+            if(actor.expression){
+                const automatic=actor.expression.origin==='automatic';
+                onStage.push({text:name+' expression: '+artwork(actor.expression.id)+' · '+(automatic?applied(update=>update.field==='expression'&&update.characterKey===actor.key&&update.targetId===actor.expression.id,entry=>entry.source?.key===selected):'your choice'),
+                    // Override is the existing Apply expression control; Revert is its manual clear, through the journal.
+                    actions:automatic?[{label:'Revert',aria:'Revert expression of '+name,kind:'dispatch',command:{type:'clearExpression',characterKey:actor.key}}]:[]});
+            }
         }
         const rowName=update=>{
             const was=update.before!==undefined&&update.before!==update.targetId?' (was '+artwork(update.before)+')':'';
@@ -230,10 +275,20 @@ export function mountVisualStage({ document, stage, actions }) {
             if(update.field==='presence')return 'Presence of '+actorName(update.characterKey)+': '+((update.disposition==='unchanged'?update.before:!update.before)?'present':'absent');
             return (update.field==='outfit'?'Outfit of ':'Expression of ')+actorName(update.characterKey)+': '+artwork(update.targetId)+was;
         };
+        // What keeps a LOCKED row kept right now: a correction releases in the overlay, a project lock is a global release (G6, G8).
+        const lockedRow=update=>{
+            if(update.disposition!=='LOCKED'||!['background','presence'].includes(update.field))return {};
+            const actor=view.cast.find(item=>item.key===update.characterKey),name=update.field==='background'?'background':'presence of '+actorName(update.characterKey);
+            const locked=update.field==='background'?view.backgroundLocked:actor?.locks.presence,lockOrigin=update.field==='background'?view.backgroundLockOrigin:actor?.presenceLockOrigin;
+            if(!locked)return {words:DISPOSITIONS.LOCKED+' · released'};
+            if(lockOrigin==='correction')return {words:'LOCKED · kept your correction',actions:[release(update.field,name,update.characterKey)]};
+            return {actions:[{label:'Let the director move '+(update.field==='background'?'the background':name),aria:'Let the director move '+(update.field==='background'?'the background':name),kind:'dispatch',command:{type:'release',field:update.field,...(update.characterKey?{characterKey:update.characterKey}:{})}}]};
+        };
         const decisions=director.log.filter(entry=>entry.source?.key===selected).map(entry=>({
             text:'Decision '+entry.seq+': '+(OUTCOMES[entry.outcome]??entry.outcome)+' · '+entry.code+(entry.elapsedMs===null?'':' · '+entry.elapsedMs+' ms')+(entry.messageChanged?' · message changed':''),
             items:entry.updates.map(update=>({
-                text:rowName(update)+' · '+(DISPOSITIONS[update.disposition]??update.disposition)+(update.cleared&&!entry.messageChanged?' · cleared by your layout change':''),
+                actions:lockedRow(update).actions,
+                text:rowName(update)+' · '+(lockedRow(update).words??DISPOSITIONS[update.disposition]??update.disposition)+(update.cleared&&!entry.messageChanged?' · cleared by your layout change':'')+(!update.cleared&&update.commandRevision!==undefined&&!model.overlayCommandValid(update.commandRevision)?' · invalidated by your correction':''),
                 items:update.evidence?[{quote:true,text:'Quote from '+message(update.evidence.sourceMessageKey)+': “'+update.evidence.excerpt+'”'}]:[],
             })),
         }));
@@ -243,14 +298,26 @@ export function mountVisualStage({ document, stage, actions }) {
             'Outcomes: '+(counts(Object.fromEntries(Object.entries(outcomes).map(([key,count])=>[OUTCOMES[key]??key,count])))||'none yet'),
             'Codes: '+(counts(codes)||'none yet'),
             'Pauses: '+(counts(pauses)||'none'),
+            'Corrections: '+(counts(director.corrections)||'none'),
             ...Object.entries(dispositions).map(([field,tally])=>'Dispositions, '+field+': '+counts(tally)),
             'Elapsed: '+(elapsed?'minimum '+elapsed.min+' ms, median '+elapsed.median+' ms, maximum '+elapsed.max+' ms, over the latest '+elapsed.samples:'none yet')];
         return [['On stage at this message',onStage],...(decisions.length?[['Decisions at this message',decisions]]:[]),['Session summary',summary]];
     }
-    const list=items=>{const e=make('ul','');e.append(...items.map(item=>{const li=make('li',item.quote?'sillynovel-why__quote':'',item.text??item);if(item.items?.length)li.append(list(item.items));return li;}));return e;};
+    // Plain data in, so the signature below covers every action; the handler re-checks the selection the row was built for.
+    function rowAction(action,sourceKey) {
+        const act=fn=>run(async()=>{if(actions.getSnapshot().cursor?.sourceKey!==sourceKey)throw Error('STALE_SELECTION');await fn();if(why.open)why.focus();},true);
+        const press=(label,aria,fn)=>{const e=make('button','menu_button sillynovel-button sillynovel-why__action',label);e.type='button';e.setAttribute('aria-label',aria);listen(e,'click',fn);return e;};
+        if(action.kind==='override'){
+            const choice=make('select','');choice.setAttribute('aria-label','Override background with');
+            choice.append(...action.options.map(([id,label])=>{const e=make('option','',label);e.value=id;return e;}));
+            return [choice,press(action.label,action.aria,()=>act(()=>model.correct({type:'setBackground',assetId:choice.value})))];
+        }
+        return [press(action.label,action.aria,()=>act(()=>action.kind==='correct'?model.correct(action.command):model.dispatch(action.command)))];
+    }
+    const list=(items,sourceKey)=>{const e=make('ul','');e.append(...items.map(item=>{const li=make('li',item.quote?'sillynovel-why__quote':'',item.text??item);if(item.actions?.length){const span=make('span','sillynovel-why__actions');span.append(...item.actions.flatMap(action=>rowAction(action,sourceKey)));li.append(span);}if(item.items?.length)li.append(list(item.items,sourceKey));return li;}));return e;};
     // Held only while open: a closed disclosure keeps no excerpt in the page, and cannot show an old one for a frame on opening (T60).
     const emptyWhy=()=>{if(whyBody.firstChild)whyBody.replaceChildren();delete whyBody.dataset.signature;};
-    function renderDirectorEvidence(director,view,actors,media) {
+    function renderDirectorEvidence(director,view,actors,media,catalog,journalReady) {
         const shown=Boolean(director?.enabled);
         directorBar.hidden=!shown;
         if(!shown){why.hidden=true;why.open=false;emptyWhy();return;}
@@ -261,14 +328,38 @@ export function mountVisualStage({ document, stage, actions }) {
         // No verified view means no verified answer: hide without forgetting that the reader opened it.
         if(!view){why.hidden=true;emptyWhy();return;}
         const selected=actions.getSnapshot().cursor?.sourceKey;
-        const explains=view.background?.origin==='automatic'||view.cast.some(a=>a.presenceOrigin==='automatic'||a.expression?.origin==='automatic')||director.log.some(entry=>entry.source?.key===selected);
+        const explains=view.backgroundOrigin||view.cast.some(a=>a.presenceOrigin||a.expression?.origin==='automatic')||director.log.some(entry=>entry.source?.key===selected);
         why.hidden=!explains;
         if(!explains)why.open=false;
         if(!why.open){emptyWhy();return;}
-        const sections=explanation(view,actors,media,director),signature=JSON.stringify(sections);
-        if(whyBody.dataset.signature===signature)return;
-        whyBody.dataset.signature=signature;
-        whyBody.replaceChildren(...sections.flatMap(([title,items])=>[make('h4','',title),list(items)]));
+        const sections=explanation(view,actors,media,director,catalog),signature=JSON.stringify([selected,sections]);
+        if(whyBody.dataset.signature!==signature){
+            // A reply rebuilds the lists; whoever is mid-choice keeps their place. Controls are named by aria-label.
+            const focused=whyBody.contains(document.activeElement)?document.activeElement.getAttribute('aria-label'):null,chosen=whyBody.querySelector('select')?.value;
+            whyBody.dataset.signature=signature;
+            whyBody.replaceChildren(...sections.flatMap(([title,items])=>[make('h4','',title),list(items,selected)]));
+            const choice=whyBody.querySelector('select');
+            if(choice&&[...choice.options].some(option=>option.value===chosen))choice.value=chosen;
+            if(focused)[...whyBody.querySelectorAll('[aria-label]')].find(e=>e.getAttribute('aria-label')===focused)?.focus();
+        }
+        // Like the expression controls: nothing acts on a streaming or unresolved message.
+        for(const e of whyBody.querySelectorAll('button,select'))e.disabled=!journalReady;
+    }
+    function renderMovable(state,view,actors,blocked) {
+        for(const e of [movableBackground,movableActors,applyBackgroundMovable,applyPresenceMovable])e.hidden=!state;
+        if(!state)return;
+        const signature=JSON.stringify(actors.map(a=>[a.key,a.label]));
+        if(movableActors.dataset.actors!==signature){
+            movableActors.dataset.actors=signature;
+            movableActors.replaceChildren(...actors.map(a=>movableToggle('Director may move presence of '+a.label+' ['+shortId(a.key)+']','presence',a.key)));
+        }
+        const locks=model.globalLocks();
+        const show=(wrap,locked,correction)=>{
+            const input=wrap.querySelector('input');input.checked=!locked;input.disabled=blocked;
+            wrap.querySelector('.sillynovel-movable__state').textContent=locked?' · locked':correction?' · movable · held by your correction':' · movable';
+        };
+        show(movableBackground,locks.background,view?.backgroundLockOrigin==='correction');
+        for(const wrap of movableActors.children){const key=wrap.querySelector('input').dataset.actor;show(wrap,locks.presence[key],view?.cast.find(a=>a.key===key)?.presenceLockOrigin==='correction');}
     }
     function render() {
         if(disposed)return;
@@ -283,8 +374,8 @@ export function mountVisualStage({ document, stage, actions }) {
         options(libraryAsset,assets.filter(a=>a.kind!=='expression').map(a=>[a.id,(a.kind==='background'?'Background':'Actor sprite')+' · '+(media.get(a.id)?.label??a.id)+' · '+media.get(a.id)?.assetId?.slice(0,8)+(a.characterKey?' · '+(actors.find(actor=>actor.key===a.characterKey)?.label??'Unknown actor')+' ['+a.characterKey.slice(0,8)+']':'')+(a.available?'':' · art unavailable')]));
         if(libraryLabel.dataset.ref!==libraryAsset.value){libraryLabel.dataset.ref=libraryAsset.value;libraryLabel.value=media.get(libraryAsset.value)?.label??'';}
         const artName=ref=>ref?(media.get(ref.id)?.label??ref.id)+(ref.status==='ready'?'':' · '+ref.status+' artwork'):'neutral / no artwork';
-        const byDirector=origin=>origin==='automatic'?' (director)':'';
-        selectedArt.textContent='Selected background: '+artName(view?.background)+byDirector(view?.background?.origin)+(model.project&&view?.background?' · '+media.get(view.background.id)?.assetId:'')+' / Active actor: '+(member?member.label+' ['+shortId(member.key)+'] · '+(member.present?'present':'absent')+byDirector(member.presenceOrigin)+' · '+(member.slot??'offstage')+' · outfit: '+artName(member.outfit)+(model.project&&member.outfit?' · '+media.get(member.outfit.id)?.assetId:'')+' · locks: '+(Object.entries(member.locks).filter(([,v])=>v).map(([k])=>k).join(', ')||'none'):'none');
+        const byDirector=origin=>origin==='automatic'?' (director)':origin==='correction'?' (corrected)':'';
+        selectedArt.textContent='Selected background: '+artName(view?.background)+byDirector(view?.backgroundOrigin)+(model.project&&view?.background?' · '+media.get(view.background.id)?.assetId:'')+' / Active actor: '+(member?member.label+' ['+shortId(member.key)+'] · '+(member.present?'present':'absent')+byDirector(member.presenceOrigin)+' · '+(member.slot??'offstage')+' · outfit: '+artName(member.outfit)+(model.project&&member.outfit?' · '+media.get(member.outfit.id)?.assetId:'')+' · locks: '+(Object.entries(member.locks).filter(([,v])=>v).map(([k])=>k).join(', ')||'none'):'none');
         if(view!==displayedView||active!==displayedActor){
             if(view!==displayedView)bg.value=view?.background?.id??'';
             presence.value=String(member?.present??true);slot.value=member?.slot??'';outfit.value=member?.outfit?.id??'';
@@ -344,8 +435,9 @@ export function mountVisualStage({ document, stage, actions }) {
         const director=state?model.directorStatus():null;
         directorArea.hidden=!director;
         if(director){directorToggle.checked=director.enabled;directorToggle.disabled=!director.available;directorStatus.textContent=director.available?director.notice+(director.enabled?' · '+director.count+' of '+director.ceiling+' requests this session':''):'Director unavailable: this host has no generation path for it.';}
-        renderDirectorEvidence(director,view,actors,media);
         const overlay=state?model.expressionStatus():null;
+        renderDirectorEvidence(director,view,actors,media,assets,Boolean(overlay?.ready&&!paused));
+        renderMovable(state,view,actors,!ready||paused||Boolean(state?.cleanupBusy));
         expressionContext.textContent=state?'Selected message: '+(actions.getSnapshot().cursor?String(actions.getSnapshot().cursor.index+1)+' · '+actions.getSnapshot().cursor.author.label:'unresolved')+' / Actor: '+(member?member.label+' ['+shortId(member.key)+']':'select actor')+' / Current expression: '+artName(member?.expression)+(member?.expression?.origin==='automatic'?' (director)':'')+' · Temporary, not saved. '+overlay.notice:'';
         for(const e of [expression,applyExpression,clearExpression])e.disabled=e.disabled||Boolean(state&&!overlay.ready);
         for(const e of [expressionFile,expressionLabel]){e.parentElement.hidden=!state;e.disabled=e.disabled||!state||!overlay?.ready||overlay?.busy;}

@@ -733,6 +733,298 @@ try {
     await reopenClean();
     await assertSavedUntouched();
     pass('T57: reload discards the overlay; the saved project, its revision and its bundle bytes never changed');
+
+    // M2.4 PR C: corrections on the row and the director-may-move control, against a project on disk and its bundle.
+    const statusLine = () => page.locator('.sillynovel-visual-status').textContent();
+    const rowButton = name => why().getByRole('button', { name, exact: true });
+    const whyText = async () => { await why().waitFor({ state: 'visible' }); await why().evaluate(e => { e.open = true; }); await page.waitForFunction(() => document.querySelector('.sillynovel-why__body').textContent.includes('Session summary')); return why().locator('.sillynovel-why__body').innerText(); };
+    const untilWhy = pattern => until(async () => pattern.test(await whyText()), 'disclosure ' + pattern);
+    const untilReadout = pattern => until(async () => pattern.test(await readout()), 'read-out ' + pattern);
+    const untilLineStatus = pattern => until(async () => pattern.test(await statusLine()), 'status ' + pattern);
+    const actorLabel = actor => actor.name + ' [' + actor.actorId.slice(0, 8) + ']';
+    const lastMoves = async (expected, turnText, step) => { await control({ reset: true, script: [step] }); await turn(turnText); await untilDirector(1); await until(async () => /^Director: on/.test(await line().textContent()), 'request settled ' + expected); };
+    await watchNotices();
+    await importArt(roamMira.actorId);
+    {
+        // T63: forward only, other fields kept, lock shown, not saved, nothing written.
+        const forestDrawn = await page.locator('.sillynovel-art__background').getAttribute('src');
+        await lastMoves('first', 'Corrections: the first move.', { auto: MOVE });
+        await untilOverlay();
+        const anchor = await chatLength();
+        await delay(2500);
+        const held = await inventory(), chatHeld = await page.evaluate(() => JSON.stringify(SillyTavern.getContext().chat));
+        await closeControls();
+        await whyText();
+        assert.equal(await rowButton('Revert background').textContent(), 'Revert');
+        await rowButton('Revert background').click();
+        await untilReadout(/Selected background: Forest \(corrected\)/);
+        const corrected = await whyText();
+        await page.screenshot({ path: join(root, 't63-correction-row.png') });
+        assert.ok(corrected.includes('Background: Forest · your correction, message ' + anchor + ' · Project A · Not saved · locked until Release'), corrected);
+        assert.ok(corrected.includes('Corrections: background 1'), corrected);
+        assert.match(corrected, /Background: Harbor \(was Forest\) · applied/, 'the decision itself stays on the record');
+        assert.match(await statusLine(), /Corrected from this message and locked until Release\. Not saved\..*Background locked\./);
+        assert.match(await castLine(), /Rowan \[[^\]]+\] absent \(director\)/, 'the other field is kept');
+        assert.equal(await drawn('right'), false);
+        assert.equal(await page.locator('.sillynovel-art__background').getAttribute('src'), forestDrawn, 'the stage draws the corrected background');
+        assert.equal(await unsavedState(), 'saved', 'project not dirty');
+        await assertSavedUntouched();
+        await delay(2500);
+        assert.deepEqual(await inventory(), held, 'every native file byte-identical across the correction');
+        assert.equal(await page.evaluate(() => JSON.stringify(SillyTavern.getContext().chat)), chatHeld);
+        await why().evaluate(e => { e.open = false; });
+        await button('Previous').click();
+        await untilReadout(/Selected background: Forest ·/);
+        assert.doesNotMatch(await readout(), /corrected|director/, 'not before the message');
+        await button('Jump to Latest').click();
+        await untilReadout(/Forest \(corrected\)/);
+        pass('T63: Revert on the row corrects one automatic background forward from the selected message only; the other field stays; the lock shows and the row says Not saved; project not dirty; saved scene, revision, bundle bytes and every native file byte-identical');
+
+        // A later update is LOCKED, the request says so, the rest applies. Release keeps the value and issues nothing; only a fresh proposal moves it.
+        await lastMoves('locked', 'Corrections: the director tries again.', { auto: { excerpt: 'lantern glows', background: harborAsset, presence: { characterKey: roamRowan.actorId, present: true } } });
+        const lockedWire = (await directorLog())[0].body.messages[1].content;
+        assert.match(lockedWire, new RegExp(forestAsset + ': Forest \\| locked'), 'backgrounds[].locked comes from the overlay');
+        await untilReadout(/Forest \(corrected\)/);
+        const kept = await whyText();
+        assert.match(kept, /Background: Harbor \(was Forest\) · LOCKED · kept your correction/);
+        assert.match(kept, /Dispositions, background: [^\n]*LOCKED 1/);
+        await until(async () => await drawn('right'), 'the rest applies');
+        await assertSavedUntouched();
+        const releaseBefore = await inventory();
+        await rowButton('Release background').first().click();
+        await untilWhy(/LOCKED · kept your manual choice · released/);
+        assert.match(await statusLine(), /Released\. Only a new director proposal can move this; nothing waiting is applied\. Not saved\./);
+        assert.match(await readout(), /Forest \(corrected\)/, 'Release moves nothing');
+        await delay(2600);
+        assert.equal((await directorLog()).length, 1, 'Release issues nothing');
+        assert.deepEqual(await inventory(), releaseBefore);
+        await lastMoves('fresh', 'Corrections: a fresh proposal.', { auto: { excerpt: 'lantern glows', background: harborAsset } });
+        await untilOverlay();
+        assert.equal(await unsavedState(), 'saved');
+        await assertSavedUntouched();
+        pass('T63: a later update on the corrected field skips LOCKED as "kept your correction" and the rest applies; the request reports the overlay lock; Release keeps the value and issues nothing; only a fresh proposal moves it');
+
+        // At an earlier message a correction invalidates later overlay commands, and the notice says so. No story message changes.
+        const chatBeforeHistory = await page.evaluate(() => JSON.stringify(SillyTavern.getContext().chat));
+        await why().evaluate(e => { e.open = false; });
+        await button('Previous').click();
+        await button('Previous').click();
+        await untilReadout(/Forest \(corrected\)/);
+        await whyText();
+        await rowButton('Revert presence of ' + actorLabel(roamRowan)).click();
+        await untilLineStatus(/Historical correction invalidated later director layout\. Not saved\./);
+        assert.match(await castLine(), /Rowan \[[^\]]+\] absent \(corrected\)/);
+        await why().evaluate(e => { e.open = false; });
+        await button('Jump to Latest').click();
+        await untilReadout(/Forest \(corrected\)/);
+        assert.match(await whyText(), /Background: Harbor \(was Forest\) · applied · invalidated by your correction/);
+        assert.equal(await page.evaluate(() => JSON.stringify(SillyTavern.getContext().chat)), chatBeforeHistory);
+        pass('T63: a correction at an earlier message invalidates later overlay commands by the reducer rule, the notice says so, and the later row reads "invalidated by your correction"; canonical chat unchanged');
+
+        // A correction makes a new scene: a result in flight is stale, not a failure.
+        await control({ reset: true, script: [{ hold: true, auto: { excerpt: 'lantern glows', background: harborAsset } }] });
+        await turn('Corrections: held while I correct.');
+        await untilDirector(1);
+        await whyText();
+        await rowButton('Revert presence of ' + actorLabel(roamRowan)).click();
+        await untilLineStatus(/Corrected from this message/);
+        await control({ release: true });
+        await untilWhy(/Stale · STALE_SCENE/);
+        assert.doesNotMatch(await readout(), /Harbor/, 'nothing from the stale result applied');
+        assert.match(await whyText(), /Consecutive failures: 0/);
+        pass('T63: a correction while a request is outstanding makes the result STALE_SCENE: not a failure, nothing applies');
+
+        // Explicit Save: the correction is in neither the body nor the store.
+        await assertSavedUntouched();
+        await why().evaluate(e => { e.open = false; });
+        await openControls();
+        await button('Save project').click();
+        await until(async () => (await plugin('/projects/' + roaming.projectId)).revision === savedRoaming.revision + 1, 'explicit save');
+        assert.deepEqual((await plugin('/projects/' + roaming.projectId)).scene, savedRoaming.scene, 'globalState() carries no correction and no lock');
+        evidence.counts.correctionsSavedSceneIdentical = true;
+        pass('T63: an explicit Save with corrections on stage writes the saved layout byte for byte: globalState() carries no correction and no lock');
+    }
+    {
+        // T64: Revert on an automatic expression row, the suffix rule, and T50 through the same journal.
+        await button('Detach project').click();
+        await page.waitForFunction(() => document.querySelector('.sillynovel-director').hidden);
+        await reopenClean();
+        await importArt(roamMira.actorId);
+        await control({ reset: true, fallback: AUTO });
+        await turn('Expressions: the first reply.');
+        await untilDirector(1);
+        await until(async () => await expressionOn('left') !== '', 'first automatic expression');
+        await turn('Expressions: the second reply.');
+        await untilDirector(2);
+        await until(async () => /^Director: on · 2 of/.test(await line().textContent()), 'second result');
+        assert.notEqual(await expressionOn('left'), '');
+        await closeControls();
+        await button('Previous').click();
+        await button('Previous').click();
+        await until(async () => await expressionOn('left') !== '', 'first expression on stage');
+        const name = 'Revert expression of ' + actorLabel(roamMira);
+        await whyText();
+        const held = await inventory();
+        await rowButton(name).click();
+        await untilLineStatus(/Cleared expression · base outfit restored\. Historical correction invalidated later expressions\. Not saved\./);
+        assert.equal(await expressionOn('left'), '');
+        assert.equal(await unsavedState(), 'saved');
+        assert.match(await whyText(), /Corrections: expression 1/);
+        await delay(2500);
+        assert.deepEqual(await inventory(), held);
+        await why().evaluate(e => { e.open = false; });
+        await button('Jump to Latest').click();
+        await until(async () => await expressionOn('left') === '', 'the later expression fell');
+        pass('T64: Revert on an automatic expression row is the existing manual clear at that source; the suffix rule is named; project not dirty; every native file byte-identical');
+        // T50: a manual clear while a request is out outranks its result at that source; the row records LOCKED.
+        await control({ reset: true, script: [{ hold: true, ...AUTO }] });
+        await turn('Expressions: held while I clear.');
+        await untilDirector(1);
+        await openControls();
+        await field('Project actor').selectOption(roamMira.actorId);
+        await button('Clear expression').click();
+        await closeControls();
+        await control({ release: true });
+        await until(async () => /Director: no change|kept your manual choice/.test(await statusText()), 'held result');
+        await untilWhy(/Expression of Mira \[[^\]]+\]: Happy[^\n]* · LOCKED · kept your manual choice/);
+        assert.equal(await expressionOn('left'), '');
+        assert.equal(await rowButton(name).count(), 0, 'nothing automatic to revert');
+        pass('T64, T50: a later automatic choice at a source with a manual clear is recorded LOCKED and the manual choice is what shows');
+    }
+    {
+        // T65: a correction, then a global manual command: the whole overlay goes, and the manual choice is what shows.
+        await lastMoves('t65', 'Global: a move to correct.', { auto: MOVE });
+        await untilOverlay();
+        await whyText();
+        await rowButton('Revert background').click();
+        await untilReadout(/Forest \(corrected\)/);
+        await why().evaluate(e => { e.open = false; });
+        await openControls();
+        await field('Background').selectOption(harborAsset);
+        await button('Apply background').click();
+        await untilReadout(/Selected background: Harbor ·/);
+        assert.doesNotMatch(await readout(), /corrected|director/);
+        assert.match(await statusLine(), /Director layout cleared, your corrections included\./);
+        assert.equal(await drawn('right'), true, 'the automatic presence went too');
+        assert.equal(byDirector(await castLine()), false);
+        assert.match(await whyText(), /cleared by your layout change/);
+        assert.equal(await unsavedState(), 'dirty', 'the global command is the user\'s edit');
+        assert.equal((await plugin('/projects/' + roaming.projectId)).scene.backgroundAssetId, forestAsset, 'nothing saved without Save');
+        pass('T65: a correction then a global manual command: the whole overlay, corrections and their locks included, cleared and rebased; the notice says so; the manual choice shows; nothing saved');
+        await why().evaluate(e => { e.open = false; });
+        await button('Detach project').click();
+        await page.waitForFunction(() => document.querySelector('.sillynovel-director').hidden);
+    }
+    {
+        // T66: a project whose every lock is on. Mark, Save, reopen, export, import.
+        const created = await makeProject('Director marked', [['Mira', 'left'], ['Rowan', 'right']], ['mira-a.png', 'rowan.png']);
+        const otherBackground = (await plugin('/projects/' + created.projectId + '/assets', 'POST', await art('rowan.png'), 201, 'image/png')).assetId;
+        const forestMarked = created.catalog.find(a => a.kind === 'background').assetId;
+        const marked = await plugin('/projects/' + created.projectId, 'PUT', { schemaVersion: 2, expectedRevision: created.revision, name: created.name, catalog: [...created.catalog, { assetId: otherBackground, kind: 'background', actorId: null, label: 'Harbor' }], scene: { ...created.scene, backgroundAssetId: forestMarked } });
+        const [markedMira, markedRowan] = marked.scene.actors;
+        await page.reload();
+        await page.locator('#sillynovel-stage').waitFor();
+        await page.waitForFunction(() => SillyTavern.getContext().characters.length > 0);
+        await toPlanted();
+        await connect();
+        await open(marked.projectId, 2);
+        const backgroundToggle = () => field('Director may move the background');
+        const presenceToggle = actor => field('Director may move presence of ' + actorLabel(actor));
+        assert.equal(await toggle().isChecked(), false, 'T48: a new project is off');
+        assert.equal(await backgroundToggle().isChecked(), false, 'default stays locked');
+        assert.equal(await presenceToggle(markedRowan).isChecked(), false);
+        assert.equal(await page.locator('#sillynovel-stage').getByLabel(/^Director may move/).count(), 3, 'the background and each actor\'s presence; slot and outfit have none (F7)');
+        assert.match(await page.locator('.sillynovel-movable').first().textContent(), / · locked$/);
+        await toggle().setChecked(true);
+        await importArt(markedMira.actorId);
+        const markedMove = { excerpt: 'lantern glows', background: otherBackground, presence: { characterKey: markedRowan.actorId, present: false } };
+        // A LOCKED row releases in one click, naming the field: a global release, so the project goes dirty visibly.
+        await lastMoves('locked', 'Marked: everything locked.', { auto: markedMove });
+        const lockedBody = await whyText();
+        assert.match(lockedBody, /Background: Harbor \(was Forest\) · LOCKED · kept your manual choice/);
+        assert.match(lockedBody, /Presence of Rowan \[[^\]]+\]: absent · LOCKED · kept your manual choice/);
+        assert.equal(await unsavedState(), 'saved');
+        await rowButton('Let the director move the background').click();
+        await until(async () => await unsavedState() === 'dirty', 'the release is the user\'s edit');
+        assert.equal(await backgroundToggle().isChecked(), true);
+        assert.match(await readout(), /Selected background: Forest ·/, 'value kept');
+        await untilWhy(/Background: Harbor \(was Forest\) · LOCKED · kept your manual choice · released/);
+        await why().evaluate(e => { e.open = false; });
+        // The toggle for presence, and its way back.
+        await openControls();
+        await presenceToggle(markedRowan).check();
+        await until(async () => /movable/.test(await page.locator('.sillynovel-movable-list').textContent()), 'presence movable');
+        assert.match(await page.locator('.sillynovel-movable-list').textContent(), new RegExp(actorLabel(markedRowan).replace(/[[\]]/g, '\\$&') + ' · movable'));
+        assert.equal(await presenceToggle(markedMira).isChecked(), false);
+        await page.locator('.sillynovel-movable-list').scrollIntoViewIfNeeded();
+        await page.screenshot({ path: join(root, 't66-director-may-move.png') });
+        // Save: the value kept, the flag in the existing field, nothing new.
+        await button('Save project').click();
+        await until(async () => await unsavedState() === 'saved', 'saved');
+        const check = record => {
+            assert.equal(record.schemaVersion, 2, 'schema v2 unchanged');
+            assert.equal(record.scene.backgroundLocked, false);
+            assert.deepEqual(record.scene.actors.map(a => [a.name, a.locks.presence]), [['Mira', true], ['Rowan', false]]);
+            assert.deepEqual(record.scene.actors.map(a => a.present), [true, true], 'values kept');
+            assert.deepEqual(Object.keys(record.scene.actors[0].locks).sort(), ['outfit', 'presence', 'slot']);
+            assert.deepEqual(Object.keys(record.scene).sort(), ['actors', 'backgroundAssetId', 'backgroundLocked']);
+            assert.doesNotMatch(JSON.stringify(record), /movable|enabledProjects|sessionCeiling/);
+        };
+        const onDisk = await plugin('/projects/' + marked.projectId);
+        check(onDisk);
+        assert.equal(onDisk.scene.backgroundAssetId, forestMarked);
+        pass('T66: a LOCKED row releases in one click naming the field and the toggle marks presence; both are manual commands that go dirty; Save keeps the values with the existing flags false, schema v2 unchanged');
+        // Reopen: read back, and the director may now move exactly what was marked.
+        await button('Discard and reopen attached project').click();
+        await until(async () => /revision/.test(await page.locator('.sillynovel-project-status').textContent()) && await backgroundToggle().isChecked(), 'reopened');
+        assert.equal(await presenceToggle(markedRowan).isChecked(), true);
+        assert.equal(await presenceToggle(markedMira).isChecked(), false);
+        await page.waitForFunction(n => document.querySelectorAll('.sillynovel-sprite:not([hidden])').length === n, 2);
+        await importArt(markedMira.actorId);
+        await lastMoves('movable', 'Marked: now it may move.', { auto: markedMove });
+        await untilOverlay();
+        assert.match(await castLine(), /Rowan \[[^\]]+\] absent \(director\)/);
+        assert.equal(await unsavedState(), 'saved', 'the director moving it dirties nothing');
+        assert.deepEqual((await plugin('/projects/' + marked.projectId)).scene, onDisk.scene);
+        pass('T66: after reopen the value is kept and the lock false; the director moves what was marked, in the overlay, and nothing is dirty or saved');
+        // Export and import: the flags travel, the director's enablement does not.
+        const markedBundle = await (await h.context.request.get(h.origin + '/api/plugins/sillynovel-storage/projects/' + marked.projectId + '/export')).body();
+        assert.doesNotMatch(markedBundle.toString(), /enabledProjects|sessionCeiling|"director"/);
+        const imported = await plugin('/projects/import', 'POST', markedBundle, 201, 'application/vnd.sillynovel.bundle');
+        const copied = await plugin('/projects/' + imported.projectId);
+        check(copied);
+        await until(async () => (await inventory()).settings.extension_settings.sillynovel.director.enabledProjects?.[marked.projectId] === true, 'enablement on disk');
+        assert.equal(Object.hasOwn((await inventory()).settings.extension_settings.sillynovel.director.enabledProjects, imported.projectId), false, 'T48: off on the imported copy');
+        await page.reload();
+        await page.locator('#sillynovel-stage').waitFor();
+        await page.waitForFunction(() => SillyTavern.getContext().characters.length > 0);
+        await toPlanted();
+        await open(imported.projectId, 2);
+        const [copyMira, copyRowan] = copied.scene.actors;
+        assert.equal(await toggle().isChecked(), false, 'T48: the imported copy is off');
+        assert.equal(await backgroundToggle().isChecked(), true);
+        assert.equal(await presenceToggle(copyRowan).isChecked(), true);
+        assert.equal(await presenceToggle(copyMira).isChecked(), false);
+        // v1 bundles carry no library labels, so the value is its artwork, not the word Forest.
+        const importedBackground = copied.scene.backgroundAssetId;
+        assert.ok(importedBackground, 'value kept');
+        assert.ok((await readout()).includes('· ' + importedBackground + ' /'), 'the stage shows the kept value');
+        pass('T66: export and import keep the value and the lock false, in the stage too; the imported copy has the director off (T48); schema v2 unchanged');
+        // A new manual apply locks again, unless the movable action was used.
+        const list = () => page.locator('.sillynovel-movable-list').textContent(), rowan = actorLabel(copyRowan).replace(/[[\]]/g, '\\$&');
+        await field('Project actor').selectOption(copyRowan.actorId);
+        await button('Apply presence').click();
+        await until(async () => new RegExp(rowan + ' · locked').test(await list()), 'manual apply locks again');
+        await page.getByRole('button', { name: 'Apply and let the director move it: presence', exact: true }).click();
+        await until(async () => new RegExp(rowan + ' · movable').test(await list()), 'the movable action keeps it movable');
+        assert.match(await statusLine(), /Applied · the director may move this · unsaved project changes\./);
+        assert.equal(await unsavedState(), 'dirty');
+        await page.getByRole('button', { name: 'Apply and let the director move it: background', exact: true }).click();
+        await until(async () => await backgroundToggle().isChecked(), 'background stays movable');
+        pass('T66: a new manual apply locks again unless "Apply and let the director move it" was used');
+        await button('Detach project').click();
+        await page.waitForFunction(() => document.querySelector('.sillynovel-director').hidden);
+    }
     assert.deepEqual(h.pageErrors.filter(text => !/Clicked stop button|Generation was aborted|Got response status|Internal Server Error/.test(text)), []);
     evidence.result = 'PASS';
     async function clearToasts() { await page.evaluate(() => { for (const e of document.querySelectorAll('#toast-container .toast')) e.remove(); }); }

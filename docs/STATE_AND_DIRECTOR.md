@@ -104,7 +104,7 @@ Manual selections are stored separately from automatic base state so that their 
 | Stage slot | Chat-level layout preference, locked until release |
 | Expression | Selected message only |
 
-Each manual change or release increments an override revision. It invalidates pending proposals based on an older revision. Releasing a lock allows the next valid interpretation; it does not apply an old response that was waiting behind the lock.
+A manual choice stays locked by default, and the user can mark it movable. Each manual change or release increments an override revision. It invalidates pending proposals based on an older revision. Releasing a lock allows the next valid interpretation; it does not apply an old response that was waiting behind the lock.
 
 A correction at an earlier source point invalidates later dependent visual records. It must not edit later story messages. The UI should explain that later visuals may need review or recomputation.
 

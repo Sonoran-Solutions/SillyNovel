@@ -142,4 +142,11 @@
 .sillynovel-why__body h4 { margin: 0.4rem 0 0.2rem; font-size: 1em; }
 .sillynovel-why__body ul { margin: 0; padding-inline-start: 1.1rem; }
 .sillynovel-why__quote { font-style: italic; white-space: pre-wrap; }
+.sillynovel-why__actions { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 0.25rem; margin-inline-start: 0.4rem; vertical-align: middle; }
+.sillynovel-why__actions select { min-width: 8rem; max-width: 12rem; width: auto; min-height: 44px; margin: 0; padding-inline-end: 1.5rem; }
+.sillynovel-movable[hidden],
+.sillynovel-movable-list[hidden] { display: none; }
+.sillynovel-movable-list { display: flex; flex-direction: column; gap: 0.25rem; width: 100%; }
+.sillynovel-control.sillynovel-movable { flex: 0 0 auto; flex-direction: row; align-items: center; flex-wrap: wrap; gap: 0.4rem; min-height: 44px; width: 100%; }
+.sillynovel-movable input { flex: 0 0 auto; width: 1.25rem; min-height: 1.25rem; height: 1.25rem; margin: 0; }
 @media (max-width: 600px), (max-height: 620px) { .sillynovel-why { max-height: max(24%, 6rem); } }
