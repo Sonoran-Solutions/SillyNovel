@@ -1,6 +1,6 @@
 # M2.3 director queueing — implementation record
 
-**PR C candidate — 2026-11-02.** The [PR C record](#pr-c--automatic-layout-overlay) is the last section below. It is a draft PR, unmerged and unreviewed. The entries that follow are older.
+**PR C merged; M2.3 complete — 2026-11-02.** The owner [accepted and merged](DECISIONS.md#owner-acceptance--m23-pr-c-merged-m23-complete--2026-11-02) PR C at `174d380`; the [PR C record](#pr-c--automatic-layout-overlay) is the last section below and its choices stand as the reversible baseline. T49 is amended in TESTING; the lock-default consequence is open question O08 for M2.4 planning. The entries that follow are older.
 
 **Candidate for owner review, draft PR, unmerged.** Implements PR A of the [M2.3 plan](M2_3_DIRECTOR_QUEUEING_PLAN.md) under [rulings F1–F10](DECISIONS.md#owner-rulings-f1f10--m23-director-queueing--2026-11-02). Tracked by [DYL-196](https://linear.app/devils17/issue/DYL-196/sillynovel-m23-director-pending-target-stale-rules-and-composer-hold). PR B follows only after the owner reviews this one; PR C is not authorized (F9). Gate B remains **NOT_RUN**.
 
