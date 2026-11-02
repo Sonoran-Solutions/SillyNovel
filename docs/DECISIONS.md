@@ -1,5 +1,28 @@
 # Decision register
 
+## Owner rulings E1–E14 — M2.2 director transport — 2026-11-01
+
+**Approving owner: Dylan. Date: 2026-11-01, America/Phoenix. Status: APPROVED.** After the [M2.2 planning proposal](M2_2_DIRECTOR_TRANSPORT_PLAN.md) merged at `2c8a3d9243a0d3c18fc509d2c3d8665671ad3058`, the owner was given each of its section 11 decisions with a recommendation and said “Record all as rulings.” The rulings adopt the plan's proposed default except where stated. Implementation is tracked by [DYL-195](https://linear.app/devils17/issue/DYL-195/sillynovel-m22-one-text-director-transport-over-the-hosts-generation).
+
+| ID | Ruling |
+| --- | --- |
+| E1 | M2.2 implementation as described in plan sections 4–10 is **authorized**, conditional on E4 being part of the same slice. The plan's section 2.4 runtime probe on the pinned host is the first task, before module code. |
+| E2 | Host entry point is `generateRawData` plus `extractMessageFromData` through the host adapter. `generateQuietPrompt` and `generateRaw` are excluded. |
+| E3 | **Option A.** Automatic expressions apply through the memory-only expressions journal; automatic layout updates are recorded as ignored; location suggestions are shown as text. The owner accepts that the first live director therefore moves expressions only. An automatic layout overlay (option B) is deferred to M2.3 planning. |
+| E4 | Add generation status `complete` to the reader model as plan section 4 defines. This changes merged M1 behaviour (manual temporary expressions may apply to a freshly completed head) and requires native-host evidence under the M2 evidence standard. |
+| E5 | Per-project enable and ceiling live in host `extensionSettings.sillynovel.director` keyed by project ID. Not in the project schema; never carried by bundles. |
+| E6 | A session is one project attachment in one page load. Ceiling is an integer 1–200, default 40. Chat switches do not reset the counter; detach/reopen does. |
+| E7 | **Amended from the plan.** A failed request skips that message and counts toward the ceiling; the director pauses automatically after three consecutive failures. A cap hit pauses immediately. A stale result is discarded and is not counted as a failure. The in-flight slot is released only on settlement; a 90 s abandonment discards the eventual result and issues no new request. |
+| E8 | `responseLength`, `jsonSchema`, `prefill`, `systemPrompt` and `instructOverride` are not used in M2.2. |
+| E9 | Macro neutralization `{{`→`{ {` and `}}`→`} }` on all sent data, with `name: ''` on every message. Refusing to request on braces is rejected. |
+| E10 | Request only when the completed head is the current selection; otherwise skip and count. No queue; catch-up belongs to M2.3. |
+| E11 | Request only when at least one present actor has a compatible temporary expression; otherwise skip. The gate is in the trigger, not the validator, so Gate B fixture runs are unaffected. |
+| E12 | Budgets: 12,000 characters of message text, 4,000 per message with the anchored tail kept, catalog ≤ 4,000 characters, response ≤ 32,768 bytes. |
+| E13 | Parser tolerates exactly one optional surrounding code fence and nothing else; everything beyond is refused, never repaired. |
+| E14 | Author display labels inside the evidence window are sendable. Card and persona descriptions remain excluded. |
+
+Not changed: Gate B NOT_RUN; M2.3, M2.4, DYL-193 closure, live installation, beta and release remain gated. Older entries below are historical.
+
 ## Owner rulings on open decisions — 2026-11-01
 
 **Approving owner: Dylan. Date: 2026-11-01, America/Phoenix. Status: APPROVED.** The owner asked for the list of open rulings with a recommendation on each, then said “Record all as rulings.” Each row below is therefore an owner ruling adopting the stated recommendation. Verification notes inside a ruling (for example confirming a host entry point) are implementation obligations, not conditions on the ruling.
