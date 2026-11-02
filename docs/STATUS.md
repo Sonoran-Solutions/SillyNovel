@@ -1,5 +1,9 @@
 # Project status
 
+## M2.2 probe rulings — 2026-11-01
+
+The M2.2 host probe contradicted the plan in three places; the owner [accepted all four resulting proposals](DECISIONS.md#owner-rulings-after-the-m22-host-probe--2026-11-01): E4 completion in either event order, E9 extended to angle-bracket name markers, E15 settle interval, E16 Send-during-request recorded as a limitation and Gate B question. [DYL-195](https://linear.app/devils17/issue/DYL-195/sillynovel-m22-one-text-director-transport-over-the-hosts-generation) implementation resumes at E4. Gate B NOT_RUN.
+
 ## M2.2 authorized — 2026-11-01
 
 The owner [ruled on E1–E14](DECISIONS.md#owner-rulings-e1e14--m22-director-transport--2026-11-01): M2.2 implementation is authorized with E3 option A (expressions only, layout changes recorded as ignored), E4 reader status `complete`, host-settings enable, and an amended E7 failure policy (skip and count, pause after three consecutive failures). Tracked by [DYL-195](https://linear.app/devils17/issue/DYL-195/sillynovel-m22-one-text-director-transport-over-the-hosts-generation). First task is the plan's section 2.4 runtime probe on the pinned host. Native-host campaign evidence applies to this slice. Gate B NOT_RUN.
