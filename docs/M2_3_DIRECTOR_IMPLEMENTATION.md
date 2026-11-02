@@ -2,7 +2,7 @@
 
 **Candidate for owner review, draft PR, unmerged.** Implements PR A of the [M2.3 plan](M2_3_DIRECTOR_QUEUEING_PLAN.md) under [rulings F1–F10](DECISIONS.md#owner-rulings-f1f10--m23-director-queueing--2026-11-02). Tracked by [DYL-196](https://linear.app/devils17/issue/DYL-196/sillynovel-m23-director-pending-target-stale-rules-and-composer-hold). PR B follows only after the owner reviews this one; PR C is not authorized (F9). Gate B remains **NOT_RUN**.
 
-**PR B candidate — 2026-11-02.** The composer hold (PR B) is implemented on a draft PR; its record is the last section below, [PR B — composer hold](#pr-b--composer-hold). Unmerged, unapproved.
+**PR B merged — 2026-11-02.** The owner [accepted and merged](DECISIONS.md#owner-acceptance--m23-pr-b-merged--2026-11-02) PR B at `4561888`; its record is the last section below, [PR B — composer hold](#pr-b--composer-hold), and its choices stand as the reversible baseline. T46 is amended in TESTING. PRs A and B complete the authorized M2.3 work; PR C waits on F9.
 
 **Post-merge update — 2026-11-02.** The owner [accepted and merged](DECISIONS.md#owner-acceptance--m23-pr-a-merged--2026-11-02) PR A at `89d5abd`; the choices below stand as the reversible baseline, and T42 is amended in TESTING. PR B starts only on the owner's go-ahead. The rest of this section is the historical candidate record.
 
