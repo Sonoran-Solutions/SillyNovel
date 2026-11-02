@@ -120,6 +120,12 @@ SILLYTAVERN_ROOT=/path/to/pinned SN_PLAYWRIGHT_MODULE=/path/to/playwright/index.
 python3 tests/probes/dyl60/validate.py /new/evidence/dir
 ```
 
+The retained package is committed; validate it from the repository with:
+
+```sh
+python3 tests/probes/dyl60/validate.py docs/evidence/m2-2/campaign
+```
+
 | Suite | Result | Elapsed |
 | --- | --- | --- |
 | `check-discovery.py` | PASS: 11/5/1 files, unexpected, empty and missing suites refused | Under 1 s |
@@ -135,7 +141,7 @@ python3 tests/probes/dyl60/validate.py /new/evidence/dir
 | **director (new)** | PASS, 17 | 267 s |
 | `validate.py` | PASS: 123 frozen inputs, 108 artifact hashes | |
 
-Total 961 s. [Runs](evidence/m2-2/campaign/runs.json), [pins](evidence/m2-2/campaign/pins.json), [director checkpoints and the exact payload](evidence/m2-2/campaign/director-evidence.json).
+Total 961 s. [Full package](evidence/m2-2/campaign/): [runs](evidence/m2-2/campaign/runs.json), [pins](evidence/m2-2/campaign/pins.json), [frozen input hashes](evidence/m2-2/campaign/inputs.json), [director checkpoints and the exact payload](evidence/m2-2/campaign/director/evidence.json).
 
 The director campaign runs on real host generation with a decoy persona, lorebook and card descriptions seeded and read back as active. It covers: off by default; exact payload and decoys absent; `{{persona}}`, `{{input}}`, `{{getvar::x}}`, `<USER>`, `<GROUP>` neutralized on the wire; 80 native files byte-identical across a request with no lifecycle event and max tokens unchanged; continue, regenerate and swipe completing with exactly one request each; quiet, swipe-back and Stop not triggering; Send and Stop while outstanding; a chat switch mid-flight; malformed reply and HTTP 500; ceiling 3; three consecutive failures and resume; 90 s abandonment on real time (observed 90.0 s); the 20-turn Last Lantern script (20 director requests, 20 native replies, no director text in the chat, every non-chat file byte-identical, saved layout unchanged); a bundle carrying no director setting; and a real four-card duplicate-name group (four native replies, one settled request, expression on one UUID only, all native files byte-identical across the request).
 

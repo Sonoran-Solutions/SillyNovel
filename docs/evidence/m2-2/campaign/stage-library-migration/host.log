@@ -1,0 +1,39 @@
+Node version: v26.8.1. Running in undefined environment. Server directory: /tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-eloquent-lalande-2ef985/21e8a52d-c69c-40c6-95bb-ef66c73b8250/scratchpad/sn-portability-host-oXIDqd/host
+Using config path: /tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-eloquent-lalande-2ef985/21e8a52d-c69c-40c6-95bb-ef66c73b8250/scratchpad/sn-portability-host-oXIDqd/config.yaml
+Using data root: /tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-eloquent-lalande-2ef985/21e8a52d-c69c-40c6-95bb-ef66c73b8250/scratchpad/sn-portability-host-oXIDqd/data
+Preferring IPv4 for DNS resolution
+
+SillyTavern 1.19.0
+Running 'HEAD' (7e8663cd9) - 9/14/2026, 10:55:46 AM MST
+
+
+Compiling frontend libraries...
+webpack 5.105.4 compiled [1m[32msuccessfully[39m[22m in 472 ms
+
+]2;SillyTavern WebServer\SillyTavern is listening on IPv4: 127.0.0.1:43105
+
+==================================================
+
+Go to: http://127.0.0.1:43105/ to open SillyTavern
+
+==================================================
+
+Login successful: default-user from 127.0.0.1 at 11/1/2026, 9:40:24 PM
+Extensions available for default-user [
+  { type: 'system', name: 'assets' },
+  { type: 'system', name: 'attachments' },
+  { type: 'system', name: 'caption' },
+  { type: 'system', name: 'connection-manager' },
+  { type: 'system', name: 'expressions' },
+  { type: 'system', name: 'gallery' },
+  { type: 'system', name: 'memory' },
+  { type: 'system', name: 'quick-reply' },
+  { type: 'system', name: 'regex' },
+  { type: 'system', name: 'stable-diffusion' },
+  { type: 'system', name: 'token-counter' },
+  { type: 'system', name: 'translate' },
+  { type: 'system', name: 'tts' },
+  { type: 'system', name: 'vectors' },
+  { type: 'global', name: 'third-party/SillyNovel' }
+]
+]2;/home/dq/.hermes/node/bin/node\
