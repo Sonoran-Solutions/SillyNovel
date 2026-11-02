@@ -1,5 +1,9 @@
 # Verification and acceptance
 
+## M2.4 PR A merged — 2026-11-02
+
+PR A [accepted](DECISIONS.md#owner-acceptance--m24-pr-a-merged--2026-11-02) at `8d85158` (frozen `f5de115`): Node 322/322 over the runner's thirteen files and discovery PASS at 13/5/1 reproduced from the repository; T58, T60 and T59's log half covered in Node per the [PR A record](M2_4_EVIDENCE_UI_IMPLEMENTATION.md#commands-and-results). T59's render half, T61 and T62 wait for PR B. No matrix row is amended by this entry.
+
 ## M2.4 PR A candidate — T58, T60 and T59's log half covered in Node — 2026-11-02
 
 Node-level SYNTHETIC evidence on frozen `f5de115`, unmerged: T58 and T60 covered in Node, and T59's log half (its render half stays NOT_RUN until PR B). Node 322/322 over the runner's 13 files; `python3 tests/probes/dyl60/check-discovery.py` PASS (13/5/1). Browser, storage and native suites NOT_RUN: a pure-module slice under the M2 evidence standard. T58's stale paths other than `STALE_JOURNAL` and `STALE_SCENE` are reached with a scripted journal; the [record](M2_4_EVIDENCE_UI_IMPLEMENTATION.md#implementation-choices-for-owner-review) says why. The T58, T59 and T60 rows below are amended to say so; no row is added.
