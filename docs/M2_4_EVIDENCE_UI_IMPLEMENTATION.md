@@ -6,7 +6,7 @@
 
 **PR B merged — 2026-11-02.** The owner [accepted and merged](DECISIONS.md#owner-acceptance--m24-pr-b-merged--2026-11-02) PR B at `8203ea1`; its record is the [PR B section](#pr-b--evidence-ui-and-resume) below and its choices stand as the reversible baseline. PRs A and B complete the authorized M2.4 work; PR C waits on the owner's go-ahead.
 
-**PR C candidate — 2026-11-02.** Draft PR, unmerged, awaiting owner review: the [PR C section](#pr-c--corrections-and-the-director-may-move-control) below, frozen `c6f6ec7`, tracked by [DYL-205](https://linear.app/devils17/issue/DYL-205/sillynovel-m24-pr-c-manual-corrections-correction-locks-and-the-o08). Nothing in it is approved or merged.
+**PR C merged — 2026-11-02.** The owner [accepted and merged](DECISIONS.md#owner-acceptance--m24-pr-c-merged--2026-11-02) PR C at `34dfcd8`; its record is the [PR C section](#pr-c--corrections-and-the-director-may-move-control) below and its choices stand as the reversible baseline. T50 and T57 are amended in TESTING. PR D waits on the owner's go-ahead.
 
 ## PR A — decision log and stale reasons
 

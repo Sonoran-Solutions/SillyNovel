@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## M2.4 PRs A, B and C merged — 2026-11-02
+
+PR C [accepted](DECISIONS.md#owner-acceptance--m24-pr-c-merged--2026-11-02) at `34dfcd8`; [DYL-205](https://linear.app/devils17/issue/DYL-205/sillynovel-m24-pr-c-manual-corrections-correction-locks-and-the-o08) Done. PR D (Gate B readiness: fixtures, scorer, runner, native blocks, record template; runtime byte-identical to PR C) is the last M2.4 slice and follows on the owner's go-ahead under G1. The Gate B sequence after it is unchanged.
+
 ## M2.4 PR C candidate (draft, unmerged) — 2026-11-02
 
 Renderer and overlay slice on frozen `c6f6ec7`, draft and unmerged; see the [record](M2_4_EVIDENCE_UI_IMPLEMENTATION.md#pr-c--corrections-and-the-director-may-move-control). PR D still waits for the owner's go-ahead after this review. Gate B sequence unchanged.
