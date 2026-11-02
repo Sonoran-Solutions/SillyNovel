@@ -58,8 +58,14 @@ function sameSource(left, right) {
         && left.text === right.text;
 }
 
-export function createHostAdapter(getContext) {
+const COMPOSER_ID = 'send_textarea';
+
+// onComposerInput wakes the director's composer hold; it carries no argument, so no draft can travel with it.
+export function createHostAdapter(getContext, { onComposerInput } = {}) {
     const sourceKeys = new WeakMap();
+    // Time of the last input/keydown seen on the composer since subscribe; never the draft.
+    let lastComposerEvent = null;
+    const clock = () => globalThis.performance?.now?.() ?? Date.now();
     // ponytail: only observed record replacement is detectable here; durable or
     // unseen same-locator lifecycle needs host-issued incarnation/load authority.
     const groupKeys = new WeakMap();
@@ -99,6 +105,13 @@ export function createHostAdapter(getContext) {
     function inspectDirector(context = contextOrNull()) {
         const missing = ['generateRawData', 'extractMessageFromData'].filter((name) => typeof context?.[name] !== 'function');
         return { ok: missing.length === 0, missing, online: typeof context?.onlineStatus === 'string' ? context.onlineStatus : null };
+    }
+
+    // F3: read-only. Only the draft's length and the time since the last observed event leave this function.
+    function inspectComposer() {
+        const length = globalThis.document?.getElementById?.(COMPOSER_ID)?.value?.length;
+        if (!Number.isSafeInteger(length)) return { present: false, draft: false, idleMs: null };
+        return { present: true, draft: length > 0, idleMs: lastComposerEvent === null ? null : Math.max(0, clock() - lastComposerEvent) };
     }
 
     // E2/E8: one call on the user's selected connection. Never throws, never retries.
@@ -205,6 +218,7 @@ export function createHostAdapter(getContext) {
         const source = context.eventSource;
         const types = context.eventTypes;
         const bindings = [];
+        const composerBindings = [];
         let disposed = false;
         let mutationObserver = null;
         let pendingRefresh = false;
@@ -326,6 +340,21 @@ export function createHostAdapter(getContext) {
                 bindings.push([eventName, listener]);
             }
 
+            // Capture on the document so a re-rendered composer is still seen; only the target's id is read.
+            const document = globalThis.document;
+            if (typeof document?.addEventListener === 'function') {
+                lastComposerEvent = null;
+                const seen = (event) => {
+                    if (disposed || event.target?.id !== COMPOSER_ID) return;
+                    lastComposerEvent = clock();
+                    try { onComposerInput?.(); } catch { /* a hold wake-up must not break typing */ }
+                };
+                for (const type of ['input', 'keydown']) {
+                    document.addEventListener(type, seen, true);
+                    composerBindings.push([type, seen]);
+                }
+            }
+
             const chatElement = globalThis.document?.getElementById?.('chat');
             const Observer = globalThis.MutationObserver;
             if (chatElement && typeof Observer === 'function') {
@@ -336,6 +365,9 @@ export function createHostAdapter(getContext) {
             }
         } catch (error) {
             try { mutationObserver?.disconnect(); } catch { /* continue releasing owned listeners */ }
+            for (const [type, listener] of composerBindings) globalThis.document?.removeEventListener?.(type, listener, true);
+            composerBindings.length = 0;
+            lastComposerEvent = null;
             for (const [eventName, listener] of bindings) {
                 try { source.removeListener(eventName, listener); } catch { /* continue releasing owned listeners */ }
             }
@@ -348,6 +380,11 @@ export function createHostAdapter(getContext) {
             let firstError = null;
             try { mutationObserver?.disconnect(); } catch (error) { firstError ||= error; }
             mutationObserver = null;
+            for (const [type, listener] of composerBindings) {
+                try { globalThis.document?.removeEventListener?.(type, listener, true); } catch (error) { firstError ||= error; }
+            }
+            composerBindings.length = 0;
+            lastComposerEvent = null;
             if (pendingFrame !== null) globalThis.cancelAnimationFrame?.(pendingFrame);
             pendingFrame = null;
             pendingRefresh = false;
@@ -382,5 +419,5 @@ export function createHostAdapter(getContext) {
         return false;
     }
 
-    return { inspectCapabilities, inspectDirector, requestDirectorText, readChatIdentity, readMessageAt, readCurrentSource, readHistory, subscribe, openOriginalMessage };
+    return { inspectCapabilities, inspectDirector, inspectComposer, requestDirectorText, readChatIdentity, readMessageAt, readCurrentSource, readHistory, subscribe, openOriginalMessage };
 }
