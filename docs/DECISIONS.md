@@ -1,5 +1,13 @@
 # Decision register
 
+## Owner authorization — M2.1 director implementation — 2026-11-01
+
+**Approving owner: Dylan. Date: 2026-11-01, America/Phoenix. Status: APPROVED (D1).** After merging the [M2.1 planning proposal](M2_1_DIRECTOR_PLAN.md) at `a8fde515ac665c4cd892009c3574eef94dbfec57`, the owner was asked whether the approval covered the plan merge only or also implementation and answered “Authorize M2.1 work.” This records plan decision **D1**: implementation of M2.1 as described in plan sections 3–7 is authorized, tracked by [DYL-194](https://linear.app/devils17/issue/DYL-194/sillynovel-m21-director-proposals-lock-precedence-and-snapshot).
+
+**D2–D8 are not owner rulings.** The owner did not rule on them separately. Implementation proceeds on the plan's proposed defaults as bounded, reversible implementation choices: fixture-only with no transport, provider, prompt or network path (D2); the narrowed v1 operation set (D3); skip-and-record for locked fields (D4); manual expression at the anchored message outranks an automatic one (D5); anchoring at the selected source only (D6); the attached-project journal question deferred to M2.2 planning (D7); the state contract's evidence-window limits (D8). Each is recorded in the implementation PR for owner review and may be reversed there without re-planning.
+
+Authorized: one focused implementation branch and draft PR, pure reducer/validation modules and deterministic Node fixtures, an implementation/evidence document, and the proposed TESTING rows. Not authorized: M2.2 transport or any real director request (O04 and O06 remain open), M2.3 queueing, M2.4 evidence UI, Gate B execution or verdict, DYL-56, DYL-61, DYL-193 closure, schema/persistence/dependency changes, live installation, beta or release. Gate B remains NOT_RUN. Older entries below are historical.
+
 ## Gate A verdict — PASS — 2026-11-01
 
 **Owner: Dylan. Date: 2026-11-01, America/Phoenix. Verdict: PASS.** Exact words: “Merge it, you can also record my overall PASS for the gate, I approve of the current build”. Candidate: merged main `e8e9cf673b6455dace67d695ee45d1d3dcc2857c`; runtime identical to frozen and tablet-tested `c5c1699a48629ae761a093e13056f0b11fdc4b88` (every commit after it is documentation or evidence only).
