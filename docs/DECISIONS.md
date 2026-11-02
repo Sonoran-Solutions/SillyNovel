@@ -1,5 +1,18 @@
 # Decision register
 
+## Owner rulings after the M2.2 host probe — 2026-11-01
+
+**Approving owner: Dylan. Date: 2026-11-01, America/Phoenix. Status: APPROVED.** The [DYL-195](https://linear.app/devils17/issue/DYL-195/sillynovel-m22-one-text-director-transport-over-the-hosts-generation) implementation session ran the plan's section 2.4 runtime probe on the pinned SillyTavern 1.19.0 host and stopped because three findings contradicted the plan. The owner was given the four resulting proposals with a recommendation each and said “Accept all four.” Probe evidence is recorded in the M2.2 implementation document on its PR.
+
+| ID | Ruling |
+| --- | --- |
+| E4 (amended) | On streamed replies the host emits `GENERATION_ENDED` before `MESSAGE_RECEIVED`/`CHARACTER_MESSAGE_RENDERED`, so the plan's “ended followed by received” rule never completes. A reply is `complete` when both are observed for the same generation, in either order, with no `GENERATION_STOPPED`. |
+| E9 (extended) | The host also expands the angle-bracket markers `<USER>`, `<BOT>`, `<CHAR>`, `<GROUP>` and `<CHARIFNOTGROUP>` (case-insensitive) in raw prompts, which would send persona, card and all group-member names past the O06 limit. These markers are neutralized by inserting a space after `<`, in addition to the brace neutralization, and the synthetic transport tests verify they arrive unchanged. |
+| E15 | Settle interval: a director request is issued only about two seconds after the last completed head with no newer completion. A head superseded during the interval is never requested and does not count toward the ceiling. |
+| E16 | Send during a director request: on a backend that serves one request at a time, pressing Send while a director request is in flight can leave the user's message without a reply and a host error toast; the message is kept and swipe/regenerate recovers. Accepted as a recorded limitation of the off-by-default director, stated in one sentence in the toggle's help text, recorded as a Gate B evaluation question, and named as input to M2.3 serialization. The host cannot abort the raw request locally, so no M2.2 fix is attempted. |
+
+Everything else in E1–E14 stands. Gate B NOT_RUN. Older entries below are historical.
+
 ## Owner rulings E1–E14 — M2.2 director transport — 2026-11-01
 
 **Approving owner: Dylan. Date: 2026-11-01, America/Phoenix. Status: APPROVED.** After the [M2.2 planning proposal](M2_2_DIRECTOR_TRANSPORT_PLAN.md) merged at `2c8a3d9243a0d3c18fc509d2c3d8665671ad3058`, the owner was given each of its section 11 decisions with a recommendation and said “Record all as rulings.” The rulings adopt the plan's proposed default except where stated. Implementation is tracked by [DYL-195](https://linear.app/devils17/issue/DYL-195/sillynovel-m22-one-text-director-transport-over-the-hosts-generation).
