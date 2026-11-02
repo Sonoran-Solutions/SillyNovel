@@ -1,0 +1,168 @@
+[
+  {
+    "name": "node",
+    "candidate": "d5664119d060d72f90aee4e3a386fdf409843a5c",
+    "command": "node --test --test-isolation=none /home/dq/Projects/SillyNovel/.claude/worktrees/eloquent-lalande-2ef985/tests/m0.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/eloquent-lalande-2ef985/tests/m1-reader-source.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/eloquent-lalande-2ef985/tests/m1-source-prefix.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/eloquent-lalande-2ef985/tests/m1-scene-reducer.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/eloquent-lalande-2ef985/tests/m1-project-scene.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/eloquent-lalande-2ef985/tests/m1-project-expressions.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/eloquent-lalande-2ef985/tests/m2-director-proposal.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/eloquent-lalande-2ef985/tests/m2-director-request.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/eloquent-lalande-2ef985/tests/m2-director-controller.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/eloquent-lalande-2ef985/tests/probes/dyl19/owned-chat-probe.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/eloquent-lalande-2ef985/tests/probes/dyl19/source-anchor.test.mjs",
+    "environment": {},
+    "startedUTC": "2026-11-02T04:35:13.616097+00:00",
+    "endedUTC": "2026-11-02T04:35:17.855344+00:00",
+    "elapsedSeconds": 4.239,
+    "exitCode": 0,
+    "log": "node.txt",
+    "checkpointCount": 0,
+    "tests": 227,
+    "pass": 227,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  {
+    "name": "storage",
+    "candidate": "d5664119d060d72f90aee4e3a386fdf409843a5c",
+    "command": "node --test --test-isolation=none /home/dq/Projects/SillyNovel/.claude/worktrees/eloquent-lalande-2ef985/plugins/sillynovel-storage/test/bundle.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/eloquent-lalande-2ef985/plugins/sillynovel-storage/test/cleanup.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/eloquent-lalande-2ef985/plugins/sillynovel-storage/test/library.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/eloquent-lalande-2ef985/plugins/sillynovel-storage/test/recovery.test.mjs /home/dq/Projects/SillyNovel/.claude/worktrees/eloquent-lalande-2ef985/plugins/sillynovel-storage/test/store.test.mjs",
+    "environment": {},
+    "startedUTC": "2026-11-02T04:35:17.863897+00:00",
+    "endedUTC": "2026-11-02T04:37:50.967879+00:00",
+    "elapsedSeconds": 153.104,
+    "exitCode": 0,
+    "log": "storage.txt",
+    "checkpointCount": 0,
+    "tests": 126,
+    "pass": 126,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  {
+    "name": "browser",
+    "candidate": "d5664119d060d72f90aee4e3a386fdf409843a5c",
+    "command": "node --test --test-isolation=none /home/dq/Projects/SillyNovel/.claude/worktrees/eloquent-lalande-2ef985/tests/m1-reader-browser.test.mjs",
+    "environment": {},
+    "startedUTC": "2026-11-02T04:37:50.975797+00:00",
+    "endedUTC": "2026-11-02T04:38:41.998748+00:00",
+    "elapsedSeconds": 51.023,
+    "exitCode": 0,
+    "log": "browser.txt",
+    "checkpointCount": 0,
+    "tests": 88,
+    "pass": 88,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  {
+    "name": "stage-library-migration",
+    "candidate": "d5664119d060d72f90aee4e3a386fdf409843a5c",
+    "command": "node tests/probes/project-portability/host.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-eloquent-lalande-2ef985/21e8a52d-c69c-40c6-95bb-ef66c73b8250/scratchpad/st-pinned",
+    "environment": {
+      "SN_STAGE_UX_RUN": "1",
+      "SN_LIBRARY_RUN": "1",
+      "SN_MIGRATION_RUN": "1"
+    },
+    "startedUTC": "2026-11-02T04:38:42.006237+00:00",
+    "endedUTC": "2026-11-02T04:40:26.709773+00:00",
+    "elapsedSeconds": 104.704,
+    "exitCode": 0,
+    "log": "stage-library-migration.txt",
+    "checkpointCount": 24,
+    "ownedRoot": "/tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-eloquent-lalande-2ef985/21e8a52d-c69c-40c6-95bb-ef66c73b8250/scratchpad/sn-portability-host-oXIDqd",
+    "result": "PASS"
+  },
+  {
+    "name": "expressions",
+    "candidate": "d5664119d060d72f90aee4e3a386fdf409843a5c",
+    "command": "node tests/probes/project-portability/host.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-eloquent-lalande-2ef985/21e8a52d-c69c-40c6-95bb-ef66c73b8250/scratchpad/st-pinned",
+    "environment": {
+      "SN_EXPRESSIONS_RUN": "1"
+    },
+    "startedUTC": "2026-11-02T04:40:26.719960+00:00",
+    "endedUTC": "2026-11-02T04:41:30.708719+00:00",
+    "elapsedSeconds": 63.989,
+    "exitCode": 0,
+    "log": "expressions.txt",
+    "checkpointCount": 16,
+    "ownedRoot": "/tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-eloquent-lalande-2ef985/21e8a52d-c69c-40c6-95bb-ef66c73b8250/scratchpad/sn-portability-host-Mjxolq",
+    "result": "PASS"
+  },
+  {
+    "name": "groups",
+    "candidate": "d5664119d060d72f90aee4e3a386fdf409843a5c",
+    "command": "node tests/probes/project-portability/host.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-eloquent-lalande-2ef985/21e8a52d-c69c-40c6-95bb-ef66c73b8250/scratchpad/st-pinned",
+    "environment": {
+      "SN_GROUP_RUN": "1"
+    },
+    "startedUTC": "2026-11-02T04:41:30.719502+00:00",
+    "endedUTC": "2026-11-02T04:43:02.614549+00:00",
+    "elapsedSeconds": 91.895,
+    "exitCode": 0,
+    "log": "groups.txt",
+    "checkpointCount": 22,
+    "ownedRoot": "/tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-eloquent-lalande-2ef985/21e8a52d-c69c-40c6-95bb-ef66c73b8250/scratchpad/sn-portability-host-niRobY",
+    "result": "PASS"
+  },
+  {
+    "name": "recovery",
+    "candidate": "d5664119d060d72f90aee4e3a386fdf409843a5c",
+    "command": "node tests/probes/project-portability/host.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-eloquent-lalande-2ef985/21e8a52d-c69c-40c6-95bb-ef66c73b8250/scratchpad/st-pinned",
+    "environment": {
+      "SN_RECOVERY_RUN": "1"
+    },
+    "startedUTC": "2026-11-02T04:43:02.627723+00:00",
+    "endedUTC": "2026-11-02T04:43:59.527069+00:00",
+    "elapsedSeconds": 56.899,
+    "exitCode": 0,
+    "log": "recovery.txt",
+    "checkpointCount": 17,
+    "ownedRoot": "/tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-eloquent-lalande-2ef985/21e8a52d-c69c-40c6-95bb-ef66c73b8250/scratchpad/sn-portability-host-JfojIV",
+    "result": "PASS"
+  },
+  {
+    "name": "cleanup",
+    "candidate": "d5664119d060d72f90aee4e3a386fdf409843a5c",
+    "command": "node tests/probes/project-portability/host.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-eloquent-lalande-2ef985/21e8a52d-c69c-40c6-95bb-ef66c73b8250/scratchpad/st-pinned",
+    "environment": {
+      "SN_CLEANUP_RUN": "1"
+    },
+    "startedUTC": "2026-11-02T04:43:59.534451+00:00",
+    "endedUTC": "2026-11-02T04:45:21.047639+00:00",
+    "elapsedSeconds": 81.513,
+    "exitCode": 0,
+    "log": "cleanup.txt",
+    "checkpointCount": 21,
+    "ownedRoot": "/tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-eloquent-lalande-2ef985/21e8a52d-c69c-40c6-95bb-ef66c73b8250/scratchpad/sn-portability-host-SBlfqH",
+    "result": "PASS"
+  },
+  {
+    "name": "native-integrity-branches",
+    "candidate": "d5664119d060d72f90aee4e3a386fdf409843a5c",
+    "command": "node tests/probes/project-portability/host.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-eloquent-lalande-2ef985/21e8a52d-c69c-40c6-95bb-ef66c73b8250/scratchpad/st-pinned",
+    "environment": {
+      "SN_CANDIDATE_RUN": "1"
+    },
+    "startedUTC": "2026-11-02T04:45:21.055225+00:00",
+    "endedUTC": "2026-11-02T04:46:48.007927+00:00",
+    "elapsedSeconds": 86.953,
+    "exitCode": 0,
+    "log": "native-integrity-branches.txt",
+    "checkpointCount": 18,
+    "ownedRoot": "/tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-eloquent-lalande-2ef985/21e8a52d-c69c-40c6-95bb-ef66c73b8250/scratchpad/sn-portability-host-KjYa6t",
+    "result": "PASS"
+  },
+  {
+    "name": "director",
+    "candidate": "d5664119d060d72f90aee4e3a386fdf409843a5c",
+    "command": "node tests/probes/m2-director/host.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-eloquent-lalande-2ef985/21e8a52d-c69c-40c6-95bb-ef66c73b8250/scratchpad/st-pinned",
+    "environment": {},
+    "startedUTC": "2026-11-02T04:46:48.026351+00:00",
+    "endedUTC": "2026-11-02T04:51:15.018403+00:00",
+    "elapsedSeconds": 266.992,
+    "exitCode": 0,
+    "log": "director.txt",
+    "checkpointCount": 17,
+    "ownedRoot": "/tmp/claude-1000/-home-dq-Projects-SillyNovel--claude-worktrees-eloquent-lalande-2ef985/21e8a52d-c69c-40c6-95bb-ef66c73b8250/scratchpad/sn-m2-director-3wDTt5",
+    "result": "PASS"
+  }
+]

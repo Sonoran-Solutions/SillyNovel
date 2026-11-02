@@ -1,8 +1,8 @@
 # M2.2 director transport — implementation record
 
-**Status: runtime probe complete; implementation STOPPED pending an owner statement.** No module code exists. The probe contradicts the [plan](M2_2_DIRECTOR_TRANSPORT_PLAN.md) and two [rulings](DECISIONS.md#owner-rulings-e1e14--m22-director-transport--2026-11-01) as worded, so section 2 asks instead of working around them. Section 2's proposals are recommendations, not approvals. Tracked by [DYL-195](https://linear.app/devils17/issue/DYL-195/sillynovel-m22-one-text-director-transport-over-the-hosts-generation). Gate B remains NOT_RUN.
+**Candidate for owner review, draft PR, unmerged.** One quiet text-director request per completed head, over the host's own raw generation path on the connection the user selected, applying temporary expressions only. Off by default. Implemented under [E1–E14](DECISIONS.md#owner-rulings-e1e14--m22-director-transport--2026-11-01) as amended by the [rulings after the host probe](DECISIONS.md#owner-rulings-after-the-m22-host-probe--2026-11-01). Tracked by [DYL-195](https://linear.app/devils17/issue/DYL-195/sillynovel-m22-one-text-director-transport-over-the-hosts-generation). Gate B remains **NOT_RUN**; nothing here claims the director is useful or accurate.
 
-**Date:** 2026-11-01, America/Phoenix. **Starting main:** `d9f975f886ce05b23682002f03de7c7f3adc4e90`.
+**Date:** 2026-11-01, America/Phoenix. **Starting main:** `d9f975f886ce05b23682002f03de7c7f3adc4e90`; `origin/main` `2d41f386928a9c9f11c0d365a1ec8839c565c35d` merged before freezing. **Frozen implementation/test SHA:** `d5664119d060d72f90aee4e3a386fdf409843a5c`. Every later commit on the branch is documentation or evidence only.
 
 ## 1. Runtime probe
 
@@ -12,7 +12,7 @@ Run on a disposable clone of pinned SillyTavern 1.19.0 at `7e8663cd9c184a550b372
 SN_PLAYWRIGHT_MODULE=/path/to/playwright/index.mjs timeout -k 5 300 node tests/probes/m2-director/probe.mjs /path/to/pinned/SillyTavern
 ```
 
-Result: the probe completed; the third run is the recorded one. Raw output: [probe-findings.json](evidence/m2-2/probe-findings.json). All data is synthetic; no real provider was contacted. Two earlier runs exposed that the persona decoy was not yet active, so their results are not used. This is what the host did, not a pass of any TESTING row.
+Run before any module code. Result: the probe completed; the third run is the recorded one. Raw output: [probe-findings.json](evidence/m2-2/probe-findings.json). All data is synthetic; no real provider was contacted. Two earlier runs exposed that the persona decoy was not yet active, so their results are not used. This is what the host did, not a pass of any TESTING row.
 
 ### Plan section 2.4 items
 
@@ -23,8 +23,8 @@ Result: the probe completed; the third run is the recorded one. Raw output: [pro
 | 3 | Events | Only `chat_completion_prompt_ready` and `chat_completion_settings_ready`. No `GENERATION_*`, `MESSAGE_*` or `CHARACTER_MESSAGE_RENDERED`. |
 | 4 | `online_status` | `no_connection` before connecting, `Valid` after. **The host does not refuse:** a request made while `no_connection` still reached the endpoint and succeeded, so SillyNovel's own check is the only guard. |
 | 5 | Text completion and instruct | Pure `createRawPrompt` only; NOT_TESTED on a text-completion backend. Without instruct: `INSTRUCTION\nDATA\n`, no name prefix. With instruct (Alpaca): `### Input:\nINSTRUCTION\n\n### Instruction:\nDATA\n\n### Response:\n`; the system message is wrapped as input and the data as the instruction. |
-| 6 | Send during a request | Concurrent backend: the user's reply completed normally and the chat grew by exactly two; the held director result still returned afterward. **Single-slot backend that rejects while busy (synthetic 503): the user's reply failed**, see section 2.3. A queueing backend is NOT_TESTED. |
-| 7 | Macro syntax | `{ {`, `} }` and every braced form tried arrive unchanged. `{{persona}}` sent the persona description and `{{input}}` the composer draft, confirming the plan's concern. **Other trigger syntax does exist**, see section 2.2. `\{\{persona\}\}` arrives as literal `{{persona}}`, backslashes removed, not expanded. |
+| 6 | Send during a request | Concurrent backend: the user's reply completed normally and the chat grew by exactly two; the held director result still returned afterward. **Single-slot backend that rejects while busy (synthetic 503): the user's reply failed**, see section 2. A queueing backend is NOT_TESTED. |
+| 7 | Macro syntax | `{ {`, `} }` and every braced form tried arrive unchanged. `{{persona}}` sent the persona description and `{{input}}` the composer draft, confirming the plan's concern. **Other trigger syntax does exist**, see section 2. `\{\{persona\}\}` arrives as literal `{{persona}}`, backslashes removed, not expanded. |
 | 8 | Stop | The user's Stop, and `stopGeneration()` with no user generation, reject the request with `Error('Cancelled by stop event')`; the endpoint saw the connection close before any reply; no host toast. No Stop control is shown for a director-only request. |
 
 ### Other observations
@@ -56,40 +56,127 @@ Started types are reliable; the type argument on message events is not.
 | quiet (`generateQuietPrompt`) | `started(quiet)`, `ended`, then a dry-run `started`; no message |
 | group of four, streaming | `started` twice for the first member, then per member `ended`, `received`, `rendered`, with the next `started` directly after |
 
-## 2. Contradictions needing an owner statement
+## 2. What the probe contradicted, and the owner's rulings
 
-### 2.1 E4: the plan's completion order does not occur on streamed replies
+The probe stopped work at `ea9bdca`. The owner was given the proposals below and said “Accept all four.” The rulings are recorded in [DECISIONS](DECISIONS.md#owner-rulings-after-the-m22-host-probe--2026-11-01).
 
-Plan section 4 defines `complete` as a `messageReceived` or `characterMessageRendered` observation “followed by `generationEnded`”, and section 3 says the host emits them in that order. That holds only without streaming. **With streaming, the host default, `GENERATION_ENDED` comes first**, so under the literal rule a streamed reply never reaches `complete` and no director request ever fires.
+| Finding | Ruling | Where honoured |
+| --- | --- | --- |
+| Streamed replies emit `GENERATION_ENDED` before the message events, so the plan's “followed by” rule never completes. | **E4 amended:** both observed for the same generation, in either order, with no stop. | `resolveCompletion` in `src/reader-source-model.mjs` |
+| `<USER>`, `<BOT>`, `<CHAR>`, `<GROUP>`, `<CHARIFNOTGROUP>` (any case) expand past brace neutralization and send persona, card and all group-member names. | **E9 extended:** a space after `<`, in addition to the braces. | `neutralize` in `src/director-request.mjs`, proven on the real wire |
+| A rejecting single-slot backend fails the user's reply if Send lands during a director request. | **E16:** accepted limitation. The message is kept and a swipe or regenerate recovers. One sentence in the toggle's help text. | `src/stage-view.mjs`; section 9 records the Gate B question and M2.3 input |
+| A group turn would request once per member, three of four stale but counted. | **E15:** about 2 s after the last completed head; a superseded head is never requested and does not count. | `SETTLE_MS` and `fire` in `src/director-controller.mjs` |
 
-**Proposal (not approved):** `complete` when both a received-or-rendered observation naming the generated source and a `generationEnded` have arrived for the same generation, in either order, with no `generationStopped`, for started types `normal`, `continue`, `regenerate` or `swipe`. Evidence for safety: streamed Stop delivers `stopped` before `received`; non-streamed Stop delivers no reply. The type comes from `generationStarted` only, because message events report `normal` for regenerate and `appendFinal` for continue.
+## 3. What changed
 
-### 2.2 E9: brace neutralization does not stop every expansion
+| File | Change | Persistence |
+| --- | --- | --- |
+| `src/reader-source-model.mjs` | Status `complete`; `observed` and `ended` on the generation record; `quiet` and `impersonate` never bind a source | None |
+| `src/host-adapter.mjs` | `inspectCapabilities().director`, `inspectDirector()`, `requestDirectorText(messages)`; missing entry points disable the director only | None |
+| `src/director-request.mjs` (new, pure) | `buildDirectorRequest`, `parseDirectorResponse`, `neutralize`, `PROMPT_VERSION` | None |
+| `src/director-session.mjs` (new, pure) | `mirrorScene`, `routeProposal` | None; rebuilt per request |
+| `src/director-controller.mjs` (new) | Page-lifetime runtime (slot, counters, settings) and per-attachment controller | Counters are memory-only; settings below |
+| `src/project-expressions.mjs` | `origin` on decisions; manual set or clear outranks automatic at the same source | None (memory-only journal) |
+| `src/project-scene.mjs`, `src/stage-view.mjs`, `index.js`, `style.css` | Controller lifetime, project toggle with help text, status line, ceiling field | `extensionSettings.sillynovel.director` only |
 
-The host also rewrites five legacy markers, **case-insensitively**, at `scripts/macros/engine/MacroEngine.js` L283–L291: `<USER>`, `<BOT>`, `<CHAR>`, `<GROUP>`, `<CHARIFNOTGROUP>`. Over the wire, chat text containing `<USER>` arrived as the persona name, `<CHAR>` as the card name, and in a group `<GROUP>` as every member's name (`Mira, Mira, Rowan, Sage`), including members outside the evidence window. `<BOT>` and `<CHAR>` became empty in a group. Only names leak, never descriptions, but E14 allows labels *inside the evidence window* and O06 limits content to that window, so this exceeds both.
+`src/scene-reducer.mjs`, `src/director-proposal.mjs`, the storage plugin and the project schema are unchanged. No dependency was added. `applyProposal` stays uncalled, as plan section 7 expected under E3-A.
 
-**Proposal (not approved):** extend the E9 assembler to break those five markers the same way, `<USER>` → `< USER>`, case-insensitively; `< USER>` and `<USER >` were verified to arrive unchanged. The evidence texts keep the original, so an excerpt spanning a marker fails `INVALID_EVIDENCE`, as with braces. Note also that a plain `{{`→`{ {` replacement leaves `{ {{` when given `{{{`; the assembler must break every adjacent pair, which `{ { {` arriving unchanged supports.
+### E4 behaviour change
 
-### 2.3 Plan section 4: a director request can fail the user's reply on a rejecting single-slot backend
+**Merged M1 behaviour changes:** a manual temporary expression can now be applied to a freshly completed head without navigating away first. `GENERATION_ENDED` with no reply observation still stays `unknown` and still refuses the head. The T05 regression covers both orders in the actual entry. A later edit or swipe-back leaves `complete` on the record with a new source revision; the director's trigger keys on the generation, so neither issues a request.
 
-Section 4 states nothing blocks replying, and `AGENTS.md` says failed providers must not block replying. With a synthetic backend that returns 503 while busy, pressing Send during an outstanding director request left the user's message in the chat with no reply and a host error toast. The director result still arrived afterward. The composer stayed usable and nothing was corrupted, but that reply was lost until the user retried. Whether real local backends behave this way was not tested.
+## 4. Rulings and where each is honoured
 
-**Proposal (not approved):** accept and record it as a known limit of an off-by-default feature, with a sentence in the toggle's help text. `generateRawData` takes no signal, so SillyNovel cannot abort its own request when the user presses Send. Alternative: the owner defers the director on single-slot connections, which the host does not identify.
+| Ruling | Implementation | Evidence |
+| --- | --- | --- |
+| E2 | `requestDirectorText` calls `generateRawData` then `extractMessageFromData`; `generateRaw` and `generateQuietPrompt` are not called | Adapter unit test; native wire checks |
+| E3-A | `routeProposal`: expressions to the journal, layout recorded `NO_AUTOMATIC_LAYOUT`, suggestions as plain text | Node, browser, native (T49) |
+| E4 amended | Above | Node, browser T05, native T47 |
+| E5 | `enabledProjects[projectId]` and `sessionCeiling` in host settings | Saved payload and bundle checks (T48) |
+| E6 | Counters keyed by project in page memory; see section 8 for the chat-switch reading | Node; native |
+| E7 amended | Skip and count; pause on three consecutive failures; cap pauses at once; stale not a failure; slot released on settlement; 90 s abandonment | Node, loopback; native on real time |
+| E8 | Fixed arguments; `responseLength`, `jsonSchema`, `prefill`, `systemPrompt`, `instructOverride` never set | Adapter unit test; browser recording; native max-tokens check |
+| E9 extended | `neutralize` over all data, `name: ''`, final-payload assertion | Node; loopback; native wire (T40) |
+| E10 | Reading earlier: skip and count, no catch-up | Node |
+| E11 | Trigger gate on a present actor with compatible art | Node |
+| E12 | 12,000 / 4,000 with anchored tail; catalog 4,000; response 32,768 bytes | Node boundary cases |
+| E13 | One optional fence, no repair | Node |
+| E14 | Author labels of window messages only | Payload fixture; native decoys absent |
+| E15, E16 | Section 2 | Node; native group; help-text assertion |
+| D7, O04, O06 | Journal only; user's connection; off by default, evidence window, one in flight, ceiling 40 | All levels |
 
-## 3. Implementation choice to confirm with the above
+## 5. Stale-result checks
 
-A group turn completes each member in turn with the next `started` immediately after, so requesting on every member's completion would issue up to four requests per turn, three of them stale but still counted toward the ceiling under E6. Proposed: wait a short settle interval after completion and re-check before issuing, with the interval measured in the native campaign.
+Before any journal write, in order: the ticket is current and the controller live; `expressions.valid(token)`; the selection is still the anchored source; a mirror rebuilt from current state equals the captured one; `checkProposalEvidence` returns `CURRENT`; no pause was raised. Staleness is decided **before** the result is read, so garbage arriving after a chat switch is not a failure. `expressions.dispatch` then rechecks the exact source record atomically. No new stamp format was added.
 
-## E4 as implemented
+## 6. Commands and results
 
-`generation.status` gains `complete`, with `observed` and `ended` fields on the record, under the amended ruling: a `messageReceived` or `characterMessageRendered` naming the generation's source and a `generationEnded`, in either order, with no `generationStopped`. A source already in the chat before the generation started cannot bind a `normal` or `regenerate` generation. `quiet` and `impersonate` never bind a source and never complete.
+All on frozen `d5664119d060d72f90aee4e3a386fdf409843a5c`, pinned SillyTavern 1.19.0 at `7e8663cd9c184a550b37238218bdd32c6efc68e9`, Node 26.8.1, Playwright 1.62.1, Chromium 151.0.7922.34, loopback endpoint only.
 
-**Behaviour change to merged M1:** a manual temporary expression can now be applied to a freshly completed head, without first navigating away. `GENERATION_ENDED` with no reply observation still stays `unknown` and still refuses the head. A later edit or swipe-back keeps `complete` on the record; the source revision moves and the director's request rule (section 7) keys on generation, so neither triggers a request.
+```sh
+npm ci --prefix plugins/sillynovel-storage --ignore-scripts --no-audit --no-fund
+python3 tests/probes/dyl60/check-discovery.py
+SILLYTAVERN_ROOT=/path/to/pinned SN_PLAYWRIGHT_MODULE=/path/to/playwright/index.mjs timeout -k 5 2700 python3 tests/probes/dyl60/run.py /new/evidence/dir
+python3 tests/probes/dyl60/validate.py /new/evidence/dir
+```
 
-## 4. Not done
+| Suite | Result | Elapsed |
+| --- | --- | --- |
+| `check-discovery.py` | PASS: 11/5/1 files, unexpected, empty and missing suites refused | Under 1 s |
+| Node (11 files) | 227/227; 45 new against M2.1's 182 | 4 s |
+| Storage (5 files) | 126/126; plugin unchanged, run because the runner runs it | 153 s |
+| Browser, actual entry | 88/88; 6 new | 51 s |
+| stage-library-migration | PASS, 24 checkpoints | 105 s |
+| expressions | PASS, 16 | 64 s |
+| groups | PASS, 22 | 92 s |
+| recovery | PASS, 17 | 57 s |
+| cleanup | PASS, 21 | 82 s |
+| native-integrity-branches | PASS, 18 | 87 s |
+| **director (new)** | PASS, 17 | 267 s |
+| `validate.py` | PASS: 123 frozen inputs, 108 artifact hashes | |
 
-Everything after the probe: E4 reader change, adapter method, request assembly, parser, controller, journal origin, UI, tests, `tests/probes/dyl60/run.py` registration, TESTING rows, STATUS and ROADMAP entries, draft PR. No runtime file changed, so no Node, browser, storage or native campaign suite was run, and none is claimed.
+Total 961 s. [Runs](evidence/m2-2/campaign/runs.json), [pins](evidence/m2-2/campaign/pins.json), [director checkpoints and the exact payload](evidence/m2-2/campaign/director-evidence.json).
 
-Retained root, disposable and task-owned: `sn-m2-probe-SATDAA` under this session's scratchpad, with `probe-findings.json` and `host.log`.
+The director campaign runs on real host generation with a decoy persona, lorebook and card descriptions seeded and read back as active. It covers: off by default; exact payload and decoys absent; `{{persona}}`, `{{input}}`, `{{getvar::x}}`, `<USER>`, `<GROUP>` neutralized on the wire; 80 native files byte-identical across a request with no lifecycle event and max tokens unchanged; continue, regenerate and swipe completing with exactly one request each; quiet, swipe-back and Stop not triggering; Send and Stop while outstanding; a chat switch mid-flight; malformed reply and HTTP 500; ceiling 3; three consecutive failures and resume; 90 s abandonment on real time (observed 90.0 s); the 20-turn Last Lantern script (20 director requests, 20 native replies, no director text in the chat, every non-chat file byte-identical, saved layout unchanged); a bundle carrying no director setting; and a real four-card duplicate-name group (four native replies, one settled request, expression on one UUID only, all native files byte-identical across the request).
 
-**Next bounded step:** an owner statement on 2.1, 2.2 and 2.3, recorded in DECISIONS; implementation then resumes at E4.
+## 7. NOT_RUN and NOT_TESTED
+
+| Surface | Status and reason |
+| --- | --- |
+| Tablet replay of the two new controls | **NOT_TESTED.** The paired Galaxy Tab S8+ was reachable and unlocked, but its foreground was an unrelated app that looked to be in active use, and launching a browser would have taken over the owner's device. Toggle and ceiling keyboard operation is covered in desktop Chromium, which is not physical evidence. DYL-193 stays open. |
+| Text-completion and instruct backends | **NOT_TESTED** on a backend. `createRawPrompt` output only; instruct wraps the data block as the instruction. |
+| Real providers | **NOT_TESTED**, out of scope. Providers that validate `name` may refuse the E9 `"name": ""`, which would surface as `TRANSPORT_ERROR`. Sources whose server converters read `user_name`, `char_name` or `group_names` were not inspected. |
+| Real single-slot backends, queueing or rejecting | **NOT_TESTED.** Only the synthetic 503 in the probe. |
+| Other installed extensions rewriting the raw prompt | **NOT_TESTED.** Campaign runs with no third-party extension but SillyNovel. |
+| Plain (non-streaming) order on the native campaign | The campaign runs streamed. Plain order is covered by the probe's event record, Node and the browser regression. |
+| Database restore with the director enabled (T48) | Not exercised. The setting is in host settings, which the plugin does not hold; bundle import is exercised. |
+| E10, E11 on the native host | Node only. |
+| Gate B, T18, usefulness, accuracy | **NOT_RUN**, owner-gated. |
+
+## 8. Implementation choices for owner review
+
+Not settled by the documents; each is reversible and none is an owner ruling.
+
+| Choice | Rationale |
+| --- | --- |
+| **E6 and chat switches.** Under F1 a chat switch always detaches the project and the user must explicitly reopen, so E6's “chat switches do not reset” and “reopen resets” collide. Counters live in page memory by project: a chat-switch detach and reopen keeps the count; the **Detach** button and **Discard and reopen** reset it; reload clears it. | Honours E6's stated reason that a chat switch must not be a free reset. |
+| The in-flight slot is page-wide, across attachments and projects. | A detach or chat switch cannot release the host promise, so a second request would break one-in-flight. |
+| A user Stop is `cancelled`, not a failure; it still counts toward the ceiling. | The user asked for it. |
+| A 90 s abandonment counts as one failure. | A request that never answered failed; later settlement counts nothing more. |
+| Automatic decisions keep their artwork when invalidated; manual ones keep M1's release. | Otherwise one continue would spend the only art and silently idle the director. Plan section 7 says invalidation rules match, which they do; this is only about releasing bytes. Bounded by the existing 32 PNG / 32 MiB limit. |
+| Importing a new PNG while a request is outstanding makes that result stale. | The catalog changed, per plan section 8's field-by-field comparison. |
+| A prior message that does not fit ends the window instead of being skipped. | The validator requires a contiguous window. |
+| An expression bundled with an unapplied `outfitId` is recorded as ignored; with `present` it still applies. | The asset was validated against an outfit that will not exist; presence does not affect expression compatibility. |
+| Enabling or a completion before enabling does not issue a retroactive request. | Attaching must not spend the ceiling. |
+| The host's own error toast appears on provider failures in addition to SillyNovel's notice. | The entry point offers no way to suppress it. |
+| `\{\{x\}\}` in chat arrives as literal `{{x}}`, unexpanded, and is left alone. | Observed in the probe: no expansion or leak. T40 is about expansion. |
+
+## 9. Limits and next bounded step
+
+The director moves expressions only (E3-A), so travel and presence categories stay fixture-only. It needs temporary PNGs imported this activation; reload or a chat switch drops them. A hung backend holds the slot until the host settles. The user has no Stop control for a director-only request. Other extensions can rewrite the raw prompt through host events.
+
+**E16 follow-through.** Gate B evaluation question: does Send during a director request cost replies on the owner's real backend, and is one-sentence help text enough? M2.3 input: serialization between native generation and director requests.
+
+**Retained disposable roots**, task-owned, under this session's scratchpad until review: `m2-2-campaign/`, `sn-m2-director-3wDTt5`, `sn-m2-probe-SATDAA`, `sn-portability-host-{oXIDqd,Mjxolq,niRobY,JfojIV,SBlfqH,KjYa6t}`, and the pinned host `st-pinned`. All owned processes stopped; port 8128 free.
+
+**Next bounded step:** owner review of this draft PR and section 8. M2.3, M2.4, Gate B, DYL-193 closure, live installation and release remain gated, and this document starts none of them.

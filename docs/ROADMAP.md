@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## M2.2 implementation candidate for review — 2026-11-01
+
+[Implementation record](M2_2_DIRECTOR_IMPLEMENTATION.md), frozen at `d5664119d060d72f90aee4e3a386fdf409843a5c`, is an unmerged draft for owner review. M2.3 inputs recorded there: serialization with native generation (E16) and the automatic layout overlay (E3 option B). M2.3, M2.4 and Gate B stay gated.
+
 ## M2.2 authorized — 2026-11-01
 
 [E1–E14 ruled](DECISIONS.md#owner-rulings-e1e14--m22-director-transport--2026-11-01); [DYL-195](https://linear.app/devils17/issue/DYL-195/sillynovel-m22-one-text-director-transport-over-the-hosts-generation) implements plan sections 4–10 with E3-A and amended E7. M2.3 planning should take up the automatic layout overlay (E3-B) together with queueing and catch-up. Gate B NOT_RUN.
