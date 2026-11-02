@@ -13,7 +13,7 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
  * @param {{ownerKey: string, sessionEpoch: number}} identity
  */
 export function createDirectorOverlay({ ownerKey, sessionEpoch }) {
-    let scene = null, args = null, history = 0, selection = 0, catalog = 0, memo = null;
+    let scene = null, args = null, history = 0, selection = 0, catalog = 0, memo = null, epoch = 0;
     const install = next => { scene = next; memo = null; return scene; };
     const contextOf = (layout, sources, selectedSourceKey, assets) => ({ ownerKey, sessionEpoch, historyRevision: history, selectionRevision: selection, selectedSourceKey, sources,
         characters: layout.actors.map(({ key, label }) => ({ key, label })), catalog: { revision: catalog, assets } });
@@ -43,7 +43,7 @@ export function createDirectorOverlay({ ownerKey, sessionEpoch }) {
     /** Discards every automatic command. Returns the new scene, or null when the layout cannot be replayed. */
     function rebase(layout, sources, { selectedSourceKey, assets }) {
         args = { layout, sources, selection: { selectedSourceKey, assets } };
-        history++; selection++; catalog++;
+        history++; selection++; catalog++; epoch++;
         const mapped = assets.map(assetOf), target = selectable(sources, selectedSourceKey);
         const base = sources.length ? replay(layout, sources, mapped) : null;
         if (!base || target === sources[0].key) return install(base);
@@ -81,6 +81,8 @@ export function createDirectorOverlay({ ownerKey, sessionEpoch }) {
         clear() { return args ? rebase(args.layout, args.sources, args.selection) : null; },
         active: () => Boolean(scene?.commands.some(entry => entry.valid && entry.origin === 'automatic')),
         scene: () => scene,
+        /** Advanced by every rebase, because a rebase restarts command revisions. */
+        epoch: () => epoch,
         dispose() { install(null); args = null; },
     };
 }

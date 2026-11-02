@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## M2.4 PR A candidate (draft, unmerged) — 2026-11-02
+
+Plan section 7 PR A is implemented on frozen `f5de115` with [its record](M2_4_EVIDENCE_UI_IMPLEMENTATION.md) and awaits owner review; PR B follows that review. Gate B NOT_RUN.
+
 ## M2.4 authorized (PRs A and B) — 2026-11-02
 
 [G1–G14 ruled](DECISIONS.md#owner-rulings-g1g14--m24-evidence-ui-corrections-and-gate-b--2026-11-02); [DYL-204](https://linear.app/devils17/issue/DYL-204/sillynovel-m24-director-decision-log-and-evidence-ui-prs-a-and-b) implements plan section 7 PR A (pure, Node evidence) and then PR B (renderer, full native-host campaign), each reviewed by the owner before the next. PR C and PR D follow on separate go-aheads. The Gate B sequence is fixed: four PRs, frozen candidate with the full campaign, [DYL-193](https://linear.app/devils17/issue/DYL-193/sillynovel-m14-deferred-physical-scaling-motion-assistive-and) replay, fixture evaluation on the owner's named connection, the owner's session, the owner's verdict. Each step needs its own authorization.
