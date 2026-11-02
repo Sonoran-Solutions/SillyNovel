@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## M2.2 authorized — 2026-11-01
+
+[E1–E14 ruled](DECISIONS.md#owner-rulings-e1e14--m22-director-transport--2026-11-01); [DYL-195](https://linear.app/devils17/issue/DYL-195/sillynovel-m22-one-text-director-transport-over-the-hosts-generation) implements plan sections 4–10 with E3-A and amended E7. M2.3 planning should take up the automatic layout overlay (E3-B) together with queueing and catch-up. Gate B NOT_RUN.
+
 ## M2.2 planning proposal (NOT approved) — 2026-11-01
 
 The [M2.2 director transport plan](M2_2_DIRECTOR_TRANSPORT_PLAN.md) proposes one quiet director request per completed message over the host's own raw generation path on the user's selected connection, bounded by O06, validated by the merged M2.1 module and applied through the memory-only expressions journal (D7), with the host entry point verified on the pinned 1.19.0 source and a synthetic loopback test plan. It authorizes nothing: M2.2 implementation starts only after a separate owner authorization is recorded in [DECISIONS](DECISIONS.md), including rulings on the decisions in its section 11. M2.3 queueing, M2.4 evidence UI, image work and Gate B remain separately gated. Older dated entries are historical.

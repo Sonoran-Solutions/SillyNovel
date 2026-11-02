@@ -1,5 +1,9 @@
 # Project status
 
+## M2.2 authorized — 2026-11-01
+
+The owner [ruled on E1–E14](DECISIONS.md#owner-rulings-e1e14--m22-director-transport--2026-11-01): M2.2 implementation is authorized with E3 option A (expressions only, layout changes recorded as ignored), E4 reader status `complete`, host-settings enable, and an amended E7 failure policy (skip and count, pause after three consecutive failures). Tracked by [DYL-195](https://linear.app/devils17/issue/DYL-195/sillynovel-m22-one-text-director-transport-over-the-hosts-generation). First task is the plan's section 2.4 runtime probe on the pinned host. Native-host campaign evidence applies to this slice. Gate B NOT_RUN.
+
 ## M2.2 planning proposal (NOT approved) — 2026-11-01
 
 A docs-only [M2.2 director transport plan](M2_2_DIRECTOR_TRANSPORT_PLAN.md) is open for owner review on main `9ae2dbf1df23e1a7e3a569c14ff6a5c903b54a60`. It records the quiet generation entry point verified by inspection of pinned SillyTavern 1.19.0 source (`generateRawData`/`extractMessageFromData` on `SillyTavern.getContext()`; `generateQuietPrompt` rejected because it assembles cards, persona, lorebooks and chat history), the O06-bounded request assembly, strict single-JSON parsing into the merged M2.1 validator, the off-by-default per-project enable, one-in-flight/one-per-message rules, the per-session ceiling of 40 with its degrade-to-manual notice, D7 journal routing, stale-result checks on the existing stamps, a synthetic loopback transport test plan and the owner decisions E1–E14 it needs. Two things the documents did not settle are recorded as decisions: the merged reader never records a `complete` generation status, and attached-project mode has no non-persistent home for automatic layout changes. **M2.2 implementation requires separate owner authorization recorded in [DECISIONS](DECISIONS.md).** Runtime unchanged; Gate B NOT_RUN; DYL-193 still precedes beta/release.
