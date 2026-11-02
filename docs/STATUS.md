@@ -1,5 +1,9 @@
 # Project status
 
+## M2.4 PR C go-ahead — 2026-11-02
+
+The owner [gave the go-ahead](DECISIONS.md#owner-go-ahead--m24-pr-c-corrections-and-the-o08-control--2026-11-02) on PR C under G5–G8: revert and override at the selected message without clearing the rest of the overlay, correction locks with Release, and the per-field “director may move this” control that resolves O08 with no schema change. Tracked by [DYL-205](https://linear.app/devils17/issue/DYL-205/sillynovel-m24-pr-c-manual-corrections-correction-locks-and-the-o08); renderer and overlay change with the full native-host campaign. Runtime unchanged by this entry. PR D (Gate B readiness) follows on its own go-ahead. Gate B NOT_RUN; DYL-193 reopened.
+
 ## M2.4 PR B merged; PR C go-ahead next — 2026-11-02
 
 The owner [accepted and merged](DECISIONS.md#owner-acceptance--m24-pr-b-merged--2026-11-02) PR B at `8203ea1` (frozen `98d4c27`); [DYL-204](https://linear.app/devils17/issue/DYL-204/sillynovel-m24-director-decision-log-and-evidence-ui-prs-a-and-b) Done. The stage now shows a Director line with state and request count, a closed “Why this visual?” disclosure listing what is on stage at the selected message, the decisions behind it and the session summary, and a Resume button after a pause. Evidence validated from the repository: Node 328, storage 126, browser 97, seven native campaigns. Tablet, touch, IME and screen readers NOT_TESTED (DYL-193). PRs A and B complete the authorized M2.4 work. **Next owner decision:** go-ahead on PR C (revert and override at the selected message, correction locks, the O08 per-field “director may move this” control), then PR D (Gate B fixtures, scorer, E16 residual blocks). Gate B NOT_RUN.
