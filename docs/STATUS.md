@@ -1,5 +1,9 @@
 # Project status
 
+## M2.4 planning proposal (NOT approved) — 2026-11-02
+
+The [M2.4 evidence UI plan](M2_4_EVIDENCE_UI_PLAN.md) proposes a memory-only decision log with the outcome taxonomy and an on-stage “Why this visual?”, per-decision corrections in the overlay, an answer to open question O08 over the existing lock flags with no schema change, and the Gate B candidate's fixtures, protocol and record. It lists owner decisions G1–G14 with a recommendation each and authorizes nothing. It also records a conflict for the owner: Linear shows DYL-193 Done, with no replay evidence in the repository, while the documents call it open (G12). Runtime unchanged. Gate B NOT_RUN.
+
 ## M2.3 complete — 2026-11-02
 
 The owner [accepted and merged](DECISIONS.md#owner-acceptance--m23-pr-c-merged-m23-complete--2026-11-02) PR C at `174d380` (frozen `67c1aed`); [DYL-203](https://linear.app/devils17/issue/DYL-203/sillynovel-m23-pr-c-automatic-layout-overlay-for-background-and) Done. With PRs A, B and C merged, M2.3 is complete: the director keeps one pending target, waits through native generation and typing, names overtaken results `SUPERSEDED`, and can now move the background and who is present through a memory-only overlay that never touches the saved project, with manual locks and any manual layout command winning. Evidence validated from the repository: Node 283, storage 126, browser 93, seven native campaigns. Tablet replay and real providers NOT_TESTED. **Open question O08:** manual choices are locked by default, so the overlay rarely moves a hand-arranged project; a “default the director may move” marking is for M2.4 planning. Next bounded step is M2.4 planning (evidence UI, Gate B candidate), which needs owner authorization. Gate B NOT_RUN; DYL-193 open.

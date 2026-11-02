@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## M2.4 planning proposal (NOT approved) — 2026-11-02
+
+The [M2.4 evidence UI plan](M2_4_EVIDENCE_UI_PLAN.md) proposes four sequential PRs (decision log, evidence UI, corrections and O08, Gate B readiness), then the DYL-193 replay on one frozen candidate, the fixture evaluation and the owner's real session, each separately authorized. Owner decisions G1–G14 are open. Nothing here starts M2.4 or Gate B.
+
 ## M2.3 complete — 2026-11-02
 
 PR C [accepted](DECISIONS.md#owner-acceptance--m23-pr-c-merged-m23-complete--2026-11-02) at `174d380`; [DYL-203](https://linear.app/devils17/issue/DYL-203/sillynovel-m23-pr-c-automatic-layout-overlay-for-background-and) Done. M2.3 is complete. M2.4 planning (evidence UI, Gate B candidate) is the next bounded step and should take up open question O08 (a default the director may move) and the DYL-193 device replay before the Gate B session; it starts only on a recorded owner authorization. Gate B stays gated.
