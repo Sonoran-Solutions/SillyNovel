@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## M2.4 PR A merged — 2026-11-02
+
+[Accepted](DECISIONS.md#owner-acceptance--m24-pr-a-merged--2026-11-02) at `8d85158`. PR B (renderer: Director line, disclosure, Resume; full native-host campaign) follows on the owner's go-ahead under [DYL-204](https://linear.app/devils17/issue/DYL-204/sillynovel-m24-director-decision-log-and-evidence-ui-prs-a-and-b); PR C and PR D on their own go-aheads. Gate B sequence unchanged.
+
 ## M2.4 PR A candidate (draft, unmerged) — 2026-11-02
 
 Plan section 7 PR A is implemented on frozen `f5de115` with [its record](M2_4_EVIDENCE_UI_IMPLEMENTATION.md) and awaits owner review; PR B follows that review. Gate B NOT_RUN.

@@ -1,5 +1,9 @@
 # Project status
 
+## M2.4 PR A merged — 2026-11-02
+
+The owner [accepted and merged](DECISIONS.md#owner-acceptance--m24-pr-a-merged--2026-11-02) PR A at `8d85158` (frozen `f5de115`): the controller now keeps a memory-only log of the last 64 director decisions per attachment with the plan's outcome taxonomy, named stale reasons, per-update dispositions, tallies and excerpt deletion when the source changes; nothing renders it yet. Node 322/322 from the repository; browser, storage and native NOT_RUN for this pure-module slice. Accepted departures: a pause is a tally, not an entry; most real stale results read `STALE_JOURNAL`. Next bounded step is PR B (Director line, “Why this visual?”, Resume) on the owner's go-ahead under [DYL-204](https://linear.app/devils17/issue/DYL-204/sillynovel-m24-director-decision-log-and-evidence-ui-prs-a-and-b). Gate B NOT_RUN; DYL-193 reopened.
+
 ## M2.4 PR A candidate (draft, unmerged) — 2026-11-02
 
 The memory-only decision log, outcome taxonomy and stale reasons are implemented on frozen `f5de115` for owner review: last 64 entries per attachment, excerpts deleted when the anchored source changes, tallies with E6's lifetime, no renderer, adapter or persistence change. Node 322/322, discovery PASS (13/5/1); browser, storage and native NOT_RUN for a pure-module slice. See the [record](M2_4_EVIDENCE_UI_IMPLEMENTATION.md). Nothing is on screen until PR B. Gate B NOT_RUN.
