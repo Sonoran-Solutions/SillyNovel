@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## Gate B candidate frozen — 2026-11-02
+
+[Step 2](M2_4_EVIDENCE_UI_PLAN.md#61-sequence) is done: main `6799a5e` is the [frozen candidate](DECISIONS.md#gate-b-candidate-frozen--6799a5e--2026-11-02) on reused, byte-identical PR D campaign evidence. Steps 3 to 6 (DYL-193 replay, fixture evaluation, the owner's session, the verdict) each wait on their own authorization. No accuracy figure exists, and none is promised.
+
 ## M2.4 complete — 2026-11-02
 
 PR D [accepted and merged](DECISIONS.md#owner-acceptance--m24-pr-d-merged-m24-complete--2026-11-02) at `9797c47`; M2.4 is complete, and the Gate B fixture set, scorer, runner and record template are on main with the runtime unchanged since PR C. The [Gate B sequence](M2_4_EVIDENCE_UI_PLAN.md#61-sequence) is next, unchanged, each step on its own authorization and none implied by this merge. No accuracy figure exists, and none is promised.
