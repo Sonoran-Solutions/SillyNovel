@@ -1,0 +1,9 @@
+Owned evidence root /tmp/sn-dyl193-scaling-LfWLMA
+page.waitForFunction: Timeout 20000ms exceeded.
+    at openCleanup (/home/dq/Projects/SillyNovel/.claude/worktrees/nervous-hypatia-a73027/tests/probes/dyl193/host.mjs:113:16)
+    at async audit (/home/dq/Projects/SillyNovel/.claude/worktrees/nervous-hypatia-a73027/tests/probes/dyl193/host.mjs:147:5)
+    at async file:///home/dq/Projects/SillyNovel/.claude/worktrees/nervous-hypatia-a73027/tests/probes/dyl193/host.mjs:168:32 {
+  log: [],
+  name: 'TimeoutError'
+}
+Evidence /tmp/sn-dyl193-scaling-LfWLMA/evidence.json

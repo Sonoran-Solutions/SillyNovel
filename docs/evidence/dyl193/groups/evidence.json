@@ -1,0 +1,239 @@
+{
+  "row": "groups",
+  "synthetic": false,
+  "candidate": "133428768500373f36195928aff06a5bc9b21abb",
+  "host": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
+  "node": "v26.8.1",
+  "checks": [
+    "groups: host Create branch at message 2 of the six-message four-card group opened a new group chat detached, no sprites, no temporary expression; explicit reopen restored the saved global layout only; native files outside the group record and group chat folder byte-identical",
+    "groups: host Create checkpoint at message 3 kept the attachment (no chat switch); opening the checkpoint through the flag detached with no sprites and no temporary expression; returning to the parent never reattached; saved project byte-equal throughout; every native file outside the group record and group chat folder byte-identical"
+  ],
+  "problems": [],
+  "screenshots": [
+    "groups-branch-detached.png",
+    "groups-branch-reopened.png",
+    "groups-checkpoint-created-still-attached.png",
+    "groups-checkpoint-reopened.png"
+  ],
+  "notTested": [
+    "Physical tablet",
+    "Other host versions",
+    "Owner session",
+    "Individual chat branch and copy (covered by tests/probes/dyl60/host.mjs)"
+  ],
+  "browser": "151.0.7922.34",
+  "groups": {
+    "group": {
+      "id": "1793677502066",
+      "name": "Lantern council",
+      "members": [
+        "Mira.png",
+        "Mira1.png",
+        "Rowan.png",
+        "Sage.png"
+      ],
+      "allow_self_responses": false,
+      "activation_strategy": 1,
+      "generation_mode": 0,
+      "disabled_members": [],
+      "chat_id": "1793677502066",
+      "chats": [
+        "1793677502066"
+      ],
+      "auto_mode_delay": 5,
+      "generation_mode_join_prefix": "",
+      "generation_mode_join_suffix": ""
+    },
+    "members": [
+      "Mira.png",
+      "Mira1.png",
+      "Rowan.png",
+      "Sage.png"
+    ],
+    "parent": "1793677502066",
+    "saved": {
+      "schemaVersion": 2,
+      "projectId": "b4c9c2f7-18f0-4e35-9dcd-b2faea395c3d",
+      "name": "Council layout",
+      "revision": 1,
+      "scene": {
+        "backgroundAssetId": "eed68f5c-e7c0-41a6-a751-c23f1916396f",
+        "backgroundLocked": true,
+        "actors": [
+          {
+            "actorId": "7890cccf-b37a-4a7e-bf68-40183417b54f",
+            "name": "Mira",
+            "present": true,
+            "slot": "left",
+            "spriteAssetId": "7881f694-18da-4148-b109-67c8c8286291",
+            "locks": {
+              "presence": true,
+              "outfit": true,
+              "slot": true
+            }
+          },
+          {
+            "actorId": "171097b3-49d5-40fb-bac5-43b5b79e6907",
+            "name": "Mira",
+            "present": true,
+            "slot": "center",
+            "spriteAssetId": "e124b89a-49a8-4fa4-aaa1-5ddd70602f91",
+            "locks": {
+              "presence": true,
+              "outfit": true,
+              "slot": true
+            }
+          },
+          {
+            "actorId": "928eadff-f829-44d5-a532-62e213785261",
+            "name": "Rowan",
+            "present": true,
+            "slot": "right",
+            "spriteAssetId": "5b658e3c-f87c-46ec-b4f7-9245564d5f10",
+            "locks": {
+              "presence": true,
+              "outfit": true,
+              "slot": true
+            }
+          },
+          {
+            "actorId": "e546fa38-3dc0-4bcd-a252-0d74ee660346",
+            "name": "Sage",
+            "present": true,
+            "slot": null,
+            "spriteAssetId": "8a261b7b-8e15-4921-b8e7-952b4ce374bc",
+            "locks": {
+              "presence": true,
+              "outfit": true,
+              "slot": true
+            }
+          }
+        ]
+      },
+      "catalog": [
+        {
+          "assetId": "7881f694-18da-4148-b109-67c8c8286291",
+          "kind": "sprite",
+          "actorId": "7890cccf-b37a-4a7e-bf68-40183417b54f",
+          "label": "Mira base"
+        },
+        {
+          "assetId": "e124b89a-49a8-4fa4-aaa1-5ddd70602f91",
+          "kind": "sprite",
+          "actorId": "171097b3-49d5-40fb-bac5-43b5b79e6907",
+          "label": "Mira base"
+        },
+        {
+          "assetId": "5b658e3c-f87c-46ec-b4f7-9245564d5f10",
+          "kind": "sprite",
+          "actorId": "928eadff-f829-44d5-a532-62e213785261",
+          "label": "Rowan base"
+        },
+        {
+          "assetId": "8a261b7b-8e15-4921-b8e7-952b4ce374bc",
+          "kind": "sprite",
+          "actorId": "e546fa38-3dc0-4bcd-a252-0d74ee660346",
+          "label": "Sage base"
+        },
+        {
+          "assetId": "eed68f5c-e7c0-41a6-a751-c23f1916396f",
+          "kind": "background",
+          "actorId": null,
+          "label": "Forest"
+        }
+      ]
+    },
+    "steps": [
+      {
+        "step": "branch",
+        "changedHostOwned": [
+          {
+            "path": "default-user/group chats/1793677502066 - Branch #1.jsonl",
+            "before": null,
+            "after": {
+              "bytes": 1162,
+              "sha256": "5d1369d730e012baa0aaaf4cdd028d9cc98cab0db7f509547017a54988e521fb"
+            }
+          },
+          {
+            "path": "default-user/groups/1793677502066.json",
+            "before": {
+              "bytes": 466,
+              "sha256": "b064d069862b73e5b9684195029b7664a59958f5bb8152470e4fb3b52b5bcab4"
+            },
+            "after": {
+              "bytes": 660,
+              "sha256": "e51851eb85aeeb9d20b13f41043b16019910a805e21ffa859c0c9bd5270c66ab"
+            }
+          }
+        ],
+        "settingsKeysChangedByHost": [],
+        "branch": "1793677502066 - Branch #1",
+        "parentChanged": false,
+        "branchMessages": 3
+      },
+      {
+        "step": "checkpoint",
+        "changedHostOwned": [
+          {
+            "path": "default-user/group chats/1793677502066.jsonl",
+            "before": {
+              "bytes": 1145,
+              "sha256": "5ad464b05093b04594cdc31ddeed78781492735a7cb989a3e0a0c062267489c1"
+            },
+            "after": {
+              "bytes": 2217,
+              "sha256": "b8c1bba0b83f4086c071d18cb3534a068eacc009b1e0ba8fd504830dcb5c1e59"
+            }
+          },
+          {
+            "path": "default-user/group chats/Council checkpoint.jsonl",
+            "before": null,
+            "after": {
+              "bytes": 1476,
+              "sha256": "b6a667c1ce2867341454d4d51e9ac546eb632939a5f6944b64febe354a4bcbee"
+            }
+          },
+          {
+            "path": "default-user/groups/1793677502066.json",
+            "before": {
+              "bytes": 648,
+              "sha256": "89e10a93ade7db8c87180d2481015e47fc28a60fb18ea95eef3d51e206cde8f4"
+            },
+            "after": {
+              "bytes": 678,
+              "sha256": "493ae0266d0e3460e600186274251afc8b82b2d29507a26e93e897f031b3e63e"
+            }
+          }
+        ],
+        "settingsKeysChangedByHost": [],
+        "checkpoint": "Council checkpoint",
+        "copyMessages": 4
+      },
+      {
+        "step": "open-checkpoint",
+        "changedHostOwned": [
+          {
+            "path": "default-user/groups/1793677502066.json",
+            "before": {
+              "bytes": 678,
+              "sha256": "493ae0266d0e3460e600186274251afc8b82b2d29507a26e93e897f031b3e63e"
+            },
+            "after": {
+              "bytes": 683,
+              "sha256": "0bf4e35533ff14ac812a3ba870685cd9b63d15d5d83fc327d73a4cc5df5ee401"
+            }
+          }
+        ],
+        "settingsKeysChangedByHost": []
+      }
+    ],
+    "groupChatsAfter": [
+      "1793677502066",
+      "1793677502066 - Branch #1",
+      "Council checkpoint"
+    ]
+  },
+  "result": "PASS",
+  "pageErrors": []
+}

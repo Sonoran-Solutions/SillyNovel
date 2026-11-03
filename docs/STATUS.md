@@ -1,5 +1,9 @@
 # Project status
 
+## DYL-193 replay on candidate 6799a5e — candidate, unmerged — 2026-11-02
+
+Step 3 ran on probe head `1334287` with the runtime byte-identical to the [frozen candidate](DECISIONS.md#gate-b-candidate-frozen--6799a5e--2026-11-02) `6799a5e` (test files only were added). [Record](DYL_193_REPLAY_RECORD.md); package [`docs/evidence/dyl193/`](evidence/dyl193/), `validate.py` PASS. Native group branch and checkpoint with an attached project: TESTED PASS on the pinned host. Desktop scaling (200 % zoom, root font 200 %, host font scale 2) and emulated reduced motion: SYNTHETIC PASS. Screen reader: NOT_TESTED; a synthetic accessibility-tree row is recorded apart and substitutes for nothing. Tablet rows: NOT_TESTED with the Galaxy Tab S8+ attached and unlocked, because no browser was running and a Godot QA app held the foreground; launching Brave is the owner's call and the question is with the owner. No defect found; no runtime change. Steps 4 to 6 unauthorized; Gate B NOT_RUN.
+
 ## DYL-193 replay authorized on the candidate — 2026-11-02
 
 The owner [authorized](DECISIONS.md#owner-authorization--dyl-193-replay-on-gate-b-candidate-6799a5e--2026-11-02) step 3 of the Gate B sequence: the [DYL-193](https://linear.app/devils17/issue/DYL-193/sillynovel-m14-deferred-physical-scaling-motion-assistive-and) replay on candidate `6799a5e`, in the `docs/evidence/dyl60/` layout, with the tablet rows on the paired Galaxy Tab S8+ when it is reachable and BLOCKED otherwise, assistive technology honest as NOT_TESTED unless actually run, and no runtime change. Steps 4 to 6 stay unauthorized. Gate B NOT_RUN.

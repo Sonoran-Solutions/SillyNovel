@@ -1,5 +1,9 @@
 # Verification and acceptance
 
+## DYL-193 replay — candidate 6799a5e, unmerged — 2026-11-02
+
+Probe head `1334287`, runtime byte-identical to candidate `6799a5e` (`git diff --quiet` over `src index.js style.css plugins manifest.json` empty; only `tests/probes/dyl193/` added). `python3 tests/probes/dyl193/run.py docs/evidence/dyl193 6799a5e…` exit 0 (scaling, motion, assistive, groups rows all PASS on pinned SillyTavern 1.19.0 `7e8663cd9c184a550b37238218bdd32c6efc68e9`, Chromium 151.0.7922.34); `tests/probes/dyl193/validate.py` PASS; `check-discovery.py` PASS 14/5/1. T12's group half is covered on the real host (branch and checkpoint through the host's own controls). T28, T52's tablet note and T61's physical note are proposed for amendment in the [record](DYL_193_REPLAY_RECORD.md#proposed-amendments-to-the-testing-matrix-text-only-rows-change-at-merge), not changed here. Desktop results are SYNTHETIC where a preference or zoom was emulated; the screen reader and every tablet row are NOT_TESTED (device attached, browser not launched). Gate B NOT_RUN.
+
 ## DYL-193 replay authorized on candidate 6799a5e — 2026-11-02
 
 [Authorized](DECISIONS.md#owner-authorization--dyl-193-replay-on-gate-b-candidate-6799a5e--2026-11-02): the deferred physical scaling, 200% zoom, reduced-motion, assistive-technology, tablet touch-flow and native group branch/copy rows run against candidate `6799a5e`, recorded in the `docs/evidence/dyl60/` layout with retained failures. Rows reached on the actual device become TESTED with their evidence cited by SHA; rows not reached stay NOT_TESTED and say why. Synthetic emulation of a preference or zoom is recorded as synthetic, never as the physical row. Matrix rows change only when the replay's record merges. No runtime change in this step. Gate B NOT_RUN.

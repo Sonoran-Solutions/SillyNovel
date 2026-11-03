@@ -1,0 +1,16 @@
+Authorized discovery: adb devices -l, exit 0.
+List of devices attached
+<serial redacted>._adb-tls-connect._tcp device product:gts8pwifixx model:SM_X800 device:gts8pwifi transport_id:1
+Authorized discovery: adb mdns services, exit 0.
+List of discovered mdns services
+<serial redacted>	_adb-tls-connect._tcp	<address redacted>
+
+Physical status: ATTACHED.
+
+Observed, read-only, after the campaign discovery (2026-11-03 UTC; the session's first discovery at its start, "adb devices -l" and "adb mdns services", listed nothing):
+- Samsung SM-X800 (Galaxy Tab S8+), Android 16, build BP2A.250605.031.A3.X800XXSBEZH3, security patch 2026-08-05; 1752x2800 physical, density 340; font_scale 1.0; animator_duration_scale null (default), transition/window animation scale 1.0; no accessibility service enabled; Samsung HoneyBoard IME; user_rotation 0 with accelerometer rotation on; awake, keyguard not showing, device not locked (device/facts-readonly.txt).
+- No browser is running and no Chromium devtools socket exists (/proc/net/unix has no chrome_devtools_remote). Brave 1.98.63 and Chrome 149.0.7827.197 are installed.
+- The foreground window is com.sonoransolutions.dungeondispatcher.issue258qa (a Godot QA app), which may be another session's test in progress.
+- Driving the tablet as at Gate A would need "adb shell am start" of Brave at http://127.0.0.1:8760/ through "adb reverse tcp:8760", which pushes that app to the background. The coordinating session ruled that taking over a device in use is the owner's call; the owner was asked and no answer had arrived when this package was frozen. Nothing was launched. The prepared probe is tests/probes/dyl193/device.mjs (NOT_RUN).
+
+Physical status: NOT_TESTED (device attached and unlocked; browser not launched pending the owner's word). Tablet text scaling, 200 % zoom, reduced motion, screen reader and touch through the file picker, import, export and cleanup: NOT_TESTED. Assistive technology on desktop: NOT_TESTED; the synthetic accessibility-tree row does not substitute.

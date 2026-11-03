@@ -1,0 +1,3 @@
+List of discovered mdns services
+<serial redacted>	_adb-tls-connect._tcp	<address redacted>
+

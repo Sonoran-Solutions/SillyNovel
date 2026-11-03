@@ -1,0 +1,3 @@
+Owned evidence root /tmp/sn-dyl193-scaling-VZBvfr
+PASS SYNTHETIC scaling: reader readable, navigation and 46 controls reachable, reply field reachable and focusable with the disclosure open, cleanup list unclipped, no clipped stage content at baseline, 200 % viewport zoom (DPR 2), CSS zoom 2 (DPR 2), root font 200 % and host font scale 2
+Evidence /tmp/sn-dyl193-scaling-VZBvfr/evidence.json

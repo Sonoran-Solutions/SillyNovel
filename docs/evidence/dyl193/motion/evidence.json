@@ -1,0 +1,321 @@
+{
+  "row": "motion",
+  "synthetic": true,
+  "candidate": "133428768500373f36195928aff06a5bc9b21abb",
+  "host": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
+  "node": "v26.8.1",
+  "checks": [
+    "SYNTHETIC reduced motion (media feature emulated): 31 of 207 stage elements carry a host transition or animation without the preference; under reduce no stage element keeps a named animation or a non-zero transition duration; text, structure and geometry identical"
+  ],
+  "problems": [],
+  "screenshots": [
+    "motion-no-preference.png",
+    "motion-reduce.png"
+  ],
+  "notTested": [
+    "Physical tablet (no device attached)",
+    "Real screen reader",
+    "System-level reduced-motion or font-size settings",
+    "Real browser zoom control (emulated only)",
+    "Touch digitizer and soft keyboard",
+    "Native confirm() dialog geometry"
+  ],
+  "browser": "151.0.7922.34",
+  "motion": {
+    "elements": 207,
+    "normallyMoving": [
+      {
+        "path": "header.sillynovel-reader__header:0/button.menu_button:2",
+        "animationName": "none",
+        "animationDuration": "0s",
+        "transitionProperty": "all",
+        "transitionDuration": "0.25s"
+      },
+      {
+        "path": "details.sillynovel-controls:5/div.sillynovel-controls__panel:1/fieldset.sillynovel-controls__area:1/button.menu_button:4",
+        "animationName": "none",
+        "animationDuration": "0s",
+        "transitionProperty": "all",
+        "transitionDuration": "0.25s"
+      },
+      {
+        "path": "details.sillynovel-controls:5/div.sillynovel-controls__panel:1/fieldset.sillynovel-controls__area:1/button.menu_button:5",
+        "animationName": "none",
+        "animationDuration": "0s",
+        "transitionProperty": "all",
+        "transitionDuration": "0.25s"
+      },
+      {
+        "path": "details.sillynovel-controls:5/div.sillynovel-controls__panel:1/fieldset.sillynovel-controls__area:1/button.menu_button:6",
+        "animationName": "none",
+        "animationDuration": "0s",
+        "transitionProperty": "all",
+        "transitionDuration": "0.25s"
+      },
+      {
+        "path": "details.sillynovel-controls:5/div.sillynovel-controls__panel:1/fieldset.sillynovel-controls__area:1/button.menu_button:7",
+        "animationName": "none",
+        "animationDuration": "0s",
+        "transitionProperty": "all",
+        "transitionDuration": "0.25s"
+      },
+      {
+        "path": "details.sillynovel-controls:5/div.sillynovel-controls__panel:1/fieldset.sillynovel-controls__area:1/button.menu_button:8",
+        "animationName": "none",
+        "animationDuration": "0s",
+        "transitionProperty": "all",
+        "transitionDuration": "0.25s"
+      },
+      {
+        "path": "details.sillynovel-controls:5/div.sillynovel-controls__panel:1/fieldset.sillynovel-controls__area:1/button.menu_button:10",
+        "animationName": "none",
+        "animationDuration": "0s",
+        "transitionProperty": "all",
+        "transitionDuration": "0.25s"
+      },
+      {
+        "path": "details.sillynovel-controls:5/div.sillynovel-controls__panel:1/fieldset.sillynovel-controls__area:2/div.sillynovel-controls__row:2/button.menu_button:1",
+        "animationName": "none",
+        "animationDuration": "0s",
+        "transitionProperty": "all",
+        "transitionDuration": "0.25s"
+      },
+      {
+        "path": "details.sillynovel-controls:5/div.sillynovel-controls__panel:1/fieldset.sillynovel-controls__area:2/div.sillynovel-controls__row:2/button.menu_button:2",
+        "animationName": "none",
+        "animationDuration": "0s",
+        "transitionProperty": "all",
+        "transitionDuration": "0.25s"
+      },
+      {
+        "path": "details.sillynovel-controls:5/div.sillynovel-controls__panel:1/fieldset.sillynovel-controls__area:2/div.sillynovel-controls__row:3/button.menu_button:2",
+        "animationName": "none",
+        "animationDuration": "0s",
+        "transitionProperty": "all",
+        "transitionDuration": "0.25s"
+      },
+      {
+        "path": "details.sillynovel-controls:5/div.sillynovel-controls__panel:1/fieldset.sillynovel-controls__area:2/div.sillynovel-controls__row:5/button.menu_button:1",
+        "animationName": "none",
+        "animationDuration": "0s",
+        "transitionProperty": "all",
+        "transitionDuration": "0.25s"
+      },
+      {
+        "path": "details.sillynovel-controls:5/div.sillynovel-controls__panel:1/fieldset.sillynovel-controls__area:2/div.sillynovel-controls__row:5/button.menu_button:2",
+        "animationName": "none",
+        "animationDuration": "0s",
+        "transitionProperty": "all",
+        "transitionDuration": "0.25s"
+      },
+      {
+        "path": "details.sillynovel-controls:5/div.sillynovel-controls__panel:1/fieldset.sillynovel-controls__area:2/div.sillynovel-controls__row:7/button.menu_button:2",
+        "animationName": "none",
+        "animationDuration": "0s",
+        "transitionProperty": "all",
+        "transitionDuration": "0.25s"
+      },
+      {
+        "path": "details.sillynovel-controls:5/div.sillynovel-controls__panel:1/fieldset.sillynovel-controls__area:2/div.sillynovel-controls__row:8/button.menu_button:1",
+        "animationName": "none",
+        "animationDuration": "0s",
+        "transitionProperty": "all",
+        "transitionDuration": "0.25s"
+      },
+      {
+        "path": "details.sillynovel-controls:5/div.sillynovel-controls__panel:1/fieldset.sillynovel-controls__area:2/div.sillynovel-controls__row:9/button.menu_button:1",
+        "animationName": "none",
+        "animationDuration": "0s",
+        "transitionProperty": "all",
+        "transitionDuration": "0.25s"
+      },
+      {
+        "path": "details.sillynovel-controls:5/div.sillynovel-controls__panel:1/fieldset.sillynovel-controls__area:2/div.sillynovel-controls__row:9/button.menu_button:2",
+        "animationName": "none",
+        "animationDuration": "0s",
+        "transitionProperty": "all",
+        "transitionDuration": "0.25s"
+      },
+      {
+        "path": "details.sillynovel-controls:5/div.sillynovel-controls__panel:1/fieldset.sillynovel-controls__area:2/div.sillynovel-controls__row:11/button.menu_button:1",
+        "animationName": "none",
+        "animationDuration": "0s",
+        "transitionProperty": "all",
+        "transitionDuration": "0.25s"
+      },
+      {
+        "path": "details.sillynovel-controls:5/div.sillynovel-controls__panel:1/fieldset.sillynovel-controls__area:2/div.sillynovel-controls__row:11/button.menu_button:2",
+        "animationName": "none",
+        "animationDuration": "0s",
+        "transitionProperty": "all",
+        "transitionDuration": "0.25s"
+      },
+      {
+        "path": "details.sillynovel-controls:5/div.sillynovel-controls__panel:1/fieldset.sillynovel-controls__area:3/button.menu_button:6",
+        "animationName": "none",
+        "animationDuration": "0s",
+        "transitionProperty": "all",
+        "transitionDuration": "0.25s"
+      },
+      {
+        "path": "details.sillynovel-controls:5/div.sillynovel-controls__panel:1/fieldset.sillynovel-controls__area:3/button.menu_button:7",
+        "animationName": "none",
+        "animationDuration": "0s",
+        "transitionProperty": "all",
+        "transitionDuration": "0.25s"
+      },
+      {
+        "path": "details.sillynovel-controls:5/div.sillynovel-controls__panel:1/fieldset.sillynovel-controls__area:3/button.menu_button:10",
+        "animationName": "none",
+        "animationDuration": "0s",
+        "transitionProperty": "all",
+        "transitionDuration": "0.25s"
+      },
+      {
+        "path": "details.sillynovel-controls:5/div.sillynovel-controls__panel:1/fieldset.sillynovel-controls__area:3/button.menu_button:13",
+        "animationName": "none",
+        "animationDuration": "0s",
+        "transitionProperty": "all",
+        "transitionDuration": "0.25s"
+      },
+      {
+        "path": "details.sillynovel-controls:5/div.sillynovel-controls__panel:1/fieldset.sillynovel-controls__area:3/button.menu_button:16",
+        "animationName": "none",
+        "animationDuration": "0s",
+        "transitionProperty": "all",
+        "transitionDuration": "0.25s"
+      },
+      {
+        "path": "div.sillynovel-director-bar:8/button.menu_button:1",
+        "animationName": "none",
+        "animationDuration": "0s",
+        "transitionProperty": "all",
+        "transitionDuration": "0.25s"
+      },
+      {
+        "path": "details.sillynovel-why:9/div.sillynovel-why__body:1/ul:1/li:2/span.sillynovel-why__actions:0/button.menu_button:0",
+        "animationName": "none",
+        "animationDuration": "0s",
+        "transitionProperty": "all",
+        "transitionDuration": "0.25s"
+      },
+      {
+        "path": "nav.sillynovel-reader__navigation:13/button.menu_button:0",
+        "animationName": "none",
+        "animationDuration": "0s",
+        "transitionProperty": "all",
+        "transitionDuration": "0.25s"
+      },
+      {
+        "path": "nav.sillynovel-reader__navigation:13/button.menu_button:1",
+        "animationName": "none",
+        "animationDuration": "0s",
+        "transitionProperty": "all",
+        "transitionDuration": "0.25s"
+      },
+      {
+        "path": "nav.sillynovel-reader__navigation:13/button.menu_button:2",
+        "animationName": "none",
+        "animationDuration": "0s",
+        "transitionProperty": "all",
+        "transitionDuration": "0.25s"
+      },
+      {
+        "path": "nav.sillynovel-reader__navigation:13/button.menu_button:3",
+        "animationName": "none",
+        "animationDuration": "0s",
+        "transitionProperty": "all",
+        "transitionDuration": "0.25s"
+      },
+      {
+        "path": "nav.sillynovel-reader__navigation:13/button.menu_button:5",
+        "animationName": "none",
+        "animationDuration": "0s",
+        "transitionProperty": "all",
+        "transitionDuration": "0.25s"
+      },
+      {
+        "path": "nav.sillynovel-reader__navigation:13/button.menu_button:6",
+        "animationName": "none",
+        "animationDuration": "0s",
+        "transitionProperty": "all",
+        "transitionDuration": "0.25s"
+      }
+    ],
+    "stillMovingUnderReduce": [],
+    "textEqual": true,
+    "boxesEqual": true,
+    "boxes": {
+      "normal": {
+        ".sillynovel-dialogue": [
+          373,
+          990,
+          694,
+          160
+        ],
+        ".sillynovel-controls summary": [
+          373,
+          193,
+          694,
+          44
+        ],
+        ".sillynovel-why": [
+          373,
+          634,
+          694,
+          300
+        ],
+        ".sillynovel-art": [
+          373,
+          580,
+          694,
+          0
+        ],
+        "#send_textarea": [
+          437,
+          1062,
+          601,
+          37
+        ]
+      },
+      "reduced": {
+        ".sillynovel-dialogue": [
+          373,
+          990,
+          694,
+          160
+        ],
+        ".sillynovel-controls summary": [
+          373,
+          193,
+          694,
+          44
+        ],
+        ".sillynovel-why": [
+          373,
+          634,
+          694,
+          300
+        ],
+        ".sillynovel-art": [
+          373,
+          580,
+          694,
+          0
+        ],
+        "#send_textarea": [
+          437,
+          1062,
+          601,
+          37
+        ]
+      }
+    },
+    "extensionStylesheet": {
+      "animationOrTransitionDeclarations": 2,
+      "reducedMotionGuard": true
+    }
+  },
+  "result": "PASS",
+  "pageErrors": []
+}

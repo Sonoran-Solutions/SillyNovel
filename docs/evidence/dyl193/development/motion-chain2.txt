@@ -1,0 +1,3 @@
+Owned evidence root /tmp/sn-dyl193-motion-gfKZyl
+PASS SYNTHETIC reduced motion (media feature emulated): 31 of 207 stage elements carry a host transition or animation without the preference; under reduce every stage element computes animation none and transition none; text, structure and geometry identical
+Evidence /tmp/sn-dyl193-motion-gfKZyl/evidence.json

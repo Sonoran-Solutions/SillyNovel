@@ -1,0 +1,3 @@
+Owned evidence root /tmp/sn-dyl193-assistive-5p0CAc
+PASS SYNTHETIC accessibility tree: 51 Tab stops from the controls summary to the reply field with controls, disclosure and cleanup open; all visible interactive elements named; 10 status regions; no live region inside the disclosure; Escape closes and refocuses. Not a screen reader.
+Evidence /tmp/sn-dyl193-assistive-5p0CAc/evidence.json

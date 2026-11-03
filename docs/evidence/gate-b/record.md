@@ -76,8 +76,8 @@ Owner's decision: the help sentence suffices / a fix is required before beta: NO
 Synthetic comparison: docs/M2_4_EVIDENCE_UI_IMPLEMENTATION.md, PR D, T68 outcomes (Regenerate lost the reply; Continue and swipe kept it; user message kept in all three; recovery by the same flow once the slot freed)
 
 --- DYL-193 ---
-Replay evidence location and SHA: NOT_RUN
-Unreached surfaces, stated as NOT_TESTED and accepted by the owner: NOT_RUN
+Replay evidence location and SHA: docs/evidence/dyl193/ on probe head 133428768500373f36195928aff06a5bc9b21abb (runtime byte-identical to the candidate 6799a5e74427b7b8052c39bb64cbb2fe0c408413; tests added only); SHA-256 of artifacts.json faa16e175fe759b9483af647cdbaa6ff52ec1ccb115e1ecce85ec766e3a89639; record docs/DYL_193_REPLAY_RECORD.md (candidate, unmerged)
+Unreached surfaces, stated as NOT_TESTED and accepted by the owner: NOT_TESTED: tablet text scaling and 200 % zoom; tablet reduced motion; screen reader on desktop and tablet; tablet touch through the file picker, import, export and cleanup; system-level (not emulated) reduced motion and font size on desktop. Reached: native group branch and checkpoint (TESTED on the host); desktop scaling and reduced motion (SYNTHETIC). Accepted by the owner: NOT_RUN
 ```
 
 A PASS is recordable only with the four hard gates at zero on the frozen SHA, DYL-193 evidence on that SHA, fixture counts recorded and no lost canonical text or saved-project change in the session ([plan section 6.5](../../M2_4_EVIDENCE_UI_PLAN.md#65-pass-criteria-for-the-owners-verdict)). No percentage threshold exists. Only the owner supplies the verdict and the owner's lines above.

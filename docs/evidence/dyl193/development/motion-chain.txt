@@ -1,0 +1,24 @@
+Owned evidence root /tmp/sn-dyl193-motion-mGB4jg
+AssertionError [ERR_ASSERTION]: every stage element has animation none and transition none under reduce
++ actual - expected
+
++ [
++   {
++     animationDuration: '0s',
++     animationName: 'none',
++     path: '#sillynovel-stage',
++     transitionDuration: '0s',
++     transitionProperty: 'all'
++   }
++ ]
+- []
+
+    at file:///home/dq/Projects/SillyNovel/.claude/worktrees/nervous-hypatia-a73027/tests/probes/dyl193/host.mjs:216:16 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: [Array],
+  expected: [],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+Evidence /tmp/sn-dyl193-motion-mGB4jg/evidence.json
