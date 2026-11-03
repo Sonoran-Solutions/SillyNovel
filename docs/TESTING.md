@@ -1,5 +1,9 @@
 # Verification and acceptance
 
+## Gate B candidate frozen on reused evidence — 2026-11-02
+
+Candidate main `6799a5e`, [frozen by the owner](DECISIONS.md#gate-b-candidate-frozen--6799a5e--2026-11-02). Hard-gate evidence is the [M2.4 PR D campaign](evidence/m2-4-d/campaign/) on `e37d6b5`, applicable because runtime and test files are byte-identical between the two SHAs (empty `git diff` over `src tests index.js style.css plugins`); it is cited as tested on `e37d6b5`, not as a run on the candidate. Reproduced from the candidate: `validate.py docs/evidence/m2-4-d/campaign` PASS and `check-discovery.py` PASS (14/5/1). The [Gate B record](evidence/gate-b/record.md) holds the filled fields. Matrix rows are unchanged. T18, the DYL-193 rows and every owner row stay NOT_RUN or NOT_TESTED. Gate B NOT_RUN.
+
 ## M2.4 PR D merged; T67 and T68 amended — 2026-11-02
 
 PR D [accepted](DECISIONS.md#owner-acceptance--m24-pr-d-merged-m24-complete--2026-11-02) at `9797c47` (frozen `e37d6b5`): `validate.py docs/evidence/m2-4-d/campaign` PASS reproduced from the repository (Node 362, storage 126, browser 103, six portability scripts, director campaign 60 checkpoints on pinned SillyTavern 1.19.0 `7e8663cd9c184a550b37238218bdd32c6efc68e9`); `check-discovery.py` PASS (14/5/1). T67 and T68 are amended below per G14 and now name their coverage; the native blocks the candidate entry below lists as newly covered stand. The failed campaign on `f74423d` is retained beside the package and is not evidence for any claim. T18 stays NOT_RUN: the fixture set is on main but unmeasured, and the fixture run is its own authorized step. Gate B NOT_RUN.
