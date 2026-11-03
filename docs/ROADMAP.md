@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## M2.4 complete — 2026-11-02
+
+PR D [accepted and merged](DECISIONS.md#owner-acceptance--m24-pr-d-merged-m24-complete--2026-11-02) at `9797c47`; M2.4 is complete, and the Gate B fixture set, scorer, runner and record template are on main with the runtime unchanged since PR C. The [Gate B sequence](M2_4_EVIDENCE_UI_PLAN.md#61-sequence) is next, unchanged, each step on its own authorization and none implied by this merge. No accuracy figure exists, and none is promised.
+
 ## M2.4 PR D candidate — 2026-11-02
 
 The last M2.4 slice is a [draft PR](M2_4_EVIDENCE_UI_IMPLEMENTATION.md#pr-d--gate-b-readiness) on frozen `e37d6b5`, awaiting owner review; nothing is merged. The [Gate B sequence](M2_4_EVIDENCE_UI_PLAN.md#61-sequence) after it is unchanged and each step needs its own authorization. No accuracy figure exists, and none is promised.

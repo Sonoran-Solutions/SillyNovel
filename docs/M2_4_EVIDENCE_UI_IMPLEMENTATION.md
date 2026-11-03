@@ -8,7 +8,7 @@
 
 **PR C merged — 2026-11-02.** The owner [accepted and merged](DECISIONS.md#owner-acceptance--m24-pr-c-merged--2026-11-02) PR C at `34dfcd8`; its record is the [PR C section](#pr-c--corrections-and-the-director-may-move-control) below and its choices stand as the reversible baseline. T50 and T57 are amended in TESTING. PR D waits on the owner's go-ahead.
 
-**PR D candidate — 2026-11-02.** Gate B readiness (fixtures, scorer, runner, native blocks, record template) is a draft PR on frozen `e37d6b5`, unmerged; its record is the [PR D section](#pr-d--gate-b-readiness) below. Runtime byte-identical to main. Gate B NOT_RUN.
+**PR D merged — 2026-11-02.** The owner [accepted and merged](DECISIONS.md#owner-acceptance--m24-pr-d-merged-m24-complete--2026-11-02) PR D at `9797c47`; its record is the [PR D section](#pr-d--gate-b-readiness) below, its choices stand as the reversible baseline and its four findings stay open. T67 and T68 are amended in TESTING. **M2.4 is complete.** The Gate B sequence begins only on the owner's recorded authorization, step by step. Gate B NOT_RUN.
 
 ## PR A — decision log and stale reasons
 
