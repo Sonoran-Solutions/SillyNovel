@@ -62,7 +62,9 @@ try {
     await writeFile(settingsPath, JSON.stringify(settings));
     const hostPort = Number(new URL(h.origin).port);
     adb('reverse', 'tcp:' + DEVICE_PORT, 'tcp:' + hostPort); reversed = true;
-    if (!socketPresent()) { shell('am', 'start', '-a', 'android.intent.action.VIEW', '-d', 'http://127.0.0.1:' + DEVICE_PORT + '/', BROWSER); evidence.device.browserLaunched = true; evidence.actions.push({ launch: BROWSER }); for (let i = 0; i < 60 && !socketPresent(); i++) await delay(500); }
+    // The tab is opened through the launch intent whether or not the browser is already running (the first run showed a pinch takes only in an intent-opened tab).
+    shell('am', 'start', '-a', 'android.intent.action.VIEW', '-d', 'http://127.0.0.1:' + DEVICE_PORT + '/', BROWSER); evidence.device.browserLaunched = !evidence.device.debugSocketBeforeLaunch; evidence.actions.push({ launch: BROWSER + ' (VIEW intent at the loopback URL)' }); for (let i = 0; i < 60 && !socketPresent(); i++) await delay(500);
+    await delay(2500);
     assert.ok(socketPresent(), 'browser debugging socket');
     adb('forward', 'tcp:' + CDP_PORT, 'localabstract:' + SOCKET); forwarded = true;
     evidence.browser = await (await fetch('http://127.0.0.1:' + CDP_PORT + '/json/version')).json();
@@ -70,7 +72,9 @@ try {
     browser = await chromium.connectOverCDP('http://127.0.0.1:' + CDP_PORT);
     const origin = 'http://127.0.0.1:' + DEVICE_PORT;
     const context = browser.contexts()[0];
+    for (let i = 0; i < 20 && !context.pages().some(p => p.url().startsWith(origin)); i++) await delay(500);
     page = context.pages().find(p => p.url().startsWith(origin)) || await context.newPage();
+    evidence.tabFromIntent = page.url().startsWith(origin);
     page.setDefaultTimeout(25000);
     evidence.syntheticTab = true;
     await page.goto(origin + '/login').catch(() => {});
@@ -141,12 +145,24 @@ try {
     // 200 % zoom: a real pinch through the browser. The host's viewport meta says user-scalable=no, so the expected result is scale 1.0.
     const cdp = await page.context().newCDPSession(page);
     const centre = await page.evaluate(() => ({ x: innerWidth / 2, y: innerHeight / 2 }));
-    await cdp.send('Input.synthesizePinchGesture', { x: centre.x, y: centre.y, scaleFactor: 2, gestureSourceType: 'touch' }).catch(error => { evidence.pinchError = error.message; });
-    await delay(800);
-    const pinched = await page.evaluate(() => visualViewport.scale);
-    if (pinched < 1.9) await cdp.send('Input.synthesizePinchGesture', { x: centre.x, y: centre.y, scaleFactor: 0.5, gestureSourceType: 'touch' }).catch(() => {});
+    let pinched = 1;
+    for (let attempt = 0; attempt < 3 && pinched < 1.9; attempt++) { await delay(1000); await cdp.send('Input.synthesizePinchGesture', { x: centre.x, y: centre.y, scaleFactor: 2, relativeSpeed: 400, gestureSourceType: 'touch' }).catch(error => { evidence.pinchError = error.message; }); await delay(1000); pinched = await page.evaluate(() => visualViewport.scale); evidence.actions.push({ pinchAttempt: attempt + 1, scale: pinched }); }
+    let zoomAudit = null;
+    if (pinched >= 1.9) {
+        // At the pinched scale the person pans; each target is panned into the visual viewport and must then be hit-testable.
+        const pan = sel => page.evaluate(sel => { const e = document.querySelector(sel); e.scrollIntoView({ block: 'center' }); const b = e.getBoundingClientRect(); scrollTo(scrollX + b.left + b.width / 2 - visualViewport.offsetLeft - visualViewport.width / 2, scrollY + b.top + b.height / 2 - visualViewport.offsetTop - visualViewport.height / 2); const r = e.getBoundingClientRect(); const vx = r.left + r.width / 2 - visualViewport.offsetLeft, vy = r.top + r.height / 2 - visualViewport.offsetTop; const inside = vx >= 0 && vy >= 0 && vx <= visualViewport.width && vy <= visualViewport.height; const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2); return { sel, scale: visualViewport.scale, visualViewport: [Math.round(visualViewport.width), Math.round(visualViewport.height)], offset: [Math.round(visualViewport.offsetLeft), Math.round(visualViewport.offsetTop)], inside, hit: hit === e || e.contains(hit), fontSize: getComputedStyle(e).fontSize }; }, sel);
+        zoomAudit = [];
+        for (const sel of ['.sillynovel-dialogue', '.sillynovel-why summary', '.sillynovel-why__body', '#send_textarea', '.sillynovel-reader__navigation']) zoomAudit.push(await pan(sel));
+        await page.locator('#sillynovel-stage').screenshot({ path: join(root, 'device-pinch-2x.png') }); evidence.screenshots.push('device-pinch-2x.png');
+        await page.evaluate(() => scrollTo(0, 0));
+    }
+    let restored = pinched;
+    for (let i = 0; i < 4 && restored > 1.05; i++) { await cdp.send('Input.synthesizePinchGesture', { x: centre.x, y: centre.y, scaleFactor: 0.4, gestureSourceType: 'touch' }).catch(() => {}); await delay(600); restored = await page.evaluate(() => visualViewport.scale); }
     await cdp.detach();
-    note('200 % zoom by real pinch', pinched >= 1.9 ? 'PASS' : 'NOT_TESTED', 'visualViewport.scale after a 2x pinch: ' + pinched + '; host viewport meta: ' + evidence.configuration.viewportMeta + '. Browser page-zoom and force-enable-zoom are settings and were not changed.');
+    evidence.actions.push({ pinch: '2x then back', scaleAfterPinch: pinched, scaleAfterRestore: restored });
+    assert.ok(restored <= 1.05, 'page scale restored to 1 after the pinch: ' + restored);
+    const zoomOk = pinched >= 1.9 && zoomAudit.every(z => z.inside && z.hit);
+    note('200 % zoom by real pinch: reader, disclosure, reply field and navigation reachable by panning', pinched >= 1.9 ? (zoomOk ? 'PASS' : 'FAIL') : 'NOT_TESTED', JSON.stringify({ scaleAfterPinch: pinched, scaleAfterRestore: restored, viewportMeta: evidence.configuration.viewportMeta, audit: zoomAudit, note: 'browser page zoom and force-enable-zoom are settings and were not changed' }));
     note('increased text scaling', 'NOT_TESTED', 'device font_scale ' + evidence.device.fontScale + ' unchanged; the Android font size and the browser text scaling are settings and were not changed.');
     note('reduced motion as a system preference', 'NOT_TESTED', 'animator_duration_scale ' + evidence.device.animatorDurationScale + ' (default), prefers-reduced-motion on the page: ' + open.reducedMotion + '; Remove animations is a setting and was not changed.');
     note('screen reader', 'NOT_TESTED', 'enabled_accessibility_services ' + evidence.device.accessibilityServices + '; TalkBack was not enabled and no screen reader was run.');
@@ -157,13 +173,19 @@ try {
     const downloadsBefore = shell('ls', '-1', '/sdcard/Download/').split('\n');
     const exported = await (await h.context.request.get(h.origin + '/api/plugins/sillynovel-storage/projects/' + project.projectId + '/export', { headers: { 'X-CSRF-Token': (await (await h.context.request.get(h.origin + '/csrf-token')).json()).token } })).body();
     await field('Saved project').selectOption(project.projectId);
+    // The page's own export request is observed from the page; the browser's save step is browser chrome, observed only through the device's window list and Downloads folder.
+    let exportResponse = null;
+    page.on('response', async r => { if (r.url().includes('/projects/' + project.projectId + '/export')) { try { exportResponse = { status: r.status(), sha256: hash(await r.body()) }; } catch (error) { exportResponse = { status: r.status(), bodyError: error.message }; } } });
     await touch(button('Export project'), 'Export project');
-    await delay(5000);
+    for (let i = 0; i < 20 && !exportResponse; i++) await delay(500);
+    await delay(4000);
+    const windowsAfterExport = shell('dumpsys', 'window', 'windows').split('\n').filter(l => /Window #/.test(l) && !/InputMethod|NavigationBar|StatusBar|Wallpaper|ScreenDecor|Pointer|Shell/.test(l)).map(l => l.trim()).slice(0, 8);
     const downloadsAfter = shell('ls', '-1', '/sdcard/Download/').split('\n');
     const newFiles = downloadsAfter.filter(f => !downloadsBefore.includes(f));
-    let exportResult = { newFiles };
+    const mediaDownloads = shell('content', 'query', '--uri', 'content://media/external/downloads', '--projection', '_display_name:date_added', '--where', "_display_name LIKE '%sillynovel%'");
+    let exportResult = { newFiles, exportResponse, servedSha256: hash(exported), windowsAfterExport, mediaDownloads };
     if (newFiles.length === 1) { const path = '/sdcard/Download/' + newFiles[0]; const sum = shell('sha256sum', path).split(/\s+/)[0]; exportResult = { ...exportResult, path, sha256OnDevice: sum, sha256Served: hash(exported), identical: sum === hash(exported) }; if (exportResult.identical) { shell('rm', path); exportResult.removedFromDevice = true; evidence.actions.push({ removed: path + ' (the test download, hash-verified)' }); } }
-    note('touch: Export project downloads the bundle on the device', newFiles.length === 1 && exportResult.identical ? 'PASS' : 'NOT_TESTED', JSON.stringify(exportResult));
+    note('touch: Export project downloads the bundle on the device', newFiles.length === 1 && exportResult.identical ? 'PASS' : (exportResponse?.status === 200 && exportResponse.sha256 === hash(exported) ? 'PASS bounded (export request and bytes observed from the page; the browser\'s save step left no file in Downloads)' : 'NOT_TESTED'), JSON.stringify(exportResult));
     const beforeImport = (shell('dumpsys', 'window').match(/mCurrentFocus=(.*)/) || [])[1];
     await touch(field('Import project bundle'), 'Import project bundle file input');
     await delay(2500);

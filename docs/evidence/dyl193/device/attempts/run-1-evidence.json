@@ -1,0 +1,274 @@
+{
+  "row": "device",
+  "synthetic": false,
+  "candidate": "8f784f06602d62605bf1bf03b6e8efd457cee153",
+  "host": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
+  "node": "v26.8.1",
+  "access": "Established paired wireless ADB; serial and address omitted from public evidence",
+  "checks": [
+    {
+      "name": "access: loopback host reached through adb reverse 8760; secure context; provider host-only; synthetic account only",
+      "result": "PASS",
+      "details": {
+        "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+        "secure": true,
+        "viewport": [
+          1317,
+          650
+        ],
+        "screen": [
+          1318,
+          825
+        ],
+        "dpr": 2.125,
+        "scale": 1,
+        "reducedMotion": false,
+        "touchPoints": 5,
+        "viewportMeta": "width=device-width, viewport-fit=cover, initial-scale=1, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content"
+      }
+    },
+    {
+      "name": "touch: file picker",
+      "result": "PASS",
+      "details": "{\"beforeFocus\":\"Window{334c9f6 u0 com.brave.browser/org.chromium.chrome.browser.ChromeTabbedActivity}\",\"pickerFocus\":\"Window{7c66062 u0 com.google.android.photopicker/com.android.photopicker.MainActivity}\",\"afterBack\":\"Window{334c9f6 u0 com.brave.browser/org.chromium.chrome.browser.ChromeTabbedActivity}\",\"pickerOpened\":true}"
+    },
+    {
+      "name": "reply field reachable with \"Why this visual?\" open at the device's current scale (font scale 1.0, page scale 1)",
+      "result": "PASS",
+      "details": {
+        "innerWidth": 1317,
+        "innerHeight": 650,
+        "dpr": 2.125,
+        "visualViewport": [
+          1318,
+          650
+        ],
+        "scale": 1,
+        "orientation": "landscape-primary",
+        "reducedMotion": false,
+        "dialogue": [
+          342,
+          517,
+          622,
+          149
+        ],
+        "why": [
+          342,
+          296,
+          622,
+          165
+        ],
+        "composer": [
+          406,
+          612,
+          539,
+          37
+        ],
+        "stage": [
+          329,
+          35,
+          659,
+          575
+        ],
+        "fontSize": "15.75px",
+        "reply": {
+          "box": [
+            406,
+            612,
+            539,
+            37
+          ],
+          "inVisualViewport": true,
+          "hit": true
+        }
+      }
+    },
+    {
+      "name": "keyboard: composer inside the visual viewport with the on-screen keyboard open",
+      "result": "PASS",
+      "details": "{\"innerWidth\":1317,\"innerHeight\":650,\"dpr\":2.125,\"visualViewport\":[1318,316],\"scale\":1,\"orientation\":\"landscape-primary\",\"reducedMotion\":false,\"dialogue\":[342,465,622,149],\"why\":[342,296,622,112],\"composer\":[406,279,539,37],\"stage\":[329,35,659,242],\"fontSize\":\"15.75px\"}"
+    },
+    {
+      "name": "200 % zoom by real pinch",
+      "result": "PASS",
+      "details": "visualViewport.scale after a 2x pinch: 1.9999998807907104; host viewport meta: width=device-width, viewport-fit=cover, initial-scale=1, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content. Browser page-zoom and force-enable-zoom are settings and were not changed."
+    },
+    {
+      "name": "increased text scaling",
+      "result": "NOT_TESTED",
+      "details": "device font_scale 1.0 unchanged; the Android font size and the browser text scaling are settings and were not changed."
+    },
+    {
+      "name": "reduced motion as a system preference",
+      "result": "NOT_TESTED",
+      "details": "animator_duration_scale null (default), prefers-reduced-motion on the page: false; Remove animations is a setting and was not changed."
+    },
+    {
+      "name": "screen reader",
+      "result": "NOT_TESTED",
+      "details": "enabled_accessibility_services null; TalkBack was not enabled and no screen reader was run."
+    }
+  ],
+  "notTested": [],
+  "screenshots": [
+    "device-why-open.png",
+    "device-keyboard-open.png"
+  ],
+  "actions": [
+    {
+      "launch": "com.brave.browser"
+    },
+    {
+      "touch": "Manual scene controls",
+      "at": [
+        659,
+        195
+      ]
+    },
+    {
+      "programmatic": "select Saved project (setup aid, not a touch-select proof)"
+    },
+    {
+      "touch": "Open project and use with this chat",
+      "at": [
+        495,
+        278
+      ]
+    },
+    {
+      "touch": "Director toggle",
+      "at": [
+        652,
+        294
+      ]
+    },
+    {
+      "programmatic": "select Project actor (setup aid)"
+    },
+    {
+      "touch": "Temporary expression PNG file input",
+      "at": [
+        794,
+        294
+      ]
+    },
+    {
+      "key": "BACK (dismiss the system file picker)"
+    },
+    {
+      "programmatic": "supply the PNG to the file input (the system picker cannot be driven from the page)"
+    },
+    {
+      "programmatic": "fill the composer"
+    },
+    {
+      "touch": "native Send",
+      "at": [
+        968,
+        297
+      ]
+    },
+    {
+      "touch": "Manual scene controls (close)",
+      "at": [
+        648,
+        211
+      ]
+    },
+    {
+      "touch": "Why this visual?",
+      "at": [
+        653,
+        318
+      ]
+    },
+    {
+      "touch": "native composer",
+      "at": [
+        676,
+        630
+      ]
+    },
+    {
+      "key": "BACK (dismiss the keyboard)"
+    },
+    {
+      "touch": "Why this visual? (close)",
+      "at": [
+        324,
+        112
+      ]
+    },
+    {
+      "touch": "Manual scene controls (open)",
+      "at": [
+        324,
+        49
+      ]
+    }
+  ],
+  "device": {
+    "model": "SM-X800",
+    "device": "gts8pwifi",
+    "android": "16",
+    "sdk": "36",
+    "build": "BP2A.250605.031.A3.X800XXSBEZH3",
+    "securityPatch": "2026-08-05",
+    "display": "Physical size: 1752x2800",
+    "density": "Physical density: 340",
+    "fontScale": "1.0",
+    "animatorDurationScale": "null",
+    "transitionAnimationScale": "1.0",
+    "windowAnimationScale": "1.0",
+    "accessibilityServices": "null",
+    "keyboard": "com.samsung.android.honeyboard/.service.HoneyBoardService",
+    "magnification": "0",
+    "userRotation": "0",
+    "accelerometerRotation": "1",
+    "browserVersion": "1.98.63",
+    "awake": true,
+    "keyguardShowing": false,
+    "foregroundBefore": "Window{5fd6aef u0 com.sonoransolutions.dungeondispatcher.issue258qa/com.godot.game.GodotAppLauncher}",
+    "debugSocketBeforeLaunch": false,
+    "browserLaunched": true
+  },
+  "browser": {
+    "Android-Package": "com.brave.browser",
+    "Browser": "Chrome/156.0.8078.80",
+    "File-Path-Style": "posix",
+    "Protocol-Version": "1.3",
+    "User-Agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+    "V8-Version": "15.6.75.27",
+    "WebKit-Version": "537.36 (@cc92146ef17860a4511f7de658b078128dbaad5)",
+    "webSocketDebuggerUrl": "ws://<address redacted>/devtools/browser"
+  },
+  "syntheticTab": true,
+  "configuration": {
+    "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+    "secure": true,
+    "viewport": [
+      1317,
+      650
+    ],
+    "screen": [
+      1318,
+      825
+    ],
+    "dpr": 2.125,
+    "scale": 1,
+    "reducedMotion": false,
+    "touchPoints": 5,
+    "viewportMeta": "width=device-width, viewport-fit=cover, initial-scale=1, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content"
+  },
+  "result": "FAIL",
+  "error": "page.waitForFunction: Timeout 25000ms exceeded.\n    at /home/dq/Projects/SillyNovel/.claude/worktrees/nervous-hypatia-a73027/tests/probes/dyl193/device.mjs:156:16",
+  "cleanup": {
+    "at": "2026-11-03T03:58:43.151Z",
+    "syntheticTabClosed": true,
+    "localForwardRemoved": true,
+    "deviceReverseRemoved": true,
+    "foregroundAfter": "Window{334c9f6 u0 com.brave.browser/org.chromium.chrome.browser.ChromeTabbedActivity}",
+    "systemSettingsChanged": false,
+    "fontScaleAfter": "1.0"
+  }
+}

@@ -1,0 +1,13 @@
+Owned evidence root /tmp/sn-dyl193-device-TLDZ8C
+PASS access: loopback host reached through adb reverse 8760; secure context; provider host-only; synthetic account only
+PASS touch: file picker: {"beforeFocus":"Window{334c9f6 u0 com.brave.browser/org.chromium.chrome.browser.ChromeTabbedActivity}","pickerFocus":"Window{b2c81e1 u0 com.google.android.photopicker/com.android.photopicker.MainActivity}","afterBack":"Window{334c9f6 u0 com.brave.browser/org.chromium.chrome.browser.ChromeTabbedActivity}","pickerOpened":true}
+PASS reply field reachable with "Why this visual?" open at the device's current scale (font scale 1.0, page scale 1)
+PASS keyboard: composer inside the visual viewport with the on-screen keyboard open: {"innerWidth":1317,"innerHeight":316,"dpr":2.125,"visualViewport":[1318,316],"scale":1,"orientation":"landscape-primary","reducedMotion":false,"dialogue":[335,370,637,66],"why":[335,232,637,96],"composer":[406,278,539,37],"stage":[329,35,659,241],"fontSize":"15.75px"}
+NOT_TESTED 200 % zoom by real pinch: reader, disclosure, reply field and navigation reachable by panning: {"scaleAfterPinch":1,"scaleAfterRestore":1,"viewportMeta":"width=device-width, viewport-fit=cover, initial-scale=1, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content","audit":null,"note":"browser page zoom and force-enable-zoom are settings and were not changed"}
+NOT_TESTED increased text scaling: device font_scale 1.0 unchanged; the Android font size and the browser text scaling are settings and were not changed.
+NOT_TESTED reduced motion as a system preference: animator_duration_scale null (default), prefers-reduced-motion on the page: false; Remove animations is a setting and was not changed.
+NOT_TESTED screen reader: enabled_accessibility_services null; TalkBack was not enabled and no screen reader was run.
+NOT_TESTED touch: Export project downloads the bundle on the device: {"newFiles":[]}
+PASS bounded touch: import picker opened by touch; bundle supplied programmatically and accepted: {"beforeImport":"Window{334c9f6 u0 com.brave.browser/org.chromium.chrome.browser.ChromeTabbedActivity}","importPicker":"Window{858a36d u0 com.google.android.documentsui/com.android.documentsui.picker.PickActivity}","importPickerOpened":true,"status":"Imported Tablet replay · 42b2766c-910a-49a5-a746-1842c2923c98. Not attached to this conversation. Select it and choose Open project and use with this chat. Current visuals and unsaved changes are preserved."}
+PASS touch: cleanup review, selection and removal completed on the device (confirm dialog accepted programmatically)
+Evidence /tmp/sn-dyl193-device-TLDZ8C/evidence.json
