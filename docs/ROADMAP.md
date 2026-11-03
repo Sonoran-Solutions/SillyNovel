@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## DYL-193 replay authorized — 2026-11-02
+
+[Step 3](DECISIONS.md#owner-authorization--dyl-193-replay-on-gate-b-candidate-6799a5e--2026-11-02) of the Gate B sequence is authorized on candidate `6799a5e`. The fixture evaluation, the owner's session and the verdict each wait on their own authorization. No accuracy figure exists, and none is promised.
+
 ## Gate B candidate frozen — 2026-11-02
 
 [Step 2](M2_4_EVIDENCE_UI_PLAN.md#61-sequence) is done: main `6799a5e` is the [frozen candidate](DECISIONS.md#gate-b-candidate-frozen--6799a5e--2026-11-02) on reused, byte-identical PR D campaign evidence. Steps 3 to 6 (DYL-193 replay, fixture evaluation, the owner's session, the verdict) each wait on their own authorization. No accuracy figure exists, and none is promised.
