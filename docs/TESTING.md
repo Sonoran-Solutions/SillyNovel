@@ -1,5 +1,9 @@
 # Verification and acceptance
 
+## DYL-193 replay authorized on candidate 6799a5e — 2026-11-02
+
+[Authorized](DECISIONS.md#owner-authorization--dyl-193-replay-on-gate-b-candidate-6799a5e--2026-11-02): the deferred physical scaling, 200% zoom, reduced-motion, assistive-technology, tablet touch-flow and native group branch/copy rows run against candidate `6799a5e`, recorded in the `docs/evidence/dyl60/` layout with retained failures. Rows reached on the actual device become TESTED with their evidence cited by SHA; rows not reached stay NOT_TESTED and say why. Synthetic emulation of a preference or zoom is recorded as synthetic, never as the physical row. Matrix rows change only when the replay's record merges. No runtime change in this step. Gate B NOT_RUN.
+
 ## Gate B candidate frozen on reused evidence — 2026-11-02
 
 Candidate main `6799a5e`, [frozen by the owner](DECISIONS.md#gate-b-candidate-frozen--6799a5e--2026-11-02). Hard-gate evidence is the [M2.4 PR D campaign](evidence/m2-4-d/campaign/) on `e37d6b5`, applicable because runtime and test files are byte-identical between the two SHAs (empty `git diff` over `src tests index.js style.css plugins`); it is cited as tested on `e37d6b5`, not as a run on the candidate. Reproduced from the candidate: `validate.py docs/evidence/m2-4-d/campaign` PASS and `check-discovery.py` PASS (14/5/1). The [Gate B record](evidence/gate-b/record.md) holds the filled fields. Matrix rows are unchanged. T18, the DYL-193 rows and every owner row stay NOT_RUN or NOT_TESTED. Gate B NOT_RUN.

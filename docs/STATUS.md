@@ -1,5 +1,9 @@
 # Project status
 
+## DYL-193 replay authorized on the candidate — 2026-11-02
+
+The owner [authorized](DECISIONS.md#owner-authorization--dyl-193-replay-on-gate-b-candidate-6799a5e--2026-11-02) step 3 of the Gate B sequence: the [DYL-193](https://linear.app/devils17/issue/DYL-193/sillynovel-m14-deferred-physical-scaling-motion-assistive-and) replay on candidate `6799a5e`, in the `docs/evidence/dyl60/` layout, with the tablet rows on the paired Galaxy Tab S8+ when it is reachable and BLOCKED otherwise, assistive technology honest as NOT_TESTED unless actually run, and no runtime change. Steps 4 to 6 stay unauthorized. Gate B NOT_RUN.
+
 ## Gate B candidate frozen — 2026-11-02
 
 The owner [froze](DECISIONS.md#gate-b-candidate-frozen--6799a5e--2026-11-02) main `6799a5e` as the Gate B candidate on the M2.4 PR D campaign evidence (runtime and tests byte-identical to `e37d6b5`; `validate.py` and `check-discovery.py` reproduced PASS from the candidate). The [Gate B record](evidence/gate-b/record.md) is started with the candidate and hard-gate fields only. Next, on its own go-ahead: the [DYL-193](https://linear.app/devils17/issue/DYL-193/sillynovel-m14-deferred-physical-scaling-motion-assistive-and) replay on this SHA, whose physical rows (tablet, 200% zoom, reduced motion, screen reader, touch flows) need the owner's devices. Then the fixture run, the owner's session and the verdict. Any runtime change makes a new candidate. Gate B NOT_RUN.
