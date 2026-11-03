@@ -3,7 +3,7 @@ from pathlib import Path
 import datetime, hashlib, json, os, re, shlex, shutil, subprocess, sys, time
 
 repo = Path(__file__).resolve().parents[3]
-node_files = [repo / 'tests' / (name + '.test.mjs') for name in ['m0', 'm1-reader-source', 'm1-source-prefix', 'm1-scene-reducer', 'm1-project-scene', 'm1-project-expressions', 'm2-director-proposal', 'm2-director-request', 'm2-director-controller', 'm2-director-overlay', 'm2-director-log']]
+node_files = [repo / 'tests' / (name + '.test.mjs') for name in ['m0', 'm1-reader-source', 'm1-source-prefix', 'm1-scene-reducer', 'm1-project-scene', 'm1-project-expressions', 'm2-director-proposal', 'm2-director-request', 'm2-director-controller', 'm2-director-overlay', 'm2-director-log', 'm2-gate-b-score']]
 storage_files = []
 for directory, expected, files in [
     ('tests/probes/dyl19', {'owned-chat-probe.test.mjs', 'source-anchor.test.mjs'}, node_files),
@@ -49,7 +49,7 @@ save('pins.json', pins)
 steps = [(name, ['node', '--test', '--test-isolation=none', *map(str, files)], {}, limit) for name, files, limit in [('node', node_files, 300), ('storage', storage_files, 600), ('browser', browser_files, 300)]]
 for name, flags in [('stage-library-migration', ['STAGE_UX','LIBRARY','MIGRATION']), ('expressions',['EXPRESSIONS']), ('groups',['GROUP']), ('recovery',['RECOVERY']), ('cleanup',['CLEANUP']), ('native-integrity-branches',['CANDIDATE'])]:
     steps.append((name, ['node','tests/probes/project-portability/host.mjs',str(host)], {f'SN_{f}_RUN':'1' for f in flags}, 600))
-steps.append(('director', ['node', 'tests/probes/m2-director/host.mjs', str(host)], {}, 900))
+steps.append(('director', ['node', 'tests/probes/m2-director/host.mjs', str(host)], {}, 1500))
 runs = []
 for name, command, flags, limit in steps:
     assert output(['git', 'rev-parse', 'HEAD']) == candidate

@@ -7,7 +7,7 @@ export const DIRECTOR_MARKER = 'SillyNovel visual director';
 export const nativeAnswer = '*The lantern glows.* "Welcome to the reading room," Mira says.';
 const PORT = Number(process.env.SN_ENDPOINT_PORT || 8128);
 const MAX_BODY = 4 * 1024 * 1024, MAX_LOG = 500;
-let log = [], script = [], fallback = { content: '{"schemaVersion":1,"updates":[]}' }, nativeDelayMs = 25, busy503 = false, release = [], outstandingDirector = 0;
+let log = [], script = [], fallback = { content: '{"schemaVersion":1,"updates":[]}' }, nativeDelayMs = 25, busy503 = false, release = [], outstandingDirector = 0, peakDirector = 0;
 const send = (res, status, body) => { if (!res.destroyed && !res.headersSent) res.writeHead(status, { 'content-type': 'application/json' }).end(JSON.stringify(body)); };
 const completion = content => ({ id: 'sn-director-local', created: 1, model: 'sn-reader-local', object: 'chat.completion', choices: [{ index: 0, message: { role: 'assistant', content }, finish_reason: 'stop' }] });
 const chunk = delta => 'data: ' + JSON.stringify({ id: 'sn-director-local', created: 1, model: 'sn-reader-local', object: 'chat.completion.chunk', choices: [{ index: 0, delta, finish_reason: delta.content ? null : 'stop' }] }) + '\n\n';
@@ -27,6 +27,7 @@ function autoProposal(content, { excerpt, layout, background: chosen, presence, 
 async function director(req, res, entry) {
     const step = script.shift() ?? fallback;
     outstandingDirector++;
+    peakDirector = Math.max(peakDirector, outstandingDirector);
     try {
         if (step.hold) await new Promise(resolve => { release.push(resolve); req.once('close', resolve); res.once('close', resolve); });
         if (step.delayMs) await new Promise(resolve => setTimeout(resolve, step.delayMs));
@@ -58,13 +59,13 @@ const server = createServer(async (req, res) => {
     let body;
     try { body = JSON.parse(raw); } catch { return send(res, 400, {}); }
     if (req.url === '/control') {
-        if (body.reset) { log = []; script = []; busy503 = false; nativeDelayMs = 25; fallback = { content: '{"schemaVersion":1,"updates":[]}' }; }
+        if (body.reset) { log = []; script = []; busy503 = false; peakDirector = 0; nativeDelayMs = 25; fallback = { content: '{"schemaVersion":1,"updates":[]}' }; }
         if (body.script) script.push(...body.script);
         if (body.fallback) fallback = body.fallback;
         if (body.nativeDelayMs !== undefined) nativeDelayMs = body.nativeDelayMs;
         if (body.busy503 !== undefined) busy503 = body.busy503;
         if (body.release) { for (const resolve of release.splice(0)) resolve(); }
-        return send(res, 200, { ok: true, requests: log.length, scripted: script.length });
+        return send(res, 200, { ok: true, requests: log.length, scripted: script.length, peakDirector });
     }
     if (req.url !== '/v1/chat/completions' || req.method !== 'POST') return send(res, 404, {});
     const isDirector = body.messages?.[0]?.role === 'system' && String(body.messages[0].content).startsWith(DIRECTOR_MARKER);

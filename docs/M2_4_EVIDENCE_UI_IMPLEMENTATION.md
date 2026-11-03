@@ -8,6 +8,8 @@
 
 **PR C merged — 2026-11-02.** The owner [accepted and merged](DECISIONS.md#owner-acceptance--m24-pr-c-merged--2026-11-02) PR C at `34dfcd8`; its record is the [PR C section](#pr-c--corrections-and-the-director-may-move-control) below and its choices stand as the reversible baseline. T50 and T57 are amended in TESTING. PR D waits on the owner's go-ahead.
 
+**PR D candidate — 2026-11-02.** Gate B readiness (fixtures, scorer, runner, native blocks, record template) is a draft PR on frozen `e37d6b5`, unmerged; its record is the [PR D section](#pr-d--gate-b-readiness) below. Runtime byte-identical to main. Gate B NOT_RUN.
+
 ## PR A — decision log and stale reasons
 
 **Starting main:** `3038dd5b44e9a1f6da3ac953251192b4bc002b37` (PR #58; `docs/DECISIONS.md` begins with the G1–G14 entry). **Frozen:** `f5de115050d61b9e6784038f8bb7395aaea0fea0`. The commit that adds this record changes only documentation, so the frozen runtime and tests are byte-identical at the final head, which is named in the PR description.
@@ -381,3 +383,156 @@ Corrections are lost on detach, chat switch, reload, disable and project replace
 ### Next bounded step
 
 Owner review of this draft PR and the choices above, the placement of the row actions and lock-on-correction first; then the owner's merge decision, which is when T50 and T57 are amended under G14; then the owner's go-ahead on PR D under G1. This document starts nothing.
+
+## PR D — Gate B readiness
+
+**Candidate for owner review, draft PR, unmerged.** Implements PR D of the [M2.4 plan](M2_4_EVIDENCE_UI_PLAN.md#7-proposed-changes-as-four-sequential-prs) under [G9, G13 and G14](DECISIONS.md#owner-rulings-g1g14--m24-evidence-ui-corrections-and-gate-b--2026-11-02) and the owner's [go-ahead](DECISIONS.md#owner-go-ahead--m24-pr-d-gate-b-readiness--2026-11-02), tracked by [DYL-206](https://linear.app/devils17/issue/DYL-206/sillynovel-m24-pr-d-gate-b-readiness-fixtures-scorer-runner-native). Tests and docs only. Nothing here is approved or merged. Gate B NOT_RUN; the fixture run, the frozen candidate, the DYL-193 replay and the owner's session are not authorized by this PR.
+
+**Starting main:** `06e6781c6e625a35806ff69667639ec2167bc435` (PR #66; `docs/DECISIONS.md` begins with the PR D go-ahead). **Frozen:** `e37d6b5bd27c1356b2a99cdf1ef3ed714286ef6f`. Every later commit on the branch is documentation or evidence only; the final pushed head is named in the PR description.
+
+**Expected-answers SHA-256:** `ada4ff1ed766af87872a0b50973b95a0d7b652a0b773ddaeb0ad54a6804cacf5`, the whole of `tests/fixtures/m2-gate-b/cases.json`, first committed at `f74423d6c5802c828b488cc5c3574418b954b7de` and unchanged at the frozen SHA. No real model has seen these cases. `PROMPT_VERSION` `0ef22635aed99352` is unchanged.
+
+### What changed
+
+| File | Change |
+| --- | --- |
+| `tests/fixtures/m2-gate-b/cases.json` | 40 invented, public-safe cases, five per roadmap category, each with the `buildDirectorRequest` input the product would send (IDs in the product's shapes) and its per-field expected answer with a one-line reason |
+| `tests/fixtures/m2-gate-b/expected-answers.sha256` | The recorded hash the scorer and runner check |
+| `tests/probes/m2-gate-b/score.mjs` | Pure scorer: each proposal goes through the product's own validator, router and overlay. Per category and field, correct, incorrect, abstained; refused, failed and not run apart; no aggregate, no percentage. Refuses a changed fixture, results from other answers or another prompt, and unknown or repeated cases |
+| `tests/probes/m2-gate-b/run.mjs` | Runner: `--owner-accepts-40-requests` (headed, the owner signs in and selects the connection by hand, then confirms) or `--proof-loopback` (refuses any origin or connection that is not 127.0.0.1) |
+| `tests/m2-gate-b-score.test.mjs` | 16 scorer and runner-argument tests (T67) |
+| `tests/probes/m2-director/host.mjs` | 13 new checkpoints, below |
+| `tests/fixtures/m2-director-endpoint.mjs` | `/control` also reports the peak of concurrent director requests, which the proof asserts |
+| `tests/probes/dyl60/run.py`, `check-discovery.py` | Node suite 14 files; the director step's limit from 900 s to 1500 s, because the step now takes 911 s |
+| [GATE_B_RECORD_TEMPLATE.md](GATE_B_RECORD_TEMPLATE.md) | The record template of plan 6.4, linked from TESTING section 6 |
+
+Not touched: everything under `src/`, `index.js`, `style.css`, `manifest.json`, `plugins/`. `git diff 06e6781 e37d6b5 -- src index.js style.css manifest.json plugins` is empty. No dependency, and no new credential route.
+
+### Where G9, G13 and G14 are honoured
+
+| Ruling | Where | Evidence |
+| --- | --- | --- |
+| G9: 40 public-safe cases, five per category | `cases.json`, `checkCases` | Node; `checkCases` also refuses an answer the case's own catalog or locks make impossible |
+| G9: answers frozen and their SHA recorded before measuring | `expected-answers.sha256`, this record | Node: any changed byte is refused before scoring; the runner refuses to start on a mismatch and never overwrites a results file |
+| G9: correct, incorrect, abstained, refused apart, per category, no percentage | `scoreRun`, `formatReport` | Node, and the proof's [score](evidence/m2-4-d/campaign/director/gate-b-proof-score.log) |
+| G9: outfit continuity correct when no outfit moves and any update ends `NO_AUTOMATIC_LAYOUT` | `scoreCase`, through `routeProposal` | Node |
+| G9: the product's own request path, one at a time, 90 s, no retries | `run.mjs` builds and sends in the page with the served `src/director-request.mjs` and `src/host-adapter.mjs`, after comparing their bytes with this checkout | Native proof: 40 requests, peak 1, wire bytes equal to `buildDirectorRequest`, a late reply abandoned and the next case held until it settled |
+| G9: the owner selects the connection; no credential route; nothing about the connection retained | `run.mjs` reads no settings in owner mode; the record's connection field is the owner's words | Native proof: results hold no raw reply, header, key, URL or model name |
+| G9: not run against a real provider | Only `--proof-loopback` was ever run | Below |
+| G13: the E16 residual measured on the synthetic rejecting backend, per flow, not asserted away | The T68 block records outcomes in `evidence.e16`; it asserts only the plan's “user's message kept” and “recovery demonstrated” | Below |
+| G14: T67 and T68 covered | Rows stay as written until merge, as T50 and T57 did | This record |
+
+### Commands and results
+
+Frozen `e37d6b5`, Node 26.8.1, Playwright 1.62.1, Chromium 151.0.7922.34, pinned SillyTavern 1.19.0 at `7e8663cd9c184a550b37238218bdd32c6efc68e9` on a disposable copy under the session scratchpad (clean at the pin, hashes in [pins.json](evidence/m2-4-d/campaign/pins.json)), loopback endpoint only, host user data in per-run temporary roots under the scratchpad, no real provider. Deadline 3000 s, output to per-step log files; no owned process remained and port 8128 was free afterwards.
+
+```sh
+python3 tests/probes/dyl60/check-discovery.py
+TMPDIR=/scratch/tmp SILLYTAVERN_ROOT=/path/to/pinned SN_PLAYWRIGHT_MODULE=/path/to/playwright/index.mjs timeout -k 15 3000 python3 tests/probes/dyl60/run.py /new/evidence/dir
+python3 tests/probes/dyl60/validate.py docs/evidence/m2-4-d/campaign
+```
+
+| Suite | Result | Elapsed |
+| --- | --- | --- |
+| `check-discovery.py` | PASS: 14/5/1 files; unexpected, empty and missing suites refused | Under 1 s |
+| Node (14 files) | 362/362; 16 more than PR C's 346 | 5 s |
+| Storage (5 files) | 126/126; plugin unchanged, run because the runner runs it | 143 s |
+| Browser, actual entry | 103/103; unchanged | 127 s |
+| stage-library-migration | PASS, 24 checkpoints | 83 s |
+| expressions | PASS, 16 | 56 s |
+| groups | PASS, 22 | 79 s |
+| recovery | PASS, 17 | 52 s |
+| cleanup | PASS, 21 | 73 s |
+| native-integrity-branches | PASS, 18 | 75 s |
+| **director (extended)** | PASS, 60 (47 in PR C plus 13 new) | 911 s |
+| `validate.py` | PASS from the repository: 132 frozen inputs, 115 artifact hashes | |
+
+**One failed run, retained.** The first campaign at `f74423d` passed its first nine steps and failed the director step at the new blocks: they compared the saved project with its first revision, while the T63 block saves it once on purpose. A test defect; no product code was involved. One recovery run followed at `e37d6b5`, after dev runs of the changed blocks on a trimmed scratch copy of the script. The failed run is [retained](evidence/m2-4-d/failed-f74423d/). The trimmed dev runs are not evidence and are not retained.
+
+### New native checkpoints
+
+| Checkpoint | What was exercised on the real host |
+| --- | --- |
+| T57, T60 (three) | Real Continue, Regenerate and swipe with automatic layout on stage: back to the global layout, background and presence both, one request for the new reply, nothing retried, the excerpt gone |
+| T57 | Swiping back to the earlier variant issues nothing and reapplies nothing |
+| T63 | A correction and its lock fall with a real swipe of their source; a fresh proposal then moves the field |
+| T57, T63 | A global manual edit while a request is held: overlay cleared; the result stale, not a failure; nothing applied or saved |
+| Catch-up | A reply that completes while the reader is behind waits and says so; a real Jump to Latest directs it once (the stage-view path M2.3 PR A could not reach) |
+| T57 | Project replacement with automatic layout on stage and a request held: no overlay crosses, the late result lands nowhere, returning brings nothing back, both saved projects untouched |
+| T57 | Removing the art an overlay background shows: stage stays up with the neutral fallback, a reply completes, the director settles, nothing saved |
+| T68 (three) | Below |
+| T67 proof | The committed runner over the loopback, below |
+
+### T68 outcomes per flow, as observed
+
+Pressed while the Director line said requesting, on the [synthetic rejecting backend](evidence/m2-4-d/campaign/director/evidence.json) (503 for a native request while a director request is held). **Synthetic; a real backend stays with the owner's session.**
+
+| Flow | Reply | Toast | Chat | Director notice | Recovery used |
+| --- | --- | --- | --- | --- | --- |
+| Regenerate | **Lost.** The host removes the reply before asking, so the user's message is now last | Host error toast: “Chat Completion API synthetic single-slot backend busy” | One shorter | “superseded by your reply” | Regenerate once the slot was free: a new reply |
+| Continue | Kept, unchanged | Same | Unchanged | “superseded by your reply” | Continue once the slot was free: a reply served |
+| Swipe | Kept, unchanged; no new variant is kept | Same | Unchanged | “superseded by your reply” | Swipe once the slot was free: a new variant |
+
+In all three the user's message was kept and no native request was served during the hold. The director request counted as `SUPERSEDED`, not a failure, and the next completed reply was requested once. A lost reply on this backend is what G13 said to measure; whether the help sentence suffices is the owner's decision from the real backend.
+
+### Runner proof, loopback only
+
+`run.mjs --proof-loopback` against the campaign's host and `tests/fixtures/m2-director-endpoint.mjs`, with scripted replies. 40 requests, one per case, peak concurrency 1. Case `flashbacks-1` was deliberately held past a shortened 2 s limit: it ended `ABANDONED` and the next case waited for it to settle. Prose ended `NOT_SINGLE_JSON`, a 500 `TRANSPORT_ERROR`, an invented ID `UNKNOWN_ASSET`, an empty reply abstained, and a wrong move incorrect. Every native file was byte-identical across the 40 requests. **These counts show the runner and scorer work; they are scripted replies and measure nothing about direction.** Files: [results](evidence/m2-4-d/campaign/director/gate-b-proof-results.json), [score](evidence/m2-4-d/campaign/director/gate-b-proof-score.log), [console](evidence/m2-4-d/campaign/director/gate-b-proof-console.log).
+
+### Findings for the owner
+
+No fix is in this PR, and the runtime stays byte-identical. None blocks reading, replying or saved state.
+
+| Finding | Detail |
+| --- | --- |
+| **Cosmetic read-out defect** | With the art an overlay background shows removed from the library, the Scene panel's read-out says `Selected background: <id> · missing artwork (director) · undefined`, because [stage-view.mjs:378](../src/stage-view.mjs) prints `media.get(id)?.assetId` unguarded. The block does not pin the word. A small follow-up, and a runtime change |
+| **T60 on a real regenerate** | Regenerate replaces the message record, so the new message has a new key and the old entry is not at the selected message: the excerpt is gone and the tallies keep the outcome, but no row says “message changed”. On Continue and swipe the row does say it. T60's wording promises it for regenerate too; Node reaches it only as text changing under one key. The owner may want T60's wording narrowed |
+| **“Superseded by your reply” when the reply failed** | On the rejecting backend the notice says the reply overtook the request even though that reply got a 503. F4's classification, working as ruled; the wording reads oddly in that one case |
+| **A global edit is `STALE_JOURNAL`, a correction is `STALE_SCENE`** | Both are stale and neither a failure. The global edit also rebases the journal's scene, and `stillCurrent` checks the journal first. Observed and asserted as it is |
+
+### NOT_RUN and NOT_TESTED
+
+| Surface | Status |
+| --- | --- |
+| The fixture run on any real connection; T18 | **NOT_RUN.** Owner's step, authorized separately; spends 40 requests |
+| The runner's owner mode (headed browser, sign-in by hand, Enter to confirm) | **NOT_RUN.** Argument refusals are Node tested; the shared send path ran in the proof |
+| Text-completion, queueing single-slot and any real backend | **NOT_TESTED** |
+| E16 on a real backend; quick replies and slash commands during a held request | **NOT_RUN.** Owner's session; plan 6.3 lists them. Only Regenerate, Continue and swipe were in this scope |
+| Corrections in a native group; `Why this visual?` in a native group | **NOT_RUN** as their own blocks; the group block's request runs the same renderer and overlay |
+| “message changed” after a real delete or reorder | **NOT_RUN** on the host; Node covers the path |
+| Tablet, touch, soft keyboard, IME, screen readers | **NOT_TESTED**, DYL-193 |
+| Gate B, its verdict, usefulness, accuracy, latency on a real provider | **NOT_RUN**, owner-gated |
+
+Now covered on the host, from earlier records' NOT_RUN tables: swipe, regenerate and Continue invalidating automatic layout; project replacement and removed art under the overlay; the manual edit while a request is outstanding (all M2.3 PR C); catch-up through the real stage view (M2.3 PR A); Regenerate, Continue or swipe on the rejecting backend (M2.3 PR B); “message changed” after a real swipe, and the regenerate case as found above (M2.4 PR B); a correction after a real swipe (M2.4 PR C; a correction after a real regenerate or delete stays NOT_RUN).
+
+### Implementation choices for owner review
+
+Not settled by the documents; each is reversible and none is an owner ruling. **Reviewing `cases.json` is the owner's chance to change an answer at no cost: after the first measurement a change is a new measurement.**
+
+| Choice | Rationale |
+| --- | --- |
+| **The hash covers the whole of `cases.json`, not only the answers.** | A changed message changes what an answer means |
+| **A case's text is judged strictly: an expression set on neutral text is incorrect.** Each expected expression is one catalog entry, on plainly emotional text. | The plan says a change where none was expected is incorrect. Expect this to count against models that always choose an expression; the owner may prefer otherwise |
+| **Repeating the current value counts as correct where nothing moves, and incorrect where a move was expected.** | It is a stated claim, not a silence, which is the distinction `unchanged` was added to make |
+| **A suggestion moves nothing, so it is noted, not scored.** Where a move was expected it abstains | It changes no field |
+| **A proposal against a lock counts as correct** when the field stays, with `LOCKED` noted apart. | The stage is what the hard gate protects; the case states what should show, and a request that proposes it changes nothing |
+| **Fields are scored per actor; outfit only in its own category.** Elsewhere an outfit update is noted | Scoring outfit everywhere would pad every category with always-correct rows |
+| **The four categories that are mostly traps each have a control case with a real change** (`mentions-5`, `negation-5`, `hypothetical-travel-5`, `flashbacks-5`). | Otherwise a model that never answers would score perfectly on these categories |
+| **`group-authorship-4` expects neither Mira to move**, on two cards with one name. | Nothing says which left; abstaining is what “no unsupported change” asks. Its answer is a judgment call |
+| Expression labels are only Happy and Sad | Small catalog, plainly right or wrong answers |
+| Failed (`TRANSPORT_ERROR`, `HOST_REFUSED`, `ABANDONED`) and not run are reported apart from refused | G9 names refused only; folding transport trouble into model refusals would misstate the model |
+| **The runner abandons a case at 90 s but starts the next only after the old request settles**, within the total deadline. A case past the deadline is `not_run`, and scoring says “All cases run: NO” | `generateRawData` has no signal, and “one at a time” must hold on the wire |
+| The owner's accepted spend is a required flag, plus Enter after selecting the connection | Nothing can spend 40 requests by accident. Neither is an authorization; that stays a DECISIONS entry |
+| The runner compares the served modules with the checkout before the first request | Otherwise a stale host would be measured under the candidate's name |
+| Deadlines: internal 40 × 90 s plus 120 s, plus 900 s for the owner's selection; the documented outer `timeout -k 15 3900` can end a worst-case run first, which keeps what was written after each case | Finite under either. The outer value is the plan's budget plus three minutes |
+| The proof runs inside the director step, so `validate.py` hashes it and no eleventh run entry is needed | `validate.py` requires exactly ten runs |
+| The template is a linked file rather than inline in TESTING section 6 | Section 6 is the generic form every gate copies |
+| `cases.json` was authored once with a throwaway script that is not committed | The JSON is what is reviewed and frozen |
+
+### Limits
+
+The cases measure single requests on invented scenes, not a session, and a good count cannot stand in for the owner's judgment; the roadmap says so. A valid excerpt proves the quote exists, not that the model read it correctly. Scoring reproduces the product's overlay from the case's input rather than a live project, so the hard gates still come from the native campaign on the frozen SHA.
+
+### Next bounded step
+
+Owner review of this draft PR, `cases.json` and the choices above first, then the owner's merge decision. After that the [Gate B sequence](M2_4_EVIDENCE_UI_PLAN.md#61-sequence), each step on its own authorization and none implying the next: one frozen candidate with the full campaign; the DYL-193 replay on that SHA; the fixture evaluation on the connection the owner names (40 requests); the owner's real session; the owner's verdict. This document starts none of them.

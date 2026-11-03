@@ -1,5 +1,9 @@
 # Project status
 
+## M2.4 PR D candidate — 2026-11-02
+
+Gate B readiness is a draft PR on frozen `e37d6b5`, unmerged and awaiting owner review: 40 frozen fixture cases (expected-answers SHA-256 `ada4ff1e…cacf5`), a scorer with no aggregate percentage, a runner proven against the loopback only, 13 new native checkpoints and a [record template](GATE_B_RECORD_TEMPLATE.md); see the [record](M2_4_EVIDENCE_UI_IMPLEMENTATION.md#pr-d--gate-b-readiness). Runtime byte-identical to main. On the synthetic rejecting backend, Regenerate during a held request lost the reply and Continue and swipe kept it; the user's message stayed each time and each recovered. The record lists four findings for the owner, none fixed here. Gate B NOT_RUN; the fixture run spends 40 requests and is the owner's own step.
+
 ## M2.4 PR D go-ahead — 2026-11-02
 
 The owner [gave the go-ahead](DECISIONS.md#owner-go-ahead--m24-pr-d-gate-b-readiness--2026-11-02) on PR D under G9, G13 and G14: the Gate B fixture set and scorer, the runner (committed, not run against a real provider), the E16 residual blocks on the synthetic rejecting backend, the native blocks earlier records left NOT_RUN, and a Gate B record template. Tests and docs only; runtime byte-identical to PR C. Tracked by [DYL-206](https://linear.app/devils17/issue/DYL-206/sillynovel-m24-pr-d-gate-b-readiness-fixtures-scorer-runner-native). On its merge M2.4 is complete and the Gate B sequence begins, each step on its own authorization: frozen candidate, [DYL-193](https://linear.app/devils17/issue/DYL-193/sillynovel-m14-deferred-physical-scaling-motion-assistive-and) replay, fixture run on the owner's named connection, the owner's session, the owner's verdict. Gate B NOT_RUN.

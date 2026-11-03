@@ -13,7 +13,7 @@ with tempfile.TemporaryDirectory(prefix='sn-discovery-check-') as directory:
     assert baseline.returncode == foreign.returncode == 0
     assert baseline.stdout == foreign.stdout
     suites = json.loads(baseline.stdout)
-    assert {name: len(files) for name, files in suites.items()} == {'node': 13, 'storage': 5, 'browser': 1}
+    assert {name: len(files) for name, files in suites.items()} == {'node': 14, 'storage': 5, 'browser': 1}
     copied = root / 'tests/probes/dyl60/run.py'
     copied.parent.mkdir(parents=True)
     shutil.copyfile(runner, copied)
@@ -31,4 +31,4 @@ with tempfile.TemporaryDirectory(prefix='sn-discovery-check-') as directory:
         (root / name).touch()
     (root / suites['node'][0]).unlink()
     assert discover(copied, root).returncode != 0
-print('PASS: identical repository/foreign-cwd discovery; 13/5/1 files; unexpected, empty and missing suites refused')
+print('PASS: identical repository/foreign-cwd discovery; 14/5/1 files; unexpected, empty and missing suites refused')

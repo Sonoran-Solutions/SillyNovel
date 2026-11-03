@@ -7,6 +7,8 @@ import { randomUUID } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { setTimeout as delay } from 'node:timers/promises';
 import { createHarness, DECOYS, PIN, repo } from './harness.mjs';
+import { CASES_FILE, answerFor, formatReport, recordedSha, scoreRun } from '../m2-gate-b/score.mjs';
+import { buildDirectorRequest } from '../../../src/director-request.mjs';
 
 const h = await createHarness(resolve(process.argv[2]), 'm2-director');
 const { page, native, plugin, control, requests, inventory, seedDecoys, connect, root } = h;
@@ -1026,6 +1028,283 @@ try {
         pass('T66: a new manual apply locks again unless "Apply and let the director move it" was used');
         await button('Detach project').click();
         await page.waitForFunction(() => document.querySelector('.sillynovel-director').hidden);
+    }
+    // M2.4 PR D: the native blocks earlier records left NOT_RUN. The project is the T56 one; only the loopback endpoint is involved.
+    const NO_CHANGE = { content: '{"schemaVersion":1,"updates":[]}' };
+    const settled = () => until(async () => /^Director: on/.test(await line().textContent()), 'director settled');
+    const reattach = async () => { await open(roaming.projectId, 2); await toggle().setChecked(true); await importArt(roamMira.actorId); };
+    await page.reload();
+    await page.locator('#sillynovel-stage').waitFor();
+    await page.waitForFunction(() => SillyTavern.getContext().characters.length > 0);
+    await toPlanted();
+    await connect();
+    await watchNotices();
+    // T63 saved this project once on purpose, so these blocks compare against what is on disk now.
+    const onDiskNow = await plugin('/projects/' + roaming.projectId), bundleNow = await exportRoaming();
+    const assertStill = async () => { const now = await plugin('/projects/' + roaming.projectId); assert.deepEqual(now.scene, onDiskNow.scene, 'saved project scene'); assert.equal(now.revision, onDiskNow.revision); assert.equal(await exportRoaming(), bundleNow, 'bundle bytes'); };
+    await reattach();
+    await closeControls();
+    {
+        // Swipe, regenerate and Continue each reach the first-changed-source path on the real host, and "message changed" is what the row then says.
+        evidence.observed = {};
+        for (const [flow, action] of [['continue', () => click('#option_continue')], ['regenerate', () => click('#option_regenerate')], ['swipe', () => click('#chat .last_mes .swipe_right')]]) {
+            await lastMoves(flow, 'Invalidate by ' + flow + '.', { auto: MOVE });
+            await untilOverlay();
+            assert.equal(await drawn('right'), false);
+            assert.match(await whyText(), /Decision \d+: Applied · APPLIED[^\n]*\n[\s\S]*“lantern glows”/);
+            await why().evaluate(e => { e.open = false; });
+            const held = await inventory();
+            await control({ reset: true, fallback: NO_CHANGE });
+            await action();
+            await untilNoOverlay();
+            assert.match(await readout(), /Selected background: Forest/, flow);
+            assert.equal(await drawn('right'), true, flow + ': presence back with the background');
+            assert.equal(byDirector(await castLine()), false, flow);
+            await untilDirector(1);
+            await settled();
+            // The new reply is requested once, as any completed reply is; nothing old is retried.
+            await delay(2600);
+            assert.equal((await directorLog()).length, 1, flow + ': one request for the new reply and no retry');
+            const body = await whyText(), row = /Decision \d+: Applied · APPLIED[^\n]*/.exec(body)?.[0] ?? null;
+            assert.doesNotMatch(body, /lantern glows/, flow + ': the excerpt of the changed message is gone');
+            // Regenerate replaces the message record, so its key is new and the old entry is not at the selected message.
+            evidence.observed[flow] = { appliedRowAtSelectedMessage: row, messageChangedShown: /message changed/.test(row ?? '') };
+            if (flow !== 'regenerate') assert.match(row, /· message changed$/, flow);
+            await why().evaluate(e => { e.open = false; });
+            nativeOnly(held, await inventory());
+            await assertStill();
+            pass('T57, T60: a real ' + flow + ' invalidates automatic layout from the first changed source, the stage returns to the global layout, nothing is retried, the excerpt is gone' + (flow === 'regenerate' ? ' (the replaced message has a new key, so no row remains at the selected message)' : ' and the row reads "message changed"; outcome and code stay'));
+        }
+        // Swiping back to the earlier variant is not a generation and does not bring the layout back.
+        await lastMoves('swipe-back', 'Swipe away and back.', { auto: MOVE });
+        await untilOverlay();
+        await control({ reset: true, fallback: NO_CHANGE });
+        await click('#chat .last_mes .swipe_right');
+        await untilNoOverlay();
+        await untilDirector(1);
+        await settled();
+        await page.locator('#chat .last_mes .swipe_left').evaluate(e => e.click());
+        await delay(2600);
+        assert.equal(byDirector(await readout()), false, 'an invalidated change is never reapplied');
+        assert.equal((await directorLog()).length, 1, 'swipe back issues nothing');
+        pass('T57: swiping back to the earlier variant issues nothing and does not reapply the invalidated layout');
+        // A correction falls with its source too, and its lock with it.
+        await lastMoves('correct-swipe', 'Correct, then swipe.', { auto: MOVE });
+        await untilOverlay();
+        await whyText();
+        await rowButton('Revert background').click();
+        await untilReadout(/Forest \(corrected\)/);
+        await why().evaluate(e => { e.open = false; });
+        await control({ reset: true, fallback: NO_CHANGE });
+        await click('#chat .last_mes .swipe_right');
+        await untilReadout(/Selected background: Forest ·/);
+        assert.doesNotMatch(await readout(), /corrected|director/);
+        await untilDirector(1);
+        await settled();
+        const afterCorrection = await inventory();
+        await lastMoves('after-correct', 'The lock went with it.', { auto: { excerpt: 'lantern glows', background: harborAsset } });
+        await untilOverlay();
+        nativeOnly(afterCorrection, await inventory());
+        pass('T63: a correction and its lock fall with a real swipe of their source; a fresh proposal then moves the field');
+    }
+    {
+        // Plan 4.6's manual row: a global manual edit while a request is outstanding makes the result stale, not a failure, and nothing from it applies.
+        await control({ reset: true, script: [{ hold: true, auto: { excerpt: 'lantern glows', background: harborAsset, presence: { characterKey: roamRowan.actorId, present: false } } }] });
+        await turn('Manual edit while held.');
+        await untilDirector(1);
+        await untilLine(/^Director: requesting/);
+        await openControls();
+        await field('Project actor').selectOption(roamRowan.actorId);
+        await field('Background').selectOption(forestAsset);
+        await button('Apply background').click();
+        await until(async () => await unsavedState() === 'dirty', 'manual edit applied');
+        await untilNoOverlay();
+        await closeControls();
+        await control({ release: true });
+        await settled();
+        await page.waitForFunction(() => !/requesting/.test(document.querySelector('.sillynovel-director-line').textContent));
+        const staleBody = await whyText();
+        evidence.observed.manualEditWhileOutstanding = staleBody.match(/Decision \d+: [^\n]*/g)?.at(-1) ?? null;
+        // A global edit also rebases the journal's scene, so its first failing path is STALE_JOURNAL; a correction's is STALE_SCENE.
+        assert.match(evidence.observed.manualEditWhileOutstanding, /Stale · STALE_JOURNAL/);
+        assert.match(staleBody, /Consecutive failures: 0/, 'not a failure');
+        assert.doesNotMatch(await readout(), /Harbor|director/, 'nothing from the stale result applied');
+        assert.equal(await drawn('right'), true);
+        assert.equal((await plugin('/projects/' + roaming.projectId)).scene.backgroundLocked, savedRoaming.scene.backgroundLocked, 'nothing saved without Save');
+        await why().evaluate(e => { e.open = false; });
+        pass('T57, T63: a manual layout edit while a request is outstanding clears the overlay and makes the result stale (STALE_JOURNAL as observed): not a failure, nothing applies, nothing saved');
+        await openControls();
+        await button('Discard and reopen attached project').click();
+        await page.waitForFunction(() => /revision/.test(document.querySelector('.sillynovel-project-status').textContent));
+        await page.waitForFunction(n => document.querySelectorAll('.sillynovel-sprite:not([hidden])').length === n, 2);
+        await importArt(roamMira.actorId);
+        await closeControls();
+    }
+    {
+        // The stage-view catch-up path: the reply completes while the reader is behind, and a real reader change directs it.
+        await control({ reset: true, fallback: NO_CHANGE });
+        await turn('Catch-up: the first reply.');
+        await untilDirector(1);
+        await settled();
+        await control({ reset: true, fallback: { auto: { excerpt: 'lantern glows', background: harborAsset } } });
+        await turn('Catch-up: read back while it settles.');
+        await button('Previous').click();
+        await untilNotice(/1 reply waiting: Jump to Latest to direct it/);
+        await delay(3000);
+        assert.equal((await directorLog()).length, 0, 'nothing is requested for a head the reader is not on');
+        assert.match(await line().textContent(), /^Director: waiting/);
+        assert.equal(byDirector(await readout()), false);
+        await button('Jump to Latest').click();
+        await untilDirector(1);
+        await untilOverlay();
+        await delay(2600);
+        assert.equal((await directorLog()).length, 1, 'requested once');
+        pass('M2.3 PR A catch-up through the real stage view: a reply completed while reading back waits, says so, and a real Jump to Latest directs it once');
+    }
+    {
+        // Project replacement under the overlay, with a request outstanding: the next project shows its own layout, and the old result lands nowhere.
+        assert.match(await readout(), /Harbor \(director\)/);
+        await control({ reset: true, script: [{ hold: true, auto: { excerpt: 'lantern glows', background: harborAsset } }] });
+        await turn('Replace while held.');
+        await untilDirector(1);
+        await untilLine(/^Director: requesting/);
+        await openControls();
+        const attached = name => until(async () => (await page.locator('.sillynovel-project-status').textContent()).includes(name), name + ' attached');
+        await open(solo.projectId, 2);
+        await attached('Director solo');
+        assert.doesNotMatch(await readout(), /Harbor|\(director\)/, 'no overlay crosses into the replacing project');
+        assert.equal(byDirector(await castLine()), false);
+        await control({ release: true });
+        await delay(1500);
+        assert.doesNotMatch(await readout(), /Harbor|\(director\)/, 'the late result lands nowhere');
+        assert.deepEqual((await plugin('/projects/' + solo.projectId)).scene, solo.scene, 'the replacing project is untouched');
+        await assertStill();
+        await open(roaming.projectId, 2);
+        await attached('Director roaming');
+        assert.equal(byDirector(await readout()), false, 'returning to the first project brings nothing back');
+        assert.match(await readout(), /Selected background: Forest/);
+        pass('T57: project replacement with automatic layout on stage and a request outstanding: no overlay crosses, the late result lands nowhere, and returning brings nothing back; both saved projects untouched');
+        await importArt(roamMira.actorId);
+    }
+    {
+        // Removed art under the overlay: the library entry goes while the overlay shows it. Reading and replying go on; bytes and the saved project do not change.
+        await lastMoves('removed-art', 'Harbor, then its art is removed.', { auto: { excerpt: 'lantern glows', background: harborAsset } });
+        await untilOverlay();
+        await openControls();
+        await field('Library artwork').selectOption(harborAsset);
+        await button('Remove artwork from library').click();
+        await until(async () => await unsavedState() === 'dirty', 'removed from the library');
+        await delay(500);
+        const removed = { readout: await readout(), feedback: await page.locator('.sillynovel-visual-status').textContent(), backgroundHidden: await page.locator('.sillynovel-art__background').evaluate(e => e.hidden) };
+        evidence.observed.removedArt = removed;
+        assert.equal(await page.locator('#sillynovel-stage').isVisible(), true);
+        const beforeRemovedTurn = await chatLength();
+        await control({ reset: true, fallback: NO_CHANGE });
+        await turn('Reading and replying go on.');
+        assert.equal(await chatLength(), beforeRemovedTurn + 2, 'a reply still completes');
+        await untilDirector(1);
+        await settled();
+        assert.equal((await plugin('/projects/' + roaming.projectId)).catalog.some(item => item.assetId === harborAsset), true, 'nothing saved without Save');
+        await assertStill();
+        pass('T57: removing the art an overlay background shows keeps the stage up, reading and replying continue, the director still settles, and nothing is saved');
+        await button('Discard and reopen attached project').click();
+        await page.waitForFunction(() => /revision/.test(document.querySelector('.sillynovel-project-status').textContent));
+        await page.waitForFunction(n => document.querySelectorAll('.sillynovel-sprite:not([hidden])').length === n, 2);
+        await importArt(roamMira.actorId);
+    }
+    {
+        // T68 (E16 residual, G13): each flow on the synthetic rejecting backend during a held request. The outcome is recorded as seen; only "the user's message is kept" and "recovery works" are required.
+        const native = () => page.evaluate(() => { const c = SillyTavern.getContext(), m = c.chat.at(-1); return { length: c.chat.length, lastIsUser: m?.is_user === true, last: m?.mes ?? null, swipes: m?.swipes?.length ?? 0, swipeId: m?.swipe_id ?? 0, users: c.chat.filter(item => item.is_user).length, lastUser: c.chat.findLast(item => item.is_user)?.mes ?? null }; });
+        const quiet = () => page.waitForFunction(() => getComputedStyle(document.querySelector('#mes_stop')).display === 'none' && !document.querySelector('#send_but').classList.contains('displayNone'));
+        const toastTexts = () => page.evaluate(() => [...document.querySelectorAll('#toast-container .toast')].map(e => ({ error: e.classList.contains('toast-error'), text: e.textContent.slice(0, 160) })));
+        const answered = text => /Mira says/.test(text ?? '');
+        evidence.e16 = {};
+        for (const [flow, selector] of [['regenerate', '#option_regenerate'], ['continue', '#option_continue'], ['swipe', '#chat .last_mes .swipe_right']]) {
+            await control({ reset: true, script: [{ hold: true, ...AUTO }] });
+            await clearToasts();
+            await turn('T68 ' + flow + ': the user message that must stay.');
+            await untilDirector(1);
+            await untilLine(/^Director: requesting/);
+            await control({ busy503: true });
+            const before = await native();
+            await page.locator(selector).evaluate(e => e.click());
+            await delay(600);
+            await quiet();
+            await delay(600);
+            const after = await native(), toasts = await toastTexts(), wire = (await requests()).filter(e => !e.director);
+            assert.equal(after.lastUser, before.lastUser, flow + ': the user message is kept');
+            assert.equal(after.users, before.users, flow + ': no user message lost');
+            const nativeTried = wire.length - 1, served = wire.slice(1).filter(e => e.replied).length;
+            await control({ release: true, busy503: false });
+            await settled();
+            const directorNotice = await statusText();
+            await clearToasts();
+            await control({ reset: true, fallback: NO_CHANGE });
+            // Recovery with the same control once the slot is free; a served native request proves it, since the old text may still be on screen.
+            const lost = !answered(after.last) || after.lastIsUser;
+            await page.locator(selector).evaluate(e => e.click());
+            await delay(600);
+            await quiet();
+            await until(async () => answered((await native()).last) && (await requests()).some(e => !e.director && e.replied), flow + ': recovery returned a reply');
+            const recovered = await native();
+            assert.equal(recovered.lastUser, before.lastUser, flow + ': the user message survives recovery');
+            assert.equal(recovered.lastIsUser, false);
+            evidence.e16[flow] = { backend: 'synthetic rejecting single-slot loopback (503 while a director request is held)', nativeRequestsDuringHold: nativeTried, nativeServedDuringHold: served, replyKept: !lost && after.last === before.last, replyLost: lost, chatLengthBefore: before.length, chatLengthAfter: after.length, lastIsUserAfter: after.lastIsUser, swipesBefore: before.swipes, swipesAfter: after.swipes, swipeIdAfter: after.swipeId, lastMessageAfter: after.last === before.last ? 'unchanged' : (after.last ?? '').slice(0, 120), toast: toasts.length ? toasts : 'none', recoveryUsed: flow, recoveredReply: answered(recovered.last), userMessageKept: true, directorNotice };
+            console.log('T68 ' + flow + ' ' + JSON.stringify(evidence.e16[flow]));
+            pass('T68: ' + flow + ' during a held request on the synthetic rejecting backend: the user\'s message is kept, recovery by ' + flow + ' returns a reply; the outcome is recorded in evidence.e16, not asserted');
+            await untilDirector(1);
+            await settled();
+            await delay(2600);
+            evidence.e16[flow].directorCodesAfterRecovery = /Codes: [^\n]*/.exec(await whyText())?.[0] ?? null;
+            await why().evaluate(e => { e.open = false; });
+        }
+    }
+    {
+        // Runner proof (plan 6.2): the committed runner on this host and this loopback only. A real provider is the owner's own step.
+        await openControls();
+        await button('Detach project').click();
+        await page.waitForFunction(() => document.querySelector('.sillynovel-director').hidden);
+        const { cases } = JSON.parse(await readFile(CASES_FILE)), by = id => cases.find(item => item.id === id);
+        const reply = testCase => ({ content: JSON.stringify(answerFor(testCase)) });
+        const steps = cases.map(reply);
+        // Each way a case can end, so the proof covers more than the happy path; all counts below follow from these.
+        const at = id => cases.findIndex(item => item.id === id);
+        steps[at('presence-2')] = { content: 'Prose instead of JSON.' };
+        steps[at('presence-3')] = { status: 500 };
+        steps[at('mentions-1')] = { content: JSON.stringify({ schemaVersion: 1, updates: [{ op: 'setLocation', backgroundId: 'invented', evidence: { sourceMessageKey: by('mentions-1').input.window.at(-1).key, excerpt: 'Rowan' } }] }) };
+        steps[at('negation-5')] = { content: '{"schemaVersion":1,"updates":[]}' };
+        steps[at('hypothetical-travel-1')] = { content: JSON.stringify({ schemaVersion: 1, updates: [{ op: 'setLocation', backgroundId: by('hypothetical-travel-1').input.backgrounds[1].backgroundId, evidence: { sourceMessageKey: by('hypothetical-travel-1').input.window.at(-1).key, excerpt: 'harbor' } }] }) };
+        steps[at('flashbacks-1')] = { delayMs: 4000, content: JSON.stringify(answerFor(by('flashbacks-1'))) };
+        await control({ reset: true, script: steps });
+        await delay(2500);
+        const proofBefore = await inventory(), proofFile = join(root, 'gate-b-proof-results.json');
+        const output = execFileSync(process.execPath, [join(repo, 'tests/probes/m2-gate-b/run.mjs'), '--proof-loopback', '--origin', h.origin, '--out', proofFile, '--per-case-ms', '2000'], { encoding: 'utf8', timeout: 300000, env: { ...process.env } });
+        await writeFile(join(root, 'gate-b-proof-console.log'), output.slice(-65536));
+        await delay(2500);
+        const proofRun = JSON.parse(await readFile(proofFile)), wire = await requests(), controlState = await control({});
+        assert.equal(wire.length, 40, 'exactly one request per case and no retries');
+        assert.ok(wire.every(e => e.director && e.body.stream === false));
+        assert.equal(controlState.peakDirector, 1, 'one at a time, the late one included');
+        assert.deepEqual(wire.map(e => e.body.messages.map(({ role, content }) => ({ role, content }))), cases.map(item => buildDirectorRequest(item.input).messages.map(({ role, content }) => ({ role, content }))), 'the bytes on the wire are the product builder\'s');
+        assert.deepEqual(proofRun.results.map(item => item.id), cases.map(item => item.id));
+        const raw = await readFile(proofFile, 'utf8');
+        assert.doesNotMatch(raw, /Prose instead|authorization|api[_-]?key|custom_url|sn-reader-local|127\.0\.0\.1|chat_completion_source/i, 'no raw reply, header, key or connection setting retained');
+        assert.ok(raw.length < 512 * 1024, 'bounded output');
+        assert.ok(output.length < 8192, 'bounded console');
+        assert.deepEqual(proofRun.results.find(item => item.id === 'flashbacks-1').code, 'ABANDONED');
+        const report = scoreRun({ casesBytes: await readFile(CASES_FILE), recorded: recordedSha(), run: proofRun });
+        await writeFile(join(root, 'gate-b-proof-score.json'), JSON.stringify(report, null, 1));
+        await writeFile(join(root, 'gate-b-proof-score.log'), formatReport(report));
+        assert.equal(report.complete, true);
+        assert.deepEqual(report.categories.presence.refused, { count: 1, codes: { NOT_SINGLE_JSON: 1 } });
+        assert.deepEqual(report.categories.presence.failed, { count: 1, codes: { TRANSPORT_ERROR: 1 } });
+        assert.deepEqual(report.categories.mentions.refused, { count: 1, codes: { UNKNOWN_ASSET: 1 } });
+        assert.equal(report.categories.negation.fields.background.abstained, 1);
+        assert.equal(report.categories['hypothetical travel'].fields.background.incorrect, 1);
+        assert.deepEqual(report.categories.flashbacks.failed, { count: 1, codes: { ABANDONED: 1 } });
+        assert.deepEqual((await inventory()).files, proofBefore.files, 'every native file byte-identical across the 40 requests');
+        evidence.counts.gateBProof = { requests: wire.length, peak: controlState.peakDirector, casesSha256: proofRun.casesSha256, promptVersion: proofRun.promptVersion };
+        pass('T67 runner proof: the committed runner, on the loopback fixture only, sent 40 cases one at a time with no retry through the product\'s own request bytes; a held reply was abandoned at its limit and the next case waited; only JSON and codes were retained, and the scorer reported correct, incorrect, abstained, refused and failed apart; every native file byte-identical');
     }
     assert.deepEqual(h.pageErrors.filter(text => !/Clicked stop button|Generation was aborted|Got response status|Internal Server Error/.test(text)), []);
     evidence.result = 'PASS';
