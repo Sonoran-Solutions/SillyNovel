@@ -221,7 +221,7 @@ export function createDirectorController({ runtime, projectId, actions, expressi
         if (!captured) {
             const interrupted = interruption(current), code = interrupted ?? reason;
             record(current, code === 'SUPERSEDED' ? 'superseded' : code === 'CANCELLED' ? 'cancelled' : 'stale', code);
-            return say(code === 'SUPERSEDED' ? 'Director request superseded by your reply' : 'Director request cancelled.');
+            return say(code === 'SUPERSEDED' ? 'Director request set aside for your reply' : 'Director request cancelled.');
         }
         const refused = (outcome, code) => { record(current, outcome, code); failure(code); };
         if (result.code === 'ABORTED') { record(current, 'cancelled', 'ABORTED'); return say('Director request cancelled.'); }

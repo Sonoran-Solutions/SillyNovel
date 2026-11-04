@@ -237,7 +237,7 @@ try {
     assert.match(await page.evaluate(() => SillyTavern.getContext().chat.at(-1).mes), /Mira says/);
     const countAtSend = Number(/(\d+) of 40 requests/.exec(await statusText())[1]), mark = (await notices()).length;
     await control({ release: true });
-    await untilNotice(/Director request superseded by your reply/);
+    await untilNotice(/Director request set aside for your reply/);
     assert.equal(await expressionOn('left'), '', 'the superseded result never applied to the old head or the new one');
     // The new reply's own target waits for the slot, then fires once; nothing is retried for the superseded head.
     await untilDirector(2);
@@ -258,7 +258,7 @@ try {
     await control({ nativeDelayMs: 25 });
     await until(async () => (await directorLog())[0].aborted, 'director request aborted on the wire');
     // M2.3 PR A: the user's Send started a generation, so the outcome is SUPERSEDED; the ABORTED code is never read.
-    await untilNotice(/Director request superseded by your reply/);
+    await untilNotice(/Director request set aside for your reply/);
     pass('the user Stop aborts the outstanding director request on the wire; the Send before it made the result SUPERSEDED, not a failure; chat stays usable (T46, T53)');
     await delay(2600);
 
