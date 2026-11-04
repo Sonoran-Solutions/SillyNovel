@@ -2,7 +2,7 @@
 
 ## M3.1 PR A candidate (draft, unmerged) — 2026-11-03
 
-The pure image-workflow module is implemented on frozen `9d57a52` for owner review under [DYL-207](https://linear.app/devils17/issue/DYL-207/sillynovel-m31-manual-image-exchange-promptreference-export-explicit): draft checks with UTF-8 ceilings and strict keys, the one export text that the preview, Copy and Download share, fixed filenames, catalog and hash checks for at most three references, and the capture rule that refuses a delayed step after detach, a draft edit or A → B → A. Nothing imports it yet; runtime unchanged. Node 371/371 (9 new), discovery PASS 15/5/1; browser, storage and native NOT_RUN for a pure-module slice (H4). See the [record](M3_1_IMAGE_WORKFLOW_IMPLEMENTATION.md). PR B waits for the owner's review. Gate C NOT_RUN.
+The pure image-workflow module is implemented on frozen `4b3a300` for owner review under [DYL-207](https://linear.app/devils17/issue/DYL-207/sillynovel-m31-manual-image-exchange-promptreference-export-explicit): draft checks with UTF-8 ceilings and strict keys, the one export text that the preview, Copy and Download share, fixed filenames, catalog and hash checks for at most three references, and the capture rule that refuses a delayed step after detach, a draft edit or A → B → A. Nothing imports it yet; runtime unchanged. Node 371/371 (9 new), discovery PASS 15/5/1; browser, storage and native NOT_RUN for a pure-module slice (H4). See the [record](M3_1_IMAGE_WORKFLOW_IMPLEMENTATION.md). PR B waits for the owner's review. Gate C NOT_RUN.
 
 ## M3.1 authorized (PRs A and B) — 2026-11-03
 

@@ -1,8 +1,10 @@
 # M3.1 image workflow — implementation record
 
+**PR A accepted — 2026-11-03.** The owner [accepted](DECISIONS.md#owner-acceptance--m31-pr-a-merged-per-field-copy-for-pr-b--2026-11-03) PR A, refrozen at `4b3a300`, with per-field Copy added to PR B's scope.
+
 ## PR A — draft checks, export text, filenames and capture currency
 
-**Candidate, unmerged. Frozen `9d57a52218556895d630062a83b30575fb359aac`**, based on main `11c2740` (the [plan](M3_1_IMAGE_WORKFLOW_PLAN.md) and the [owner rulings H1–H11](DECISIONS.md#owner-rulings-h1h11--m31-image-workflow--2026-11-03)). Tracked by [DYL-207](https://linear.app/devils17/issue/DYL-207/sillynovel-m31-manual-image-exchange-promptreference-export-explicit). Pure module only (H1, H4): nothing imports `src/image-workflow.mjs` yet, so the runtime behaves exactly as main does. No UI, provider, adapter, persistence or schema change.
+**Candidate, unmerged. Frozen `4b3a30079d70cd52818db5ecdea433411ce4beba`**, based on main `11c2740` (the [plan](M3_1_IMAGE_WORKFLOW_PLAN.md) and the [owner rulings H1–H11](DECISIONS.md#owner-rulings-h1h11--m31-image-workflow--2026-11-03)). Tracked by [DYL-207](https://linear.app/devils17/issue/DYL-207/sillynovel-m31-manual-image-exchange-promptreference-export-explicit). Pure module only (H1, H4): nothing imports `src/image-workflow.mjs` yet, so the runtime behaves exactly as main does. No UI, provider, adapter, persistence or schema change.
 
 ### What it adds
 
@@ -33,7 +35,7 @@
 1. **Problems are returned as a list, not thrown,** so PR B can show every reason at once and name the unavailable reference (plan 3.4). `exportText` throws only on a draft the interface should never have let through.
 2. **The prompt counts as missing when it is only whitespace.** Other fields are kept exactly as typed.
 3. **Size is a section only when chosen;** `unspecified` adds nothing to the text.
-4. **The text has section headings** (`Prompt:` etc.) so a person pasting it knows what each part is. Plan 3.2 fixes the content and order, not the headings; they are a reversible choice.
+4. **The text has section headings** (`Prompt:` etc.) so a person reading it knows what each part is. Plan 3.2 fixes the content and order, not the headings. Accepted with per-field Copy in PR B, so pasting into a tool needs no editing.
 5. **The reference byte total uses the catalog's recorded `byteCount`.** PR B still verifies each reference's hash on authenticated readback before download, as plan 3.3 requires.
 6. **The library's own `label()` check is reused** from `plugins/sillynovel-storage/schema.mjs`, which `src/project-scene.mjs` already imports in the browser, so draft labels follow exactly the import rule.
 7. **No result-PNG preflight here.** Plan 3.3 reuses the existing preview checks in `src/transient-scene.mjs` and extracts only what PR B shares, so that work belongs to PR B.
@@ -53,7 +55,7 @@ git diff --check
 | Check | Result |
 | --- | --- |
 | Focused file | 9/9 pass |
-| Node runner list (15 files) | 371/371 pass (362 on main `11c2740` plus these 9) |
+| Node runner list (15 files) | 371/371 pass (362 on main `11c2740` plus these 9), on `9d57a52` and again on the refrozen `4b3a300` (literal problem codes) |
 | Discovery | PASS, 15/5/1 |
 | Syntax and whitespace | PASS |
 

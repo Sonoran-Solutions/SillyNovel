@@ -2,7 +2,7 @@
 
 ## M3.1 PR A candidate (draft, unmerged) — 2026-11-03
 
-Plan section 8 PR A is implemented on frozen `9d57a52` with [its record](M3_1_IMAGE_WORKFLOW_IMPLEMENTATION.md) and awaits owner review; PR B follows that review. Gate C NOT_RUN.
+Plan section 8 PR A is implemented on frozen `4b3a300` with [its record](M3_1_IMAGE_WORKFLOW_IMPLEMENTATION.md) and awaits owner review; PR B follows that review. Gate C NOT_RUN.
 
 ## M3.1 authorized — 2026-11-03
 

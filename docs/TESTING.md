@@ -2,7 +2,7 @@
 
 ## M3.1 PR A candidate — T69, T70 and T72 covered in Node — 2026-11-03
 
-Node-level SYNTHETIC evidence on frozen `9d57a52`, unmerged: T69's text half, T70's validation and filename half, and T72's capture rule. Node 371/371 over the runner's 15 files; `python3 tests/probes/dyl60/check-discovery.py` PASS (15/5/1). Browser, storage and native NOT_RUN: a pure-module slice under the M2 evidence standard (H4). T71 and T73, and the browser halves of T69, T70 and T72, wait for PR B. [Record](M3_1_IMAGE_WORKFLOW_IMPLEMENTATION.md).
+Node-level SYNTHETIC evidence on frozen `4b3a300`, unmerged: T69's text half, T70's validation and filename half, and T72's capture rule. Node 371/371 over the runner's 15 files; `python3 tests/probes/dyl60/check-discovery.py` PASS (15/5/1). Browser, storage and native NOT_RUN: a pure-module slice under the M2 evidence standard (H4). T71 and T73, and the browser halves of T69, T70 and T72, wait for PR B. [Record](M3_1_IMAGE_WORKFLOW_IMPLEMENTATION.md).
 
 ## M3 rows adopted — 2026-11-03
 
