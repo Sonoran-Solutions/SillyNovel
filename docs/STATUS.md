@@ -2,7 +2,7 @@
 
 ## Post-Gate-B cleanup candidate (draft, unmerged) — 2026-11-03
 
-A small runtime change for owner review, [record](POST_GATE_B_CLEANUP.md): the Scene panel read-out no longer prints `undefined` when an overlay background's art was removed (PR D finding 1); the notice after Send during a director request now reads “Director request set aside for your reply”, outcome `SUPERSEDED` unchanged (finding 3); `tests/probes/m2-gate-b/run.mjs` exits after “Finished” (its losing race timers were referenced); the storage plugin README says `dataRoot` must be absolute. Finding 2 has proposed T60 wording for acceptance at merge; finding 4 is unchanged by design. Node 362/362 on main and on the branch. Browser suite and native-host campaign NOT_RUN: the pinned 1.19.0 host is not present, so this cannot merge under the M2 evidence standard until they run. Gate C NOT_RUN.
+A small runtime change for owner review, [record](POST_GATE_B_CLEANUP.md): the Scene panel read-out no longer prints `undefined` when an overlay background's art was removed (PR D finding 1); the notice after Send during a director request now reads “Director request set aside for your reply”, outcome `SUPERSEDED` unchanged (finding 3); `tests/probes/m2-gate-b/run.mjs` exits after “Finished” (its losing race timers were referenced); the storage plugin README says `dataRoot` must be absolute. Finding 2 has proposed T60 wording for acceptance at merge; finding 4 is unchanged by design. Rebased onto `22b774d`; full campaign on a disposable pinned SillyTavern 1.19.0 host at `67d6207`: Node 371, storage 126, browser 103, seven native campaigns, `validate.py` PASS. Gate C NOT_RUN.
 
 ## M3.1 PR A candidate (draft, unmerged) — 2026-11-03
 
