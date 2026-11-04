@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## DYL-193 replay merged — 2026-11-03
+
+[Step 3](DECISIONS.md#owner-acceptance--dyl-193-replay-merged-on-gate-b-candidate-6799a5e--2026-11-03) of the Gate B sequence is done on candidate `6799a5e`, with the physical scaling, reduced-motion and screen-reader rows still NOT_TESTED where they need a device setting or an assistive technology nobody ran. The fixture evaluation, the owner's session and the verdict each wait on their own authorization. No accuracy figure exists, and none is promised.
+
 ## DYL-193 replay authorized — 2026-11-02
 
 [Step 3](DECISIONS.md#owner-authorization--dyl-193-replay-on-gate-b-candidate-6799a5e--2026-11-02) of the Gate B sequence is authorized on candidate `6799a5e`. The fixture evaluation, the owner's session and the verdict each wait on their own authorization. No accuracy figure exists, and none is promised.
