@@ -24,7 +24,7 @@ export function draftProblems(draft, catalog = null) {
     if (draft.version !== DRAFT_VERSION || draft.kind !== 'background') add('INVALID_DRAFT');
     if (draft.label !== '' && !label(draft.label)) add('BAD_LABEL');
     if (!draft.prompt.trim()) add('PROMPT_REQUIRED');
-    for (const key of ['prompt', 'negativePrompt', 'styleNote']) if (bytes(draft[key]) > LIMITS[key]) add(key.replace(/[A-Z]/g, c => '_' + c).toUpperCase() + '_TOO_LONG');
+    for (const [key, code] of [['prompt', 'PROMPT_TOO_LONG'], ['negativePrompt', 'NEGATIVE_PROMPT_TOO_LONG'], ['styleNote', 'STYLE_NOTE_TOO_LONG']]) if (bytes(draft[key]) > LIMITS[key]) add(code);
     if (!SIZE_HINTS.includes(draft.sizeHint)) add('BAD_SIZE_HINT');
     if (draft.references.length > MAX_REFERENCES) add('TOO_MANY_REFERENCES');
     const seen = new Set(); let total = 0;
