@@ -120,6 +120,8 @@ export async function createProjectScene(project,client,actions,changed,isCurren
         expressionStatus:()=>expressions.get(),
         importExpression:(file,key,name,selectionCurrent)=>expressions.importFile(file,key,name,selectionCurrent),
         expressionFailed:id=>expressions.failed(id),
+        // M3.1: only a library entry of this project, re-read with its digest checked, for an explicit reference download (plan 3.3).
+        async readReference(assetId){if(!current()||!library.some(a=>a.assetId===assetId))throw Error('UNKNOWN_REFERENCE');const value=await client.asset(project.projectId,assetId);if(!current())throw Error('STALE_PROJECT');return value;},
         async renameAsset(ref,name) {
             if(!current())return;
             if(importing||cleanupBusy)throw Error('Wait for the PNG import or cleanup to finish.');

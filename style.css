@@ -150,3 +150,7 @@
 .sillynovel-control.sillynovel-movable { flex: 0 0 auto; flex-direction: row; align-items: center; flex-wrap: wrap; gap: 0.4rem; min-height: 44px; width: 100%; }
 .sillynovel-movable input { flex: 0 0 auto; width: 1.25rem; min-height: 1.25rem; height: 1.25rem; margin: 0; }
 @media (max-width: 600px), (max-height: 620px) { .sillynovel-why { max-height: max(24%, 6rem); } }
+.sillynovel-image-workflow { flex-basis: 100%; min-width: 0; }
+.sillynovel-image-workflow textarea { width: min(100%, 32rem); min-height: 4rem; resize: vertical; }
+.sillynovel-image-workflow__text { flex-basis: 100%; min-width: 0; max-height: 10rem; overflow: auto; margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 0.8em; }
+.sillynovel-image-workflow__preview { max-width: 100%; max-height: 8rem; object-fit: contain; }

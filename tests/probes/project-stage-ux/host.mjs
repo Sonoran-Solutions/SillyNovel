@@ -88,6 +88,38 @@ export async function runStageUX({root,data,repo,page,alice,peer,project,field,b
  assert.deepEqual(await canonical(),baseline);assert.equal(await connection(),connectionBefore);
  evidence.stageUX={project:saved,nativeBefore:baseline,nativeAfter:await canonical(),connectionBeforeSha256:sha(connectionBefore),connectionAfterSha256:sha(await connection()),screenshots:['before-reopen','after-reopen','conflict','uncertain'].flatMap(phase=>['desktop','narrow'].flatMap(device=>['','-controls'].map(suffix=>'stage-'+phase+'-'+device+suffix+'.png')))};
  pass('real stale-save conflict and lost committed receipt retain edits/block retry; A→B→A detaches; named native files and connection context unchanged');
+ // M3.1 PR B (T69-T72): the image workflow on the real host and plugin. Prompt and reference leave only as downloads; a result enters only by Import and apply, through the plugin's own decoder.
+ const wfBefore=await canonical(),requests=[],seen=r=>{if(r.url().includes('/api/plugins/sillynovel-storage/'))requests.push(r.method()+' '+new URL(r.url()).pathname);};
+ await field('Saved project').selectOption(entry.projectId);await button('Open project and use with this chat').click();await waitState('saved');
+ await button('Image workflow').click();
+ const wf=name=>page.locator('.sillynovel-image-workflow').getByLabel(name,{exact:true});
+ await wf('Image prompt').fill('A lantern-lit harbor at dusk');await wf('Negative prompt').fill('people');
+ page.on('request',seen);
+ const promptDownload=page.waitForEvent('download');await button('Download prompt').click();const promptFile=await promptDownload;
+ assert.equal(promptFile.suggestedFilename(),'sillynovel-image-prompt.txt');assert.equal(await readFile(await promptFile.path(),'utf8'),'Prompt:\nA lantern-lit harbor at dusk\n\nNegative prompt:\npeople\n');
+ assert.deepEqual(requests,[],'the prompt export made no storage request');
+ const refId=(await get()).scene.backgroundAssetId,assetPath='/api/plugins/sillynovel-storage/projects/'+entry.projectId+'/assets/';
+ await wf('Reference 1').selectOption(refId);
+ const refDownload=page.waitForEvent('download');await button('Download reference 1').click();const refFile=await refDownload;
+ assert.equal(refFile.suggestedFilename(),'reference-1.png');
+ assert.equal(sha(await readFile(await refFile.path())),sha(await (await alice.request(assetPath+refId)).body()),'the stored bytes, digest-checked');
+ assert.deepEqual(requests,['GET '+assetPath+refId],'only the authenticated readback');
+ const result=join(repo,'tests/fixtures/m12-stage/mira-a-joy.png');
+ await wf('Result PNG').setInputFiles(result);await page.locator('.sillynovel-image-workflow__preview').waitFor();await button('Discard preview').click();
+ assert.equal(requests.filter(r=>r.startsWith('POST')).length,0,'a chosen and discarded result uploads nothing');
+ await wf('Background label').fill('Workflow harbor');
+ await wf('Result PNG').setInputFiles(result);await page.locator('.sillynovel-image-workflow__preview').waitFor();
+ await button('Import and apply background to Manual stage UX').click();await waitState('dirty');
+ await page.waitForFunction(()=>document.querySelector('.sillynovel-image-workflow__status').textContent.includes('Imported and applied'));
+ await button('Save project').click();await waitState('saved');page.off('request',seen);
+ const imported=await get(),added=imported.catalog.find(a=>a.kind==='background'&&a.label==='Workflow harbor');
+ assert.ok(added);assert.equal(imported.scene.backgroundAssetId,added.assetId);assert.equal(imported.scene.backgroundLocked,true);
+ assert.equal(sha(await (await alice.request(assetPath+added.assetId)).body()),sha(await readFile(result)));
+ assert.equal(requests.filter(r=>r.startsWith('POST')).length,1,'one upload, on Import and apply');
+ await button('Detach project').click();
+ assert.deepEqual(await canonical(),wfBefore);
+ evidence.imageWorkflow={projectId:entry.projectId,referenceAssetId:refId,importedAssetId:added.assetId,importedSha256:sha(await readFile(result)),storageRequests:requests};
+ pass('image workflow on the real host: prompt download sends nothing, reference download is the stored digest-checked file, a discarded preview uploads nothing, Import and apply goes through the plugin and saves locked; named native files unchanged');
  // Native user reply is an intentional host mutation, checked after the visual-only inventory.
  await connect();
  await page.locator('#send_textarea').fill('Synthetic stage UX native reply');await page.locator('#send_but').click();
