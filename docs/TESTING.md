@@ -1,5 +1,9 @@
 # Verification and acceptance
 
+## M3 rows adopted — 2026-11-03
+
+Per [H11](DECISIONS.md#owner-rulings-h1h11--m31-image-workflow--2026-11-03), rows T69–T80 from [plan section 7](M3_1_IMAGE_WORKFLOW_PLAN.md#7-proposed-testing-rows) are added to the matrix below as NOT_RUN. T69–T73 belong to M3.1; T74–T80 wait for M3.2 and M3.3, which are not authorized. No evidence is claimed by this entry.
+
 ## Gate B verdict PASS recorded — 2026-11-03
 
 [Recorded](DECISIONS.md#gate-b-verdict--pass--2026-11-03) in the owner's words; the [Gate B record](evidence/gate-b/record.md) is the human gate record for candidate `6799a5e`: automated checks, hard gates, fixture counts and DYL-193 filled from evidence; real-session and E16 lines NOT_RUN by the owner's choice. The session host was SillyTavern 1.18.0 with the candidate's storage plugin, a deviation from the pin recorded in DECISIONS. Tablet text scaling, tablet reduced motion and screen readers stay NOT_TESTED. Plugin README follow-up: `dataRoot` must be absolute for the storage plugin.
@@ -245,6 +249,18 @@ Harness assertions model event shapes and do not prove host ordering. In the liv
 | T66 | Mark a background or presence movable, Save, reopen, export, import | Value kept, lock false after each; director may move it; a new manual apply locks again unless the movable action was used; director enablement does not travel (T48); schema v2 unchanged. Node, browser and native on `c6f6ec7` (candidate, unmerged) | M2.4-C |
 | T67 | Gate B fixture scorer | Counts per category and field; refused apart, and failed or not-run apart from refused; no aggregate percentage; changed expected answers refused against the recorded SHA. Covered by Node (`tests/m2-gate-b-score.test.mjs`) and the loopback-only runner proof in the M2.4 PR D campaign; measured direction once on `6799a5e` in the Gate B fixture run of 2026-11-03 (40 sent, 36 scored, 4 refused, [record](evidence/gate-b/record.md)) | M2.4-D |
 | T68 | Regenerate, Continue or swipe during an outstanding request on the synthetic rejecting backend (E16 residual) | Outcome recorded per flow as observed: Regenerate loses the reply, Continue and swipe keep it; the user's message kept in all three; a host toast each; the director request counted `SUPERSEDED`; recovery by the same flow once the slot frees demonstrated; not asserted away. Real backend stays with the owner's session. Covered by the M2.4 PR D campaign (amended at merge per G14) | M2.4-D |
+| T69 | Image prompt draft copied or downloaded | Exact visible text equals copy/download bytes; blank/oversized fields refuse; HTML/macros/slash text stays data; no provider request or implicit chat/card collection. NOT_RUN. | M3.1 |
+| T70 | Reference PNGs exported | Export only explicitly selected owned PNG references with matching hashes; foreign/missing/hash-changed references refuse; filenames cannot create paths. NOT_RUN. | M3.1 |
+| T71 | Result PNG previewed, discarded, or imported and applied | Local preview discard uploads nothing; explicit import/apply locks background, marks dirty, saves/reopens; identical PNG reuses project bytes; invalid PNG/quota/conflict preserves previous saved state. NOT_RUN. | M3.1 |
+| T72 | Delayed export, decode or upload after detach, project replacement or A → B → A | Delayed export/decode/upload after detach, project replacement or A → B → A cannot publish into the new attachment; draft/preview resources disposed. NOT_RUN. | M3.1 |
+| T73 | Image workflow on keyboard, scaling, touch and screen reader | Workflow keyboard, scaling, touch picker/download and screen-reader checks; reply field reachable throughout export/import/failure. Physical/assistive rows never replaced by emulation. NOT_RUN. | M3.1 UI |
+| T74 | Host image seam with adversarial prompts and decoy private data | Pinned host seam with adversarial prompts and decoy private data: no command execution, text-model call, chat/background mutation or unexpected outbound fields; actual wire matches review. NOT_RUN. | M3.2 |
+| T75 | Local image route unavailable, changed or cloud-selected | Standard local route unavailable, source/workflow/settings changed or cloud/RunPod selected: refuse before dispatch; no connection rewrite or fallback. NOT_RUN. | M3.2 |
+| T76 | Host image result staged for approval | Valid host result staged only; arbitrary path/redirect/non-PNG refused; approval alone copies into the intended project; host file retention disclosed. NOT_RUN. | M3.2 |
+| T77 | Image timeout, cancel or stale late result | Timeout/cancel/stale late result, including A → B → A and manual lock: no application, no retry, unknown reservation retained, actual backend cancellation separately measured. NOT_RUN. | M3.2–3 |
+| T78 | Concurrent identical image requests and cache hits | Concurrent identical requests and repeated clicks coalesce; cache hit sends zero; changed effective inputs miss; reload/second-tab recovery cannot cause a duplicate authorized job in the supported mode. NOT_RUN. | M3.3 |
+| T79 | Image refusal, auth, rate and error fixtures | Refusal/auth/rate/error fixtures preserve canonical data and reading/replying, with no provider hopping; count/budget reservations include failed and unresolved jobs. NOT_RUN. | M3.3 |
+| T80 | Generated candidate reject, delete and approve | Generated candidate reject/delete/approve, approved-asset deletion protection, metadata redaction and recovery/portability behavior match the adopted retention contract. NOT_RUN. | M3.3 |
 
 ## 3. Fixture design
 

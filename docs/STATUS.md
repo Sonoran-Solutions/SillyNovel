@@ -1,5 +1,9 @@
 # Project status
 
+## M3.1 authorized (PRs A and B) — 2026-11-03
+
+The owner [ruled on H1–H11](DECISIONS.md#owner-rulings-h1h11--m31-image-workflow--2026-11-03) on the [M3.1 plan](M3_1_IMAGE_WORKFLOW_PLAN.md): M3.1 is authorized as two sequential PRs tracked by [DYL-207](https://linear.app/devils17/issue/DYL-207/sillynovel-m31-manual-image-exchange-promptreference-export-explicit), PR A (pure draft validator and export text builder, Node evidence) and then PR B (Image workflow disclosure, reference downloads, local preview, “Import and apply background”; full campaign). No image provider in M3.1. H3, H5, H6 and H7, including O05's first route, are deferred to M3.2 planning; H8, delegated to the agent, is an optional director session after M3.1. TESTING rows T69–T80 added as NOT_RUN. Runtime unchanged by this entry. Gate C NOT_RUN.
+
 ## M3.1 planning proposal (NOT approved) — 2026-11-03
 
 The [M3.1 image workflow plan](M3_1_IMAGE_WORKFLOW_PLAN.md) proposes M3 in the roadmap's order: M3.1 manual prompt/reference export and explicit PNG import into the existing library with no provider; M3.2 one manual missing-background request through the host's Image Generation extension on standard local ComfyUI (an answer to O05, from 1.18.0 source only, NOT_VERIFIED on 1.19.0); M3.3 approval, cache, stale-job, privacy and usage-limit controls; M3.4 further adapters later. It lists owner decisions H1–H11 with a recommendation each, maps every Gate C demonstration to a slice, and proposes T69–T80 as NOT_RUN. **It authorizes nothing**; runtime unchanged. Gate C NOT_RUN.

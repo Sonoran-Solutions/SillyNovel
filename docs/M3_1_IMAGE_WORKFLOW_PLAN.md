@@ -291,7 +291,7 @@ Heavy runs (the campaign, storage suite, device replay) need a finite deadline, 
 
 ## 9. Owner decisions H1–H11
 
-All **OPEN / proposed**, not recorded rulings. Options below preserve existing safety boundaries; recommendations do not authorize work.
+**Ruled 2026-11-03:** see the [owner rulings](DECISIONS.md#owner-rulings-h1h11--m31-image-workflow--2026-11-03). H1, H2, H4, H9, H10 and H11 adopt the recommendation; H3, H5, H6 and H7 are deferred to M3.2 planning; H8 was delegated and recorded as option B. The table below is the proposal as reviewed.
 
 | ID | Decision and options | Recommendation and reason |
 | --- | --- | --- |
