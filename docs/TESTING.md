@@ -1,5 +1,9 @@
 # Verification and acceptance
 
+## M3.1 PR A candidate — T69, T70 and T72 covered in Node — 2026-11-03
+
+Node-level SYNTHETIC evidence on frozen `4b3a300`, unmerged: T69's text half, T70's validation and filename half, and T72's capture rule. Node 371/371 over the runner's 15 files; `python3 tests/probes/dyl60/check-discovery.py` PASS (15/5/1). Browser, storage and native NOT_RUN: a pure-module slice under the M2 evidence standard (H4). T71 and T73, and the browser halves of T69, T70 and T72, wait for PR B. [Record](M3_1_IMAGE_WORKFLOW_IMPLEMENTATION.md).
+
 ## M3 rows adopted — 2026-11-03
 
 Per [H11](DECISIONS.md#owner-rulings-h1h11--m31-image-workflow--2026-11-03), rows T69–T80 from [plan section 7](M3_1_IMAGE_WORKFLOW_PLAN.md#7-proposed-testing-rows) are added to the matrix below as NOT_RUN. T69–T73 belong to M3.1; T74–T80 wait for M3.2 and M3.3, which are not authorized. No evidence is claimed by this entry.

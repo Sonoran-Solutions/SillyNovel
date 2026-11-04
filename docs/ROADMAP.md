@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## M3.1 PR A candidate (draft, unmerged) — 2026-11-03
+
+Plan section 8 PR A is implemented on frozen `4b3a300` with [its record](M3_1_IMAGE_WORKFLOW_IMPLEMENTATION.md) and awaits owner review; PR B follows that review. Gate C NOT_RUN.
+
 ## M3.1 authorized — 2026-11-03
 
 [H1–H11 ruled](DECISIONS.md#owner-rulings-h1h11--m31-image-workflow--2026-11-03); [DYL-207](https://linear.app/devils17/issue/DYL-207/sillynovel-m31-manual-image-exchange-promptreference-export-explicit) implements plan section 8's M3.1 PR A and then PR B, each reviewed by the owner before the next. M3.2 planning takes up the deferred H3, H5, H6 and H7, including O05. Gate C stays gated.

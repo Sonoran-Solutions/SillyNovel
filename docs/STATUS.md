@@ -1,5 +1,9 @@
 # Project status
 
+## M3.1 PR A candidate (draft, unmerged) — 2026-11-03
+
+The pure image-workflow module is implemented on frozen `4b3a300` for owner review under [DYL-207](https://linear.app/devils17/issue/DYL-207/sillynovel-m31-manual-image-exchange-promptreference-export-explicit): draft checks with UTF-8 ceilings and strict keys, the one export text that the preview, Copy and Download share, fixed filenames, catalog and hash checks for at most three references, and the capture rule that refuses a delayed step after detach, a draft edit or A → B → A. Nothing imports it yet; runtime unchanged. Node 371/371 (9 new), discovery PASS 15/5/1; browser, storage and native NOT_RUN for a pure-module slice (H4). See the [record](M3_1_IMAGE_WORKFLOW_IMPLEMENTATION.md). PR B waits for the owner's review. Gate C NOT_RUN.
+
 ## M3.1 authorized (PRs A and B) — 2026-11-03
 
 The owner [ruled on H1–H11](DECISIONS.md#owner-rulings-h1h11--m31-image-workflow--2026-11-03) on the [M3.1 plan](M3_1_IMAGE_WORKFLOW_PLAN.md): M3.1 is authorized as two sequential PRs tracked by [DYL-207](https://linear.app/devils17/issue/DYL-207/sillynovel-m31-manual-image-exchange-promptreference-export-explicit), PR A (pure draft validator and export text builder, Node evidence) and then PR B (Image workflow disclosure, reference downloads, local preview, “Import and apply background”; full campaign). No image provider in M3.1. H3, H5, H6 and H7, including O05's first route, are deferred to M3.2 planning; H8, delegated to the agent, is an optional director session after M3.1. TESTING rows T69–T80 added as NOT_RUN. Runtime unchanged by this entry. Gate C NOT_RUN.
