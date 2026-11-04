@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## Gate B owner's session authorized — 2026-11-03
+
+[Step 5](DECISIONS.md#owner-authorization--gate-b-owners-session-on-candidate-6799a5e--2026-11-03) is authorized on candidate `6799a5e`; the owner runs it and supplies the verdict afterwards. No accuracy figure is promised.
+
 ## Gate B fixture evaluation measured — 2026-11-03
 
 [Step 4](DECISIONS.md#owner-authorization--gate-b-fixture-evaluation-on-candidate-6799a5e--2026-11-03) ran once on candidate `6799a5e` ([host decision](DECISIONS.md#owner-decision--gate-b-fixture-run-on-the-owners-regular-sillytavern-install--2026-11-03)); the per-category counts are in the Gate B record and no accuracy figure is derived from them. The owner's session and the verdict each wait on their own authorization.

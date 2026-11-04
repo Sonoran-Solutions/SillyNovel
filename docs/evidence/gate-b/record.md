@@ -17,7 +17,7 @@ Automated checks actually run: on 2026-11-02 from a checkout of 6799a5e:
   The campaign itself ran on e37d6b5 (tested revision), not on the candidate (current revision): reused evidence.
 Owner feedback (verbatim or clearly attributed): NOT_RUN
 Owner verdict: NOT_RUN
-Remaining blockers: step 3 (DYL-193 replay) done and accepted (merge cf31c38); step 4 (fixture evaluation) run and recorded (candidate record, unmerged until this file's PR merges); steps 5–6 (owner session, verdict) unauthorized and NOT_RUN
+Remaining blockers: step 3 (DYL-193 replay) done and accepted (merge cf31c38); step 4 (fixture evaluation) run and recorded (candidate record, unmerged until this file's PR merges); step 5 (owner session) authorized on 2026-11-03 and NOT_RUN; step 6 (verdict) waits on it
 Known limitations: the campaign is synthetic on the loopback endpoint; nothing here measures direction, latency or a real backend
 Evidence locations: docs/evidence/m2-4-d/campaign/ (package SHA-256 over sorted per-file hashes: 5b63e37f593995b91ab000b66ad969ee62fe3354797705dfc1bbdfd19bd00995); failed first run retained at docs/evidence/m2-4-d/failed-f74423d/
 
