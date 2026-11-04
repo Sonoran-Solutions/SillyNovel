@@ -1,0 +1,168 @@
+[
+  {
+    "name": "node",
+    "candidate": "0c858c8c0ac1d09e9d709acb2866b31d79901dd8",
+    "command": "node --test --test-isolation=none /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/prB/tests/m0.test.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/prB/tests/m1-reader-source.test.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/prB/tests/m1-source-prefix.test.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/prB/tests/m1-scene-reducer.test.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/prB/tests/m1-project-scene.test.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/prB/tests/m1-project-expressions.test.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/prB/tests/m2-director-proposal.test.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/prB/tests/m2-director-request.test.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/prB/tests/m2-director-controller.test.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/prB/tests/m2-director-overlay.test.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/prB/tests/m2-director-log.test.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/prB/tests/m2-gate-b-score.test.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/prB/tests/m3-image-workflow.test.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/prB/tests/probes/dyl19/owned-chat-probe.test.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/prB/tests/probes/dyl19/source-anchor.test.mjs",
+    "environment": {},
+    "startedUTC": "2026-11-04T04:32:31.454849+00:00",
+    "endedUTC": "2026-11-04T04:32:38.438924+00:00",
+    "elapsedSeconds": 6.984,
+    "exitCode": 0,
+    "log": "node.txt",
+    "checkpointCount": 0,
+    "tests": 373,
+    "pass": 373,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  {
+    "name": "storage",
+    "candidate": "0c858c8c0ac1d09e9d709acb2866b31d79901dd8",
+    "command": "node --test --test-isolation=none /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/prB/plugins/sillynovel-storage/test/bundle.test.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/prB/plugins/sillynovel-storage/test/cleanup.test.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/prB/plugins/sillynovel-storage/test/library.test.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/prB/plugins/sillynovel-storage/test/recovery.test.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/prB/plugins/sillynovel-storage/test/store.test.mjs",
+    "environment": {},
+    "startedUTC": "2026-11-04T04:32:38.449393+00:00",
+    "endedUTC": "2026-11-04T04:34:58.365288+00:00",
+    "elapsedSeconds": 139.916,
+    "exitCode": 0,
+    "log": "storage.txt",
+    "checkpointCount": 0,
+    "tests": 126,
+    "pass": 126,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  {
+    "name": "browser",
+    "candidate": "0c858c8c0ac1d09e9d709acb2866b31d79901dd8",
+    "command": "node --test --test-isolation=none /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/prB/tests/m1-reader-browser.test.mjs",
+    "environment": {},
+    "startedUTC": "2026-11-04T04:34:58.373846+00:00",
+    "endedUTC": "2026-11-04T04:37:14.641143+00:00",
+    "elapsedSeconds": 136.267,
+    "exitCode": 0,
+    "log": "browser.txt",
+    "checkpointCount": 0,
+    "tests": 105,
+    "pass": 105,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  {
+    "name": "stage-library-migration",
+    "candidate": "0c858c8c0ac1d09e9d709acb2866b31d79901dd8",
+    "command": "node tests/probes/project-portability/host.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/host/SillyTavern",
+    "environment": {
+      "SN_STAGE_UX_RUN": "1",
+      "SN_LIBRARY_RUN": "1",
+      "SN_MIGRATION_RUN": "1"
+    },
+    "startedUTC": "2026-11-04T04:37:14.647781+00:00",
+    "endedUTC": "2026-11-04T04:38:53.561690+00:00",
+    "elapsedSeconds": 98.914,
+    "exitCode": 0,
+    "log": "stage-library-migration.txt",
+    "checkpointCount": 25,
+    "ownedRoot": "/tmp/sn-portability-host-JDRf3D",
+    "result": "PASS"
+  },
+  {
+    "name": "expressions",
+    "candidate": "0c858c8c0ac1d09e9d709acb2866b31d79901dd8",
+    "command": "node tests/probes/project-portability/host.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/host/SillyTavern",
+    "environment": {
+      "SN_EXPRESSIONS_RUN": "1"
+    },
+    "startedUTC": "2026-11-04T04:38:53.573869+00:00",
+    "endedUTC": "2026-11-04T04:39:59.854321+00:00",
+    "elapsedSeconds": 66.28,
+    "exitCode": 0,
+    "log": "expressions.txt",
+    "checkpointCount": 16,
+    "ownedRoot": "/tmp/sn-portability-host-CnTLwn",
+    "result": "PASS"
+  },
+  {
+    "name": "groups",
+    "candidate": "0c858c8c0ac1d09e9d709acb2866b31d79901dd8",
+    "command": "node tests/probes/project-portability/host.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/host/SillyTavern",
+    "environment": {
+      "SN_GROUP_RUN": "1"
+    },
+    "startedUTC": "2026-11-04T04:39:59.865181+00:00",
+    "endedUTC": "2026-11-04T04:41:25.804498+00:00",
+    "elapsedSeconds": 85.939,
+    "exitCode": 0,
+    "log": "groups.txt",
+    "checkpointCount": 22,
+    "ownedRoot": "/tmp/sn-portability-host-yeZVib",
+    "result": "PASS"
+  },
+  {
+    "name": "recovery",
+    "candidate": "0c858c8c0ac1d09e9d709acb2866b31d79901dd8",
+    "command": "node tests/probes/project-portability/host.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/host/SillyTavern",
+    "environment": {
+      "SN_RECOVERY_RUN": "1"
+    },
+    "startedUTC": "2026-11-04T04:41:25.817968+00:00",
+    "endedUTC": "2026-11-04T04:42:15.270672+00:00",
+    "elapsedSeconds": 49.453,
+    "exitCode": 0,
+    "log": "recovery.txt",
+    "checkpointCount": 17,
+    "ownedRoot": "/tmp/sn-portability-host-2rrRLT",
+    "result": "PASS"
+  },
+  {
+    "name": "cleanup",
+    "candidate": "0c858c8c0ac1d09e9d709acb2866b31d79901dd8",
+    "command": "node tests/probes/project-portability/host.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/host/SillyTavern",
+    "environment": {
+      "SN_CLEANUP_RUN": "1"
+    },
+    "startedUTC": "2026-11-04T04:42:15.279703+00:00",
+    "endedUTC": "2026-11-04T04:43:37.769673+00:00",
+    "elapsedSeconds": 82.49,
+    "exitCode": 0,
+    "log": "cleanup.txt",
+    "checkpointCount": 21,
+    "ownedRoot": "/tmp/sn-portability-host-a3AjKO",
+    "result": "PASS"
+  },
+  {
+    "name": "native-integrity-branches",
+    "candidate": "0c858c8c0ac1d09e9d709acb2866b31d79901dd8",
+    "command": "node tests/probes/project-portability/host.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/host/SillyTavern",
+    "environment": {
+      "SN_CANDIDATE_RUN": "1"
+    },
+    "startedUTC": "2026-11-04T04:43:37.777139+00:00",
+    "endedUTC": "2026-11-04T04:45:00.283320+00:00",
+    "elapsedSeconds": 82.506,
+    "exitCode": 0,
+    "log": "native-integrity-branches.txt",
+    "checkpointCount": 18,
+    "ownedRoot": "/tmp/sn-portability-host-eNlAnA",
+    "result": "PASS"
+  },
+  {
+    "name": "director",
+    "candidate": "0c858c8c0ac1d09e9d709acb2866b31d79901dd8",
+    "command": "node tests/probes/m2-director/host.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/host/SillyTavern",
+    "environment": {},
+    "startedUTC": "2026-11-04T04:45:00.294939+00:00",
+    "endedUTC": "2026-11-04T05:00:21.489604+00:00",
+    "elapsedSeconds": 921.195,
+    "exitCode": 0,
+    "log": "director.txt",
+    "checkpointCount": 60,
+    "ownedRoot": "/tmp/sn-m2-director-mmm39I",
+    "result": "PASS"
+  }
+]
