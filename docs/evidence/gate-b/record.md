@@ -17,28 +17,28 @@ Automated checks actually run: on 2026-11-02 from a checkout of 6799a5e:
   The campaign itself ran on e37d6b5 (tested revision), not on the candidate (current revision): reused evidence.
 Owner feedback (verbatim or clearly attributed): NOT_RUN
 Owner verdict: NOT_RUN
-Remaining blockers: step 3 (DYL-193 replay) done and accepted (merge cf31c38); step 4 (fixture evaluation) authorized and NOT_RUN; steps 5–6 (owner session, verdict) unauthorized and NOT_RUN
+Remaining blockers: step 3 (DYL-193 replay) done and accepted (merge cf31c38); step 4 (fixture evaluation) run and recorded (candidate record, unmerged until this file's PR merges); steps 5–6 (owner session, verdict) unauthorized and NOT_RUN
 Known limitations: the campaign is synthetic on the loopback endpoint; nothing here measures direction, latency or a real backend
 Evidence locations: docs/evidence/m2-4-d/campaign/ (package SHA-256 over sorted per-file hashes: 5b63e37f593995b91ab000b66ad969ee62fe3354797705dfc1bbdfd19bd00995); failed first run retained at docs/evidence/m2-4-d/failed-f74423d/
 
 --- Fixture evaluation (plan 6.2) ---
-Authorization for the 40 requests (DECISIONS entry): docs/DECISIONS.md, “Owner authorization — Gate B fixture evaluation on candidate 6799a5e — 2026-11-03” (“Yes, authorize it”); run NOT_RUN
+Authorization for the 40 requests (DECISIONS entry): docs/DECISIONS.md, “Owner authorization — Gate B fixture evaluation on candidate 6799a5e — 2026-11-03” (“Yes, authorize it”); run on 2026-11-03, host per docs/DECISIONS.md, “Owner decision — Gate B fixture run on the owner's regular SillyTavern install — 2026-11-03”
 Expected-answers SHA-256 (tests/fixtures/m2-gate-b/expected-answers.sha256): ada4ff1ed766af87872a0b50973b95a0d7b652a0b773ddaeb0ad54a6804cacf5
 Commit that froze those answers, recorded before the first measurement: first committed at f74423d6c5802c828b488cc5c3574418b954b7de, unchanged at e37d6b5 and at 6799a5e
 PROMPT_VERSION: 0ef22635aed99352
-Connection class and model, as the owner reports them: NOT_RUN
-Runner command and deadline: NOT_RUN
-Results file and its SHA-256: NOT_RUN
-All cases run (scorer “All cases run”): NOT_RUN
+Connection class and model, as the owner reports them: OpenRouter chat completion, model Xiaomi MiMo-V2.6-Pro, provider DeepInfra, no fallback models or providers (the owner's host settings as the owner showed and confirmed them; the runner retained nothing about the connection). Host: the owner's regular SillyTavern install at ~/SillyTavern, release 1.18.0, git 8172dcd0e (not the pinned 1.19.0 7e8663c), with SillyNovel served by symlink from a checkout detached at the candidate; served src/director-request.mjs and src/host-adapter.mjs hash-equal to the candidate's
+Runner command and deadline: from a checkout at 6799a5e, `timeout --foreground -k 15 3900 node tests/probes/m2-gate-b/run.mjs --owner-accepts-40-requests --origin http://127.0.0.1:8000 --out results.json`, headed, 90 s per case; started 2026-11-04T02:39:32Z (2026-11-03 19:39 America/Phoenix); the owner selected the connection in the browser window and pressed Enter; all 40 cases settled within about two minutes; the runner printed “Finished: 40 cases, 0 not run” and then stayed alive, so it was sent SIGTERM and exited 143 at 02:46:25Z with the results file already complete (it is rewritten after every case). Two earlier launches were stopped by the kernel on reading the terminal because the wrapper ran timeout without --foreground; neither sent a request (fixture/runner.log is the successful launch's log)
+Results file and its SHA-256: docs/evidence/gate-b/fixture/results.json 0ee8748fd98431e4690a5060baad6a076a35de51a57aa794d16aa00d6e531c10; cases as sent in fixture/results-cases.json (SHA-256 ada4ff1ed766af87872a0b50973b95a0d7b652a0b773ddaeb0ad54a6804cacf5, equal to the expected-answers SHA); scorer output in fixture/score.txt; elapsed per case 542 ms min, 1681 ms median, 12889 ms max
+All cases run (scorer “All cases run”): yes; 40 sent, 36 scored, 4 refused (NOT_SINGLE_JSON), 0 failed, 0 not run
 Counts by category, copied from the scorer with no aggregate and no percentage:
-  presence: NOT_RUN
-  mentions: NOT_RUN
-  negation: NOT_RUN
-  hypothetical travel: NOT_RUN
-  flashbacks: NOT_RUN
-  outfit continuity: NOT_RUN
-  group authorship: NOT_RUN
-  user locks: NOT_RUN
+  presence: 5 cases, 5 scored, refused 0, failed 0, not run 0; background: correct 5, incorrect 0, abstained 0; presence: correct 12, incorrect 0, abstained 0; expression: correct 10, incorrect 2, abstained 0; noted: locked skips 0, repeated values 0, outfit updates 0, suggestions 0
+  mentions: 5 cases, 5 scored, refused 0, failed 0, not run 0; background: correct 5, incorrect 0, abstained 0; presence: correct 12, incorrect 0, abstained 0; expression: correct 9, incorrect 3, abstained 0; noted: locked skips 0, repeated values 0, outfit updates 0, suggestions 0
+  negation: 5 cases, 5 scored, refused 0, failed 0, not run 0; background: correct 5, incorrect 0, abstained 0; presence: correct 10, incorrect 0, abstained 0; expression: correct 7, incorrect 3, abstained 0; noted: locked skips 0, repeated values 0, outfit updates 0, suggestions 0
+  hypothetical travel: 5 cases, 4 scored, refused 1 (NOT_SINGLE_JSON 1), failed 0, not run 0; background: correct 4, incorrect 0, abstained 0; presence: correct 8, incorrect 0, abstained 0; expression: correct 7, incorrect 1, abstained 0; noted: locked skips 0, repeated values 0, outfit updates 0, suggestions 0
+  flashbacks: 5 cases, 5 scored, refused 0, failed 0, not run 0; background: correct 3, incorrect 2, abstained 0; presence: correct 9, incorrect 1, abstained 0; expression: correct 7, incorrect 3, abstained 0; noted: locked skips 0, repeated values 0, outfit updates 0, suggestions 0
+  outfit continuity: 5 cases, 5 scored, refused 0, failed 0, not run 0; background: correct 5, incorrect 0, abstained 0; presence: correct 10, incorrect 0, abstained 0; expression: correct 9, incorrect 1, abstained 0; outfit: correct 10, incorrect 0, abstained 0; noted: locked skips 0, repeated values 0, outfit updates 1, suggestions 0
+  group authorship: 5 cases, 4 scored, refused 1 (NOT_SINGLE_JSON 1), failed 0, not run 0; background: correct 4, incorrect 0, abstained 0; presence: correct 12, incorrect 0, abstained 0; expression: correct 12, incorrect 0, abstained 0; noted: locked skips 0, repeated values 0, outfit updates 0, suggestions 0
+  user locks: 5 cases, 3 scored, refused 2 (NOT_SINGLE_JSON 2), failed 0, not run 0; background: correct 3, incorrect 0, abstained 0; presence: correct 6, incorrect 0, abstained 0; expression: correct 4, incorrect 2, abstained 0; noted: locked skips 4, repeated values 0, outfit updates 0, suggestions 0
 Earlier measurements retained, if an answer changed (each with its SHA): none
 
 --- Hard gates, from the regression and native campaign on the frozen SHA ---
