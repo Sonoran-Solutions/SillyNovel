@@ -1,0 +1,704 @@
+{
+ "schemaVersion": 1,
+ "mode": "owner",
+ "candidate": "6799a5e74427b7b8052c39bb64cbb2fe0c408413",
+ "casesSha256": "ada4ff1ed766af87872a0b50973b95a0d7b652a0b773ddaeb0ad54a6804cacf5",
+ "promptVersion": "0ef22635aed99352",
+ "perCaseMs": 90000,
+ "startedUTC": "2026-11-04T02:39:32.043Z",
+ "results": [
+  {
+   "id": "presence-1",
+   "category": "presence",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "present": false,
+      "evidence": {
+       "sourceMessageKey": "session-source-102",
+       "excerpt": "He walks out of the tavern, and the door swings shut behind him."
+      }
+     }
+    ]
+   },
+   "elapsedMs": 1333
+  },
+  {
+   "id": "presence-2",
+   "category": "presence",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000003-0000-4000-8000-000000000003",
+      "present": true,
+      "evidence": {
+       "sourceMessageKey": "session-source-104",
+       "excerpt": "The door opens and Sage steps inside, shaking rain from a grey cloak."
+      }
+     }
+    ]
+   },
+   "elapsedMs": 2464
+  },
+  {
+   "id": "presence-3",
+   "category": "presence",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": []
+   },
+   "elapsedMs": 542
+  },
+  {
+   "id": "presence-4",
+   "category": "presence",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": []
+   },
+   "elapsedMs": 949
+  },
+  {
+   "id": "presence-5",
+   "category": "presence",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000003-0000-4000-8000-000000000003",
+      "expressionId": "temporary-expression:a0000025-0000-4000-8000-000000000025",
+      "present": false,
+      "evidence": {
+       "sourceMessageKey": "session-source-109",
+       "excerpt": "Sage bows to the table, climbs the stairs and is gone from the hall."
+      }
+     }
+    ]
+   },
+   "elapsedMs": 3587
+  },
+  {
+   "id": "mentions-1",
+   "category": "mentions",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": []
+   },
+   "elapsedMs": 1266
+  },
+  {
+   "id": "mentions-2",
+   "category": "mentions",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "evidence": {
+       "sourceMessageKey": "session-source-112",
+       "excerpt": "\"The harbor is lovely this time of year,\" Mira says, pouring another cup at the tavern table."
+      }
+     }
+    ]
+   },
+   "elapsedMs": 3584
+  },
+  {
+   "id": "mentions-3",
+   "category": "mentions",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "evidence": {
+       "sourceMessageKey": "session-source-113",
+       "excerpt": "Rowan slides a letter across the table."
+      }
+     }
+    ]
+   },
+   "elapsedMs": 2277
+  },
+  {
+   "id": "mentions-4",
+   "category": "mentions",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": []
+   },
+   "elapsedMs": 838
+  },
+  {
+   "id": "mentions-5",
+   "category": "mentions",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000003-0000-4000-8000-000000000003",
+      "present": true,
+      "expressionId": "temporary-expression:a0000025-0000-4000-8000-000000000025",
+      "evidence": {
+       "sourceMessageKey": "session-source-117",
+       "excerpt": "Sage pushes through the tavern door and drops a few coins on the bar."
+      }
+     },
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "evidence": {
+       "sourceMessageKey": "session-source-117",
+       "excerpt": "Rowan laughs out loud."
+      }
+     }
+    ]
+   },
+   "elapsedMs": 2748
+  },
+  {
+   "id": "negation-1",
+   "category": "negation",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "evidence": {
+       "sourceMessageKey": "session-source-118",
+       "excerpt": "Mira waits at the window until the candle burns low, but Rowan does not come."
+      }
+     }
+    ]
+   },
+   "elapsedMs": 2880
+  },
+  {
+   "id": "negation-2",
+   "category": "negation",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": []
+   },
+   "elapsedMs": 1005
+  },
+  {
+   "id": "negation-3",
+   "category": "negation",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "evidence": {
+       "sourceMessageKey": "session-source-120",
+       "excerpt": "Rowan points at the door. \"Go, if you want to.\""
+      }
+     }
+    ]
+   },
+   "elapsedMs": 2876
+  },
+  {
+   "id": "negation-4",
+   "category": "negation",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "evidence": {
+       "sourceMessageKey": "session-source-122",
+       "excerpt": "Mira does not smile, and she does not look up from her book either."
+      }
+     }
+    ]
+   },
+   "elapsedMs": 1810
+  },
+  {
+   "id": "negation-5",
+   "category": "negation",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setLocation",
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "evidence": {
+       "sourceMessageKey": "session-source-123",
+       "excerpt": "They walk on until they stand inside the library, and Mira closes its heavy door behind them."
+      }
+     }
+    ]
+   },
+   "elapsedMs": 1231
+  },
+  {
+   "id": "hypothetical-travel-1",
+   "category": "hypothetical travel",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "evidence": {
+       "sourceMessageKey": "session-source-124",
+       "excerpt": "\"If we went to the harbor, we could catch the morning boat,\" Rowan says, and takes another bite of bread."
+      }
+     }
+    ]
+   },
+   "elapsedMs": 1854
+  },
+  {
+   "id": "hypothetical-travel-2",
+   "category": "hypothetical travel",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": []
+   },
+   "elapsedMs": 682
+  },
+  {
+   "id": "hypothetical-travel-3",
+   "category": "hypothetical travel",
+   "status": "refused",
+   "code": "NOT_SINGLE_JSON",
+   "elapsedMs": 4519
+  },
+  {
+   "id": "hypothetical-travel-4",
+   "category": "hypothetical travel",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": []
+   },
+   "elapsedMs": 1277
+  },
+  {
+   "id": "hypothetical-travel-5",
+   "category": "hypothetical travel",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setLocation",
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "evidence": {
+       "sourceMessageKey": "session-source-130",
+       "excerpt": "They have reached the harbor at last, and Mira sets down her bag on the pier."
+      }
+     }
+    ]
+   },
+   "elapsedMs": 1521
+  },
+  {
+   "id": "flashbacks-1",
+   "category": "flashbacks",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "evidence": {
+       "sourceMessageKey": "session-source-131",
+       "excerpt": "Mira remembered the summer at the harbor, when Rowan still lived above the chandler and sang off key every morning."
+      }
+     }
+    ]
+   },
+   "elapsedMs": 1712
+  },
+  {
+   "id": "flashbacks-2",
+   "category": "flashbacks",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setLocation",
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "evidence": {
+       "sourceMessageKey": "session-source-132",
+       "excerpt": "Years ago, in the forest, Sage had pulled her out of the river."
+      }
+     },
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000003-0000-4000-8000-000000000003",
+      "present": true,
+      "evidence": {
+       "sourceMessageKey": "session-source-132",
+       "excerpt": "Sage had pulled her out of the river. Mira touches the old scar on her wrist and says nothing."
+      }
+     }
+    ]
+   },
+   "elapsedMs": 2677
+  },
+  {
+   "id": "flashbacks-3",
+   "category": "flashbacks",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setLocation",
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "evidence": {
+       "sourceMessageKey": "session-source-133",
+       "excerpt": "Ten years earlier the market had been bright with banners."
+      }
+     }
+    ]
+   },
+   "elapsedMs": 1082
+  },
+  {
+   "id": "flashbacks-4",
+   "category": "flashbacks",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "evidence": {
+       "sourceMessageKey": "session-source-134",
+       "excerpt": "\"I left the library that night and never went back,\" Rowan says quietly, turning his mug on the table."
+      }
+     }
+    ]
+   },
+   "elapsedMs": 1651
+  },
+  {
+   "id": "flashbacks-5",
+   "category": "flashbacks",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "present": true,
+      "evidence": {
+       "sourceMessageKey": "session-source-135",
+       "excerpt": "Mira looks up as Rowan comes back through the tavern door."
+      }
+     },
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "evidence": {
+       "sourceMessageKey": "session-source-135",
+       "excerpt": "Mira looks up as Rowan comes back through the tavern door."
+      }
+     }
+    ]
+   },
+   "elapsedMs": 1896
+  },
+  {
+   "id": "outfit-continuity-1",
+   "category": "outfit continuity",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "outfitId": "a0000001-0000-4000-8000-000000000001:a0000031-0000-4000-8000-000000000031",
+      "evidence": {
+       "sourceMessageKey": "session-source-136",
+       "excerpt": "Mira changes into a blue travelling dress behind the screen and comes back to the table."
+      }
+     }
+    ]
+   },
+   "elapsedMs": 1828
+  },
+  {
+   "id": "outfit-continuity-2",
+   "category": "outfit continuity",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "evidence": {
+       "sourceMessageKey": "session-source-137",
+       "excerpt": "Rowan throws on his heavy coat and laughs with delight."
+      }
+     }
+    ]
+   },
+   "elapsedMs": 1230
+  },
+  {
+   "id": "outfit-continuity-3",
+   "category": "outfit continuity",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": []
+   },
+   "elapsedMs": 594
+  },
+  {
+   "id": "outfit-continuity-4",
+   "category": "outfit continuity",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": []
+   },
+   "elapsedMs": 679
+  },
+  {
+   "id": "outfit-continuity-5",
+   "category": "outfit continuity",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "evidence": {
+       "sourceMessageKey": "session-source-141",
+       "excerpt": "Mira slips into the ball gown and spins once, beaming with joy."
+      }
+     }
+    ]
+   },
+   "elapsedMs": 1562
+  },
+  {
+   "id": "group-authorship-1",
+   "category": "group authorship",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "present": false,
+      "evidence": {
+       "sourceMessageKey": "session-source-143",
+       "excerpt": "I shoulder my pack, nod to the table and walk out of the tavern into the rain."
+      }
+     }
+    ]
+   },
+   "elapsedMs": 1156
+  },
+  {
+   "id": "group-authorship-2",
+   "category": "group authorship",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "evidence": {
+       "sourceMessageKey": "session-source-145",
+       "excerpt": "I laugh out loud, delighted, and take the ring from his hand."
+      }
+     }
+    ]
+   },
+   "elapsedMs": 1727
+  },
+  {
+   "id": "group-authorship-3",
+   "category": "group authorship",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000003-0000-4000-8000-000000000003",
+      "expressionId": "temporary-expression:a0000026-0000-4000-8000-000000000026",
+      "evidence": {
+       "sourceMessageKey": "session-source-147",
+       "excerpt": "I lower my eyes, close to tears, and cannot finish my drink."
+      }
+     }
+    ]
+   },
+   "elapsedMs": 1725
+  },
+  {
+   "id": "group-authorship-4",
+   "category": "group authorship",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": []
+   },
+   "elapsedMs": 1257
+  },
+  {
+   "id": "group-authorship-5",
+   "category": "group authorship",
+   "status": "refused",
+   "code": "NOT_SINGLE_JSON",
+   "elapsedMs": 12889
+  },
+  {
+   "id": "user-locks-1",
+   "category": "user locks",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setLocation",
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "evidence": {
+       "sourceMessageKey": "session-source-151",
+       "excerpt": "They have reached the harbor at last, and Mira sets down her bag on the pier."
+      }
+     }
+    ]
+   },
+   "elapsedMs": 1496
+  },
+  {
+   "id": "user-locks-2",
+   "category": "user locks",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "present": false,
+      "evidence": {
+       "sourceMessageKey": "session-source-152",
+       "excerpt": "Rowan drains his mug, stands and walks out of the tavern without a word."
+      }
+     }
+    ]
+   },
+   "elapsedMs": 1529
+  },
+  {
+   "id": "user-locks-3",
+   "category": "user locks",
+   "status": "refused",
+   "code": "NOT_SINGLE_JSON",
+   "elapsedMs": 1987
+  },
+  {
+   "id": "user-locks-4",
+   "category": "user locks",
+   "status": "refused",
+   "code": "NOT_SINGLE_JSON",
+   "elapsedMs": 3729
+  },
+  {
+   "id": "user-locks-5",
+   "category": "user locks",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setLocation",
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "evidence": {
+       "sourceMessageKey": "session-source-155",
+       "excerpt": "they walk into the market"
+      }
+     },
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "evidence": {
+       "sourceMessageKey": "session-source-155",
+       "excerpt": "Mira beams with joy"
+      }
+     },
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "present": false,
+      "evidence": {
+       "sourceMessageKey": "session-source-155",
+       "excerpt": "Rowan runs ahead toward the far stalls and out of sight"
+      }
+     }
+    ]
+   },
+   "elapsedMs": 2500
+  }
+ ]
+}

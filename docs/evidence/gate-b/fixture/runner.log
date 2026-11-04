@@ -1,0 +1,44 @@
+checkout 6799a5e74427b7b8052c39bb64cbb2fe0c408413 host http://127.0.0.1:8000 out /tmp/claude-1000/-home-dq-Projects-SillyNovel/1f0222ed-285a-41b7-9ffc-fd36c21e53b9/scratchpad/gateb-run/results.json started 2026-11-04T02:39:32Z
+In the browser window: sign in if needed and select the connection by hand. Then press Enter here to send 40 requests one at a time, or Ctrl+C. 1/40 presence-1 proposal 1333 ms
+2/40 presence-2 proposal 2464 ms
+3/40 presence-3 proposal 542 ms
+4/40 presence-4 proposal 949 ms
+5/40 presence-5 proposal 3587 ms
+6/40 mentions-1 proposal 1266 ms
+7/40 mentions-2 proposal 3584 ms
+8/40 mentions-3 proposal 2277 ms
+9/40 mentions-4 proposal 838 ms
+10/40 mentions-5 proposal 2748 ms
+11/40 negation-1 proposal 2880 ms
+12/40 negation-2 proposal 1005 ms
+13/40 negation-3 proposal 2876 ms
+14/40 negation-4 proposal 1810 ms
+15/40 negation-5 proposal 1231 ms
+16/40 hypothetical-travel-1 proposal 1854 ms
+17/40 hypothetical-travel-2 proposal 682 ms
+18/40 hypothetical-travel-3 refused NOT_SINGLE_JSON 4519 ms
+19/40 hypothetical-travel-4 proposal 1277 ms
+20/40 hypothetical-travel-5 proposal 1521 ms
+21/40 flashbacks-1 proposal 1712 ms
+22/40 flashbacks-2 proposal 2677 ms
+23/40 flashbacks-3 proposal 1082 ms
+24/40 flashbacks-4 proposal 1651 ms
+25/40 flashbacks-5 proposal 1896 ms
+26/40 outfit-continuity-1 proposal 1828 ms
+27/40 outfit-continuity-2 proposal 1230 ms
+28/40 outfit-continuity-3 proposal 594 ms
+29/40 outfit-continuity-4 proposal 679 ms
+30/40 outfit-continuity-5 proposal 1562 ms
+31/40 group-authorship-1 proposal 1156 ms
+32/40 group-authorship-2 proposal 1727 ms
+33/40 group-authorship-3 proposal 1725 ms
+34/40 group-authorship-4 proposal 1257 ms
+35/40 group-authorship-5 refused NOT_SINGLE_JSON 12889 ms
+36/40 user-locks-1 proposal 1496 ms
+37/40 user-locks-2 proposal 1529 ms
+38/40 user-locks-3 refused NOT_SINGLE_JSON 1987 ms
+39/40 user-locks-4 refused NOT_SINGLE_JSON 3729 ms
+40/40 user-locks-5 proposal 2500 ms
+Finished: 40 cases, 0 not run. Results /tmp/claude-1000/-home-dq-Projects-SillyNovel/1f0222ed-285a-41b7-9ffc-fd36c21e53b9/scratchpad/gateb-run/results.json
+Stopping: 143
+runner exit 143 finished 2026-11-04T02:46:25Z
