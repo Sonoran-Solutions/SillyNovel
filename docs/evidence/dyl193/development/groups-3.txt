@@ -1,0 +1,68 @@
+Owned evidence root /tmp/sn-dyl193-groups-oVzPFU
+AssertionError [ERR_ASSERTION]: the branch is the parent prefix through message 2, byte for byte apart from host bookmarking fields
++ actual - expected
+... Skipped lines
+
+  [
+    {
+      extra: {},
+      is_system: false,
+      is_user: false,
+...
+      send_date: '2026-11-02T12:00:00.000Z',
++     swipe_id: 0,
++     swipe_info: [
++       {
++         extra: {},
++         send_date: '2026-11-02T12:00:00.000Z'
++       }
++     ],
++     swipes: [
++       'I brought the map back.'
++     ]
+    },
+    {
+      extra: {},
+      is_system: false,
+      is_user: false,
+...
+      send_date: '2026-11-02T12:00:00.000Z',
++     swipe_id: 0,
++     swipe_info: [
++       {
++         extra: {},
++         send_date: '2026-11-02T12:00:00.000Z'
++       }
++     ],
++     swipes: [
++       'I brought the map back.'
++     ]
+    },
+    {
+      extra: {},
+      is_system: false,
+      is_user: false,
+...
+      send_date: '2026-11-02T12:00:00.000Z',
++     swipe_id: 0,
++     swipe_info: [
++       {
++         extra: {},
++         send_date: '2026-11-02T12:00:00.000Z'
++       }
++     ],
++     swipes: [
++       'Two Miras, two different errands. Please choose your actor deliberately.'
++     ]
+    }
+  ]
+
+    at file:///home/dq/Projects/SillyNovel/.claude/worktrees/nervous-hypatia-a73027/tests/probes/dyl193/host.mjs:340:16 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: [Array],
+  expected: [Array],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+Evidence /tmp/sn-dyl193-groups-oVzPFU/evidence.json

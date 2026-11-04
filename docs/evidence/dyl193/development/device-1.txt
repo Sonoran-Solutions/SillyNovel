@@ -1,0 +1,15 @@
+Owned evidence root /tmp/sn-dyl193-device-3ttjOI
+PASS access: loopback host reached through adb reverse 8760; secure context; provider host-only; synthetic account only
+PASS touch: file picker: {"beforeFocus":"Window{334c9f6 u0 com.brave.browser/org.chromium.chrome.browser.ChromeTabbedActivity}","pickerFocus":"Window{7c66062 u0 com.google.android.photopicker/com.android.photopicker.MainActivity}","afterBack":"Window{334c9f6 u0 com.brave.browser/org.chromium.chrome.browser.ChromeTabbedActivity}","pickerOpened":true}
+PASS reply field reachable with "Why this visual?" open at the device's current scale (font scale 1.0, page scale 1)
+PASS keyboard: composer inside the visual viewport with the on-screen keyboard open: {"innerWidth":1317,"innerHeight":650,"dpr":2.125,"visualViewport":[1318,316],"scale":1,"orientation":"landscape-primary","reducedMotion":false,"dialogue":[342,465,622,149],"why":[342,296,622,112],"composer":[406,279,539,37],"stage":[329,35,659,242],"fontSize":"15.75px"}
+PASS 200 % zoom by real pinch: visualViewport.scale after a 2x pinch: 1.9999998807907104; host viewport meta: width=device-width, viewport-fit=cover, initial-scale=1, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content. Browser page-zoom and force-enable-zoom are settings and were not changed.
+NOT_TESTED increased text scaling: device font_scale 1.0 unchanged; the Android font size and the browser text scaling are settings and were not changed.
+NOT_TESTED reduced motion as a system preference: animator_duration_scale null (default), prefers-reduced-motion on the page: false; Remove animations is a setting and was not changed.
+NOT_TESTED screen reader: enabled_accessibility_services null; TalkBack was not enabled and no screen reader was run.
+page.waitForFunction: Timeout 25000ms exceeded.
+    at /home/dq/Projects/SillyNovel/.claude/worktrees/nervous-hypatia-a73027/tests/probes/dyl193/device.mjs:156:16 {
+  log: [],
+  name: 'TimeoutError'
+}
+Evidence /tmp/sn-dyl193-device-3ttjOI/evidence.json

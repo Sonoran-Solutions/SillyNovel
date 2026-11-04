@@ -1,0 +1,4 @@
+Owned evidence root /tmp/sn-dyl193-groups-jn01Ih
+PASS groups: host Create branch at message 2 of the six-message four-card group opened a new group chat detached, no sprites, no temporary expression; explicit reopen restored the saved global layout only; native files outside the group record and group chat folder byte-identical
+PASS groups: host Create checkpoint at message 3 kept the attachment (no chat switch); opening the checkpoint through the flag detached with no sprites and no temporary expression; returning to the parent never reattached; saved project byte-equal throughout; every native file outside the group record and group chat folder byte-identical
+Evidence /tmp/sn-dyl193-groups-jn01Ih/evidence.json

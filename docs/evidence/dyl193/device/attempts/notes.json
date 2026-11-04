@@ -1,0 +1,29 @@
+{
+  "purpose": "Device probe attempts before the retained run (run 4). Each failure or gap was a probe correction; no runtime file changed; the device was never paired, unlocked, installed to or re-configured.",
+  "attempts": [
+    {
+      "run": 1,
+      "log": "development/device-1.txt",
+      "outcome": "FAIL (probe): a real pinch reached scale 2.0 but the probe did not pinch back before the next touch, so the following touches missed; no audit was taken at scale 2",
+      "correction": "audit reachability at the pinched scale, then pinch back to 1 and assert it"
+    },
+    {
+      "run": 2,
+      "log": "development/device-2.txt",
+      "outcome": "PASS exit 0, but the pinch left scale 1.0 and the export tap left no file in Downloads",
+      "correction": "retry the pinch; observe the page's own export request and bytes and list windows read-only"
+    },
+    {
+      "run": 3,
+      "log": "development/device-3.txt",
+      "outcome": "PASS exit 0; three pinch attempts stayed at 1.0 in a CDP-created tab; export request observed (200, bytes identical), no file in Downloads",
+      "correction": "open the tab through the browser's VIEW intent as in run 1; add a read-only media-store query (its projection syntax was wrong and it returned usage text; harmless)"
+    },
+    {
+      "run": 4,
+      "log": "development/device-4.txt",
+      "outcome": "PASS, retained as device/evidence.json: pinch 2.0 with audit, scale restored to 1",
+      "correction": null
+    }
+  ]
+}

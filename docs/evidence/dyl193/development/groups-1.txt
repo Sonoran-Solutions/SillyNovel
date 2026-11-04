@@ -1,0 +1,19 @@
+Owned evidence root /tmp/sn-dyl193-groups-9tvE9W
+AssertionError [ERR_ASSERTION]: branch: every native file outside the host-owned group record and group chat folder is byte-identical
++ actual - expected
+
++ [
++   'default-user/settings.json'
++ ]
+- []
+
+    at compare (file:///home/dq/Projects/SillyNovel/.claude/worktrees/nervous-hypatia-a73027/tests/probes/dyl193/host.mjs:304:20)
+    at file:///home/dq/Projects/SillyNovel/.claude/worktrees/nervous-hypatia-a73027/tests/probes/dyl193/host.mjs:328:34 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: [Array],
+  expected: [],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+Evidence /tmp/sn-dyl193-groups-9tvE9W/evidence.json

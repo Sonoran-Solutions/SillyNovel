@@ -1,0 +1,18 @@
+Owned evidence root /tmp/sn-dyl193-scaling-0xtJ1k
+AssertionError [ERR_ASSERTION]: zoom200-css-zoom-dpr2
++ actual - expected
+
++ [
++   'document scrolls horizontally'
++ ]
+- []
+
+    at file:///home/dq/Projects/SillyNovel/.claude/worktrees/nervous-hypatia-a73027/tests/probes/dyl193/host.mjs:182:51 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: [Array],
+  expected: [],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+Evidence /tmp/sn-dyl193-scaling-0xtJ1k/evidence.json

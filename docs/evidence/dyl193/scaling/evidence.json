@@ -1,0 +1,706 @@
+{
+  "row": "scaling",
+  "synthetic": true,
+  "candidate": "133428768500373f36195928aff06a5bc9b21abb",
+  "host": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
+  "node": "v26.8.1",
+  "checks": [
+    "SYNTHETIC scaling: reader readable, navigation and 46 controls reachable, reply field reachable and focusable with the disclosure open, cleanup list unclipped, no clipped stage content at baseline, 200 % viewport zoom (DPR 2), CSS zoom 2 (DPR 2), root font 200 % and host font scale 2"
+  ],
+  "problems": [],
+  "screenshots": [
+    "scaling-baseline-1440x1100-dpr1-why-open.png",
+    "scaling-baseline-1440x1100-dpr1-reader.png",
+    "scaling-zoom200-viewport-720x550-dpr2-why-open.png",
+    "scaling-zoom200-viewport-720x550-dpr2-reader.png",
+    "scaling-zoom200-css-zoom-dpr2-why-open.png",
+    "scaling-zoom200-css-zoom-dpr2-reader.png",
+    "scaling-root-font-size-200-why-open.png",
+    "scaling-root-font-size-200-reader.png",
+    "scaling-host-font-scale-2-why-open.png",
+    "scaling-host-font-scale-2-reader.png"
+  ],
+  "notTested": [
+    "Physical tablet (no device attached)",
+    "Real screen reader",
+    "System-level reduced-motion or font-size settings",
+    "Real browser zoom control (emulated only)",
+    "Touch digitizer and soft keyboard",
+    "Native confirm() dialog geometry"
+  ],
+  "browser": "151.0.7922.34",
+  "variants": [
+    {
+      "name": "baseline-1440x1100-dpr1",
+      "metrics": {
+        "innerWidth": 1440,
+        "innerHeight": 1100,
+        "dpr": 1,
+        "visualScale": 1,
+        "rootZoom": "",
+        "rootFontSize": "16px",
+        "hostFontScale": "1",
+        "documentScrollWidth": 1440,
+        "scrollsHorizontally": false,
+        "dialogueFontSize": "15.75px",
+        "reducedMotion": false
+      },
+      "dialogue": {
+        "height": 275,
+        "text": 60,
+        "fitsHorizontally": true,
+        "scrollable": false
+      },
+      "navigation": [
+        {
+          "what": "button Previous",
+          "box": [
+            373,
+            1003,
+            83,
+            44
+          ],
+          "inViewport": true,
+          "hit": true,
+          "label": "Previous",
+          "ok": true
+        },
+        {
+          "what": "button Next",
+          "box": [
+            462,
+            1003,
+            55,
+            44
+          ],
+          "inViewport": true,
+          "hit": true,
+          "label": "Next",
+          "ok": true
+        },
+        {
+          "what": "button Backlog",
+          "box": [
+            523,
+            1003,
+            78,
+            44
+          ],
+          "inViewport": true,
+          "hit": true,
+          "label": "Backlog",
+          "ok": true
+        },
+        {
+          "what": "button Jump to Latest",
+          "box": [
+            608,
+            1003,
+            122,
+            44
+          ],
+          "inViewport": true,
+          "hit": true,
+          "label": "Jump to Latest",
+          "ok": true
+        },
+        {
+          "what": "button Copy message",
+          "box": [
+            742,
+            1003,
+            123,
+            44
+          ],
+          "inViewport": true,
+          "hit": true,
+          "label": "Copy message",
+          "ok": true
+        }
+      ],
+      "controlsAudited": 45,
+      "controlsShorterThan44": [],
+      "why": {
+        "open": true,
+        "height": 300,
+        "insideStage": true,
+        "bodyScrollable": true,
+        "text": 646
+      },
+      "reply": {
+        "what": "reply field with disclosure open",
+        "box": [
+          437,
+          1062,
+          601,
+          37
+        ],
+        "inViewport": true,
+        "hit": true,
+        "label": "",
+        "ok": true,
+        "focusable": true
+      },
+      "cleanup": [
+        {
+          "what": "cleanup checkbox",
+          "box": [
+            394,
+            361,
+            44,
+            44
+          ],
+          "inViewport": true,
+          "hit": true,
+          "label": "",
+          "ok": true,
+          "fits": true
+        }
+      ],
+      "clippedOutsideArt": [],
+      "problems": []
+    },
+    {
+      "name": "zoom200-viewport-720x550-dpr2",
+      "metrics": {
+        "innerWidth": 720,
+        "innerHeight": 550,
+        "dpr": 2,
+        "visualScale": 1,
+        "rootZoom": "",
+        "rootFontSize": "16px",
+        "hostFontScale": "1",
+        "documentScrollWidth": 720,
+        "scrollsHorizontally": false,
+        "dialogueFontSize": "15.75px",
+        "reducedMotion": false
+      },
+      "dialogue": {
+        "height": 88,
+        "text": 60,
+        "fitsHorizontally": true,
+        "scrollable": false
+      },
+      "navigation": [
+        {
+          "what": "button Previous",
+          "box": [
+            6,
+            464,
+            83,
+            44
+          ],
+          "inViewport": true,
+          "hit": true,
+          "label": "Previous",
+          "ok": true
+        },
+        {
+          "what": "button Next",
+          "box": [
+            95,
+            464,
+            55,
+            44
+          ],
+          "inViewport": true,
+          "hit": true,
+          "label": "Next",
+          "ok": true
+        },
+        {
+          "what": "button Backlog",
+          "box": [
+            156,
+            464,
+            78,
+            44
+          ],
+          "inViewport": true,
+          "hit": true,
+          "label": "Backlog",
+          "ok": true
+        },
+        {
+          "what": "button Jump to Latest",
+          "box": [
+            240,
+            464,
+            122,
+            44
+          ],
+          "inViewport": true,
+          "hit": true,
+          "label": "Jump to Latest",
+          "ok": true
+        },
+        {
+          "what": "button Copy message",
+          "box": [
+            375,
+            464,
+            123,
+            44
+          ],
+          "inViewport": true,
+          "hit": true,
+          "label": "Copy message",
+          "ok": true
+        }
+      ],
+      "controlsAudited": 46,
+      "controlsShorterThan44": [],
+      "why": {
+        "open": true,
+        "height": 111,
+        "insideStage": true,
+        "bodyScrollable": true,
+        "text": 646
+      },
+      "reply": {
+        "what": "reply field with disclosure open",
+        "box": [
+          77,
+          512,
+          601,
+          37
+        ],
+        "inViewport": true,
+        "hit": true,
+        "label": "",
+        "ok": true,
+        "focusable": true
+      },
+      "cleanup": [
+        {
+          "what": "cleanup checkbox",
+          "box": [
+            23,
+            194,
+            44,
+            44
+          ],
+          "inViewport": true,
+          "hit": true,
+          "label": "",
+          "ok": true,
+          "fits": true
+        }
+      ],
+      "clippedOutsideArt": [],
+      "problems": []
+    },
+    {
+      "name": "zoom200-css-zoom-dpr2",
+      "metrics": {
+        "innerWidth": 1440,
+        "innerHeight": 1100,
+        "dpr": 2,
+        "visualScale": 1,
+        "rootZoom": "2",
+        "rootFontSize": "16px",
+        "hostFontScale": "1",
+        "documentScrollWidth": 2880,
+        "scrollsHorizontally": true,
+        "dialogueFontSize": "15.75px",
+        "reducedMotion": false,
+        "overflowing": [
+          {
+            "path": "div#expression-wrapper",
+            "right": 2880,
+            "stage": false
+          }
+        ],
+        "hostOverflowOnly": true
+      },
+      "dialogue": {
+        "height": 320,
+        "text": 60,
+        "fitsHorizontally": true,
+        "scrollable": false
+      },
+      "navigation": [
+        {
+          "what": "button Previous",
+          "box": [
+            26,
+            905,
+            165,
+            88
+          ],
+          "inViewport": true,
+          "hit": true,
+          "label": "Previous",
+          "ok": true
+        },
+        {
+          "what": "button Next",
+          "box": [
+            203,
+            905,
+            112,
+            88
+          ],
+          "inViewport": true,
+          "hit": true,
+          "label": "Next",
+          "ok": true
+        },
+        {
+          "what": "button Backlog",
+          "box": [
+            328,
+            905,
+            157,
+            88
+          ],
+          "inViewport": true,
+          "hit": true,
+          "label": "Backlog",
+          "ok": true
+        },
+        {
+          "what": "button Jump to Latest",
+          "box": [
+            497,
+            905,
+            250,
+            88
+          ],
+          "inViewport": true,
+          "hit": true,
+          "label": "Jump to Latest",
+          "ok": true
+        },
+        {
+          "what": "button Copy message",
+          "box": [
+            772,
+            905,
+            248,
+            88
+          ],
+          "inViewport": true,
+          "hit": true,
+          "label": "Copy message",
+          "ok": true
+        }
+      ],
+      "controlsAudited": 46,
+      "controlsShorterThan44": [],
+      "why": {
+        "open": true,
+        "height": 599,
+        "insideStage": true,
+        "bodyScrollable": true,
+        "text": 646
+      },
+      "reply": {
+        "what": "reply field with disclosure open",
+        "box": [
+          154,
+          1023,
+          1201,
+          73
+        ],
+        "inViewport": true,
+        "hit": true,
+        "label": "",
+        "ok": true,
+        "focusable": true
+      },
+      "cleanup": [
+        {
+          "what": "cleanup checkbox",
+          "box": [
+            68,
+            506,
+            88,
+            88
+          ],
+          "inViewport": true,
+          "hit": true,
+          "label": "",
+          "ok": true,
+          "fits": true
+        }
+      ],
+      "clippedOutsideArt": [],
+      "problems": []
+    },
+    {
+      "name": "root-font-size-200",
+      "metrics": {
+        "innerWidth": 1440,
+        "innerHeight": 1100,
+        "dpr": 1,
+        "visualScale": 1,
+        "rootZoom": "",
+        "rootFontSize": "32px",
+        "hostFontScale": "1",
+        "documentScrollWidth": 1440,
+        "scrollsHorizontally": false,
+        "dialogueFontSize": "15.75px",
+        "reducedMotion": false
+      },
+      "dialogue": {
+        "height": 160,
+        "text": 60,
+        "fitsHorizontally": true,
+        "scrollable": false
+      },
+      "navigation": [
+        {
+          "what": "button Previous",
+          "box": [
+            385,
+            987,
+            104,
+            48
+          ],
+          "inViewport": true,
+          "hit": true,
+          "label": "Previous",
+          "ok": true
+        },
+        {
+          "what": "button Next",
+          "box": [
+            501,
+            987,
+            76,
+            48
+          ],
+          "inViewport": true,
+          "hit": true,
+          "label": "Next",
+          "ok": true
+        },
+        {
+          "what": "button Backlog",
+          "box": [
+            590,
+            987,
+            99,
+            48
+          ],
+          "inViewport": true,
+          "hit": true,
+          "label": "Backlog",
+          "ok": true
+        },
+        {
+          "what": "button Jump to Latest",
+          "box": [
+            701,
+            987,
+            143,
+            48
+          ],
+          "inViewport": true,
+          "hit": true,
+          "label": "Jump to Latest",
+          "ok": true
+        },
+        {
+          "what": "button Copy message",
+          "box": [
+            869,
+            987,
+            144,
+            48
+          ],
+          "inViewport": true,
+          "hit": true,
+          "label": "Copy message",
+          "ok": true
+        }
+      ],
+      "controlsAudited": 46,
+      "controlsShorterThan44": [],
+      "why": {
+        "open": true,
+        "height": 292,
+        "insideStage": true,
+        "bodyScrollable": true,
+        "text": 646
+      },
+      "reply": {
+        "what": "reply field with disclosure open",
+        "box": [
+          437,
+          1062,
+          601,
+          37
+        ],
+        "inViewport": true,
+        "hit": true,
+        "label": "",
+        "ok": true,
+        "focusable": true
+      },
+      "cleanup": [
+        {
+          "what": "cleanup checkbox",
+          "box": [
+            422,
+            403,
+            44,
+            44
+          ],
+          "inViewport": true,
+          "hit": true,
+          "label": "",
+          "afterMinimalScroll": {
+            "box": [
+              422,
+              269,
+              44,
+              44
+            ],
+            "inViewport": true,
+            "hit": false,
+            "coveredBy": "summary \"Manual scene controls\" at [241,293] (stage)",
+            "label": ""
+          },
+          "ok": true,
+          "fits": true
+        }
+      ],
+      "clippedOutsideArt": [],
+      "problems": []
+    },
+    {
+      "name": "host-font-scale-2",
+      "metrics": {
+        "innerWidth": 1440,
+        "innerHeight": 1100,
+        "dpr": 1,
+        "visualScale": 1,
+        "rootZoom": "",
+        "rootFontSize": "16px",
+        "hostFontScale": "2",
+        "documentScrollWidth": 1440,
+        "scrollsHorizontally": false,
+        "dialogueFontSize": "31.5px",
+        "reducedMotion": false
+      },
+      "dialogue": {
+        "height": 160,
+        "text": 60,
+        "fitsHorizontally": true,
+        "scrollable": true
+      },
+      "navigation": [
+        {
+          "what": "button Previous",
+          "box": [
+            373,
+            894,
+            142,
+            56
+          ],
+          "inViewport": true,
+          "hit": true,
+          "label": "Previous",
+          "ok": true
+        },
+        {
+          "what": "button Next",
+          "box": [
+            521,
+            894,
+            89,
+            56
+          ],
+          "inViewport": true,
+          "hit": true,
+          "label": "Next",
+          "ok": true
+        },
+        {
+          "what": "button Backlog",
+          "box": [
+            616,
+            894,
+            134,
+            56
+          ],
+          "inViewport": true,
+          "hit": true,
+          "label": "Backlog",
+          "ok": true
+        },
+        {
+          "what": "button Jump to Latest",
+          "box": [
+            757,
+            894,
+            227,
+            56
+          ],
+          "inViewport": true,
+          "hit": true,
+          "label": "Jump to Latest",
+          "ok": true
+        },
+        {
+          "what": "button Copy message",
+          "box": [
+            373,
+            956,
+            225,
+            56
+          ],
+          "inViewport": true,
+          "hit": true,
+          "label": "Copy message",
+          "ok": true
+        }
+      ],
+      "controlsAudited": 46,
+      "controlsShorterThan44": [],
+      "why": {
+        "open": true,
+        "height": 279,
+        "insideStage": true,
+        "bodyScrollable": true,
+        "text": 646
+      },
+      "reply": {
+        "what": "reply field with disclosure open",
+        "box": [
+          506,
+          1027,
+          497,
+          71
+        ],
+        "inViewport": true,
+        "hit": true,
+        "label": "",
+        "ok": true,
+        "focusable": true
+      },
+      "cleanup": [
+        {
+          "what": "cleanup checkbox",
+          "box": [
+            394,
+            306,
+            44,
+            44
+          ],
+          "inViewport": true,
+          "hit": true,
+          "label": "",
+          "ok": true,
+          "fits": true
+        }
+      ],
+      "clippedOutsideArt": [],
+      "problems": []
+    }
+  ],
+  "result": "PASS",
+  "pageErrors": []
+}

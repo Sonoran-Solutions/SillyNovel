@@ -1,0 +1,27 @@
+ro.product.model=SM-X800
+ro.product.device=gts8pwifi
+ro.build.version.release=16
+ro.build.display.id=BP2A.250605.031.A3.X800XXSBEZH3
+ro.build.version.security_patch=2026-08-05
+ro.build.version.sdk=36
+wm size: Physical size: 1752x2800
+wm density: Physical density: 340
+font_scale=1.0
+animator_duration_scale=null
+transition_animation_scale=1.0
+window_animation_scale=1.0
+accessibility_reduce_motion(secure)=null
+enabled_accessibility_services=null
+default_input_method=com.samsung.android.honeyboard/.service.HoneyBoardService
+accessibility_display_magnification_enabled=0
+user_rotation=0 accelerometer_rotation=1
+  mWakefulness=Awake
+  mHoldingDisplaySuspendBlocker=true
+  mCurrentFocus=Window{5fd6aef u0 com.sonoransolutions.dungeondispatcher.issue258qa/com.godot.game.GodotAppLauncher}
+    mShowingDream=false mDreamingLockscreen=false
+    isKeyguardShowing=false
+ User "<user redacted>" (id=0, flags=0x4c13) (current): trustState=UNTRUSTED, trustManaged=0, deviceLocked=0, isActiveUnlockRunning=0, strongAuthRequired=0x0
+devtools sockets:
+com.brave.browser versionName=    versionName=1.98.63
+com.android.chrome versionName=    versionName=149.0.7827.197
+    topResumedActivity=ActivityRecord{234911568 u0 com.sonoransolutions.dungeondispatcher.issue258qa/com.godot.game.GodotAppLauncher t600}

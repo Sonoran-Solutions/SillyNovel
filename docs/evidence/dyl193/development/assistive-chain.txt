@@ -1,0 +1,14 @@
+Owned evidence root /tmp/sn-dyl193-assistive-7XJRMZ
+AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+  assert.ok(order.filter(o => o.inStage).length > 10)
+
+    at file:///home/dq/Projects/SillyNovel/.claude/worktrees/nervous-hypatia-a73027/tests/probes/dyl193/host.mjs:254:16 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+Evidence /tmp/sn-dyl193-assistive-7XJRMZ/evidence.json

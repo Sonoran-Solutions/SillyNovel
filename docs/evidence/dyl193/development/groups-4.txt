@@ -1,0 +1,13 @@
+Owned evidence root /tmp/sn-dyl193-groups-nWtZwA
+PASS groups: host Create branch at message 2 of the six-message four-card group opened a new group chat detached, no sprites, no temporary expression; explicit reopen restored the saved global layout only; native files outside the group record and group chat folder byte-identical
+locator.click: Timeout 20000ms exceeded.
+Call log:
+  - waiting for locator('#select_chat_div .select_chat_block[file_name="1793676656301.jsonl"]')
+
+    at /home/dq/Projects/SillyNovel/.claude/worktrees/nervous-hypatia-a73027/tests/probes/dyl193/host.mjs:354:101 {
+  log: [
+    `  - waiting for locator('#select_chat_div .select_chat_block[file_name="1793676656301.jsonl"]')`
+  ],
+  name: 'TimeoutError'
+}
+Evidence /tmp/sn-dyl193-groups-nWtZwA/evidence.json

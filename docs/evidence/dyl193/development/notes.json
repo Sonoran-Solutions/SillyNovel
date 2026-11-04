@@ -1,0 +1,70 @@
+{
+  "purpose": "Discovery runs of the new probe blocks before the supervised campaign. Every failure here was a probe or fixture correction, none a candidate failure; no runtime file changed.",
+  "attempts": [
+    {
+      "log": "groups-1.txt",
+      "failed": "settings.json differed between the baseline and the post-branch inventory",
+      "correction": "record the exact settings keys the host rewrites instead of failing on the file; the extension's keys must never be among them"
+    },
+    {
+      "log": "groups-2.txt",
+      "failed": "extension_settings.sillynovel differed: the host's debounced write of the enable toggle had not flushed before the baseline",
+      "correction": "wait for the enable write to reach disk before the baseline inventory"
+    },
+    {
+      "log": "groups-3.txt",
+      "failed": "branch messages carried swipe_id/swipes/swipe_info the parent lacked",
+      "correction": "the host's branch snapshot adds swipe scaffolding; compare name, text, author flags and card only"
+    },
+    {
+      "log": "groups-4.txt",
+      "failed": "chat-list selector used file_name with .jsonl; group chat blocks carry the bare name",
+      "correction": "selector fixed"
+    },
+    {
+      "log": "groups-5.txt",
+      "failed": null,
+      "correction": "PASS"
+    },
+    {
+      "log": "scaling-1.txt",
+      "failed": "Review unused artwork listed nothing: the extra background was in the library, so it was referenced",
+      "correction": "upload a PNG that neither the scene nor the library references"
+    },
+    {
+      "log": "scaling-2.txt",
+      "failed": "root CSS zoom: documentElement.scrollWidth is reported in zoomed units; root font 200 %: cleanup checkbox centre covered after a minimal scroll",
+      "correction": "measure horizontal overflow by scrolling and attribute the overflowing elements; name the covering element"
+    },
+    {
+      "log": "scaling-3.txt",
+      "failed": "same two observations, now attributed: host div#expression-wrapper (viewport-unit sized) overflows under root CSS zoom; the panel's sticky summary covers a row after a minimal scroll",
+      "correction": "host-only overflow under the non-faithful CSS-zoom emulation is recorded, not failed; a covered row is retried with a centred scroll and the first measurement kept"
+    },
+    {
+      "log": "scaling-chain.txt",
+      "failed": null,
+      "correction": "PASS"
+    },
+    {
+      "log": "motion-chain.txt",
+      "failed": "#sillynovel-stage computes transition-property all with 0 s duration (the initial value)",
+      "correction": "only a named animation or a non-zero transition duration counts as motion"
+    },
+    {
+      "log": "assistive-chain.txt",
+      "failed": "Tab from the reader reached the reply field in 6 stops: the controls precede the reader in document order",
+      "correction": "start the keyboard traversal at the controls summary"
+    },
+    {
+      "log": "motion-chain2.txt",
+      "failed": null,
+      "correction": "PASS"
+    },
+    {
+      "log": "assistive-chain2.txt",
+      "failed": null,
+      "correction": "PASS"
+    }
+  ]
+}

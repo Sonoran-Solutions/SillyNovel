@@ -1,0 +1,364 @@
+{
+  "row": "assistive",
+  "synthetic": true,
+  "candidate": "133428768500373f36195928aff06a5bc9b21abb",
+  "host": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
+  "node": "v26.8.1",
+  "checks": [
+    "SYNTHETIC accessibility tree: 51 Tab stops from the controls summary to the reply field with controls, disclosure and cleanup open; all visible interactive elements named; 10 status regions; no live region inside the disclosure; Escape closes and refocuses. Not a screen reader."
+  ],
+  "problems": [],
+  "screenshots": [
+    "assistive-controls-why-cleanup.png"
+  ],
+  "notTested": [
+    "Physical tablet (no device attached)",
+    "Real screen reader",
+    "System-level reduced-motion or font-size settings",
+    "Real browser zoom control (emulated only)",
+    "Touch digitizer and soft keyboard",
+    "Native confirm() dialog geometry"
+  ],
+  "browser": "151.0.7922.34",
+  "aria": {
+    "readerClosed": "- region \"SillyNovel reader\":\n  - heading \"Project A · Character\" [level=2]\n  - text: Message 15 of 15\n  - button \"Back to Chat\"\n  - status: Saved project layout\n  - status \"ce585d7b-3180-40bd-a663-229d7ba6dd7a\": Replay solo · revision 1 · ce585d7b · Attached for this browser activation\n  - paragraph: Saved global layouts and library persist. Message-specific visual history is not saved. Reload or switching conversations detaches; explicitly reopen.\n  - group: Manual scene controls\n  - figure \"Mira [0a805f4c]\"\n  - figure \"Rowan [f0628b7c]\"\n  - paragraph: \"Cast: Mira [0a805f4c] left · locks: presence, slot, outfit / Rowan [f0628b7c] right · locks: presence, slot, outfit\"\n  - status: \"Director: on · 1 of 40\"\n  - group: Why this visual?\n  - status: Project opened · global layout only. Director applied a temporary expression. Not saved. Background locked.\n  - status: Completion status unknown\n  - article \"Selected message\":\n    - paragraph:\n      - emphasis: The lantern glows.\n      - text: \"\\\"Welcome to the reading room,\\\" Mira says.\"\n  - navigation \"Reader navigation\":\n    - button \"Previous\"\n    - button \"Next\" [disabled]\n    - button \"Backlog\"\n    - button \"Jump to Latest\" [disabled]\n    - status\n    - button \"Copy message\"",
+    "controlsWhyCleanupOpen": "- region \"SillyNovel reader\":\n  - heading \"Project A · Character\" [level=2]\n  - text: Message 15 of 15\n  - button \"Back to Chat\"\n  - status: Saved project layout\n  - status \"ce585d7b-3180-40bd-a663-229d7ba6dd7a\": Replay solo · revision 1 · ce585d7b · Attached for this browser activation\n  - paragraph: Saved global layouts and library persist. Message-specific visual history is not saved. Reload or switching conversations detaches; explicitly reopen.\n  - group:\n    - text: Manual scene controls\n    - paragraph: Project actors are manual identities with no native card binding. Global outfits and layout persist across messages. Expressions are temporary, source-specific, and can be invalidated by edits; no speaker mapping is inferred. Portable v1 bundles include selected artwork only, without library labels or unselected alternatives.\n    - group \"Project\":\n      - text: Project\n      - paragraph: Choose a saved project explicitly. Attachment lasts only for this browser activation; it is never stored in the native conversation.\n      - text: Project name\n      - textbox \"Project name\"\n      - text: Saved project\n      - combobox \"Saved project\":\n        - option \"Replay solo · ce585d7b\" [selected]\n      - button \"Create project and use with this chat\"\n      - button \"Open project and use with this chat\"\n      - button \"Discard and reopen attached project\"\n      - button \"Save project\"\n      - button \"Detach project\"\n      - status\n      - button \"Export project\"\n      - text: Import project bundle\n      - button \"Import project bundle\"\n      - checkbox \"Automatic director for this project\" [checked]\n      - text: Automatic director for this project\n      - paragraph: Off by default. After each completed reply, sends the last messages and your artwork labels to the connection you selected, counts against the usage of that connection, and only ever changes temporary expressions, the background and who is present, for this attachment; none of it is saved. The director waits while you type; a regenerate or swipe pressed while a director request is running can fail on a backend that handles one request at a time, and a swipe or regenerate recovers.\n      - status: Director applied 1 temporary expression. Not saved. · 1 of 40 requests this session\n    - group \"Scene\":\n      - text: Scene\n      - paragraph: Arrange the manual cast. Presence hides artwork but keeps its position reserved. Offstage releases a position. Manual choices can replace locks; releasing a lock keeps its value.\n      - text: Background\n      - combobox \"Background\":\n        - option \"Clear · neutral\"\n        - option \"Forest · a93033d8\" [selected]\n      - button \"Apply background\"\n      - 'button \"Apply and let the director move it: background\"': Apply and let the director move it\n      - checkbox \"Director may move the background\"\n      - text: Director may move the background · locked Project actor name\n      - textbox \"Project actor name\": Mira\n      - button \"Register project actor\"\n      - text: Project actor\n      - combobox \"Project actor\":\n        - option \"Mira · Project actor · 0a805f4c\" [selected]\n        - option \"Rowan · Project actor · f0628b7c\"\n      - text: Presence\n      - combobox \"Presence\":\n        - option \"Present\" [selected]\n        - option \"Absent\"\n      - button \"Apply presence\"\n      - 'button \"Apply and let the director move it: presence\"': Apply and let the director move it\n      - checkbox \"Director may move presence of Mira [0a805f4c]\"\n      - text: Director may move presence of Mira [0a805f4c] · locked\n      - checkbox \"Director may move presence of Rowan [f0628b7c]\"\n      - text: Director may move presence of Rowan [f0628b7c] · locked Position\n      - combobox \"Position\":\n        - option \"Offstage\"\n        - option \"Left\" [selected]\n        - option \"Center\"\n        - option \"Right\"\n      - text: Occupied slot action\n      - combobox \"Occupied slot action\":\n        - option \"Move · refuse occupied\" [selected]\n        - option \"Explicit swap\"\n        - option \"Explicit replace\"\n      - button \"Apply position\"\n      - text: Outfit\n      - combobox \"Outfit\":\n        - option \"Clear · default\"\n        - option \"Mira base · b292ebe5\" [selected]\n      - button \"Apply outfit\"\n      - text: Expression to apply · selected source only\n      - combobox \"Expression to apply · selected source only\":\n        - option \"Clear · neutral\"\n        - option \"Happy\" [selected]\n      - button \"Apply expression\"\n      - button \"Clear expression\"\n      - status: \"Selected message: 15 · Project A / Actor: Mira [0a805f4c] / Current expression: Happy (director) · Temporary, not saved. Director applied a temporary expression. Not saved.\"\n      - text: Temporary expression label\n      - textbox \"Temporary expression label\": Happy\n      - text: Temporary expression PNG\n      - button \"Temporary expression PNG\"\n      - text: Lock field\n      - combobox \"Lock field\":\n        - option \"background\" [selected]\n        - option \"presence\"\n        - option \"slot\"\n        - option \"outfit\"\n      - button \"Lock choice\"\n      - button \"Release lock\"\n      - paragraph: \"Selected background: Forest · a93033d8-ac5d-4155-8fea-f15c130403d3 / Active actor: Mira [0a805f4c] · present · left · outfit: Mira base · b292ebe5-e618-4050-ad93-be3d071c8aca · locks: presence, slot, outfit\"\n    - group \"Artwork Library\":\n      - text: Artwork Library\n      - paragraph: Import selects the artwork immediately. Save project commits labels, alternatives and layout together. Removing a library entry never deletes its bytes; unused-byte cleanup is a separate review and confirmation after saving.\n      - text: Project image use\n      - combobox \"Project image use\":\n        - option \"Background\" [selected]\n        - option \"Selected actor outfit\"\n      - text: PNG display label\n      - textbox \"PNG display label\"\n      - text: Library artwork\n      - combobox \"Library artwork\":\n        - option \"Actor sprite · Mira base · b292ebe5 · Mira [0a805f4c]\" [selected]\n        - option \"Actor sprite · Rowan base · 5b5ea24c · Rowan [f0628b7c]\"\n        - option \"Background · Forest · a93033d8\"\n      - text: Artwork label\n      - textbox \"Artwork label\": Mira base\n      - button \"Save artwork label\"\n      - button \"Remove artwork from library\"\n      - text: Project PNG file\n      - button \"Project PNG file\"\n      - heading \"Unused Project Assets\" [level=4]\n      - button \"Review unused artwork\"\n      - checkbox \"32facaf2-bc55-4436-a0b8-b08c429aeeed · 1280 × 720 · 6085 bytes · SHA-256 7b76e59e5e9c\"\n      - text: 32facaf2-bc55-4436-a0b8-b08c429aeeed · 1280 × 720 · 6085 bytes · SHA-256 7b76e59e5e9c\n      - paragraph: 0 selected · 0 logical bytes\n      - button \"Remove selected unused artwork\" [disabled]\n      - status: 1 unused artwork files · 6085 logical bytes reclaimable.\n      - paragraph: Saved library alternatives are retained. Only saved scene and library references are checked. Other tabs or clients may have unsaved drafts that will lose access to removed artwork. Removal cannot be undone here; keep verified database backups.\n      - button \"Reset transient visuals\" [disabled]\n  - figure \"Mira [0a805f4c]\"\n  - figure \"Rowan [f0628b7c]\"\n  - paragraph: \"Cast: Mira [0a805f4c] left · locks: presence, slot, outfit / Rowan [f0628b7c] right · locks: presence, slot, outfit\"\n  - status: \"Director: on · 1 of 40\"\n  - group:\n    - text: Why this visual?\n    - heading \"On stage at this message\" [level=4]\n    - list:\n      - listitem: \"Background: Forest · your layout · locked\"\n      - listitem: \"Mira [0a805f4c]: present · your layout · locked\"\n      - listitem:\n        - text: \"Mira [0a805f4c] expression: Happy · director, message 15 · Project A\"\n        - button \"Revert expression of Mira [0a805f4c]\": Revert\n      - listitem: \"Rowan [f0628b7c]: present · your layout · locked\"\n    - heading \"Decisions at this message\" [level=4]\n    - list:\n      - listitem:\n        - text: \"Decision 1: Applied · APPLIED · 24 ms\"\n        - list:\n          - listitem:\n            - text: \"Expression of Mira [0a805f4c]: Happy (was neutral) · applied\"\n            - list:\n              - listitem: \"Quote from message 15 · Project A: “lantern glows”\"\n    - heading \"Session summary\" [level=4]\n    - list:\n      - listitem: \"Requests: 1 of 40\"\n      - listitem: \"Consecutive failures: 0\"\n      - listitem: \"Outcomes: Applied 1\"\n      - listitem: \"Codes: APPLIED 1\"\n      - listitem: \"Pauses: none\"\n      - listitem: \"Corrections: none\"\n      - listitem: \"Dispositions, expression: applied 1\"\n      - listitem: \"Elapsed: minimum 24 ms, median 24 ms, maximum 24 ms, over the latest 1\"\n  - status: Project opened · global layout only. Director applied a temporary expression. Not saved. Background locked.\n  - status: Completion status unknown\n  - article \"Selected message\":\n    - paragraph:\n      - emphasis: The lantern glows.\n      - text: \"\\\"Welcome to the reading room,\\\" Mira says.\"\n  - navigation \"Reader navigation\":\n    - button \"Previous\"\n    - button \"Next\" [disabled]\n    - button \"Backlog\"\n    - button \"Jump to Latest\" [disabled]\n    - status\n    - button \"Copy message\"",
+    "unnamedInteractive": [],
+    "statusRegions": [
+      "sillynovel-unsaved",
+      "sillynovel-project-status",
+      "sillynovel-bundle-status",
+      "sillynovel-director-status",
+      "sillynovel-expression-context",
+      "sillynovel-cleanup-status",
+      "sillynovel-director-line",
+      "sillynovel-visual-status",
+      "sillynovel-reader__status",
+      "sillynovel-reader__unread"
+    ],
+    "landmarks": {
+      "stage": "SillyNovel reader",
+      "dialogue": "Selected message",
+      "navigation": "Reader navigation",
+      "art": "Manual visual stage",
+      "headings": [
+        "H2 Project A · Character",
+        "H4 Unused Project Assets",
+        "H4 On stage at this message",
+        "H4 Decisions at this message",
+        "H4 Session summary"
+      ],
+      "liveRegionsInsideWhy": 0
+    },
+    "tabOrder": [
+      {
+        "id": "",
+        "tag": "input",
+        "name": "Project name",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "select",
+        "name": "Saved project",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "button",
+        "name": "Create project and use with this chat",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "button",
+        "name": "Open project and use with this chat",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "button",
+        "name": "Discard and reopen attached project",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "button",
+        "name": "Save project",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "button",
+        "name": "Detach project",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "button",
+        "name": "Export project",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "input",
+        "name": "Import project bundle",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "input",
+        "name": "Automatic director for this project",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "select",
+        "name": "Background",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "button",
+        "name": "Apply background",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "button",
+        "name": "Apply and let the director move it: back",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "input",
+        "name": "Director may move the background",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "input",
+        "name": "Project actor name",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "button",
+        "name": "Register project actor",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "select",
+        "name": "Project actor",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "select",
+        "name": "Presence",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "button",
+        "name": "Apply presence",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "button",
+        "name": "Apply and let the director move it: pres",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "input",
+        "name": "Director may move presence of Mira [0a80",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "input",
+        "name": "Director may move presence of Rowan [f06",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "select",
+        "name": "Position",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "select",
+        "name": "Occupied slot action",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "button",
+        "name": "Apply position",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "select",
+        "name": "Outfit",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "button",
+        "name": "Apply outfit",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "select",
+        "name": "Expression to apply · selected source on",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "button",
+        "name": "Apply expression",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "button",
+        "name": "Clear expression",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "input",
+        "name": "Temporary expression label",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "input",
+        "name": "Temporary expression PNG",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "select",
+        "name": "Lock field",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "button",
+        "name": "Lock choice",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "button",
+        "name": "Release lock",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "select",
+        "name": "Project image use",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "input",
+        "name": "PNG display label",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "select",
+        "name": "Library artwork",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "input",
+        "name": "Artwork label",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "button",
+        "name": "Save artwork label",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "button",
+        "name": "Remove artwork from library",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "input",
+        "name": "Project PNG file",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "button",
+        "name": "Review unused artwork",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "input",
+        "name": "32facaf2-bc55-4436-a0b8-b08c429aeeed · 1",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "article",
+        "name": "Selected message",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "button",
+        "name": "Previous",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "button",
+        "name": "Backlog",
+        "inStage": true
+      },
+      {
+        "id": "",
+        "tag": "button",
+        "name": "Copy message",
+        "inStage": true
+      },
+      {
+        "id": "options_button",
+        "tag": "div",
+        "name": "",
+        "inStage": false
+      },
+      {
+        "id": "extensionsMenuButton",
+        "tag": "div",
+        "name": "",
+        "inStage": false
+      },
+      {
+        "id": "send_textarea",
+        "tag": "textarea",
+        "name": "",
+        "inStage": false
+      }
+    ]
+  },
+  "result": "PASS",
+  "pageErrors": []
+}
