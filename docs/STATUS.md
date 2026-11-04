@@ -1,5 +1,9 @@
 # Project status
 
+## Gate B owner's session authorized — 2026-11-03
+
+The owner [authorized](DECISIONS.md#owner-authorization--gate-b-owners-session-on-candidate-6799a5e--2026-11-03) step 5: the owner's own session under the plan 6.3 protocol on candidate `6799a5e`, on a disposable or backed-up host of the owner's choice (G10), not yet named. Not yet run. Step 6, the verdict, waits on the session. Gate B NOT_RUN.
+
 ## Gate B fixture evaluation run on candidate 6799a5e — candidate, unmerged — 2026-11-03
 
 Step 4 ran once, as [authorized](DECISIONS.md#owner-authorization--gate-b-fixture-evaluation-on-candidate-6799a5e--2026-11-03), on the [owner's regular install](DECISIONS.md#owner-decision--gate-b-fixture-run-on-the-owners-regular-sillytavern-install--2026-11-03) (SillyTavern 1.18.0, a recorded deviation from the pin) with the runtime served from a checkout at `6799a5e`. 40 cases sent through the product's request path on the owner's hand-selected connection (OpenRouter chat completion, model Xiaomi MiMo-V2.6-Pro, provider DeepInfra, no fallback models or providers); 36 scored, 4 refused as `NOT_SINGLE_JSON` (hypothetical travel 1, group authorship 1, user locks 2), 0 failed, 0 not run; elapsed 542 ms min, 1681 ms median, 12889 ms max. Counts per category and field are in the [Gate B record](evidence/gate-b/record.md) and [`fixture/score.txt`](evidence/gate-b/fixture/score.txt): background 34 correct and 2 incorrect (both flashbacks), presence 79 correct and 1 incorrect (flashbacks), expression 65 correct and 15 incorrect, outfit 10 correct with 1 outfit update noted, 4 locked skips in user locks. No aggregate and no percentage, by ruling; no fixture answer changed. The runner printed “Finished” and then stayed alive until it was sent SIGTERM, a test-file observation that touched no result. Steps 5 and 6 stay unauthorized. Gate B NOT_RUN.
