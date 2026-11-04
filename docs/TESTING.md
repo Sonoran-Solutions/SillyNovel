@@ -1,5 +1,9 @@
 # Verification and acceptance
 
+## Gate B verdict PASS recorded — 2026-11-03
+
+[Recorded](DECISIONS.md#gate-b-verdict--pass--2026-11-03) in the owner's words; the [Gate B record](evidence/gate-b/record.md) is the human gate record for candidate `6799a5e`: automated checks, hard gates, fixture counts and DYL-193 filled from evidence; real-session and E16 lines NOT_RUN by the owner's choice. The session host was SillyTavern 1.18.0 with the candidate's storage plugin, a deviation from the pin recorded in DECISIONS. Tablet text scaling, tablet reduced motion and screen readers stay NOT_TESTED. Plugin README follow-up: `dataRoot` must be absolute for the storage plugin.
+
 ## Gate B owner's session authorized on candidate 6799a5e — 2026-11-03
 
 [Authorized](DECISIONS.md#owner-authorization--gate-b-owners-session-on-candidate-6799a5e--2026-11-03): the plan 6.3 protocol run by the owner on a disposable or backed-up host serving the candidate runtime, with the record's owner fields (session summary counts, E16 result per flow, feedback) filled from the owner's words only; no excerpts or labels from a private chat enter the repository. Agents prepare the host and transcribe; nothing automated substitutes. Gate B NOT_RUN until the owner's verdict.

@@ -1,5 +1,9 @@
 # Project status
 
+## Gate B verdict PASS — 2026-11-03
+
+The owner [recorded PASS](DECISIONS.md#gate-b-verdict--pass--2026-11-03) on candidate `6799a5e` in their own words, choosing to skip the session lines; the [Gate B record](evidence/gate-b/record.md) holds the hard gates, the DYL-193 evidence and the fixture counts, and NOT_RUN for every session and E16 line. The session host was the owner's regular SillyTavern 1.18.0 install with the candidate and its storage plugin installed on the owner's word. Nothing further is authorized: no beta, release or wider installation; the NOT_TESTED surfaces of DYL-193 and the four open PR D findings stand.
+
 ## Gate B owner's session authorized — 2026-11-03
 
 The owner [authorized](DECISIONS.md#owner-authorization--gate-b-owners-session-on-candidate-6799a5e--2026-11-03) step 5: the owner's own session under the plan 6.3 protocol on candidate `6799a5e`, on a disposable or backed-up host of the owner's choice (G10), not yet named. Not yet run. Step 6, the verdict, waits on the session. Gate B NOT_RUN.
