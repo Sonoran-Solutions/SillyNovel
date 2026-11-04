@@ -1,5 +1,13 @@
 # Staged implementation roadmap
 
+## M3.1 authorized — 2026-11-03
+
+[H1–H11 ruled](DECISIONS.md#owner-rulings-h1h11--m31-image-workflow--2026-11-03); [DYL-207](https://linear.app/devils17/issue/DYL-207/sillynovel-m31-manual-image-exchange-promptreference-export-explicit) implements plan section 8's M3.1 PR A and then PR B, each reviewed by the owner before the next. M3.2 planning takes up the deferred H3, H5, H6 and H7, including O05. Gate C stays gated.
+
+## M3.1 planning proposal (NOT approved) — 2026-11-03
+
+The [M3.1 image workflow plan](M3_1_IMAGE_WORKFLOW_PLAN.md) proposes the M3 slices and owner decisions H1–H11, including O05's first route. Nothing in M3 starts without a recorded owner authorization.
+
 ## Gate B PASS — 2026-11-03
 
 [The owner's verdict](DECISIONS.md#gate-b-verdict--pass--2026-11-03) closes the Gate B sequence on candidate `6799a5e` with the session lines unreported and no accuracy figure. What comes next is the owner's planning decision; nothing after Gate B is authorized by the verdict.
