@@ -1,6 +1,6 @@
 # DYL-193 replay record — Gate B candidate 6799a5e
 
-**Candidate and unmerged. Replay step 3 of the [Gate B sequence](M2_4_EVIDENCE_UI_PLAN.md#61-sequence), [authorized by the owner](DECISIONS.md#owner-authorization--dyl-193-replay-on-gate-b-candidate-6799a5e--2026-11-02) on 2026-11-02.** This record reports; it fixes nothing. No runtime file changed. The desktop halves of the scaling and motion rows and the native group branch/copy row ran; every result from an emulated preference, zoom or accessibility tree is labelled SYNTHETIC and stands for no physical or assistive row. The tablet was driven as at Gate A on the owner's word; its rows are TESTED, PASS bounded or NOT_TESTED exactly as the table says, and no screen reader was run. Gate B NOT_RUN; steps 4 to 6 are not started.
+**Merged `cf31c38` ([PR #71](https://github.com/Sonoran-Solutions/SillyNovel/pull/71), head `62a1f16`) and [accepted by the owner](DECISIONS.md#owner-acceptance--dyl-193-replay-merged-on-gate-b-candidate-6799a5e--2026-11-03) on 2026-11-03; the matrix rows below were amended by that acceptance. Replay step 3 of the [Gate B sequence](M2_4_EVIDENCE_UI_PLAN.md#61-sequence), [authorized by the owner](DECISIONS.md#owner-authorization--dyl-193-replay-on-gate-b-candidate-6799a5e--2026-11-02) on 2026-11-02.** This record reports; it fixes nothing. No runtime file changed. The desktop halves of the scaling and motion rows and the native group branch/copy row ran; every result from an emulated preference, zoom or accessibility tree is labelled SYNTHETIC and stands for no physical or assistive row. The tablet was driven as at Gate A on the owner's word; its rows are TESTED, PASS bounded or NOT_TESTED exactly as the table says, and no screen reader was run. Gate B NOT_RUN; steps 4 to 6 are not started.
 
 ## Identity
 
@@ -99,7 +99,7 @@ None found. The candidate produced no failing reproduction on any surface reache
 | T52 (tablet note) | “tablet NOT_TESTED” stays for the composer-hold behaviour itself; add “DYL-193 replay 2026-11-02: tablet touch on the composer and keyboard covered, the hold itself not exercised on the tablet” |
 | T61 Evidence UI on the stage | “reply field's reach with the disclosure open covered on desktop at 200 % zoom, root font 200 % and host font scale 2 (SYNTHETIC, `1334287`); reply field reachable with the disclosure open on the Galaxy Tab S8+ at scale 1.0, with the keyboard open and at a real pinch of 2.0 (DYL-193 replay, `8f784f0`)” |
 
-No row is amended by this record; the [Gate B record](evidence/gate-b/record.md) carries only the DYL-193 half, and “accepted by the owner” stays NOT_RUN.
+These four amendments were applied to the matrix at merge by the [acceptance record](DECISIONS.md#owner-acceptance--dyl-193-replay-merged-on-gate-b-candidate-6799a5e--2026-11-03); the [Gate B record](evidence/gate-b/record.md) carries only the DYL-193 half.
 
 ## What remains for the owner's own hands
 
