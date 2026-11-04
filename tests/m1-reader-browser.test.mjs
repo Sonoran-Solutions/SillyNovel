@@ -1533,18 +1533,19 @@ test('T69 image workflow without a project: per-field copy and prompt download, 
  assert.deepEqual(requests.filter(u=>!u.includes('/api/plugins/sillynovel-storage/capabilities')),[],'export sends nothing anywhere');
  await page.locator('#send_textarea').fill('Still my draft');await page.keyboard.press('Escape');assert.equal(await page.locator('#send_textarea').inputValue(),'Still my draft');
 });
-test('T70 T71 T72 image workflow with a project: digest-checked reference download, refused and discarded previews upload nothing, import and apply, detach clears',async t=>{
+test('T70 T71 T72 image workflow with a project: digest-checked reference download, refused and discarded previews upload nothing, import follows the shared layout gate, detach keeps text and clears references',async t=>{
  const page=await fixture(t);page.setDefaultTimeout(5000);await page.locator('#sillynovel-enabled').uncheck();await page.evaluate(()=>{fixture.context.getRequestHeaders=()=>({});});
  const id='11111111-1111-4111-8111-111111111111',ids=['33333333-3333-4333-8333-333333333333','44444444-4444-4444-8444-444444444444'],uploaded='55555555-5555-4555-8555-555555555555';
  const record={schemaVersion:2,projectId:id,name:'Harbor project',revision:0,scene:{backgroundAssetId:null,backgroundLocked:true,actors:[]},catalog:ids.map((assetId,i)=>({assetId,label:'Harbor '+(i+1),kind:'background',actorId:null}))};
  const {createHash}=await import('node:crypto'),sha=b=>createHash('sha256').update(b).digest('hex');
  const mira=await readFile(resolve(root,'tests/fixtures/m12-stage/mira-a.png')),forest=await readFile(resolve(root,'tests/fixtures/m12-stage/forest.png'));
- let served=mira,uploads=0;
+ let served=mira,uploads=0,releaseCleanup;const cleanupHeld=new Promise(r=>releaseCleanup=r);
  await page.route('**/api/plugins/sillynovel-storage/**',async route=>{
   const request=route.request(),path=new URL(request.url()).pathname;
+  if(path.endsWith('/unused-assets')){await cleanupHeld;return route.fulfill({status:503,json:{code:'STORAGE_UNAVAILABLE'}});}
   if(request.method()==='POST'&&path.endsWith('/assets')){uploads++;return route.fulfill({status:201,json:{assetId:uploaded}});}
   if(path.includes('/assets/'))return route.fulfill({contentType:'image/png',headers:{'X-Content-SHA256':sha(path.endsWith(uploaded)?forest:served)},body:path.endsWith(uploaded)?forest:served});
-  return route.fulfill({json:path.endsWith('/capabilities')?{apiVersion:1,schemaVersion:2,catalogVersion:1}:path.endsWith('/projects')?[record]:record});
+  return route.fulfill({json:path.endsWith('/capabilities')?{apiVersion:1,schemaVersion:2,catalogVersion:1,cleanupVersion:1}:path.endsWith('/projects')?[record]:record});
  });
  await page.locator('#sillynovel-enabled').check();await page.locator('.sillynovel-controls summary').click();
  await button(page,'Image workflow').click();
@@ -1570,14 +1571,24 @@ test('T70 T71 T72 image workflow with a project: digest-checked reference downlo
  assert.equal(uploads,0,'choosing and discarding upload nothing');
  await field('Background label').fill('Generated harbor');
  await field('Result PNG').setInputFiles(resolve(root,'tests/fixtures/m12-stage/forest.png'));await page.locator('.sillynovel-image-workflow__preview').waitFor();
- await button(page,'Import and apply background to Harbor project').click();
+ // Import and apply follows the same gate as the PNG import: here a held cleanup review disables the shared controls.
+ const importButton=button(page,'Import and apply background to Harbor project'),pngImport=page.getByLabel('Project PNG file',{exact:true});
+ assert.equal(await importButton.isEnabled(),true);
+ await button(page,'Review unused artwork').click();
+ await page.waitForFunction(()=>document.querySelector('[aria-label="Project PNG file"]').disabled);
+ assert.equal(await pngImport.isDisabled(),true);assert.equal(await importButton.isDisabled(),true,'disabled exactly when the PNG import is');
+ await importButton.dispatchEvent('click');assert.equal(uploads,0,'even a synthetic click imports nothing while the shared controls are held');
+ releaseCleanup();
+ await page.waitForFunction(()=>!document.querySelector('[aria-label="Project PNG file"]').disabled);
+ assert.equal(await importButton.isEnabled(),true);
+ await importButton.click();
  await page.waitForFunction(()=>document.querySelector('.sillynovel-image-workflow__status').textContent.includes('Imported and applied'));
  assert.equal(uploads,1);assert.match(await page.locator('.sillynovel-unsaved').innerText(),/Unsaved/);
  await page.waitForFunction(()=>document.querySelector('.sillynovel-art__background').dataset.asset.startsWith('blob:'),undefined,{timeout:5000});
  assert.match(await page.locator('.sillynovel-selected-art').innerText(),/Selected background: Generated harbor/);
  await field('Result PNG').setInputFiles(resolve(root,'tests/fixtures/m12-stage/forest.png'));await page.locator('.sillynovel-image-workflow__preview').waitFor();
  page.on('dialog',d=>d.accept());await button(page,'Detach project').click();
- await page.waitForFunction(()=>document.querySelector('.sillynovel-image-workflow__status').textContent.includes('cleared'));
- assert.equal(await field('Image prompt').inputValue(),'','a detached project takes its draft along');
+ await page.waitForFunction(()=>document.querySelector('.sillynovel-image-workflow__status').textContent.includes('your text is kept'));
+ assert.equal(await field('Image prompt').inputValue(),'Written before attaching','detaching keeps the text');assert.equal(await field('Reference 1').inputValue(),'','references belong to one attachment');
  assert.equal(await page.locator('.sillynovel-image-workflow__preview').isHidden(),true);assert.equal(uploads,1,'the pending preview never uploaded');
 });

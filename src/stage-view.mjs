@@ -201,7 +201,7 @@ export function mountVisualStage({ document, stage, actions }) {
     const openWorkflow=open=>{workflowBody.hidden=!open;workflowToggle.setAttribute('aria-expanded',String(open));};
     listen(workflowToggle,'click',()=>openWorkflow(workflowBody.hidden));
     workflow.append(workflowToggle,workflowBody);target.append(workflow);
-    // Own controls, outside `controls`: drafting does not wait for a resolved message.
+    // Own controls, outside `controls`: drafting does not wait for a resolved message. Import and apply does, like the PNG import (layoutReady).
     const wfField=(name,tag)=>{const label=make('label','sillynovel-control',name),e=make(tag,'');e.setAttribute('aria-label',name);label.append(e);workflowBody.append(label);return e;};
     const wfButton=(text,fn)=>{const e=make('button','menu_button sillynovel-button',text);e.type='button';listen(e,'click',()=>wfRun(fn));workflowBody.append(e);return e;};
     workflowBody.append(make('p','','Write a prompt, copy or download it, make the image in any tool you choose, then import the PNG here. SillyNovel sends nothing to an image service and fills nothing in from the chat.'));
@@ -221,7 +221,7 @@ export function mountVisualStage({ document, stage, actions }) {
     const resultImage=make('img','sillynovel-image-workflow__preview');resultImage.alt='Chosen result, not imported';resultImage.hidden=true;workflowBody.append(resultImage);
     const importResult=wfButton('Import and apply background',()=>applyResult()),discardResult=wfButton('Discard preview',()=>clearPreview('Preview discarded · nothing was uploaded.'));
     const wfStatus=make('p','sillynovel-image-workflow__status');wfStatus.setAttribute('role','status');workflowBody.append(wfStatus);
-    let wfModel=model,wfRevision=0,wfBusy=false,resultPreview=null,previewSeq=0;
+    let wfModel=model,wfRevision=0,wfBusy=false,resultPreview=null,previewSeq=0,layoutReady=false;
     const PROBLEMS={PROMPT_REQUIRED:'Write a prompt to export.',PROMPT_TOO_LONG:'The prompt is over 8 KiB.',NEGATIVE_PROMPT_TOO_LONG:'The negative prompt is over 2 KiB.',STYLE_NOTE_TOO_LONG:'The style note is over 1 KiB.',
         BAD_LABEL:'Use a label of 1–80 characters on one line.',DUPLICATE_REFERENCE:'A reference is selected twice.',UNKNOWN_REFERENCE:'A reference is no longer in this project.',REFERENCE_CHANGED:'A reference changed; select it again.',
         NOT_PNG:'Choose a PNG file.',PNG_TOO_LARGE:'The PNG is over 5 MiB.',PNG_DIMENSIONS:'The PNG must be at most 4096 pixels on an edge and 16 million pixels.',ANIMATED_PNG:'Animated PNGs are unsupported.',MALFORMED_PNG:'The PNG is damaged or incomplete.',
@@ -266,6 +266,7 @@ export function mountVisualStage({ document, stage, actions }) {
         const chosen=resultPreview;
         if(!chosen)return;
         if(!stillCurrent(chosen.capture,now(0))){clearPreview('The project changed · preview discarded, nothing uploaded.');return;}
+        if(!layoutReady){wfStatus.textContent='Wait for the selected message to settle, then import.';return;}
         if(projectBusy||model.status().importing)return;
         await model.importFile(chosen.file,'background',undefined,wfLabel.value.trim());
         if(resultPreview===chosen)clearPreview('Imported and applied as the background · unsaved project change. Save project to keep it.');
@@ -275,9 +276,8 @@ export function mountVisualStage({ document, stage, actions }) {
     listen(workflowBody,'keydown',event=>{if(event.key==='Escape'){openWorkflow(false);workflowToggle.focus();event.stopPropagation();}});
     function renderWorkflow(){
         if(wfModel!==model){
-            // A detached or replaced project takes its draft along; attaching keeps a draft written before it. References and previews never carry over.
-            if(wfModel.project)for(const e of [wfLabel,wfPrompt,wfNegative,wfStyle])e.value='';
-            for(const s of wfRefs)s.value='';wfModel=model;wfRevision++;clearPreview(model.project?'':'Image workflow cleared: the project was detached or replaced.');
+            // Your text survives attach, detach and replacement (owner direction on PR B); references and previews belong to one attachment and never carry over.
+            const left=Boolean(wfModel.project);for(const s of wfRefs)s.value='';wfModel=model;wfRevision++;clearPreview(left?'Project changed: references and any preview cleared; your text is kept.':'');
         }
         const attached=Boolean(model.project),refs=references(),d=draft(),text=draftProblems(d),all=draftProblems(d,catalog(refs)),importing=attached&&model.status().importing;
         for(const s of wfRefs){options(s,[['','None'],...refs.map(r=>[r.assetId,(r.kind==='background'?'Background':'Actor sprite')+' · '+r.label])]);s.disabled=!attached;}
@@ -288,7 +288,7 @@ export function mountVisualStage({ document, stage, actions }) {
         refButtons.forEach((e,i)=>{e.hidden=!wfRefs[i].value;e.disabled=!attached||wfBusy||Boolean(all.length);});
         resultFile.disabled=!attached||importing;
         importResult.textContent=attached?'Import and apply background to '+model.status().name:'Import and apply background';
-        importResult.disabled=!resultPreview||importing||projectBusy;discardResult.disabled=!resultPreview;
+        importResult.disabled=!resultPreview||importing||projectBusy||!layoutReady;discardResult.disabled=!resultPreview;
         wfNote.textContent=attached?'Import adds the PNG to this project, sets it as the background and locks it, like any manual import. Save project to keep it.':'Attach a saved project to download references or import a result. The prompt can be copied or downloaded now.';
     }
     target.append(make('h4','','Unused Project Assets'));
@@ -501,6 +501,7 @@ export function mountVisualStage({ document, stage, actions }) {
         const state=model.project?model.status():null;
         const paused=projectBusy||Boolean(state?.importing);
         for(const e of controls)e.disabled=paused||Boolean(state?.cleanupBusy)||(e===reset ? false : !ready);
+        layoutReady=ready&&!paused&&!state?.cleanupBusy;
         const recovery=state&&['conflict','uncertain'].includes(state.saveState);
         const status=state?.busy?'Saving project…':state?.saveState==='conflict'?'Unsaved project changes · save conflicted':state?.saveState==='uncertain'?'Save outcome uncertain · inspect by explicit reopen':state?.saveState==='error'?'Save failed · edits retained':state?.dirty?'Unsaved project changes':state?'Saved project layout':'Unsaved session visuals';
         unsaved.textContent=status;unsaved.dataset.state=state?.busy?'pending':recovery?state.saveState:state?.saveState==='error'?'error':state?.dirty?'dirty':state?'saved':'session';
