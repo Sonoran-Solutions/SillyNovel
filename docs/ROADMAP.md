@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## Gate B fixture evaluation authorized — 2026-11-03
+
+[Step 4](DECISIONS.md#owner-authorization--gate-b-fixture-evaluation-on-candidate-6799a5e--2026-11-03) of the Gate B sequence is authorized on candidate `6799a5e`: 40 requests on the owner's hand-selected connection, counts per category, no accuracy figure promised. The owner's session and the verdict each wait on their own authorization.
+
 ## DYL-193 replay merged — 2026-11-03
 
 [Step 3](DECISIONS.md#owner-acceptance--dyl-193-replay-merged-on-gate-b-candidate-6799a5e--2026-11-03) of the Gate B sequence is done on candidate `6799a5e`, with the physical scaling, reduced-motion and screen-reader rows still NOT_TESTED where they need a device setting or an assistive technology nobody ran. The fixture evaluation, the owner's session and the verdict each wait on their own authorization. No accuracy figure exists, and none is promised.

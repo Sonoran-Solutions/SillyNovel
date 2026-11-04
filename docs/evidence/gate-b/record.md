@@ -17,12 +17,12 @@ Automated checks actually run: on 2026-11-02 from a checkout of 6799a5e:
   The campaign itself ran on e37d6b5 (tested revision), not on the candidate (current revision): reused evidence.
 Owner feedback (verbatim or clearly attributed): NOT_RUN
 Owner verdict: NOT_RUN
-Remaining blockers: steps 3–6 of plan 6.1 unauthorized and NOT_RUN: DYL-193 replay, fixture evaluation, owner session, verdict
+Remaining blockers: step 3 (DYL-193 replay) done and accepted (merge cf31c38); step 4 (fixture evaluation) authorized and NOT_RUN; steps 5–6 (owner session, verdict) unauthorized and NOT_RUN
 Known limitations: the campaign is synthetic on the loopback endpoint; nothing here measures direction, latency or a real backend
 Evidence locations: docs/evidence/m2-4-d/campaign/ (package SHA-256 over sorted per-file hashes: 5b63e37f593995b91ab000b66ad969ee62fe3354797705dfc1bbdfd19bd00995); failed first run retained at docs/evidence/m2-4-d/failed-f74423d/
 
 --- Fixture evaluation (plan 6.2) ---
-Authorization for the 40 requests (DECISIONS entry): NOT_RUN (none)
+Authorization for the 40 requests (DECISIONS entry): docs/DECISIONS.md, “Owner authorization — Gate B fixture evaluation on candidate 6799a5e — 2026-11-03” (“Yes, authorize it”); run NOT_RUN
 Expected-answers SHA-256 (tests/fixtures/m2-gate-b/expected-answers.sha256): ada4ff1ed766af87872a0b50973b95a0d7b652a0b773ddaeb0ad54a6804cacf5
 Commit that froze those answers, recorded before the first measurement: first committed at f74423d6c5802c828b488cc5c3574418b954b7de, unchanged at e37d6b5 and at 6799a5e
 PROMPT_VERSION: 0ef22635aed99352

@@ -1,5 +1,9 @@
 # Project status
 
+## Gate B fixture evaluation authorized — 2026-11-03
+
+The owner [authorized](DECISIONS.md#owner-authorization--gate-b-fixture-evaluation-on-candidate-6799a5e--2026-11-03) step 4: one run of the 40 frozen cases through the product's request path on the connection the owner selects by hand at run time, from a checkout at candidate `6799a5e`, results committed under `docs/evidence/gate-b/` and counts copied into the Gate B record with no percentage. Not yet run. Steps 5 and 6 stay unauthorized. Gate B NOT_RUN.
+
 ## DYL-193 replay merged; Gate B step 3 complete — 2026-11-03
 
 The owner [accepted](DECISIONS.md#owner-acceptance--dyl-193-replay-merged-on-gate-b-candidate-6799a5e--2026-11-03) the replay ([PR #71](https://github.com/Sonoran-Solutions/SillyNovel/pull/71), merge `cf31c38`, head `62a1f16`) with the runtime still byte-identical to candidate `6799a5e`. Tablet text scaling, reduced motion and screen readers on both platforms stay NOT_TESTED and are claimed by nothing. [DYL-193](https://linear.app/devils17/issue/DYL-193/sillynovel-m14-deferred-physical-scaling-motion-assistive-and) is Done. Step 4, the fixture evaluation, waits on its own authorization. Gate B NOT_RUN.
