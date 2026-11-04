@@ -1,5 +1,9 @@
 # Verification and acceptance
 
+## Gate B fixture evaluation authorized on candidate 6799a5e — 2026-11-03
+
+[Authorized](DECISIONS.md#owner-authorization--gate-b-fixture-evaluation-on-candidate-6799a5e--2026-11-03): `tests/probes/m2-gate-b/run.mjs --owner-accepts-40-requests` once, headed, from a checkout at `6799a5e`, against a host the owner names where the owner selects the connection by hand; the runner refuses a host serving different sender modules; results JSON committed with the scorer's per-category counts (T18 measured for the first time; T67 then measures direction). A failed or not-run case is reported, never retried. Gate B NOT_RUN until the owner's session and verdict.
+
 ## DYL-193 replay merged — matrix rows amended — 2026-11-03
 
 On the owner's [acceptance](DECISIONS.md#owner-acceptance--dyl-193-replay-merged-on-gate-b-candidate-6799a5e--2026-11-03) of [PR #71](https://github.com/Sonoran-Solutions/SillyNovel/pull/71) (merge `cf31c38`), rows T12, T28, T52 and T61 carry the amendments the [record](DYL_193_REPLAY_RECORD.md#proposed-amendments-to-the-testing-matrix-text-only-rows-change-at-merge) proposed, citing probe heads `1334287` and `8f784f0` on runtime `6799a5e`. Reproduced before merge from a scratch worktree at `62a1f16`: `python3 tests/probes/dyl193/validate.py docs/evidence/dyl193` PASS, `check-discovery.py` PASS 14/5/1, Node 465/465 at `556e18b` on the pinned host (reused; only the validator line, docs and two deleted cache files differ). Screen readers, tablet text scaling and tablet reduced motion stay NOT_TESTED. Gate B NOT_RUN.
