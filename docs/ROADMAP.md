@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## Gate B PASS — 2026-11-03
+
+[The owner's verdict](DECISIONS.md#gate-b-verdict--pass--2026-11-03) closes the Gate B sequence on candidate `6799a5e` with the session lines unreported and no accuracy figure. What comes next is the owner's planning decision; nothing after Gate B is authorized by the verdict.
+
 ## Gate B owner's session authorized — 2026-11-03
 
 [Step 5](DECISIONS.md#owner-authorization--gate-b-owners-session-on-candidate-6799a5e--2026-11-03) is authorized on candidate `6799a5e`; the owner runs it and supplies the verdict afterwards. No accuracy figure is promised.
