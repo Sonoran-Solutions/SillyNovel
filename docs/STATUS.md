@@ -1,5 +1,9 @@
 # Project status
 
+## Post-Gate-B cleanup candidate (draft, unmerged) — 2026-11-03
+
+A small runtime change for owner review, [record](POST_GATE_B_CLEANUP.md): the Scene panel read-out no longer prints `undefined` when an overlay background's art was removed (PR D finding 1); the notice after Send during a director request now reads “Director request set aside for your reply”, outcome `SUPERSEDED` unchanged (finding 3); `tests/probes/m2-gate-b/run.mjs` exits after “Finished” (its losing race timers were referenced); the storage plugin README says `dataRoot` must be absolute. Finding 2 has proposed T60 wording for acceptance at merge; finding 4 is unchanged by design. Node 362/362 on main and on the branch. Browser suite and native-host campaign NOT_RUN: the pinned 1.19.0 host is not present, so this cannot merge under the M2 evidence standard until they run. Gate C NOT_RUN.
+
 ## M3.1 PR A candidate (draft, unmerged) — 2026-11-03
 
 The pure image-workflow module is implemented on frozen `4b3a300` for owner review under [DYL-207](https://linear.app/devils17/issue/DYL-207/sillynovel-m31-manual-image-exchange-promptreference-export-explicit): draft checks with UTF-8 ceilings and strict keys, the one export text that the preview, Copy and Download share, fixed filenames, catalog and hash checks for at most three references, and the capture rule that refuses a delayed step after detach, a draft edit or A → B → A. Nothing imports it yet; runtime unchanged. Node 371/371 (9 new), discovery PASS 15/5/1; browser, storage and native NOT_RUN for a pure-module slice (H4). See the [record](M3_1_IMAGE_WORKFLOW_IMPLEMENTATION.md). PR B waits for the owner's review. Gate C NOT_RUN.
