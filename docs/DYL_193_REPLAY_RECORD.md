@@ -11,6 +11,7 @@
 | Starting check | `git diff --quiet 6799a5e HEAD -- src tests index.js style.css plugins` → exit 0 at `ecb7ecd` and again at `b579eab` |
 | Probe head (tests added) | `133428768500373f36195928aff06a5bc9b21abb`: `tests/probes/dyl193/` only; `git diff --quiet 6799a5e 1334287 -- src index.js style.css plugins manifest.json` → exit 0 ([pins](evidence/dyl193/pins.json) `runtimeDiffFromCandidate`) |
 | Host | SillyTavern 1.19.0 `7e8663cd9c184a550b37238218bdd32c6efc68e9`, disposable clone per row, loopback only |
+| Current head versus tested heads | The current head differs from the tested heads `1334287` (desktop rows) and `8f784f0` (device run) only by the deletion of the two tracked `tests/probes/dyl193/__pycache__/*.pyc` files and the validator's comparison line, which now checks the frozen inputs against the probe head; the evidence package is byte-identical |
 | Tooling | Node v26.8.1, Playwright 1.62.1, headless Chromium 151.0.7922.34, Linux 7.0.0-38-generic x86_64, adb 1.0.41 (37.0.1) |
 | Package | [`docs/evidence/dyl193/`](evidence/dyl193/), 4.0 MiB, 79 artifact hashes in [`artifacts.json`](evidence/dyl193/artifacts.json); SHA-256 of `artifacts.json`: `c04cbecb81b4b94b94cca8e3b600be7cc848ce9e2d71cdede3c2ebee19c236a8` |
 
@@ -87,7 +88,7 @@ None found. The candidate produced no failing reproduction on any surface reache
 
 ## What `validate.py` covers and does not
 
-[`tests/probes/dyl193/validate.py`](../tests/probes/dyl193/validate.py) checks the pins (Node, Chromium, host SHA and version), that the runtime files at the probe head hash-equal the candidate's, that the recorded inputs still match the repository, that each of the four rows exited 0 with a PASS evidence record on the probe head, the checkpoint counts, that the synthetic flag is set on exactly the three emulated rows, PNG headers and the artifact manifest. It does **not** validate the dyl60 campaign layout (that is [`tests/probes/dyl60/validate.py`](../tests/probes/dyl60/validate.py), which expects ten campaign runs and does not apply to this package), does not judge a screenshot, cannot turn a SYNTHETIC row into a physical or assistive one, and knows nothing about the device beyond the presence of `device.txt`.
+[`tests/probes/dyl193/validate.py`](../tests/probes/dyl193/validate.py) checks the pins (Node, Chromium, host SHA and version), that the runtime files at the probe head hash-equal the candidate's, that the recorded inputs hash-equal the files at the probe head, that each of the four rows exited 0 with a PASS evidence record on the probe head, the checkpoint counts, that the synthetic flag is set on exactly the three emulated rows, PNG headers and the artifact manifest. It does **not** validate the dyl60 campaign layout (that is [`tests/probes/dyl60/validate.py`](../tests/probes/dyl60/validate.py), which expects ten campaign runs and does not apply to this package), does not judge a screenshot, cannot turn a SYNTHETIC row into a physical or assistive one, and knows nothing about the device beyond the presence of `device.txt`.
 
 ## Proposed amendments to the TESTING matrix (text only; rows change at merge)
 

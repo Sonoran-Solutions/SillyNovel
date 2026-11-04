@@ -16,7 +16,7 @@ for path in ['index.js', 'style.css', 'manifest.json']:
 for path, value in inputs.items():
     if path.startswith(('src/', 'plugins/')) and not path.startswith('plugins/sillynovel-storage/node_modules'):
         assert sha(subprocess.check_output(['git', 'show', pins['candidate'] + ':' + path], cwd=repo)) == value, path
-    assert sha((repo / path).read_bytes()) == value, path
+    assert sha(subprocess.check_output(['git', 'show', pins['probeHead'] + ':' + path], cwd=repo)) == value, path  # the tested head, not the working tree
 rows = {r['name']: r for r in runs}
 assert set(rows) >= {'adb-devices', 'adb-mdns', 'scaling', 'motion', 'assistive', 'groups'}
 device = (out / 'device.txt').read_text()
