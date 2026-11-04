@@ -1,5 +1,9 @@
 # Project status
 
+## M3.1 planning proposal (NOT approved) — 2026-11-03
+
+The [M3.1 image workflow plan](M3_1_IMAGE_WORKFLOW_PLAN.md) proposes M3 in the roadmap's order: M3.1 manual prompt/reference export and explicit PNG import into the existing library with no provider; M3.2 one manual missing-background request through the host's Image Generation extension on standard local ComfyUI (an answer to O05, from 1.18.0 source only, NOT_VERIFIED on 1.19.0); M3.3 approval, cache, stale-job, privacy and usage-limit controls; M3.4 further adapters later. It lists owner decisions H1–H11 with a recommendation each, maps every Gate C demonstration to a slice, and proposes T69–T80 as NOT_RUN. **It authorizes nothing**; runtime unchanged. Gate C NOT_RUN.
+
 ## Gate B verdict PASS — 2026-11-03
 
 The owner [recorded PASS](DECISIONS.md#gate-b-verdict--pass--2026-11-03) on candidate `6799a5e` in their own words, choosing to skip the session lines; the [Gate B record](evidence/gate-b/record.md) holds the hard gates, the DYL-193 evidence and the fixture counts, and NOT_RUN for every session and E16 line. The session host was the owner's regular SillyTavern 1.18.0 install with the candidate and its storage plugin installed on the owner's word. Nothing further is authorized: no beta, release or wider installation; the NOT_TESTED surfaces of DYL-193 and the four open PR D findings stand.
