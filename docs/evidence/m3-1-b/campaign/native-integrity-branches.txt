@@ -1,4 +1,4 @@
-Owned evidence root /tmp/sn-portability-host-eNlAnA
+Owned evidence root /tmp/sn-portability-host-wMKK5n
 PASS real host auth/CSRF, two-user project and asset isolation, two-client CAS, PNG hash and limits
 PASS browser create/import background + two sprites/arrange/save/reload/explicit reopen; named canonical files unchanged
 PASS candidate: complete scoped native inventory paths/counts/sizes/hashes and full settings unchanged across expression, artwork, save and explicit reopen; real persona/avatar, connection profile, lore, cards/groups/chats included
@@ -17,4 +17,4 @@ PASS delayed successful save receipt cannot redirect switched chat
 PASS actual host native send/stream/stop, navigation and backlog remain functional
 PASS plugin/server restart preserves original and imported layout/assets; imported project explicitly reopens in real browser
 PASS plugin disabled at startup refuses bundle controls and retains session stage/native composer
-Evidence /tmp/sn-portability-host-eNlAnA/evidence.json
+Evidence /tmp/sn-portability-host-wMKK5n/evidence.json

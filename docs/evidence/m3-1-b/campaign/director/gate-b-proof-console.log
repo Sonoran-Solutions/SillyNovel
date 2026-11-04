@@ -1,41 +1,41 @@
-1/40 presence-1 proposal 15 ms
-2/40 presence-2 refused NOT_SINGLE_JSON 11 ms
-3/40 presence-3 failed TRANSPORT_ERROR 21 ms
-4/40 presence-4 proposal 12 ms
-5/40 presence-5 proposal 15 ms
-6/40 mentions-1 proposal 12 ms
-7/40 mentions-2 proposal 12 ms
-8/40 mentions-3 proposal 13 ms
-9/40 mentions-4 proposal 16 ms
-10/40 mentions-5 proposal 11 ms
-11/40 negation-1 proposal 15 ms
-12/40 negation-2 proposal 11 ms
-13/40 negation-3 proposal 12 ms
-14/40 negation-4 proposal 15 ms
-15/40 negation-5 proposal 15 ms
-16/40 hypothetical-travel-1 proposal 13 ms
-17/40 hypothetical-travel-2 proposal 16 ms
-18/40 hypothetical-travel-3 proposal 10 ms
-19/40 hypothetical-travel-4 proposal 8 ms
+1/40 presence-1 proposal 9 ms
+2/40 presence-2 refused NOT_SINGLE_JSON 7 ms
+3/40 presence-3 failed TRANSPORT_ERROR 15 ms
+4/40 presence-4 proposal 7 ms
+5/40 presence-5 proposal 7 ms
+6/40 mentions-1 proposal 8 ms
+7/40 mentions-2 proposal 6 ms
+8/40 mentions-3 proposal 5 ms
+9/40 mentions-4 proposal 9 ms
+10/40 mentions-5 proposal 6 ms
+11/40 negation-1 proposal 6 ms
+12/40 negation-2 proposal 9 ms
+13/40 negation-3 proposal 7 ms
+14/40 negation-4 proposal 6 ms
+15/40 negation-5 proposal 8 ms
+16/40 hypothetical-travel-1 proposal 6 ms
+17/40 hypothetical-travel-2 proposal 6 ms
+18/40 hypothetical-travel-3 proposal 7 ms
+19/40 hypothetical-travel-4 proposal 6 ms
 20/40 hypothetical-travel-5 proposal 7 ms
 21/40 flashbacks-1 failed ABANDONED 2000 ms
-22/40 flashbacks-2 proposal 8 ms
-23/40 flashbacks-3 proposal 6 ms
-24/40 flashbacks-4 proposal 6 ms
-25/40 flashbacks-5 proposal 7 ms
+22/40 flashbacks-2 proposal 13 ms
+23/40 flashbacks-3 proposal 14 ms
+24/40 flashbacks-4 proposal 19 ms
+25/40 flashbacks-5 proposal 11 ms
 26/40 outfit-continuity-1 proposal 7 ms
-27/40 outfit-continuity-2 proposal 9 ms
-28/40 outfit-continuity-3 proposal 17 ms
-29/40 outfit-continuity-4 proposal 9 ms
-30/40 outfit-continuity-5 proposal 7 ms
-31/40 group-authorship-1 proposal 7 ms
-32/40 group-authorship-2 proposal 6 ms
+27/40 outfit-continuity-2 proposal 6 ms
+28/40 outfit-continuity-3 proposal 6 ms
+29/40 outfit-continuity-4 proposal 5 ms
+30/40 outfit-continuity-5 proposal 6 ms
+31/40 group-authorship-1 proposal 6 ms
+32/40 group-authorship-2 proposal 7 ms
 33/40 group-authorship-3 proposal 6 ms
 34/40 group-authorship-4 proposal 5 ms
 35/40 group-authorship-5 proposal 5 ms
 36/40 user-locks-1 proposal 5 ms
-37/40 user-locks-2 proposal 6 ms
-38/40 user-locks-3 proposal 7 ms
-39/40 user-locks-4 proposal 6 ms
-40/40 user-locks-5 proposal 6 ms
-Finished: 40 cases, 0 not run. Results /tmp/sn-m2-director-mmm39I/gate-b-proof-results.json
+37/40 user-locks-2 proposal 4 ms
+38/40 user-locks-3 proposal 6 ms
+39/40 user-locks-4 proposal 4 ms
+40/40 user-locks-5 proposal 4 ms
+Finished: 40 cases, 0 not run. Results /tmp/sn-m2-director-KdWfZL/gate-b-proof-results.json

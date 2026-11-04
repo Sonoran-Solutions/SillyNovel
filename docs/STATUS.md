@@ -2,12 +2,12 @@
 
 ## M3.1 PR B candidate (draft, unmerged) — 2026-11-03
 
-The Image workflow is implemented on frozen `0c858c8` for owner review under [DYL-207](https://linear.app/devils17/issue/DYL-207/sillynovel-m31-manual-image-exchange-promptreference-export-explicit):
+The Image workflow is implemented on frozen `62b848b` for owner review under [DYL-207](https://linear.app/devils17/issue/DYL-207/sillynovel-m31-manual-image-exchange-promptreference-export-explicit):
 - **Where:** a closed disclosure in the Artwork Library.
 - **Export:** prompt fields with per-field Copy, Download prompt, and digest-checked reference downloads of this project's PNGs.
 - **Import:** a result PNG checked before decode and previewed locally, then **Import and apply background**, which is today's import and applies, locks and dirties.
 
-Nothing is sent to an image service. Full campaign on a disposable pinned SillyTavern 1.19.0 host: Node 373, storage 126, browser 105, seven native campaigns (one new checkpoint drives the workflow through the real plugin); `validate.py` PASS. Keyboard-only, narrow, scaling, touch and screen-reader passes of the new controls (T73) NOT_RUN. See the [record](M3_1_IMAGE_WORKFLOW_IMPLEMENTATION.md#pr-b--the-image-workflow). Gate C NOT_RUN.
+Nothing is sent to an image service. On the owner's review, Import and apply now follows the PNG import's gate, and draft text survives detach. Full campaign on a disposable pinned SillyTavern 1.19.0 host: Node 373, storage 126, browser 105, seven native campaigns (one new checkpoint drives the workflow through the real plugin); `validate.py` PASS. Keyboard-only, narrow, scaling, touch and screen-reader passes of the new controls (T73) NOT_RUN. See the [record](M3_1_IMAGE_WORKFLOW_IMPLEMENTATION.md#pr-b--the-image-workflow). Gate C NOT_RUN.
 
 ## Post-Gate-B cleanup candidate (draft, unmerged) — 2026-11-03
 

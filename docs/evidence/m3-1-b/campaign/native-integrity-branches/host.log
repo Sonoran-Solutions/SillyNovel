@@ -1,6 +1,6 @@
-Node version: v26.8.1. Running in undefined environment. Server directory: /tmp/sn-portability-host-eNlAnA/host
-Using config path: /tmp/sn-portability-host-eNlAnA/config.yaml
-Using data root: /tmp/sn-portability-host-eNlAnA/data
+Node version: v26.8.1. Running in undefined environment. Server directory: /tmp/sn-portability-host-wMKK5n/host
+Using config path: /tmp/sn-portability-host-wMKK5n/config.yaml
+Using data root: /tmp/sn-portability-host-wMKK5n/data
 Preferring IPv4 for DNS resolution
 
 SillyTavern 1.19.0
@@ -8,17 +8,17 @@ Running 'HEAD' (7e8663cd9) - 9/14/2026, 10:55:46 AM MST
 
 
 Compiling frontend libraries...
-webpack 5.105.4 compiled [1m[32msuccessfully[39m[22m in 712 ms
+webpack 5.105.4 compiled [1m[32msuccessfully[39m[22m in 359 ms
 
-]2;SillyTavern WebServer\SillyTavern is listening on IPv4: 127.0.0.1:46623
-
-==================================================
-
-Go to: http://127.0.0.1:46623/ to open SillyTavern
+]2;SillyTavern WebServer\SillyTavern is listening on IPv4: 127.0.0.1:44481
 
 ==================================================
 
-Login successful: default-user from 127.0.0.1 at 11/3/2026, 9:44:58 PM
+Go to: http://127.0.0.1:44481/ to open SillyTavern
+
+==================================================
+
+Login successful: default-user from 127.0.0.1 at 11/3/2026, 11:31:36 PM
 Extensions available for default-user [
   { type: 'system', name: 'assets' },
   { type: 'system', name: 'attachments' },

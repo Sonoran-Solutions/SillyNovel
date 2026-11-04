@@ -1,11 +1,11 @@
 {
  "schemaVersion": 1,
  "mode": "loopback-proof",
- "candidate": "0c858c8c0ac1d09e9d709acb2866b31d79901dd8",
+ "candidate": "62b848bc22206a0ca153993953426f386fba8d77",
  "casesSha256": "ada4ff1ed766af87872a0b50973b95a0d7b652a0b773ddaeb0ad54a6804cacf5",
  "promptVersion": "0ef22635aed99352",
  "perCaseMs": 2000,
- "startedUTC": "2026-11-04T04:56:53.672Z",
+ "startedUTC": "2026-11-04T06:43:20.696Z",
  "results": [
   {
    "id": "presence-1",
@@ -25,21 +25,21 @@
      }
     ]
    },
-   "elapsedMs": 15
+   "elapsedMs": 9
   },
   {
    "id": "presence-2",
    "category": "presence",
    "status": "refused",
    "code": "NOT_SINGLE_JSON",
-   "elapsedMs": 11
+   "elapsedMs": 7
   },
   {
    "id": "presence-3",
    "category": "presence",
    "status": "failed",
    "code": "TRANSPORT_ERROR",
-   "elapsedMs": 21
+   "elapsedMs": 15
   },
   {
    "id": "presence-4",
@@ -49,7 +49,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 12
+   "elapsedMs": 7
   },
   {
    "id": "presence-5",
@@ -69,7 +69,7 @@
      }
     ]
    },
-   "elapsedMs": 15
+   "elapsedMs": 7
   },
   {
    "id": "mentions-1",
@@ -88,7 +88,7 @@
      }
     ]
    },
-   "elapsedMs": 12
+   "elapsedMs": 8
   },
   {
    "id": "mentions-2",
@@ -98,7 +98,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 12
+   "elapsedMs": 6
   },
   {
    "id": "mentions-3",
@@ -108,7 +108,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 13
+   "elapsedMs": 5
   },
   {
    "id": "mentions-4",
@@ -118,7 +118,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 16
+   "elapsedMs": 9
   },
   {
    "id": "mentions-5",
@@ -147,7 +147,7 @@
      }
     ]
    },
-   "elapsedMs": 11
+   "elapsedMs": 6
   },
   {
    "id": "negation-1",
@@ -157,7 +157,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 15
+   "elapsedMs": 6
   },
   {
    "id": "negation-2",
@@ -167,7 +167,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 11
+   "elapsedMs": 9
   },
   {
    "id": "negation-3",
@@ -177,7 +177,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 12
+   "elapsedMs": 7
   },
   {
    "id": "negation-4",
@@ -187,7 +187,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 15
+   "elapsedMs": 6
   },
   {
    "id": "negation-5",
@@ -197,7 +197,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 15
+   "elapsedMs": 8
   },
   {
    "id": "hypothetical-travel-1",
@@ -216,7 +216,7 @@
      }
     ]
    },
-   "elapsedMs": 13
+   "elapsedMs": 6
   },
   {
    "id": "hypothetical-travel-2",
@@ -226,7 +226,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 16
+   "elapsedMs": 6
   },
   {
    "id": "hypothetical-travel-3",
@@ -236,7 +236,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 10
+   "elapsedMs": 7
   },
   {
    "id": "hypothetical-travel-4",
@@ -246,7 +246,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 8
+   "elapsedMs": 6
   },
   {
    "id": "hypothetical-travel-5",
@@ -282,7 +282,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 8
+   "elapsedMs": 13
   },
   {
    "id": "flashbacks-3",
@@ -292,7 +292,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 6
+   "elapsedMs": 14
   },
   {
    "id": "flashbacks-4",
@@ -302,7 +302,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 6
+   "elapsedMs": 19
   },
   {
    "id": "flashbacks-5",
@@ -322,7 +322,7 @@
      }
     ]
    },
-   "elapsedMs": 7
+   "elapsedMs": 11
   },
   {
    "id": "outfit-continuity-1",
@@ -352,7 +352,7 @@
      }
     ]
    },
-   "elapsedMs": 9
+   "elapsedMs": 6
   },
   {
    "id": "outfit-continuity-3",
@@ -362,7 +362,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 17
+   "elapsedMs": 6
   },
   {
    "id": "outfit-continuity-4",
@@ -372,7 +372,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 9
+   "elapsedMs": 5
   },
   {
    "id": "outfit-continuity-5",
@@ -392,7 +392,7 @@
      }
     ]
    },
-   "elapsedMs": 7
+   "elapsedMs": 6
   },
   {
    "id": "group-authorship-1",
@@ -412,7 +412,7 @@
      }
     ]
    },
-   "elapsedMs": 7
+   "elapsedMs": 6
   },
   {
    "id": "group-authorship-2",
@@ -432,7 +432,7 @@
      }
     ]
    },
-   "elapsedMs": 6
+   "elapsedMs": 7
   },
   {
    "id": "group-authorship-3",
@@ -492,7 +492,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 6
+   "elapsedMs": 4
   },
   {
    "id": "user-locks-3",
@@ -512,7 +512,7 @@
      }
     ]
    },
-   "elapsedMs": 7
+   "elapsedMs": 6
   },
   {
    "id": "user-locks-4",
@@ -522,7 +522,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 6
+   "elapsedMs": 4
   },
   {
    "id": "user-locks-5",
@@ -542,7 +542,7 @@
      }
     ]
    },
-   "elapsedMs": 6
+   "elapsedMs": 4
   }
  ]
 }

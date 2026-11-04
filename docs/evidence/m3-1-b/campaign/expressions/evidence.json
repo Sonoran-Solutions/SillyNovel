@@ -1,8 +1,8 @@
 {
-  "candidate": "0c858c8c0ac1d09e9d709acb2866b31d79901dd8",
+  "candidate": "62b848bc22206a0ca153993953426f386fba8d77",
   "host": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
   "node": "v26.8.1",
-  "root": "/tmp/sn-portability-host-CnTLwn",
+  "root": "/tmp/sn-portability-host-8T8GAR",
   "checks": [
     "real host auth/CSRF, two-user project and asset isolation, two-client CAS, PNG hash and limits",
     "browser create/import background + two sprites/arrange/save/reload/explicit reopen; named canonical files unchanged",
@@ -22,8 +22,8 @@
     "plugin disabled at startup refuses bundle controls and retains session stage/native composer"
   ],
   "files": {
-    "default-user/characters/Project A.png": "f916d75cae63d6fd1e62aeb03d9586f630735b249b95355e1b72bd3e20daf9f4",
-    "default-user/characters/Project B.png": "a94d6291dd0cbf8bbdc10439768a8cb030362ff89356566d458654cff6c3dbbc",
+    "default-user/characters/Project A.png": "ab48ea8ffa2d37bdd105fb8c1be325fd01ad2cc5f37b25f2d5bd56ab0af348ad",
+    "default-user/characters/Project B.png": "c7547874a496fc8624357e9e3ead8d40ad9713f4eab135030213af9255c3dd08",
     "default-user/characters/Seraphina/admiration.png": "e451994487b3a5b7c72d6e6025c8cbe6bbcfbf01a490042b8b581522e6ba4f96",
     "default-user/characters/Seraphina/amusement.png": "1cedaee06fb1c740c5c8c52de8973f733789d51fe9b23fcb633635e755ae6e6f",
     "default-user/characters/Seraphina/anger.png": "d657d77b1bce609dd6006582cf687691871411eb041f9f4c41da4765b12ea069",
@@ -53,8 +53,8 @@
     "default-user/characters/Seraphina/sadness.png": "3819c2bca59224f67767eb3762c846e35d5eb5272be03f35c21fc32163df67a6",
     "default-user/characters/Seraphina/surprise.png": "f6a9f657d081f670a961649a5a21526ec251262ca06adf99626509059fbbb103",
     "default-user/characters/default_Seraphina.png": "8a71e8270f54fafbccf905b1bdf053a6a55f57bea89c01fcd8c0e87ee76a2d52",
-    "default-user/chats/Project A/Project A - 2026-11-03@21h39m10s458ms.jsonl": "5e50e99a99396e401ea0113923f599746ae5f9795b17af246e40d7c294438771",
-    "default-user/chats/Project B/Project B - 2026-11-03@21h39m10s489ms.jsonl": "2f803368ad85fb809cbb2b22a1632947d02c4d3df6fa07a79080b14e21026ec9",
+    "default-user/chats/Project A/Project A - 2026-11-03@23h27m02s496ms.jsonl": "3bac133e20e49b0e17215bd89467a0be02e45d8f16443b70f07f55a8d2f44532",
+    "default-user/chats/Project B/Project B - 2026-11-03@23h27m02s526ms.jsonl": "34851cf0883174b9cb41cbbe84d5ff36d16ddbf18cc9bcabd83f3580ceb808b4",
     "default-user/worlds/Eldoria.json": "bfc2548443c890746a54d54e35e41265b02d1b59fd06d72552b305bf9b1e063c"
   },
   "notTested": [
@@ -75,8 +75,8 @@
   "browser": "151.0.7922.34",
   "expressions": {
     "nativeBefore": {
-      "default-user/characters/Project A.png": "f916d75cae63d6fd1e62aeb03d9586f630735b249b95355e1b72bd3e20daf9f4",
-      "default-user/characters/Project B.png": "a94d6291dd0cbf8bbdc10439768a8cb030362ff89356566d458654cff6c3dbbc",
+      "default-user/characters/Project A.png": "ab48ea8ffa2d37bdd105fb8c1be325fd01ad2cc5f37b25f2d5bd56ab0af348ad",
+      "default-user/characters/Project B.png": "c7547874a496fc8624357e9e3ead8d40ad9713f4eab135030213af9255c3dd08",
       "default-user/characters/Seraphina/admiration.png": "e451994487b3a5b7c72d6e6025c8cbe6bbcfbf01a490042b8b581522e6ba4f96",
       "default-user/characters/Seraphina/amusement.png": "1cedaee06fb1c740c5c8c52de8973f733789d51fe9b23fcb633635e755ae6e6f",
       "default-user/characters/Seraphina/anger.png": "d657d77b1bce609dd6006582cf687691871411eb041f9f4c41da4765b12ea069",
@@ -106,15 +106,15 @@
       "default-user/characters/Seraphina/sadness.png": "3819c2bca59224f67767eb3762c846e35d5eb5272be03f35c21fc32163df67a6",
       "default-user/characters/Seraphina/surprise.png": "f6a9f657d081f670a961649a5a21526ec251262ca06adf99626509059fbbb103",
       "default-user/characters/default_Seraphina.png": "8a71e8270f54fafbccf905b1bdf053a6a55f57bea89c01fcd8c0e87ee76a2d52",
-      "default-user/chats/Project A/Project A - 2026-11-03@21h39m10s458ms.jsonl": "e79b64d6a6c7b880e43e430cfb95bd9b2904da49723a177e26e5c497cf720977",
-      "default-user/chats/Project B/Project B - 2026-11-03@21h39m10s489ms.jsonl": "2f803368ad85fb809cbb2b22a1632947d02c4d3df6fa07a79080b14e21026ec9",
+      "default-user/chats/Project A/Project A - 2026-11-03@23h27m02s496ms.jsonl": "ee195c2c2a008e4e82567ba921577eef08d3f7149287dae608a0b09a3570ded2",
+      "default-user/chats/Project B/Project B - 2026-11-03@23h27m02s526ms.jsonl": "34851cf0883174b9cb41cbbe84d5ff36d16ddbf18cc9bcabd83f3580ceb808b4",
       "default-user/worlds/Eldoria.json": "bfc2548443c890746a54d54e35e41265b02d1b59fd06d72552b305bf9b1e063c",
       "default-user/worlds/expression-fixture.json": "07f23f575b2373c757a172e05e787442af84e9b1204ab2b9d11b4e74b8769372",
       "default-user/avatars/expression-persona.png": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f"
     },
     "nativeAfter": {
-      "default-user/characters/Project A.png": "f916d75cae63d6fd1e62aeb03d9586f630735b249b95355e1b72bd3e20daf9f4",
-      "default-user/characters/Project B.png": "a94d6291dd0cbf8bbdc10439768a8cb030362ff89356566d458654cff6c3dbbc",
+      "default-user/characters/Project A.png": "ab48ea8ffa2d37bdd105fb8c1be325fd01ad2cc5f37b25f2d5bd56ab0af348ad",
+      "default-user/characters/Project B.png": "c7547874a496fc8624357e9e3ead8d40ad9713f4eab135030213af9255c3dd08",
       "default-user/characters/Seraphina/admiration.png": "e451994487b3a5b7c72d6e6025c8cbe6bbcfbf01a490042b8b581522e6ba4f96",
       "default-user/characters/Seraphina/amusement.png": "1cedaee06fb1c740c5c8c52de8973f733789d51fe9b23fcb633635e755ae6e6f",
       "default-user/characters/Seraphina/anger.png": "d657d77b1bce609dd6006582cf687691871411eb041f9f4c41da4765b12ea069",
@@ -144,25 +144,25 @@
       "default-user/characters/Seraphina/sadness.png": "3819c2bca59224f67767eb3762c846e35d5eb5272be03f35c21fc32163df67a6",
       "default-user/characters/Seraphina/surprise.png": "f6a9f657d081f670a961649a5a21526ec251262ca06adf99626509059fbbb103",
       "default-user/characters/default_Seraphina.png": "8a71e8270f54fafbccf905b1bdf053a6a55f57bea89c01fcd8c0e87ee76a2d52",
-      "default-user/chats/Project A/Project A - 2026-11-03@21h39m10s458ms.jsonl": "e79b64d6a6c7b880e43e430cfb95bd9b2904da49723a177e26e5c497cf720977",
-      "default-user/chats/Project B/Project B - 2026-11-03@21h39m10s489ms.jsonl": "2f803368ad85fb809cbb2b22a1632947d02c4d3df6fa07a79080b14e21026ec9",
+      "default-user/chats/Project A/Project A - 2026-11-03@23h27m02s496ms.jsonl": "ee195c2c2a008e4e82567ba921577eef08d3f7149287dae608a0b09a3570ded2",
+      "default-user/chats/Project B/Project B - 2026-11-03@23h27m02s526ms.jsonl": "34851cf0883174b9cb41cbbe84d5ff36d16ddbf18cc9bcabd83f3580ceb808b4",
       "default-user/worlds/Eldoria.json": "bfc2548443c890746a54d54e35e41265b02d1b59fd06d72552b305bf9b1e063c",
       "default-user/worlds/expression-fixture.json": "07f23f575b2373c757a172e05e787442af84e9b1204ab2b9d11b4e74b8769372",
       "default-user/avatars/expression-persona.png": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f"
     },
     "original": {
       "schemaVersion": 2,
-      "projectId": "65172829-3fad-4855-9343-edb6dab74f2b",
+      "projectId": "4dbff216-505b-4f0e-b138-6a26f662d2a7",
       "name": "Browser project",
       "revision": 1,
       "scene": {
-        "backgroundAssetId": "b3739436-53f8-4f04-8727-d92b239762f1",
+        "backgroundAssetId": "31c65f9e-4308-404a-a19a-7e5e2e15b7c0",
         "backgroundLocked": true,
         "actors": [
           {
-            "actorId": "a43898a9-1903-4273-b264-29b7bd4a791f",
+            "actorId": "2eaf564d-7367-4779-8cc7-ab87c920a97b",
             "name": "One",
-            "spriteAssetId": "7e8354a3-0809-4b34-9294-ea9b0adb896c",
+            "spriteAssetId": "20d706ed-b8c5-4153-aa81-6b518d136faa",
             "slot": "left",
             "present": true,
             "locks": {
@@ -172,9 +172,9 @@
             }
           },
           {
-            "actorId": "9d864f10-ab6b-4b25-8b5a-d1c12766535b",
+            "actorId": "6bf30e1e-1fff-4227-a83e-242343ac5808",
             "name": "Two",
-            "spriteAssetId": "4270eec5-0d69-46f4-8dc6-b56381d1e07e",
+            "spriteAssetId": "bd3df016-be9f-4f1c-b52f-882596cca760",
             "slot": "right",
             "present": true,
             "locks": {
@@ -187,38 +187,38 @@
       },
       "catalog": [
         {
-          "assetId": "b3739436-53f8-4f04-8727-d92b239762f1",
+          "assetId": "31c65f9e-4308-404a-a19a-7e5e2e15b7c0",
           "label": "Background",
           "kind": "background",
           "actorId": null
         },
         {
-          "assetId": "7e8354a3-0809-4b34-9294-ea9b0adb896c",
+          "assetId": "20d706ed-b8c5-4153-aa81-6b518d136faa",
           "label": "One sprite",
           "kind": "sprite",
-          "actorId": "a43898a9-1903-4273-b264-29b7bd4a791f"
+          "actorId": "2eaf564d-7367-4779-8cc7-ab87c920a97b"
         },
         {
-          "assetId": "4270eec5-0d69-46f4-8dc6-b56381d1e07e",
+          "assetId": "bd3df016-be9f-4f1c-b52f-882596cca760",
           "label": "Two sprite",
           "kind": "sprite",
-          "actorId": "9d864f10-ab6b-4b25-8b5a-d1c12766535b"
+          "actorId": "6bf30e1e-1fff-4227-a83e-242343ac5808"
         }
       ]
     },
     "saved": {
       "schemaVersion": 2,
-      "projectId": "65172829-3fad-4855-9343-edb6dab74f2b",
+      "projectId": "4dbff216-505b-4f0e-b138-6a26f662d2a7",
       "name": "Browser project",
       "revision": 2,
       "scene": {
-        "backgroundAssetId": "b3739436-53f8-4f04-8727-d92b239762f1",
+        "backgroundAssetId": "31c65f9e-4308-404a-a19a-7e5e2e15b7c0",
         "backgroundLocked": true,
         "actors": [
           {
-            "actorId": "a43898a9-1903-4273-b264-29b7bd4a791f",
+            "actorId": "2eaf564d-7367-4779-8cc7-ab87c920a97b",
             "name": "One",
-            "spriteAssetId": "7e8354a3-0809-4b34-9294-ea9b0adb896c",
+            "spriteAssetId": "20d706ed-b8c5-4153-aa81-6b518d136faa",
             "slot": "left",
             "present": true,
             "locks": {
@@ -228,9 +228,9 @@
             }
           },
           {
-            "actorId": "9d864f10-ab6b-4b25-8b5a-d1c12766535b",
+            "actorId": "6bf30e1e-1fff-4227-a83e-242343ac5808",
             "name": "Two",
-            "spriteAssetId": "4270eec5-0d69-46f4-8dc6-b56381d1e07e",
+            "spriteAssetId": "bd3df016-be9f-4f1c-b52f-882596cca760",
             "slot": "right",
             "present": true,
             "locks": {
@@ -243,22 +243,22 @@
       },
       "catalog": [
         {
-          "assetId": "b3739436-53f8-4f04-8727-d92b239762f1",
+          "assetId": "31c65f9e-4308-404a-a19a-7e5e2e15b7c0",
           "label": "Background",
           "kind": "background",
           "actorId": null
         },
         {
-          "assetId": "7e8354a3-0809-4b34-9294-ea9b0adb896c",
+          "assetId": "20d706ed-b8c5-4153-aa81-6b518d136faa",
           "label": "One sprite",
           "kind": "sprite",
-          "actorId": "a43898a9-1903-4273-b264-29b7bd4a791f"
+          "actorId": "2eaf564d-7367-4779-8cc7-ab87c920a97b"
         },
         {
-          "assetId": "4270eec5-0d69-46f4-8dc6-b56381d1e07e",
+          "assetId": "bd3df016-be9f-4f1c-b52f-882596cca760",
           "label": "Two sprite",
           "kind": "sprite",
-          "actorId": "9d864f10-ab6b-4b25-8b5a-d1c12766535b"
+          "actorId": "6bf30e1e-1fff-4227-a83e-242343ac5808"
         }
       ]
     },
@@ -267,13 +267,13 @@
       "expectedRevision": 1,
       "name": "Browser project",
       "scene": {
-        "backgroundAssetId": "b3739436-53f8-4f04-8727-d92b239762f1",
+        "backgroundAssetId": "31c65f9e-4308-404a-a19a-7e5e2e15b7c0",
         "backgroundLocked": true,
         "actors": [
           {
-            "actorId": "a43898a9-1903-4273-b264-29b7bd4a791f",
+            "actorId": "2eaf564d-7367-4779-8cc7-ab87c920a97b",
             "name": "One",
-            "spriteAssetId": "7e8354a3-0809-4b34-9294-ea9b0adb896c",
+            "spriteAssetId": "20d706ed-b8c5-4153-aa81-6b518d136faa",
             "slot": "left",
             "present": true,
             "locks": {
@@ -283,9 +283,9 @@
             }
           },
           {
-            "actorId": "9d864f10-ab6b-4b25-8b5a-d1c12766535b",
+            "actorId": "6bf30e1e-1fff-4227-a83e-242343ac5808",
             "name": "Two",
-            "spriteAssetId": "4270eec5-0d69-46f4-8dc6-b56381d1e07e",
+            "spriteAssetId": "bd3df016-be9f-4f1c-b52f-882596cca760",
             "slot": "right",
             "present": true,
             "locks": {
@@ -298,22 +298,22 @@
       },
       "catalog": [
         {
-          "assetId": "b3739436-53f8-4f04-8727-d92b239762f1",
+          "assetId": "31c65f9e-4308-404a-a19a-7e5e2e15b7c0",
           "label": "Background",
           "kind": "background",
           "actorId": null
         },
         {
-          "assetId": "7e8354a3-0809-4b34-9294-ea9b0adb896c",
+          "assetId": "20d706ed-b8c5-4153-aa81-6b518d136faa",
           "label": "One sprite",
           "kind": "sprite",
-          "actorId": "a43898a9-1903-4273-b264-29b7bd4a791f"
+          "actorId": "2eaf564d-7367-4779-8cc7-ab87c920a97b"
         },
         {
-          "assetId": "4270eec5-0d69-46f4-8dc6-b56381d1e07e",
+          "assetId": "bd3df016-be9f-4f1c-b52f-882596cca760",
           "label": "Two sprite",
           "kind": "sprite",
-          "actorId": "9d864f10-ab6b-4b25-8b5a-d1c12766535b"
+          "actorId": "6bf30e1e-1fff-4227-a83e-242343ac5808"
         }
       ]
     },
@@ -328,8 +328,8 @@
       "expression-invalidated-narrow-controls.png"
     ],
     "nativeAfterIntentionalEdit": {
-      "default-user/characters/Project A.png": "f916d75cae63d6fd1e62aeb03d9586f630735b249b95355e1b72bd3e20daf9f4",
-      "default-user/characters/Project B.png": "a94d6291dd0cbf8bbdc10439768a8cb030362ff89356566d458654cff6c3dbbc",
+      "default-user/characters/Project A.png": "ab48ea8ffa2d37bdd105fb8c1be325fd01ad2cc5f37b25f2d5bd56ab0af348ad",
+      "default-user/characters/Project B.png": "c7547874a496fc8624357e9e3ead8d40ad9713f4eab135030213af9255c3dd08",
       "default-user/characters/Seraphina/admiration.png": "e451994487b3a5b7c72d6e6025c8cbe6bbcfbf01a490042b8b581522e6ba4f96",
       "default-user/characters/Seraphina/amusement.png": "1cedaee06fb1c740c5c8c52de8973f733789d51fe9b23fcb633635e755ae6e6f",
       "default-user/characters/Seraphina/anger.png": "d657d77b1bce609dd6006582cf687691871411eb041f9f4c41da4765b12ea069",
@@ -359,8 +359,8 @@
       "default-user/characters/Seraphina/sadness.png": "3819c2bca59224f67767eb3762c846e35d5eb5272be03f35c21fc32163df67a6",
       "default-user/characters/Seraphina/surprise.png": "f6a9f657d081f670a961649a5a21526ec251262ca06adf99626509059fbbb103",
       "default-user/characters/default_Seraphina.png": "8a71e8270f54fafbccf905b1bdf053a6a55f57bea89c01fcd8c0e87ee76a2d52",
-      "default-user/chats/Project A/Project A - 2026-11-03@21h39m10s458ms.jsonl": "2c25b2c45eba29dfecb625566ddef760e01e1c856240c3e56bb9d9a80ab93c5f",
-      "default-user/chats/Project B/Project B - 2026-11-03@21h39m10s489ms.jsonl": "2f803368ad85fb809cbb2b22a1632947d02c4d3df6fa07a79080b14e21026ec9",
+      "default-user/chats/Project A/Project A - 2026-11-03@23h27m02s496ms.jsonl": "c389eddbb6a5b2ac276e197cb49956465750e6d86c151a0d11d5fc0384e04d73",
+      "default-user/chats/Project B/Project B - 2026-11-03@23h27m02s526ms.jsonl": "34851cf0883174b9cb41cbbe84d5ff36d16ddbf18cc9bcabd83f3580ceb808b4",
       "default-user/worlds/Eldoria.json": "bfc2548443c890746a54d54e35e41265b02d1b59fd06d72552b305bf9b1e063c",
       "default-user/worlds/expression-fixture.json": "07f23f575b2373c757a172e05e787442af84e9b1204ab2b9d11b4e74b8769372",
       "default-user/avatars/expression-persona.png": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f"
@@ -372,14 +372,14 @@
     ]
   },
   "bundle": {
-    "sha256": "29358611f6cfae69a2124930146de7f9755b2bc2743374b48d0b87464b028c79",
+    "sha256": "e7fdffba72f28f1730714170573bda0737f0658619e50131a74ea9f897b6bae2",
     "bytes": 28190,
     "format": "sillynovel-project",
     "version": 1
   },
   "portabilityNativeBefore": {
-    "default-user/characters/Project A.png": "f916d75cae63d6fd1e62aeb03d9586f630735b249b95355e1b72bd3e20daf9f4",
-    "default-user/characters/Project B.png": "a94d6291dd0cbf8bbdc10439768a8cb030362ff89356566d458654cff6c3dbbc",
+    "default-user/characters/Project A.png": "ab48ea8ffa2d37bdd105fb8c1be325fd01ad2cc5f37b25f2d5bd56ab0af348ad",
+    "default-user/characters/Project B.png": "c7547874a496fc8624357e9e3ead8d40ad9713f4eab135030213af9255c3dd08",
     "default-user/characters/Seraphina/admiration.png": "e451994487b3a5b7c72d6e6025c8cbe6bbcfbf01a490042b8b581522e6ba4f96",
     "default-user/characters/Seraphina/amusement.png": "1cedaee06fb1c740c5c8c52de8973f733789d51fe9b23fcb633635e755ae6e6f",
     "default-user/characters/Seraphina/anger.png": "d657d77b1bce609dd6006582cf687691871411eb041f9f4c41da4765b12ea069",
@@ -409,15 +409,15 @@
     "default-user/characters/Seraphina/sadness.png": "3819c2bca59224f67767eb3762c846e35d5eb5272be03f35c21fc32163df67a6",
     "default-user/characters/Seraphina/surprise.png": "f6a9f657d081f670a961649a5a21526ec251262ca06adf99626509059fbbb103",
     "default-user/characters/default_Seraphina.png": "8a71e8270f54fafbccf905b1bdf053a6a55f57bea89c01fcd8c0e87ee76a2d52",
-    "default-user/chats/Project A/Project A - 2026-11-03@21h39m10s458ms.jsonl": "def82649b9fab82863724935a3b6e42367771bd8aa91a7f3256607cb27e3c93a",
-    "default-user/chats/Project B/Project B - 2026-11-03@21h39m10s489ms.jsonl": "2f803368ad85fb809cbb2b22a1632947d02c4d3df6fa07a79080b14e21026ec9",
+    "default-user/chats/Project A/Project A - 2026-11-03@23h27m02s496ms.jsonl": "4099b265cbb1af5fff123b5492e9c1e5cf72e7a54e74ffa8091c212ed14d92a1",
+    "default-user/chats/Project B/Project B - 2026-11-03@23h27m02s526ms.jsonl": "34851cf0883174b9cb41cbbe84d5ff36d16ddbf18cc9bcabd83f3580ceb808b4",
     "default-user/worlds/Eldoria.json": "bfc2548443c890746a54d54e35e41265b02d1b59fd06d72552b305bf9b1e063c",
     "default-user/worlds/expression-fixture.json": "07f23f575b2373c757a172e05e787442af84e9b1204ab2b9d11b4e74b8769372",
     "default-user/avatars/expression-persona.png": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f"
   },
   "portabilityNativeAfter": {
-    "default-user/characters/Project A.png": "f916d75cae63d6fd1e62aeb03d9586f630735b249b95355e1b72bd3e20daf9f4",
-    "default-user/characters/Project B.png": "a94d6291dd0cbf8bbdc10439768a8cb030362ff89356566d458654cff6c3dbbc",
+    "default-user/characters/Project A.png": "ab48ea8ffa2d37bdd105fb8c1be325fd01ad2cc5f37b25f2d5bd56ab0af348ad",
+    "default-user/characters/Project B.png": "c7547874a496fc8624357e9e3ead8d40ad9713f4eab135030213af9255c3dd08",
     "default-user/characters/Seraphina/admiration.png": "e451994487b3a5b7c72d6e6025c8cbe6bbcfbf01a490042b8b581522e6ba4f96",
     "default-user/characters/Seraphina/amusement.png": "1cedaee06fb1c740c5c8c52de8973f733789d51fe9b23fcb633635e755ae6e6f",
     "default-user/characters/Seraphina/anger.png": "d657d77b1bce609dd6006582cf687691871411eb041f9f4c41da4765b12ea069",
@@ -447,8 +447,8 @@
     "default-user/characters/Seraphina/sadness.png": "3819c2bca59224f67767eb3762c846e35d5eb5272be03f35c21fc32163df67a6",
     "default-user/characters/Seraphina/surprise.png": "f6a9f657d081f670a961649a5a21526ec251262ca06adf99626509059fbbb103",
     "default-user/characters/default_Seraphina.png": "8a71e8270f54fafbccf905b1bdf053a6a55f57bea89c01fcd8c0e87ee76a2d52",
-    "default-user/chats/Project A/Project A - 2026-11-03@21h39m10s458ms.jsonl": "def82649b9fab82863724935a3b6e42367771bd8aa91a7f3256607cb27e3c93a",
-    "default-user/chats/Project B/Project B - 2026-11-03@21h39m10s489ms.jsonl": "2f803368ad85fb809cbb2b22a1632947d02c4d3df6fa07a79080b14e21026ec9",
+    "default-user/chats/Project A/Project A - 2026-11-03@23h27m02s496ms.jsonl": "4099b265cbb1af5fff123b5492e9c1e5cf72e7a54e74ffa8091c212ed14d92a1",
+    "default-user/chats/Project B/Project B - 2026-11-03@23h27m02s526ms.jsonl": "34851cf0883174b9cb41cbbe84d5ff36d16ddbf18cc9bcabd83f3580ceb808b4",
     "default-user/worlds/Eldoria.json": "bfc2548443c890746a54d54e35e41265b02d1b59fd06d72552b305bf9b1e063c",
     "default-user/worlds/expression-fixture.json": "07f23f575b2373c757a172e05e787442af84e9b1204ab2b9d11b4e74b8769372",
     "default-user/avatars/expression-persona.png": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f"
@@ -456,218 +456,218 @@
   "databaseBeforeFailures": {
     "projects": [
       {
-        "id": "0e4f353a-bdcd-4710-8bff-cc6968a156d3",
-        "owner": "[\"sn-other\",1793767150293]",
-        "name": "Bob project",
-        "revision": 0,
-        "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
-        "catalog": "[]"
-      },
-      {
-        "id": "489360b0-f767-42ab-8e29-2dce8d821f88",
-        "owner": "[\"default-user\",1793767135864]",
+        "id": "32654e52-a8b6-47f2-b134-ff402965a595",
+        "owner": "[\"default-user\",1793773614570]",
         "name": "API project",
         "revision": 1,
         "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
         "catalog": "[]"
       },
       {
-        "id": "636df75e-cd0b-4c42-aa12-2fb9b86aca96",
-        "owner": "[\"default-user\",1793767135864]",
-        "name": "Browser project",
-        "revision": 1,
-        "scene": "{\"backgroundAssetId\":\"119cafd5-9cb1-45be-aa17-5dfb318d1fbc\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"3cc8c188-19fb-43d0-80bf-70dbe12551c7\",\"name\":\"One\",\"spriteAssetId\":\"55227246-650b-438b-8420-a67db735ec49\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"ec88e9bd-097e-441c-8c1a-db454c440599\",\"name\":\"Two\",\"spriteAssetId\":\"2e738e22-dc9b-4742-afce-83efeb9373f3\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
-        "catalog": "[{\"assetId\":\"119cafd5-9cb1-45be-aa17-5dfb318d1fbc\",\"label\":\"forest\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"55227246-650b-438b-8420-a67db735ec49\",\"label\":\"mira-a\",\"kind\":\"sprite\",\"actorId\":\"3cc8c188-19fb-43d0-80bf-70dbe12551c7\"},{\"assetId\":\"2e738e22-dc9b-4742-afce-83efeb9373f3\",\"label\":\"rowan\",\"kind\":\"sprite\",\"actorId\":\"ec88e9bd-097e-441c-8c1a-db454c440599\"}]"
-      },
-      {
-        "id": "65172829-3fad-4855-9343-edb6dab74f2b",
-        "owner": "[\"default-user\",1793767135864]",
+        "id": "4dbff216-505b-4f0e-b138-6a26f662d2a7",
+        "owner": "[\"default-user\",1793773614570]",
         "name": "Browser project",
         "revision": 2,
-        "scene": "{\"backgroundAssetId\":\"b3739436-53f8-4f04-8727-d92b239762f1\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"a43898a9-1903-4273-b264-29b7bd4a791f\",\"name\":\"One\",\"spriteAssetId\":\"7e8354a3-0809-4b34-9294-ea9b0adb896c\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"9d864f10-ab6b-4b25-8b5a-d1c12766535b\",\"name\":\"Two\",\"spriteAssetId\":\"4270eec5-0d69-46f4-8dc6-b56381d1e07e\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
-        "catalog": "[{\"assetId\":\"b3739436-53f8-4f04-8727-d92b239762f1\",\"label\":\"Background\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"7e8354a3-0809-4b34-9294-ea9b0adb896c\",\"label\":\"One sprite\",\"kind\":\"sprite\",\"actorId\":\"a43898a9-1903-4273-b264-29b7bd4a791f\"},{\"assetId\":\"4270eec5-0d69-46f4-8dc6-b56381d1e07e\",\"label\":\"Two sprite\",\"kind\":\"sprite\",\"actorId\":\"9d864f10-ab6b-4b25-8b5a-d1c12766535b\"}]"
+        "scene": "{\"backgroundAssetId\":\"31c65f9e-4308-404a-a19a-7e5e2e15b7c0\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"2eaf564d-7367-4779-8cc7-ab87c920a97b\",\"name\":\"One\",\"spriteAssetId\":\"20d706ed-b8c5-4153-aa81-6b518d136faa\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"6bf30e1e-1fff-4227-a83e-242343ac5808\",\"name\":\"Two\",\"spriteAssetId\":\"bd3df016-be9f-4f1c-b52f-882596cca760\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
+        "catalog": "[{\"assetId\":\"31c65f9e-4308-404a-a19a-7e5e2e15b7c0\",\"label\":\"Background\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"20d706ed-b8c5-4153-aa81-6b518d136faa\",\"label\":\"One sprite\",\"kind\":\"sprite\",\"actorId\":\"2eaf564d-7367-4779-8cc7-ab87c920a97b\"},{\"assetId\":\"bd3df016-be9f-4f1c-b52f-882596cca760\",\"label\":\"Two sprite\",\"kind\":\"sprite\",\"actorId\":\"6bf30e1e-1fff-4227-a83e-242343ac5808\"}]"
       },
       {
-        "id": "736624f1-2ee7-4810-a185-179f78861913",
-        "owner": "[\"default-user\",1793767135864]",
+        "id": "80524316-5411-42d8-a71e-a81edb0747b7",
+        "owner": "[\"sn-other\",1793773622354]",
+        "name": "Bob project",
+        "revision": 0,
+        "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
+        "catalog": "[]"
+      },
+      {
+        "id": "85e36d79-758b-4eb2-a25a-18679fcd90c5",
+        "owner": "[\"default-user\",1793773614570]",
+        "name": "Browser project",
+        "revision": 1,
+        "scene": "{\"backgroundAssetId\":\"675d4ad9-57d1-41b9-b278-f90b1ed2fb33\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"f9789e11-31bf-422c-8b48-6f5dc78dd29d\",\"name\":\"One\",\"spriteAssetId\":\"e71cb85b-f5a3-422a-ab58-aca256749232\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"241d9482-d98a-487a-86bb-47619d8a51a3\",\"name\":\"Two\",\"spriteAssetId\":\"6ca2548f-7671-48bf-8889-35243863cb70\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
+        "catalog": "[{\"assetId\":\"675d4ad9-57d1-41b9-b278-f90b1ed2fb33\",\"label\":\"forest\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"e71cb85b-f5a3-422a-ab58-aca256749232\",\"label\":\"mira-a\",\"kind\":\"sprite\",\"actorId\":\"f9789e11-31bf-422c-8b48-6f5dc78dd29d\"},{\"assetId\":\"6ca2548f-7671-48bf-8889-35243863cb70\",\"label\":\"rowan\",\"kind\":\"sprite\",\"actorId\":\"241d9482-d98a-487a-86bb-47619d8a51a3\"}]"
+      },
+      {
+        "id": "a368bd96-c61c-4a29-9d3f-985fba65883a",
+        "owner": "[\"default-user\",1793773614570]",
         "name": "Browser project",
         "revision": 0,
-        "scene": "{\"backgroundAssetId\":\"985a5ec5-68fd-4e5d-962b-a37b116ba01c\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"77f4a061-050f-4a28-b7a3-c4736d0becfa\",\"name\":\"One\",\"spriteAssetId\":\"298ada41-88d1-447d-8029-a52cfa2a606c\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"cbc678bd-867a-4357-a5f1-64745d303cc6\",\"name\":\"Two\",\"spriteAssetId\":\"2c756987-d805-43b3-84b3-9ed4d4bea2eb\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
+        "scene": "{\"backgroundAssetId\":\"2b12907e-c6fd-4b02-a8e1-155b565dc4fb\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"6b65f9dd-20d7-43fe-b5c0-7d422bdef8a8\",\"name\":\"One\",\"spriteAssetId\":\"4f10d215-9771-45d2-ae7f-5f3c7e01322c\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"d3d9b0ac-61e4-46f9-903e-0bc9cbd1daa5\",\"name\":\"Two\",\"spriteAssetId\":\"09164a10-35c5-4f62-8e7d-46a2e62ecc49\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
         "catalog": "[]"
       }
     ],
     "assets": [
       {
-        "id": "119cafd5-9cb1-45be-aa17-5dfb318d1fbc",
-        "project": "636df75e-cd0b-4c42-aa12-2fb9b86aca96",
-        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
-        "bytes": 11591
-      },
-      {
-        "id": "298ada41-88d1-447d-8029-a52cfa2a606c",
-        "project": "736624f1-2ee7-4810-a185-179f78861913",
-        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
-        "bytes": 4454
-      },
-      {
-        "id": "2c756987-d805-43b3-84b3-9ed4d4bea2eb",
-        "project": "736624f1-2ee7-4810-a185-179f78861913",
+        "id": "09164a10-35c5-4f62-8e7d-46a2e62ecc49",
+        "project": "a368bd96-c61c-4a29-9d3f-985fba65883a",
         "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
         "bytes": 4253
       },
       {
-        "id": "2e738e22-dc9b-4742-afce-83efeb9373f3",
-        "project": "636df75e-cd0b-4c42-aa12-2fb9b86aca96",
-        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
-        "bytes": 4253
-      },
-      {
-        "id": "4270eec5-0d69-46f4-8dc6-b56381d1e07e",
-        "project": "65172829-3fad-4855-9343-edb6dab74f2b",
-        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
-        "bytes": 4253
-      },
-      {
-        "id": "55227246-650b-438b-8420-a67db735ec49",
-        "project": "636df75e-cd0b-4c42-aa12-2fb9b86aca96",
+        "id": "20d706ed-b8c5-4153-aa81-6b518d136faa",
+        "project": "4dbff216-505b-4f0e-b138-6a26f662d2a7",
         "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
         "bytes": 4454
       },
       {
-        "id": "6329281c-7afa-446c-8b9c-55d84fe1a5b2",
-        "project": "489360b0-f767-42ab-8e29-2dce8d821f88",
+        "id": "2b12907e-c6fd-4b02-a8e1-155b565dc4fb",
+        "project": "a368bd96-c61c-4a29-9d3f-985fba65883a",
         "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
         "bytes": 11591
       },
       {
-        "id": "7e8354a3-0809-4b34-9294-ea9b0adb896c",
-        "project": "65172829-3fad-4855-9343-edb6dab74f2b",
+        "id": "31c65f9e-4308-404a-a19a-7e5e2e15b7c0",
+        "project": "4dbff216-505b-4f0e-b138-6a26f662d2a7",
+        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
+        "bytes": 11591
+      },
+      {
+        "id": "4f10d215-9771-45d2-ae7f-5f3c7e01322c",
+        "project": "a368bd96-c61c-4a29-9d3f-985fba65883a",
         "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
         "bytes": 4454
       },
       {
-        "id": "985a5ec5-68fd-4e5d-962b-a37b116ba01c",
-        "project": "736624f1-2ee7-4810-a185-179f78861913",
+        "id": "675d4ad9-57d1-41b9-b278-f90b1ed2fb33",
+        "project": "85e36d79-758b-4eb2-a25a-18679fcd90c5",
         "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
         "bytes": 11591
       },
       {
-        "id": "b3739436-53f8-4f04-8727-d92b239762f1",
-        "project": "65172829-3fad-4855-9343-edb6dab74f2b",
+        "id": "6ca2548f-7671-48bf-8889-35243863cb70",
+        "project": "85e36d79-758b-4eb2-a25a-18679fcd90c5",
+        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
+        "bytes": 4253
+      },
+      {
+        "id": "7ebea4b5-b268-4796-9064-2e6330ebb3c9",
+        "project": "32654e52-a8b6-47f2-b134-ff402965a595",
         "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
         "bytes": 11591
+      },
+      {
+        "id": "bd3df016-be9f-4f1c-b52f-882596cca760",
+        "project": "4dbff216-505b-4f0e-b138-6a26f662d2a7",
+        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
+        "bytes": 4253
+      },
+      {
+        "id": "e71cb85b-f5a3-422a-ab58-aca256749232",
+        "project": "85e36d79-758b-4eb2-a25a-18679fcd90c5",
+        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
+        "bytes": 4454
       }
     ]
   },
   "databaseAfterFailures": {
     "projects": [
       {
-        "id": "0e4f353a-bdcd-4710-8bff-cc6968a156d3",
-        "owner": "[\"sn-other\",1793767150293]",
-        "name": "Bob project",
-        "revision": 0,
-        "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
-        "catalog": "[]"
-      },
-      {
-        "id": "489360b0-f767-42ab-8e29-2dce8d821f88",
-        "owner": "[\"default-user\",1793767135864]",
+        "id": "32654e52-a8b6-47f2-b134-ff402965a595",
+        "owner": "[\"default-user\",1793773614570]",
         "name": "API project",
         "revision": 1,
         "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
         "catalog": "[]"
       },
       {
-        "id": "636df75e-cd0b-4c42-aa12-2fb9b86aca96",
-        "owner": "[\"default-user\",1793767135864]",
-        "name": "Browser project",
-        "revision": 1,
-        "scene": "{\"backgroundAssetId\":\"119cafd5-9cb1-45be-aa17-5dfb318d1fbc\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"3cc8c188-19fb-43d0-80bf-70dbe12551c7\",\"name\":\"One\",\"spriteAssetId\":\"55227246-650b-438b-8420-a67db735ec49\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"ec88e9bd-097e-441c-8c1a-db454c440599\",\"name\":\"Two\",\"spriteAssetId\":\"2e738e22-dc9b-4742-afce-83efeb9373f3\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
-        "catalog": "[{\"assetId\":\"119cafd5-9cb1-45be-aa17-5dfb318d1fbc\",\"label\":\"forest\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"55227246-650b-438b-8420-a67db735ec49\",\"label\":\"mira-a\",\"kind\":\"sprite\",\"actorId\":\"3cc8c188-19fb-43d0-80bf-70dbe12551c7\"},{\"assetId\":\"2e738e22-dc9b-4742-afce-83efeb9373f3\",\"label\":\"rowan\",\"kind\":\"sprite\",\"actorId\":\"ec88e9bd-097e-441c-8c1a-db454c440599\"}]"
-      },
-      {
-        "id": "65172829-3fad-4855-9343-edb6dab74f2b",
-        "owner": "[\"default-user\",1793767135864]",
+        "id": "4dbff216-505b-4f0e-b138-6a26f662d2a7",
+        "owner": "[\"default-user\",1793773614570]",
         "name": "Browser project",
         "revision": 2,
-        "scene": "{\"backgroundAssetId\":\"b3739436-53f8-4f04-8727-d92b239762f1\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"a43898a9-1903-4273-b264-29b7bd4a791f\",\"name\":\"One\",\"spriteAssetId\":\"7e8354a3-0809-4b34-9294-ea9b0adb896c\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"9d864f10-ab6b-4b25-8b5a-d1c12766535b\",\"name\":\"Two\",\"spriteAssetId\":\"4270eec5-0d69-46f4-8dc6-b56381d1e07e\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
-        "catalog": "[{\"assetId\":\"b3739436-53f8-4f04-8727-d92b239762f1\",\"label\":\"Background\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"7e8354a3-0809-4b34-9294-ea9b0adb896c\",\"label\":\"One sprite\",\"kind\":\"sprite\",\"actorId\":\"a43898a9-1903-4273-b264-29b7bd4a791f\"},{\"assetId\":\"4270eec5-0d69-46f4-8dc6-b56381d1e07e\",\"label\":\"Two sprite\",\"kind\":\"sprite\",\"actorId\":\"9d864f10-ab6b-4b25-8b5a-d1c12766535b\"}]"
+        "scene": "{\"backgroundAssetId\":\"31c65f9e-4308-404a-a19a-7e5e2e15b7c0\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"2eaf564d-7367-4779-8cc7-ab87c920a97b\",\"name\":\"One\",\"spriteAssetId\":\"20d706ed-b8c5-4153-aa81-6b518d136faa\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"6bf30e1e-1fff-4227-a83e-242343ac5808\",\"name\":\"Two\",\"spriteAssetId\":\"bd3df016-be9f-4f1c-b52f-882596cca760\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
+        "catalog": "[{\"assetId\":\"31c65f9e-4308-404a-a19a-7e5e2e15b7c0\",\"label\":\"Background\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"20d706ed-b8c5-4153-aa81-6b518d136faa\",\"label\":\"One sprite\",\"kind\":\"sprite\",\"actorId\":\"2eaf564d-7367-4779-8cc7-ab87c920a97b\"},{\"assetId\":\"bd3df016-be9f-4f1c-b52f-882596cca760\",\"label\":\"Two sprite\",\"kind\":\"sprite\",\"actorId\":\"6bf30e1e-1fff-4227-a83e-242343ac5808\"}]"
       },
       {
-        "id": "736624f1-2ee7-4810-a185-179f78861913",
-        "owner": "[\"default-user\",1793767135864]",
+        "id": "80524316-5411-42d8-a71e-a81edb0747b7",
+        "owner": "[\"sn-other\",1793773622354]",
+        "name": "Bob project",
+        "revision": 0,
+        "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
+        "catalog": "[]"
+      },
+      {
+        "id": "85e36d79-758b-4eb2-a25a-18679fcd90c5",
+        "owner": "[\"default-user\",1793773614570]",
+        "name": "Browser project",
+        "revision": 1,
+        "scene": "{\"backgroundAssetId\":\"675d4ad9-57d1-41b9-b278-f90b1ed2fb33\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"f9789e11-31bf-422c-8b48-6f5dc78dd29d\",\"name\":\"One\",\"spriteAssetId\":\"e71cb85b-f5a3-422a-ab58-aca256749232\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"241d9482-d98a-487a-86bb-47619d8a51a3\",\"name\":\"Two\",\"spriteAssetId\":\"6ca2548f-7671-48bf-8889-35243863cb70\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
+        "catalog": "[{\"assetId\":\"675d4ad9-57d1-41b9-b278-f90b1ed2fb33\",\"label\":\"forest\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"e71cb85b-f5a3-422a-ab58-aca256749232\",\"label\":\"mira-a\",\"kind\":\"sprite\",\"actorId\":\"f9789e11-31bf-422c-8b48-6f5dc78dd29d\"},{\"assetId\":\"6ca2548f-7671-48bf-8889-35243863cb70\",\"label\":\"rowan\",\"kind\":\"sprite\",\"actorId\":\"241d9482-d98a-487a-86bb-47619d8a51a3\"}]"
+      },
+      {
+        "id": "a368bd96-c61c-4a29-9d3f-985fba65883a",
+        "owner": "[\"default-user\",1793773614570]",
         "name": "Browser project",
         "revision": 0,
-        "scene": "{\"backgroundAssetId\":\"985a5ec5-68fd-4e5d-962b-a37b116ba01c\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"77f4a061-050f-4a28-b7a3-c4736d0becfa\",\"name\":\"One\",\"spriteAssetId\":\"298ada41-88d1-447d-8029-a52cfa2a606c\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"cbc678bd-867a-4357-a5f1-64745d303cc6\",\"name\":\"Two\",\"spriteAssetId\":\"2c756987-d805-43b3-84b3-9ed4d4bea2eb\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
+        "scene": "{\"backgroundAssetId\":\"2b12907e-c6fd-4b02-a8e1-155b565dc4fb\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"6b65f9dd-20d7-43fe-b5c0-7d422bdef8a8\",\"name\":\"One\",\"spriteAssetId\":\"4f10d215-9771-45d2-ae7f-5f3c7e01322c\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"d3d9b0ac-61e4-46f9-903e-0bc9cbd1daa5\",\"name\":\"Two\",\"spriteAssetId\":\"09164a10-35c5-4f62-8e7d-46a2e62ecc49\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
         "catalog": "[]"
       }
     ],
     "assets": [
       {
-        "id": "119cafd5-9cb1-45be-aa17-5dfb318d1fbc",
-        "project": "636df75e-cd0b-4c42-aa12-2fb9b86aca96",
-        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
-        "bytes": 11591
-      },
-      {
-        "id": "298ada41-88d1-447d-8029-a52cfa2a606c",
-        "project": "736624f1-2ee7-4810-a185-179f78861913",
-        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
-        "bytes": 4454
-      },
-      {
-        "id": "2c756987-d805-43b3-84b3-9ed4d4bea2eb",
-        "project": "736624f1-2ee7-4810-a185-179f78861913",
+        "id": "09164a10-35c5-4f62-8e7d-46a2e62ecc49",
+        "project": "a368bd96-c61c-4a29-9d3f-985fba65883a",
         "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
         "bytes": 4253
       },
       {
-        "id": "2e738e22-dc9b-4742-afce-83efeb9373f3",
-        "project": "636df75e-cd0b-4c42-aa12-2fb9b86aca96",
-        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
-        "bytes": 4253
-      },
-      {
-        "id": "4270eec5-0d69-46f4-8dc6-b56381d1e07e",
-        "project": "65172829-3fad-4855-9343-edb6dab74f2b",
-        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
-        "bytes": 4253
-      },
-      {
-        "id": "55227246-650b-438b-8420-a67db735ec49",
-        "project": "636df75e-cd0b-4c42-aa12-2fb9b86aca96",
+        "id": "20d706ed-b8c5-4153-aa81-6b518d136faa",
+        "project": "4dbff216-505b-4f0e-b138-6a26f662d2a7",
         "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
         "bytes": 4454
       },
       {
-        "id": "6329281c-7afa-446c-8b9c-55d84fe1a5b2",
-        "project": "489360b0-f767-42ab-8e29-2dce8d821f88",
+        "id": "2b12907e-c6fd-4b02-a8e1-155b565dc4fb",
+        "project": "a368bd96-c61c-4a29-9d3f-985fba65883a",
         "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
         "bytes": 11591
       },
       {
-        "id": "7e8354a3-0809-4b34-9294-ea9b0adb896c",
-        "project": "65172829-3fad-4855-9343-edb6dab74f2b",
+        "id": "31c65f9e-4308-404a-a19a-7e5e2e15b7c0",
+        "project": "4dbff216-505b-4f0e-b138-6a26f662d2a7",
+        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
+        "bytes": 11591
+      },
+      {
+        "id": "4f10d215-9771-45d2-ae7f-5f3c7e01322c",
+        "project": "a368bd96-c61c-4a29-9d3f-985fba65883a",
         "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
         "bytes": 4454
       },
       {
-        "id": "985a5ec5-68fd-4e5d-962b-a37b116ba01c",
-        "project": "736624f1-2ee7-4810-a185-179f78861913",
+        "id": "675d4ad9-57d1-41b9-b278-f90b1ed2fb33",
+        "project": "85e36d79-758b-4eb2-a25a-18679fcd90c5",
         "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
         "bytes": 11591
       },
       {
-        "id": "b3739436-53f8-4f04-8727-d92b239762f1",
-        "project": "65172829-3fad-4855-9343-edb6dab74f2b",
+        "id": "6ca2548f-7671-48bf-8889-35243863cb70",
+        "project": "85e36d79-758b-4eb2-a25a-18679fcd90c5",
+        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
+        "bytes": 4253
+      },
+      {
+        "id": "7ebea4b5-b268-4796-9064-2e6330ebb3c9",
+        "project": "32654e52-a8b6-47f2-b134-ff402965a595",
         "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
         "bytes": 11591
+      },
+      {
+        "id": "bd3df016-be9f-4f1c-b52f-882596cca760",
+        "project": "4dbff216-505b-4f0e-b138-6a26f662d2a7",
+        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
+        "bytes": 4253
+      },
+      {
+        "id": "e71cb85b-f5a3-422a-ab58-aca256749232",
+        "project": "85e36d79-758b-4eb2-a25a-18679fcd90c5",
+        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
+        "bytes": 4454
       }
     ]
   },
   "concurrentImportStatuses": [
-    201,
-    429
+    429,
+    201
   ],
   "result": "PASS"
 }

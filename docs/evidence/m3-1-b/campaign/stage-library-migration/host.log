@@ -1,6 +1,6 @@
-Node version: v26.8.1. Running in undefined environment. Server directory: /tmp/sn-portability-host-JDRf3D/host
-Using config path: /tmp/sn-portability-host-JDRf3D/config.yaml
-Using data root: /tmp/sn-portability-host-JDRf3D/data
+Node version: v26.8.1. Running in undefined environment. Server directory: /tmp/sn-portability-host-KgHATv/host
+Using config path: /tmp/sn-portability-host-KgHATv/config.yaml
+Using data root: /tmp/sn-portability-host-KgHATv/data
 Preferring IPv4 for DNS resolution
 
 SillyTavern 1.19.0
@@ -8,17 +8,17 @@ Running 'HEAD' (7e8663cd9) - 9/14/2026, 10:55:46 AM MST
 
 
 Compiling frontend libraries...
-webpack 5.105.4 compiled [1m[32msuccessfully[39m[22m in 427 ms
+webpack 5.105.4 compiled [1m[32msuccessfully[39m[22m in 357 ms
 
-]2;SillyTavern WebServer\SillyTavern is listening on IPv4: 127.0.0.1:41677
-
-==================================================
-
-Go to: http://127.0.0.1:41677/ to open SillyTavern
+]2;SillyTavern WebServer\SillyTavern is listening on IPv4: 127.0.0.1:45703
 
 ==================================================
 
-Login successful: default-user from 127.0.0.1 at 11/3/2026, 9:38:51 PM
+Go to: http://127.0.0.1:45703/ to open SillyTavern
+
+==================================================
+
+Login successful: default-user from 127.0.0.1 at 11/3/2026, 11:26:51 PM
 Extensions available for default-user [
   { type: 'system', name: 'assets' },
   { type: 'system', name: 'attachments' },

@@ -67,7 +67,9 @@ PR B (the Image workflow disclosure, reference downloads, local preview, “Impo
 
 ## PR B — the Image workflow
 
-**Candidate, unmerged. Frozen `0c858c8c0ac1d09e9d709acb2866b31d79901dd8`**, based on main `22b774d` (PR A merged, [owner acceptance](DECISIONS.md#owner-acceptance--m31-pr-a-merged-per-field-copy-for-pr-b--2026-11-03)). Tracked by [DYL-207](https://linear.app/devils17/issue/DYL-207/sillynovel-m31-manual-image-exchange-promptreference-export-explicit). Renderer change: the evidence is the full campaign on pinned SillyTavern 1.19.0 (H4). No image provider (H2), no host-adapter, plugin or schema change.
+**Candidate, unmerged. Frozen `62b848bc22206a0ca153993953426f386fba8d77`**, based on main `22b774d` (PR A merged, [owner acceptance](DECISIONS.md#owner-acceptance--m31-pr-a-merged-per-field-copy-for-pr-b--2026-11-03)). Tracked by [DYL-207](https://linear.app/devils17/issue/DYL-207/sillynovel-m31-manual-image-exchange-promptreference-export-explicit). Renderer change: the evidence is the full campaign on pinned SillyTavern 1.19.0 (H4). No image provider (H2), no host-adapter, plugin or schema change.
+
+**Owner direction during review — 2026-11-03.** Told in the walkthrough that Import and apply skipped the gate the PNG import respects, and that detaching cleared a draft, the owner said “Fix 1 and soften 2.” Both are in the refrozen `62b848b` (the first freeze, `0c858c8`, also passed its campaign and is superseded). (1) Import and apply now follows the same gate as the PNG import. (2) Your text survives detach and project replacement; references and the preview are still cleared. This amends plan 3.3's clear-on-detach for the draft text only.
 
 ### What it adds
 
@@ -83,9 +85,9 @@ Nothing is sent to an image service. The only storage requests the workflow make
 ### Implementation choices for owner review
 
 1. **A toggle button with `aria-expanded`, not a nested `<details>`.** A second `<summary>` inside the controls would make the `.sillynovel-controls summary` locator, used about 60 times across the probes, ambiguous. The disclosure is still closed by default, and Escape inside it closes it and returns focus to its button.
-2. **The workflow's controls stay usable while a message streams or is unresolved.** They are kept out of the shared `controls` list that the scene's `ready` gate disables. Import still goes through `importFile`'s own gates (import or cleanup in progress) and the stage's `projectBusy`.
+2. **Drafting, copying and downloading never wait for the scene; Import and apply does.** The workflow's controls are kept out of the shared `controls` list. Import and apply instead mirrors that list's gate exactly (`layoutReady`: stage verified for the current snapshot, no project operation or import in flight, no cleanup running), so it is disabled whenever the Project PNG file import is. With a project attached that gate is about the stage, not about a reply streaming, because project layout is global. It is checked again on click.
 3. **A preview belongs to the attachment, not to draft edits.** It is captured with project model, project ID and session epoch; the label is read when you press Import. A reference download is also bound to the draft revision, so changing the selection mid-read drops it.
-4. **Attaching keeps a draft written before it; detaching or replacing the project clears the draft, references and preview.** That is plan 3.3's clear-on-detach, with drafting before attachment allowed by plan 3.1.
+4. **Your text survives attach, detach and replacement; references and the preview never do** (owner direction). References and the preview belong to one attachment's library, so they are cleared with a visible note.
 5. **A → B → A is caught by model identity.** Every attachment builds a new project model, so `stillCurrent` fails on identity even where the session epoch is unchanged. A native chat switch also changes the epoch. (This is point 2 of the PR A acceptance.)
 6. **A reference's expected hash is the one checked when the art was installed.** Download re-reads it, and a different hash refuses as “A reference changed; select it again.”
 7. **Reference byte counts are passed as 0** (a `ponytail:` comment in the code). `client.asset()` refuses any stored asset over 5 MiB, so three references can't exceed `LIMITS.referenceBytes`. Pass real sizes if that cap is ever raised.
@@ -99,13 +101,13 @@ Nothing is sent to an image service. The only storage requests the workflow make
 | --- | --- | --- |
 | T69 | Browser: preview equals the downloaded file's bytes; per-field copy holds only that field; blank prompt refuses; markup, `{{char}}` and `/sd` stay text; no request at all without a project; the native draft is kept. Native: the prompt download makes no storage request. Node (PR A): byte ceilings. | — |
 | T70 | Browser: a duplicate refuses; the downloaded reference equals the served bytes; a changed stored file refuses. Native: the download is the stored file, by digest, and the only request is the authenticated readback. Node: foreign, unknown and path-shaped references refuse; fixed filenames. | — |
-| T71 | Browser: a non-PNG refuses before preview; choose and discard upload nothing; Import and apply uploads once, applies the background and marks the project unsaved. Native: through the real plugin decoder, saved, locked, with the stored bytes equal to the file. Node: animation, truncation, oversize and dimension ceilings. | Save conflict and quota during this import (covered for the shared import path by the existing campaigns, not exercised from the workflow) |
-| T72 | Browser: detach clears the draft and a pending preview, which never uploads. Node: capture rules including A → B → A. | A delayed decode racing a detach, on the real host |
+| T71 | Browser: a non-PNG refuses before preview; choose and discard upload nothing; Import and apply is disabled, and a synthetic click uploads nothing, exactly while the PNG import is (held cleanup review); then it uploads once, applies the background and marks the project unsaved. Native: through the real plugin decoder, saved, locked, with the stored bytes equal to the file. Node: animation, truncation, oversize and dimension ceilings. | Save conflict and quota during this import (covered for the shared import path by the existing campaigns, not exercised from the workflow) |
+| T72 | Browser: detach clears references and a pending preview, which never uploads, and keeps the text. Node: capture rules including A → B → A. | A delayed decode racing a detach, on the real host |
 | T73 | — | **All NOT_RUN:** keyboard-only pass, narrow layout and 200 % scaling of the disclosure, touch file picker and downloads on the Galaxy Tab, screen readers |
 
 ### Commands and results
 
-One supervised campaign from the PR B worktree at the frozen SHA (heavy-job lock held, 50-minute deadline, 33 minutes used, no leftover processes):
+One supervised campaign from the PR B worktree at the frozen SHA `62b848b` (heavy-job lock held, 50-minute deadline, no leftover processes). The same campaign on the first freeze `0c858c8` passed with the same counts; its package is replaced by this one:
 
 ```sh
 SILLYTAVERN_ROOT=<disposable pinned host> SN_PLAYWRIGHT_MODULE=<pinned Playwright> python3 tests/probes/dyl60/run.py docs/evidence/m3-1-b/campaign
