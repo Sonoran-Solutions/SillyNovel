@@ -46,7 +46,7 @@ export async function runCases({ page, cases, base, perCaseMs, deadlineAt, write
         results.push({ id, category, ...result });
         write(results);
         console.log((index + 1) + '/' + cases.length + ' ' + id + ' ' + result.status + (result.code ? ' ' + result.code : '') + ' ' + result.elapsedMs + ' ms');
-        if (result.code === 'ABANDONED') await Promise.race([page.evaluate(() => window.__snGateBSettled.then(() => true)), delay(Math.max(0, deadlineAt - Date.now()))]);
+        if (result.code === 'ABANDONED') await Promise.race([page.evaluate(() => window.__snGateBSettled.then(() => true)), delay(Math.max(0, deadlineAt - Date.now()), undefined, { ref: false })]);
     }
     return results;
 }
@@ -74,8 +74,8 @@ async function main() {
         await page.waitForFunction(() => globalThis.SillyTavern?.getContext, undefined, { timeout: options.mode === 'owner' ? CONNECT_MS : 60000 });
         if (options.mode === 'owner') {
             const prompt = createInterface({ input: process.stdin, output: process.stdout });
-            await Promise.race([prompt.question('In the browser window: sign in if needed and select the connection by hand. Then press Enter here to send 40 requests one at a time, or Ctrl+C. '), delay(CONNECT_MS).then(() => { throw Error('No confirmation in time.'); })]);
-            prompt.close();
+            try { await Promise.race([prompt.question('In the browser window: sign in if needed and select the connection by hand. Then press Enter here to send 40 requests one at a time, or Ctrl+C. '), delay(CONNECT_MS, undefined, { ref: false }).then(() => { throw Error('No confirmation in time.'); })]); }
+            finally { prompt.close(); }
         } else {
             // A refusal, not a retained fact: the proof must never reach anything but the loopback fixture.
             await page.waitForFunction(() => SillyTavern.getContext().mainApi === 'openai');

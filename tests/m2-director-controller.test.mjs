@@ -469,7 +469,7 @@ for (const [name, change] of Object.entries({
     assert.equal(x.expression(), null);
     assert.equal(x.runtime.session(x.record.projectId).consecutive, 0);
     // F4: a started reply generation names its own outcome; the rest stay cancelled.
-    if (name !== 'detach' && name !== 'disable') assert.equal(status(x).notice, name === 'continue start' ? 'Director request superseded by your reply' : 'Director request cancelled.');
+    if (name !== 'detach' && name !== 'disable') assert.equal(status(x).notice, name === 'continue start' ? 'Director request set aside for your reply' : 'Director request cancelled.');
     assert.equal(x.runtime.inFlight, false);
     assert.equal(JSON.stringify(x.record.scene).includes('temporary-expression'), false);
 });
@@ -703,7 +703,7 @@ test('T53: Send while outstanding is SUPERSEDED before the result is read; not a
         x.context.chat.push({ name: 'You', is_user: true, mes: 'Sent while outstanding.' });
         x.reader.apply({ type: 'generationStarted', generationType: 'normal', dryRun: false });
         await x.answer(0, late);
-        assert.equal(status(x).notice, 'Director request superseded by your reply');
+        assert.equal(status(x).notice, 'Director request set aside for your reply');
         const state = x.runtime.session(x.record.projectId);
         assert.equal(state.consecutive, 0);
         assert.equal(state.count, 1);
