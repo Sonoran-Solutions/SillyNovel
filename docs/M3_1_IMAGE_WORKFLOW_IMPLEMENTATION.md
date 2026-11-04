@@ -97,7 +97,7 @@ Nothing is sent to an image service. The only storage requests the workflow make
 
 ### TESTING coverage
 
-| Row | Covered (frozen `0c858c8`) | Still NOT_RUN or NOT_TESTED |
+| Row | Covered (frozen `62b848b`) | Still NOT_RUN or NOT_TESTED |
 | --- | --- | --- |
 | T69 | Browser: preview equals the downloaded file's bytes; per-field copy holds only that field; blank prompt refuses; markup, `{{char}}` and `/sd` stay text; no request at all without a project; the native draft is kept. Native: the prompt download makes no storage request. Node (PR A): byte ceilings. | — |
 | T70 | Browser: a duplicate refuses; the downloaded reference equals the served bytes; a changed stored file refuses. Native: the download is the stored file, by digest, and the only request is the authenticated readback. Node: foreign, unknown and path-shaped references refuse; fixed filenames. | — |
