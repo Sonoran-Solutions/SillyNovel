@@ -1,5 +1,9 @@
 # Decision register
 
+## Owner direction — M3.1 PR B merged — 2026-11-04
+
+**Owner: Dylan. Date: 2026-11-04, America/Phoenix. Status: APPROVED (merge).** After the combined campaign on `66a0297` passed, the owner said “Merge #80.” [#80](https://github.com/Sonoran-Solutions/SillyNovel/pull/80) merged as `ad4279d`; both M3.1 PRs are now on main. The merge does not waive T73 (keyboard-only, narrow layout and 200 % scaling, touch and downloads on the Galaxy Tab, screen readers), which stays NOT_RUN, so [DYL-207](https://linear.app/devils17/issue/DYL-207/sillynovel-m31-manual-image-exchange-promptreference-export-explicit) stays open for it. It authorizes nothing further: M3.2 planning (H3, H5, H6, H7) and the optional H8 session wait for the owner's word. Gate C NOT_RUN.
+
 ## Owner direction — post-Gate-B cleanup merged before M3.1 PR B — 2026-11-04
 
 **Owner: Dylan. Date: 2026-11-04, America/Phoenix. Status: APPROVED (merge order).** Asked which of [#77](https://github.com/Sonoran-Solutions/SillyNovel/pull/77) and [#80](https://github.com/Sonoran-Solutions/SillyNovel/pull/80) should merge first, the owner said “Merge #77 first.” #77 merged as `6f8cf24`. PR B is rebased onto it and needs a combined check before it can merge; its merge still needs the owner's word. The owner made no ruling on the proposed T60 wording in the [cleanup record](POST_GATE_B_CLEANUP.md), so it stays a proposal and TESTING T60 is unchanged. Gate C NOT_RUN.
