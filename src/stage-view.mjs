@@ -2,6 +2,7 @@ import { createProjectClient } from './project-client.mjs';
 import { createProjectScene } from './project-scene.mjs';
 import { createTransientScene, TEST_ACTORS, evidenceStamp } from './transient-scene.mjs';
 import { supportsProjectConversation } from './host-adapter.mjs';
+import { emptyDraft, draftProblems, exportText, referenceFilename, captureOf, stillCurrent, pngProblem, SIZE_HINTS, PROMPT_FILENAME, RESULT_LIMITS, PREVIEW_TIMEOUT_MS } from './image-workflow.mjs';
 
 export function mountVisualStage({ document, stage, actions }) {
     const make = (tag, cls, text) => { const e=document.createElement(tag); e.className=cls; if(text)e.textContent=text; return e; };
@@ -193,6 +194,103 @@ export function mountVisualStage({ document, stage, actions }) {
     const selectedArt=make('p','sillynovel-selected-art');sceneArea.append(selectedArt);
     const file=field('Temporary raster file','input');file.type='file';file.accept='image/png,image/jpeg,image/webp';
     listen(file,'change',()=>{const selected=file.files[0],kind=fileKind.value,key=actor.value;file.value='';if(selected)run(()=>model.importFile(selected,kind,key,importLabel.value),true);});
+    // M3.1 manual image exchange (H2, H9, H10): nothing here sends a request. Text and chosen PNGs leave only by Copy or Download; a result enters only by Import and apply.
+    // A button disclosure, not a nested <details>: one summary inside the controls keeps every existing selector unambiguous.
+    const workflow=make('div','sillynovel-image-workflow'),workflowToggle=make('button','menu_button sillynovel-button','Image workflow'),workflowBody=make('div','sillynovel-controls__panel');
+    workflowToggle.type='button';workflowBody.id='sillynovel-image-workflow-body';workflowBody.hidden=true;workflowToggle.setAttribute('aria-controls',workflowBody.id);workflowToggle.setAttribute('aria-expanded','false');
+    const openWorkflow=open=>{workflowBody.hidden=!open;workflowToggle.setAttribute('aria-expanded',String(open));};
+    listen(workflowToggle,'click',()=>openWorkflow(workflowBody.hidden));
+    workflow.append(workflowToggle,workflowBody);target.append(workflow);
+    // Own controls, outside `controls`: drafting does not wait for a resolved message. Import and apply does, like the PNG import (layoutReady).
+    const wfField=(name,tag)=>{const label=make('label','sillynovel-control',name),e=make(tag,'');e.setAttribute('aria-label',name);label.append(e);workflowBody.append(label);return e;};
+    const wfButton=(text,fn)=>{const e=make('button','menu_button sillynovel-button',text);e.type='button';listen(e,'click',()=>wfRun(fn));workflowBody.append(e);return e;};
+    workflowBody.append(make('p','','Write a prompt, copy or download it, make the image in any tool you choose, then import the PNG here. SillyNovel sends nothing to an image service and fills nothing in from the chat.'));
+    const wfLabel=wfField('Background label','input');wfLabel.maxLength=80;
+    const wfPrompt=wfField('Image prompt','textarea'),wfNegative=wfField('Negative prompt','textarea'),wfStyle=wfField('Style note','input');
+    const wfSize=wfField('Size hint','select');options(wfSize,SIZE_HINTS.map(h=>[h,h[0].toUpperCase()+h.slice(1)]));
+    const wfRefs=[0,1,2].map(i=>wfField('Reference '+(i+1),'select'));
+    const wfText=make('pre','sillynovel-image-workflow__text');wfText.setAttribute('aria-label','Prompt export preview');wfText.tabIndex=0;
+    const wfProblems=make('p','sillynovel-image-workflow__problems');workflowBody.append(wfText,wfProblems);
+    // Each field copies alone, so a tool's positive-prompt box never receives the headings or the negative prompt (owner acceptance of PR A).
+    const copyButtons=[['prompt','Prompt'],['negativePrompt','Negative prompt'],['styleNote','Style note']].map(([key,name])=>[key,wfButton('Copy '+name.toLowerCase(),async()=>{
+        try{await navigator.clipboard.writeText(draft()[key]);wfStatus.textContent=name+' copied.';}catch{wfStatus.textContent='Clipboard unavailable · use Download prompt instead.';}})]);
+    const downloadPrompt=wfButton('Download prompt',()=>{saveFile(new Blob([exportText(draft())],{type:'text/plain;charset=utf-8'}),PROMPT_FILENAME);wfStatus.textContent='Prompt download started as '+PROMPT_FILENAME+'.';});
+    const refButtons=[0,1,2].map(i=>wfButton('Download reference '+(i+1),()=>downloadReference(i)));
+    const wfNote=make('p','sillynovel-image-workflow__note');workflowBody.append(wfNote);
+    const resultFile=wfField('Result PNG','input');resultFile.type='file';resultFile.accept='image/png';
+    const resultImage=make('img','sillynovel-image-workflow__preview');resultImage.alt='Chosen result, not imported';resultImage.hidden=true;workflowBody.append(resultImage);
+    const importResult=wfButton('Import and apply background',()=>applyResult()),discardResult=wfButton('Discard preview',()=>clearPreview('Preview discarded · nothing was uploaded.'));
+    const wfStatus=make('p','sillynovel-image-workflow__status');wfStatus.setAttribute('role','status');workflowBody.append(wfStatus);
+    let wfModel=model,wfRevision=0,wfBusy=false,resultPreview=null,previewSeq=0,layoutReady=false;
+    const PROBLEMS={PROMPT_REQUIRED:'Write a prompt to export.',PROMPT_TOO_LONG:'The prompt is over 8 KiB.',NEGATIVE_PROMPT_TOO_LONG:'The negative prompt is over 2 KiB.',STYLE_NOTE_TOO_LONG:'The style note is over 1 KiB.',
+        BAD_LABEL:'Use a label of 1–80 characters on one line.',DUPLICATE_REFERENCE:'A reference is selected twice.',UNKNOWN_REFERENCE:'A reference is no longer in this project.',REFERENCE_CHANGED:'A reference changed; select it again.',
+        NOT_PNG:'Choose a PNG file.',PNG_TOO_LARGE:'The PNG is over 5 MiB.',PNG_DIMENSIONS:'The PNG must be at most 4096 pixels on an edge and 16 million pixels.',ANIMATED_PNG:'Animated PNGs are unsupported.',MALFORMED_PNG:'The PNG is damaged or incomplete.',
+        DECODE_TIMEOUT:'The preview took over 10 seconds and was abandoned.',STALE:'The project changed while this was running; nothing was applied.',ASSET_UNAVAILABLE:'That reference is unavailable.',ASSET_DIGEST:'That reference failed its digest check.',INVALID_ASSET:'That reference is not a valid stored PNG.'};
+    const describe=code=>PROBLEMS[code]??code;
+    function wfRun(fn){const captured=model;Promise.resolve().then(fn).catch(error=>{if(!disposed&&model===captured)wfStatus.textContent='Image workflow: '+describe(error.message);}).finally(()=>{if(!disposed)renderWorkflow();});}
+    const now=draftRevision=>({projectModel:model.project?model:null,projectId:model.project?model.status().projectId:null,sessionEpoch:actions.getSnapshot().sessionEpoch,draftRevision});
+    // One per library PNG; the hash is the one checked when the art was installed. Expressions are temporary and never references.
+    const references=()=>{if(!model.project)return[];const {assets,media}=model.get(),seen=new Map();for(const a of assets){const item=media.get(a.id);if(a.kind!=='expression'&&a.available&&item?.assetId&&/^[0-9a-f]{64}$/.test(a.revision)&&!seen.has(item.assetId))seen.set(item.assetId,{assetId:item.assetId,sha256:a.revision,label:item.label,kind:a.kind});}return[...seen.values()];};
+    // ponytail: byteCount 0 because project-client refuses any stored asset over 5 MiB, so three stay within LIMITS.referenceBytes; pass real sizes if that cap rises.
+    const catalog=refs=>refs.map(({assetId,sha256})=>({assetId,sha256,byteCount:0}));
+    const draft=()=>{const refs=references();return {...emptyDraft(),label:wfLabel.value,prompt:wfPrompt.value,negativePrompt:wfNegative.value,styleNote:wfStyle.value,sizeHint:wfSize.value,
+        references:wfRefs.map(s=>s.value).filter(Boolean).map(assetId=>({assetId,sha256:refs.find(r=>r.assetId===assetId)?.sha256??'0'.repeat(64)}))};};
+    function saveFile(blob,name){const a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download=name;a.hidden=true;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+    async function downloadReference(i){
+        const assetId=wfRefs[i].value,expected=references().find(r=>r.assetId===assetId)?.sha256;
+        if(!model.project||!assetId||draftProblems(draft(),catalog(references())).length)return;
+        const capture=captureOf(now(wfRevision));wfBusy=true;renderWorkflow();
+        try{const {blob,hash}=await capture.projectModel.readReference(assetId);
+            if(!stillCurrent(capture,now(wfRevision)))throw Error('STALE');
+            if(hash!==expected)throw Error('REFERENCE_CHANGED');
+            saveFile(blob,referenceFilename(i));wfStatus.textContent='Reference '+(i+1)+' download started as '+referenceFilename(i)+'. It is the stored file and may contain embedded PNG metadata.';
+        }finally{wfBusy=false;}
+    }
+    function clearPreview(message){previewSeq++;if(resultPreview)URL.revokeObjectURL(resultPreview.url);resultPreview=null;resultImage.hidden=true;resultImage.removeAttribute('src');if(message!==undefined)wfStatus.textContent=message;}
+    // A preview belongs to the attachment, not to draft edits: the label is read when importing (draft revision 0 on both sides).
+    async function choosePreview(file){
+        clearPreview('Checking the PNG · nothing is uploaded.');const seq=previewSeq;
+        if(!model.project)throw Error('Attach a saved project first.');
+        if(file.size>RESULT_LIMITS.bytes)throw Error('PNG_TOO_LARGE');
+        const capture=captureOf(now(0)),problem=pngProblem(new Uint8Array(await file.arrayBuffer()));
+        if(problem)throw Error(problem);
+        const url=URL.createObjectURL(file),image=new Image();let timer;
+        try{image.src=url;await Promise.race([image.decode(),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('DECODE_TIMEOUT')),PREVIEW_TIMEOUT_MS);})]);
+            if(seq!==previewSeq||!stillCurrent(capture,now(0)))throw Error('STALE');
+        }catch(error){URL.revokeObjectURL(url);throw error;}finally{clearTimeout(timer);}
+        resultPreview={file,url,capture};resultImage.src=url;resultImage.hidden=false;
+        wfStatus.textContent='Preview only · nothing uploaded. Import and apply it, or discard it.';
+    }
+    listen(resultFile,'change',()=>{const selected=resultFile.files[0];resultFile.value='';if(selected)wfRun(()=>choosePreview(selected));});
+    async function applyResult(){
+        const chosen=resultPreview;
+        if(!chosen)return;
+        if(!stillCurrent(chosen.capture,now(0))){clearPreview('The project changed · preview discarded, nothing uploaded.');return;}
+        if(!layoutReady){wfStatus.textContent='Wait for the selected message to settle, then import.';return;}
+        if(projectBusy||model.status().importing)return;
+        await model.importFile(chosen.file,'background',undefined,wfLabel.value.trim());
+        if(resultPreview===chosen)clearPreview('Imported and applied as the background · unsaved project change. Save project to keep it.');
+    }
+    for(const e of [wfLabel,wfPrompt,wfNegative,wfStyle])listen(e,'input',()=>{wfRevision++;renderWorkflow();});
+    for(const e of [wfSize,...wfRefs])listen(e,'change',()=>{wfRevision++;renderWorkflow();});
+    listen(workflowBody,'keydown',event=>{if(event.key==='Escape'){openWorkflow(false);workflowToggle.focus();event.stopPropagation();}});
+    function renderWorkflow(){
+        if(wfModel!==model){
+            // Your text survives attach, detach and replacement (owner direction on PR B); references and previews belong to one attachment and never carry over.
+            const left=Boolean(wfModel.project);for(const s of wfRefs)s.value='';wfModel=model;wfRevision++;clearPreview(left?'Project changed: references and any preview cleared; your text is kept.':'');
+        }
+        const attached=Boolean(model.project),refs=references(),d=draft(),text=draftProblems(d),all=draftProblems(d,catalog(refs)),importing=attached&&model.status().importing;
+        for(const s of wfRefs){options(s,[['','None'],...refs.map(r=>[r.assetId,(r.kind==='background'?'Background':'Actor sprite')+' · '+r.label])]);s.disabled=!attached;}
+        wfText.textContent=text.length?'':exportText(d);wfText.hidden=Boolean(text.length);
+        wfProblems.textContent=all.map(p=>describe(p.code)).join(' ');
+        for(const [key,e] of copyButtons)e.disabled=Boolean(text.length)||!d[key];
+        downloadPrompt.disabled=Boolean(text.length);
+        refButtons.forEach((e,i)=>{e.hidden=!wfRefs[i].value;e.disabled=!attached||wfBusy||Boolean(all.length);});
+        resultFile.disabled=!attached||importing;
+        importResult.textContent=attached?'Import and apply background to '+model.status().name:'Import and apply background';
+        importResult.disabled=!resultPreview||importing||projectBusy||!layoutReady;discardResult.disabled=!resultPreview;
+        wfNote.textContent=attached?'Import adds the PNG to this project, sets it as the background and locks it, like any manual import. Save project to keep it.':'Attach a saved project to download references or import a result. The prompt can be copied or downloaded now.';
+    }
     target.append(make('h4','','Unused Project Assets'));
     const reviewUnused=button('Review unused artwork',()=>model.project&&model.reviewUnused());
     const cleanupList=make('div','sillynovel-cleanup-list');target.append(cleanupList);
@@ -403,6 +501,7 @@ export function mountVisualStage({ document, stage, actions }) {
         const state=model.project?model.status():null;
         const paused=projectBusy||Boolean(state?.importing);
         for(const e of controls)e.disabled=paused||Boolean(state?.cleanupBusy)||(e===reset ? false : !ready);
+        layoutReady=ready&&!paused&&!state?.cleanupBusy;
         const recovery=state&&['conflict','uncertain'].includes(state.saveState);
         const status=state?.busy?'Saving project…':state?.saveState==='conflict'?'Unsaved project changes · save conflicted':state?.saveState==='uncertain'?'Save outcome uncertain · inspect by explicit reopen':state?.saveState==='error'?'Save failed · edits retained':state?.dirty?'Unsaved project changes':state?'Saved project layout':'Unsaved session visuals';
         unsaved.textContent=status;unsaved.dataset.state=state?.busy?'pending':recovery?state.saveState:state?.saveState==='error'?'error':state?.dirty?'dirty':state?'saved':'session';
@@ -451,6 +550,7 @@ export function mountVisualStage({ document, stage, actions }) {
         for(const control of [renameAsset,unregisterAsset]){control.hidden=!state;control.disabled=control.disabled||!libraryAsset.value;}
         registerActor.textContent=state?'Register project actor':'Register session actor';
         preset.parentElement.hidden=Boolean(state);
+        renderWorkflow();
     }
     function update(snapshot) {
         if(snapshot.sessionEpoch!==activation){
@@ -467,5 +567,5 @@ export function mountVisualStage({ document, stage, actions }) {
         run(()=>model.sync(false));
     }
     render();update(actions.getSnapshot());
-    return {update,dispose(){disposed=true;projectEpoch++;for(const remove of removers)remove();model.dispose();}};
+    return {update,dispose(){disposed=true;projectEpoch++;clearPreview();for(const remove of removers)remove();model.dispose();}};
 }

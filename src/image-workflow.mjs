@@ -1,4 +1,4 @@
-/** Pure M3.1 manual image exchange (H1, H2, H9): draft checks, export text, fixed filenames, capture currency. No provider, no I/O. See docs/M3_1_IMAGE_WORKFLOW_PLAN.md. */
+/** Pure M3.1 manual image exchange (H1, H2, H9): draft checks, export text, fixed filenames, result PNG checks, capture currency. No provider, no I/O. See docs/M3_1_IMAGE_WORKFLOW_PLAN.md. */
 import { validId, label } from '../plugins/sillynovel-storage/schema.mjs';
 
 export const DRAFT_VERSION = 1, MAX_REFERENCES = 3, PROMPT_FILENAME = 'sillynovel-image-prompt.txt';
@@ -53,6 +53,29 @@ export function exportText(draft) {
 export function referenceFilename(index) {
     if (!Number.isInteger(index) || index < 0 || index >= MAX_REFERENCES) throw Error('INVALID_REFERENCE_INDEX');
     return 'reference-' + (index + 1) + '.png';
+}
+
+// The project library's ceilings (plan 3.2); a decode that takes longer than this is abandoned.
+export const RESULT_LIMITS = Object.freeze({ bytes: 5 * 1024 * 1024, edge: 4096, pixels: 16000000 }), PREVIEW_TIMEOUT_MS = 10000;
+const SIGNATURE = [137, 80, 78, 71, 13, 10, 26, 10];
+
+/** Checks a chosen result's bytes before any decode: one static PNG within the ceilings. Returns a problem code or null; the plugin's decoder stays authoritative on upload. */
+export function pngProblem(bytes) {
+    if (!(bytes instanceof Uint8Array)) return 'NOT_PNG';
+    if (bytes.length > RESULT_LIMITS.bytes) return 'PNG_TOO_LARGE';
+    if (bytes.length < 33 || SIGNATURE.some((b, i) => bytes[i] !== b)) return 'NOT_PNG';
+    const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength), type = i => String.fromCharCode(...bytes.subarray(i + 4, i + 8));
+    if (view.getUint32(8) !== 13 || type(8) !== 'IHDR') return 'MALFORMED_PNG';
+    const width = view.getUint32(16), height = view.getUint32(20);
+    if (!width || !height || Math.max(width, height) > RESULT_LIMITS.edge || width * height > RESULT_LIMITS.pixels) return 'PNG_DIMENSIONS';
+    // Walk the chunks to IEND: an animation chunk anywhere refuses, and a truncated file never passes.
+    for (let i = 8; ;) {
+        if (i + 12 > bytes.length) return 'MALFORMED_PNG';
+        const name = type(i);
+        if (name === 'acTL') return 'ANIMATED_PNG';
+        if (name === 'IEND') return null;
+        i += view.getUint32(i) + 12;
+    }
 }
 
 /** Taken before each asynchronous step; the session epoch is new on every attachment, so A → B → A never matches an old capture. */

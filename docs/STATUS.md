@@ -1,8 +1,17 @@
 # Project status
 
-## Post-Gate-B cleanup candidate (draft, unmerged) — 2026-11-03
+## M3.1 PR B candidate (draft, unmerged) — 2026-11-03
 
-A small runtime change for owner review, [record](POST_GATE_B_CLEANUP.md): the Scene panel read-out no longer prints `undefined` when an overlay background's art was removed (PR D finding 1); the notice after Send during a director request now reads “Director request set aside for your reply”, outcome `SUPERSEDED` unchanged (finding 3); `tests/probes/m2-gate-b/run.mjs` exits after “Finished” (its losing race timers were referenced); the storage plugin README says `dataRoot` must be absolute. Finding 2 has proposed T60 wording for acceptance at merge; finding 4 is unchanged by design. Rebased onto `22b774d`; full campaign on a disposable pinned SillyTavern 1.19.0 host at `67d6207`: Node 371, storage 126, browser 103, seven native campaigns, `validate.py` PASS. Gate C NOT_RUN.
+The Image workflow is implemented on frozen `66a0297` (rebased onto the merged cleanup) for owner review under [DYL-207](https://linear.app/devils17/issue/DYL-207/sillynovel-m31-manual-image-exchange-promptreference-export-explicit):
+- **Where:** a closed disclosure in the Artwork Library.
+- **Export:** prompt fields with per-field Copy, Download prompt, and digest-checked reference downloads of this project's PNGs.
+- **Import:** a result PNG checked before decode and previewed locally, then **Import and apply background**, which is today's import and applies, locks and dirties.
+
+Nothing is sent to an image service. On the owner's review, Import and apply now follows the PNG import's gate, and draft text survives detach. Full campaign on a disposable pinned SillyTavern 1.19.0 host: Node 373, storage 126, browser 105, seven native campaigns (one new checkpoint drives the workflow through the real plugin); `validate.py` PASS. Keyboard-only, narrow, scaling, touch and screen-reader passes of the new controls (T73) NOT_RUN. See the [record](M3_1_IMAGE_WORKFLOW_IMPLEMENTATION.md#pr-b--the-image-workflow). Gate C NOT_RUN.
+
+## Post-Gate-B cleanup merged — 2026-11-04
+
+Merged as [#77](https://github.com/Sonoran-Solutions/SillyNovel/pull/77) (`6f8cf24`) on the owner's word, before M3.1 PR B. A small runtime change, [record](POST_GATE_B_CLEANUP.md): the Scene panel read-out no longer prints `undefined` when an overlay background's art was removed (PR D finding 1); the notice after Send during a director request now reads “Director request set aside for your reply”, outcome `SUPERSEDED` unchanged (finding 3); `tests/probes/m2-gate-b/run.mjs` exits after “Finished” (its losing race timers were referenced); the storage plugin README says `dataRoot` must be absolute. Finding 2's proposed T60 wording is not yet accepted, so TESTING T60 is unchanged; finding 4 is unchanged by design. Rebased onto `22b774d`; full campaign on a disposable pinned SillyTavern 1.19.0 host at `67d6207`: Node 371, storage 126, browser 103, seven native campaigns, `validate.py` PASS. Gate C NOT_RUN.
 
 ## M3.1 PR A candidate (draft, unmerged) — 2026-11-03
 

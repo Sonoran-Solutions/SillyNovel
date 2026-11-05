@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { emptyDraft, draftProblems, exportText, referenceFilename, captureOf, stillCurrent, LIMITS, MAX_REFERENCES, PROMPT_FILENAME } from '../src/image-workflow.mjs';
+import { emptyDraft, draftProblems, exportText, referenceFilename, captureOf, stillCurrent, LIMITS, MAX_REFERENCES, PROMPT_FILENAME, pngProblem, RESULT_LIMITS } from '../src/image-workflow.mjs';
 
 const id = n => '00000000-0000-4000-8000-' + String(n).padStart(12, '0');
 const hash = c => c.repeat(64);
@@ -78,4 +78,26 @@ test('T72: a capture matches only the same project model, project, session epoch
     assert.equal(stillCurrent(capture, at({}, id(1), 1, 4)), false, 'a replaced project model with the same ID');
     assert.equal(stillCurrent(capture, null), false, 'detached');
     assert.equal(stillCurrent(captureOf(at(null, null, 1, 0)), at(null, null, 1, 0)), false, 'no attachment is never current');
+});
+
+// A minimal PNG: signature, IHDR, optional extra chunks, IEND. CRCs are not checked before decode; the plugin's decoder checks them.
+const chunk = (name, data = []) => [...[24, 16, 8, 0].map(s => (data.length >>> s) & 255), ...[...name].map(c => c.charCodeAt(0)), ...data, 0, 0, 0, 0];
+const be = n => [24, 16, 8, 0].map(s => (n >>> s) & 255);
+const png = (width = 64, height = 32, extra = []) => new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10, ...chunk('IHDR', [...be(width), ...be(height), 8, 6, 0, 0, 0]), ...extra, ...chunk('IEND')]);
+
+test('T71: a static PNG within the ceilings passes before decode, the real fixture included', async () => {
+    const { readFile } = await import('node:fs/promises');
+    assert.equal(pngProblem(png()), null);
+    assert.equal(pngProblem(png(RESULT_LIMITS.edge, 3906)), null, '4096 × 3906 is under 16M pixels');
+    assert.equal(pngProblem(new Uint8Array(await readFile(new URL('fixtures/m12-stage/forest.png', import.meta.url)))), null);
+});
+test('T71: wrong type, animation, truncation, oversize and bad dimensions refuse before decode', () => {
+    assert.equal(pngProblem('not bytes'), 'NOT_PNG');
+    assert.equal(pngProblem(new Uint8Array([255, 216, 255, 224, ...new Array(40).fill(0)])), 'NOT_PNG', 'a JPEG');
+    assert.equal(pngProblem(png(64, 32, chunk('acTL', [0, 0, 0, 2, 0, 0, 0, 0]))), 'ANIMATED_PNG');
+    assert.equal(pngProblem(png().subarray(0, 40)), 'MALFORMED_PNG', 'cut off before IEND');
+    const noIhdr = png(); noIhdr.set([...'IDAT'].map(c => c.charCodeAt(0)), 12);
+    assert.equal(pngProblem(noIhdr), 'MALFORMED_PNG', 'IHDR must come first');
+    assert.equal(pngProblem(new Uint8Array(RESULT_LIMITS.bytes + 1)), 'PNG_TOO_LARGE');
+    for (const [w, h] of [[0, 32], [64, 0], [RESULT_LIMITS.edge + 1, 1], [4096, 4096]]) assert.equal(pngProblem(png(w, h)), 'PNG_DIMENSIONS', w + ' × ' + h);
 });

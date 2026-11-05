@@ -64,3 +64,66 @@ Browser, storage and native suites NOT_RUN: a pure-module slice under the [M2 ev
 ### Next
 
 PR B (the Image workflow disclosure, reference downloads, local preview, “Import and apply background”) starts only after the owner reviews this PR. It is a renderer change and needs the browser suite, storage suite, full native-host campaign on pinned SillyTavern 1.19.0 and the affected device replay. The pinned host is not currently on this machine.
+
+## PR B — the Image workflow
+
+**Candidate, unmerged. Frozen `66a02977edf33799de366c47be99ab3a3a142dc9`**, which is `62b848b` rebased onto main `6f8cf24` (the [post-Gate-B cleanup](POST_GATE_B_CLEANUP.md) merged first on the [owner's word](DECISIONS.md#owner-direction--post-gate-b-cleanup-merged-before-m31-pr-b--2026-11-04); PR A merged before it, [owner acceptance](DECISIONS.md#owner-acceptance--m31-pr-a-merged-per-field-copy-for-pr-b--2026-11-03)). Tracked by [DYL-207](https://linear.app/devils17/issue/DYL-207/sillynovel-m31-manual-image-exchange-promptreference-export-explicit). Renderer change: the evidence is the full campaign on pinned SillyTavern 1.19.0 (H4). No image provider (H2), no host-adapter, plugin or schema change.
+
+**Owner direction during review — 2026-11-03.** Told in the walkthrough that Import and apply skipped the gate the PNG import respects, and that detaching cleared a draft, the owner said “Fix 1 and soften 2.” Both are in `62b848b`, now rebased as `66a0297` (the first freeze, `0c858c8`, also passed its campaign and is superseded). (1) Import and apply now follows the same gate as the PNG import. (2) Your text survives detach and project replacement; references and the preview are still cleared. This amends plan 3.3's clear-on-detach for the draft text only.
+
+### What it adds
+
+| Where | Change |
+| --- | --- |
+| `src/stage-view.mjs` | An **Image workflow** disclosure at the end of the Artwork Library area, closed by default. Fields: background label, image prompt, negative prompt, style note, size hint, references 1–3 (this project's library PNGs only). The preview shows `exportText` exactly, with the reasons it can't be exported under it. **Copy prompt**, **Copy negative prompt** and **Copy style note** each copy that field alone (the owner's acceptance of PR A). **Download prompt** saves `sillynovel-image-prompt.txt`. **Download reference N** re-reads the stored file, checks its digest and saves `reference-N.png`. **Result PNG** checks the file before decode, then shows a local preview. **Import and apply background to ‹project›** imports it; **Discard preview** drops it without uploading. |
+| `src/image-workflow.mjs` | `pngProblem(bytes)`: one static PNG (signature, IHDR first, chunks walked to IEND, no `acTL`), at most 5 MiB, 4096 px on an edge and 16 million pixels, checked before any decode. `PREVIEW_TIMEOUT_MS` is 10 s. |
+| `src/project-scene.mjs` | `readReference(assetId)`: read-only, accepts only an asset in this project's library, goes through the existing digest-checked `client.asset()` and refuses if the attachment changed meanwhile. |
+| `style.css` | Layout for the disclosure, the wrapped text preview and the image preview. |
+
+Nothing is sent to an image service. The only storage requests the workflow makes are the reference readback (GET) and, on Import and apply, the existing upload (POST) and the install readback.
+
+### Implementation choices for owner review
+
+1. **A toggle button with `aria-expanded`, not a nested `<details>`.** A second `<summary>` inside the controls would make the `.sillynovel-controls summary` locator, used about 60 times across the probes, ambiguous. The disclosure is still closed by default, and Escape inside it closes it and returns focus to its button.
+2. **Drafting, copying and downloading never wait for the scene; Import and apply does.** The workflow's controls are kept out of the shared `controls` list. Import and apply instead mirrors that list's gate exactly (`layoutReady`: stage verified for the current snapshot, no project operation or import in flight, no cleanup running), so it is disabled whenever the Project PNG file import is. With a project attached that gate is about the stage, not about a reply streaming, because project layout is global. It is checked again on click.
+3. **A preview belongs to the attachment, not to draft edits.** It is captured with project model, project ID and session epoch; the label is read when you press Import. A reference download is also bound to the draft revision, so changing the selection mid-read drops it.
+4. **Your text survives attach, detach and replacement; references and the preview never do** (owner direction). References and the preview belong to one attachment's library, so they are cleared with a visible note.
+5. **A → B → A is caught by model identity.** Every attachment builds a new project model, so `stillCurrent` fails on identity even where the session epoch is unchanged. A native chat switch also changes the epoch. (This is point 2 of the PR A acceptance.)
+6. **A reference's expected hash is the one checked when the art was installed.** Download re-reads it, and a different hash refuses as “A reference changed; select it again.”
+7. **Reference byte counts are passed as 0** (a `ponytail:` comment in the code). `client.asset()` refuses any stored asset over 5 MiB, so three references can't exceed `LIMITS.referenceBytes`. Pass real sizes if that cap is ever raised.
+8. **`pngProblem` is a new pure check;** `src/transient-scene.mjs`'s inline checks are untouched. The `acTL` walk is duplicated rather than changing the session-only import path.
+9. **Import is today's `importFile` unchanged** (H10): it registers the PNG, applies it as the background, locks it, clears the director overlay and marks the project dirty. A blank label falls back to the file name. Save stays explicit.
+10. **Messages are plain text throughout.** Your text goes through `textContent`, and the browser test asserts that a `<b>` in the prompt creates no element.
+
+### TESTING coverage
+
+| Row | Covered (frozen `66a0297`) | Still NOT_RUN or NOT_TESTED |
+| --- | --- | --- |
+| T69 | Browser: preview equals the downloaded file's bytes; per-field copy holds only that field; blank prompt refuses; markup, `{{char}}` and `/sd` stay text; no request at all without a project; the native draft is kept. Native: the prompt download makes no storage request. Node (PR A): byte ceilings. | — |
+| T70 | Browser: a duplicate refuses; the downloaded reference equals the served bytes; a changed stored file refuses. Native: the download is the stored file, by digest, and the only request is the authenticated readback. Node: foreign, unknown and path-shaped references refuse; fixed filenames. | — |
+| T71 | Browser: a non-PNG refuses before preview; choose and discard upload nothing; Import and apply is disabled, and a synthetic click uploads nothing, exactly while the PNG import is (held cleanup review); then it uploads once, applies the background and marks the project unsaved. Native: through the real plugin decoder, saved, locked, with the stored bytes equal to the file. Node: animation, truncation, oversize and dimension ceilings. | Save conflict and quota during this import (covered for the shared import path by the existing campaigns, not exercised from the workflow) |
+| T72 | Browser: detach clears references and a pending preview, which never uploads, and keeps the text. Node: capture rules including A → B → A. | A delayed decode racing a detach, on the real host |
+| T73 | — | **All NOT_RUN:** keyboard-only pass, narrow layout and 200 % scaling of the disclosure, touch file picker and downloads on the Galaxy Tab, screen readers |
+
+### Commands and results
+
+One supervised campaign from a detached worktree at the frozen SHA `66a0297`, the combined check with the cleanup merged (heavy-job lock held, 50-minute deadline, no leftover processes). Before the rebase, the same campaign passed with the same counts on `62b848b` and on the first freeze `0c858c8`; this package replaces theirs. Two attempts on `66a0297` failed before any suite ran on it: `run.py` refused the existing package directory, then the storage suite could not find `pngjs` because the fresh worktree had no plugin dependencies (`npm ci` in `plugins/sillynovel-storage` fixed it). Those attempts are kept outside the repository and are not evidence.
+
+```sh
+SILLYTAVERN_ROOT=<disposable pinned host> SN_PLAYWRIGHT_MODULE=<pinned Playwright> python3 tests/probes/dyl60/run.py docs/evidence/m3-1-b/campaign
+python3 tests/probes/dyl60/validate.py docs/evidence/m3-1-b/campaign
+```
+
+| Suite | Result |
+| --- | --- |
+| Node | 373/373 (PR A's 371 plus the two `pngProblem` tests) |
+| Storage | 126/126 |
+| Browser actual-entry | 105/105 (103 before plus the two workflow tests) |
+| Native campaigns | stage-library-migration 25 checkpoints (the image-workflow block is one), expressions 16, groups 22, recovery 17, cleanup 21, native-integrity-branches 18, director 60 |
+| `validate.py` | PASS over 138 frozen inputs, a native inventory of 84 files and 115 artifact hashes; physical and owner gates NOT_TESTED or NOT_RUN |
+
+Host: SillyTavern 1.19.0 at `7e8663cd9c184a550b37238218bdd32c6efc68e9`, a disposable `git clone` from the owner's local SillyTavern clone (the owner's install untouched) with `npm ci`, Node 26.8.1, the pinned Playwright Chromium. Package: [`docs/evidence/m3-1-b/campaign/`](evidence/m3-1-b/campaign/). Before freezing, the stage-library-migration step ran once on its own (25 PASS) to check the new probe block; that run is not the evidence.
+
+### Not covered
+
+Physical and assistive rows (T73); any image provider, which is M3.2 and not authorized; generated-candidate storage (H7, deferred).

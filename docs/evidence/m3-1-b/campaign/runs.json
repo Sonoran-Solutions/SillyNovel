@@ -1,0 +1,168 @@
+[
+  {
+    "name": "node",
+    "candidate": "66a02977edf33799de366c47be99ab3a3a142dc9",
+    "command": "node --test --test-isolation=none /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/combined80/tests/m0.test.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/combined80/tests/m1-reader-source.test.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/combined80/tests/m1-source-prefix.test.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/combined80/tests/m1-scene-reducer.test.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/combined80/tests/m1-project-scene.test.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/combined80/tests/m1-project-expressions.test.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/combined80/tests/m2-director-proposal.test.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/combined80/tests/m2-director-request.test.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/combined80/tests/m2-director-controller.test.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/combined80/tests/m2-director-overlay.test.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/combined80/tests/m2-director-log.test.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/combined80/tests/m2-gate-b-score.test.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/combined80/tests/m3-image-workflow.test.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/combined80/tests/probes/dyl19/owned-chat-probe.test.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/combined80/tests/probes/dyl19/source-anchor.test.mjs",
+    "environment": {},
+    "startedUTC": "2026-11-04T23:42:46.384058+00:00",
+    "endedUTC": "2026-11-04T23:42:50.859864+00:00",
+    "elapsedSeconds": 4.476,
+    "exitCode": 0,
+    "log": "node.txt",
+    "checkpointCount": 0,
+    "tests": 373,
+    "pass": 373,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  {
+    "name": "storage",
+    "candidate": "66a02977edf33799de366c47be99ab3a3a142dc9",
+    "command": "node --test --test-isolation=none /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/combined80/plugins/sillynovel-storage/test/bundle.test.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/combined80/plugins/sillynovel-storage/test/cleanup.test.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/combined80/plugins/sillynovel-storage/test/library.test.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/combined80/plugins/sillynovel-storage/test/recovery.test.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/combined80/plugins/sillynovel-storage/test/store.test.mjs",
+    "environment": {},
+    "startedUTC": "2026-11-04T23:42:50.868915+00:00",
+    "endedUTC": "2026-11-04T23:44:48.134276+00:00",
+    "elapsedSeconds": 117.265,
+    "exitCode": 0,
+    "log": "storage.txt",
+    "checkpointCount": 0,
+    "tests": 126,
+    "pass": 126,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  {
+    "name": "browser",
+    "candidate": "66a02977edf33799de366c47be99ab3a3a142dc9",
+    "command": "node --test --test-isolation=none /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/combined80/tests/m1-reader-browser.test.mjs",
+    "environment": {},
+    "startedUTC": "2026-11-04T23:44:48.140660+00:00",
+    "endedUTC": "2026-11-04T23:46:59.452073+00:00",
+    "elapsedSeconds": 131.311,
+    "exitCode": 0,
+    "log": "browser.txt",
+    "checkpointCount": 0,
+    "tests": 105,
+    "pass": 105,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  {
+    "name": "stage-library-migration",
+    "candidate": "66a02977edf33799de366c47be99ab3a3a142dc9",
+    "command": "node tests/probes/project-portability/host.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/host/SillyTavern",
+    "environment": {
+      "SN_STAGE_UX_RUN": "1",
+      "SN_LIBRARY_RUN": "1",
+      "SN_MIGRATION_RUN": "1"
+    },
+    "startedUTC": "2026-11-04T23:46:59.458261+00:00",
+    "endedUTC": "2026-11-04T23:48:14.168491+00:00",
+    "elapsedSeconds": 74.71,
+    "exitCode": 0,
+    "log": "stage-library-migration.txt",
+    "checkpointCount": 25,
+    "ownedRoot": "/tmp/sn-portability-host-DEQpSh",
+    "result": "PASS"
+  },
+  {
+    "name": "expressions",
+    "candidate": "66a02977edf33799de366c47be99ab3a3a142dc9",
+    "command": "node tests/probes/project-portability/host.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/host/SillyTavern",
+    "environment": {
+      "SN_EXPRESSIONS_RUN": "1"
+    },
+    "startedUTC": "2026-11-04T23:48:14.178579+00:00",
+    "endedUTC": "2026-11-04T23:49:03.524322+00:00",
+    "elapsedSeconds": 49.346,
+    "exitCode": 0,
+    "log": "expressions.txt",
+    "checkpointCount": 16,
+    "ownedRoot": "/tmp/sn-portability-host-ZqI8Im",
+    "result": "PASS"
+  },
+  {
+    "name": "groups",
+    "candidate": "66a02977edf33799de366c47be99ab3a3a142dc9",
+    "command": "node tests/probes/project-portability/host.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/host/SillyTavern",
+    "environment": {
+      "SN_GROUP_RUN": "1"
+    },
+    "startedUTC": "2026-11-04T23:49:03.533537+00:00",
+    "endedUTC": "2026-11-04T23:50:15.491670+00:00",
+    "elapsedSeconds": 71.958,
+    "exitCode": 0,
+    "log": "groups.txt",
+    "checkpointCount": 22,
+    "ownedRoot": "/tmp/sn-portability-host-ZqkutL",
+    "result": "PASS"
+  },
+  {
+    "name": "recovery",
+    "candidate": "66a02977edf33799de366c47be99ab3a3a142dc9",
+    "command": "node tests/probes/project-portability/host.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/host/SillyTavern",
+    "environment": {
+      "SN_RECOVERY_RUN": "1"
+    },
+    "startedUTC": "2026-11-04T23:50:15.501102+00:00",
+    "endedUTC": "2026-11-04T23:50:55.385998+00:00",
+    "elapsedSeconds": 39.885,
+    "exitCode": 0,
+    "log": "recovery.txt",
+    "checkpointCount": 17,
+    "ownedRoot": "/tmp/sn-portability-host-i2xpdP",
+    "result": "PASS"
+  },
+  {
+    "name": "cleanup",
+    "candidate": "66a02977edf33799de366c47be99ab3a3a142dc9",
+    "command": "node tests/probes/project-portability/host.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/host/SillyTavern",
+    "environment": {
+      "SN_CLEANUP_RUN": "1"
+    },
+    "startedUTC": "2026-11-04T23:50:55.393607+00:00",
+    "endedUTC": "2026-11-04T23:51:54.919645+00:00",
+    "elapsedSeconds": 59.526,
+    "exitCode": 0,
+    "log": "cleanup.txt",
+    "checkpointCount": 21,
+    "ownedRoot": "/tmp/sn-portability-host-J1db3c",
+    "result": "PASS"
+  },
+  {
+    "name": "native-integrity-branches",
+    "candidate": "66a02977edf33799de366c47be99ab3a3a142dc9",
+    "command": "node tests/probes/project-portability/host.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/host/SillyTavern",
+    "environment": {
+      "SN_CANDIDATE_RUN": "1"
+    },
+    "startedUTC": "2026-11-04T23:51:54.927246+00:00",
+    "endedUTC": "2026-11-04T23:53:02.581038+00:00",
+    "elapsedSeconds": 67.654,
+    "exitCode": 0,
+    "log": "native-integrity-branches.txt",
+    "checkpointCount": 18,
+    "ownedRoot": "/tmp/sn-portability-host-rxUYz1",
+    "result": "PASS"
+  },
+  {
+    "name": "director",
+    "candidate": "66a02977edf33799de366c47be99ab3a3a142dc9",
+    "command": "node tests/probes/m2-director/host.mjs /tmp/claude-1000/-home-dq-Projects-SillyNovel/d7b11623-c06b-42ad-9566-ddd41ee27468/scratchpad/host/SillyTavern",
+    "environment": {},
+    "startedUTC": "2026-11-04T23:53:02.592555+00:00",
+    "endedUTC": "2026-11-05T00:05:02.200709+00:00",
+    "elapsedSeconds": 719.608,
+    "exitCode": 0,
+    "log": "director.txt",
+    "checkpointCount": 60,
+    "ownedRoot": "/tmp/sn-m2-director-QFYWd7",
+    "result": "PASS"
+  }
+]
