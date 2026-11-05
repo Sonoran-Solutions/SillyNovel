@@ -1,5 +1,9 @@
 # Project status
 
+## M3.1 merged — 2026-11-04
+
+Both M3.1 PRs are on main: PR A ([#79](https://github.com/Sonoran-Solutions/SillyNovel/pull/79)) and PR B ([#80](https://github.com/Sonoran-Solutions/SillyNovel/pull/80), `ad4279d`), on the [owner's word](DECISIONS.md#owner-direction--m31-pr-b-merged--2026-11-04). The Image workflow ships with no image provider. Evidence is the combined campaign on `66a0297`. T73 is NOT_RUN and keeps DYL-207 open. Nothing further is authorized. Gate C NOT_RUN.
+
 ## M3.1 PR B candidate (draft, unmerged) — 2026-11-03
 
 The Image workflow is implemented on frozen `66a0297` (rebased onto the merged cleanup) for owner review under [DYL-207](https://linear.app/devils17/issue/DYL-207/sillynovel-m31-manual-image-exchange-promptreference-export-explicit):
