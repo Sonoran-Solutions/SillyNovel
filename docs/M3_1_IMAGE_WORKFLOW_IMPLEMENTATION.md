@@ -67,9 +67,9 @@ PR B (the Image workflow disclosure, reference downloads, local preview, “Impo
 
 ## PR B — the Image workflow
 
-**Candidate, unmerged. Frozen `62b848bc22206a0ca153993953426f386fba8d77`**, based on main `22b774d` (PR A merged, [owner acceptance](DECISIONS.md#owner-acceptance--m31-pr-a-merged-per-field-copy-for-pr-b--2026-11-03)). Tracked by [DYL-207](https://linear.app/devils17/issue/DYL-207/sillynovel-m31-manual-image-exchange-promptreference-export-explicit). Renderer change: the evidence is the full campaign on pinned SillyTavern 1.19.0 (H4). No image provider (H2), no host-adapter, plugin or schema change.
+**Candidate, unmerged. Frozen `66a02977edf33799de366c47be99ab3a3a142dc9`**, which is `62b848b` rebased onto main `6f8cf24` (the [post-Gate-B cleanup](POST_GATE_B_CLEANUP.md) merged first on the [owner's word](DECISIONS.md#owner-direction--post-gate-b-cleanup-merged-before-m31-pr-b--2026-11-04); PR A merged before it, [owner acceptance](DECISIONS.md#owner-acceptance--m31-pr-a-merged-per-field-copy-for-pr-b--2026-11-03)). Tracked by [DYL-207](https://linear.app/devils17/issue/DYL-207/sillynovel-m31-manual-image-exchange-promptreference-export-explicit). Renderer change: the evidence is the full campaign on pinned SillyTavern 1.19.0 (H4). No image provider (H2), no host-adapter, plugin or schema change.
 
-**Owner direction during review — 2026-11-03.** Told in the walkthrough that Import and apply skipped the gate the PNG import respects, and that detaching cleared a draft, the owner said “Fix 1 and soften 2.” Both are in the refrozen `62b848b` (the first freeze, `0c858c8`, also passed its campaign and is superseded). (1) Import and apply now follows the same gate as the PNG import. (2) Your text survives detach and project replacement; references and the preview are still cleared. This amends plan 3.3's clear-on-detach for the draft text only.
+**Owner direction during review — 2026-11-03.** Told in the walkthrough that Import and apply skipped the gate the PNG import respects, and that detaching cleared a draft, the owner said “Fix 1 and soften 2.” Both are in `62b848b`, now rebased as `66a0297` (the first freeze, `0c858c8`, also passed its campaign and is superseded). (1) Import and apply now follows the same gate as the PNG import. (2) Your text survives detach and project replacement; references and the preview are still cleared. This amends plan 3.3's clear-on-detach for the draft text only.
 
 ### What it adds
 
@@ -97,7 +97,7 @@ Nothing is sent to an image service. The only storage requests the workflow make
 
 ### TESTING coverage
 
-| Row | Covered (frozen `62b848b`) | Still NOT_RUN or NOT_TESTED |
+| Row | Covered (frozen `66a0297`) | Still NOT_RUN or NOT_TESTED |
 | --- | --- | --- |
 | T69 | Browser: preview equals the downloaded file's bytes; per-field copy holds only that field; blank prompt refuses; markup, `{{char}}` and `/sd` stay text; no request at all without a project; the native draft is kept. Native: the prompt download makes no storage request. Node (PR A): byte ceilings. | — |
 | T70 | Browser: a duplicate refuses; the downloaded reference equals the served bytes; a changed stored file refuses. Native: the download is the stored file, by digest, and the only request is the authenticated readback. Node: foreign, unknown and path-shaped references refuse; fixed filenames. | — |
@@ -107,7 +107,7 @@ Nothing is sent to an image service. The only storage requests the workflow make
 
 ### Commands and results
 
-One supervised campaign from the PR B worktree at the frozen SHA `62b848b` (heavy-job lock held, 50-minute deadline, no leftover processes). The same campaign on the first freeze `0c858c8` passed with the same counts; its package is replaced by this one:
+One supervised campaign from a detached worktree at the frozen SHA `66a0297`, the combined check with the cleanup merged (heavy-job lock held, 50-minute deadline, no leftover processes). Before the rebase, the same campaign passed with the same counts on `62b848b` and on the first freeze `0c858c8`; this package replaces theirs. Two attempts on `66a0297` failed before any suite ran on it: `run.py` refused the existing package directory, then the storage suite could not find `pngjs` because the fresh worktree had no plugin dependencies (`npm ci` in `plugins/sillynovel-storage` fixed it). Those attempts are kept outside the repository and are not evidence.
 
 ```sh
 SILLYTAVERN_ROOT=<disposable pinned host> SN_PLAYWRIGHT_MODULE=<pinned Playwright> python3 tests/probes/dyl60/run.py docs/evidence/m3-1-b/campaign

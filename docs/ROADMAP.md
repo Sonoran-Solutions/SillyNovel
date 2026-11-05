@@ -2,7 +2,7 @@
 
 ## M3.1 PR B candidate (draft, unmerged) — 2026-11-03
 
-The last M3.1 slice is a [draft PR](M3_1_IMAGE_WORKFLOW_IMPLEMENTATION.md#pr-b--the-image-workflow) on frozen `62b848b`, awaiting owner review. M3.2 planning (H3, H5, H6, H7) and the optional H8 session follow only on the owner's word. Gate C NOT_RUN.
+The last M3.1 slice is a [draft PR](M3_1_IMAGE_WORKFLOW_IMPLEMENTATION.md#pr-b--the-image-workflow) on frozen `66a0297`, rebased onto the merged post-Gate-B cleanup, awaiting owner review. M3.2 planning (H3, H5, H6, H7) and the optional H8 session follow only on the owner's word. Gate C NOT_RUN.
 
 ## M3.1 PR A candidate (draft, unmerged) — 2026-11-03
 

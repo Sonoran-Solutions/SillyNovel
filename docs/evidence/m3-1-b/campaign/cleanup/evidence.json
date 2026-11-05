@@ -1,8 +1,8 @@
 {
-  "candidate": "62b848bc22206a0ca153993953426f386fba8d77",
+  "candidate": "66a02977edf33799de366c47be99ab3a3a142dc9",
   "host": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
   "node": "v26.8.1",
-  "root": "/tmp/sn-portability-host-yAAMWO",
+  "root": "/tmp/sn-portability-host-J1db3c",
   "checks": [
     "real host auth/CSRF, two-user project and asset isolation, two-client CAS, PNG hash and limits",
     "browser create/import background + two sprites/arrange/save/reload/explicit reopen; named canonical files unchanged",
@@ -27,8 +27,8 @@
     "CSRF-disabled pinned host refuses cleanup inspection and persistence"
   ],
   "files": {
-    "default-user/characters/Project A.png": "03ad5e80f5da92a0ef68d5b11da1f11d088ef585f9eeca488c170e0dd378f572",
-    "default-user/characters/Project B.png": "0fed0d37bf273de6df43a5f2e664e10ea927a6faeca0539ae9413ad0f81237df",
+    "default-user/characters/Project A.png": "3e8a37e4a875098a6dc1ae17f987b1bcac41c12cdd156aee8325c16eb44b9adf",
+    "default-user/characters/Project B.png": "774bd50d942523e47afbf3916d19df47c37577bc798dde71e273daa7da8bf8a9",
     "default-user/characters/Seraphina/admiration.png": "e451994487b3a5b7c72d6e6025c8cbe6bbcfbf01a490042b8b581522e6ba4f96",
     "default-user/characters/Seraphina/amusement.png": "1cedaee06fb1c740c5c8c52de8973f733789d51fe9b23fcb633635e755ae6e6f",
     "default-user/characters/Seraphina/anger.png": "d657d77b1bce609dd6006582cf687691871411eb041f9f4c41da4765b12ea069",
@@ -58,8 +58,8 @@
     "default-user/characters/Seraphina/sadness.png": "3819c2bca59224f67767eb3762c846e35d5eb5272be03f35c21fc32163df67a6",
     "default-user/characters/Seraphina/surprise.png": "f6a9f657d081f670a961649a5a21526ec251262ca06adf99626509059fbbb103",
     "default-user/characters/default_Seraphina.png": "8a71e8270f54fafbccf905b1bdf053a6a55f57bea89c01fcd8c0e87ee76a2d52",
-    "default-user/chats/Project A/Project A - 2026-11-03@23h29m41s904ms.jsonl": "973ef56c1b734dc8575d66ea406c45828373a963caed21a72c8133900a777d3e",
-    "default-user/chats/Project B/Project B - 2026-11-03@23h29m41s934ms.jsonl": "2311342b5e0f1456431a5615f383556931a252e5a41441299d270cc8a29602dc",
+    "default-user/chats/Project A/Project A - 2026-11-04@16h51m04s497ms.jsonl": "52c389e842a739e4091001d6f5ef081b162949d2c557a601960c3605cb43c071",
+    "default-user/chats/Project B/Project B - 2026-11-04@16h51m04s525ms.jsonl": "8f5653598bbe3e18033551340fdc8b77e0b1ecc4a0c15f30313bf8f6c36404d4",
     "default-user/worlds/Eldoria.json": "bfc2548443c890746a54d54e35e41265b02d1b59fd06d72552b305bf9b1e063c"
   },
   "notTested": [
@@ -82,84 +82,84 @@
     "before": {
       "projects": [
         {
-          "id": "3e2a1b2a-7dbe-43b9-9b2e-cbc25fbfbebb",
-          "owner": "[\"default-user\",1793773774165]",
+          "id": "0f92d9d6-5290-45c3-859d-c945e9fd550c",
+          "owner": "[\"default-user\",1793836256556]",
           "name": "Browser project",
           "revision": 1,
-          "scene": "{\"backgroundAssetId\":\"8540d9ed-652a-40e7-95fa-258bc7c70528\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"d7afc65d-4cfa-4309-b735-e343b830589a\",\"name\":\"One\",\"spriteAssetId\":\"34505620-b134-4cf1-a7e1-9c1dfe0612d8\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"aa80eb40-6f60-444d-9579-7c09482d4465\",\"name\":\"Two\",\"spriteAssetId\":\"5240ba5b-c5ed-4b5b-9861-dce966e18a4b\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
-          "catalog": "[{\"assetId\":\"8540d9ed-652a-40e7-95fa-258bc7c70528\",\"label\":\"forest\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"34505620-b134-4cf1-a7e1-9c1dfe0612d8\",\"label\":\"mira-a\",\"kind\":\"sprite\",\"actorId\":\"d7afc65d-4cfa-4309-b735-e343b830589a\"},{\"assetId\":\"5240ba5b-c5ed-4b5b-9861-dce966e18a4b\",\"label\":\"rowan\",\"kind\":\"sprite\",\"actorId\":\"aa80eb40-6f60-444d-9579-7c09482d4465\"}]"
+          "scene": "{\"backgroundAssetId\":\"2e444622-2a56-431b-9d5d-7b45e9f7c54a\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"37bd39b5-6812-4a95-b154-0dcd17b29408\",\"name\":\"One\",\"spriteAssetId\":\"9caae65c-5c33-4a0c-9e87-d7c79b62f3cb\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"0f1681a9-30bb-4f66-8e15-88b269730879\",\"name\":\"Two\",\"spriteAssetId\":\"e112ce9e-2415-41a4-abe3-bc0699ec5240\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
+          "catalog": "[{\"assetId\":\"2e444622-2a56-431b-9d5d-7b45e9f7c54a\",\"label\":\"forest\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"9caae65c-5c33-4a0c-9e87-d7c79b62f3cb\",\"label\":\"mira-a\",\"kind\":\"sprite\",\"actorId\":\"37bd39b5-6812-4a95-b154-0dcd17b29408\"},{\"assetId\":\"e112ce9e-2415-41a4-abe3-bc0699ec5240\",\"label\":\"rowan\",\"kind\":\"sprite\",\"actorId\":\"0f1681a9-30bb-4f66-8e15-88b269730879\"}]"
         },
         {
-          "id": "74c16da4-2bea-4c5c-96c9-c53981b495c4",
-          "owner": "[\"sn-other\",1793773781765]",
-          "name": "Bob project",
-          "revision": 0,
+          "id": "257aa7ed-0eb3-45f4-a1f8-fe20495f8e92",
+          "owner": "[\"default-user\",1793836256556]",
+          "name": "API project",
+          "revision": 1,
           "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
           "catalog": "[]"
         },
         {
-          "id": "e646b113-20a4-4449-b81b-59fce9b61fdc",
-          "owner": "[\"default-user\",1793773774165]",
-          "name": "API project",
-          "revision": 1,
+          "id": "c438398d-2c6c-4e6d-98c4-1298788a184a",
+          "owner": "[\"sn-other\",1793836264348]",
+          "name": "Bob project",
+          "revision": 0,
           "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
           "catalog": "[]"
         }
       ],
       "assets": [
         {
-          "id": "34505620-b134-4cf1-a7e1-9c1dfe0612d8",
-          "project": "3e2a1b2a-7dbe-43b9-9b2e-cbc25fbfbebb",
-          "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
-          "width": 420,
-          "height": 660,
-          "byteCount": 4454
-        },
-        {
-          "id": "50112736-f70a-4ded-8aa4-975db7e14560",
-          "project": "3e2a1b2a-7dbe-43b9-9b2e-cbc25fbfbebb",
+          "id": "168326b1-147f-451f-b4ed-4e96a3ee8888",
+          "project": "0f92d9d6-5290-45c3-859d-c945e9fd550c",
           "sha256": "ebc67fb00f77658f0f3fff534659afaa569e34f87d663be4e255002b16e85ea6",
           "width": 420,
           "height": 660,
           "byteCount": 4557
         },
         {
-          "id": "5240ba5b-c5ed-4b5b-9861-dce966e18a4b",
-          "project": "3e2a1b2a-7dbe-43b9-9b2e-cbc25fbfbebb",
-          "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
+          "id": "2e444622-2a56-431b-9d5d-7b45e9f7c54a",
+          "project": "0f92d9d6-5290-45c3-859d-c945e9fd550c",
+          "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
+          "width": 1280,
+          "height": 720,
+          "byteCount": 11591
+        },
+        {
+          "id": "726925d9-2c50-4a51-965e-a427261b4f61",
+          "project": "257aa7ed-0eb3-45f4-a1f8-fe20495f8e92",
+          "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
+          "width": 1280,
+          "height": 720,
+          "byteCount": 11591
+        },
+        {
+          "id": "9caae65c-5c33-4a0c-9e87-d7c79b62f3cb",
+          "project": "0f92d9d6-5290-45c3-859d-c945e9fd550c",
+          "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
           "width": 420,
           "height": 660,
-          "byteCount": 4253
+          "byteCount": 4454
         },
         {
-          "id": "8540d9ed-652a-40e7-95fa-258bc7c70528",
-          "project": "3e2a1b2a-7dbe-43b9-9b2e-cbc25fbfbebb",
-          "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
-          "width": 1280,
-          "height": 720,
-          "byteCount": 11591
-        },
-        {
-          "id": "cfddad37-d7e0-4521-b695-362a0bba29a1",
-          "project": "e646b113-20a4-4449-b81b-59fce9b61fdc",
-          "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
-          "width": 1280,
-          "height": 720,
-          "byteCount": 11591
-        },
-        {
-          "id": "fb6cce3e-2536-4e5a-8471-cc1c7344014c",
-          "project": "3e2a1b2a-7dbe-43b9-9b2e-cbc25fbfbebb",
+          "id": "d26a52ab-0b0e-470a-9f97-77f302f9af7a",
+          "project": "0f92d9d6-5290-45c3-859d-c945e9fd550c",
           "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
           "width": 1280,
           "height": 720,
           "byteCount": 6085
+        },
+        {
+          "id": "e112ce9e-2415-41a4-abe3-bc0699ec5240",
+          "project": "0f92d9d6-5290-45c3-859d-c945e9fd550c",
+          "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
+          "width": 420,
+          "height": 660,
+          "byteCount": 4253
         }
       ]
     },
     "nativeBefore": {
-      "default-user/characters/Project A.png": "03ad5e80f5da92a0ef68d5b11da1f11d088ef585f9eeca488c170e0dd378f572",
-      "default-user/characters/Project B.png": "0fed0d37bf273de6df43a5f2e664e10ea927a6faeca0539ae9413ad0f81237df",
+      "default-user/characters/Project A.png": "3e8a37e4a875098a6dc1ae17f987b1bcac41c12cdd156aee8325c16eb44b9adf",
+      "default-user/characters/Project B.png": "774bd50d942523e47afbf3916d19df47c37577bc798dde71e273daa7da8bf8a9",
       "default-user/characters/Seraphina/admiration.png": "e451994487b3a5b7c72d6e6025c8cbe6bbcfbf01a490042b8b581522e6ba4f96",
       "default-user/characters/Seraphina/amusement.png": "1cedaee06fb1c740c5c8c52de8973f733789d51fe9b23fcb633635e755ae6e6f",
       "default-user/characters/Seraphina/anger.png": "d657d77b1bce609dd6006582cf687691871411eb041f9f4c41da4765b12ea069",
@@ -189,8 +189,8 @@
       "default-user/characters/Seraphina/sadness.png": "3819c2bca59224f67767eb3762c846e35d5eb5272be03f35c21fc32163df67a6",
       "default-user/characters/Seraphina/surprise.png": "f6a9f657d081f670a961649a5a21526ec251262ca06adf99626509059fbbb103",
       "default-user/characters/default_Seraphina.png": "8a71e8270f54fafbccf905b1bdf053a6a55f57bea89c01fcd8c0e87ee76a2d52",
-      "default-user/chats/Project A/Project A - 2026-11-03@23h29m41s904ms.jsonl": "973ef56c1b734dc8575d66ea406c45828373a963caed21a72c8133900a777d3e",
-      "default-user/chats/Project B/Project B - 2026-11-03@23h29m41s934ms.jsonl": "2311342b5e0f1456431a5615f383556931a252e5a41441299d270cc8a29602dc",
+      "default-user/chats/Project A/Project A - 2026-11-04@16h51m04s497ms.jsonl": "52c389e842a739e4091001d6f5ef081b162949d2c557a601960c3605cb43c071",
+      "default-user/chats/Project B/Project B - 2026-11-04@16h51m04s525ms.jsonl": "8f5653598bbe3e18033551340fdc8b77e0b1ecc4a0c15f30313bf8f6c36404d4",
       "default-user/worlds/Eldoria.json": "bfc2548443c890746a54d54e35e41265b02d1b59fd06d72552b305bf9b1e063c",
       "sn-other/characters/Seraphina/admiration.png": "e451994487b3a5b7c72d6e6025c8cbe6bbcfbf01a490042b8b581522e6ba4f96",
       "sn-other/characters/Seraphina/amusement.png": "1cedaee06fb1c740c5c8c52de8973f733789d51fe9b23fcb633635e755ae6e6f",
@@ -225,19 +225,19 @@
     },
     "sqlite": "3.53.4",
     "preview": {
-      "projectId": "3e2a1b2a-7dbe-43b9-9b2e-cbc25fbfbebb",
+      "projectId": "0f92d9d6-5290-45c3-859d-c945e9fd550c",
       "revision": 1,
-      "inventoryRevision": "736bece21567b0251a5ce9a5db7819924185a13b9d96305096f61f2e55c193de",
+      "inventoryRevision": "dc7dd432abcb18eddc2de8d4865554b65822c0fe33582e706446405207a2eba2",
       "candidates": [
         {
-          "assetId": "50112736-f70a-4ded-8aa4-975db7e14560",
+          "assetId": "168326b1-147f-451f-b4ed-4e96a3ee8888",
           "sha256": "ebc67fb00f77658f0f3fff534659afaa569e34f87d663be4e255002b16e85ea6",
           "width": 420,
           "height": 660,
           "byteCount": 4557
         },
         {
-          "assetId": "fb6cce3e-2536-4e5a-8471-cc1c7344014c",
+          "assetId": "d26a52ab-0b0e-470a-9f97-77f302f9af7a",
           "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
           "width": 1280,
           "height": 720,
@@ -250,7 +250,7 @@
     "firstDeletion": {
       "deleted": [
         {
-          "assetId": "50112736-f70a-4ded-8aa4-975db7e14560",
+          "assetId": "168326b1-147f-451f-b4ed-4e96a3ee8888",
           "sha256": "ebc67fb00f77658f0f3fff534659afaa569e34f87d663be4e255002b16e85ea6",
           "width": 420,
           "height": 660,
@@ -271,10 +271,10 @@
         "freePages": 978
       },
       "receipt": {
-        "projectId": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
+        "projectId": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
         "revision": 0,
         "deletedIds": [
-          "0f293802-1e7f-432c-acd5-4945f2a5f657"
+          "014d1e5e-db11-4597-88cd-b05233a2aa4b"
         ],
         "deletedCount": 1,
         "reclaimedBytes": 4001673
@@ -288,308 +288,308 @@
     "after": {
       "projects": [
         {
-          "id": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-          "owner": "[\"default-user\",1793773774165]",
-          "name": "Cleanup quota",
-          "revision": 0,
-          "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
-          "catalog": "[]"
-        },
-        {
-          "id": "3e2a1b2a-7dbe-43b9-9b2e-cbc25fbfbebb",
-          "owner": "[\"default-user\",1793773774165]",
+          "id": "0f92d9d6-5290-45c3-859d-c945e9fd550c",
+          "owner": "[\"default-user\",1793836256556]",
           "name": "Browser project",
           "revision": 2,
-          "scene": "{\"backgroundAssetId\":\"8540d9ed-652a-40e7-95fa-258bc7c70528\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"d7afc65d-4cfa-4309-b735-e343b830589a\",\"name\":\"One\",\"spriteAssetId\":\"34505620-b134-4cf1-a7e1-9c1dfe0612d8\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"aa80eb40-6f60-444d-9579-7c09482d4465\",\"name\":\"Two\",\"spriteAssetId\":\"5240ba5b-c5ed-4b5b-9861-dce966e18a4b\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
-          "catalog": "[{\"assetId\":\"8540d9ed-652a-40e7-95fa-258bc7c70528\",\"label\":\"forest\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"34505620-b134-4cf1-a7e1-9c1dfe0612d8\",\"label\":\"mira-a\",\"kind\":\"sprite\",\"actorId\":\"d7afc65d-4cfa-4309-b735-e343b830589a\"},{\"assetId\":\"5240ba5b-c5ed-4b5b-9861-dce966e18a4b\",\"label\":\"rowan\",\"kind\":\"sprite\",\"actorId\":\"aa80eb40-6f60-444d-9579-7c09482d4465\"}]"
+          "scene": "{\"backgroundAssetId\":\"2e444622-2a56-431b-9d5d-7b45e9f7c54a\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"37bd39b5-6812-4a95-b154-0dcd17b29408\",\"name\":\"One\",\"spriteAssetId\":\"9caae65c-5c33-4a0c-9e87-d7c79b62f3cb\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"0f1681a9-30bb-4f66-8e15-88b269730879\",\"name\":\"Two\",\"spriteAssetId\":\"e112ce9e-2415-41a4-abe3-bc0699ec5240\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
+          "catalog": "[{\"assetId\":\"2e444622-2a56-431b-9d5d-7b45e9f7c54a\",\"label\":\"forest\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"9caae65c-5c33-4a0c-9e87-d7c79b62f3cb\",\"label\":\"mira-a\",\"kind\":\"sprite\",\"actorId\":\"37bd39b5-6812-4a95-b154-0dcd17b29408\"},{\"assetId\":\"e112ce9e-2415-41a4-abe3-bc0699ec5240\",\"label\":\"rowan\",\"kind\":\"sprite\",\"actorId\":\"0f1681a9-30bb-4f66-8e15-88b269730879\"}]"
         },
         {
-          "id": "74c16da4-2bea-4c5c-96c9-c53981b495c4",
-          "owner": "[\"sn-other\",1793773781765]",
-          "name": "Bob project",
-          "revision": 0,
+          "id": "257aa7ed-0eb3-45f4-a1f8-fe20495f8e92",
+          "owner": "[\"default-user\",1793836256556]",
+          "name": "API project",
+          "revision": 1,
           "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
           "catalog": "[]"
         },
         {
-          "id": "b9fa2e0b-6a06-49e1-b7dd-792266f5ccc1",
-          "owner": "[\"sn-other\",1793773781765]",
+          "id": "7f8b3f43-a4dd-4e25-922e-b0891aca1180",
+          "owner": "[\"sn-other\",1793836264348]",
           "name": "Cleanup foreign",
           "revision": 0,
           "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
           "catalog": "[]"
         },
         {
-          "id": "e646b113-20a4-4449-b81b-59fce9b61fdc",
-          "owner": "[\"default-user\",1793773774165]",
-          "name": "API project",
-          "revision": 1,
+          "id": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+          "owner": "[\"default-user\",1793836256556]",
+          "name": "Cleanup quota",
+          "revision": 0,
+          "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
+          "catalog": "[]"
+        },
+        {
+          "id": "c438398d-2c6c-4e6d-98c4-1298788a184a",
+          "owner": "[\"sn-other\",1793836264348]",
+          "name": "Bob project",
+          "revision": 0,
           "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
           "catalog": "[]"
         }
       ],
       "assets": [
         {
-          "id": "198735a9-0efd-4e04-afa0-e1423c61ad0e",
-          "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-          "sha256": "1e67246ca940d073bcc158417f393b5e0b6e93298fbb09430898f7220c397a8b",
+          "id": "023fbd74-e9fb-40d5-9dec-196207eac05f",
+          "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+          "sha256": "25b644d8ca4254ce701fa81fef3a8519d5870a65187a5cb05ce9d3c957e23254",
           "width": 1000,
           "height": 1000,
           "byteCount": 4001673
         },
         {
-          "id": "23b7f221-ccd3-4764-a10b-2c39691475b5",
-          "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-          "sha256": "292ab8209a2eda9a9c1bc6a26b3ab1bcfdb0f6da953634748023bfdc71735e0b",
+          "id": "04974530-81a4-4695-8818-9a8e0c39f129",
+          "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+          "sha256": "58964aadf9aade46bbf5c9b4f11f8b47215e2bd0d096cd3c7b4915030dbbbc4a",
           "width": 1000,
           "height": 1000,
           "byteCount": 4001673
         },
         {
-          "id": "2ad8bc7d-f419-4139-9c59-4751a0a107b2",
-          "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-          "sha256": "fc5cbfd421fd1f5a190d64d25e39a798c545a60806a2a2db8eba4cf4bd25c0a0",
+          "id": "17335813-7aa6-4196-8ab8-00a78256466c",
+          "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+          "sha256": "48a6e9f1098b9a1b3fee7e1c8d63367ae1a5911ac35ad60a40e1cd4dad314893",
           "width": 1000,
           "height": 1000,
           "byteCount": 4001673
         },
         {
-          "id": "34505620-b134-4cf1-a7e1-9c1dfe0612d8",
-          "project": "3e2a1b2a-7dbe-43b9-9b2e-cbc25fbfbebb",
+          "id": "207093c1-088d-4343-b27e-141b49ad1a94",
+          "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+          "sha256": "9e060c3a7037e3e2fbaef7f8849c2f0596af03ce7dd4ecef5dcca0c4473b72a3",
+          "width": 1000,
+          "height": 1000,
+          "byteCount": 4001673
+        },
+        {
+          "id": "2e444622-2a56-431b-9d5d-7b45e9f7c54a",
+          "project": "0f92d9d6-5290-45c3-859d-c945e9fd550c",
+          "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
+          "width": 1280,
+          "height": 720,
+          "byteCount": 11591
+        },
+        {
+          "id": "32e4fa75-ace2-4d50-bb98-7afac52ec5b8",
+          "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+          "sha256": "d5cddd69ada9d8872cab8a593ca0d74f4de45c38b58f4024b4a8b96c2fe5c6e9",
+          "width": 1000,
+          "height": 1000,
+          "byteCount": 4001673
+        },
+        {
+          "id": "3db541fb-eaf8-4cdb-b6a3-80cb515ee0bc",
+          "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+          "sha256": "db565fcd3f48b192b53fc9dead23f534420356711bc1d0600cc55da8667de439",
+          "width": 1000,
+          "height": 1000,
+          "byteCount": 4001673
+        },
+        {
+          "id": "3e6bec43-94f3-4c0d-88c5-3b7f67584dd7",
+          "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+          "sha256": "cf1d9fc1eac00a3a0568c76049cf6e0cdf60d8aa9367e83a70752b2bcf6e6566",
+          "width": 1000,
+          "height": 1000,
+          "byteCount": 4001673
+        },
+        {
+          "id": "43ff5d89-4e6c-4118-ac28-62927a3b26bf",
+          "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+          "sha256": "9188c6cd5dc7379e42d44f337d3a18a5cbe799f89cc5eee4ce35ed1f3da95d5a",
+          "width": 1000,
+          "height": 1000,
+          "byteCount": 4001673
+        },
+        {
+          "id": "4cd8ed39-5605-404f-9728-743fd7772195",
+          "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+          "sha256": "29b819673688bb29be5e4e9e47163185a075a4cce65003d611d9994b36e3ced9",
+          "width": 1000,
+          "height": 1000,
+          "byteCount": 4001673
+        },
+        {
+          "id": "50f247ea-9b76-4168-8a59-f8acff53c8ca",
+          "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+          "sha256": "0e02903a49a223278988482a998f54be604e3e1d742abfaef4d942131e867702",
+          "width": 1000,
+          "height": 1000,
+          "byteCount": 4001673
+        },
+        {
+          "id": "56107088-13d1-4a0a-b061-2bab18251fa4",
+          "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+          "sha256": "c35e54f624a45711fa77997c9514df77ba1ec116d8c96d85876a79a876a6c65f",
+          "width": 1000,
+          "height": 1000,
+          "byteCount": 4001673
+        },
+        {
+          "id": "726925d9-2c50-4a51-965e-a427261b4f61",
+          "project": "257aa7ed-0eb3-45f4-a1f8-fe20495f8e92",
+          "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
+          "width": 1280,
+          "height": 720,
+          "byteCount": 11591
+        },
+        {
+          "id": "7b838ea4-b518-4702-87c2-11c4c2e0e5a2",
+          "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+          "sha256": "86b06c156a56c4d2c799a455858c84bd525d17084eac4ef9ee7fe5d136427f1d",
+          "width": 1000,
+          "height": 1000,
+          "byteCount": 4001673
+        },
+        {
+          "id": "96f59d38-afba-44a3-a513-e85695378aa0",
+          "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+          "sha256": "d7197dab817db94c881f349e40c7e6bcb2be1ecc306b439c44c461ed21fb18b5",
+          "width": 1000,
+          "height": 1000,
+          "byteCount": 4001673
+        },
+        {
+          "id": "9caae65c-5c33-4a0c-9e87-d7c79b62f3cb",
+          "project": "0f92d9d6-5290-45c3-859d-c945e9fd550c",
           "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
           "width": 420,
           "height": 660,
           "byteCount": 4454
         },
         {
-          "id": "3494b676-fa9a-41f0-8867-c680c092bc74",
-          "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-          "sha256": "100f5bfaef1c26b8f00eb20dcc5b44be4e754d768159cb0a12418a73816cdaf6",
+          "id": "a27a7f18-1725-4eb3-ad15-618be5775a28",
+          "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+          "sha256": "28b7fbd75098eb2679098e874a32060e77f247a94509ec5ffa7ea8c8c886802e",
           "width": 1000,
           "height": 1000,
           "byteCount": 4001673
         },
         {
-          "id": "3496d4c2-2f84-41d6-9654-3475c4340e13",
-          "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-          "sha256": "93da1c0eda892b8521ad916c3a541671bb685612c1c14d1823e25d14864c39a7",
+          "id": "a2f8b046-1176-40e7-b012-a66c82d949c0",
+          "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+          "sha256": "3f0b1390d6c77af9eb62700706a385c3597a594f15a1b514eaa39c34345ae7ea",
           "width": 1000,
           "height": 1000,
           "byteCount": 4001673
         },
         {
-          "id": "40235e89-cbb7-47a6-98ab-02001ca047a7",
-          "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-          "sha256": "bacd7da7e1c46e1b9d94fdde2bc891592d434f17b431cc0189e9bb15406afd4d",
+          "id": "b0d6014c-bf14-4b2e-af80-d1cda9b3bccd",
+          "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+          "sha256": "be6f3c9d7d1d0662f504479a4af96fe5f4ce7f758df8ba13765e729611691d22",
           "width": 1000,
           "height": 1000,
           "byteCount": 4001673
         },
         {
-          "id": "43a1f344-3e84-453e-93b0-3afad55955dd",
-          "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-          "sha256": "06c6e399bfc5599a49499aba8744d2c877cb756c51d1292c9d1a7972b0adae31",
+          "id": "b58795c7-a6f1-4f49-b0ec-653dfcaca2c6",
+          "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+          "sha256": "a8650e40f0f73a1c465a4b25f85a1e18bfaf5ed37935bc9ad714a02b38e221c2",
           "width": 1000,
           "height": 1000,
           "byteCount": 4001673
         },
         {
-          "id": "49f3696b-a219-4b04-89d6-e7254cc15e7e",
-          "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-          "sha256": "4bf18ec8951fac497d6e916ce2c2a1cf022532a1d476003094ea9393b89009b7",
+          "id": "c36fc825-c222-4823-98e7-d50b553efb26",
+          "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+          "sha256": "07147fe6a28e8f9a6f1aea8ccb7b0ad53cda8b20b497f30da3a8ed7e117c688a",
           "width": 1000,
           "height": 1000,
           "byteCount": 4001673
         },
         {
-          "id": "5240ba5b-c5ed-4b5b-9861-dce966e18a4b",
-          "project": "3e2a1b2a-7dbe-43b9-9b2e-cbc25fbfbebb",
+          "id": "c9784937-2587-4d10-8112-ac5ab2f5d048",
+          "project": "7f8b3f43-a4dd-4e25-922e-b0891aca1180",
+          "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
+          "width": 420,
+          "height": 660,
+          "byteCount": 4454
+        },
+        {
+          "id": "cd071401-75a4-4472-8c88-b2f5fd2645ab",
+          "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+          "sha256": "2731762939100ed51d6d806bc14215d0ee232b610381d74c8e4d4a5443fb76ce",
+          "width": 1000,
+          "height": 1000,
+          "byteCount": 4001673
+        },
+        {
+          "id": "cf916669-d661-4dd6-a501-d970cd20b58e",
+          "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+          "sha256": "c0be4f4cef85f8995ee7d92f08930884da83840305bf17bd3dc3a4b8c9f9b09d",
+          "width": 1000,
+          "height": 1000,
+          "byteCount": 4001673
+        },
+        {
+          "id": "d06b159d-dd42-456a-a387-e205f6d447ba",
+          "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+          "sha256": "25565275864bddb48db463649b986aff6c1db5ef54ef977a87db836b7c007984",
+          "width": 1000,
+          "height": 1000,
+          "byteCount": 4001673
+        },
+        {
+          "id": "d26a52ab-0b0e-470a-9f97-77f302f9af7a",
+          "project": "0f92d9d6-5290-45c3-859d-c945e9fd550c",
+          "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
+          "width": 1280,
+          "height": 720,
+          "byteCount": 6085
+        },
+        {
+          "id": "db3ed232-618d-4bf7-bcd2-928942eeba1e",
+          "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+          "sha256": "f6e904689b7a1f50bbf7f329f57a7eb4be4f3e2734f26190bc62e21ecaf91ed1",
+          "width": 1000,
+          "height": 1000,
+          "byteCount": 4001673
+        },
+        {
+          "id": "dc05b2f2-466e-49e8-9bec-0f2c7f64707f",
+          "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+          "sha256": "2306c80ec98484efd77f9c2e35614df6faf2d67190034e68f7f07ee381b288e8",
+          "width": 1000,
+          "height": 1000,
+          "byteCount": 4001673
+        },
+        {
+          "id": "dd7a24d9-b7de-442d-8862-089a67450157",
+          "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+          "sha256": "c40e08e8cf108e9809103aaac6d1505b084b0f33dba473c17ebf09582a3b9628",
+          "width": 1000,
+          "height": 1000,
+          "byteCount": 4001673
+        },
+        {
+          "id": "e112ce9e-2415-41a4-abe3-bc0699ec5240",
+          "project": "0f92d9d6-5290-45c3-859d-c945e9fd550c",
           "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
           "width": 420,
           "height": 660,
           "byteCount": 4253
         },
         {
-          "id": "5282b063-3c40-43c3-bf02-91ff1ca7473f",
-          "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-          "sha256": "18e7e4985544e1615a6841b626d1025bbd971bf5d7d4a7a679f1ef3ed659e0a4",
+          "id": "e330af7c-c64e-4957-a763-e654974f89a5",
+          "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+          "sha256": "86127a6e60202a8e2871dc57f44118faae93f0e6f009898e7d9762aa3673767c",
           "width": 1000,
           "height": 1000,
           "byteCount": 4001673
         },
         {
-          "id": "595391e3-e9a8-4090-a87e-535f18a208c9",
-          "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-          "sha256": "409ee783cda72f2c698a92fcbbcb66a21ca84cae59ae816865cbf48b7aab58fd",
+          "id": "e4fd54a8-83e9-4590-8865-665462a62175",
+          "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+          "sha256": "ef85c44e6fee319a0d6ed11416d1a5e011ef3e513a7b226453e9f7713bb41ed0",
           "width": 1000,
           "height": 1000,
           "byteCount": 4001673
-        },
-        {
-          "id": "642299c8-6515-4a30-ba49-0551d972bfed",
-          "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-          "sha256": "4c873c206cec2466166efd8228b7b4c39c65021a40db915c3cbdc1d9515b3052",
-          "width": 1000,
-          "height": 1000,
-          "byteCount": 4001673
-        },
-        {
-          "id": "6914f252-2280-4d9b-9bef-b184a3480a13",
-          "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-          "sha256": "709f958e300c33976c0911fe03c7d3be99825e7ce41909d71020232dcae07750",
-          "width": 1000,
-          "height": 1000,
-          "byteCount": 4001673
-        },
-        {
-          "id": "6a8b9562-4b55-4fa2-96c0-47a98f284b9e",
-          "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-          "sha256": "5136298f416613e2227c93a4bb195e71c4dba0e02049547fd25b266f10e56568",
-          "width": 1000,
-          "height": 1000,
-          "byteCount": 4001673
-        },
-        {
-          "id": "6cb680af-90f9-4d4c-a4c3-ad81efeb62da",
-          "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-          "sha256": "8505f69315c521b95cf02019d154a943e55b4a0bab97ee3d99b0e3fda477980d",
-          "width": 1000,
-          "height": 1000,
-          "byteCount": 4001673
-        },
-        {
-          "id": "78e3687f-46c0-4c88-b15c-85d33c81870c",
-          "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-          "sha256": "2c43bb9df8cc0d3b5191869a6eb6016d1d29cdb5a000d9c76fa95145e0c8b200",
-          "width": 1000,
-          "height": 1000,
-          "byteCount": 4001673
-        },
-        {
-          "id": "7b9a250f-88e9-4d1c-bad3-ca01e76f921e",
-          "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-          "sha256": "68f091605aee2a528730cbb4a344e7e0cc0df7ef47eaf3f32ae45350068f5b54",
-          "width": 1000,
-          "height": 1000,
-          "byteCount": 4001673
-        },
-        {
-          "id": "8540d9ed-652a-40e7-95fa-258bc7c70528",
-          "project": "3e2a1b2a-7dbe-43b9-9b2e-cbc25fbfbebb",
-          "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
-          "width": 1280,
-          "height": 720,
-          "byteCount": 11591
-        },
-        {
-          "id": "86a60d01-bc1a-4e0e-a912-c1a6a551635d",
-          "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-          "sha256": "92c880314c6155d87387cd8f6747336e35c22aa8f66a4a242ec95cf95de9ee09",
-          "width": 1000,
-          "height": 1000,
-          "byteCount": 4001673
-        },
-        {
-          "id": "8da40945-5813-4757-9232-782bce827ce6",
-          "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-          "sha256": "fcaebd658cf0291065c69a71ffd29de0c54f1eb8d619a4849c519911ad69bccf",
-          "width": 1000,
-          "height": 1000,
-          "byteCount": 4001673
-        },
-        {
-          "id": "a02a51a0-aba4-472f-8428-5eac6f22c9fb",
-          "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-          "sha256": "da397e959bb3cb2d40ff7d0fd9faab2012ece8f88e397f7addd36f085c7556bb",
-          "width": 1000,
-          "height": 1000,
-          "byteCount": 4001673
-        },
-        {
-          "id": "c1101847-a73e-409f-8504-b72c8b7db882",
-          "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-          "sha256": "d5795b366627a7ea5499f10ec78b9825fb504a8659492e6730982296b3865aca",
-          "width": 1000,
-          "height": 1000,
-          "byteCount": 4001673
-        },
-        {
-          "id": "c84c23b0-0432-457d-b4d2-e88ee3ed44b5",
-          "project": "b9fa2e0b-6a06-49e1-b7dd-792266f5ccc1",
-          "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
-          "width": 420,
-          "height": 660,
-          "byteCount": 4454
-        },
-        {
-          "id": "cba73af3-75eb-4a1f-b372-6f9edcfbcb37",
-          "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-          "sha256": "3b954b818458b638184ad0d5a313beec1b249e982481a9434dc454cc4a04c84c",
-          "width": 1000,
-          "height": 1000,
-          "byteCount": 4001673
-        },
-        {
-          "id": "cfddad37-d7e0-4521-b695-362a0bba29a1",
-          "project": "e646b113-20a4-4449-b81b-59fce9b61fdc",
-          "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
-          "width": 1280,
-          "height": 720,
-          "byteCount": 11591
-        },
-        {
-          "id": "d45a3050-e1a9-4077-8ad7-5d477322e556",
-          "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-          "sha256": "ae3d987d7fdfe75c49384ee2fc71bc3f651a6562759323c75e94665a1d2d08ff",
-          "width": 1000,
-          "height": 1000,
-          "byteCount": 4001673
-        },
-        {
-          "id": "d488e4f7-a15b-49b4-91d3-c71d1b5b13fc",
-          "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-          "sha256": "ebbe6a20e504110f8f65e48626e56c287f4b66604c1531ca6d73b1bd222f81d4",
-          "width": 1000,
-          "height": 1000,
-          "byteCount": 4001673
-        },
-        {
-          "id": "d69d4c53-8506-4e6a-a38f-fe904c790132",
-          "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-          "sha256": "4f54b57bbeb95d6b3394f7f840f39dfbaff8c62a7b7a719dd931391c3fb060b8",
-          "width": 1000,
-          "height": 1000,
-          "byteCount": 4001673
-        },
-        {
-          "id": "d8e9f832-e2ea-45c5-b676-e8577a28d867",
-          "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-          "sha256": "2420af99c46f1cfa75c7a8cae65f19a416597591d3ad82fbfcc74ee853c6c3c9",
-          "width": 1000,
-          "height": 1000,
-          "byteCount": 4001673
-        },
-        {
-          "id": "f851f65e-7760-44ff-a9d7-a17271783c4d",
-          "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-          "sha256": "b49f722b252345d912af01fade149a5f08d5db4345eec23e31514d2dfcf24852",
-          "width": 1000,
-          "height": 1000,
-          "byteCount": 4001673
-        },
-        {
-          "id": "fb6cce3e-2536-4e5a-8471-cc1c7344014c",
-          "project": "3e2a1b2a-7dbe-43b9-9b2e-cbc25fbfbebb",
-          "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
-          "width": 1280,
-          "height": 720,
-          "byteCount": 6085
         }
       ]
     },
     "nativeAfter": {
-      "default-user/characters/Project A.png": "03ad5e80f5da92a0ef68d5b11da1f11d088ef585f9eeca488c170e0dd378f572",
-      "default-user/characters/Project B.png": "0fed0d37bf273de6df43a5f2e664e10ea927a6faeca0539ae9413ad0f81237df",
+      "default-user/characters/Project A.png": "3e8a37e4a875098a6dc1ae17f987b1bcac41c12cdd156aee8325c16eb44b9adf",
+      "default-user/characters/Project B.png": "774bd50d942523e47afbf3916d19df47c37577bc798dde71e273daa7da8bf8a9",
       "default-user/characters/Seraphina/admiration.png": "e451994487b3a5b7c72d6e6025c8cbe6bbcfbf01a490042b8b581522e6ba4f96",
       "default-user/characters/Seraphina/amusement.png": "1cedaee06fb1c740c5c8c52de8973f733789d51fe9b23fcb633635e755ae6e6f",
       "default-user/characters/Seraphina/anger.png": "d657d77b1bce609dd6006582cf687691871411eb041f9f4c41da4765b12ea069",
@@ -619,8 +619,8 @@
       "default-user/characters/Seraphina/sadness.png": "3819c2bca59224f67767eb3762c846e35d5eb5272be03f35c21fc32163df67a6",
       "default-user/characters/Seraphina/surprise.png": "f6a9f657d081f670a961649a5a21526ec251262ca06adf99626509059fbbb103",
       "default-user/characters/default_Seraphina.png": "8a71e8270f54fafbccf905b1bdf053a6a55f57bea89c01fcd8c0e87ee76a2d52",
-      "default-user/chats/Project A/Project A - 2026-11-03@23h29m41s904ms.jsonl": "973ef56c1b734dc8575d66ea406c45828373a963caed21a72c8133900a777d3e",
-      "default-user/chats/Project B/Project B - 2026-11-03@23h29m41s934ms.jsonl": "2311342b5e0f1456431a5615f383556931a252e5a41441299d270cc8a29602dc",
+      "default-user/chats/Project A/Project A - 2026-11-04@16h51m04s497ms.jsonl": "52c389e842a739e4091001d6f5ef081b162949d2c557a601960c3605cb43c071",
+      "default-user/chats/Project B/Project B - 2026-11-04@16h51m04s525ms.jsonl": "8f5653598bbe3e18033551340fdc8b77e0b1ecc4a0c15f30313bf8f6c36404d4",
       "default-user/worlds/Eldoria.json": "bfc2548443c890746a54d54e35e41265b02d1b59fd06d72552b305bf9b1e063c",
       "sn-other/characters/Seraphina/admiration.png": "e451994487b3a5b7c72d6e6025c8cbe6bbcfbf01a490042b8b581522e6ba4f96",
       "sn-other/characters/Seraphina/amusement.png": "1cedaee06fb1c740c5c8c52de8973f733789d51fe9b23fcb633635e755ae6e6f",
@@ -660,14 +660,14 @@
     }
   },
   "bundle": {
-    "sha256": "c6a2fc71675224311f7eec99d4dba84f6acd4356ffacc2bd18e2a5a48d046249",
+    "sha256": "ccdab45662a77c3e1c4022392bcb101bb37466433d4d42d9ff0db813a57a1a51",
     "bytes": 28190,
     "format": "sillynovel-project",
     "version": 1
   },
   "portabilityNativeBefore": {
-    "default-user/characters/Project A.png": "03ad5e80f5da92a0ef68d5b11da1f11d088ef585f9eeca488c170e0dd378f572",
-    "default-user/characters/Project B.png": "0fed0d37bf273de6df43a5f2e664e10ea927a6faeca0539ae9413ad0f81237df",
+    "default-user/characters/Project A.png": "3e8a37e4a875098a6dc1ae17f987b1bcac41c12cdd156aee8325c16eb44b9adf",
+    "default-user/characters/Project B.png": "774bd50d942523e47afbf3916d19df47c37577bc798dde71e273daa7da8bf8a9",
     "default-user/characters/Seraphina/admiration.png": "e451994487b3a5b7c72d6e6025c8cbe6bbcfbf01a490042b8b581522e6ba4f96",
     "default-user/characters/Seraphina/amusement.png": "1cedaee06fb1c740c5c8c52de8973f733789d51fe9b23fcb633635e755ae6e6f",
     "default-user/characters/Seraphina/anger.png": "d657d77b1bce609dd6006582cf687691871411eb041f9f4c41da4765b12ea069",
@@ -697,13 +697,13 @@
     "default-user/characters/Seraphina/sadness.png": "3819c2bca59224f67767eb3762c846e35d5eb5272be03f35c21fc32163df67a6",
     "default-user/characters/Seraphina/surprise.png": "f6a9f657d081f670a961649a5a21526ec251262ca06adf99626509059fbbb103",
     "default-user/characters/default_Seraphina.png": "8a71e8270f54fafbccf905b1bdf053a6a55f57bea89c01fcd8c0e87ee76a2d52",
-    "default-user/chats/Project A/Project A - 2026-11-03@23h29m41s904ms.jsonl": "973ef56c1b734dc8575d66ea406c45828373a963caed21a72c8133900a777d3e",
-    "default-user/chats/Project B/Project B - 2026-11-03@23h29m41s934ms.jsonl": "2311342b5e0f1456431a5615f383556931a252e5a41441299d270cc8a29602dc",
+    "default-user/chats/Project A/Project A - 2026-11-04@16h51m04s497ms.jsonl": "52c389e842a739e4091001d6f5ef081b162949d2c557a601960c3605cb43c071",
+    "default-user/chats/Project B/Project B - 2026-11-04@16h51m04s525ms.jsonl": "8f5653598bbe3e18033551340fdc8b77e0b1ecc4a0c15f30313bf8f6c36404d4",
     "default-user/worlds/Eldoria.json": "bfc2548443c890746a54d54e35e41265b02d1b59fd06d72552b305bf9b1e063c"
   },
   "portabilityNativeAfter": {
-    "default-user/characters/Project A.png": "03ad5e80f5da92a0ef68d5b11da1f11d088ef585f9eeca488c170e0dd378f572",
-    "default-user/characters/Project B.png": "0fed0d37bf273de6df43a5f2e664e10ea927a6faeca0539ae9413ad0f81237df",
+    "default-user/characters/Project A.png": "3e8a37e4a875098a6dc1ae17f987b1bcac41c12cdd156aee8325c16eb44b9adf",
+    "default-user/characters/Project B.png": "774bd50d942523e47afbf3916d19df47c37577bc798dde71e273daa7da8bf8a9",
     "default-user/characters/Seraphina/admiration.png": "e451994487b3a5b7c72d6e6025c8cbe6bbcfbf01a490042b8b581522e6ba4f96",
     "default-user/characters/Seraphina/amusement.png": "1cedaee06fb1c740c5c8c52de8973f733789d51fe9b23fcb633635e755ae6e6f",
     "default-user/characters/Seraphina/anger.png": "d657d77b1bce609dd6006582cf687691871411eb041f9f4c41da4765b12ea069",
@@ -733,535 +733,535 @@
     "default-user/characters/Seraphina/sadness.png": "3819c2bca59224f67767eb3762c846e35d5eb5272be03f35c21fc32163df67a6",
     "default-user/characters/Seraphina/surprise.png": "f6a9f657d081f670a961649a5a21526ec251262ca06adf99626509059fbbb103",
     "default-user/characters/default_Seraphina.png": "8a71e8270f54fafbccf905b1bdf053a6a55f57bea89c01fcd8c0e87ee76a2d52",
-    "default-user/chats/Project A/Project A - 2026-11-03@23h29m41s904ms.jsonl": "973ef56c1b734dc8575d66ea406c45828373a963caed21a72c8133900a777d3e",
-    "default-user/chats/Project B/Project B - 2026-11-03@23h29m41s934ms.jsonl": "2311342b5e0f1456431a5615f383556931a252e5a41441299d270cc8a29602dc",
+    "default-user/chats/Project A/Project A - 2026-11-04@16h51m04s497ms.jsonl": "52c389e842a739e4091001d6f5ef081b162949d2c557a601960c3605cb43c071",
+    "default-user/chats/Project B/Project B - 2026-11-04@16h51m04s525ms.jsonl": "8f5653598bbe3e18033551340fdc8b77e0b1ecc4a0c15f30313bf8f6c36404d4",
     "default-user/worlds/Eldoria.json": "bfc2548443c890746a54d54e35e41265b02d1b59fd06d72552b305bf9b1e063c"
   },
   "databaseBeforeFailures": {
     "projects": [
       {
-        "id": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "owner": "[\"default-user\",1793773774165]",
-        "name": "Cleanup quota",
-        "revision": 0,
-        "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
-        "catalog": "[]"
-      },
-      {
-        "id": "3e2a1b2a-7dbe-43b9-9b2e-cbc25fbfbebb",
-        "owner": "[\"default-user\",1793773774165]",
+        "id": "0f92d9d6-5290-45c3-859d-c945e9fd550c",
+        "owner": "[\"default-user\",1793836256556]",
         "name": "Browser project",
         "revision": 2,
-        "scene": "{\"backgroundAssetId\":\"8540d9ed-652a-40e7-95fa-258bc7c70528\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"d7afc65d-4cfa-4309-b735-e343b830589a\",\"name\":\"One\",\"spriteAssetId\":\"34505620-b134-4cf1-a7e1-9c1dfe0612d8\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"aa80eb40-6f60-444d-9579-7c09482d4465\",\"name\":\"Two\",\"spriteAssetId\":\"5240ba5b-c5ed-4b5b-9861-dce966e18a4b\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
-        "catalog": "[{\"assetId\":\"8540d9ed-652a-40e7-95fa-258bc7c70528\",\"label\":\"forest\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"34505620-b134-4cf1-a7e1-9c1dfe0612d8\",\"label\":\"mira-a\",\"kind\":\"sprite\",\"actorId\":\"d7afc65d-4cfa-4309-b735-e343b830589a\"},{\"assetId\":\"5240ba5b-c5ed-4b5b-9861-dce966e18a4b\",\"label\":\"rowan\",\"kind\":\"sprite\",\"actorId\":\"aa80eb40-6f60-444d-9579-7c09482d4465\"}]"
+        "scene": "{\"backgroundAssetId\":\"2e444622-2a56-431b-9d5d-7b45e9f7c54a\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"37bd39b5-6812-4a95-b154-0dcd17b29408\",\"name\":\"One\",\"spriteAssetId\":\"9caae65c-5c33-4a0c-9e87-d7c79b62f3cb\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"0f1681a9-30bb-4f66-8e15-88b269730879\",\"name\":\"Two\",\"spriteAssetId\":\"e112ce9e-2415-41a4-abe3-bc0699ec5240\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
+        "catalog": "[{\"assetId\":\"2e444622-2a56-431b-9d5d-7b45e9f7c54a\",\"label\":\"forest\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"9caae65c-5c33-4a0c-9e87-d7c79b62f3cb\",\"label\":\"mira-a\",\"kind\":\"sprite\",\"actorId\":\"37bd39b5-6812-4a95-b154-0dcd17b29408\"},{\"assetId\":\"e112ce9e-2415-41a4-abe3-bc0699ec5240\",\"label\":\"rowan\",\"kind\":\"sprite\",\"actorId\":\"0f1681a9-30bb-4f66-8e15-88b269730879\"}]"
       },
       {
-        "id": "74c16da4-2bea-4c5c-96c9-c53981b495c4",
-        "owner": "[\"sn-other\",1793773781765]",
-        "name": "Bob project",
+        "id": "2383f796-da76-48c0-a33f-9449bd62cef9",
+        "owner": "[\"default-user\",1793836256556]",
+        "name": "Browser project",
         "revision": 0,
-        "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
+        "scene": "{\"backgroundAssetId\":\"b9c84462-7fb8-41a4-8c68-4c6e1a24f0b7\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"b2a488ac-fb49-4dbc-85d7-dae97dcdc4f1\",\"name\":\"One\",\"spriteAssetId\":\"e5481cf5-7b2b-4167-8e16-84e977f91226\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"f4e297b5-94c3-4fab-901f-572288b19faa\",\"name\":\"Two\",\"spriteAssetId\":\"5798322e-b270-4922-88a0-13d005af8a9f\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
         "catalog": "[]"
       },
       {
-        "id": "b9fa2e0b-6a06-49e1-b7dd-792266f5ccc1",
-        "owner": "[\"sn-other\",1793773781765]",
-        "name": "Cleanup foreign",
-        "revision": 0,
-        "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
-        "catalog": "[]"
-      },
-      {
-        "id": "e646b113-20a4-4449-b81b-59fce9b61fdc",
-        "owner": "[\"default-user\",1793773774165]",
+        "id": "257aa7ed-0eb3-45f4-a1f8-fe20495f8e92",
+        "owner": "[\"default-user\",1793836256556]",
         "name": "API project",
         "revision": 1,
         "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
         "catalog": "[]"
       },
       {
-        "id": "f81fbfdc-7222-4d7c-aaa2-52f320a1b1ad",
-        "owner": "[\"default-user\",1793773774165]",
-        "name": "Browser project",
+        "id": "7f8b3f43-a4dd-4e25-922e-b0891aca1180",
+        "owner": "[\"sn-other\",1793836264348]",
+        "name": "Cleanup foreign",
         "revision": 0,
-        "scene": "{\"backgroundAssetId\":\"09550fe0-89fb-4f72-83d9-88d7de2521c5\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"06d4aaf7-3d55-4ea9-8fd2-2542f06b0849\",\"name\":\"One\",\"spriteAssetId\":\"8ee671d7-642b-46ee-8b1c-894569d56285\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"4b3af213-b738-4ffa-9e2e-50fd7b6785b2\",\"name\":\"Two\",\"spriteAssetId\":\"6599f78f-179f-424c-a5a8-cf6c55e16b5d\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
+        "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
+        "catalog": "[]"
+      },
+      {
+        "id": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "owner": "[\"default-user\",1793836256556]",
+        "name": "Cleanup quota",
+        "revision": 0,
+        "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
+        "catalog": "[]"
+      },
+      {
+        "id": "c438398d-2c6c-4e6d-98c4-1298788a184a",
+        "owner": "[\"sn-other\",1793836264348]",
+        "name": "Bob project",
+        "revision": 0,
+        "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
         "catalog": "[]"
       }
     ],
     "assets": [
       {
-        "id": "09550fe0-89fb-4f72-83d9-88d7de2521c5",
-        "project": "f81fbfdc-7222-4d7c-aaa2-52f320a1b1ad",
+        "id": "023fbd74-e9fb-40d5-9dec-196207eac05f",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "25b644d8ca4254ce701fa81fef3a8519d5870a65187a5cb05ce9d3c957e23254",
+        "bytes": 4001673
+      },
+      {
+        "id": "04974530-81a4-4695-8818-9a8e0c39f129",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "58964aadf9aade46bbf5c9b4f11f8b47215e2bd0d096cd3c7b4915030dbbbc4a",
+        "bytes": 4001673
+      },
+      {
+        "id": "17335813-7aa6-4196-8ab8-00a78256466c",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "48a6e9f1098b9a1b3fee7e1c8d63367ae1a5911ac35ad60a40e1cd4dad314893",
+        "bytes": 4001673
+      },
+      {
+        "id": "207093c1-088d-4343-b27e-141b49ad1a94",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "9e060c3a7037e3e2fbaef7f8849c2f0596af03ce7dd4ecef5dcca0c4473b72a3",
+        "bytes": 4001673
+      },
+      {
+        "id": "2e444622-2a56-431b-9d5d-7b45e9f7c54a",
+        "project": "0f92d9d6-5290-45c3-859d-c945e9fd550c",
         "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
         "bytes": 11591
       },
       {
-        "id": "198735a9-0efd-4e04-afa0-e1423c61ad0e",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "1e67246ca940d073bcc158417f393b5e0b6e93298fbb09430898f7220c397a8b",
+        "id": "32e4fa75-ace2-4d50-bb98-7afac52ec5b8",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "d5cddd69ada9d8872cab8a593ca0d74f4de45c38b58f4024b4a8b96c2fe5c6e9",
         "bytes": 4001673
       },
       {
-        "id": "23b7f221-ccd3-4764-a10b-2c39691475b5",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "292ab8209a2eda9a9c1bc6a26b3ab1bcfdb0f6da953634748023bfdc71735e0b",
+        "id": "3db541fb-eaf8-4cdb-b6a3-80cb515ee0bc",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "db565fcd3f48b192b53fc9dead23f534420356711bc1d0600cc55da8667de439",
         "bytes": 4001673
       },
       {
-        "id": "2ad8bc7d-f419-4139-9c59-4751a0a107b2",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "fc5cbfd421fd1f5a190d64d25e39a798c545a60806a2a2db8eba4cf4bd25c0a0",
+        "id": "3e6bec43-94f3-4c0d-88c5-3b7f67584dd7",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "cf1d9fc1eac00a3a0568c76049cf6e0cdf60d8aa9367e83a70752b2bcf6e6566",
         "bytes": 4001673
       },
       {
-        "id": "34505620-b134-4cf1-a7e1-9c1dfe0612d8",
-        "project": "3e2a1b2a-7dbe-43b9-9b2e-cbc25fbfbebb",
-        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
-        "bytes": 4454
-      },
-      {
-        "id": "3494b676-fa9a-41f0-8867-c680c092bc74",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "100f5bfaef1c26b8f00eb20dcc5b44be4e754d768159cb0a12418a73816cdaf6",
+        "id": "43ff5d89-4e6c-4118-ac28-62927a3b26bf",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "9188c6cd5dc7379e42d44f337d3a18a5cbe799f89cc5eee4ce35ed1f3da95d5a",
         "bytes": 4001673
       },
       {
-        "id": "3496d4c2-2f84-41d6-9654-3475c4340e13",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "93da1c0eda892b8521ad916c3a541671bb685612c1c14d1823e25d14864c39a7",
+        "id": "4cd8ed39-5605-404f-9728-743fd7772195",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "29b819673688bb29be5e4e9e47163185a075a4cce65003d611d9994b36e3ced9",
         "bytes": 4001673
       },
       {
-        "id": "40235e89-cbb7-47a6-98ab-02001ca047a7",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "bacd7da7e1c46e1b9d94fdde2bc891592d434f17b431cc0189e9bb15406afd4d",
+        "id": "50f247ea-9b76-4168-8a59-f8acff53c8ca",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "0e02903a49a223278988482a998f54be604e3e1d742abfaef4d942131e867702",
         "bytes": 4001673
       },
       {
-        "id": "43a1f344-3e84-453e-93b0-3afad55955dd",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "06c6e399bfc5599a49499aba8744d2c877cb756c51d1292c9d1a7972b0adae31",
+        "id": "56107088-13d1-4a0a-b061-2bab18251fa4",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "c35e54f624a45711fa77997c9514df77ba1ec116d8c96d85876a79a876a6c65f",
         "bytes": 4001673
       },
       {
-        "id": "49f3696b-a219-4b04-89d6-e7254cc15e7e",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "4bf18ec8951fac497d6e916ce2c2a1cf022532a1d476003094ea9393b89009b7",
-        "bytes": 4001673
-      },
-      {
-        "id": "5240ba5b-c5ed-4b5b-9861-dce966e18a4b",
-        "project": "3e2a1b2a-7dbe-43b9-9b2e-cbc25fbfbebb",
+        "id": "5798322e-b270-4922-88a0-13d005af8a9f",
+        "project": "2383f796-da76-48c0-a33f-9449bd62cef9",
         "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
         "bytes": 4253
       },
       {
-        "id": "5282b063-3c40-43c3-bf02-91ff1ca7473f",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "18e7e4985544e1615a6841b626d1025bbd971bf5d7d4a7a679f1ef3ed659e0a4",
-        "bytes": 4001673
-      },
-      {
-        "id": "595391e3-e9a8-4090-a87e-535f18a208c9",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "409ee783cda72f2c698a92fcbbcb66a21ca84cae59ae816865cbf48b7aab58fd",
-        "bytes": 4001673
-      },
-      {
-        "id": "642299c8-6515-4a30-ba49-0551d972bfed",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "4c873c206cec2466166efd8228b7b4c39c65021a40db915c3cbdc1d9515b3052",
-        "bytes": 4001673
-      },
-      {
-        "id": "6599f78f-179f-424c-a5a8-cf6c55e16b5d",
-        "project": "f81fbfdc-7222-4d7c-aaa2-52f320a1b1ad",
-        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
-        "bytes": 4253
-      },
-      {
-        "id": "6914f252-2280-4d9b-9bef-b184a3480a13",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "709f958e300c33976c0911fe03c7d3be99825e7ce41909d71020232dcae07750",
-        "bytes": 4001673
-      },
-      {
-        "id": "6a8b9562-4b55-4fa2-96c0-47a98f284b9e",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "5136298f416613e2227c93a4bb195e71c4dba0e02049547fd25b266f10e56568",
-        "bytes": 4001673
-      },
-      {
-        "id": "6cb680af-90f9-4d4c-a4c3-ad81efeb62da",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "8505f69315c521b95cf02019d154a943e55b4a0bab97ee3d99b0e3fda477980d",
-        "bytes": 4001673
-      },
-      {
-        "id": "78e3687f-46c0-4c88-b15c-85d33c81870c",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "2c43bb9df8cc0d3b5191869a6eb6016d1d29cdb5a000d9c76fa95145e0c8b200",
-        "bytes": 4001673
-      },
-      {
-        "id": "7b9a250f-88e9-4d1c-bad3-ca01e76f921e",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "68f091605aee2a528730cbb4a344e7e0cc0df7ef47eaf3f32ae45350068f5b54",
-        "bytes": 4001673
-      },
-      {
-        "id": "8540d9ed-652a-40e7-95fa-258bc7c70528",
-        "project": "3e2a1b2a-7dbe-43b9-9b2e-cbc25fbfbebb",
+        "id": "726925d9-2c50-4a51-965e-a427261b4f61",
+        "project": "257aa7ed-0eb3-45f4-a1f8-fe20495f8e92",
         "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
         "bytes": 11591
       },
       {
-        "id": "86a60d01-bc1a-4e0e-a912-c1a6a551635d",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "92c880314c6155d87387cd8f6747336e35c22aa8f66a4a242ec95cf95de9ee09",
+        "id": "7b838ea4-b518-4702-87c2-11c4c2e0e5a2",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "86b06c156a56c4d2c799a455858c84bd525d17084eac4ef9ee7fe5d136427f1d",
         "bytes": 4001673
       },
       {
-        "id": "8da40945-5813-4757-9232-782bce827ce6",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "fcaebd658cf0291065c69a71ffd29de0c54f1eb8d619a4849c519911ad69bccf",
+        "id": "96f59d38-afba-44a3-a513-e85695378aa0",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "d7197dab817db94c881f349e40c7e6bcb2be1ecc306b439c44c461ed21fb18b5",
         "bytes": 4001673
       },
       {
-        "id": "8ee671d7-642b-46ee-8b1c-894569d56285",
-        "project": "f81fbfdc-7222-4d7c-aaa2-52f320a1b1ad",
+        "id": "9caae65c-5c33-4a0c-9e87-d7c79b62f3cb",
+        "project": "0f92d9d6-5290-45c3-859d-c945e9fd550c",
         "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
         "bytes": 4454
       },
       {
-        "id": "a02a51a0-aba4-472f-8428-5eac6f22c9fb",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "da397e959bb3cb2d40ff7d0fd9faab2012ece8f88e397f7addd36f085c7556bb",
+        "id": "a27a7f18-1725-4eb3-ad15-618be5775a28",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "28b7fbd75098eb2679098e874a32060e77f247a94509ec5ffa7ea8c8c886802e",
         "bytes": 4001673
       },
       {
-        "id": "c1101847-a73e-409f-8504-b72c8b7db882",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "d5795b366627a7ea5499f10ec78b9825fb504a8659492e6730982296b3865aca",
+        "id": "a2f8b046-1176-40e7-b012-a66c82d949c0",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "3f0b1390d6c77af9eb62700706a385c3597a594f15a1b514eaa39c34345ae7ea",
         "bytes": 4001673
       },
       {
-        "id": "c84c23b0-0432-457d-b4d2-e88ee3ed44b5",
-        "project": "b9fa2e0b-6a06-49e1-b7dd-792266f5ccc1",
-        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
-        "bytes": 4454
-      },
-      {
-        "id": "cba73af3-75eb-4a1f-b372-6f9edcfbcb37",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "3b954b818458b638184ad0d5a313beec1b249e982481a9434dc454cc4a04c84c",
+        "id": "b0d6014c-bf14-4b2e-af80-d1cda9b3bccd",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "be6f3c9d7d1d0662f504479a4af96fe5f4ce7f758df8ba13765e729611691d22",
         "bytes": 4001673
       },
       {
-        "id": "cfddad37-d7e0-4521-b695-362a0bba29a1",
-        "project": "e646b113-20a4-4449-b81b-59fce9b61fdc",
+        "id": "b58795c7-a6f1-4f49-b0ec-653dfcaca2c6",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "a8650e40f0f73a1c465a4b25f85a1e18bfaf5ed37935bc9ad714a02b38e221c2",
+        "bytes": 4001673
+      },
+      {
+        "id": "b9c84462-7fb8-41a4-8c68-4c6e1a24f0b7",
+        "project": "2383f796-da76-48c0-a33f-9449bd62cef9",
         "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
         "bytes": 11591
       },
       {
-        "id": "d45a3050-e1a9-4077-8ad7-5d477322e556",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "ae3d987d7fdfe75c49384ee2fc71bc3f651a6562759323c75e94665a1d2d08ff",
+        "id": "c36fc825-c222-4823-98e7-d50b553efb26",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "07147fe6a28e8f9a6f1aea8ccb7b0ad53cda8b20b497f30da3a8ed7e117c688a",
         "bytes": 4001673
       },
       {
-        "id": "d488e4f7-a15b-49b4-91d3-c71d1b5b13fc",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "ebbe6a20e504110f8f65e48626e56c287f4b66604c1531ca6d73b1bd222f81d4",
+        "id": "c9784937-2587-4d10-8112-ac5ab2f5d048",
+        "project": "7f8b3f43-a4dd-4e25-922e-b0891aca1180",
+        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
+        "bytes": 4454
+      },
+      {
+        "id": "cd071401-75a4-4472-8c88-b2f5fd2645ab",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "2731762939100ed51d6d806bc14215d0ee232b610381d74c8e4d4a5443fb76ce",
         "bytes": 4001673
       },
       {
-        "id": "d69d4c53-8506-4e6a-a38f-fe904c790132",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "4f54b57bbeb95d6b3394f7f840f39dfbaff8c62a7b7a719dd931391c3fb060b8",
+        "id": "cf916669-d661-4dd6-a501-d970cd20b58e",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "c0be4f4cef85f8995ee7d92f08930884da83840305bf17bd3dc3a4b8c9f9b09d",
         "bytes": 4001673
       },
       {
-        "id": "d8e9f832-e2ea-45c5-b676-e8577a28d867",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "2420af99c46f1cfa75c7a8cae65f19a416597591d3ad82fbfcc74ee853c6c3c9",
+        "id": "d06b159d-dd42-456a-a387-e205f6d447ba",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "25565275864bddb48db463649b986aff6c1db5ef54ef977a87db836b7c007984",
         "bytes": 4001673
       },
       {
-        "id": "f851f65e-7760-44ff-a9d7-a17271783c4d",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "b49f722b252345d912af01fade149a5f08d5db4345eec23e31514d2dfcf24852",
-        "bytes": 4001673
-      },
-      {
-        "id": "fb6cce3e-2536-4e5a-8471-cc1c7344014c",
-        "project": "3e2a1b2a-7dbe-43b9-9b2e-cbc25fbfbebb",
+        "id": "d26a52ab-0b0e-470a-9f97-77f302f9af7a",
+        "project": "0f92d9d6-5290-45c3-859d-c945e9fd550c",
         "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
         "bytes": 6085
+      },
+      {
+        "id": "db3ed232-618d-4bf7-bcd2-928942eeba1e",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "f6e904689b7a1f50bbf7f329f57a7eb4be4f3e2734f26190bc62e21ecaf91ed1",
+        "bytes": 4001673
+      },
+      {
+        "id": "dc05b2f2-466e-49e8-9bec-0f2c7f64707f",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "2306c80ec98484efd77f9c2e35614df6faf2d67190034e68f7f07ee381b288e8",
+        "bytes": 4001673
+      },
+      {
+        "id": "dd7a24d9-b7de-442d-8862-089a67450157",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "c40e08e8cf108e9809103aaac6d1505b084b0f33dba473c17ebf09582a3b9628",
+        "bytes": 4001673
+      },
+      {
+        "id": "e112ce9e-2415-41a4-abe3-bc0699ec5240",
+        "project": "0f92d9d6-5290-45c3-859d-c945e9fd550c",
+        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
+        "bytes": 4253
+      },
+      {
+        "id": "e330af7c-c64e-4957-a763-e654974f89a5",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "86127a6e60202a8e2871dc57f44118faae93f0e6f009898e7d9762aa3673767c",
+        "bytes": 4001673
+      },
+      {
+        "id": "e4fd54a8-83e9-4590-8865-665462a62175",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "ef85c44e6fee319a0d6ed11416d1a5e011ef3e513a7b226453e9f7713bb41ed0",
+        "bytes": 4001673
+      },
+      {
+        "id": "e5481cf5-7b2b-4167-8e16-84e977f91226",
+        "project": "2383f796-da76-48c0-a33f-9449bd62cef9",
+        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
+        "bytes": 4454
       }
     ]
   },
   "databaseAfterFailures": {
     "projects": [
       {
-        "id": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "owner": "[\"default-user\",1793773774165]",
-        "name": "Cleanup quota",
-        "revision": 0,
-        "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
-        "catalog": "[]"
-      },
-      {
-        "id": "3e2a1b2a-7dbe-43b9-9b2e-cbc25fbfbebb",
-        "owner": "[\"default-user\",1793773774165]",
+        "id": "0f92d9d6-5290-45c3-859d-c945e9fd550c",
+        "owner": "[\"default-user\",1793836256556]",
         "name": "Browser project",
         "revision": 2,
-        "scene": "{\"backgroundAssetId\":\"8540d9ed-652a-40e7-95fa-258bc7c70528\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"d7afc65d-4cfa-4309-b735-e343b830589a\",\"name\":\"One\",\"spriteAssetId\":\"34505620-b134-4cf1-a7e1-9c1dfe0612d8\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"aa80eb40-6f60-444d-9579-7c09482d4465\",\"name\":\"Two\",\"spriteAssetId\":\"5240ba5b-c5ed-4b5b-9861-dce966e18a4b\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
-        "catalog": "[{\"assetId\":\"8540d9ed-652a-40e7-95fa-258bc7c70528\",\"label\":\"forest\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"34505620-b134-4cf1-a7e1-9c1dfe0612d8\",\"label\":\"mira-a\",\"kind\":\"sprite\",\"actorId\":\"d7afc65d-4cfa-4309-b735-e343b830589a\"},{\"assetId\":\"5240ba5b-c5ed-4b5b-9861-dce966e18a4b\",\"label\":\"rowan\",\"kind\":\"sprite\",\"actorId\":\"aa80eb40-6f60-444d-9579-7c09482d4465\"}]"
+        "scene": "{\"backgroundAssetId\":\"2e444622-2a56-431b-9d5d-7b45e9f7c54a\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"37bd39b5-6812-4a95-b154-0dcd17b29408\",\"name\":\"One\",\"spriteAssetId\":\"9caae65c-5c33-4a0c-9e87-d7c79b62f3cb\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"0f1681a9-30bb-4f66-8e15-88b269730879\",\"name\":\"Two\",\"spriteAssetId\":\"e112ce9e-2415-41a4-abe3-bc0699ec5240\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
+        "catalog": "[{\"assetId\":\"2e444622-2a56-431b-9d5d-7b45e9f7c54a\",\"label\":\"forest\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"9caae65c-5c33-4a0c-9e87-d7c79b62f3cb\",\"label\":\"mira-a\",\"kind\":\"sprite\",\"actorId\":\"37bd39b5-6812-4a95-b154-0dcd17b29408\"},{\"assetId\":\"e112ce9e-2415-41a4-abe3-bc0699ec5240\",\"label\":\"rowan\",\"kind\":\"sprite\",\"actorId\":\"0f1681a9-30bb-4f66-8e15-88b269730879\"}]"
       },
       {
-        "id": "74c16da4-2bea-4c5c-96c9-c53981b495c4",
-        "owner": "[\"sn-other\",1793773781765]",
-        "name": "Bob project",
+        "id": "2383f796-da76-48c0-a33f-9449bd62cef9",
+        "owner": "[\"default-user\",1793836256556]",
+        "name": "Browser project",
         "revision": 0,
-        "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
+        "scene": "{\"backgroundAssetId\":\"b9c84462-7fb8-41a4-8c68-4c6e1a24f0b7\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"b2a488ac-fb49-4dbc-85d7-dae97dcdc4f1\",\"name\":\"One\",\"spriteAssetId\":\"e5481cf5-7b2b-4167-8e16-84e977f91226\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"f4e297b5-94c3-4fab-901f-572288b19faa\",\"name\":\"Two\",\"spriteAssetId\":\"5798322e-b270-4922-88a0-13d005af8a9f\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
         "catalog": "[]"
       },
       {
-        "id": "b9fa2e0b-6a06-49e1-b7dd-792266f5ccc1",
-        "owner": "[\"sn-other\",1793773781765]",
-        "name": "Cleanup foreign",
-        "revision": 0,
-        "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
-        "catalog": "[]"
-      },
-      {
-        "id": "e646b113-20a4-4449-b81b-59fce9b61fdc",
-        "owner": "[\"default-user\",1793773774165]",
+        "id": "257aa7ed-0eb3-45f4-a1f8-fe20495f8e92",
+        "owner": "[\"default-user\",1793836256556]",
         "name": "API project",
         "revision": 1,
         "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
         "catalog": "[]"
       },
       {
-        "id": "f81fbfdc-7222-4d7c-aaa2-52f320a1b1ad",
-        "owner": "[\"default-user\",1793773774165]",
-        "name": "Browser project",
+        "id": "7f8b3f43-a4dd-4e25-922e-b0891aca1180",
+        "owner": "[\"sn-other\",1793836264348]",
+        "name": "Cleanup foreign",
         "revision": 0,
-        "scene": "{\"backgroundAssetId\":\"09550fe0-89fb-4f72-83d9-88d7de2521c5\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"06d4aaf7-3d55-4ea9-8fd2-2542f06b0849\",\"name\":\"One\",\"spriteAssetId\":\"8ee671d7-642b-46ee-8b1c-894569d56285\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"4b3af213-b738-4ffa-9e2e-50fd7b6785b2\",\"name\":\"Two\",\"spriteAssetId\":\"6599f78f-179f-424c-a5a8-cf6c55e16b5d\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
+        "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
+        "catalog": "[]"
+      },
+      {
+        "id": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "owner": "[\"default-user\",1793836256556]",
+        "name": "Cleanup quota",
+        "revision": 0,
+        "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
+        "catalog": "[]"
+      },
+      {
+        "id": "c438398d-2c6c-4e6d-98c4-1298788a184a",
+        "owner": "[\"sn-other\",1793836264348]",
+        "name": "Bob project",
+        "revision": 0,
+        "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
         "catalog": "[]"
       }
     ],
     "assets": [
       {
-        "id": "09550fe0-89fb-4f72-83d9-88d7de2521c5",
-        "project": "f81fbfdc-7222-4d7c-aaa2-52f320a1b1ad",
+        "id": "023fbd74-e9fb-40d5-9dec-196207eac05f",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "25b644d8ca4254ce701fa81fef3a8519d5870a65187a5cb05ce9d3c957e23254",
+        "bytes": 4001673
+      },
+      {
+        "id": "04974530-81a4-4695-8818-9a8e0c39f129",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "58964aadf9aade46bbf5c9b4f11f8b47215e2bd0d096cd3c7b4915030dbbbc4a",
+        "bytes": 4001673
+      },
+      {
+        "id": "17335813-7aa6-4196-8ab8-00a78256466c",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "48a6e9f1098b9a1b3fee7e1c8d63367ae1a5911ac35ad60a40e1cd4dad314893",
+        "bytes": 4001673
+      },
+      {
+        "id": "207093c1-088d-4343-b27e-141b49ad1a94",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "9e060c3a7037e3e2fbaef7f8849c2f0596af03ce7dd4ecef5dcca0c4473b72a3",
+        "bytes": 4001673
+      },
+      {
+        "id": "2e444622-2a56-431b-9d5d-7b45e9f7c54a",
+        "project": "0f92d9d6-5290-45c3-859d-c945e9fd550c",
         "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
         "bytes": 11591
       },
       {
-        "id": "198735a9-0efd-4e04-afa0-e1423c61ad0e",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "1e67246ca940d073bcc158417f393b5e0b6e93298fbb09430898f7220c397a8b",
+        "id": "32e4fa75-ace2-4d50-bb98-7afac52ec5b8",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "d5cddd69ada9d8872cab8a593ca0d74f4de45c38b58f4024b4a8b96c2fe5c6e9",
         "bytes": 4001673
       },
       {
-        "id": "23b7f221-ccd3-4764-a10b-2c39691475b5",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "292ab8209a2eda9a9c1bc6a26b3ab1bcfdb0f6da953634748023bfdc71735e0b",
+        "id": "3db541fb-eaf8-4cdb-b6a3-80cb515ee0bc",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "db565fcd3f48b192b53fc9dead23f534420356711bc1d0600cc55da8667de439",
         "bytes": 4001673
       },
       {
-        "id": "2ad8bc7d-f419-4139-9c59-4751a0a107b2",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "fc5cbfd421fd1f5a190d64d25e39a798c545a60806a2a2db8eba4cf4bd25c0a0",
+        "id": "3e6bec43-94f3-4c0d-88c5-3b7f67584dd7",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "cf1d9fc1eac00a3a0568c76049cf6e0cdf60d8aa9367e83a70752b2bcf6e6566",
         "bytes": 4001673
       },
       {
-        "id": "34505620-b134-4cf1-a7e1-9c1dfe0612d8",
-        "project": "3e2a1b2a-7dbe-43b9-9b2e-cbc25fbfbebb",
-        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
-        "bytes": 4454
-      },
-      {
-        "id": "3494b676-fa9a-41f0-8867-c680c092bc74",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "100f5bfaef1c26b8f00eb20dcc5b44be4e754d768159cb0a12418a73816cdaf6",
+        "id": "43ff5d89-4e6c-4118-ac28-62927a3b26bf",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "9188c6cd5dc7379e42d44f337d3a18a5cbe799f89cc5eee4ce35ed1f3da95d5a",
         "bytes": 4001673
       },
       {
-        "id": "3496d4c2-2f84-41d6-9654-3475c4340e13",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "93da1c0eda892b8521ad916c3a541671bb685612c1c14d1823e25d14864c39a7",
+        "id": "4cd8ed39-5605-404f-9728-743fd7772195",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "29b819673688bb29be5e4e9e47163185a075a4cce65003d611d9994b36e3ced9",
         "bytes": 4001673
       },
       {
-        "id": "40235e89-cbb7-47a6-98ab-02001ca047a7",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "bacd7da7e1c46e1b9d94fdde2bc891592d434f17b431cc0189e9bb15406afd4d",
+        "id": "50f247ea-9b76-4168-8a59-f8acff53c8ca",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "0e02903a49a223278988482a998f54be604e3e1d742abfaef4d942131e867702",
         "bytes": 4001673
       },
       {
-        "id": "43a1f344-3e84-453e-93b0-3afad55955dd",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "06c6e399bfc5599a49499aba8744d2c877cb756c51d1292c9d1a7972b0adae31",
+        "id": "56107088-13d1-4a0a-b061-2bab18251fa4",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "c35e54f624a45711fa77997c9514df77ba1ec116d8c96d85876a79a876a6c65f",
         "bytes": 4001673
       },
       {
-        "id": "49f3696b-a219-4b04-89d6-e7254cc15e7e",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "4bf18ec8951fac497d6e916ce2c2a1cf022532a1d476003094ea9393b89009b7",
-        "bytes": 4001673
-      },
-      {
-        "id": "5240ba5b-c5ed-4b5b-9861-dce966e18a4b",
-        "project": "3e2a1b2a-7dbe-43b9-9b2e-cbc25fbfbebb",
+        "id": "5798322e-b270-4922-88a0-13d005af8a9f",
+        "project": "2383f796-da76-48c0-a33f-9449bd62cef9",
         "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
         "bytes": 4253
       },
       {
-        "id": "5282b063-3c40-43c3-bf02-91ff1ca7473f",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "18e7e4985544e1615a6841b626d1025bbd971bf5d7d4a7a679f1ef3ed659e0a4",
-        "bytes": 4001673
-      },
-      {
-        "id": "595391e3-e9a8-4090-a87e-535f18a208c9",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "409ee783cda72f2c698a92fcbbcb66a21ca84cae59ae816865cbf48b7aab58fd",
-        "bytes": 4001673
-      },
-      {
-        "id": "642299c8-6515-4a30-ba49-0551d972bfed",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "4c873c206cec2466166efd8228b7b4c39c65021a40db915c3cbdc1d9515b3052",
-        "bytes": 4001673
-      },
-      {
-        "id": "6599f78f-179f-424c-a5a8-cf6c55e16b5d",
-        "project": "f81fbfdc-7222-4d7c-aaa2-52f320a1b1ad",
-        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
-        "bytes": 4253
-      },
-      {
-        "id": "6914f252-2280-4d9b-9bef-b184a3480a13",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "709f958e300c33976c0911fe03c7d3be99825e7ce41909d71020232dcae07750",
-        "bytes": 4001673
-      },
-      {
-        "id": "6a8b9562-4b55-4fa2-96c0-47a98f284b9e",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "5136298f416613e2227c93a4bb195e71c4dba0e02049547fd25b266f10e56568",
-        "bytes": 4001673
-      },
-      {
-        "id": "6cb680af-90f9-4d4c-a4c3-ad81efeb62da",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "8505f69315c521b95cf02019d154a943e55b4a0bab97ee3d99b0e3fda477980d",
-        "bytes": 4001673
-      },
-      {
-        "id": "78e3687f-46c0-4c88-b15c-85d33c81870c",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "2c43bb9df8cc0d3b5191869a6eb6016d1d29cdb5a000d9c76fa95145e0c8b200",
-        "bytes": 4001673
-      },
-      {
-        "id": "7b9a250f-88e9-4d1c-bad3-ca01e76f921e",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "68f091605aee2a528730cbb4a344e7e0cc0df7ef47eaf3f32ae45350068f5b54",
-        "bytes": 4001673
-      },
-      {
-        "id": "8540d9ed-652a-40e7-95fa-258bc7c70528",
-        "project": "3e2a1b2a-7dbe-43b9-9b2e-cbc25fbfbebb",
+        "id": "726925d9-2c50-4a51-965e-a427261b4f61",
+        "project": "257aa7ed-0eb3-45f4-a1f8-fe20495f8e92",
         "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
         "bytes": 11591
       },
       {
-        "id": "86a60d01-bc1a-4e0e-a912-c1a6a551635d",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "92c880314c6155d87387cd8f6747336e35c22aa8f66a4a242ec95cf95de9ee09",
+        "id": "7b838ea4-b518-4702-87c2-11c4c2e0e5a2",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "86b06c156a56c4d2c799a455858c84bd525d17084eac4ef9ee7fe5d136427f1d",
         "bytes": 4001673
       },
       {
-        "id": "8da40945-5813-4757-9232-782bce827ce6",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "fcaebd658cf0291065c69a71ffd29de0c54f1eb8d619a4849c519911ad69bccf",
+        "id": "96f59d38-afba-44a3-a513-e85695378aa0",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "d7197dab817db94c881f349e40c7e6bcb2be1ecc306b439c44c461ed21fb18b5",
         "bytes": 4001673
       },
       {
-        "id": "8ee671d7-642b-46ee-8b1c-894569d56285",
-        "project": "f81fbfdc-7222-4d7c-aaa2-52f320a1b1ad",
+        "id": "9caae65c-5c33-4a0c-9e87-d7c79b62f3cb",
+        "project": "0f92d9d6-5290-45c3-859d-c945e9fd550c",
         "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
         "bytes": 4454
       },
       {
-        "id": "a02a51a0-aba4-472f-8428-5eac6f22c9fb",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "da397e959bb3cb2d40ff7d0fd9faab2012ece8f88e397f7addd36f085c7556bb",
+        "id": "a27a7f18-1725-4eb3-ad15-618be5775a28",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "28b7fbd75098eb2679098e874a32060e77f247a94509ec5ffa7ea8c8c886802e",
         "bytes": 4001673
       },
       {
-        "id": "c1101847-a73e-409f-8504-b72c8b7db882",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "d5795b366627a7ea5499f10ec78b9825fb504a8659492e6730982296b3865aca",
+        "id": "a2f8b046-1176-40e7-b012-a66c82d949c0",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "3f0b1390d6c77af9eb62700706a385c3597a594f15a1b514eaa39c34345ae7ea",
         "bytes": 4001673
       },
       {
-        "id": "c84c23b0-0432-457d-b4d2-e88ee3ed44b5",
-        "project": "b9fa2e0b-6a06-49e1-b7dd-792266f5ccc1",
-        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
-        "bytes": 4454
-      },
-      {
-        "id": "cba73af3-75eb-4a1f-b372-6f9edcfbcb37",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "3b954b818458b638184ad0d5a313beec1b249e982481a9434dc454cc4a04c84c",
+        "id": "b0d6014c-bf14-4b2e-af80-d1cda9b3bccd",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "be6f3c9d7d1d0662f504479a4af96fe5f4ce7f758df8ba13765e729611691d22",
         "bytes": 4001673
       },
       {
-        "id": "cfddad37-d7e0-4521-b695-362a0bba29a1",
-        "project": "e646b113-20a4-4449-b81b-59fce9b61fdc",
+        "id": "b58795c7-a6f1-4f49-b0ec-653dfcaca2c6",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "a8650e40f0f73a1c465a4b25f85a1e18bfaf5ed37935bc9ad714a02b38e221c2",
+        "bytes": 4001673
+      },
+      {
+        "id": "b9c84462-7fb8-41a4-8c68-4c6e1a24f0b7",
+        "project": "2383f796-da76-48c0-a33f-9449bd62cef9",
         "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
         "bytes": 11591
       },
       {
-        "id": "d45a3050-e1a9-4077-8ad7-5d477322e556",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "ae3d987d7fdfe75c49384ee2fc71bc3f651a6562759323c75e94665a1d2d08ff",
+        "id": "c36fc825-c222-4823-98e7-d50b553efb26",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "07147fe6a28e8f9a6f1aea8ccb7b0ad53cda8b20b497f30da3a8ed7e117c688a",
         "bytes": 4001673
       },
       {
-        "id": "d488e4f7-a15b-49b4-91d3-c71d1b5b13fc",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "ebbe6a20e504110f8f65e48626e56c287f4b66604c1531ca6d73b1bd222f81d4",
+        "id": "c9784937-2587-4d10-8112-ac5ab2f5d048",
+        "project": "7f8b3f43-a4dd-4e25-922e-b0891aca1180",
+        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
+        "bytes": 4454
+      },
+      {
+        "id": "cd071401-75a4-4472-8c88-b2f5fd2645ab",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "2731762939100ed51d6d806bc14215d0ee232b610381d74c8e4d4a5443fb76ce",
         "bytes": 4001673
       },
       {
-        "id": "d69d4c53-8506-4e6a-a38f-fe904c790132",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "4f54b57bbeb95d6b3394f7f840f39dfbaff8c62a7b7a719dd931391c3fb060b8",
+        "id": "cf916669-d661-4dd6-a501-d970cd20b58e",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "c0be4f4cef85f8995ee7d92f08930884da83840305bf17bd3dc3a4b8c9f9b09d",
         "bytes": 4001673
       },
       {
-        "id": "d8e9f832-e2ea-45c5-b676-e8577a28d867",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "2420af99c46f1cfa75c7a8cae65f19a416597591d3ad82fbfcc74ee853c6c3c9",
+        "id": "d06b159d-dd42-456a-a387-e205f6d447ba",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "25565275864bddb48db463649b986aff6c1db5ef54ef977a87db836b7c007984",
         "bytes": 4001673
       },
       {
-        "id": "f851f65e-7760-44ff-a9d7-a17271783c4d",
-        "project": "1b053fd7-4498-4b0a-b629-6ac68eb1f283",
-        "sha256": "b49f722b252345d912af01fade149a5f08d5db4345eec23e31514d2dfcf24852",
-        "bytes": 4001673
-      },
-      {
-        "id": "fb6cce3e-2536-4e5a-8471-cc1c7344014c",
-        "project": "3e2a1b2a-7dbe-43b9-9b2e-cbc25fbfbebb",
+        "id": "d26a52ab-0b0e-470a-9f97-77f302f9af7a",
+        "project": "0f92d9d6-5290-45c3-859d-c945e9fd550c",
         "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
         "bytes": 6085
+      },
+      {
+        "id": "db3ed232-618d-4bf7-bcd2-928942eeba1e",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "f6e904689b7a1f50bbf7f329f57a7eb4be4f3e2734f26190bc62e21ecaf91ed1",
+        "bytes": 4001673
+      },
+      {
+        "id": "dc05b2f2-466e-49e8-9bec-0f2c7f64707f",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "2306c80ec98484efd77f9c2e35614df6faf2d67190034e68f7f07ee381b288e8",
+        "bytes": 4001673
+      },
+      {
+        "id": "dd7a24d9-b7de-442d-8862-089a67450157",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "c40e08e8cf108e9809103aaac6d1505b084b0f33dba473c17ebf09582a3b9628",
+        "bytes": 4001673
+      },
+      {
+        "id": "e112ce9e-2415-41a4-abe3-bc0699ec5240",
+        "project": "0f92d9d6-5290-45c3-859d-c945e9fd550c",
+        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
+        "bytes": 4253
+      },
+      {
+        "id": "e330af7c-c64e-4957-a763-e654974f89a5",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "86127a6e60202a8e2871dc57f44118faae93f0e6f009898e7d9762aa3673767c",
+        "bytes": 4001673
+      },
+      {
+        "id": "e4fd54a8-83e9-4590-8865-665462a62175",
+        "project": "b01cf5ed-42a5-40a6-986f-81a53b93db3e",
+        "sha256": "ef85c44e6fee319a0d6ed11416d1a5e011ef3e513a7b226453e9f7713bb41ed0",
+        "bytes": 4001673
+      },
+      {
+        "id": "e5481cf5-7b2b-4167-8e16-84e977f91226",
+        "project": "2383f796-da76-48c0-a33f-9449bd62cef9",
+        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
+        "bytes": 4454
       }
     ]
   },

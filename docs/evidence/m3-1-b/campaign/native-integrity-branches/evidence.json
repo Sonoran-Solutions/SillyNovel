@@ -1,8 +1,8 @@
 {
-  "candidate": "62b848bc22206a0ca153993953426f386fba8d77",
+  "candidate": "66a02977edf33799de366c47be99ab3a3a142dc9",
   "host": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
   "node": "v26.8.1",
-  "root": "/tmp/sn-portability-host-wMKK5n",
+  "root": "/tmp/sn-portability-host-rxUYz1",
   "checks": [
     "real host auth/CSRF, two-user project and asset isolation, two-client CAS, PNG hash and limits",
     "browser create/import background + two sprites/arrange/save/reload/explicit reopen; named canonical files unchanged",
@@ -24,8 +24,8 @@
     "plugin disabled at startup refuses bundle controls and retains session stage/native composer"
   ],
   "files": {
-    "default-user/characters/Project A.png": "78bdf37b80f66d97f92881cb82dfe64769f6ba32fb08c8d96bfa3524969e8afe",
-    "default-user/characters/Project B.png": "d00f59e84cb23c9e2775ab12d4c35311c9eb7d6601b09bc61cae75a3423a11c2",
+    "default-user/characters/Project A.png": "5a7454d27759c95d6fb4600090fc49b833dc4adbd7181febbd13eca0248b5dd7",
+    "default-user/characters/Project B.png": "271c2da8b9d82af13d6c09a247aae5de84062923250a367a41550d10da53a34e",
     "default-user/characters/Seraphina/admiration.png": "e451994487b3a5b7c72d6e6025c8cbe6bbcfbf01a490042b8b581522e6ba4f96",
     "default-user/characters/Seraphina/amusement.png": "1cedaee06fb1c740c5c8c52de8973f733789d51fe9b23fcb633635e755ae6e6f",
     "default-user/characters/Seraphina/anger.png": "d657d77b1bce609dd6006582cf687691871411eb041f9f4c41da4765b12ea069",
@@ -55,7 +55,7 @@
     "default-user/characters/Seraphina/sadness.png": "3819c2bca59224f67767eb3762c846e35d5eb5272be03f35c21fc32163df67a6",
     "default-user/characters/Seraphina/surprise.png": "f6a9f657d081f670a961649a5a21526ec251262ca06adf99626509059fbbb103",
     "default-user/characters/default_Seraphina.png": "8a71e8270f54fafbccf905b1bdf053a6a55f57bea89c01fcd8c0e87ee76a2d52",
-    "default-user/chats/Project A/Project A - 2026-11-03@23h30m39s595ms.jsonl": "f0595ed3c571f52f1c85ec38c30cfcecd8b0ec8597508259b86758a5dd185f16",
+    "default-user/chats/Project A/Project A - 2026-11-04@16h52m04s094ms.jsonl": "2652334754748febb1cfa8c64b05863bbbbc2adc4c2a52f696cd03678397e150",
     "default-user/worlds/Eldoria.json": "bfc2548443c890746a54d54e35e41265b02d1b59fd06d72552b305bf9b1e063c"
   },
   "notTested": [
@@ -82,27 +82,27 @@
           "files": {
             "default-user/characters/Mira.png": {
               "bytes": 78549,
-              "sha256": "d0ad0d9868208f5c6b86e15fc25b0d6b00187491eee7f92a50455b5a1ce48dac"
+              "sha256": "f77594480fb790fade73ba3fe5fa9f08816074a63829672aa372af702df3e107"
             },
             "default-user/characters/Mira1.png": {
               "bytes": 78549,
-              "sha256": "8687bf045712ad0a06a850fde1c4c98e461701267636633955cafece5a5703e3"
+              "sha256": "527fc8b634fc5f3ea6a7a7a95cea688c2aa787f945b964ba17ab4f3e4bbad48d"
             },
             "default-user/characters/Project A.png": {
               "bytes": 78637,
-              "sha256": "477e9891f1663b68ea09a8b04cf3652458f0d15c2df6cfd5ae435ce651b6bcc2"
+              "sha256": "fe1b893388f0bdb221aefa75ed9cd731070fe2a00641c9fcfac52ee5b82ed3d0"
             },
             "default-user/characters/Project B.png": {
               "bytes": 78573,
-              "sha256": "d00f59e84cb23c9e2775ab12d4c35311c9eb7d6601b09bc61cae75a3423a11c2"
+              "sha256": "271c2da8b9d82af13d6c09a247aae5de84062923250a367a41550d10da53a34e"
             },
             "default-user/characters/Rowan.png": {
               "bytes": 78557,
-              "sha256": "2c3056ac66e2fc32454115c69565639aec53d0249e5eb21f2f42fc8d4822501a"
+              "sha256": "29401a2a7a23f2f56a75afd9950b6d72785744ea6d65fb7b5196b5228f0bf7a9"
             },
             "default-user/characters/Sage.png": {
               "bytes": 78549,
-              "sha256": "952c604a73a28ba4024d7a9f21fa8f6dee46376c748ec970b3a9e9544b5f909a"
+              "sha256": "e3c2ae95fcb7686aee705e30909347be16d97afff73ad295b5178ae203747310"
             },
             "default-user/characters/Seraphina/admiration.png": {
               "bytes": 129463,
@@ -220,21 +220,21 @@
               "bytes": 551901,
               "sha256": "8a71e8270f54fafbccf905b1bdf053a6a55f57bea89c01fcd8c0e87ee76a2d52"
             },
-            "default-user/chats/Project A/Project A - 2026-11-03@23h30m39s595ms.jsonl": {
+            "default-user/chats/Project A/Project A - 2026-11-04@16h52m04s094ms.jsonl": {
               "bytes": 447,
-              "sha256": "17006273baf0be8d602fda7840e77e0213f4abcccdb525f731a79eecd74bc24b"
+              "sha256": "834915d1303f31137b8248367f3df4c3a663bea894d8f2a77e1e1b41a8b7d47f"
             },
             "default-user/chats/Project A/The Last Lantern.jsonl": {
               "bytes": 24827,
-              "sha256": "b1360d38aa4f58c31df6d73d9663851f89acd3cd92e0b0c7b6468272ed70539e"
+              "sha256": "4912d69e63fa60c2f0c36190bb4210167bf02c277ee24156b833b345d4a25699"
             },
-            "default-user/group chats/1793773849045.jsonl": {
+            "default-user/group chats/1793836333970.jsonl": {
               "bytes": 1145,
               "sha256": "1ecacfa562bfab4ca1be0c9a115debcde130788fe1fb9efa9ec5b431a69837a8"
             },
-            "default-user/groups/1793773849045.json": {
+            "default-user/groups/1793836333970.json": {
               "bytes": 466,
-              "sha256": "c033bf7b39cff11a0986c12280e2a8d86e82755129912da67e22e4cee18a5693"
+              "sha256": "c737e184eadb8c88ee3e8900e175e0fbedb2089b4dfb140ef5f7b46c8228edaa"
             },
             "default-user/worlds/Eldoria.json": {
               "bytes": 8579,
@@ -402,11 +402,11 @@
             },
             "_storage/04d8318f3ecb84f1d2d8c2be4a258db13862a16d40a9f4bc9d388aba8c060162": {
               "bytes": 185,
-              "sha256": "168a2d2e787ac7e1ac613eb60db72015cf9b19b59959940eae9681dd14dd5bc7"
+              "sha256": "961ba896eec8322cd0c5605eee2e02b82d762c93af70b849edbec3693134ad6b"
             },
             "_storage/3a5bb37ab86ac047d8ef481ee2e7bd3683d694ff8502a7cfe6951af849015dcc": {
               "bytes": 151,
-              "sha256": "1ed6d3e0a2178281e062f047424a7d835c8216cd126d1980e82487702f30a486"
+              "sha256": "1b8410a4d2a27be9f084b0e408f33ba25a6e0a7ed8e397c8a376e3ec3cc938ce"
             },
             "default-user/settings.json": {
               "bytes": 46040,
@@ -428,7 +428,7 @@
                 "mes_example": "",
                 "creatorcomment": "",
                 "avatar": "none",
-                "chat": "Mira - 2026-11-03@23h30m48s987ms",
+                "chat": "Mira - 2026-11-04@16h52m13s912ms",
                 "talkativeness": 0.5,
                 "fav": false,
                 "tags": [],
@@ -472,7 +472,7 @@
                 "mes_example": "",
                 "creatorcomment": "",
                 "avatar": "none",
-                "chat": "Mira - 2026-11-03@23h30m49s002ms",
+                "chat": "Mira - 2026-11-04@16h52m13s926ms",
                 "talkativeness": 0.5,
                 "fav": false,
                 "tags": [],
@@ -547,7 +547,7 @@
                     }
                   }
                 },
-                "create_date": "2026-11-04T06:30:39.616Z"
+                "create_date": "2026-11-04T23:52:04.120Z"
               },
               "artSha256": "286646b5bd10cbf16b93a6acfe4e6f33ccfab630fd933ff1dd3f81b66811e203"
             },
@@ -561,7 +561,7 @@
                 "mes_example": "",
                 "creatorcomment": "",
                 "avatar": "none",
-                "chat": "Project B - 2026-11-03@23h30m39s622ms",
+                "chat": "Project B - 2026-11-04@16h52m04s126ms",
                 "talkativeness": 0.5,
                 "fav": false,
                 "tags": [],
@@ -605,7 +605,7 @@
                 "mes_example": "",
                 "creatorcomment": "",
                 "avatar": "none",
-                "chat": "Rowan - 2026-11-03@23h30m49s015ms",
+                "chat": "Rowan - 2026-11-04@16h52m13s938ms",
                 "talkativeness": 0.5,
                 "fav": false,
                 "tags": [],
@@ -649,7 +649,7 @@
                 "mes_example": "",
                 "creatorcomment": "",
                 "avatar": "none",
-                "chat": "Sage - 2026-11-03@23h30m49s028ms",
+                "chat": "Sage - 2026-11-04@16h52m13s952ms",
                 "talkativeness": 0.5,
                 "fav": false,
                 "tags": [],
@@ -2084,27 +2084,27 @@
           "files": {
             "default-user/characters/Mira.png": {
               "bytes": 78549,
-              "sha256": "d0ad0d9868208f5c6b86e15fc25b0d6b00187491eee7f92a50455b5a1ce48dac"
+              "sha256": "f77594480fb790fade73ba3fe5fa9f08816074a63829672aa372af702df3e107"
             },
             "default-user/characters/Mira1.png": {
               "bytes": 78549,
-              "sha256": "8687bf045712ad0a06a850fde1c4c98e461701267636633955cafece5a5703e3"
+              "sha256": "527fc8b634fc5f3ea6a7a7a95cea688c2aa787f945b964ba17ab4f3e4bbad48d"
             },
             "default-user/characters/Project A.png": {
               "bytes": 78637,
-              "sha256": "477e9891f1663b68ea09a8b04cf3652458f0d15c2df6cfd5ae435ce651b6bcc2"
+              "sha256": "fe1b893388f0bdb221aefa75ed9cd731070fe2a00641c9fcfac52ee5b82ed3d0"
             },
             "default-user/characters/Project B.png": {
               "bytes": 78573,
-              "sha256": "d00f59e84cb23c9e2775ab12d4c35311c9eb7d6601b09bc61cae75a3423a11c2"
+              "sha256": "271c2da8b9d82af13d6c09a247aae5de84062923250a367a41550d10da53a34e"
             },
             "default-user/characters/Rowan.png": {
               "bytes": 78557,
-              "sha256": "2c3056ac66e2fc32454115c69565639aec53d0249e5eb21f2f42fc8d4822501a"
+              "sha256": "29401a2a7a23f2f56a75afd9950b6d72785744ea6d65fb7b5196b5228f0bf7a9"
             },
             "default-user/characters/Sage.png": {
               "bytes": 78549,
-              "sha256": "952c604a73a28ba4024d7a9f21fa8f6dee46376c748ec970b3a9e9544b5f909a"
+              "sha256": "e3c2ae95fcb7686aee705e30909347be16d97afff73ad295b5178ae203747310"
             },
             "default-user/characters/Seraphina/admiration.png": {
               "bytes": 129463,
@@ -2222,21 +2222,21 @@
               "bytes": 551901,
               "sha256": "8a71e8270f54fafbccf905b1bdf053a6a55f57bea89c01fcd8c0e87ee76a2d52"
             },
-            "default-user/chats/Project A/Project A - 2026-11-03@23h30m39s595ms.jsonl": {
+            "default-user/chats/Project A/Project A - 2026-11-04@16h52m04s094ms.jsonl": {
               "bytes": 447,
-              "sha256": "17006273baf0be8d602fda7840e77e0213f4abcccdb525f731a79eecd74bc24b"
+              "sha256": "834915d1303f31137b8248367f3df4c3a663bea894d8f2a77e1e1b41a8b7d47f"
             },
             "default-user/chats/Project A/The Last Lantern.jsonl": {
               "bytes": 24827,
-              "sha256": "b1360d38aa4f58c31df6d73d9663851f89acd3cd92e0b0c7b6468272ed70539e"
+              "sha256": "4912d69e63fa60c2f0c36190bb4210167bf02c277ee24156b833b345d4a25699"
             },
-            "default-user/group chats/1793773849045.jsonl": {
+            "default-user/group chats/1793836333970.jsonl": {
               "bytes": 1145,
               "sha256": "1ecacfa562bfab4ca1be0c9a115debcde130788fe1fb9efa9ec5b431a69837a8"
             },
-            "default-user/groups/1793773849045.json": {
+            "default-user/groups/1793836333970.json": {
               "bytes": 466,
-              "sha256": "c033bf7b39cff11a0986c12280e2a8d86e82755129912da67e22e4cee18a5693"
+              "sha256": "c737e184eadb8c88ee3e8900e175e0fbedb2089b4dfb140ef5f7b46c8228edaa"
             },
             "default-user/worlds/Eldoria.json": {
               "bytes": 8579,
@@ -2404,11 +2404,11 @@
             },
             "_storage/04d8318f3ecb84f1d2d8c2be4a258db13862a16d40a9f4bc9d388aba8c060162": {
               "bytes": 185,
-              "sha256": "168a2d2e787ac7e1ac613eb60db72015cf9b19b59959940eae9681dd14dd5bc7"
+              "sha256": "961ba896eec8322cd0c5605eee2e02b82d762c93af70b849edbec3693134ad6b"
             },
             "_storage/3a5bb37ab86ac047d8ef481ee2e7bd3683d694ff8502a7cfe6951af849015dcc": {
               "bytes": 151,
-              "sha256": "1ed6d3e0a2178281e062f047424a7d835c8216cd126d1980e82487702f30a486"
+              "sha256": "1b8410a4d2a27be9f084b0e408f33ba25a6e0a7ed8e397c8a376e3ec3cc938ce"
             },
             "default-user/settings.json": {
               "bytes": 46040,
@@ -2430,7 +2430,7 @@
                 "mes_example": "",
                 "creatorcomment": "",
                 "avatar": "none",
-                "chat": "Mira - 2026-11-03@23h30m48s987ms",
+                "chat": "Mira - 2026-11-04@16h52m13s912ms",
                 "talkativeness": 0.5,
                 "fav": false,
                 "tags": [],
@@ -2474,7 +2474,7 @@
                 "mes_example": "",
                 "creatorcomment": "",
                 "avatar": "none",
-                "chat": "Mira - 2026-11-03@23h30m49s002ms",
+                "chat": "Mira - 2026-11-04@16h52m13s926ms",
                 "talkativeness": 0.5,
                 "fav": false,
                 "tags": [],
@@ -2549,7 +2549,7 @@
                     }
                   }
                 },
-                "create_date": "2026-11-04T06:30:39.616Z"
+                "create_date": "2026-11-04T23:52:04.120Z"
               },
               "artSha256": "286646b5bd10cbf16b93a6acfe4e6f33ccfab630fd933ff1dd3f81b66811e203"
             },
@@ -2563,7 +2563,7 @@
                 "mes_example": "",
                 "creatorcomment": "",
                 "avatar": "none",
-                "chat": "Project B - 2026-11-03@23h30m39s622ms",
+                "chat": "Project B - 2026-11-04@16h52m04s126ms",
                 "talkativeness": 0.5,
                 "fav": false,
                 "tags": [],
@@ -2607,7 +2607,7 @@
                 "mes_example": "",
                 "creatorcomment": "",
                 "avatar": "none",
-                "chat": "Rowan - 2026-11-03@23h30m49s015ms",
+                "chat": "Rowan - 2026-11-04@16h52m13s938ms",
                 "talkativeness": 0.5,
                 "fav": false,
                 "tags": [],
@@ -2651,7 +2651,7 @@
                 "mes_example": "",
                 "creatorcomment": "",
                 "avatar": "none",
-                "chat": "Sage - 2026-11-03@23h30m49s028ms",
+                "chat": "Sage - 2026-11-04@16h52m13s952ms",
                 "talkativeness": 0.5,
                 "fav": false,
                 "tags": [],
@@ -4094,7 +4094,7 @@
     "fixture": {
       "individual": "The Last Lantern",
       "individualTurns": 20,
-      "visualProjectId": "c218c35a-7db6-4bbc-8e92-139e34bbc0f6",
+      "visualProjectId": "83651ae1-7f1f-48d3-be3a-ac45ed3dbab4",
       "members": [
         "Mira.png",
         "Mira1.png",
@@ -4102,7 +4102,7 @@
         "Sage.png"
       ],
       "group": {
-        "id": "1793773849045",
+        "id": "1793836333970",
         "name": "Lantern council",
         "members": [
           "Mira.png",
@@ -4114,9 +4114,9 @@
         "activation_strategy": 1,
         "generation_mode": 0,
         "disabled_members": [],
-        "chat_id": "1793773849045",
+        "chat_id": "1793836333970",
         "chats": [
-          "1793773849045"
+          "1793836333970"
         ],
         "auto_mode_delay": 5,
         "generation_mode_join_prefix": "",
@@ -4157,17 +4157,17 @@
       ],
       "groupProject": {
         "schemaVersion": 2,
-        "projectId": "1cd48c30-a7d0-4caa-8ef0-e069b78554f7",
+        "projectId": "c399c5e1-1c6c-466b-81ce-db78dd991a10",
         "name": "Lantern council layout",
         "revision": 2,
         "scene": {
-          "backgroundAssetId": "02c6cc55-5835-4330-831b-061d7b005727",
+          "backgroundAssetId": "cbf4482b-90a5-4b4d-aa90-3c9330fa5d83",
           "backgroundLocked": true,
           "actors": [
             {
-              "actorId": "2245c626-0d04-41ae-8224-9bac72cadbf1",
+              "actorId": "9b28e4ce-133b-4d87-968c-9903fcb9f77c",
               "name": "Mira",
-              "spriteAssetId": "78ba3abf-77ab-4d21-adc6-8ad3efbcd4c4",
+              "spriteAssetId": "fe313400-acf9-49ae-9c94-d95a6a170607",
               "slot": "left",
               "present": true,
               "locks": {
@@ -4177,9 +4177,9 @@
               }
             },
             {
-              "actorId": "9f6c347b-5bc5-4971-9838-a6cec90e80c5",
+              "actorId": "4bea6415-8083-4e4e-8ab4-5a267262e6f5",
               "name": "Mira",
-              "spriteAssetId": "9c1f6173-3920-4dfe-981e-f562bab12f07",
+              "spriteAssetId": "88af7e9a-7c8e-4692-91cd-dffb6c746b60",
               "slot": "right",
               "present": true,
               "locks": {
@@ -4189,9 +4189,9 @@
               }
             },
             {
-              "actorId": "51884376-8db2-4148-8a9d-f8e8944e01d1",
+              "actorId": "e72c5778-a7af-460f-9671-2cd75b72a6fe",
               "name": "Rowan",
-              "spriteAssetId": "9c1f6173-3920-4dfe-981e-f562bab12f07",
+              "spriteAssetId": "88af7e9a-7c8e-4692-91cd-dffb6c746b60",
               "slot": "center",
               "present": true,
               "locks": {
@@ -4201,9 +4201,9 @@
               }
             },
             {
-              "actorId": "99a72683-d661-4fec-85d0-d32c60e15d38",
+              "actorId": "5b45532b-79a7-4655-8d04-9e19b96522da",
               "name": "Sage",
-              "spriteAssetId": "01f571bf-d0ca-4db1-964f-710b878159cf",
+              "spriteAssetId": "424870a3-1529-4626-92d3-f86ccbe1a801",
               "slot": null,
               "present": true,
               "locks": {
@@ -4216,34 +4216,34 @@
         },
         "catalog": [
           {
-            "assetId": "02c6cc55-5835-4330-831b-061d7b005727",
+            "assetId": "cbf4482b-90a5-4b4d-aa90-3c9330fa5d83",
             "label": "Background",
             "kind": "background",
             "actorId": null
           },
           {
-            "assetId": "78ba3abf-77ab-4d21-adc6-8ad3efbcd4c4",
+            "assetId": "fe313400-acf9-49ae-9c94-d95a6a170607",
             "label": "Mira sprite",
             "kind": "sprite",
-            "actorId": "2245c626-0d04-41ae-8224-9bac72cadbf1"
+            "actorId": "9b28e4ce-133b-4d87-968c-9903fcb9f77c"
           },
           {
-            "assetId": "9c1f6173-3920-4dfe-981e-f562bab12f07",
+            "assetId": "88af7e9a-7c8e-4692-91cd-dffb6c746b60",
             "label": "Mira sprite",
             "kind": "sprite",
-            "actorId": "9f6c347b-5bc5-4971-9838-a6cec90e80c5"
+            "actorId": "4bea6415-8083-4e4e-8ab4-5a267262e6f5"
           },
           {
-            "assetId": "9c1f6173-3920-4dfe-981e-f562bab12f07",
+            "assetId": "88af7e9a-7c8e-4692-91cd-dffb6c746b60",
             "label": "rowan",
             "kind": "sprite",
-            "actorId": "51884376-8db2-4148-8a9d-f8e8944e01d1"
+            "actorId": "e72c5778-a7af-460f-9671-2cd75b72a6fe"
           },
           {
-            "assetId": "01f571bf-d0ca-4db1-964f-710b878159cf",
+            "assetId": "424870a3-1529-4626-92d3-f86ccbe1a801",
             "label": "sage",
             "kind": "sprite",
-            "actorId": "99a72683-d661-4fec-85d0-d32c60e15d38"
+            "actorId": "5b45532b-79a7-4655-8d04-9e19b96522da"
           }
         ]
       }
@@ -4254,33 +4254,33 @@
       "copyPath": "default-user/chats/Project A/Lantern identical copy.jsonl",
       "identical": {
         "bytes": 24872,
-        "sha256": "3885a6771c3e9875182e7b38b0330056c28e6791a81649b91114eeca7f623f9a"
+        "sha256": "a460298bfe4cf18905919d759e8ca6af033c7647e7d46cb552c8f18743f4d317"
       },
       "before": {
         "files": {
           "default-user/characters/Mira.png": {
             "bytes": 78549,
-            "sha256": "d0ad0d9868208f5c6b86e15fc25b0d6b00187491eee7f92a50455b5a1ce48dac"
+            "sha256": "f77594480fb790fade73ba3fe5fa9f08816074a63829672aa372af702df3e107"
           },
           "default-user/characters/Mira1.png": {
             "bytes": 78549,
-            "sha256": "8687bf045712ad0a06a850fde1c4c98e461701267636633955cafece5a5703e3"
+            "sha256": "527fc8b634fc5f3ea6a7a7a95cea688c2aa787f945b964ba17ab4f3e4bbad48d"
           },
           "default-user/characters/Project A.png": {
             "bytes": 78637,
-            "sha256": "477e9891f1663b68ea09a8b04cf3652458f0d15c2df6cfd5ae435ce651b6bcc2"
+            "sha256": "fe1b893388f0bdb221aefa75ed9cd731070fe2a00641c9fcfac52ee5b82ed3d0"
           },
           "default-user/characters/Project B.png": {
             "bytes": 78573,
-            "sha256": "d00f59e84cb23c9e2775ab12d4c35311c9eb7d6601b09bc61cae75a3423a11c2"
+            "sha256": "271c2da8b9d82af13d6c09a247aae5de84062923250a367a41550d10da53a34e"
           },
           "default-user/characters/Rowan.png": {
             "bytes": 78557,
-            "sha256": "2c3056ac66e2fc32454115c69565639aec53d0249e5eb21f2f42fc8d4822501a"
+            "sha256": "29401a2a7a23f2f56a75afd9950b6d72785744ea6d65fb7b5196b5228f0bf7a9"
           },
           "default-user/characters/Sage.png": {
             "bytes": 78549,
-            "sha256": "952c604a73a28ba4024d7a9f21fa8f6dee46376c748ec970b3a9e9544b5f909a"
+            "sha256": "e3c2ae95fcb7686aee705e30909347be16d97afff73ad295b5178ae203747310"
           },
           "default-user/characters/Seraphina/admiration.png": {
             "bytes": 129463,
@@ -4400,23 +4400,23 @@
           },
           "default-user/chats/Project A/Lantern identical copy.jsonl": {
             "bytes": 24872,
-            "sha256": "3885a6771c3e9875182e7b38b0330056c28e6791a81649b91114eeca7f623f9a"
+            "sha256": "a460298bfe4cf18905919d759e8ca6af033c7647e7d46cb552c8f18743f4d317"
           },
-          "default-user/chats/Project A/Project A - 2026-11-03@23h30m39s595ms.jsonl": {
+          "default-user/chats/Project A/Project A - 2026-11-04@16h52m04s094ms.jsonl": {
             "bytes": 447,
-            "sha256": "17006273baf0be8d602fda7840e77e0213f4abcccdb525f731a79eecd74bc24b"
+            "sha256": "834915d1303f31137b8248367f3df4c3a663bea894d8f2a77e1e1b41a8b7d47f"
           },
           "default-user/chats/Project A/The Last Lantern.jsonl": {
             "bytes": 24872,
-            "sha256": "3885a6771c3e9875182e7b38b0330056c28e6791a81649b91114eeca7f623f9a"
+            "sha256": "a460298bfe4cf18905919d759e8ca6af033c7647e7d46cb552c8f18743f4d317"
           },
-          "default-user/group chats/1793773849045.jsonl": {
+          "default-user/group chats/1793836333970.jsonl": {
             "bytes": 1145,
             "sha256": "1ecacfa562bfab4ca1be0c9a115debcde130788fe1fb9efa9ec5b431a69837a8"
           },
-          "default-user/groups/1793773849045.json": {
+          "default-user/groups/1793836333970.json": {
             "bytes": 466,
-            "sha256": "c033bf7b39cff11a0986c12280e2a8d86e82755129912da67e22e4cee18a5693"
+            "sha256": "c737e184eadb8c88ee3e8900e175e0fbedb2089b4dfb140ef5f7b46c8228edaa"
           },
           "default-user/worlds/Eldoria.json": {
             "bytes": 8579,
@@ -4584,11 +4584,11 @@
           },
           "_storage/04d8318f3ecb84f1d2d8c2be4a258db13862a16d40a9f4bc9d388aba8c060162": {
             "bytes": 185,
-            "sha256": "168a2d2e787ac7e1ac613eb60db72015cf9b19b59959940eae9681dd14dd5bc7"
+            "sha256": "961ba896eec8322cd0c5605eee2e02b82d762c93af70b849edbec3693134ad6b"
           },
           "_storage/3a5bb37ab86ac047d8ef481ee2e7bd3683d694ff8502a7cfe6951af849015dcc": {
             "bytes": 151,
-            "sha256": "1ed6d3e0a2178281e062f047424a7d835c8216cd126d1980e82487702f30a486"
+            "sha256": "1b8410a4d2a27be9f084b0e408f33ba25a6e0a7ed8e397c8a376e3ec3cc938ce"
           },
           "default-user/settings.json": {
             "bytes": 46040,
@@ -4610,7 +4610,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Mira - 2026-11-03@23h30m48s987ms",
+              "chat": "Mira - 2026-11-04@16h52m13s912ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -4654,7 +4654,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Mira - 2026-11-03@23h30m49s002ms",
+              "chat": "Mira - 2026-11-04@16h52m13s926ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -4729,7 +4729,7 @@
                   }
                 }
               },
-              "create_date": "2026-11-04T06:30:39.616Z"
+              "create_date": "2026-11-04T23:52:04.120Z"
             },
             "artSha256": "286646b5bd10cbf16b93a6acfe4e6f33ccfab630fd933ff1dd3f81b66811e203"
           },
@@ -4743,7 +4743,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Project B - 2026-11-03@23h30m39s622ms",
+              "chat": "Project B - 2026-11-04@16h52m04s126ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -4787,7 +4787,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Rowan - 2026-11-03@23h30m49s015ms",
+              "chat": "Rowan - 2026-11-04@16h52m13s938ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -4831,7 +4831,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Sage - 2026-11-03@23h30m49s028ms",
+              "chat": "Sage - 2026-11-04@16h52m13s952ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -6266,27 +6266,27 @@
         "files": {
           "default-user/characters/Mira.png": {
             "bytes": 78549,
-            "sha256": "d0ad0d9868208f5c6b86e15fc25b0d6b00187491eee7f92a50455b5a1ce48dac"
+            "sha256": "f77594480fb790fade73ba3fe5fa9f08816074a63829672aa372af702df3e107"
           },
           "default-user/characters/Mira1.png": {
             "bytes": 78549,
-            "sha256": "8687bf045712ad0a06a850fde1c4c98e461701267636633955cafece5a5703e3"
+            "sha256": "527fc8b634fc5f3ea6a7a7a95cea688c2aa787f945b964ba17ab4f3e4bbad48d"
           },
           "default-user/characters/Project A.png": {
             "bytes": 78653,
-            "sha256": "8b64dd4f05e5e63d1026c8dac6b7dfb7f905001832608676b41e7edf86716e50"
+            "sha256": "58b8df46fd37e1b318cf55e047fa86c1b683643fa4129ed98f706d4b09af7082"
           },
           "default-user/characters/Project B.png": {
             "bytes": 78573,
-            "sha256": "d00f59e84cb23c9e2775ab12d4c35311c9eb7d6601b09bc61cae75a3423a11c2"
+            "sha256": "271c2da8b9d82af13d6c09a247aae5de84062923250a367a41550d10da53a34e"
           },
           "default-user/characters/Rowan.png": {
             "bytes": 78557,
-            "sha256": "2c3056ac66e2fc32454115c69565639aec53d0249e5eb21f2f42fc8d4822501a"
+            "sha256": "29401a2a7a23f2f56a75afd9950b6d72785744ea6d65fb7b5196b5228f0bf7a9"
           },
           "default-user/characters/Sage.png": {
             "bytes": 78549,
-            "sha256": "952c604a73a28ba4024d7a9f21fa8f6dee46376c748ec970b3a9e9544b5f909a"
+            "sha256": "e3c2ae95fcb7686aee705e30909347be16d97afff73ad295b5178ae203747310"
           },
           "default-user/characters/Seraphina/admiration.png": {
             "bytes": 129463,
@@ -6406,23 +6406,23 @@
           },
           "default-user/chats/Project A/Lantern identical copy.jsonl": {
             "bytes": 24872,
-            "sha256": "3885a6771c3e9875182e7b38b0330056c28e6791a81649b91114eeca7f623f9a"
+            "sha256": "a460298bfe4cf18905919d759e8ca6af033c7647e7d46cb552c8f18743f4d317"
           },
-          "default-user/chats/Project A/Project A - 2026-11-03@23h30m39s595ms.jsonl": {
+          "default-user/chats/Project A/Project A - 2026-11-04@16h52m04s094ms.jsonl": {
             "bytes": 447,
-            "sha256": "17006273baf0be8d602fda7840e77e0213f4abcccdb525f731a79eecd74bc24b"
+            "sha256": "834915d1303f31137b8248367f3df4c3a663bea894d8f2a77e1e1b41a8b7d47f"
           },
           "default-user/chats/Project A/The Last Lantern.jsonl": {
             "bytes": 24872,
-            "sha256": "3885a6771c3e9875182e7b38b0330056c28e6791a81649b91114eeca7f623f9a"
+            "sha256": "a460298bfe4cf18905919d759e8ca6af033c7647e7d46cb552c8f18743f4d317"
           },
-          "default-user/group chats/1793773849045.jsonl": {
+          "default-user/group chats/1793836333970.jsonl": {
             "bytes": 1145,
             "sha256": "1ecacfa562bfab4ca1be0c9a115debcde130788fe1fb9efa9ec5b431a69837a8"
           },
-          "default-user/groups/1793773849045.json": {
+          "default-user/groups/1793836333970.json": {
             "bytes": 466,
-            "sha256": "c033bf7b39cff11a0986c12280e2a8d86e82755129912da67e22e4cee18a5693"
+            "sha256": "c737e184eadb8c88ee3e8900e175e0fbedb2089b4dfb140ef5f7b46c8228edaa"
           },
           "default-user/worlds/Eldoria.json": {
             "bytes": 8579,
@@ -6590,11 +6590,11 @@
           },
           "_storage/04d8318f3ecb84f1d2d8c2be4a258db13862a16d40a9f4bc9d388aba8c060162": {
             "bytes": 185,
-            "sha256": "168a2d2e787ac7e1ac613eb60db72015cf9b19b59959940eae9681dd14dd5bc7"
+            "sha256": "961ba896eec8322cd0c5605eee2e02b82d762c93af70b849edbec3693134ad6b"
           },
           "_storage/3a5bb37ab86ac047d8ef481ee2e7bd3683d694ff8502a7cfe6951af849015dcc": {
             "bytes": 151,
-            "sha256": "1ed6d3e0a2178281e062f047424a7d835c8216cd126d1980e82487702f30a486"
+            "sha256": "1b8410a4d2a27be9f084b0e408f33ba25a6e0a7ed8e397c8a376e3ec3cc938ce"
           },
           "default-user/settings.json": {
             "bytes": 46040,
@@ -6616,7 +6616,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Mira - 2026-11-03@23h30m48s987ms",
+              "chat": "Mira - 2026-11-04@16h52m13s912ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -6660,7 +6660,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Mira - 2026-11-03@23h30m49s002ms",
+              "chat": "Mira - 2026-11-04@16h52m13s926ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -6735,7 +6735,7 @@
                   }
                 }
               },
-              "create_date": "2026-11-04T06:30:39.616Z"
+              "create_date": "2026-11-04T23:52:04.120Z"
             },
             "artSha256": "286646b5bd10cbf16b93a6acfe4e6f33ccfab630fd933ff1dd3f81b66811e203"
           },
@@ -6749,7 +6749,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Project B - 2026-11-03@23h30m39s622ms",
+              "chat": "Project B - 2026-11-04@16h52m04s126ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -6793,7 +6793,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Rowan - 2026-11-03@23h30m49s015ms",
+              "chat": "Rowan - 2026-11-04@16h52m13s938ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -6837,7 +6837,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Sage - 2026-11-03@23h30m49s028ms",
+              "chat": "Sage - 2026-11-04@16h52m13s952ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -8275,27 +8275,27 @@
         "files": {
           "default-user/characters/Mira.png": {
             "bytes": 78549,
-            "sha256": "d0ad0d9868208f5c6b86e15fc25b0d6b00187491eee7f92a50455b5a1ce48dac"
+            "sha256": "f77594480fb790fade73ba3fe5fa9f08816074a63829672aa372af702df3e107"
           },
           "default-user/characters/Mira1.png": {
             "bytes": 78549,
-            "sha256": "8687bf045712ad0a06a850fde1c4c98e461701267636633955cafece5a5703e3"
+            "sha256": "527fc8b634fc5f3ea6a7a7a95cea688c2aa787f945b964ba17ab4f3e4bbad48d"
           },
           "default-user/characters/Project A.png": {
             "bytes": 78653,
-            "sha256": "8b64dd4f05e5e63d1026c8dac6b7dfb7f905001832608676b41e7edf86716e50"
+            "sha256": "58b8df46fd37e1b318cf55e047fa86c1b683643fa4129ed98f706d4b09af7082"
           },
           "default-user/characters/Project B.png": {
             "bytes": 78573,
-            "sha256": "d00f59e84cb23c9e2775ab12d4c35311c9eb7d6601b09bc61cae75a3423a11c2"
+            "sha256": "271c2da8b9d82af13d6c09a247aae5de84062923250a367a41550d10da53a34e"
           },
           "default-user/characters/Rowan.png": {
             "bytes": 78557,
-            "sha256": "2c3056ac66e2fc32454115c69565639aec53d0249e5eb21f2f42fc8d4822501a"
+            "sha256": "29401a2a7a23f2f56a75afd9950b6d72785744ea6d65fb7b5196b5228f0bf7a9"
           },
           "default-user/characters/Sage.png": {
             "bytes": 78549,
-            "sha256": "952c604a73a28ba4024d7a9f21fa8f6dee46376c748ec970b3a9e9544b5f909a"
+            "sha256": "e3c2ae95fcb7686aee705e30909347be16d97afff73ad295b5178ae203747310"
           },
           "default-user/characters/Seraphina/admiration.png": {
             "bytes": 129463,
@@ -8415,23 +8415,23 @@
           },
           "default-user/chats/Project A/Lantern identical copy.jsonl": {
             "bytes": 24872,
-            "sha256": "3885a6771c3e9875182e7b38b0330056c28e6791a81649b91114eeca7f623f9a"
+            "sha256": "a460298bfe4cf18905919d759e8ca6af033c7647e7d46cb552c8f18743f4d317"
           },
-          "default-user/chats/Project A/Project A - 2026-11-03@23h30m39s595ms.jsonl": {
+          "default-user/chats/Project A/Project A - 2026-11-04@16h52m04s094ms.jsonl": {
             "bytes": 447,
-            "sha256": "17006273baf0be8d602fda7840e77e0213f4abcccdb525f731a79eecd74bc24b"
+            "sha256": "834915d1303f31137b8248367f3df4c3a663bea894d8f2a77e1e1b41a8b7d47f"
           },
           "default-user/chats/Project A/The Last Lantern.jsonl": {
             "bytes": 24872,
-            "sha256": "3885a6771c3e9875182e7b38b0330056c28e6791a81649b91114eeca7f623f9a"
+            "sha256": "a460298bfe4cf18905919d759e8ca6af033c7647e7d46cb552c8f18743f4d317"
           },
-          "default-user/group chats/1793773849045.jsonl": {
+          "default-user/group chats/1793836333970.jsonl": {
             "bytes": 1145,
             "sha256": "1ecacfa562bfab4ca1be0c9a115debcde130788fe1fb9efa9ec5b431a69837a8"
           },
-          "default-user/groups/1793773849045.json": {
+          "default-user/groups/1793836333970.json": {
             "bytes": 466,
-            "sha256": "c033bf7b39cff11a0986c12280e2a8d86e82755129912da67e22e4cee18a5693"
+            "sha256": "c737e184eadb8c88ee3e8900e175e0fbedb2089b4dfb140ef5f7b46c8228edaa"
           },
           "default-user/worlds/Eldoria.json": {
             "bytes": 8579,
@@ -8599,11 +8599,11 @@
           },
           "_storage/04d8318f3ecb84f1d2d8c2be4a258db13862a16d40a9f4bc9d388aba8c060162": {
             "bytes": 185,
-            "sha256": "168a2d2e787ac7e1ac613eb60db72015cf9b19b59959940eae9681dd14dd5bc7"
+            "sha256": "961ba896eec8322cd0c5605eee2e02b82d762c93af70b849edbec3693134ad6b"
           },
           "_storage/3a5bb37ab86ac047d8ef481ee2e7bd3683d694ff8502a7cfe6951af849015dcc": {
             "bytes": 151,
-            "sha256": "1ed6d3e0a2178281e062f047424a7d835c8216cd126d1980e82487702f30a486"
+            "sha256": "1b8410a4d2a27be9f084b0e408f33ba25a6e0a7ed8e397c8a376e3ec3cc938ce"
           },
           "default-user/settings.json": {
             "bytes": 46040,
@@ -8625,7 +8625,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Mira - 2026-11-03@23h30m48s987ms",
+              "chat": "Mira - 2026-11-04@16h52m13s912ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -8669,7 +8669,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Mira - 2026-11-03@23h30m49s002ms",
+              "chat": "Mira - 2026-11-04@16h52m13s926ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -8744,7 +8744,7 @@
                   }
                 }
               },
-              "create_date": "2026-11-04T06:30:39.616Z"
+              "create_date": "2026-11-04T23:52:04.120Z"
             },
             "artSha256": "286646b5bd10cbf16b93a6acfe4e6f33ccfab630fd933ff1dd3f81b66811e203"
           },
@@ -8758,7 +8758,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Project B - 2026-11-03@23h30m39s622ms",
+              "chat": "Project B - 2026-11-04@16h52m04s126ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -8802,7 +8802,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Rowan - 2026-11-03@23h30m49s015ms",
+              "chat": "Rowan - 2026-11-04@16h52m13s938ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -8846,7 +8846,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Sage - 2026-11-03@23h30m49s028ms",
+              "chat": "Sage - 2026-11-04@16h52m13s952ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -10281,27 +10281,27 @@
         "files": {
           "default-user/characters/Mira.png": {
             "bytes": 78549,
-            "sha256": "d0ad0d9868208f5c6b86e15fc25b0d6b00187491eee7f92a50455b5a1ce48dac"
+            "sha256": "f77594480fb790fade73ba3fe5fa9f08816074a63829672aa372af702df3e107"
           },
           "default-user/characters/Mira1.png": {
             "bytes": 78549,
-            "sha256": "8687bf045712ad0a06a850fde1c4c98e461701267636633955cafece5a5703e3"
+            "sha256": "527fc8b634fc5f3ea6a7a7a95cea688c2aa787f945b964ba17ab4f3e4bbad48d"
           },
           "default-user/characters/Project A.png": {
             "bytes": 78685,
-            "sha256": "4a93c4c0f63157a62ded163bcc67b0d061e3890cfcab4bbc46aa430cbe9f2785"
+            "sha256": "49a70bef824cae16a39bde4bdf0c6ecdceb3917a5e3303be53f0d9236a363008"
           },
           "default-user/characters/Project B.png": {
             "bytes": 78573,
-            "sha256": "d00f59e84cb23c9e2775ab12d4c35311c9eb7d6601b09bc61cae75a3423a11c2"
+            "sha256": "271c2da8b9d82af13d6c09a247aae5de84062923250a367a41550d10da53a34e"
           },
           "default-user/characters/Rowan.png": {
             "bytes": 78557,
-            "sha256": "2c3056ac66e2fc32454115c69565639aec53d0249e5eb21f2f42fc8d4822501a"
+            "sha256": "29401a2a7a23f2f56a75afd9950b6d72785744ea6d65fb7b5196b5228f0bf7a9"
           },
           "default-user/characters/Sage.png": {
             "bytes": 78549,
-            "sha256": "952c604a73a28ba4024d7a9f21fa8f6dee46376c748ec970b3a9e9544b5f909a"
+            "sha256": "e3c2ae95fcb7686aee705e30909347be16d97afff73ad295b5178ae203747310"
           },
           "default-user/characters/Seraphina/admiration.png": {
             "bytes": 129463,
@@ -10421,27 +10421,27 @@
           },
           "default-user/chats/Project A/Lantern identical copy - Branch #1.jsonl": {
             "bytes": 1343,
-            "sha256": "a319142a59d440a848aa1f0aaab2f35efebbba08204e1d8e4db5b22e4cdf18b1"
+            "sha256": "e12885722433a293b8c428bff7b1ed1ce178c8dd95ff515a8c96a8646a007c7d"
           },
           "default-user/chats/Project A/Lantern identical copy.jsonl": {
             "bytes": 24872,
-            "sha256": "3885a6771c3e9875182e7b38b0330056c28e6791a81649b91114eeca7f623f9a"
+            "sha256": "a460298bfe4cf18905919d759e8ca6af033c7647e7d46cb552c8f18743f4d317"
           },
-          "default-user/chats/Project A/Project A - 2026-11-03@23h30m39s595ms.jsonl": {
+          "default-user/chats/Project A/Project A - 2026-11-04@16h52m04s094ms.jsonl": {
             "bytes": 447,
-            "sha256": "17006273baf0be8d602fda7840e77e0213f4abcccdb525f731a79eecd74bc24b"
+            "sha256": "834915d1303f31137b8248367f3df4c3a663bea894d8f2a77e1e1b41a8b7d47f"
           },
           "default-user/chats/Project A/The Last Lantern.jsonl": {
             "bytes": 24872,
-            "sha256": "3885a6771c3e9875182e7b38b0330056c28e6791a81649b91114eeca7f623f9a"
+            "sha256": "a460298bfe4cf18905919d759e8ca6af033c7647e7d46cb552c8f18743f4d317"
           },
-          "default-user/group chats/1793773849045.jsonl": {
+          "default-user/group chats/1793836333970.jsonl": {
             "bytes": 1145,
             "sha256": "1ecacfa562bfab4ca1be0c9a115debcde130788fe1fb9efa9ec5b431a69837a8"
           },
-          "default-user/groups/1793773849045.json": {
+          "default-user/groups/1793836333970.json": {
             "bytes": 466,
-            "sha256": "c033bf7b39cff11a0986c12280e2a8d86e82755129912da67e22e4cee18a5693"
+            "sha256": "c737e184eadb8c88ee3e8900e175e0fbedb2089b4dfb140ef5f7b46c8228edaa"
           },
           "default-user/worlds/Eldoria.json": {
             "bytes": 8579,
@@ -10609,11 +10609,11 @@
           },
           "_storage/04d8318f3ecb84f1d2d8c2be4a258db13862a16d40a9f4bc9d388aba8c060162": {
             "bytes": 185,
-            "sha256": "168a2d2e787ac7e1ac613eb60db72015cf9b19b59959940eae9681dd14dd5bc7"
+            "sha256": "961ba896eec8322cd0c5605eee2e02b82d762c93af70b849edbec3693134ad6b"
           },
           "_storage/3a5bb37ab86ac047d8ef481ee2e7bd3683d694ff8502a7cfe6951af849015dcc": {
             "bytes": 151,
-            "sha256": "1ed6d3e0a2178281e062f047424a7d835c8216cd126d1980e82487702f30a486"
+            "sha256": "1b8410a4d2a27be9f084b0e408f33ba25a6e0a7ed8e397c8a376e3ec3cc938ce"
           },
           "default-user/settings.json": {
             "bytes": 46040,
@@ -10635,7 +10635,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Mira - 2026-11-03@23h30m48s987ms",
+              "chat": "Mira - 2026-11-04@16h52m13s912ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -10679,7 +10679,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Mira - 2026-11-03@23h30m49s002ms",
+              "chat": "Mira - 2026-11-04@16h52m13s926ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -10754,7 +10754,7 @@
                   }
                 }
               },
-              "create_date": "2026-11-04T06:30:39.616Z"
+              "create_date": "2026-11-04T23:52:04.120Z"
             },
             "artSha256": "286646b5bd10cbf16b93a6acfe4e6f33ccfab630fd933ff1dd3f81b66811e203"
           },
@@ -10768,7 +10768,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Project B - 2026-11-03@23h30m39s622ms",
+              "chat": "Project B - 2026-11-04@16h52m04s126ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -10812,7 +10812,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Rowan - 2026-11-03@23h30m49s015ms",
+              "chat": "Rowan - 2026-11-04@16h52m13s938ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -10856,7 +10856,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Sage - 2026-11-03@23h30m49s028ms",
+              "chat": "Sage - 2026-11-04@16h52m13s952ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -12298,13 +12298,13 @@
         "expectedRevision": 3,
         "name": "Lantern candidate layout",
         "scene": {
-          "backgroundAssetId": "a916017b-6a12-495c-ad32-d204e64ddd78",
+          "backgroundAssetId": "b3b264c3-1c37-4320-a2cd-5c1148971d4b",
           "backgroundLocked": true,
           "actors": [
             {
-              "actorId": "c6024afe-311f-479a-add3-6fcc0f1d1be1",
+              "actorId": "16e306cf-358e-4174-baca-13e584922ff3",
               "name": "Mira",
-              "spriteAssetId": "e6f98c23-dd1b-4990-b0ad-1e15573f2ca7",
+              "spriteAssetId": "40a39bcf-ca03-466d-a923-8b2016436fb4",
               "slot": "left",
               "present": true,
               "locks": {
@@ -12314,9 +12314,9 @@
               }
             },
             {
-              "actorId": "1f895359-81c2-429d-aa65-476be2a50ce0",
+              "actorId": "7a3706e9-0ecc-47a5-b0ab-c511159b5951",
               "name": "Rowan",
-              "spriteAssetId": "993399a7-cce4-43a7-b5e2-5f571e633305",
+              "spriteAssetId": "ecdbcada-b2c8-4967-8df4-f9ea424f1d1d",
               "slot": "right",
               "present": true,
               "locks": {
@@ -12329,25 +12329,25 @@
         },
         "catalog": [
           {
-            "assetId": "a7b4140f-bc41-445f-8608-810062d1d687",
+            "assetId": "e95cc8a4-0fc1-43da-a158-fd6c4ca84115",
             "label": "Background",
             "kind": "background",
             "actorId": null
           },
           {
-            "assetId": "e6f98c23-dd1b-4990-b0ad-1e15573f2ca7",
+            "assetId": "40a39bcf-ca03-466d-a923-8b2016436fb4",
             "label": "Mira sprite",
             "kind": "sprite",
-            "actorId": "c6024afe-311f-479a-add3-6fcc0f1d1be1"
+            "actorId": "16e306cf-358e-4174-baca-13e584922ff3"
           },
           {
-            "assetId": "993399a7-cce4-43a7-b5e2-5f571e633305",
+            "assetId": "ecdbcada-b2c8-4967-8df4-f9ea424f1d1d",
             "label": "Rowan sprite",
             "kind": "sprite",
-            "actorId": "1f895359-81c2-429d-aa65-476be2a50ce0"
+            "actorId": "7a3706e9-0ecc-47a5-b0ab-c511159b5951"
           },
           {
-            "assetId": "a916017b-6a12-495c-ad32-d204e64ddd78",
+            "assetId": "b3b264c3-1c37-4320-a2cd-5c1148971d4b",
             "label": "Lantern alternative",
             "kind": "background",
             "actorId": null
@@ -12363,27 +12363,27 @@
         "files": {
           "default-user/characters/Mira.png": {
             "bytes": 78549,
-            "sha256": "d0ad0d9868208f5c6b86e15fc25b0d6b00187491eee7f92a50455b5a1ce48dac"
+            "sha256": "f77594480fb790fade73ba3fe5fa9f08816074a63829672aa372af702df3e107"
           },
           "default-user/characters/Mira1.png": {
             "bytes": 78549,
-            "sha256": "8687bf045712ad0a06a850fde1c4c98e461701267636633955cafece5a5703e3"
+            "sha256": "527fc8b634fc5f3ea6a7a7a95cea688c2aa787f945b964ba17ab4f3e4bbad48d"
           },
           "default-user/characters/Project A.png": {
             "bytes": 78685,
-            "sha256": "4a93c4c0f63157a62ded163bcc67b0d061e3890cfcab4bbc46aa430cbe9f2785"
+            "sha256": "49a70bef824cae16a39bde4bdf0c6ecdceb3917a5e3303be53f0d9236a363008"
           },
           "default-user/characters/Project B.png": {
             "bytes": 78573,
-            "sha256": "d00f59e84cb23c9e2775ab12d4c35311c9eb7d6601b09bc61cae75a3423a11c2"
+            "sha256": "271c2da8b9d82af13d6c09a247aae5de84062923250a367a41550d10da53a34e"
           },
           "default-user/characters/Rowan.png": {
             "bytes": 78557,
-            "sha256": "2c3056ac66e2fc32454115c69565639aec53d0249e5eb21f2f42fc8d4822501a"
+            "sha256": "29401a2a7a23f2f56a75afd9950b6d72785744ea6d65fb7b5196b5228f0bf7a9"
           },
           "default-user/characters/Sage.png": {
             "bytes": 78549,
-            "sha256": "952c604a73a28ba4024d7a9f21fa8f6dee46376c748ec970b3a9e9544b5f909a"
+            "sha256": "e3c2ae95fcb7686aee705e30909347be16d97afff73ad295b5178ae203747310"
           },
           "default-user/characters/Seraphina/admiration.png": {
             "bytes": 129463,
@@ -12503,27 +12503,27 @@
           },
           "default-user/chats/Project A/Lantern identical copy - Branch #1.jsonl": {
             "bytes": 1343,
-            "sha256": "a319142a59d440a848aa1f0aaab2f35efebbba08204e1d8e4db5b22e4cdf18b1"
+            "sha256": "e12885722433a293b8c428bff7b1ed1ce178c8dd95ff515a8c96a8646a007c7d"
           },
           "default-user/chats/Project A/Lantern identical copy.jsonl": {
             "bytes": 24872,
-            "sha256": "3885a6771c3e9875182e7b38b0330056c28e6791a81649b91114eeca7f623f9a"
+            "sha256": "a460298bfe4cf18905919d759e8ca6af033c7647e7d46cb552c8f18743f4d317"
           },
-          "default-user/chats/Project A/Project A - 2026-11-03@23h30m39s595ms.jsonl": {
+          "default-user/chats/Project A/Project A - 2026-11-04@16h52m04s094ms.jsonl": {
             "bytes": 447,
-            "sha256": "17006273baf0be8d602fda7840e77e0213f4abcccdb525f731a79eecd74bc24b"
+            "sha256": "834915d1303f31137b8248367f3df4c3a663bea894d8f2a77e1e1b41a8b7d47f"
           },
           "default-user/chats/Project A/The Last Lantern.jsonl": {
             "bytes": 24872,
-            "sha256": "3885a6771c3e9875182e7b38b0330056c28e6791a81649b91114eeca7f623f9a"
+            "sha256": "a460298bfe4cf18905919d759e8ca6af033c7647e7d46cb552c8f18743f4d317"
           },
-          "default-user/group chats/1793773849045.jsonl": {
+          "default-user/group chats/1793836333970.jsonl": {
             "bytes": 1145,
             "sha256": "1ecacfa562bfab4ca1be0c9a115debcde130788fe1fb9efa9ec5b431a69837a8"
           },
-          "default-user/groups/1793773849045.json": {
+          "default-user/groups/1793836333970.json": {
             "bytes": 466,
-            "sha256": "c033bf7b39cff11a0986c12280e2a8d86e82755129912da67e22e4cee18a5693"
+            "sha256": "c737e184eadb8c88ee3e8900e175e0fbedb2089b4dfb140ef5f7b46c8228edaa"
           },
           "default-user/worlds/Eldoria.json": {
             "bytes": 8579,
@@ -12691,11 +12691,11 @@
           },
           "_storage/04d8318f3ecb84f1d2d8c2be4a258db13862a16d40a9f4bc9d388aba8c060162": {
             "bytes": 185,
-            "sha256": "168a2d2e787ac7e1ac613eb60db72015cf9b19b59959940eae9681dd14dd5bc7"
+            "sha256": "961ba896eec8322cd0c5605eee2e02b82d762c93af70b849edbec3693134ad6b"
           },
           "_storage/3a5bb37ab86ac047d8ef481ee2e7bd3683d694ff8502a7cfe6951af849015dcc": {
             "bytes": 151,
-            "sha256": "1ed6d3e0a2178281e062f047424a7d835c8216cd126d1980e82487702f30a486"
+            "sha256": "1b8410a4d2a27be9f084b0e408f33ba25a6e0a7ed8e397c8a376e3ec3cc938ce"
           },
           "default-user/settings.json": {
             "bytes": 46040,
@@ -12717,7 +12717,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Mira - 2026-11-03@23h30m48s987ms",
+              "chat": "Mira - 2026-11-04@16h52m13s912ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -12761,7 +12761,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Mira - 2026-11-03@23h30m49s002ms",
+              "chat": "Mira - 2026-11-04@16h52m13s926ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -12836,7 +12836,7 @@
                   }
                 }
               },
-              "create_date": "2026-11-04T06:30:39.616Z"
+              "create_date": "2026-11-04T23:52:04.120Z"
             },
             "artSha256": "286646b5bd10cbf16b93a6acfe4e6f33ccfab630fd933ff1dd3f81b66811e203"
           },
@@ -12850,7 +12850,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Project B - 2026-11-03@23h30m39s622ms",
+              "chat": "Project B - 2026-11-04@16h52m04s126ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -12894,7 +12894,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Rowan - 2026-11-03@23h30m49s015ms",
+              "chat": "Rowan - 2026-11-04@16h52m13s938ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -12938,7 +12938,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Sage - 2026-11-03@23h30m49s028ms",
+              "chat": "Sage - 2026-11-04@16h52m13s952ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -14373,27 +14373,27 @@
         "files": {
           "default-user/characters/Mira.png": {
             "bytes": 78549,
-            "sha256": "d0ad0d9868208f5c6b86e15fc25b0d6b00187491eee7f92a50455b5a1ce48dac"
+            "sha256": "f77594480fb790fade73ba3fe5fa9f08816074a63829672aa372af702df3e107"
           },
           "default-user/characters/Mira1.png": {
             "bytes": 78549,
-            "sha256": "8687bf045712ad0a06a850fde1c4c98e461701267636633955cafece5a5703e3"
+            "sha256": "527fc8b634fc5f3ea6a7a7a95cea688c2aa787f945b964ba17ab4f3e4bbad48d"
           },
           "default-user/characters/Project A.png": {
             "bytes": 78685,
-            "sha256": "e718ba49d66791277d51ede6165051cf0933ae8709de9d08620d3ff09d1f7189"
+            "sha256": "afb7e6c3eb00815f70a5f393a0df51fa6911e8c2c20c6ae200a7581ef835a4f3"
           },
           "default-user/characters/Project B.png": {
             "bytes": 78573,
-            "sha256": "d00f59e84cb23c9e2775ab12d4c35311c9eb7d6601b09bc61cae75a3423a11c2"
+            "sha256": "271c2da8b9d82af13d6c09a247aae5de84062923250a367a41550d10da53a34e"
           },
           "default-user/characters/Rowan.png": {
             "bytes": 78557,
-            "sha256": "2c3056ac66e2fc32454115c69565639aec53d0249e5eb21f2f42fc8d4822501a"
+            "sha256": "29401a2a7a23f2f56a75afd9950b6d72785744ea6d65fb7b5196b5228f0bf7a9"
           },
           "default-user/characters/Sage.png": {
             "bytes": 78549,
-            "sha256": "952c604a73a28ba4024d7a9f21fa8f6dee46376c748ec970b3a9e9544b5f909a"
+            "sha256": "e3c2ae95fcb7686aee705e30909347be16d97afff73ad295b5178ae203747310"
           },
           "default-user/characters/Seraphina/admiration.png": {
             "bytes": 129463,
@@ -14513,31 +14513,31 @@
           },
           "default-user/chats/Project A/Lantern identical copy - Branch #1.jsonl": {
             "bytes": 1343,
-            "sha256": "a319142a59d440a848aa1f0aaab2f35efebbba08204e1d8e4db5b22e4cdf18b1"
+            "sha256": "e12885722433a293b8c428bff7b1ed1ce178c8dd95ff515a8c96a8646a007c7d"
           },
           "default-user/chats/Project A/Lantern identical copy - Branch #2.jsonl": {
             "bytes": 1355,
-            "sha256": "e774b7b829f3ae72da96f87201548419d218c30f3a9b00008a789753a6f9a331"
+            "sha256": "6ed98fb11d35a506959ce77f59ea3f7b4bffccfbff870c4cd8796b39c2a453d2"
           },
           "default-user/chats/Project A/Lantern identical copy.jsonl": {
             "bytes": 24872,
-            "sha256": "3885a6771c3e9875182e7b38b0330056c28e6791a81649b91114eeca7f623f9a"
+            "sha256": "a460298bfe4cf18905919d759e8ca6af033c7647e7d46cb552c8f18743f4d317"
           },
-          "default-user/chats/Project A/Project A - 2026-11-03@23h30m39s595ms.jsonl": {
+          "default-user/chats/Project A/Project A - 2026-11-04@16h52m04s094ms.jsonl": {
             "bytes": 447,
-            "sha256": "17006273baf0be8d602fda7840e77e0213f4abcccdb525f731a79eecd74bc24b"
+            "sha256": "834915d1303f31137b8248367f3df4c3a663bea894d8f2a77e1e1b41a8b7d47f"
           },
           "default-user/chats/Project A/The Last Lantern.jsonl": {
             "bytes": 24872,
-            "sha256": "3885a6771c3e9875182e7b38b0330056c28e6791a81649b91114eeca7f623f9a"
+            "sha256": "a460298bfe4cf18905919d759e8ca6af033c7647e7d46cb552c8f18743f4d317"
           },
-          "default-user/group chats/1793773849045.jsonl": {
+          "default-user/group chats/1793836333970.jsonl": {
             "bytes": 1145,
             "sha256": "1ecacfa562bfab4ca1be0c9a115debcde130788fe1fb9efa9ec5b431a69837a8"
           },
-          "default-user/groups/1793773849045.json": {
+          "default-user/groups/1793836333970.json": {
             "bytes": 466,
-            "sha256": "c033bf7b39cff11a0986c12280e2a8d86e82755129912da67e22e4cee18a5693"
+            "sha256": "c737e184eadb8c88ee3e8900e175e0fbedb2089b4dfb140ef5f7b46c8228edaa"
           },
           "default-user/worlds/Eldoria.json": {
             "bytes": 8579,
@@ -14705,11 +14705,11 @@
           },
           "_storage/04d8318f3ecb84f1d2d8c2be4a258db13862a16d40a9f4bc9d388aba8c060162": {
             "bytes": 185,
-            "sha256": "168a2d2e787ac7e1ac613eb60db72015cf9b19b59959940eae9681dd14dd5bc7"
+            "sha256": "961ba896eec8322cd0c5605eee2e02b82d762c93af70b849edbec3693134ad6b"
           },
           "_storage/3a5bb37ab86ac047d8ef481ee2e7bd3683d694ff8502a7cfe6951af849015dcc": {
             "bytes": 151,
-            "sha256": "1ed6d3e0a2178281e062f047424a7d835c8216cd126d1980e82487702f30a486"
+            "sha256": "1b8410a4d2a27be9f084b0e408f33ba25a6e0a7ed8e397c8a376e3ec3cc938ce"
           },
           "default-user/settings.json": {
             "bytes": 46040,
@@ -14731,7 +14731,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Mira - 2026-11-03@23h30m48s987ms",
+              "chat": "Mira - 2026-11-04@16h52m13s912ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -14775,7 +14775,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Mira - 2026-11-03@23h30m49s002ms",
+              "chat": "Mira - 2026-11-04@16h52m13s926ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -14850,7 +14850,7 @@
                   }
                 }
               },
-              "create_date": "2026-11-04T06:30:39.616Z"
+              "create_date": "2026-11-04T23:52:04.120Z"
             },
             "artSha256": "286646b5bd10cbf16b93a6acfe4e6f33ccfab630fd933ff1dd3f81b66811e203"
           },
@@ -14864,7 +14864,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Project B - 2026-11-03@23h30m39s622ms",
+              "chat": "Project B - 2026-11-04@16h52m04s126ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -14908,7 +14908,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Rowan - 2026-11-03@23h30m49s015ms",
+              "chat": "Rowan - 2026-11-04@16h52m13s938ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -14952,7 +14952,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Sage - 2026-11-03@23h30m49s028ms",
+              "chat": "Sage - 2026-11-04@16h52m13s952ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -16455,27 +16455,27 @@
         "files": {
           "default-user/characters/Mira.png": {
             "bytes": 78549,
-            "sha256": "d0ad0d9868208f5c6b86e15fc25b0d6b00187491eee7f92a50455b5a1ce48dac"
+            "sha256": "f77594480fb790fade73ba3fe5fa9f08816074a63829672aa372af702df3e107"
           },
           "default-user/characters/Mira1.png": {
             "bytes": 78549,
-            "sha256": "8687bf045712ad0a06a850fde1c4c98e461701267636633955cafece5a5703e3"
+            "sha256": "527fc8b634fc5f3ea6a7a7a95cea688c2aa787f945b964ba17ab4f3e4bbad48d"
           },
           "default-user/characters/Project A.png": {
             "bytes": 78685,
-            "sha256": "e718ba49d66791277d51ede6165051cf0933ae8709de9d08620d3ff09d1f7189"
+            "sha256": "afb7e6c3eb00815f70a5f393a0df51fa6911e8c2c20c6ae200a7581ef835a4f3"
           },
           "default-user/characters/Project B.png": {
             "bytes": 78573,
-            "sha256": "d00f59e84cb23c9e2775ab12d4c35311c9eb7d6601b09bc61cae75a3423a11c2"
+            "sha256": "271c2da8b9d82af13d6c09a247aae5de84062923250a367a41550d10da53a34e"
           },
           "default-user/characters/Rowan.png": {
             "bytes": 78557,
-            "sha256": "2c3056ac66e2fc32454115c69565639aec53d0249e5eb21f2f42fc8d4822501a"
+            "sha256": "29401a2a7a23f2f56a75afd9950b6d72785744ea6d65fb7b5196b5228f0bf7a9"
           },
           "default-user/characters/Sage.png": {
             "bytes": 78549,
-            "sha256": "952c604a73a28ba4024d7a9f21fa8f6dee46376c748ec970b3a9e9544b5f909a"
+            "sha256": "e3c2ae95fcb7686aee705e30909347be16d97afff73ad295b5178ae203747310"
           },
           "default-user/characters/Seraphina/admiration.png": {
             "bytes": 129463,
@@ -16595,31 +16595,31 @@
           },
           "default-user/chats/Project A/Lantern identical copy - Branch #1.jsonl": {
             "bytes": 1343,
-            "sha256": "a319142a59d440a848aa1f0aaab2f35efebbba08204e1d8e4db5b22e4cdf18b1"
+            "sha256": "e12885722433a293b8c428bff7b1ed1ce178c8dd95ff515a8c96a8646a007c7d"
           },
           "default-user/chats/Project A/Lantern identical copy - Branch #2.jsonl": {
             "bytes": 1355,
-            "sha256": "e774b7b829f3ae72da96f87201548419d218c30f3a9b00008a789753a6f9a331"
+            "sha256": "6ed98fb11d35a506959ce77f59ea3f7b4bffccfbff870c4cd8796b39c2a453d2"
           },
           "default-user/chats/Project A/Lantern identical copy.jsonl": {
             "bytes": 24872,
-            "sha256": "3885a6771c3e9875182e7b38b0330056c28e6791a81649b91114eeca7f623f9a"
+            "sha256": "a460298bfe4cf18905919d759e8ca6af033c7647e7d46cb552c8f18743f4d317"
           },
-          "default-user/chats/Project A/Project A - 2026-11-03@23h30m39s595ms.jsonl": {
+          "default-user/chats/Project A/Project A - 2026-11-04@16h52m04s094ms.jsonl": {
             "bytes": 447,
-            "sha256": "17006273baf0be8d602fda7840e77e0213f4abcccdb525f731a79eecd74bc24b"
+            "sha256": "834915d1303f31137b8248367f3df4c3a663bea894d8f2a77e1e1b41a8b7d47f"
           },
           "default-user/chats/Project A/The Last Lantern.jsonl": {
             "bytes": 24872,
-            "sha256": "3885a6771c3e9875182e7b38b0330056c28e6791a81649b91114eeca7f623f9a"
+            "sha256": "a460298bfe4cf18905919d759e8ca6af033c7647e7d46cb552c8f18743f4d317"
           },
-          "default-user/group chats/1793773849045.jsonl": {
+          "default-user/group chats/1793836333970.jsonl": {
             "bytes": 1145,
             "sha256": "1ecacfa562bfab4ca1be0c9a115debcde130788fe1fb9efa9ec5b431a69837a8"
           },
-          "default-user/groups/1793773849045.json": {
+          "default-user/groups/1793836333970.json": {
             "bytes": 466,
-            "sha256": "c033bf7b39cff11a0986c12280e2a8d86e82755129912da67e22e4cee18a5693"
+            "sha256": "c737e184eadb8c88ee3e8900e175e0fbedb2089b4dfb140ef5f7b46c8228edaa"
           },
           "default-user/worlds/Eldoria.json": {
             "bytes": 8579,
@@ -16787,11 +16787,11 @@
           },
           "_storage/04d8318f3ecb84f1d2d8c2be4a258db13862a16d40a9f4bc9d388aba8c060162": {
             "bytes": 185,
-            "sha256": "168a2d2e787ac7e1ac613eb60db72015cf9b19b59959940eae9681dd14dd5bc7"
+            "sha256": "961ba896eec8322cd0c5605eee2e02b82d762c93af70b849edbec3693134ad6b"
           },
           "_storage/3a5bb37ab86ac047d8ef481ee2e7bd3683d694ff8502a7cfe6951af849015dcc": {
             "bytes": 151,
-            "sha256": "1ed6d3e0a2178281e062f047424a7d835c8216cd126d1980e82487702f30a486"
+            "sha256": "1b8410a4d2a27be9f084b0e408f33ba25a6e0a7ed8e397c8a376e3ec3cc938ce"
           },
           "default-user/settings.json": {
             "bytes": 46040,
@@ -16813,7 +16813,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Mira - 2026-11-03@23h30m48s987ms",
+              "chat": "Mira - 2026-11-04@16h52m13s912ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -16857,7 +16857,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Mira - 2026-11-03@23h30m49s002ms",
+              "chat": "Mira - 2026-11-04@16h52m13s926ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -16932,7 +16932,7 @@
                   }
                 }
               },
-              "create_date": "2026-11-04T06:30:39.616Z"
+              "create_date": "2026-11-04T23:52:04.120Z"
             },
             "artSha256": "286646b5bd10cbf16b93a6acfe4e6f33ccfab630fd933ff1dd3f81b66811e203"
           },
@@ -16946,7 +16946,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Project B - 2026-11-03@23h30m39s622ms",
+              "chat": "Project B - 2026-11-04@16h52m04s126ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -16990,7 +16990,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Rowan - 2026-11-03@23h30m49s015ms",
+              "chat": "Rowan - 2026-11-04@16h52m13s938ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -17034,7 +17034,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Sage - 2026-11-03@23h30m49s028ms",
+              "chat": "Sage - 2026-11-04@16h52m13s952ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -18469,27 +18469,27 @@
         "files": {
           "default-user/characters/Mira.png": {
             "bytes": 78549,
-            "sha256": "d0ad0d9868208f5c6b86e15fc25b0d6b00187491eee7f92a50455b5a1ce48dac"
+            "sha256": "f77594480fb790fade73ba3fe5fa9f08816074a63829672aa372af702df3e107"
           },
           "default-user/characters/Mira1.png": {
             "bytes": 78549,
-            "sha256": "8687bf045712ad0a06a850fde1c4c98e461701267636633955cafece5a5703e3"
+            "sha256": "527fc8b634fc5f3ea6a7a7a95cea688c2aa787f945b964ba17ab4f3e4bbad48d"
           },
           "default-user/characters/Project A.png": {
             "bytes": 78685,
-            "sha256": "e718ba49d66791277d51ede6165051cf0933ae8709de9d08620d3ff09d1f7189"
+            "sha256": "afb7e6c3eb00815f70a5f393a0df51fa6911e8c2c20c6ae200a7581ef835a4f3"
           },
           "default-user/characters/Project B.png": {
             "bytes": 78573,
-            "sha256": "d00f59e84cb23c9e2775ab12d4c35311c9eb7d6601b09bc61cae75a3423a11c2"
+            "sha256": "271c2da8b9d82af13d6c09a247aae5de84062923250a367a41550d10da53a34e"
           },
           "default-user/characters/Rowan.png": {
             "bytes": 78557,
-            "sha256": "2c3056ac66e2fc32454115c69565639aec53d0249e5eb21f2f42fc8d4822501a"
+            "sha256": "29401a2a7a23f2f56a75afd9950b6d72785744ea6d65fb7b5196b5228f0bf7a9"
           },
           "default-user/characters/Sage.png": {
             "bytes": 78549,
-            "sha256": "952c604a73a28ba4024d7a9f21fa8f6dee46376c748ec970b3a9e9544b5f909a"
+            "sha256": "e3c2ae95fcb7686aee705e30909347be16d97afff73ad295b5178ae203747310"
           },
           "default-user/characters/Seraphina/admiration.png": {
             "bytes": 129463,
@@ -18609,31 +18609,31 @@
           },
           "default-user/chats/Project A/Lantern identical copy - Branch #1.jsonl": {
             "bytes": 1343,
-            "sha256": "a319142a59d440a848aa1f0aaab2f35efebbba08204e1d8e4db5b22e4cdf18b1"
+            "sha256": "e12885722433a293b8c428bff7b1ed1ce178c8dd95ff515a8c96a8646a007c7d"
           },
           "default-user/chats/Project A/Lantern identical copy - Branch #2.jsonl": {
             "bytes": 2308,
-            "sha256": "9845f92fba30cc05fc3bfd512bf40ca43d0d0c95b6ce2a147779e30107abd52a"
+            "sha256": "53a1eb8dafceaa8df2faaa5eb6ac1e2bc3a8c2eb1cd8f57c83047c9cd2477b56"
           },
           "default-user/chats/Project A/Lantern identical copy.jsonl": {
             "bytes": 24872,
-            "sha256": "3885a6771c3e9875182e7b38b0330056c28e6791a81649b91114eeca7f623f9a"
+            "sha256": "a460298bfe4cf18905919d759e8ca6af033c7647e7d46cb552c8f18743f4d317"
           },
-          "default-user/chats/Project A/Project A - 2026-11-03@23h30m39s595ms.jsonl": {
+          "default-user/chats/Project A/Project A - 2026-11-04@16h52m04s094ms.jsonl": {
             "bytes": 447,
-            "sha256": "17006273baf0be8d602fda7840e77e0213f4abcccdb525f731a79eecd74bc24b"
+            "sha256": "834915d1303f31137b8248367f3df4c3a663bea894d8f2a77e1e1b41a8b7d47f"
           },
           "default-user/chats/Project A/The Last Lantern.jsonl": {
             "bytes": 24872,
-            "sha256": "3885a6771c3e9875182e7b38b0330056c28e6791a81649b91114eeca7f623f9a"
+            "sha256": "a460298bfe4cf18905919d759e8ca6af033c7647e7d46cb552c8f18743f4d317"
           },
-          "default-user/group chats/1793773849045.jsonl": {
+          "default-user/group chats/1793836333970.jsonl": {
             "bytes": 1145,
             "sha256": "1ecacfa562bfab4ca1be0c9a115debcde130788fe1fb9efa9ec5b431a69837a8"
           },
-          "default-user/groups/1793773849045.json": {
+          "default-user/groups/1793836333970.json": {
             "bytes": 466,
-            "sha256": "c033bf7b39cff11a0986c12280e2a8d86e82755129912da67e22e4cee18a5693"
+            "sha256": "c737e184eadb8c88ee3e8900e175e0fbedb2089b4dfb140ef5f7b46c8228edaa"
           },
           "default-user/worlds/Eldoria.json": {
             "bytes": 8579,
@@ -18801,11 +18801,11 @@
           },
           "_storage/04d8318f3ecb84f1d2d8c2be4a258db13862a16d40a9f4bc9d388aba8c060162": {
             "bytes": 185,
-            "sha256": "168a2d2e787ac7e1ac613eb60db72015cf9b19b59959940eae9681dd14dd5bc7"
+            "sha256": "961ba896eec8322cd0c5605eee2e02b82d762c93af70b849edbec3693134ad6b"
           },
           "_storage/3a5bb37ab86ac047d8ef481ee2e7bd3683d694ff8502a7cfe6951af849015dcc": {
             "bytes": 151,
-            "sha256": "1ed6d3e0a2178281e062f047424a7d835c8216cd126d1980e82487702f30a486"
+            "sha256": "1b8410a4d2a27be9f084b0e408f33ba25a6e0a7ed8e397c8a376e3ec3cc938ce"
           },
           "default-user/settings.json": {
             "bytes": 46040,
@@ -18827,7 +18827,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Mira - 2026-11-03@23h30m48s987ms",
+              "chat": "Mira - 2026-11-04@16h52m13s912ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -18871,7 +18871,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Mira - 2026-11-03@23h30m49s002ms",
+              "chat": "Mira - 2026-11-04@16h52m13s926ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -18946,7 +18946,7 @@
                   }
                 }
               },
-              "create_date": "2026-11-04T06:30:39.616Z"
+              "create_date": "2026-11-04T23:52:04.120Z"
             },
             "artSha256": "286646b5bd10cbf16b93a6acfe4e6f33ccfab630fd933ff1dd3f81b66811e203"
           },
@@ -18960,7 +18960,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Project B - 2026-11-03@23h30m39s622ms",
+              "chat": "Project B - 2026-11-04@16h52m04s126ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -19004,7 +19004,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Rowan - 2026-11-03@23h30m49s015ms",
+              "chat": "Rowan - 2026-11-04@16h52m13s938ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -19048,7 +19048,7 @@
               "mes_example": "",
               "creatorcomment": "",
               "avatar": "none",
-              "chat": "Sage - 2026-11-03@23h30m49s028ms",
+              "chat": "Sage - 2026-11-04@16h52m13s952ms",
               "talkativeness": 0.5,
               "fav": false,
               "tags": [],
@@ -20498,30 +20498,30 @@
         }
       ],
       "excludedVisualIds": [
-        "c218c35a-7db6-4bbc-8e92-139e34bbc0f6",
-        "c6024afe-311f-479a-add3-6fcc0f1d1be1",
-        "temporary-expression:66a8b64d-b1b3-45cb-bd35-ee3d3d5a9174",
-        "a7b4140f-bc41-445f-8608-810062d1d687",
-        "e6f98c23-dd1b-4990-b0ad-1e15573f2ca7",
-        "993399a7-cce4-43a7-b5e2-5f571e633305",
-        "a916017b-6a12-495c-ad32-d204e64ddd78"
+        "83651ae1-7f1f-48d3-be3a-ac45ed3dbab4",
+        "16e306cf-358e-4174-baca-13e584922ff3",
+        "temporary-expression:a119193f-72f6-47fa-84bf-f3a4f4818e22",
+        "e95cc8a4-0fc1-43da-a158-fd6c4ca84115",
+        "40a39bcf-ca03-466d-a923-8b2016436fb4",
+        "ecdbcada-b2c8-4967-8df4-f9ea424f1d1d",
+        "b3b264c3-1c37-4320-a2cd-5c1148971d4b"
       ],
       "activeSyntheticPersona": true
     }
   },
   "bundle": {
-    "sha256": "fe2fd32eb35a755627d89cda9547fc9f32b074972b5af1136187e31a2ba42119",
+    "sha256": "ef744e244a8269f46977d3e490eddfec625f5884408fab382d58d9a95d4b3e41",
     "bytes": 28190,
     "format": "sillynovel-project",
     "version": 1
   },
   "portabilityNativeBefore": {
-    "default-user/characters/Mira.png": "d0ad0d9868208f5c6b86e15fc25b0d6b00187491eee7f92a50455b5a1ce48dac",
-    "default-user/characters/Mira1.png": "8687bf045712ad0a06a850fde1c4c98e461701267636633955cafece5a5703e3",
-    "default-user/characters/Project A.png": "477e9891f1663b68ea09a8b04cf3652458f0d15c2df6cfd5ae435ce651b6bcc2",
-    "default-user/characters/Project B.png": "d00f59e84cb23c9e2775ab12d4c35311c9eb7d6601b09bc61cae75a3423a11c2",
-    "default-user/characters/Rowan.png": "2c3056ac66e2fc32454115c69565639aec53d0249e5eb21f2f42fc8d4822501a",
-    "default-user/characters/Sage.png": "952c604a73a28ba4024d7a9f21fa8f6dee46376c748ec970b3a9e9544b5f909a",
+    "default-user/characters/Mira.png": "f77594480fb790fade73ba3fe5fa9f08816074a63829672aa372af702df3e107",
+    "default-user/characters/Mira1.png": "527fc8b634fc5f3ea6a7a7a95cea688c2aa787f945b964ba17ab4f3e4bbad48d",
+    "default-user/characters/Project A.png": "fe1b893388f0bdb221aefa75ed9cd731070fe2a00641c9fcfac52ee5b82ed3d0",
+    "default-user/characters/Project B.png": "271c2da8b9d82af13d6c09a247aae5de84062923250a367a41550d10da53a34e",
+    "default-user/characters/Rowan.png": "29401a2a7a23f2f56a75afd9950b6d72785744ea6d65fb7b5196b5228f0bf7a9",
+    "default-user/characters/Sage.png": "e3c2ae95fcb7686aee705e30909347be16d97afff73ad295b5178ae203747310",
     "default-user/characters/Seraphina/admiration.png": "e451994487b3a5b7c72d6e6025c8cbe6bbcfbf01a490042b8b581522e6ba4f96",
     "default-user/characters/Seraphina/amusement.png": "1cedaee06fb1c740c5c8c52de8973f733789d51fe9b23fcb633635e755ae6e6f",
     "default-user/characters/Seraphina/anger.png": "d657d77b1bce609dd6006582cf687691871411eb041f9f4c41da4765b12ea069",
@@ -20551,24 +20551,24 @@
     "default-user/characters/Seraphina/sadness.png": "3819c2bca59224f67767eb3762c846e35d5eb5272be03f35c21fc32163df67a6",
     "default-user/characters/Seraphina/surprise.png": "f6a9f657d081f670a961649a5a21526ec251262ca06adf99626509059fbbb103",
     "default-user/characters/default_Seraphina.png": "8a71e8270f54fafbccf905b1bdf053a6a55f57bea89c01fcd8c0e87ee76a2d52",
-    "default-user/chats/Project A/Lantern identical copy - Branch #1.jsonl": "a319142a59d440a848aa1f0aaab2f35efebbba08204e1d8e4db5b22e4cdf18b1",
-    "default-user/chats/Project A/Lantern identical copy - Branch #2.jsonl": "9845f92fba30cc05fc3bfd512bf40ca43d0d0c95b6ce2a147779e30107abd52a",
-    "default-user/chats/Project A/Lantern identical copy.jsonl": "3885a6771c3e9875182e7b38b0330056c28e6791a81649b91114eeca7f623f9a",
-    "default-user/chats/Project A/Project A - 2026-11-03@23h30m39s595ms.jsonl": "17006273baf0be8d602fda7840e77e0213f4abcccdb525f731a79eecd74bc24b",
-    "default-user/chats/Project A/The Last Lantern.jsonl": "3885a6771c3e9875182e7b38b0330056c28e6791a81649b91114eeca7f623f9a",
-    "default-user/chats/Project B/Project B - 2026-11-03@23h30m39s622ms.jsonl": "e80e5297100e4b5f2c1b1acdc8f659a0bae79cb20e35f1e084950e97e5ce8968",
-    "default-user/groups/1793773849045.json": "c033bf7b39cff11a0986c12280e2a8d86e82755129912da67e22e4cee18a5693",
-    "default-user/group chats/1793773849045.jsonl": "1ecacfa562bfab4ca1be0c9a115debcde130788fe1fb9efa9ec5b431a69837a8",
+    "default-user/chats/Project A/Lantern identical copy - Branch #1.jsonl": "e12885722433a293b8c428bff7b1ed1ce178c8dd95ff515a8c96a8646a007c7d",
+    "default-user/chats/Project A/Lantern identical copy - Branch #2.jsonl": "53a1eb8dafceaa8df2faaa5eb6ac1e2bc3a8c2eb1cd8f57c83047c9cd2477b56",
+    "default-user/chats/Project A/Lantern identical copy.jsonl": "a460298bfe4cf18905919d759e8ca6af033c7647e7d46cb552c8f18743f4d317",
+    "default-user/chats/Project A/Project A - 2026-11-04@16h52m04s094ms.jsonl": "834915d1303f31137b8248367f3df4c3a663bea894d8f2a77e1e1b41a8b7d47f",
+    "default-user/chats/Project A/The Last Lantern.jsonl": "a460298bfe4cf18905919d759e8ca6af033c7647e7d46cb552c8f18743f4d317",
+    "default-user/chats/Project B/Project B - 2026-11-04@16h52m04s126ms.jsonl": "27676c4871c71c05f9accaa88496ef8a901c1b5aec48e8ee70a1404bb8bfff8f",
+    "default-user/groups/1793836333970.json": "c737e184eadb8c88ee3e8900e175e0fbedb2089b4dfb140ef5f7b46c8228edaa",
+    "default-user/group chats/1793836333970.jsonl": "1ecacfa562bfab4ca1be0c9a115debcde130788fe1fb9efa9ec5b431a69837a8",
     "default-user/worlds/Eldoria.json": "bfc2548443c890746a54d54e35e41265b02d1b59fd06d72552b305bf9b1e063c",
     "default-user/worlds/lantern-lore.json": "d3ae0a97a0a5a9e8e923b00ffa162814f4589689c8870b48117ad34955e81bfb"
   },
   "portabilityNativeAfter": {
-    "default-user/characters/Mira.png": "d0ad0d9868208f5c6b86e15fc25b0d6b00187491eee7f92a50455b5a1ce48dac",
-    "default-user/characters/Mira1.png": "8687bf045712ad0a06a850fde1c4c98e461701267636633955cafece5a5703e3",
-    "default-user/characters/Project A.png": "477e9891f1663b68ea09a8b04cf3652458f0d15c2df6cfd5ae435ce651b6bcc2",
-    "default-user/characters/Project B.png": "d00f59e84cb23c9e2775ab12d4c35311c9eb7d6601b09bc61cae75a3423a11c2",
-    "default-user/characters/Rowan.png": "2c3056ac66e2fc32454115c69565639aec53d0249e5eb21f2f42fc8d4822501a",
-    "default-user/characters/Sage.png": "952c604a73a28ba4024d7a9f21fa8f6dee46376c748ec970b3a9e9544b5f909a",
+    "default-user/characters/Mira.png": "f77594480fb790fade73ba3fe5fa9f08816074a63829672aa372af702df3e107",
+    "default-user/characters/Mira1.png": "527fc8b634fc5f3ea6a7a7a95cea688c2aa787f945b964ba17ab4f3e4bbad48d",
+    "default-user/characters/Project A.png": "fe1b893388f0bdb221aefa75ed9cd731070fe2a00641c9fcfac52ee5b82ed3d0",
+    "default-user/characters/Project B.png": "271c2da8b9d82af13d6c09a247aae5de84062923250a367a41550d10da53a34e",
+    "default-user/characters/Rowan.png": "29401a2a7a23f2f56a75afd9950b6d72785744ea6d65fb7b5196b5228f0bf7a9",
+    "default-user/characters/Sage.png": "e3c2ae95fcb7686aee705e30909347be16d97afff73ad295b5178ae203747310",
     "default-user/characters/Seraphina/admiration.png": "e451994487b3a5b7c72d6e6025c8cbe6bbcfbf01a490042b8b581522e6ba4f96",
     "default-user/characters/Seraphina/amusement.png": "1cedaee06fb1c740c5c8c52de8973f733789d51fe9b23fcb633635e755ae6e6f",
     "default-user/characters/Seraphina/anger.png": "d657d77b1bce609dd6006582cf687691871411eb041f9f4c41da4765b12ea069",
@@ -20598,156 +20598,156 @@
     "default-user/characters/Seraphina/sadness.png": "3819c2bca59224f67767eb3762c846e35d5eb5272be03f35c21fc32163df67a6",
     "default-user/characters/Seraphina/surprise.png": "f6a9f657d081f670a961649a5a21526ec251262ca06adf99626509059fbbb103",
     "default-user/characters/default_Seraphina.png": "8a71e8270f54fafbccf905b1bdf053a6a55f57bea89c01fcd8c0e87ee76a2d52",
-    "default-user/chats/Project A/Lantern identical copy - Branch #1.jsonl": "a319142a59d440a848aa1f0aaab2f35efebbba08204e1d8e4db5b22e4cdf18b1",
-    "default-user/chats/Project A/Lantern identical copy - Branch #2.jsonl": "9845f92fba30cc05fc3bfd512bf40ca43d0d0c95b6ce2a147779e30107abd52a",
-    "default-user/chats/Project A/Lantern identical copy.jsonl": "3885a6771c3e9875182e7b38b0330056c28e6791a81649b91114eeca7f623f9a",
-    "default-user/chats/Project A/Project A - 2026-11-03@23h30m39s595ms.jsonl": "17006273baf0be8d602fda7840e77e0213f4abcccdb525f731a79eecd74bc24b",
-    "default-user/chats/Project A/The Last Lantern.jsonl": "3885a6771c3e9875182e7b38b0330056c28e6791a81649b91114eeca7f623f9a",
-    "default-user/chats/Project B/Project B - 2026-11-03@23h30m39s622ms.jsonl": "e80e5297100e4b5f2c1b1acdc8f659a0bae79cb20e35f1e084950e97e5ce8968",
-    "default-user/groups/1793773849045.json": "c033bf7b39cff11a0986c12280e2a8d86e82755129912da67e22e4cee18a5693",
-    "default-user/group chats/1793773849045.jsonl": "1ecacfa562bfab4ca1be0c9a115debcde130788fe1fb9efa9ec5b431a69837a8",
+    "default-user/chats/Project A/Lantern identical copy - Branch #1.jsonl": "e12885722433a293b8c428bff7b1ed1ce178c8dd95ff515a8c96a8646a007c7d",
+    "default-user/chats/Project A/Lantern identical copy - Branch #2.jsonl": "53a1eb8dafceaa8df2faaa5eb6ac1e2bc3a8c2eb1cd8f57c83047c9cd2477b56",
+    "default-user/chats/Project A/Lantern identical copy.jsonl": "a460298bfe4cf18905919d759e8ca6af033c7647e7d46cb552c8f18743f4d317",
+    "default-user/chats/Project A/Project A - 2026-11-04@16h52m04s094ms.jsonl": "834915d1303f31137b8248367f3df4c3a663bea894d8f2a77e1e1b41a8b7d47f",
+    "default-user/chats/Project A/The Last Lantern.jsonl": "a460298bfe4cf18905919d759e8ca6af033c7647e7d46cb552c8f18743f4d317",
+    "default-user/chats/Project B/Project B - 2026-11-04@16h52m04s126ms.jsonl": "27676c4871c71c05f9accaa88496ef8a901c1b5aec48e8ee70a1404bb8bfff8f",
+    "default-user/groups/1793836333970.json": "c737e184eadb8c88ee3e8900e175e0fbedb2089b4dfb140ef5f7b46c8228edaa",
+    "default-user/group chats/1793836333970.jsonl": "1ecacfa562bfab4ca1be0c9a115debcde130788fe1fb9efa9ec5b431a69837a8",
     "default-user/worlds/Eldoria.json": "bfc2548443c890746a54d54e35e41265b02d1b59fd06d72552b305bf9b1e063c",
     "default-user/worlds/lantern-lore.json": "d3ae0a97a0a5a9e8e923b00ffa162814f4589689c8870b48117ad34955e81bfb"
   },
   "databaseBeforeFailures": {
     "projects": [
       {
-        "id": "1cd48c30-a7d0-4caa-8ef0-e069b78554f7",
-        "owner": "[\"default-user\",1793773831569]",
-        "name": "Lantern council layout",
-        "revision": 2,
-        "scene": "{\"backgroundAssetId\":\"02c6cc55-5835-4330-831b-061d7b005727\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"2245c626-0d04-41ae-8224-9bac72cadbf1\",\"name\":\"Mira\",\"spriteAssetId\":\"78ba3abf-77ab-4d21-adc6-8ad3efbcd4c4\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"9f6c347b-5bc5-4971-9838-a6cec90e80c5\",\"name\":\"Mira\",\"spriteAssetId\":\"9c1f6173-3920-4dfe-981e-f562bab12f07\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"51884376-8db2-4148-8a9d-f8e8944e01d1\",\"name\":\"Rowan\",\"spriteAssetId\":\"9c1f6173-3920-4dfe-981e-f562bab12f07\",\"slot\":\"center\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"99a72683-d661-4fec-85d0-d32c60e15d38\",\"name\":\"Sage\",\"spriteAssetId\":\"01f571bf-d0ca-4db1-964f-710b878159cf\",\"slot\":null,\"present\":true,\"locks\":{\"presence\":true,\"slot\":false,\"outfit\":true}}]}",
-        "catalog": "[{\"assetId\":\"02c6cc55-5835-4330-831b-061d7b005727\",\"label\":\"Background\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"78ba3abf-77ab-4d21-adc6-8ad3efbcd4c4\",\"label\":\"Mira sprite\",\"kind\":\"sprite\",\"actorId\":\"2245c626-0d04-41ae-8224-9bac72cadbf1\"},{\"assetId\":\"9c1f6173-3920-4dfe-981e-f562bab12f07\",\"label\":\"Mira sprite\",\"kind\":\"sprite\",\"actorId\":\"9f6c347b-5bc5-4971-9838-a6cec90e80c5\"},{\"assetId\":\"9c1f6173-3920-4dfe-981e-f562bab12f07\",\"label\":\"rowan\",\"kind\":\"sprite\",\"actorId\":\"51884376-8db2-4148-8a9d-f8e8944e01d1\"},{\"assetId\":\"01f571bf-d0ca-4db1-964f-710b878159cf\",\"label\":\"sage\",\"kind\":\"sprite\",\"actorId\":\"99a72683-d661-4fec-85d0-d32c60e15d38\"}]"
-      },
-      {
-        "id": "2cfbdff2-ea27-4e1c-a08d-4c216315bc9d",
-        "owner": "[\"sn-other\",1793773839459]",
+        "id": "1e489d65-72cb-4b50-a16e-6149f379a9dd",
+        "owner": "[\"sn-other\",1793836323934]",
         "name": "Bob project",
         "revision": 0,
         "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
         "catalog": "[]"
       },
       {
-        "id": "56ab7c3e-5396-4fe6-ac60-53d85bc00bad",
-        "owner": "[\"default-user\",1793773831569]",
+        "id": "2f1a68dd-88a9-4470-9a7b-051650e59736",
+        "owner": "[\"default-user\",1793836316149]",
         "name": "Browser project",
         "revision": 1,
-        "scene": "{\"backgroundAssetId\":\"9b88ead4-dfbb-46a5-ad9b-1e95c99b5e36\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"a779c5a0-bcef-40ce-8bc0-ed84448135fc\",\"name\":\"One\",\"spriteAssetId\":\"624f20eb-b8d4-438d-977f-e4140037cb4d\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"2c6097b6-0476-4760-99f9-66c876519d77\",\"name\":\"Two\",\"spriteAssetId\":\"b6bd1ab1-4cd7-42da-935b-b00ec8db15f2\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
-        "catalog": "[{\"assetId\":\"9b88ead4-dfbb-46a5-ad9b-1e95c99b5e36\",\"label\":\"forest\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"624f20eb-b8d4-438d-977f-e4140037cb4d\",\"label\":\"mira-a\",\"kind\":\"sprite\",\"actorId\":\"a779c5a0-bcef-40ce-8bc0-ed84448135fc\"},{\"assetId\":\"b6bd1ab1-4cd7-42da-935b-b00ec8db15f2\",\"label\":\"rowan\",\"kind\":\"sprite\",\"actorId\":\"2c6097b6-0476-4760-99f9-66c876519d77\"}]"
+        "scene": "{\"backgroundAssetId\":\"85e63b2b-8008-4c99-930c-1a0e509db229\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"622a1be9-6d96-4452-a471-2bd1f3ea5ae8\",\"name\":\"One\",\"spriteAssetId\":\"f4034370-ed26-465f-b1ae-83e65fec9dfe\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"4f3d361e-0349-4ff4-9777-e80b49552cd0\",\"name\":\"Two\",\"spriteAssetId\":\"0d24a16a-7616-4cf9-805b-f79c5e380a21\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
+        "catalog": "[{\"assetId\":\"85e63b2b-8008-4c99-930c-1a0e509db229\",\"label\":\"forest\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"f4034370-ed26-465f-b1ae-83e65fec9dfe\",\"label\":\"mira-a\",\"kind\":\"sprite\",\"actorId\":\"622a1be9-6d96-4452-a471-2bd1f3ea5ae8\"},{\"assetId\":\"0d24a16a-7616-4cf9-805b-f79c5e380a21\",\"label\":\"rowan\",\"kind\":\"sprite\",\"actorId\":\"4f3d361e-0349-4ff4-9777-e80b49552cd0\"}]"
       },
       {
-        "id": "c218c35a-7db6-4bbc-8e92-139e34bbc0f6",
-        "owner": "[\"default-user\",1793773831569]",
+        "id": "83651ae1-7f1f-48d3-be3a-ac45ed3dbab4",
+        "owner": "[\"default-user\",1793836316149]",
         "name": "Lantern candidate layout",
         "revision": 4,
-        "scene": "{\"backgroundAssetId\":\"a916017b-6a12-495c-ad32-d204e64ddd78\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"c6024afe-311f-479a-add3-6fcc0f1d1be1\",\"name\":\"Mira\",\"spriteAssetId\":\"e6f98c23-dd1b-4990-b0ad-1e15573f2ca7\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"1f895359-81c2-429d-aa65-476be2a50ce0\",\"name\":\"Rowan\",\"spriteAssetId\":\"993399a7-cce4-43a7-b5e2-5f571e633305\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
-        "catalog": "[{\"assetId\":\"a7b4140f-bc41-445f-8608-810062d1d687\",\"label\":\"Background\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"e6f98c23-dd1b-4990-b0ad-1e15573f2ca7\",\"label\":\"Mira sprite\",\"kind\":\"sprite\",\"actorId\":\"c6024afe-311f-479a-add3-6fcc0f1d1be1\"},{\"assetId\":\"993399a7-cce4-43a7-b5e2-5f571e633305\",\"label\":\"Rowan sprite\",\"kind\":\"sprite\",\"actorId\":\"1f895359-81c2-429d-aa65-476be2a50ce0\"},{\"assetId\":\"a916017b-6a12-495c-ad32-d204e64ddd78\",\"label\":\"Lantern alternative\",\"kind\":\"background\",\"actorId\":null}]"
+        "scene": "{\"backgroundAssetId\":\"b3b264c3-1c37-4320-a2cd-5c1148971d4b\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"16e306cf-358e-4174-baca-13e584922ff3\",\"name\":\"Mira\",\"spriteAssetId\":\"40a39bcf-ca03-466d-a923-8b2016436fb4\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"7a3706e9-0ecc-47a5-b0ab-c511159b5951\",\"name\":\"Rowan\",\"spriteAssetId\":\"ecdbcada-b2c8-4967-8df4-f9ea424f1d1d\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
+        "catalog": "[{\"assetId\":\"e95cc8a4-0fc1-43da-a158-fd6c4ca84115\",\"label\":\"Background\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"40a39bcf-ca03-466d-a923-8b2016436fb4\",\"label\":\"Mira sprite\",\"kind\":\"sprite\",\"actorId\":\"16e306cf-358e-4174-baca-13e584922ff3\"},{\"assetId\":\"ecdbcada-b2c8-4967-8df4-f9ea424f1d1d\",\"label\":\"Rowan sprite\",\"kind\":\"sprite\",\"actorId\":\"7a3706e9-0ecc-47a5-b0ab-c511159b5951\"},{\"assetId\":\"b3b264c3-1c37-4320-a2cd-5c1148971d4b\",\"label\":\"Lantern alternative\",\"kind\":\"background\",\"actorId\":null}]"
       },
       {
-        "id": "c25e39b7-43fe-44df-843c-0ba7d8721aad",
-        "owner": "[\"default-user\",1793773831569]",
-        "name": "Browser project",
-        "revision": 0,
-        "scene": "{\"backgroundAssetId\":\"d8a8fd65-f3c4-491a-b0e0-9785b89f539b\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"118eaae0-1692-4536-b82d-13e807182504\",\"name\":\"One\",\"spriteAssetId\":\"cc2a3adc-85d2-41e4-b902-15f32249c8fc\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"c37ca98e-d618-4240-9366-d5e775a48684\",\"name\":\"Two\",\"spriteAssetId\":\"d3a074f4-a69b-47a2-a093-0f9dcc045b5e\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
-        "catalog": "[]"
-      },
-      {
-        "id": "fefd0220-3fd7-468b-aa64-450052d9fb6f",
-        "owner": "[\"default-user\",1793773831569]",
+        "id": "9bc9e84b-0195-4dd9-a87e-d8c469c59cec",
+        "owner": "[\"default-user\",1793836316149]",
         "name": "API project",
         "revision": 1,
         "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
         "catalog": "[]"
+      },
+      {
+        "id": "ac664152-9927-4c35-8d4d-036a96df584b",
+        "owner": "[\"default-user\",1793836316149]",
+        "name": "Browser project",
+        "revision": 0,
+        "scene": "{\"backgroundAssetId\":\"17546a2d-5154-4e98-8083-17bdfb672bdb\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"2981a888-42bd-45bc-a8a3-1d852017eb77\",\"name\":\"One\",\"spriteAssetId\":\"45593428-634a-4333-9c47-a6d180b9669c\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"1ddee5dd-bb28-45f9-9873-eab0dfdf00e6\",\"name\":\"Two\",\"spriteAssetId\":\"09828770-baca-4deb-9651-a3c92c36f3ff\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
+        "catalog": "[]"
+      },
+      {
+        "id": "c399c5e1-1c6c-466b-81ce-db78dd991a10",
+        "owner": "[\"default-user\",1793836316149]",
+        "name": "Lantern council layout",
+        "revision": 2,
+        "scene": "{\"backgroundAssetId\":\"cbf4482b-90a5-4b4d-aa90-3c9330fa5d83\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"9b28e4ce-133b-4d87-968c-9903fcb9f77c\",\"name\":\"Mira\",\"spriteAssetId\":\"fe313400-acf9-49ae-9c94-d95a6a170607\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"4bea6415-8083-4e4e-8ab4-5a267262e6f5\",\"name\":\"Mira\",\"spriteAssetId\":\"88af7e9a-7c8e-4692-91cd-dffb6c746b60\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"e72c5778-a7af-460f-9671-2cd75b72a6fe\",\"name\":\"Rowan\",\"spriteAssetId\":\"88af7e9a-7c8e-4692-91cd-dffb6c746b60\",\"slot\":\"center\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"5b45532b-79a7-4655-8d04-9e19b96522da\",\"name\":\"Sage\",\"spriteAssetId\":\"424870a3-1529-4626-92d3-f86ccbe1a801\",\"slot\":null,\"present\":true,\"locks\":{\"presence\":true,\"slot\":false,\"outfit\":true}}]}",
+        "catalog": "[{\"assetId\":\"cbf4482b-90a5-4b4d-aa90-3c9330fa5d83\",\"label\":\"Background\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"fe313400-acf9-49ae-9c94-d95a6a170607\",\"label\":\"Mira sprite\",\"kind\":\"sprite\",\"actorId\":\"9b28e4ce-133b-4d87-968c-9903fcb9f77c\"},{\"assetId\":\"88af7e9a-7c8e-4692-91cd-dffb6c746b60\",\"label\":\"Mira sprite\",\"kind\":\"sprite\",\"actorId\":\"4bea6415-8083-4e4e-8ab4-5a267262e6f5\"},{\"assetId\":\"88af7e9a-7c8e-4692-91cd-dffb6c746b60\",\"label\":\"rowan\",\"kind\":\"sprite\",\"actorId\":\"e72c5778-a7af-460f-9671-2cd75b72a6fe\"},{\"assetId\":\"424870a3-1529-4626-92d3-f86ccbe1a801\",\"label\":\"sage\",\"kind\":\"sprite\",\"actorId\":\"5b45532b-79a7-4655-8d04-9e19b96522da\"}]"
       }
     ],
     "assets": [
       {
-        "id": "01f571bf-d0ca-4db1-964f-710b878159cf",
-        "project": "1cd48c30-a7d0-4caa-8ef0-e069b78554f7",
+        "id": "09828770-baca-4deb-9651-a3c92c36f3ff",
+        "project": "ac664152-9927-4c35-8d4d-036a96df584b",
+        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
+        "bytes": 4253
+      },
+      {
+        "id": "0d24a16a-7616-4cf9-805b-f79c5e380a21",
+        "project": "2f1a68dd-88a9-4470-9a7b-051650e59736",
+        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
+        "bytes": 4253
+      },
+      {
+        "id": "17546a2d-5154-4e98-8083-17bdfb672bdb",
+        "project": "ac664152-9927-4c35-8d4d-036a96df584b",
+        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
+        "bytes": 11591
+      },
+      {
+        "id": "40a39bcf-ca03-466d-a923-8b2016436fb4",
+        "project": "83651ae1-7f1f-48d3-be3a-ac45ed3dbab4",
+        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
+        "bytes": 4454
+      },
+      {
+        "id": "424870a3-1529-4626-92d3-f86ccbe1a801",
+        "project": "c399c5e1-1c6c-466b-81ce-db78dd991a10",
         "sha256": "2ff97d72355e8c093e032d450746b4484212041ffee857359604fc080542ef88",
         "bytes": 4560
       },
       {
-        "id": "02c6cc55-5835-4330-831b-061d7b005727",
-        "project": "1cd48c30-a7d0-4caa-8ef0-e069b78554f7",
+        "id": "42ee9d9f-8fd6-4047-856b-14e4d250e309",
+        "project": "9bc9e84b-0195-4dd9-a87e-d8c469c59cec",
+        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
+        "bytes": 11591
+      },
+      {
+        "id": "45593428-634a-4333-9c47-a6d180b9669c",
+        "project": "ac664152-9927-4c35-8d4d-036a96df584b",
+        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
+        "bytes": 4454
+      },
+      {
+        "id": "85e63b2b-8008-4c99-930c-1a0e509db229",
+        "project": "2f1a68dd-88a9-4470-9a7b-051650e59736",
+        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
+        "bytes": 11591
+      },
+      {
+        "id": "88af7e9a-7c8e-4692-91cd-dffb6c746b60",
+        "project": "c399c5e1-1c6c-466b-81ce-db78dd991a10",
+        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
+        "bytes": 4253
+      },
+      {
+        "id": "b3b264c3-1c37-4320-a2cd-5c1148971d4b",
+        "project": "83651ae1-7f1f-48d3-be3a-ac45ed3dbab4",
         "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
         "bytes": 6085
       },
       {
-        "id": "3cb7d370-0f60-465f-a12a-10ae9fa80bfc",
-        "project": "fefd0220-3fd7-468b-aa64-450052d9fb6f",
-        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
-        "bytes": 11591
-      },
-      {
-        "id": "624f20eb-b8d4-438d-977f-e4140037cb4d",
-        "project": "56ab7c3e-5396-4fe6-ac60-53d85bc00bad",
-        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
-        "bytes": 4454
-      },
-      {
-        "id": "78ba3abf-77ab-4d21-adc6-8ad3efbcd4c4",
-        "project": "1cd48c30-a7d0-4caa-8ef0-e069b78554f7",
-        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
-        "bytes": 4454
-      },
-      {
-        "id": "993399a7-cce4-43a7-b5e2-5f571e633305",
-        "project": "c218c35a-7db6-4bbc-8e92-139e34bbc0f6",
-        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
-        "bytes": 4253
-      },
-      {
-        "id": "9b88ead4-dfbb-46a5-ad9b-1e95c99b5e36",
-        "project": "56ab7c3e-5396-4fe6-ac60-53d85bc00bad",
-        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
-        "bytes": 11591
-      },
-      {
-        "id": "9c1f6173-3920-4dfe-981e-f562bab12f07",
-        "project": "1cd48c30-a7d0-4caa-8ef0-e069b78554f7",
-        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
-        "bytes": 4253
-      },
-      {
-        "id": "a7b4140f-bc41-445f-8608-810062d1d687",
-        "project": "c218c35a-7db6-4bbc-8e92-139e34bbc0f6",
-        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
-        "bytes": 11591
-      },
-      {
-        "id": "a916017b-6a12-495c-ad32-d204e64ddd78",
-        "project": "c218c35a-7db6-4bbc-8e92-139e34bbc0f6",
+        "id": "cbf4482b-90a5-4b4d-aa90-3c9330fa5d83",
+        "project": "c399c5e1-1c6c-466b-81ce-db78dd991a10",
         "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
         "bytes": 6085
       },
       {
-        "id": "b6bd1ab1-4cd7-42da-935b-b00ec8db15f2",
-        "project": "56ab7c3e-5396-4fe6-ac60-53d85bc00bad",
-        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
-        "bytes": 4253
-      },
-      {
-        "id": "cc2a3adc-85d2-41e4-b902-15f32249c8fc",
-        "project": "c25e39b7-43fe-44df-843c-0ba7d8721aad",
-        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
-        "bytes": 4454
-      },
-      {
-        "id": "d3a074f4-a69b-47a2-a093-0f9dcc045b5e",
-        "project": "c25e39b7-43fe-44df-843c-0ba7d8721aad",
-        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
-        "bytes": 4253
-      },
-      {
-        "id": "d8a8fd65-f3c4-491a-b0e0-9785b89f539b",
-        "project": "c25e39b7-43fe-44df-843c-0ba7d8721aad",
+        "id": "e95cc8a4-0fc1-43da-a158-fd6c4ca84115",
+        "project": "83651ae1-7f1f-48d3-be3a-ac45ed3dbab4",
         "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
         "bytes": 11591
       },
       {
-        "id": "e6f98c23-dd1b-4990-b0ad-1e15573f2ca7",
-        "project": "c218c35a-7db6-4bbc-8e92-139e34bbc0f6",
+        "id": "ecdbcada-b2c8-4967-8df4-f9ea424f1d1d",
+        "project": "83651ae1-7f1f-48d3-be3a-ac45ed3dbab4",
+        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
+        "bytes": 4253
+      },
+      {
+        "id": "f4034370-ed26-465f-b1ae-83e65fec9dfe",
+        "project": "2f1a68dd-88a9-4470-9a7b-051650e59736",
+        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
+        "bytes": 4454
+      },
+      {
+        "id": "fe313400-acf9-49ae-9c94-d95a6a170607",
+        "project": "c399c5e1-1c6c-466b-81ce-db78dd991a10",
         "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
         "bytes": 4454
       }
@@ -20756,142 +20756,142 @@
   "databaseAfterFailures": {
     "projects": [
       {
-        "id": "1cd48c30-a7d0-4caa-8ef0-e069b78554f7",
-        "owner": "[\"default-user\",1793773831569]",
-        "name": "Lantern council layout",
-        "revision": 2,
-        "scene": "{\"backgroundAssetId\":\"02c6cc55-5835-4330-831b-061d7b005727\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"2245c626-0d04-41ae-8224-9bac72cadbf1\",\"name\":\"Mira\",\"spriteAssetId\":\"78ba3abf-77ab-4d21-adc6-8ad3efbcd4c4\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"9f6c347b-5bc5-4971-9838-a6cec90e80c5\",\"name\":\"Mira\",\"spriteAssetId\":\"9c1f6173-3920-4dfe-981e-f562bab12f07\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"51884376-8db2-4148-8a9d-f8e8944e01d1\",\"name\":\"Rowan\",\"spriteAssetId\":\"9c1f6173-3920-4dfe-981e-f562bab12f07\",\"slot\":\"center\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"99a72683-d661-4fec-85d0-d32c60e15d38\",\"name\":\"Sage\",\"spriteAssetId\":\"01f571bf-d0ca-4db1-964f-710b878159cf\",\"slot\":null,\"present\":true,\"locks\":{\"presence\":true,\"slot\":false,\"outfit\":true}}]}",
-        "catalog": "[{\"assetId\":\"02c6cc55-5835-4330-831b-061d7b005727\",\"label\":\"Background\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"78ba3abf-77ab-4d21-adc6-8ad3efbcd4c4\",\"label\":\"Mira sprite\",\"kind\":\"sprite\",\"actorId\":\"2245c626-0d04-41ae-8224-9bac72cadbf1\"},{\"assetId\":\"9c1f6173-3920-4dfe-981e-f562bab12f07\",\"label\":\"Mira sprite\",\"kind\":\"sprite\",\"actorId\":\"9f6c347b-5bc5-4971-9838-a6cec90e80c5\"},{\"assetId\":\"9c1f6173-3920-4dfe-981e-f562bab12f07\",\"label\":\"rowan\",\"kind\":\"sprite\",\"actorId\":\"51884376-8db2-4148-8a9d-f8e8944e01d1\"},{\"assetId\":\"01f571bf-d0ca-4db1-964f-710b878159cf\",\"label\":\"sage\",\"kind\":\"sprite\",\"actorId\":\"99a72683-d661-4fec-85d0-d32c60e15d38\"}]"
-      },
-      {
-        "id": "2cfbdff2-ea27-4e1c-a08d-4c216315bc9d",
-        "owner": "[\"sn-other\",1793773839459]",
+        "id": "1e489d65-72cb-4b50-a16e-6149f379a9dd",
+        "owner": "[\"sn-other\",1793836323934]",
         "name": "Bob project",
         "revision": 0,
         "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
         "catalog": "[]"
       },
       {
-        "id": "56ab7c3e-5396-4fe6-ac60-53d85bc00bad",
-        "owner": "[\"default-user\",1793773831569]",
+        "id": "2f1a68dd-88a9-4470-9a7b-051650e59736",
+        "owner": "[\"default-user\",1793836316149]",
         "name": "Browser project",
         "revision": 1,
-        "scene": "{\"backgroundAssetId\":\"9b88ead4-dfbb-46a5-ad9b-1e95c99b5e36\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"a779c5a0-bcef-40ce-8bc0-ed84448135fc\",\"name\":\"One\",\"spriteAssetId\":\"624f20eb-b8d4-438d-977f-e4140037cb4d\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"2c6097b6-0476-4760-99f9-66c876519d77\",\"name\":\"Two\",\"spriteAssetId\":\"b6bd1ab1-4cd7-42da-935b-b00ec8db15f2\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
-        "catalog": "[{\"assetId\":\"9b88ead4-dfbb-46a5-ad9b-1e95c99b5e36\",\"label\":\"forest\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"624f20eb-b8d4-438d-977f-e4140037cb4d\",\"label\":\"mira-a\",\"kind\":\"sprite\",\"actorId\":\"a779c5a0-bcef-40ce-8bc0-ed84448135fc\"},{\"assetId\":\"b6bd1ab1-4cd7-42da-935b-b00ec8db15f2\",\"label\":\"rowan\",\"kind\":\"sprite\",\"actorId\":\"2c6097b6-0476-4760-99f9-66c876519d77\"}]"
+        "scene": "{\"backgroundAssetId\":\"85e63b2b-8008-4c99-930c-1a0e509db229\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"622a1be9-6d96-4452-a471-2bd1f3ea5ae8\",\"name\":\"One\",\"spriteAssetId\":\"f4034370-ed26-465f-b1ae-83e65fec9dfe\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"4f3d361e-0349-4ff4-9777-e80b49552cd0\",\"name\":\"Two\",\"spriteAssetId\":\"0d24a16a-7616-4cf9-805b-f79c5e380a21\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
+        "catalog": "[{\"assetId\":\"85e63b2b-8008-4c99-930c-1a0e509db229\",\"label\":\"forest\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"f4034370-ed26-465f-b1ae-83e65fec9dfe\",\"label\":\"mira-a\",\"kind\":\"sprite\",\"actorId\":\"622a1be9-6d96-4452-a471-2bd1f3ea5ae8\"},{\"assetId\":\"0d24a16a-7616-4cf9-805b-f79c5e380a21\",\"label\":\"rowan\",\"kind\":\"sprite\",\"actorId\":\"4f3d361e-0349-4ff4-9777-e80b49552cd0\"}]"
       },
       {
-        "id": "c218c35a-7db6-4bbc-8e92-139e34bbc0f6",
-        "owner": "[\"default-user\",1793773831569]",
+        "id": "83651ae1-7f1f-48d3-be3a-ac45ed3dbab4",
+        "owner": "[\"default-user\",1793836316149]",
         "name": "Lantern candidate layout",
         "revision": 4,
-        "scene": "{\"backgroundAssetId\":\"a916017b-6a12-495c-ad32-d204e64ddd78\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"c6024afe-311f-479a-add3-6fcc0f1d1be1\",\"name\":\"Mira\",\"spriteAssetId\":\"e6f98c23-dd1b-4990-b0ad-1e15573f2ca7\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"1f895359-81c2-429d-aa65-476be2a50ce0\",\"name\":\"Rowan\",\"spriteAssetId\":\"993399a7-cce4-43a7-b5e2-5f571e633305\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
-        "catalog": "[{\"assetId\":\"a7b4140f-bc41-445f-8608-810062d1d687\",\"label\":\"Background\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"e6f98c23-dd1b-4990-b0ad-1e15573f2ca7\",\"label\":\"Mira sprite\",\"kind\":\"sprite\",\"actorId\":\"c6024afe-311f-479a-add3-6fcc0f1d1be1\"},{\"assetId\":\"993399a7-cce4-43a7-b5e2-5f571e633305\",\"label\":\"Rowan sprite\",\"kind\":\"sprite\",\"actorId\":\"1f895359-81c2-429d-aa65-476be2a50ce0\"},{\"assetId\":\"a916017b-6a12-495c-ad32-d204e64ddd78\",\"label\":\"Lantern alternative\",\"kind\":\"background\",\"actorId\":null}]"
+        "scene": "{\"backgroundAssetId\":\"b3b264c3-1c37-4320-a2cd-5c1148971d4b\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"16e306cf-358e-4174-baca-13e584922ff3\",\"name\":\"Mira\",\"spriteAssetId\":\"40a39bcf-ca03-466d-a923-8b2016436fb4\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"7a3706e9-0ecc-47a5-b0ab-c511159b5951\",\"name\":\"Rowan\",\"spriteAssetId\":\"ecdbcada-b2c8-4967-8df4-f9ea424f1d1d\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
+        "catalog": "[{\"assetId\":\"e95cc8a4-0fc1-43da-a158-fd6c4ca84115\",\"label\":\"Background\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"40a39bcf-ca03-466d-a923-8b2016436fb4\",\"label\":\"Mira sprite\",\"kind\":\"sprite\",\"actorId\":\"16e306cf-358e-4174-baca-13e584922ff3\"},{\"assetId\":\"ecdbcada-b2c8-4967-8df4-f9ea424f1d1d\",\"label\":\"Rowan sprite\",\"kind\":\"sprite\",\"actorId\":\"7a3706e9-0ecc-47a5-b0ab-c511159b5951\"},{\"assetId\":\"b3b264c3-1c37-4320-a2cd-5c1148971d4b\",\"label\":\"Lantern alternative\",\"kind\":\"background\",\"actorId\":null}]"
       },
       {
-        "id": "c25e39b7-43fe-44df-843c-0ba7d8721aad",
-        "owner": "[\"default-user\",1793773831569]",
-        "name": "Browser project",
-        "revision": 0,
-        "scene": "{\"backgroundAssetId\":\"d8a8fd65-f3c4-491a-b0e0-9785b89f539b\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"118eaae0-1692-4536-b82d-13e807182504\",\"name\":\"One\",\"spriteAssetId\":\"cc2a3adc-85d2-41e4-b902-15f32249c8fc\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"c37ca98e-d618-4240-9366-d5e775a48684\",\"name\":\"Two\",\"spriteAssetId\":\"d3a074f4-a69b-47a2-a093-0f9dcc045b5e\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
-        "catalog": "[]"
-      },
-      {
-        "id": "fefd0220-3fd7-468b-aa64-450052d9fb6f",
-        "owner": "[\"default-user\",1793773831569]",
+        "id": "9bc9e84b-0195-4dd9-a87e-d8c469c59cec",
+        "owner": "[\"default-user\",1793836316149]",
         "name": "API project",
         "revision": 1,
         "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
         "catalog": "[]"
+      },
+      {
+        "id": "ac664152-9927-4c35-8d4d-036a96df584b",
+        "owner": "[\"default-user\",1793836316149]",
+        "name": "Browser project",
+        "revision": 0,
+        "scene": "{\"backgroundAssetId\":\"17546a2d-5154-4e98-8083-17bdfb672bdb\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"2981a888-42bd-45bc-a8a3-1d852017eb77\",\"name\":\"One\",\"spriteAssetId\":\"45593428-634a-4333-9c47-a6d180b9669c\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"1ddee5dd-bb28-45f9-9873-eab0dfdf00e6\",\"name\":\"Two\",\"spriteAssetId\":\"09828770-baca-4deb-9651-a3c92c36f3ff\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
+        "catalog": "[]"
+      },
+      {
+        "id": "c399c5e1-1c6c-466b-81ce-db78dd991a10",
+        "owner": "[\"default-user\",1793836316149]",
+        "name": "Lantern council layout",
+        "revision": 2,
+        "scene": "{\"backgroundAssetId\":\"cbf4482b-90a5-4b4d-aa90-3c9330fa5d83\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"9b28e4ce-133b-4d87-968c-9903fcb9f77c\",\"name\":\"Mira\",\"spriteAssetId\":\"fe313400-acf9-49ae-9c94-d95a6a170607\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"4bea6415-8083-4e4e-8ab4-5a267262e6f5\",\"name\":\"Mira\",\"spriteAssetId\":\"88af7e9a-7c8e-4692-91cd-dffb6c746b60\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"e72c5778-a7af-460f-9671-2cd75b72a6fe\",\"name\":\"Rowan\",\"spriteAssetId\":\"88af7e9a-7c8e-4692-91cd-dffb6c746b60\",\"slot\":\"center\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"5b45532b-79a7-4655-8d04-9e19b96522da\",\"name\":\"Sage\",\"spriteAssetId\":\"424870a3-1529-4626-92d3-f86ccbe1a801\",\"slot\":null,\"present\":true,\"locks\":{\"presence\":true,\"slot\":false,\"outfit\":true}}]}",
+        "catalog": "[{\"assetId\":\"cbf4482b-90a5-4b4d-aa90-3c9330fa5d83\",\"label\":\"Background\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"fe313400-acf9-49ae-9c94-d95a6a170607\",\"label\":\"Mira sprite\",\"kind\":\"sprite\",\"actorId\":\"9b28e4ce-133b-4d87-968c-9903fcb9f77c\"},{\"assetId\":\"88af7e9a-7c8e-4692-91cd-dffb6c746b60\",\"label\":\"Mira sprite\",\"kind\":\"sprite\",\"actorId\":\"4bea6415-8083-4e4e-8ab4-5a267262e6f5\"},{\"assetId\":\"88af7e9a-7c8e-4692-91cd-dffb6c746b60\",\"label\":\"rowan\",\"kind\":\"sprite\",\"actorId\":\"e72c5778-a7af-460f-9671-2cd75b72a6fe\"},{\"assetId\":\"424870a3-1529-4626-92d3-f86ccbe1a801\",\"label\":\"sage\",\"kind\":\"sprite\",\"actorId\":\"5b45532b-79a7-4655-8d04-9e19b96522da\"}]"
       }
     ],
     "assets": [
       {
-        "id": "01f571bf-d0ca-4db1-964f-710b878159cf",
-        "project": "1cd48c30-a7d0-4caa-8ef0-e069b78554f7",
+        "id": "09828770-baca-4deb-9651-a3c92c36f3ff",
+        "project": "ac664152-9927-4c35-8d4d-036a96df584b",
+        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
+        "bytes": 4253
+      },
+      {
+        "id": "0d24a16a-7616-4cf9-805b-f79c5e380a21",
+        "project": "2f1a68dd-88a9-4470-9a7b-051650e59736",
+        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
+        "bytes": 4253
+      },
+      {
+        "id": "17546a2d-5154-4e98-8083-17bdfb672bdb",
+        "project": "ac664152-9927-4c35-8d4d-036a96df584b",
+        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
+        "bytes": 11591
+      },
+      {
+        "id": "40a39bcf-ca03-466d-a923-8b2016436fb4",
+        "project": "83651ae1-7f1f-48d3-be3a-ac45ed3dbab4",
+        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
+        "bytes": 4454
+      },
+      {
+        "id": "424870a3-1529-4626-92d3-f86ccbe1a801",
+        "project": "c399c5e1-1c6c-466b-81ce-db78dd991a10",
         "sha256": "2ff97d72355e8c093e032d450746b4484212041ffee857359604fc080542ef88",
         "bytes": 4560
       },
       {
-        "id": "02c6cc55-5835-4330-831b-061d7b005727",
-        "project": "1cd48c30-a7d0-4caa-8ef0-e069b78554f7",
+        "id": "42ee9d9f-8fd6-4047-856b-14e4d250e309",
+        "project": "9bc9e84b-0195-4dd9-a87e-d8c469c59cec",
+        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
+        "bytes": 11591
+      },
+      {
+        "id": "45593428-634a-4333-9c47-a6d180b9669c",
+        "project": "ac664152-9927-4c35-8d4d-036a96df584b",
+        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
+        "bytes": 4454
+      },
+      {
+        "id": "85e63b2b-8008-4c99-930c-1a0e509db229",
+        "project": "2f1a68dd-88a9-4470-9a7b-051650e59736",
+        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
+        "bytes": 11591
+      },
+      {
+        "id": "88af7e9a-7c8e-4692-91cd-dffb6c746b60",
+        "project": "c399c5e1-1c6c-466b-81ce-db78dd991a10",
+        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
+        "bytes": 4253
+      },
+      {
+        "id": "b3b264c3-1c37-4320-a2cd-5c1148971d4b",
+        "project": "83651ae1-7f1f-48d3-be3a-ac45ed3dbab4",
         "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
         "bytes": 6085
       },
       {
-        "id": "3cb7d370-0f60-465f-a12a-10ae9fa80bfc",
-        "project": "fefd0220-3fd7-468b-aa64-450052d9fb6f",
-        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
-        "bytes": 11591
-      },
-      {
-        "id": "624f20eb-b8d4-438d-977f-e4140037cb4d",
-        "project": "56ab7c3e-5396-4fe6-ac60-53d85bc00bad",
-        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
-        "bytes": 4454
-      },
-      {
-        "id": "78ba3abf-77ab-4d21-adc6-8ad3efbcd4c4",
-        "project": "1cd48c30-a7d0-4caa-8ef0-e069b78554f7",
-        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
-        "bytes": 4454
-      },
-      {
-        "id": "993399a7-cce4-43a7-b5e2-5f571e633305",
-        "project": "c218c35a-7db6-4bbc-8e92-139e34bbc0f6",
-        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
-        "bytes": 4253
-      },
-      {
-        "id": "9b88ead4-dfbb-46a5-ad9b-1e95c99b5e36",
-        "project": "56ab7c3e-5396-4fe6-ac60-53d85bc00bad",
-        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
-        "bytes": 11591
-      },
-      {
-        "id": "9c1f6173-3920-4dfe-981e-f562bab12f07",
-        "project": "1cd48c30-a7d0-4caa-8ef0-e069b78554f7",
-        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
-        "bytes": 4253
-      },
-      {
-        "id": "a7b4140f-bc41-445f-8608-810062d1d687",
-        "project": "c218c35a-7db6-4bbc-8e92-139e34bbc0f6",
-        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
-        "bytes": 11591
-      },
-      {
-        "id": "a916017b-6a12-495c-ad32-d204e64ddd78",
-        "project": "c218c35a-7db6-4bbc-8e92-139e34bbc0f6",
+        "id": "cbf4482b-90a5-4b4d-aa90-3c9330fa5d83",
+        "project": "c399c5e1-1c6c-466b-81ce-db78dd991a10",
         "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
         "bytes": 6085
       },
       {
-        "id": "b6bd1ab1-4cd7-42da-935b-b00ec8db15f2",
-        "project": "56ab7c3e-5396-4fe6-ac60-53d85bc00bad",
-        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
-        "bytes": 4253
-      },
-      {
-        "id": "cc2a3adc-85d2-41e4-b902-15f32249c8fc",
-        "project": "c25e39b7-43fe-44df-843c-0ba7d8721aad",
-        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
-        "bytes": 4454
-      },
-      {
-        "id": "d3a074f4-a69b-47a2-a093-0f9dcc045b5e",
-        "project": "c25e39b7-43fe-44df-843c-0ba7d8721aad",
-        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
-        "bytes": 4253
-      },
-      {
-        "id": "d8a8fd65-f3c4-491a-b0e0-9785b89f539b",
-        "project": "c25e39b7-43fe-44df-843c-0ba7d8721aad",
+        "id": "e95cc8a4-0fc1-43da-a158-fd6c4ca84115",
+        "project": "83651ae1-7f1f-48d3-be3a-ac45ed3dbab4",
         "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
         "bytes": 11591
       },
       {
-        "id": "e6f98c23-dd1b-4990-b0ad-1e15573f2ca7",
-        "project": "c218c35a-7db6-4bbc-8e92-139e34bbc0f6",
+        "id": "ecdbcada-b2c8-4967-8df4-f9ea424f1d1d",
+        "project": "83651ae1-7f1f-48d3-be3a-ac45ed3dbab4",
+        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
+        "bytes": 4253
+      },
+      {
+        "id": "f4034370-ed26-465f-b1ae-83e65fec9dfe",
+        "project": "2f1a68dd-88a9-4470-9a7b-051650e59736",
+        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
+        "bytes": 4454
+      },
+      {
+        "id": "fe313400-acf9-49ae-9c94-d95a6a170607",
+        "project": "c399c5e1-1c6c-466b-81ce-db78dd991a10",
         "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
         "bytes": 4454
       }

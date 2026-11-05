@@ -1,6 +1,6 @@
 # Post-Gate-B cleanup — implementation record
 
-**Candidate, unmerged.** Written on `1741b870391709745250a55537fbc1e2699a0b77`, rebased onto main `22b774d` (M3.1 PR A merged); campaign candidate `67d620724185cc42aa1121a4d4334dde69e07320`. Runtime change (renderer and controller copy), validated by the full campaign below. Nothing here is approved.
+**Merged** as [#77](https://github.com/Sonoran-Solutions/SillyNovel/pull/77), `6f8cf24`, on 2026-11-04. Written on `1741b870391709745250a55537fbc1e2699a0b77`, rebased onto main `22b774d` (M3.1 PR A merged); campaign candidate `67d620724185cc42aa1121a4d4334dde69e07320`. Runtime change (renderer and controller copy), validated by the full campaign below. The merge accepts the runtime change only; the T60 wording is still a proposal.
 
 ## Changes and PR D findings
 
@@ -56,4 +56,4 @@ Package: [`docs/evidence/post-gate-b-cleanup/campaign/`](evidence/post-gate-b-cl
 
 - No test drives the missing-art read-out itself; the browser and native suites pass around it, but the `undefined` case has no dedicated assertion.
 - Runner exit fix: by inspection only; owner mode NOT_RUN.
-- The proposed T60 wording waits for the owner's acceptance at merge.
+- The proposed T60 wording still waits for the owner's acceptance: #77 merged without a ruling on it, and TESTING T60 is unchanged.

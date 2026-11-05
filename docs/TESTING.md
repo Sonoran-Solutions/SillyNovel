@@ -2,7 +2,7 @@
 
 ## M3.1 PR B candidate — T69, T70 and T71 covered; T72 partly; T73 NOT_RUN — 2026-11-03
 
-Full campaign on frozen `62b848b`, unmerged, on a disposable pinned SillyTavern 1.19.0 host: Node 373/373, storage 126/126, browser 105/105, seven native campaigns; `python3 tests/probes/dyl60/validate.py docs/evidence/m3-1-b/campaign` PASS. Browser and native checks cover T69–T71; T72 has its detach half in the browser and its capture rule in Node. T73 (keyboard-only, narrow, scaling, touch and screen readers for the new controls) is NOT_RUN. [Record](M3_1_IMAGE_WORKFLOW_IMPLEMENTATION.md#pr-b--the-image-workflow).
+Full campaign on frozen `66a0297` (rebased onto the merged cleanup `6f8cf24`), unmerged, on a disposable pinned SillyTavern 1.19.0 host: Node 373/373, storage 126/126, browser 105/105, seven native campaigns; `python3 tests/probes/dyl60/validate.py docs/evidence/m3-1-b/campaign` PASS. Browser and native checks cover T69–T71; T72 has its detach half in the browser and its capture rule in Node. T73 (keyboard-only, narrow, scaling, touch and screen readers for the new controls) is NOT_RUN. [Record](M3_1_IMAGE_WORKFLOW_IMPLEMENTATION.md#pr-b--the-image-workflow).
 
 ## M3.1 PR A candidate — T69, T70 and T72 covered in Node — 2026-11-03
 

@@ -1,4 +1,4 @@
-Owned evidence root /tmp/sn-portability-host-4pY2vN
+Owned evidence root /tmp/sn-portability-host-i2xpdP
 PASS real host auth/CSRF, two-user project and asset isolation, two-client CAS, PNG hash and limits
 PASS browser create/import background + two sprites/arrange/save/reload/explicit reopen; named canonical files unchanged
 PASS portable browser download/import preserves dirty stage; explicit reopen restores new identities, bytes, layout/locks; exact native inventory unchanged
@@ -16,4 +16,4 @@ PASS restored pinned host serves every original project/PNG and retains two-acco
 PASS explicit browser reopen renders original background/two sprites; native reader/composer/draft work; inventoried canonical files unchanged
 PASS restored installation restart preserves complete rows/ownership and native file inventory
 PASS plugin disabled at startup refuses bundle controls and retains session stage/native composer
-Evidence /tmp/sn-portability-host-4pY2vN/evidence.json
+Evidence /tmp/sn-portability-host-i2xpdP/evidence.json

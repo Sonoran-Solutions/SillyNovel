@@ -1,4 +1,4 @@
-Owned evidence root /tmp/sn-portability-host-yAAMWO
+Owned evidence root /tmp/sn-portability-host-J1db3c
 PASS real host auth/CSRF, two-user project and asset isolation, two-client CAS, PNG hash and limits
 PASS browser create/import background + two sprites/arrange/save/reload/explicit reopen; named canonical files unchanged
 PASS cleanup authenticated preview, strict schema/body/method/CSRF and two-account/foreign-ID isolation
@@ -20,4 +20,4 @@ PASS actual host native send/stream/stop, navigation and backlog remain function
 PASS plugin/server restart preserves original and imported layout/assets; imported project explicitly reopens in real browser
 PASS plugin disabled at startup refuses bundle controls and retains session stage/native composer
 PASS CSRF-disabled pinned host refuses cleanup inspection and persistence
-Evidence /tmp/sn-portability-host-yAAMWO/evidence.json
+Evidence /tmp/sn-portability-host-J1db3c/evidence.json
