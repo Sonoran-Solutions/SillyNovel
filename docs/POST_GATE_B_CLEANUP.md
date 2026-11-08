@@ -7,11 +7,11 @@
 | Finding | Disposition |
 | --- | --- |
 | (a) Removed-art read-out | Fixed in `src/stage-view.mjs:369`, `:372`, `:374`, `:378`: append background/outfit/library asset IDs only when present, including both selected-art suffixes. Existing textContent rendering retained. |
-| (b) T60 regenerate wording | `docs/TESTING.md` NOT changed. Proposed amended Expected text below, for the owner to accept at merge. |
+| (b) T60 regenerate wording | Proposed amended Expected text below; the owner accepted it on 2026-11-08 and `docs/TESTING.md` T60 now carries it. |
 | (c) Reply notice | `src/director-controller.mjs:224`: “Director request set aside for your reply”. Only displayed copy changed; `SUPERSEDED`, log label `superseded` and classification unchanged. Assertions updated in `tests/m2-director-controller.test.mjs:472`, `:706` and `tests/probes/m2-director/host.mjs:240`, `:261`. |
 | (d) STALE_JOURNAL vs STALE_SCENE | No change: global edits rebase the journal and reach `STALE_JOURNAL` first; corrections reach `STALE_SCENE`, as previously observed and asserted. Neither is a failure. |
 
-Proposed T60 **Expected** (not an owner-approved matrix amendment): “Excerpts deleted; outcome kept in tallies; no text of the old message remains in the log. When a changed source retains its message key, its row shows ‘message changed’. A real regenerate replaces the message under a new key: the excerpt is gone and tallies keep the outcome, but no ‘message changed’ row remains at the selected replacement message.” Existing evidence annotations should retain their original tested revisions.
+Proposed T60 **Expected** (accepted by the owner on 2026-11-08): “Excerpts deleted; outcome kept in tallies; no text of the old message remains in the log. When a changed source retains its message key, its row shows ‘message changed’. A real regenerate replaces the message under a new key: the excerpt is gone and tallies keep the outcome, but no ‘message changed’ row remains at the selected replacement message.” Existing evidence annotations should retain their original tested revisions.
 
 ## Host findings
 
@@ -56,4 +56,4 @@ Package: [`docs/evidence/post-gate-b-cleanup/campaign/`](evidence/post-gate-b-cl
 
 - No test drives the missing-art read-out itself; the browser and native suites pass around it, but the `undefined` case has no dedicated assertion.
 - Runner exit fix: by inspection only; owner mode NOT_RUN.
-- The proposed T60 wording still waits for the owner's acceptance: #77 merged without a ruling on it, and TESTING T60 is unchanged.
+- The proposed T60 wording was accepted by the owner on 2026-11-08, after #77 merged; TESTING T60 now carries it.

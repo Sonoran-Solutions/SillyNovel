@@ -103,7 +103,7 @@ Nothing is sent to an image service. The only storage requests the workflow make
 | T70 | Browser: a duplicate refuses; the downloaded reference equals the served bytes; a changed stored file refuses. Native: the download is the stored file, by digest, and the only request is the authenticated readback. Node: foreign, unknown and path-shaped references refuse; fixed filenames. | — |
 | T71 | Browser: a non-PNG refuses before preview; choose and discard upload nothing; Import and apply is disabled, and a synthetic click uploads nothing, exactly while the PNG import is (held cleanup review); then it uploads once, applies the background and marks the project unsaved. Native: through the real plugin decoder, saved, locked, with the stored bytes equal to the file. Node: animation, truncation, oversize and dimension ceilings. | Save conflict and quota during this import (covered for the shared import path by the existing campaigns, not exercised from the workflow) |
 | T72 | Browser: detach clears references and a pending preview, which never uploads, and keeps the text. Node: capture rules including A → B → A. | A delayed decode racing a detach, on the real host |
-| T73 | — | **All NOT_RUN:** keyboard-only pass, narrow layout and 200 % scaling of the disclosure, touch file picker and downloads on the Galaxy Tab, screen readers |
+| T73 | PASS by the owner's report on 2026-11-08 (no devices, tools or revision given; [decision](DECISIONS.md#owner-verdict--t73-pass-t60-wording-accepted--2026-11-08)) | Agent evidence: none. At freeze, all NOT_RUN: keyboard-only pass, narrow layout and 200 % scaling of the disclosure, touch file picker and downloads on the Galaxy Tab, screen readers |
 
 ### Commands and results
 
@@ -126,4 +126,4 @@ Host: SillyTavern 1.19.0 at `7e8663cd9c184a550b37238218bdd32c6efc68e9`, a dispos
 
 ### Not covered
 
-Physical and assistive rows (T73); any image provider, which is M3.2 and not authorized; generated-candidate storage (H7, deferred).
+Physical and assistive rows (T73) have no agent evidence; the owner reported them PASS on 2026-11-08. Any image provider, which is M3.2 and not authorized; generated-candidate storage (H7, deferred).

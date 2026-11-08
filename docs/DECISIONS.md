@@ -1,5 +1,9 @@
 # Decision register
 
+## Owner verdict — T73 PASS; T60 wording accepted — 2026-11-08
+
+**Owner: Dylan. Date: 2026-11-08, America/Phoenix. Status: APPROVED.** The owner said “You can record that T73 passes and I accept T60 wording.” (1) **T73** (Image workflow keyboard, scaling, touch and screen-reader checks) is PASS on the owner's own report. The report names no device, assistive tool or revision, and no agent evidence exists for it. This closes the last open row of [DYL-207](https://linear.app/devils17/issue/DYL-207/sillynovel-m31-manual-image-exchange-promptreference-export-explicit). (2) The **T60** Expected text proposed in the [post-Gate-B cleanup record](POST_GATE_B_CLEANUP.md) is accepted as a matrix amendment: a real regenerate replaces the message under a new key, so no ‘message changed’ row remains at the replacement. Nothing further is authorized: M3.2 planning (H3, H5, H6, H7) and the optional H8 session wait for the owner's word. Gate C NOT_RUN.
+
 ## Owner direction — M3.1 PR B merged — 2026-11-04
 
 **Owner: Dylan. Date: 2026-11-04, America/Phoenix. Status: APPROVED (merge).** After the combined campaign on `66a0297` passed, the owner said “Merge #80.” [#80](https://github.com/Sonoran-Solutions/SillyNovel/pull/80) merged as `ad4279d`; both M3.1 PRs are now on main. The merge does not waive T73 (keyboard-only, narrow layout and 200 % scaling, touch and downloads on the Galaxy Tab, screen readers), which stays NOT_RUN, so [DYL-207](https://linear.app/devils17/issue/DYL-207/sillynovel-m31-manual-image-exchange-promptreference-export-explicit) stays open for it. It authorizes nothing further: M3.2 planning (H3, H5, H6, H7) and the optional H8 session wait for the owner's word. Gate C NOT_RUN.
