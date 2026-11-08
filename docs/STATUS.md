@@ -1,5 +1,9 @@
 # Project status
 
+## M3.1 complete — 2026-11-08
+
+On the [owner's word](DECISIONS.md#owner-verdict--t73-pass-t60-wording-accepted--2026-11-08), T73 is PASS by owner report and the T60 wording proposed by the post-Gate-B cleanup is accepted. With both M3.1 PRs merged, DYL-207 is done. Next, only on the owner's word: the optional H8 director session and M3.2 planning (H3, H5, H6, H7, O05). Gate C NOT_RUN.
+
 ## M3.1 merged — 2026-11-04
 
 Both M3.1 PRs are on main: PR A ([#79](https://github.com/Sonoran-Solutions/SillyNovel/pull/79)) and PR B ([#80](https://github.com/Sonoran-Solutions/SillyNovel/pull/80), `ad4279d`), on the [owner's word](DECISIONS.md#owner-direction--m31-pr-b-merged--2026-11-04). The Image workflow ships with no image provider. Evidence is the combined campaign on `66a0297`. T73 is NOT_RUN and keeps DYL-207 open. Nothing further is authorized. Gate C NOT_RUN.
