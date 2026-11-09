@@ -2,6 +2,8 @@
 
 **PR A accepted — 2026-11-08.** The owner [accepted](DECISIONS.md#owner-acceptance--m32-pr-a-merged-four-findings-adopted-pr-b-go-ahead--2026-11-08) PR A as merged (`3665f6e`), adopted its four findings into the plan, and authorized PR B.
 
+**PR B accepted — 2026-11-08.** The owner [accepted](DECISIONS.md#owner-acceptance--m32-pr-b-merged-two-proposals-adopted-pr-c-go-ahead--2026-11-08) PR B as merged (`2bc9fea`), adopted its two proposals into the plan, and authorized PR C.
+
 ## PR A — the seam probe, tests only
 
 **Candidate, unmerged. Frozen `75b2807`**, based on main `522b79d` (the [plan](M3_2_IMAGE_ROUTE_PLAN.md) and the [owner rulings I1–I10](DECISIONS.md#owner-rulings-i1i10--m32-first-image-route--2026-11-08)). Tracked by [DYL-213](https://linear.app/devils17/issue/DYL-213/sillynovel-m32-first-image-route-host-image-generation-local-comfyui). Tests and a fixture only (plan section 7, PR A): nothing under `src/`, `index.js`, `style.css` or the plugin changes, so the runtime behaves exactly as main does. No provider was contacted; the owner's ComfyUI on port 8188 was never reached.
