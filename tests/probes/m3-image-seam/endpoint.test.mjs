@@ -89,6 +89,15 @@ test('deterministic loopback ComfyUI fixture contract', async () => {
     assert.equal(jpgResponse.headers.get('content-type'), 'image/jpeg');
     assert.notEqual((await jpgResponse.arrayBuffer()).byteLength, bytes.length);
 
+    // Reset keeps the job counter and completed jobs: ids never repeat across cases.
+    await control({ reset: true });
+    assert.deepEqual(await (await response('/log')).json(), []);
+    assert.equal((await waitDone('sn-1')).status.status_str, 'success');
+    const afterReset = await prompt(); assert.equal(afterReset.prompt_id, 'sn-7'); await waitDone(afterReset.prompt_id);
+    const historyLog = (await (await response('/log')).json()).filter(entry => entry.path.startsWith('/history/'));
+    assert.ok(historyLog.every(entry => typeof entry.historyId === 'string' && typeof entry.terminal === 'boolean'));
+    assert.ok(historyLog.some(entry => entry.historyId === 'sn-7' && entry.terminal));
+
     const guarded = launch(8188);
     const [code] = await once(guarded, 'exit'); assert.notEqual(code, 0);
 });

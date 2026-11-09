@@ -48,7 +48,9 @@ const server = createServer(async (req, res) => {
     });
     if (req.method === 'POST' && url.pathname === '/control') {
         let body; try { body = JSON.parse(rawBody || '{}'); } catch { return send(res, 400, {}); }
-        if (body.reset) { log = []; script = []; jobs.clear(); held.clear(); fallback = {}; nextJob = 1; started = Date.now(); }
+        // Reset clears the log, script, held set and fallback only. Job ids never restart and completed jobs stay answerable,
+        // so a host still polling an earlier job can never be handed a later case's job under a reused id.
+        if (body.reset) { log = []; script = []; held.clear(); fallback = {}; }
         if (Array.isArray(body.script)) script.push(...body.script);
         if (body.fallback) fallback = body.fallback;
         if (body.release) for (const id of [...held]) complete(jobs.get(id));
@@ -69,7 +71,7 @@ const server = createServer(async (req, res) => {
     }
     if (req.method === 'GET' && url.pathname.startsWith('/history')) {
         const id = url.pathname === '/history' ? null : decodeURIComponent(url.pathname.slice('/history/'.length));
-        if (id !== null) { const job = jobs.get(id); return send(res, 200, job?.done ? { [id]: historyItem(job) } : {}); }
+        if (id !== null) { const job = jobs.get(id); entry.historyId = id; entry.terminal = !!job?.done; return send(res, 200, job?.done ? { [id]: historyItem(job) } : {}); }
         return send(res, 200, Object.fromEntries([...jobs.values()].filter(job => job.done).map(job => [job.id, historyItem(job)])));
     }
     if (req.method === 'GET' && url.pathname === '/view') {

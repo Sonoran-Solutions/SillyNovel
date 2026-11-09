@@ -55,7 +55,7 @@ async function writeBounded(file, value) {
     await writeFile(file, bytes <= MiB ? text : JSON.stringify({ truncated: true, originalLength: bytes, sha256: sha(text), head: text.slice(0, MiB / 2) }));
 }
 
-const evidence = { host: PIN, node: process.version, setup: {}, cases: [], findings: [], restoreFailures: [],
+const evidence = { startedAt: new Date(performance.timeOrigin).toISOString(), host: PIN, node: process.version, setup: {}, cases: [], findings: [], restoreFailures: [],
     notTested: ['Real ComfyUI (the owner\'s 127.0.0.1:8188 was never contacted); /interrupt is measured only as the fixture\'s log entry, not as real work stopping', 'Other host versions, including the owner\'s 1.18.0', 'Other image-aware extensions (SD_PROMPT_PROCESSING listeners)', 'RunPod serverless and every cloud source', 'Physical devices', 'Group chats', 'Non-default sampler/model/VAE selections'] };
 let h, page, fixture, fixtureOut = '', fixtureOrigin, verdict = 'STOP';
 const apiLog = [], dialogs = [];
@@ -212,14 +212,20 @@ async function seamCase(id, { prompt, negative = '', step, abortable = false, du
     const extra = during ? await during() : {};
     await until(async () => (await callState()).state !== 'pending', id + ' settles', 60000);
     const returned = await callState();
+    const settledSeq = (await comfy('/log')).length;
     await untilNoHeldJob();
+    // The host's server keeps polling /history/<id> on its own; before the next case resets the fixture, wait until it has
+    // been answered terminally for every job of this case (or fetched its /view), so no poll outlives the case.
+    const jobIds = (await comfy('/log')).filter(e => e.path === '/prompt' && e.promptId).map(e => e.promptId);
+    for (const jobId of jobIds) await until(async left => (await comfy('/log', undefined, left)).some(e => (e.historyId === jobId && e.terminal) || (e.path === '/view' && e.query?.filename?.startsWith(jobId + '.'))), id + ' host poll of ' + jobId + ' answered terminally');
     // Taken after the call settles and before any restore of a deliberate override.
     const after = await snapshot(), imagesAfter = await images();
     const fixtureLog = await comfy('/log'), text = (await requests()).slice(textStart);
+    const stalePolls = fixtureLog.slice(settledSeq).filter(e => jobIds.includes(e.historyId)).length;
     const api = apiLog.slice(apiStart), toasts = (await page.evaluate(() => window.__toasts)).slice(toastStart);
     const generate = api.filter(e => e.path === '/api/sd/comfy/generate'), prompts = fixtureLog.filter(e => e.path === '/prompt');
     const o = { id, prompt, negative, step, returned, before, after, imagesNew: newFiles(imagesBefore, imagesAfter), imagesAfter, fixtureLog, text, api, toasts,
-        pageErrors: h.pageErrors.slice(errStart), dialogs: dialogs.slice(dialogStart), generate, prompts, ...extra };
+        pageErrors: h.pageErrors.slice(errStart), dialogs: dialogs.slice(dialogStart), generate, prompts, jobIds, stalePollsAfterSettle: stalePolls, ...extra };
     o.workflow = prompts[0]?.rawBody ? (() => { try { return JSON.parse(prompts[0].rawBody).prompt; } catch { return null; } })() : null;
     if (o.workflow) {
         const sampler = Object.values(o.workflow).find(n => n.class_type === 'KSampler');
@@ -236,7 +242,7 @@ async function seamCase(id, { prompt, negative = '', step, abortable = false, du
 const backgroundChanged = o => o.before.background !== o.after.background || !isDeepStrictEqual(o.before.backgroundMeta, o.after.backgroundMeta);
 const changedKeys = (a, b) => Object.keys({ ...a, ...b }).filter(k => !isDeepStrictEqual(a[k], b[k]));
 const summary = o => ({ returned: o.returned, prompts: o.prompts.length, positiveText: o.positiveText, negativeText: o.negativeText, seed: o.seed, imagesNew: o.imagesNew,
-    textRequests: o.text.length, decoysOnImageWire: o.decoysOnImageWire, decoysOnTextWire: o.decoysOnTextWire, toasts: o.toasts, pageErrors: o.pageErrors, dialogs: o.dialogs,
+    stalePollsAfterSettle: o.stalePollsAfterSettle, textRequests: o.text.length, decoysOnImageWire: o.decoysOnImageWire, decoysOnTextWire: o.decoysOnTextWire, toasts: o.toasts, pageErrors: o.pageErrors, dialogs: o.dialogs,
     chatChanged: o.before.chatSha256 !== o.after.chatSha256, chatLength: [o.before.chatLength, o.after.chatLength], backgroundChanged: backgroundChanged(o),
     settingsChangedByCall: changedKeys(o.before.sd, o.after.sd) });
 // Explicit pass conditions shared by every required case. `chat: false` only for R5, which switches chats on purpose.
@@ -373,6 +379,23 @@ try {
         try { genBody = JSON.parse(o.generate[0].body); } catch { f.push('generate body unparsed'); }
         if (genBody && genBody.prompt !== o.prompts[0]?.rawBody) f.push('generate prompt != fixture /prompt body');
         if (genBody && genBody.url !== fixtureOrigin) f.push('generate url ' + genBody.url);
+        if (genBody && !isDeepStrictEqual(Object.keys(genBody).sort(), ['prompt', 'url'])) f.push('generate body keys ' + Object.keys(genBody).join(','));
+        // The expected workflow, built independently from the host checkout's shipped default with the host's substitutions
+        // (stable-diffusion/index.js L4233-4249 at the pin) and the settings snapshot taken before the call.
+        let expected = null, received = null;
+        try {
+            const sd = o.before.sd;
+            if ((sd.comfy_placeholders ?? []).length) f.push('unexpected custom comfy_placeholders');
+            let w = shippedText.replaceAll('"%prompt%"', JSON.stringify(combinePrefixes(BASE.prompt_prefix, 'a quiet reading room at dusk', '{prompt}')));
+            w = w.replaceAll('"%negative_prompt%"', JSON.stringify(combinePrefixes('SN-DRAFT-NEG', BASE.negative_prompt)));
+            w = w.replaceAll('"%seed%"', JSON.stringify(1234));
+            w = w.replaceAll('"%denoise%"', JSON.stringify(sd.denoising_strength === undefined ? 1.0 : sd.denoising_strength));
+            w = w.replaceAll('"%clip_skip%"', JSON.stringify(isNaN(sd.clip_skip) ? -1 : -sd.clip_skip));
+            for (const ph of ['model', 'vae', 'sampler', 'scheduler', 'steps', 'scale', 'width', 'height']) w = w.replaceAll(`"%${ph}%"`, JSON.stringify(sd[ph]));
+            expected = { prompt: JSON.parse(w) };
+            received = JSON.parse(o.prompts[0]?.rawBody);
+            assert.deepEqual(received, expected);
+        } catch (e) { f.push('received /prompt body differs from the independently built workflow: ' + String(e.message).split('\n')[0]); }
         const types = o.workflow ? [...new Set(Object.values(o.workflow).map(n => n.class_type))].sort() : [];
         if (!isDeepStrictEqual(types, shippedTypes)) f.push('class_types ' + types.join(','));
         const expectPos = combinePrefixes(BASE.prompt_prefix, 'a quiet reading room at dusk', '{prompt}'), expectNeg = combinePrefixes('SN-DRAFT-NEG', BASE.negative_prompt);
@@ -430,6 +453,7 @@ try {
         if (!r.interruptLogged) f.push('fixture did not log /interrupt');
         nonPath(o, f); noFile(o, f);
         required('R4', o, f, { afterAbort: r.afterAbort, interruptLoggedByFixture: r.interruptLogged, historyPollsBeforeAbortEnded: r.historyPolls });
+        finding('H9', o, `server-side polling of /history/<id> continues after the client abort until the backend reports the job terminal; ${o.stalePollsAfterSettle} stale polls observed after R4 settled`, { stalePollsAfterSettle: o.stalePollsAfterSettle, jobIds: o.jobIds });
     }
     // R5 chat change while held
     {
@@ -438,15 +462,22 @@ try {
             await untilPrompt();
             await select('Seam B');
             seamB.before = await snapshot();
+            seamB.pendingBeforeRelease = (await callState()).state === 'pending';
+            seamB.releaseSeq = (await comfy('/log')).length;
             await comfy('/control', { release: true });
             return {};
         } }), f = [];
         seamB.after = await snapshot();
         invariants(o, f, { chat: false });
         nonPath(o, f); noFile(o, f);
+        if (!seamB.pendingBeforeRelease) f.push('call was not pending before release');
+        const viewAfterRelease = o.fixtureLog.slice(seamB.releaseSeq).some(e => e.path === '/view');
+        if (!viewAfterRelease) f.push('host did not fetch /view after release');
+        if (!(o.returned.state === 'resolved' && o.returned.type === 'undefined')) f.push('resolved value is not undefined');
+        if (!o.toasts.some(t => t.includes('Chat changed'))) f.push('no "Chat changed" toast');
         if (seamB.before.chatSha256 !== seamB.after.chatSha256 || seamB.before.chatLength !== seamB.after.chatLength) f.push('Seam B chat changed');
         if (seamB.before.background !== seamB.after.background || !isDeepStrictEqual(seamB.before.backgroundMeta, seamB.after.backgroundMeta)) f.push('Seam B background changed');
-        required('R5', o, f, { seamBChat: { before: seamB.before.chatSha256, after: seamB.after.chatSha256, length: seamB.after.chatLength } });
+        required('R5', o, f, { pendingBeforeRelease: seamB.pendingBeforeRelease, viewAfterRelease, seamBChat: { before: seamB.before.chatSha256, after: seamB.after.chatSha256, length: seamB.after.chatLength } });
         await select('Seam A');
         await openSeamChat();
         await page.waitForFunction(() => SillyTavern.getContext().chat.length === 2);
@@ -552,14 +583,21 @@ try {
     }
     console.error(error);
     if (root) await page?.screenshot({ path: join(root, 'failure.png') }).catch(() => {});
-    process.exitCode = 1;
 } finally {
     evidence.verdict = verdict;
     evidence.dialogs = dialogs;
+    // Best-effort fallback write before cleanup, in case cleanup itself throws or hangs.
+    if (root) { try { await writeBounded(join(root, 'evidence.json'), redact({ ...evidence, cleanup: 'pending' })); } catch (e) { console.error('fallback evidence write failed', e); } }
+    const cleanup = { harnessClosed: false, fixtureExit: null, ownedRoot: root ?? null };
+    try { if (h) { await h.close(); cleanup.harnessClosed = true; } } catch (e) { cleanup.harnessClosed = 'error: ' + String(e?.message ?? e); }
+    try { await stopFixture(); cleanup.fixtureExit = fixture ? { code: fixture.exitCode, signal: fixture.signalCode } : null; } catch (e) { cleanup.fixtureExit = { error: String(e?.message ?? e) }; }
+    const fixtureGone = !fixture || cleanup.fixtureExit?.code != null || cleanup.fixtureExit?.signal != null;
+    // Non-zero only when the measurement could not complete; an unfinished cleanup also leaves it incomplete.
+    let exitCode = evidence.error || cleanup.harnessClosed !== true || !fixtureGone ? 1 : 0;
     evidence.fixtureConsoleTail = fixtureOut.slice(-4096);
-    if (root) { try { await writeBounded(join(root, 'evidence.json'), redact(evidence)); } catch (e) { console.error('evidence write failed', e); process.exitCode = 1; } }
-    try { await h?.close(); } catch (e) { console.error('harness close failed', e); process.exitCode = 1; }
-    try { await stopFixture(); } catch (e) { console.error('fixture stop failed', e); process.exitCode = 1; }
+    Object.assign(evidence, { cleanup, exitCode, endedAt: new Date().toISOString(), elapsedMs: Math.round(Date.now() - performance.timeOrigin) });
+    if (root) { try { await writeBounded(join(root, 'evidence.json'), redact(evidence)); } catch (e) { console.error('evidence write failed', e); exitCode = 1; } }
+    process.exitCode = exitCode;
     console.log('VERDICT ' + verdict);
     console.log('Evidence ' + (root ? join(root, 'evidence.json') : 'not written (no owned root)'));
 }

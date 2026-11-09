@@ -23,9 +23,9 @@ before it is fetched, and redirects are refused.
   logs `/interrupt`, no file), chat change, backend error, non-PNG (`.jpg` path and the fixture's non-PNG bytes), and
   still polling after a 15 s hold. Every required case also requires unchanged settings, chat and background and no
   text-endpoint request (R5 checks the chat it switched to instead).
-- Hazard cases H1-H8 print `FINDING`: macros, character prefix, trigger word, `free_extend`, avatar workflow,
+- Hazard cases H1-H9 print `FINDING`: macros, character prefix, trigger word, `free_extend`, avatar workflow,
   in-flight dimensions, stale sampler selection, and a DOM `AbortController` passed as `_abortController` (ignored by
-  the host: still pending after abort, no `/interrupt`, file saved after release).
+  the host: still pending after abort, no `/interrupt`, file saved after release); H9 stale `/history` polls.
 
 `/interrupt` is the fixture's log of the host's request, not evidence that real ComfyUI work stops. R8 measures only
 that polling continues after 15 s; the absence of a host deadline is a source finding.
