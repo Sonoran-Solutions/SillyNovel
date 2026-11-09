@@ -50,6 +50,7 @@ steps = [(name, ['node', '--test', '--test-isolation=none', *map(str, files)], {
 for name, flags in [('stage-library-migration', ['STAGE_UX','LIBRARY','MIGRATION']), ('expressions',['EXPRESSIONS']), ('groups',['GROUP']), ('recovery',['RECOVERY']), ('cleanup',['CLEANUP']), ('native-integrity-branches',['CANDIDATE'])]:
     steps.append((name, ['node','tests/probes/project-portability/host.mjs',str(host)], {f'SN_{f}_RUN':'1' for f in flags}, 600))
 steps.append(('director', ['node', 'tests/probes/m2-director/host.mjs', str(host)], {}, 1500))
+steps.append(('image-route', ['node', 'tests/probes/m3-image-route/host.mjs', str(host)], {}, 900))
 runs = []
 for name, command, flags, limit in steps:
     assert output(['git', 'rev-parse', 'HEAD']) == candidate

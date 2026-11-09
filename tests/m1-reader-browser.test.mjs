@@ -3,12 +3,15 @@ import { readFile } from 'node:fs/promises';
 import { createServer } from 'node:http';
 import { resolve } from 'node:path';
 import test, { before, after } from 'node:test';
+import { createHash } from 'node:crypto';
+import { preflight, reviewText } from '../src/image-request.mjs';
 
 // Test tooling is external; production reuses the pinned host's installed libraries.
 const { chromium } = await import(process.env.SN_PLAYWRIGHT_MODULE || 'playwright');
 const hostRoot = process.env.SILLYTAVERN_ROOT;
 if (!hostRoot) throw new Error('Set SILLYTAVERN_ROOT to the pinned host checkout (installed showdown/dompurify).');
 let browser, server, origin;
+const shippedWorkflow = await readFile(resolve(hostRoot, 'default/content/Default_Comfy_Workflow.json'), 'utf8');
 const root = resolve(import.meta.dirname, '..');
 const files = new Map([
     ['/', resolve(root, 'tests/fixtures/reader-browser.html')],
@@ -24,6 +27,14 @@ before(async () => {
             res.writeHead(200, { 'content-type': 'text/javascript' }).end('export const showdown = window.showdown; export const DOMPurify = window.DOMPurify;');
             return;
         }
+        // The host image seam's surroundings (M3.2): the host's abort controller module, the shipped workflow and the host's image folder.
+        if (path === '/scripts/slash-commands/SlashCommandAbortController.js') {
+            res.writeHead(200, { 'content-type': 'text/javascript' }).end("export class SlashCommandAbortController extends EventTarget { abort(reason) { this.aborted = true; this.reason = reason; this.dispatchEvent(new Event('abort')); } }");
+            return;
+        }
+        if (path === '/api/sd/comfy/workflow' && req.method === 'POST') { res.writeHead(200, { 'content-type': 'application/json' }).end(JSON.stringify(shippedWorkflow)); return; }
+        if (path === '/user/images/synthetic.png') { res.writeHead(200, { 'content-type': 'image/png' }).end(await readFile(resolve(root, 'tests/fixtures/m12-stage/tavern.png'))); return; }
+        if (path === '/user/images/synthetic.jpg') { res.writeHead(200, { 'content-type': 'image/jpeg' }).end(Buffer.from('not a png 13!')); return; }
         if (!files.has(path)) { res.writeHead(404).end(); return; }
         res.writeHead(200, { 'content-type': path.endsWith('.html') || path === '/' ? 'text/html' : path.endsWith('.css') ? 'text/css' : path.endsWith('.png') ? 'image/png' : 'text/javascript' }).end(await readFile(files.get(path)));
     });
@@ -32,11 +43,12 @@ before(async () => {
     browser = await chromium.launch({ headless: true });
 });
 after(async () => { await browser?.close(); await new Promise(resolve => server?.close(resolve)); });
-async function fixture(t, query = '', initScript = null) {
+async function fixture(t, query = '', initScript = null, prepare = null) {
     const context = await browser.newContext({ viewport: { width: 1280, height: 900 }, permissions: ['clipboard-read', 'clipboard-write'] });
     t.after(() => context.close());
     if (initScript) await context.addInitScript(initScript);
     const page = await context.newPage();
+    if (prepare) await prepare(page);
     await page.goto(origin + '/' + query);
     await page.waitForFunction(() => document.getElementById('sillynovel-settings-status')?.textContent !== '');
     if (query.includes('mount-failure')) await page.locator('#sillynovel-enabled').click();
@@ -1591,4 +1603,240 @@ test('T70 T71 T72 image workflow with a project: digest-checked reference downlo
  await page.waitForFunction(()=>document.querySelector('.sillynovel-image-workflow__status').textContent.includes('your text is kept'));
  assert.equal(await field('Image prompt').inputValue(),'Written before attaching','detaching keeps the text');assert.equal(await field('Reference 1').inputValue(),'','references belong to one attachment');
  assert.equal(await page.locator('.sillynovel-image-workflow__preview').isHidden(),true);assert.equal(uploads,1,'the pending preview never uploaded');
+});
+
+// M3.2 PR C: Generate on this host, through the actual entry, adapter, request module and stage view against the scriptable /imagine seam.
+const SD_KEYS=['source','comfy_type','comfy_url','comfy_workflow','free_extend','multimodal_captioning','refine_mode','interactive_mode','function_tool','prompt_prefix','negative_prompt','seed','width','height','steps','scale','model','vae','sampler','scheduler','clip_skip','denoising_strength','comfy_placeholders'];
+const control=(page,name)=>page.getByRole('button',{name,exact:true,includeHidden:true});
+const generationStatus=page=>page.locator('.sillynovel-image-workflow__status');
+const allowance=page=>page.locator('.sillynovel-image-workflow__generation p',{hasText:/^Submissions used /});
+const waitStatus=(page,pattern)=>page.waitForFunction(source=>new RegExp(source).test(document.querySelector('.sillynovel-image-workflow__status').textContent),pattern.source);
+async function expectedReview(page,draft){
+ const sd=await page.evaluate(()=>structuredClone(fixture.context.extensionSettings.sd));
+ const options=await page.evaluate(()=>Object.fromEntries(['model','vae','sampler','scheduler'].map(k=>[k,Array.from(document.querySelector('#sd_'+k).options,o=>o.value)])));
+ const snapshot={...Object.fromEntries(SD_KEYS.map(k=>[k,sd[k]])),seam:true};
+ const {review,problems}=preflight({snapshot,workflowText:shippedWorkflow,workflowSha256:createHash('sha256').update(shippedWorkflow).digest('hex'),draft,options});
+ assert.deepEqual(problems,[]);return reviewText(review);
+}
+async function imageRoute(t,{clock=false}={}){
+ const page=await fixture(t,'',null,clock?p=>p.clock.install():null);page.setDefaultTimeout(5000);await page.locator('#sillynovel-enabled').uncheck();
+ const id='11111111-1111-4111-8111-111111111111',bg='33333333-3333-4333-8333-333333333333',uploaded='55555555-5555-4555-8555-555555555555';
+ const record={schemaVersion:2,projectId:id,name:'Harbor project',revision:0,scene:{backgroundAssetId:null,backgroundLocked:false,actors:[]},catalog:[{assetId:bg,label:'Harbor 1',kind:'background',actorId:null}]};
+ const sha=b=>createHash('sha256').update(b).digest('hex'),tavern=await readFile(resolve(root,'tests/fixtures/m12-stage/tavern.png')),forest=await readFile(resolve(root,'tests/fixtures/m12-stage/forest.png'));
+ const state={uploads:0};
+ await page.route('**/api/plugins/sillynovel-storage/**',async route=>{
+  const request=route.request(),path=new URL(request.url()).pathname;
+  if(request.method()==='POST'&&path.endsWith('/assets')){state.uploads++;return route.fulfill({status:201,json:{assetId:uploaded}});}
+  if(path.includes('/assets/'))return route.fulfill({contentType:'image/png',headers:{'X-Content-SHA256':sha(path.endsWith(uploaded)?tavern:forest)},body:path.endsWith(uploaded)?tavern:forest});
+  return route.fulfill({json:path.endsWith('/capabilities')?{apiVersion:1,schemaVersion:2,catalogVersion:1}:path.endsWith('/projects')?[record]:record});
+ });
+ await page.locator('#sillynovel-enabled').check();await page.locator('.sillynovel-controls summary').click();await button(page,'Image workflow').click();
+ const field=name=>page.locator('.sillynovel-image-workflow').getByLabel(name,{exact:true});
+ await button(page,'Open project and use with this chat').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('Harbor project · revision'));
+ const draft={prompt:'harbor at dusk, lanterns on the water',negativePrompt:'blurry, text'};
+ await field('Background label').fill('Generated harbor');await field('Image prompt').fill(draft.prompt);await field('Negative prompt').fill(draft.negativePrompt);
+ const sessionOn=async()=>{await field('Image session on this host').check();await page.locator('.sillynovel-image-workflow__review:not([hidden])').waitFor();};
+ const hold=()=>page.evaluate(()=>{fixture.imagineHold=new Promise(r=>{fixture.release=r;});});
+ const release=path=>page.evaluate(path=>fixture.release(path),path);
+ const references=()=>field('Reference 1').locator('option').count();
+ return {page,field,draft,state,sessionOn,hold,release,references};
+}
+
+test('M3.2 off by default and reachable: the section lives in the Image workflow disclosure, the session is off, every action is disabled, the reply field stays focusable',async t=>{
+ const page=await fixture(t);page.setDefaultTimeout(5000);
+ await page.locator('.sillynovel-controls summary').click();
+ const section=page.locator('.sillynovel-image-workflow__generation');
+ assert.equal(await section.count(),1);assert.equal(await section.evaluate(e=>e.closest('#sillynovel-image-workflow-body')!==null),true);
+ assert.equal(await section.isVisible(),false,'closed disclosure hides it');
+ await button(page,'Image workflow').click();
+ assert.equal(await section.locator('p').first().innerText(),'Generate on this host');
+ const toggle=page.locator('.sillynovel-image-workflow').getByLabel('Image session on this host',{exact:true});
+ assert.equal(await toggle.isVisible(),true,'the session toggle is reachable');assert.equal(await toggle.isChecked(),false);
+ for(const name of ['Submit','Cancel','Stop host job','Abandon'])assert.equal(await control(page,name).isDisabled(),true,name);
+ assert.equal(await page.evaluate(()=>fixture.imagineCalls.length),0);
+ await page.locator('#send_textarea').focus();assert.equal(await page.evaluate(()=>document.activeElement.id),'send_textarea');
+});
+
+test('M3.2 session on: the review equals the request module\'s text for the same inputs, with the workflow hash, clip skip and denoise; nothing is sent',async t=>{
+ const x=await imageRoute(t),{page}=x;await x.sessionOn();
+ const expected=await expectedReview(page,x.draft),shown=await page.locator('.sillynovel-image-workflow__review').textContent();
+ assert.equal(shown,expected);
+ for(const line of ['Workflow SHA-256: "'+createHash('sha256').update(shippedWorkflow).digest('hex')+'"','Clip skip: 1','Denoise: 1','Positive: "SN-PREFIX-TEXT, harbor at dusk, lanterns on the water"','Negative: "blurry, text, SN-NEG-PREFIX"'])assert.ok(shown.includes(line+'\n'),line);
+ assert.equal(await allowance(page).innerText(),'Submissions used 0 of 5');
+ assert.equal(await control(page,'Submit').isEnabled(),true);
+ assert.equal(await page.evaluate(()=>fixture.imagineCalls.length),0,'turning the session on sends nothing');
+});
+
+test('M3.2 preflight refusals name themselves and disable Submit: host mode (caught by Submit\'s re-inspection), prompt macro, stale selection',async t=>{
+ const x=await imageRoute(t),{page,field}=x;await x.sessionOn();
+ const problems=()=>page.locator('.sillynovel-image-workflow__generation-problems').innerText();
+ // The live review re-reads the draft only; Submit re-inspects the host and refuses a changed snapshot.
+ await page.evaluate(()=>{fixture.context.extensionSettings.sd.free_extend=true;});
+ await field('Image prompt').fill(x.draft.prompt+' edited');
+ await control(page,'Submit').click();await waitStatus(page,/The host image settings changed · review them before submitting\./);
+ assert.match(await problems(),/Turn off free extend in the host's Image Generation settings\./);
+ assert.equal(await control(page,'Submit').isDisabled(),true);
+ await page.evaluate(()=>{fixture.context.extensionSettings.sd.free_extend=false;});
+ await field('Image session on this host').uncheck();await x.sessionOn();
+ await page.waitForFunction(()=>document.querySelector('.sillynovel-image-workflow__generation-problems').textContent==='');assert.equal(await control(page,'Submit').isEnabled(),true);
+ await field('Image prompt').fill('{{user}} at the harbor');
+ assert.match(await problems(),/Remove \{\{ \}\}, <USER>-style markers and %placeholders% from the prompt\./);
+ assert.equal(await control(page,'Submit').isDisabled(),true);
+ await field('Image prompt').fill(x.draft.prompt);assert.equal(await problems(),'');assert.equal(await control(page,'Submit').isEnabled(),true);
+ await page.evaluate(()=>{fixture.context.extensionSettings.sd.sampler='stale-sampler';});
+ await control(page,'Submit').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-image-workflow__generation-problems').textContent!=='');
+ assert.match(await generationStatus(page).innerText(),/The host image settings changed/);
+ assert.match(await problems(),/A saved sampler is not among the host's loaded options; reselect it in the host\./);
+ assert.equal(await control(page,'Submit').isDisabled(),true);
+ await page.evaluate(()=>{fixture.context.extensionSettings.sd.sampler='euler';});
+ await field('Image session on this host').uncheck();await x.sessionOn();
+ await page.waitForFunction(()=>document.querySelector('.sillynovel-image-workflow__generation-problems').textContent==='');assert.equal(await control(page,'Submit').isEnabled(),true);
+ assert.equal(await page.evaluate(()=>fixture.imagineCalls.length),0,'no refusal reached the seam');
+ assert.equal(await allowance(page).innerText(),'Submissions used 0 of 5','refusals spend nothing');
+});
+
+test('M3.2 Submit sends the draft prompt as the trigger and the draft negative, with the host controller; never the combined text',async t=>{
+ const x=await imageRoute(t),{page}=x;await x.sessionOn();await x.hold();
+ await control(page,'Submit').click();await page.waitForFunction(()=>fixture.imagineCalls.length===1);
+ const call=await page.evaluate(()=>{const {args,trigger}=fixture.imagineCalls[0];return {args:{...args,_abortController:args._abortController instanceof EventTarget&&typeof args._abortController.abort==='function'?'host controller':String(args._abortController)},keys:Object.keys(args),trigger};});
+ assert.deepEqual(call.args,{quiet:'true',gallery:'false',negative:x.draft.negativePrompt,_abortController:'host controller'});
+ assert.deepEqual(call.keys.sort(),['_abortController','gallery','negative','quiet']);
+ assert.equal(call.trigger,x.draft.prompt);
+ assert.equal(await generationStatus(page).innerText(),'Generating on 127.0.0.1:8129 · reading and replying continue');
+ assert.equal(await allowance(page).innerText(),'Submissions used 1 of 5');
+ assert.equal(await control(page,'Submit').isDisabled(),true,'one in flight');
+ await x.release();await waitStatus(page,/^Candidate, not imported/);
+});
+
+test('M3.2 candidate: the host result is previewed with its path disclosed; Import and apply registers, applies and locks it; the request is imported',async t=>{
+ const x=await imageRoute(t),{page}=x;await x.sessionOn();
+ await control(page,'Submit').click();await waitStatus(page,/^Candidate, not imported/);
+ assert.equal(await generationStatus(page).innerText(),'Candidate, not imported · the host kept a copy at /user/images/synthetic.png. Import and apply it, or discard it.');
+ assert.equal(await page.locator('.sillynovel-image-workflow__preview').isVisible(),true);
+ assert.equal(x.state.uploads,0,'a candidate uploads nothing');
+ const importButton=button(page,'Import and apply background to Harbor project');
+ assert.equal(await importButton.isEnabled(),true);await importButton.click();
+ await waitStatus(page,/^Imported and applied as the background · unsaved project change\. Save project to keep it\.$/);
+ assert.equal(x.state.uploads,1);assert.match(await page.locator('.sillynovel-unsaved').innerText(),/Unsaved/);
+ await page.waitForFunction(()=>document.querySelector('.sillynovel-art__background').dataset.asset.startsWith('blob:'),undefined,{timeout:5000});
+ assert.match(await page.locator('.sillynovel-selected-art').innerText(),/Selected background: Generated harbor/);
+ assert.match(await page.locator('.sillynovel-visual-status').innerText(),/Background locked\./);
+ assert.equal(await allowance(page).innerText(),'Submissions used 1 of 5');
+ assert.equal(await button(page,'Discard preview').isDisabled(),true,'nothing left to discard once imported');
+ assert.equal(await page.locator('.sillynovel-image-workflow__preview').isHidden(),true);
+});
+
+test('M3.2 Discard preview leaves nothing in the project',async t=>{
+ const x=await imageRoute(t),{page}=x;await x.sessionOn();const before=await x.references();
+ await control(page,'Submit').click();await waitStatus(page,/^Candidate, not imported/);
+ await button(page,'Discard preview').click();
+ assert.equal(await generationStatus(page).innerText(),'Preview discarded · nothing was uploaded.');
+ assert.equal(await page.locator('.sillynovel-image-workflow__preview').isHidden(),true);
+ assert.equal(x.state.uploads,0);assert.equal(await x.references(),before,'the project asset list is unchanged');
+ assert.equal(await allowance(page).innerText(),'Submissions used 1 of 5');
+});
+
+test('M3.2 a non-PNG host result is refused with its path; no preview; the unit is spent',async t=>{
+ const x=await imageRoute(t),{page}=x;await x.sessionOn();
+ await page.evaluate(()=>{fixture.imagineResult='/user/images/synthetic.jpg';});
+ await control(page,'Submit').click();await waitStatus(page,/refused/);
+ assert.equal(await generationStatus(page).innerText(),"The host's result was refused: RESULT_NOT_PNG. The host kept a copy at /user/images/synthetic.jpg");
+ assert.equal(await page.locator('.sillynovel-image-workflow__preview').isHidden(),true);
+ assert.equal(await allowance(page).innerText(),'Submissions used 1 of 5');assert.equal(x.state.uploads,0);
+ assert.equal(await control(page,'Submit').isEnabled(),true);
+});
+
+test('M3.2 Cancel withdraws permission and holds the slot until the host settles; the late result is dropped',async t=>{
+ const x=await imageRoute(t),{page}=x;await x.sessionOn();await x.hold();
+ await control(page,'Submit').click();await waitStatus(page,/^Generating on/);
+ await control(page,'Cancel').click();
+ assert.equal(await generationStatus(page).innerText(),'Cancelled · permission to apply withdrawn; the host keeps polling until the job is terminal');
+ assert.equal(await control(page,'Submit').isDisabled(),true,'the slot is held');assert.equal(await control(page,'Cancel').isDisabled(),true);
+ await x.release('/user/images/synthetic.png');
+ await waitStatus(page,/^Cancelled · result discarded/);
+ assert.equal(await generationStatus(page).innerText(),'Cancelled · result discarded; the host kept a copy at /user/images/synthetic.png');
+ assert.equal(await page.locator('.sillynovel-image-workflow__preview').isHidden(),true);
+ assert.equal(await control(page,'Submit').isEnabled(),true);assert.equal(await allowance(page).innerText(),'Submissions used 1 of 5');
+ assert.equal(x.state.uploads,0);
+});
+
+test('M3.2 Stop host job aborts the host controller after its global-interrupt disclosure; nothing is applied',async t=>{
+ const x=await imageRoute(t),{page}=x;await x.sessionOn();
+ const warning=page.locator('#sillynovel-image-stop-warning');
+ assert.equal(await warning.isVisible(),true);assert.equal(await warning.innerText(),'Stop host job asks ComfyUI to interrupt whatever it is running now, not only this request.');
+ assert.equal(await control(page,'Stop host job').getAttribute('aria-describedby'),'sillynovel-image-stop-warning');
+ await x.hold();await control(page,'Submit').click();await waitStatus(page,/^Generating on/);
+ assert.equal(await warning.isVisible(),true,'visible before the click');
+ await control(page,'Stop host job').click();
+ await page.waitForFunction(()=>fixture.imagineReturns.length===1);
+ assert.deepEqual(await page.evaluate(()=>({aborted:fixture.imagineCalls[0].args._abortController.aborted,returned:fixture.imagineReturns[0]===undefined})),{aborted:true,returned:true});
+ await waitStatus(page,/^Cancelled · result discarded/);
+ assert.equal(await page.locator('.sillynovel-image-workflow__preview').isHidden(),true);assert.equal(x.state.uploads,0);
+ assert.equal(await allowance(page).innerText(),'Submissions used 1 of 5');assert.equal(await control(page,'Submit').isEnabled(),true);
+});
+
+test('M3.2 timeout at 120 s (fake timers): outcome unknown, slot held; Abandon releases it with the unit spent; a late result is dropped',async t=>{
+ const x=await imageRoute(t,{clock:true}),{page}=x;await x.sessionOn();await x.hold();
+ await control(page,'Submit').click();await waitStatus(page,/^Generating on/);
+ assert.equal(await control(page,'Abandon').isHidden(),true);
+ await page.clock.fastForward(120_000);
+ await waitStatus(page,/^No result after 120 s · outcome unknown/);
+ assert.match(await generationStatus(page).innerText(),/ComfyUI's queue and the host's image folder/);
+ assert.equal(await control(page,'Abandon').isEnabled(),true);assert.equal(await control(page,'Submit').isDisabled(),true);
+ await control(page,'Abandon').click();
+ assert.equal(await generationStatus(page).innerText(),'Abandoned · the unit stays spent.');
+ assert.equal(await allowance(page).innerText(),'Submissions used 1 of 5');assert.equal(await control(page,'Submit').isEnabled(),true);
+ await x.release('/user/images/synthetic.png');await page.waitForFunction(()=>fixture.imagineReturns.length===1);await page.waitForTimeout(200);
+ assert.equal(await generationStatus(page).innerText(),'Abandoned · the unit stays spent.');
+ assert.equal(await page.locator('.sillynovel-image-workflow__preview').isHidden(),true);assert.equal(x.state.uploads,0);
+});
+
+test('M3.2 allowance: five submissions, the sixth is refused with a reason; off and on starts a fresh allowance and shows the review again',async t=>{
+ const x=await imageRoute(t),{page,field}=x;await x.sessionOn();
+ for(let i=1;i<=5;i++){
+  await control(page,'Submit').click();
+  await page.waitForFunction(i=>fixture.imagineCalls.length===i&&document.querySelector('.sillynovel-image-workflow__status').textContent.startsWith('Candidate, not imported'),i);
+  assert.equal(await allowance(page).innerText(),'Submissions used '+i+' of 5');
+ }
+ assert.equal(await control(page,'Submit').isDisabled(),true);
+ assert.equal(await page.locator('.sillynovel-image-workflow__generation-problems').innerText(),'All 5 submissions in this image session are used.','the refusal names itself');
+ await control(page,'Submit').dispatchEvent('click');await page.waitForTimeout(100);
+ assert.equal(await page.evaluate(()=>fixture.imagineCalls.length),5,'nothing beyond five');
+ await field('Image session on this host').uncheck();await x.sessionOn();
+ await page.waitForFunction(()=>[...document.querySelectorAll('.sillynovel-image-workflow__generation p')].some(p=>p.textContent==='Submissions used 0 of 5'));
+ assert.equal(await page.locator('.sillynovel-image-workflow__review').isVisible(),true);assert.equal(await control(page,'Submit').isEnabled(),true);
+});
+
+test('M3.2 a chat switch during the call ends the session; the late result is discarded as stale and never applied',async t=>{
+ const x=await imageRoute(t),{page,field}=x;await x.sessionOn();await x.hold();
+ await control(page,'Submit').click();await waitStatus(page,/^Generating on/);
+ await page.evaluate(()=>{fixture.context.chatId='synthetic-B';fixture.emit('CHAT_CHANGED','synthetic-B');});
+ await page.waitForFunction(()=>!document.querySelector('.sillynovel-project-status').textContent.includes('Harbor project · revision'));
+ assert.equal(await field('Image session on this host').isChecked(),false,'session off after the switch');
+ await x.release('/user/images/synthetic.png');await page.waitForFunction(()=>fixture.imagineReturns.length===1);await page.waitForTimeout(200);
+ assert.equal(await page.locator('.sillynovel-image-workflow__preview').isHidden(),true);assert.equal(x.state.uploads,0);
+ assert.match(await generationStatus(page).innerText(),/Result discarded: .*the host kept a copy at \/user\/images\/synthetic\.png/,'the stale result is disclosed');
+});
+
+test('M3.2 keyboard and names (emulated check, not a screen-reader run): Tab reaches every new control from the disclosure toggle, each is named, status is role=status, Escape closes and refocuses',async t=>{
+ const x=await imageRoute(t),{page}=x;await x.sessionOn();
+ const walk=async()=>{
+  await button(page,'Image workflow').focus();const seen=[];
+  for(let i=0;i<80;i++){await page.keyboard.press('Tab');const e=await page.evaluate(()=>{const a=document.activeElement;return {id:a.id,name:a.getAttribute('aria-label')||a.textContent.trim(),inBody:!!a.closest('#sillynovel-image-workflow-body')};});if(!e.inBody)break;seen.push(e.name);}
+  return seen;
+ };
+ let seen=await walk();
+ for(const name of ['Image session on this host','Generation review','Submit'])assert.ok(seen.includes(name),name+' in '+JSON.stringify(seen));
+ await x.hold();await control(page,'Submit').click();await waitStatus(page,/^Generating on/);
+ seen=await walk();for(const name of ['Cancel','Stop host job'])assert.ok(seen.includes(name),name+' in '+JSON.stringify(seen));
+ await control(page,'Cancel').click();
+ seen=await walk();assert.ok(seen.includes('Abandon'),'Abandon in '+JSON.stringify(seen));
+ for(const name of ['Submit','Cancel','Stop host job','Abandon'])assert.equal(await control(page,name).count(),1,name+' has its accessible name');
+ assert.equal(await page.getByRole('checkbox',{name:'Image session on this host',exact:true}).count(),1);
+ assert.equal(await page.getByLabel('Generation review',{exact:true}).count(),1);
+ assert.equal(await generationStatus(page).getAttribute('role'),'status');
+ await control(page,'Stop host job').focus();await page.keyboard.press('Escape');
+ assert.equal(await page.locator('#sillynovel-image-workflow-body').isHidden(),true);
+ assert.equal(await button(page,'Image workflow').evaluate(e=>e===document.activeElement),true);
+ await x.release();
 });

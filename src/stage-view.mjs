@@ -280,13 +280,13 @@ export function mountVisualStage({ document, stage, actions }) {
         finally{if(token===imageEpoch)imageStarting=false;}
     }));
     function renderGeneration(){
-        const available=Boolean(actions.image?.available().ok),state=session.snapshot(),outcome=pending?state.requests[pending.id]:null;
+        const seam=actions.image?.available(),available=Boolean(seam?.ok||seam?.missing.join()==='SlashCommandAbortController'),state=session.snapshot(),outcome=pending?state.requests[pending.id]:null;
         imageUnavailable.hidden=available;imageControls.hidden=!available;if(!available)return;
         imageToggle.checked=state.on||imageStarting;
         allowanceLine.textContent='Submissions used '+state.used+' of '+DEFAULT_ALLOWANCE;
         if(state.on&&inspection)reviewGeneration();
         generationReview.hidden=!review;generationReview.textContent=review?reviewText(review):'';generationReview.classList.toggle('sillynovel-image-workflow__refused',Boolean(problems.length));
-        generationProblems.textContent=problems.map(imageProblem).join(' ');
+        generationProblems.textContent=[...problems.map(imageProblem),...(state.on&&state.used>=state.allowance?['All '+state.allowance+' submissions in this image session are used.']:[])].join(' ');
         workflowPin.hidden=!workflowSha256;workflowPin.textContent=workflowSha256?'Session workflow SHA-256: '+workflowSha256:'';
         submitImage.disabled=!state.on||!review?.ok||state.inFlight!==null||imageSubmitting||state.used>=state.allowance||!model.project;
         cancelImage.disabled=!pending||outcome!=='pending';
@@ -335,7 +335,7 @@ export function mountVisualStage({ document, stage, actions }) {
             let result;
             try{result=await actions.image.request({prompt:raw.prompt,negative:raw.negativePrompt,controller:job.controller});}catch{result={ok:false,code:'HOST_THREW'};}
             clearTimeout(job.timer);job.timer=null;
-            if(pending!==job||disposed){dropGeneration(job);return;}
+            if(pending!==job||disposed){dropGeneration(job);const late=!disposed&&!pending&&result.path?staleReason(request,nowFull()):null;if(late)wfStatus.textContent='Result discarded: '+(STALE_REASONS[late]??late)+'; the host kept a copy at '+result.path;return;}
             if(job.cancelled){session.settle(id,'stale');pending=null;wfStatus.textContent='Cancelled · result discarded'+(result.path?'; the host kept a copy at '+result.path:'.');return;}
             let reason=staleReason(request,nowFull());if(reason){discardGeneration(job,reason,result.path);return;}
             if(!result.ok){session.settle(id,'failed');pending=null;wfStatus.textContent=imageProblem(result);return;}
