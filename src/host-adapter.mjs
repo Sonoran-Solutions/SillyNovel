@@ -1,3 +1,6 @@
+import { LOOPBACK_HOSTS, resultPathProblem } from './image-request.mjs';
+import { pngProblem, RESULT_LIMITS } from './image-workflow.mjs';
+
 const REQUIRED_EVENTS = [
     'CHAT_CHANGED',
     'MESSAGE_RECEIVED',
@@ -61,7 +64,7 @@ function sameSource(left, right) {
 const COMPOSER_ID = 'send_textarea';
 
 // onComposerInput wakes the director's composer hold; it carries no argument, so no draft can travel with it.
-export function createHostAdapter(getContext, { onComposerInput } = {}) {
+export function createHostAdapter(getContext, { onComposerInput, image: imageEnvironment = {} } = {}) {
     const sourceKeys = new WeakMap();
     // Time of the last input/keydown seen on the composer since subscribe; never the draft.
     let lastComposerEvent = null;
@@ -127,6 +130,144 @@ export function createHostAdapter(getContext, { onComposerInput } = {}) {
             return { ok: false, code: /^Cancelled by (stop event|extension)$/.test(error?.message ?? '') || error?.name === 'AbortError' ? 'ABORTED' : 'TRANSPORT_ERROR' };
         }
     }
+
+    let ImageController = null, controllerImport = null;
+    const imageFetch = (...args) => (imageEnvironment.fetch ?? globalThis.fetch)(...args);
+    const importImageController = () => controllerImport ??= (async () => {
+        try {
+            const Controller = await (imageEnvironment.importController
+                ? imageEnvironment.importController()
+                : import('/scripts/slash-commands/SlashCommandAbortController.js').then(module => module.SlashCommandAbortController));
+            if (typeof Controller === 'function') ImageController = Controller;
+        } catch { /* a missing host module disables image generation only */ }
+    })();
+
+    function imageAvailable(context = contextOrNull()) {
+        const checks = [
+            ['SlashCommandParser.commands.imagine', () => {
+                const callback = context?.SlashCommandParser?.commands?.imagine?.callback;
+                return typeof callback === 'function' && callback.length === 2;
+            }],
+            ['extensionSettings.sd', () => context?.extensionSettings?.sd !== null && typeof context?.extensionSettings?.sd === 'object'],
+            ['getRequestHeaders', () => typeof context?.getRequestHeaders === 'function'],
+            ['getCurrentChatId', () => typeof context?.getCurrentChatId === 'function'],
+            ['SlashCommandAbortController', () => ImageController !== null],
+        ];
+        const missing = checks.filter(([, check]) => { try { return !check(); } catch { return true; } }).map(([name]) => name);
+        return { ok: missing.length === 0, missing };
+    }
+
+    function imageHostChatKey(context = contextOrNull()) {
+        try {
+            const key = context?.getCurrentChatId?.();
+            return key == null ? null : String(key);
+        } catch { return null; }
+    }
+
+    function imageOrigin() {
+        try { return globalThis.location?.origin ?? null; } catch { return null; }
+    }
+
+    // Bound both workflow JSON and PNG reads before buffering; null means the ceiling was crossed.
+    async function readImageBody(response, limit) {
+        const reader = response.body?.getReader();
+        if (!reader) return new Uint8Array();
+        const bytes = new Uint8Array(limit); let size = 0;
+        try {
+            for (;;) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                size += value.byteLength;
+                if (size > limit) {
+                    try { await reader.cancel(); } catch { /* preserve the size refusal */ }
+                    return null;
+                }
+                bytes.set(value, size - value.byteLength);
+            }
+        } finally { reader.releaseLock(); }
+        return bytes.slice(0, size);
+    }
+
+    async function inspectImage() {
+        await importImageController();
+        const context = contextOrNull(), { missing } = imageAvailable(context);
+        const snapshot = {}, options = {}, origin = imageOrigin(), hostChatKey = imageHostChatKey(context);
+        let workflowText = null, workflowSha256 = null;
+        try {
+            const sd = context?.extensionSettings?.sd;
+            for (const key of ['source', 'comfy_type', 'comfy_url', 'comfy_workflow', 'free_extend', 'multimodal_captioning', 'refine_mode', 'interactive_mode', 'function_tool', 'prompt_prefix', 'negative_prompt', 'seed', 'width', 'height', 'steps', 'scale', 'model', 'vae', 'sampler', 'scheduler', 'clip_skip', 'denoising_strength', 'comfy_placeholders']) {
+                const value = sd?.[key];
+                snapshot[key] = value && typeof value === 'object' ? structuredClone(value) : value;
+            }
+        } catch { if (!missing.includes('extensionSettings.sd')) missing.push('extensionSettings.sd'); }
+        snapshot.seam = imageAvailable(context).ok;
+        for (const key of ['model', 'vae', 'sampler', 'scheduler']) {
+            options[key] = undefined;
+            try {
+                const select = (imageEnvironment.document ?? globalThis.document)?.querySelector?.('#sd_' + key);
+                if (select) options[key] = Array.from(select.options, option => option.value);
+            } catch { /* preflight refuses a missing option list */ }
+        }
+        try {
+            const headers = new Headers(context.getRequestHeaders());
+            headers.set('Content-Type', 'application/json');
+            const response = await imageFetch(new URL('/api/sd/comfy/workflow', origin), {
+                method: 'POST', headers, body: JSON.stringify({ file_name: snapshot.comfy_workflow }), redirect: 'error',
+            });
+            if (response.status !== 200) throw Error('workflow');
+            const bytes = await readImageBody(response, 1024 * 1024);
+            if (bytes === null) missing.push('workflow-too-large');
+            else {
+                const text = await new Response(bytes).json();
+                if (typeof text === 'string') workflowText = text;
+            }
+        } catch { /* workflow remains unavailable */ }
+        if (workflowText === null && !missing.includes('workflow-too-large')) missing.push('workflow');
+        if (workflowText !== null) {
+            try {
+                const digest = await globalThis.crypto.subtle.digest('SHA-256', new TextEncoder().encode(workflowText));
+                workflowSha256 = Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, '0')).join('');
+            } catch { missing.push('workflow-sha256'); }
+        }
+        return { ok: imageAvailable().ok && workflowText !== null, missing, snapshot, options, workflowText, workflowSha256, hostChatKey, origin };
+    }
+
+    function createImageController() {
+        try { return ImageController ? new ImageController() : null; } catch { return null; }
+    }
+
+    async function requestImage(input) {
+        const context = contextOrNull();
+        if (!imageAvailable(context).ok) return { ok: false, code: 'SEAM_MISSING' };
+        try {
+            const raw = context.extensionSettings.sd.comfy_url;
+            const url = typeof raw === 'string' ? new URL(raw) : null;
+            if (!url || !['http:', 'https:'].includes(url.protocol) || !LOOPBACK_HOSTS.includes(url.hostname)) return { ok: false, code: 'URL_NOT_LOOPBACK' };
+        } catch { return { ok: false, code: 'URL_NOT_LOOPBACK' }; }
+        try {
+            const { prompt, negative, controller } = input ?? {};
+            const path = await context.SlashCommandParser.commands.imagine.callback({ quiet: 'true', gallery: 'false', negative, _abortController: controller }, prompt);
+            return typeof path === 'string' && path.length > 0 ? { ok: true, path } : { ok: false, code: 'HOST_NO_RESULT' };
+        } catch { return { ok: false, code: 'HOST_THREW' }; }
+    }
+
+    async function fetchImageResult(path) {
+        const origin = imageOrigin(), code = resultPathProblem(path, origin);
+        if (code) return { ok: false, code, path };
+        try {
+            const url = new URL(path, origin);
+            const response = await imageFetch(url, { headers: contextOrNull().getRequestHeaders(), redirect: 'error' });
+            if (response.status !== 200) return { ok: false, code: 'RESULT_FETCH_FAILED', path };
+            if (response.url !== url.href) return { ok: false, code: 'RESULT_REDIRECTED', path };
+            const bytes = await readImageBody(response, RESULT_LIMITS.bytes);
+            if (bytes === null) return { ok: false, code: 'RESULT_TOO_LARGE', path };
+            const problem = pngProblem(bytes);
+            if (problem) return { ok: false, code: problem, path };
+            return { ok: true, file: new File([bytes], 'generated-background.png', { type: 'image/png' }), bytes, path };
+        } catch { return { ok: false, code: 'RESULT_FETCH_FAILED', path }; }
+    }
+
+    const image = { available: imageAvailable, inspect: inspectImage, createController: createImageController, request: requestImage, fetchResult: fetchImageResult, hostChatKey: imageHostChatKey };
 
     function readChatIdentity(context = contextOrNull()) {
         if (!context) return null;
@@ -419,5 +560,5 @@ export function createHostAdapter(getContext, { onComposerInput } = {}) {
         return false;
     }
 
-    return { inspectCapabilities, inspectDirector, inspectComposer, requestDirectorText, readChatIdentity, readMessageAt, readCurrentSource, readHistory, subscribe, openOriginalMessage };
+    return { image, inspectCapabilities, inspectDirector, inspectComposer, requestDirectorText, readChatIdentity, readMessageAt, readCurrentSource, readHistory, subscribe, openOriginalMessage };
 }

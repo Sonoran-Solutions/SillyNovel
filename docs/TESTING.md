@@ -1,5 +1,9 @@
 # Verification and acceptance
 
+## M3.2 PR C candidate — T74–T77 adapter halves covered — 2026-11-08
+
+Full campaign on frozen `afac1f9` on a disposable pinned SillyTavern 1.19.0 host with the PR A fake ComfyUI as the image backend, [`docs/evidence/m3-2-c/campaign/`](evidence/m3-2-c/campaign/): Node 492/492 (17 files), storage 126/126, browser 124/124, native checkpoints 25/16/22/17/21/18/60/8, `validate.py` PASS over 147 frozen inputs; `check-discovery.py` PASS (17/5/1). T74's adapter half (one `/prompt` per Submit, workflow `deepEqual` to the shipped default, no decoys, zero text requests, settings and canonical files unchanged), T75's adapter refusals, T76's path validation and shared import, and T77's Cancel, Abandon only after the deadline, the late result after a timeout, Stop host job, timeout (fake timers), stale discard on a chat switch, a draft edit and a scene change, and allowance are covered against the real entry and on the pinned host; the new controls' keyboard pass is emulated. The real 120 s wait on the host, a manual lock during a request on the host, physical devices and screen readers stay NOT_RUN or NOT_TESTED. Row text changes only at merge. [Record](M3_2_IMAGE_ROUTE_IMPLEMENTATION.md#pr-c--the-adapter-seam-and-the-generate-on-this-host-section). Gate C NOT_RUN.
+
 ## M3.2 PR B merged — T75 and T77 rows annotated — 2026-11-08
 
 On the owner's [acceptance](DECISIONS.md#owner-acceptance--m32-pr-b-merged-two-proposals-adopted-pr-c-go-ahead--2026-11-08) of [#86](https://github.com/Sonoran-Solutions/SillyNovel/pull/86) (`2bc9fea`, test candidate `883d59b`), rows T75 and T77 below carry their SYNTHETIC Node annotations from the PR B module tests ([record](M3_2_IMAGE_ROUTE_IMPLEMENTATION.md#pr-b--the-pure-image-request-module)); the adapter and host halves stay NOT_RUN for PR C. No suite was run for this docs-only change.

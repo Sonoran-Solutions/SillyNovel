@@ -1,0 +1,548 @@
+{
+ "schemaVersion": 1,
+ "mode": "loopback-proof",
+ "candidate": "afac1f93dec8655cbf03a0d8957a9f03d2673fe8",
+ "casesSha256": "ada4ff1ed766af87872a0b50973b95a0d7b652a0b773ddaeb0ad54a6804cacf5",
+ "promptVersion": "0ef22635aed99352",
+ "perCaseMs": 2000,
+ "startedUTC": "2026-11-09T04:33:15.046Z",
+ "results": [
+  {
+   "id": "presence-1",
+   "category": "presence",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "evidence": {
+       "sourceMessageKey": "session-source-102",
+       "excerpt": "Rowan slings his pack over one shoulder."
+      },
+      "present": false
+     }
+    ]
+   },
+   "elapsedMs": 13
+  },
+  {
+   "id": "presence-2",
+   "category": "presence",
+   "status": "refused",
+   "code": "NOT_SINGLE_JSON",
+   "elapsedMs": 12
+  },
+  {
+   "id": "presence-3",
+   "category": "presence",
+   "status": "failed",
+   "code": "TRANSPORT_ERROR",
+   "elapsedMs": 20
+  },
+  {
+   "id": "presence-4",
+   "category": "presence",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": []
+   },
+   "elapsedMs": 8
+  },
+  {
+   "id": "presence-5",
+   "category": "presence",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000003-0000-4000-8000-000000000003",
+      "evidence": {
+       "sourceMessageKey": "session-source-110",
+       "excerpt": "Rowan raises his mug toward the stairs a"
+      },
+      "present": false
+     }
+    ]
+   },
+   "elapsedMs": 7
+  },
+  {
+   "id": "mentions-1",
+   "category": "mentions",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setLocation",
+      "backgroundId": "invented",
+      "evidence": {
+       "sourceMessageKey": "session-source-111",
+       "excerpt": "Rowan"
+      }
+     }
+    ]
+   },
+   "elapsedMs": 7
+  },
+  {
+   "id": "mentions-2",
+   "category": "mentions",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": []
+   },
+   "elapsedMs": 18
+  },
+  {
+   "id": "mentions-3",
+   "category": "mentions",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": []
+   },
+   "elapsedMs": 13
+  },
+  {
+   "id": "mentions-4",
+   "category": "mentions",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": []
+   },
+   "elapsedMs": 12
+  },
+  {
+   "id": "mentions-5",
+   "category": "mentions",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "evidence": {
+       "sourceMessageKey": "session-source-117",
+       "excerpt": "As if summoned, Sage pushes through the "
+      },
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023"
+     },
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000003-0000-4000-8000-000000000003",
+      "evidence": {
+       "sourceMessageKey": "session-source-117",
+       "excerpt": "As if summoned, Sage pushes through the "
+      },
+      "present": true
+     }
+    ]
+   },
+   "elapsedMs": 11
+  },
+  {
+   "id": "negation-1",
+   "category": "negation",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": []
+   },
+   "elapsedMs": 12
+  },
+  {
+   "id": "negation-2",
+   "category": "negation",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": []
+   },
+   "elapsedMs": 16
+  },
+  {
+   "id": "negation-3",
+   "category": "negation",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": []
+   },
+   "elapsedMs": 14
+  },
+  {
+   "id": "negation-4",
+   "category": "negation",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": []
+   },
+   "elapsedMs": 11
+  },
+  {
+   "id": "negation-5",
+   "category": "negation",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": []
+   },
+   "elapsedMs": 11
+  },
+  {
+   "id": "hypothetical-travel-1",
+   "category": "hypothetical travel",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setLocation",
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "evidence": {
+       "sourceMessageKey": "session-source-124",
+       "excerpt": "harbor"
+      }
+     }
+    ]
+   },
+   "elapsedMs": 6
+  },
+  {
+   "id": "hypothetical-travel-2",
+   "category": "hypothetical travel",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": []
+   },
+   "elapsedMs": 8
+  },
+  {
+   "id": "hypothetical-travel-3",
+   "category": "hypothetical travel",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": []
+   },
+   "elapsedMs": 9
+  },
+  {
+   "id": "hypothetical-travel-4",
+   "category": "hypothetical travel",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": []
+   },
+   "elapsedMs": 8
+  },
+  {
+   "id": "hypothetical-travel-5",
+   "category": "hypothetical travel",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setLocation",
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "evidence": {
+       "sourceMessageKey": "session-source-130",
+       "excerpt": "Hours later the trees give way to masts "
+      }
+     }
+    ]
+   },
+   "elapsedMs": 6
+  },
+  {
+   "id": "flashbacks-1",
+   "category": "flashbacks",
+   "status": "failed",
+   "code": "ABANDONED",
+   "elapsedMs": 2000
+  },
+  {
+   "id": "flashbacks-2",
+   "category": "flashbacks",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": []
+   },
+   "elapsedMs": 9
+  },
+  {
+   "id": "flashbacks-3",
+   "category": "flashbacks",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": []
+   },
+   "elapsedMs": 7
+  },
+  {
+   "id": "flashbacks-4",
+   "category": "flashbacks",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": []
+   },
+   "elapsedMs": 6
+  },
+  {
+   "id": "flashbacks-5",
+   "category": "flashbacks",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "evidence": {
+       "sourceMessageKey": "session-source-135",
+       "excerpt": "In the memory the forest was full of sno"
+      },
+      "present": true
+     }
+    ]
+   },
+   "elapsedMs": 6
+  },
+  {
+   "id": "outfit-continuity-1",
+   "category": "outfit continuity",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": []
+   },
+   "elapsedMs": 5
+  },
+  {
+   "id": "outfit-continuity-2",
+   "category": "outfit continuity",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "evidence": {
+       "sourceMessageKey": "session-source-137",
+       "excerpt": "Rowan throws on his heavy coat and laugh"
+      },
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023"
+     }
+    ]
+   },
+   "elapsedMs": 5
+  },
+  {
+   "id": "outfit-continuity-3",
+   "category": "outfit continuity",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": []
+   },
+   "elapsedMs": 7
+  },
+  {
+   "id": "outfit-continuity-4",
+   "category": "outfit continuity",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": []
+   },
+   "elapsedMs": 7
+  },
+  {
+   "id": "outfit-continuity-5",
+   "category": "outfit continuity",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "evidence": {
+       "sourceMessageKey": "session-source-141",
+       "excerpt": "Mira slips into the ball gown and spins "
+      },
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021"
+     }
+    ]
+   },
+   "elapsedMs": 6
+  },
+  {
+   "id": "group-authorship-1",
+   "category": "group authorship",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "evidence": {
+       "sourceMessageKey": "session-source-143",
+       "excerpt": "I shoulder my pack, nod to the table and"
+      },
+      "present": false
+     }
+    ]
+   },
+   "elapsedMs": 6
+  },
+  {
+   "id": "group-authorship-2",
+   "category": "group authorship",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "evidence": {
+       "sourceMessageKey": "session-source-145",
+       "excerpt": "I laugh out loud, delighted, and take th"
+      },
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021"
+     }
+    ]
+   },
+   "elapsedMs": 18
+  },
+  {
+   "id": "group-authorship-3",
+   "category": "group authorship",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000003-0000-4000-8000-000000000003",
+      "evidence": {
+       "sourceMessageKey": "session-source-147",
+       "excerpt": "I lower my eyes, close to tears, and can"
+      },
+      "expressionId": "temporary-expression:a0000026-0000-4000-8000-000000000026"
+     }
+    ]
+   },
+   "elapsedMs": 7
+  },
+  {
+   "id": "group-authorship-4",
+   "category": "group authorship",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": []
+   },
+   "elapsedMs": 6
+  },
+  {
+   "id": "group-authorship-5",
+   "category": "group authorship",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": []
+   },
+   "elapsedMs": 6
+  },
+  {
+   "id": "user-locks-1",
+   "category": "user locks",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": []
+   },
+   "elapsedMs": 7
+  },
+  {
+   "id": "user-locks-2",
+   "category": "user locks",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": []
+   },
+   "elapsedMs": 4
+  },
+  {
+   "id": "user-locks-3",
+   "category": "user locks",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "evidence": {
+       "sourceMessageKey": "session-source-153",
+       "excerpt": "They have reached the market. Rowan peel"
+      },
+      "present": false
+     }
+    ]
+   },
+   "elapsedMs": 4
+  },
+  {
+   "id": "user-locks-4",
+   "category": "user locks",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": []
+   },
+   "elapsedMs": 4
+  },
+  {
+   "id": "user-locks-5",
+   "category": "user locks",
+   "status": "proposal",
+   "proposal": {
+    "schemaVersion": 1,
+    "updates": [
+     {
+      "op": "setCharacter",
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "evidence": {
+       "sourceMessageKey": "session-source-155",
+       "excerpt": "Mira beams with joy as they walk into th"
+      },
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021"
+     }
+    ]
+   },
+   "elapsedMs": 4
+  }
+ ]
+}

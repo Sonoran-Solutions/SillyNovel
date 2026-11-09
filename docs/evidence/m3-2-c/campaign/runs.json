@@ -1,0 +1,182 @@
+[
+  {
+    "name": "node",
+    "candidate": "afac1f93dec8655cbf03a0d8957a9f03d2673fe8",
+    "command": "node --test --test-isolation=none /home/dq/.local/state/orchestrator/runs/20261109T023540Z-2b2b79/wt/pr-c/tests/m0.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T023540Z-2b2b79/wt/pr-c/tests/m1-reader-source.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T023540Z-2b2b79/wt/pr-c/tests/m1-source-prefix.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T023540Z-2b2b79/wt/pr-c/tests/m1-scene-reducer.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T023540Z-2b2b79/wt/pr-c/tests/m1-project-scene.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T023540Z-2b2b79/wt/pr-c/tests/m1-project-expressions.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T023540Z-2b2b79/wt/pr-c/tests/m2-director-proposal.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T023540Z-2b2b79/wt/pr-c/tests/m2-director-request.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T023540Z-2b2b79/wt/pr-c/tests/m2-director-controller.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T023540Z-2b2b79/wt/pr-c/tests/m2-director-overlay.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T023540Z-2b2b79/wt/pr-c/tests/m2-director-log.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T023540Z-2b2b79/wt/pr-c/tests/m2-gate-b-score.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T023540Z-2b2b79/wt/pr-c/tests/m3-image-workflow.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T023540Z-2b2b79/wt/pr-c/tests/m3-image-request.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T023540Z-2b2b79/wt/pr-c/tests/m3-image-adapter.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T023540Z-2b2b79/wt/pr-c/tests/probes/dyl19/owned-chat-probe.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T023540Z-2b2b79/wt/pr-c/tests/probes/dyl19/source-anchor.test.mjs",
+    "environment": {},
+    "startedUTC": "2026-11-09T04:08:09.106007+00:00",
+    "endedUTC": "2026-11-09T04:08:14.884548+00:00",
+    "elapsedSeconds": 5.779,
+    "exitCode": 0,
+    "log": "node.txt",
+    "checkpointCount": 0,
+    "tests": 492,
+    "pass": 492,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  {
+    "name": "storage",
+    "candidate": "afac1f93dec8655cbf03a0d8957a9f03d2673fe8",
+    "command": "node --test --test-isolation=none /home/dq/.local/state/orchestrator/runs/20261109T023540Z-2b2b79/wt/pr-c/plugins/sillynovel-storage/test/bundle.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T023540Z-2b2b79/wt/pr-c/plugins/sillynovel-storage/test/cleanup.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T023540Z-2b2b79/wt/pr-c/plugins/sillynovel-storage/test/library.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T023540Z-2b2b79/wt/pr-c/plugins/sillynovel-storage/test/recovery.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T023540Z-2b2b79/wt/pr-c/plugins/sillynovel-storage/test/store.test.mjs",
+    "environment": {},
+    "startedUTC": "2026-11-09T04:08:14.895577+00:00",
+    "endedUTC": "2026-11-09T04:10:41.938711+00:00",
+    "elapsedSeconds": 147.043,
+    "exitCode": 0,
+    "log": "storage.txt",
+    "checkpointCount": 0,
+    "tests": 126,
+    "pass": 126,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  {
+    "name": "browser",
+    "candidate": "afac1f93dec8655cbf03a0d8957a9f03d2673fe8",
+    "command": "node --test --test-isolation=none /home/dq/.local/state/orchestrator/runs/20261109T023540Z-2b2b79/wt/pr-c/tests/m1-reader-browser.test.mjs",
+    "environment": {},
+    "startedUTC": "2026-11-09T04:10:41.947144+00:00",
+    "endedUTC": "2026-11-09T04:13:12.951458+00:00",
+    "elapsedSeconds": 151.004,
+    "exitCode": 0,
+    "log": "browser.txt",
+    "checkpointCount": 0,
+    "tests": 124,
+    "pass": 124,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  {
+    "name": "stage-library-migration",
+    "candidate": "afac1f93dec8655cbf03a0d8957a9f03d2673fe8",
+    "command": "node tests/probes/project-portability/host.mjs /home/dq/.local/state/orchestrator/runs/20261109T023540Z-2b2b79/host/SillyTavern",
+    "environment": {
+      "SN_STAGE_UX_RUN": "1",
+      "SN_LIBRARY_RUN": "1",
+      "SN_MIGRATION_RUN": "1"
+    },
+    "startedUTC": "2026-11-09T04:13:12.960640+00:00",
+    "endedUTC": "2026-11-09T04:14:53.951765+00:00",
+    "elapsedSeconds": 100.991,
+    "exitCode": 0,
+    "log": "stage-library-migration.txt",
+    "checkpointCount": 25,
+    "ownedRoot": "/tmp/sn-portability-host-kGgSfp",
+    "result": "PASS"
+  },
+  {
+    "name": "expressions",
+    "candidate": "afac1f93dec8655cbf03a0d8957a9f03d2673fe8",
+    "command": "node tests/probes/project-portability/host.mjs /home/dq/.local/state/orchestrator/runs/20261109T023540Z-2b2b79/host/SillyTavern",
+    "environment": {
+      "SN_EXPRESSIONS_RUN": "1"
+    },
+    "startedUTC": "2026-11-09T04:14:53.963556+00:00",
+    "endedUTC": "2026-11-09T04:15:57.654880+00:00",
+    "elapsedSeconds": 63.691,
+    "exitCode": 0,
+    "log": "expressions.txt",
+    "checkpointCount": 16,
+    "ownedRoot": "/tmp/sn-portability-host-kxOwrw",
+    "result": "PASS"
+  },
+  {
+    "name": "groups",
+    "candidate": "afac1f93dec8655cbf03a0d8957a9f03d2673fe8",
+    "command": "node tests/probes/project-portability/host.mjs /home/dq/.local/state/orchestrator/runs/20261109T023540Z-2b2b79/host/SillyTavern",
+    "environment": {
+      "SN_GROUP_RUN": "1"
+    },
+    "startedUTC": "2026-11-09T04:15:57.663273+00:00",
+    "endedUTC": "2026-11-09T04:17:27.900179+00:00",
+    "elapsedSeconds": 90.237,
+    "exitCode": 0,
+    "log": "groups.txt",
+    "checkpointCount": 22,
+    "ownedRoot": "/tmp/sn-portability-host-4rYpye",
+    "result": "PASS"
+  },
+  {
+    "name": "recovery",
+    "candidate": "afac1f93dec8655cbf03a0d8957a9f03d2673fe8",
+    "command": "node tests/probes/project-portability/host.mjs /home/dq/.local/state/orchestrator/runs/20261109T023540Z-2b2b79/host/SillyTavern",
+    "environment": {
+      "SN_RECOVERY_RUN": "1"
+    },
+    "startedUTC": "2026-11-09T04:17:27.911073+00:00",
+    "endedUTC": "2026-11-09T04:18:24.318622+00:00",
+    "elapsedSeconds": 56.408,
+    "exitCode": 0,
+    "log": "recovery.txt",
+    "checkpointCount": 17,
+    "ownedRoot": "/tmp/sn-portability-host-brRaZY",
+    "result": "PASS"
+  },
+  {
+    "name": "cleanup",
+    "candidate": "afac1f93dec8655cbf03a0d8957a9f03d2673fe8",
+    "command": "node tests/probes/project-portability/host.mjs /home/dq/.local/state/orchestrator/runs/20261109T023540Z-2b2b79/host/SillyTavern",
+    "environment": {
+      "SN_CLEANUP_RUN": "1"
+    },
+    "startedUTC": "2026-11-09T04:18:24.328987+00:00",
+    "endedUTC": "2026-11-09T04:19:46.655924+00:00",
+    "elapsedSeconds": 82.327,
+    "exitCode": 0,
+    "log": "cleanup.txt",
+    "checkpointCount": 21,
+    "ownedRoot": "/tmp/sn-portability-host-fAbcsR",
+    "result": "PASS"
+  },
+  {
+    "name": "native-integrity-branches",
+    "candidate": "afac1f93dec8655cbf03a0d8957a9f03d2673fe8",
+    "command": "node tests/probes/project-portability/host.mjs /home/dq/.local/state/orchestrator/runs/20261109T023540Z-2b2b79/host/SillyTavern",
+    "environment": {
+      "SN_CANDIDATE_RUN": "1"
+    },
+    "startedUTC": "2026-11-09T04:19:46.666605+00:00",
+    "endedUTC": "2026-11-09T04:21:14.467290+00:00",
+    "elapsedSeconds": 87.801,
+    "exitCode": 0,
+    "log": "native-integrity-branches.txt",
+    "checkpointCount": 18,
+    "ownedRoot": "/tmp/sn-portability-host-YLf5Dp",
+    "result": "PASS"
+  },
+  {
+    "name": "director",
+    "candidate": "afac1f93dec8655cbf03a0d8957a9f03d2673fe8",
+    "command": "node tests/probes/m2-director/host.mjs /home/dq/.local/state/orchestrator/runs/20261109T023540Z-2b2b79/host/SillyTavern",
+    "environment": {},
+    "startedUTC": "2026-11-09T04:21:14.485000+00:00",
+    "endedUTC": "2026-11-09T04:33:31.088548+00:00",
+    "elapsedSeconds": 736.604,
+    "exitCode": 0,
+    "log": "director.txt",
+    "checkpointCount": 60,
+    "ownedRoot": "/tmp/sn-m2-director-bUf4Ot",
+    "result": "PASS"
+  },
+  {
+    "name": "image-route",
+    "candidate": "afac1f93dec8655cbf03a0d8957a9f03d2673fe8",
+    "command": "node tests/probes/m3-image-route/host.mjs /home/dq/.local/state/orchestrator/runs/20261109T023540Z-2b2b79/host/SillyTavern",
+    "environment": {},
+    "startedUTC": "2026-11-09T04:33:31.102395+00:00",
+    "endedUTC": "2026-11-09T04:34:02.512113+00:00",
+    "elapsedSeconds": 31.41,
+    "exitCode": 0,
+    "log": "image-route.txt",
+    "checkpointCount": 8,
+    "ownedRoot": "/tmp/sn-m3-image-route-zY2ke4",
+    "result": "PASS"
+  }
+]

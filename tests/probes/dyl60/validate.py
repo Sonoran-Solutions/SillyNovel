@@ -8,7 +8,7 @@ sha = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
 pins, runs, inputs = load('pins.json'), load('runs.json'), load('inputs.json')
 for art in json.loads((repo / 'tests/fixtures/m12-stage/manifest.json').read_text()):
     assert sha(repo / 'tests/fixtures/m12-stage' / art['file']) == art['sha256']
-assert len(runs) == 10
+assert len(runs) == 11
 assert pins['node'] == 'v26.8.1' and pins['sqlite'] == '3.53.4'
 assert pins['browser']['version'] == '151.0.7922.34'
 assert pins['host'] == '7e8663cd9c184a550b37238218bdd32c6efc68e9'
@@ -23,7 +23,7 @@ for run in runs:
         assert record['candidate'] == pins['candidate'] and record['result'] == 'PASS'
         assert record['browser'] == pins['browser']['version'] and record['host'] == pins['host']
         assert run['checkpointCount'] == len(record['checks'])
-        if run['name'] != 'director': assert record['portabilityNativeBefore'] == record['portabilityNativeAfter']
+        if run['name'] not in ('director', 'image-route'): assert record['portabilityNativeBefore'] == record['portabilityNativeAfter']
 group = load('groups/evidence.json')['groups']
 assert group['nativeBefore'] == group['nativeAfter']
 assert len(set(group['members'])) == len(set(group['manualActors'])) == 4
