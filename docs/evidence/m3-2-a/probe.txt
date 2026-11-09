@@ -1,0 +1,22 @@
+Owned evidence root /tmp/sn-m3-image-seam-sCF6jN
+SETUP selections aligned {"sampler":{"from":"DDIM","to":"euler"}}
+SETUP seam arity 2; workflows dir ["Char_Avatar_Comfy_Workflow.json","Default_Comfy_Workflow.json"]; workflow endpoint equals shipped default true
+PASS R1 | returned {"state":"resolved","type":"string","value":"/user/images/2026-11-08@18h23m57s340ms.png"}
+PASS R2 | returned {"state":"resolved","type":"string","value":"/user/images/2026-11-08@18h23m57s462ms.png"}
+PASS R3 | returned {"state":"resolved","type":"string","value":"/user/images/2026-11-08@18h23m57s554ms.png"}
+PASS R4 | returned {"state":"resolved","type":"undefined","value":null}
+FINDING H9: server-side polling of /history/<id> continues after the client abort until the backend reports the job terminal; 1 stale polls observed after R4 settled
+PASS R5 | returned {"state":"resolved","type":"undefined","value":null}
+PASS R6 | returned {"state":"resolved","type":"undefined","value":null}
+PASS R7 | returned {"state":"resolved","type":"string","value":"/user/images/2026-11-08@18h23m59s482ms.jpg"}
+PASS R8 | returned {"state":"resolved","type":"string","value":"/user/images/2026-11-08@18h24m14s788ms.png"}
+FINDING H6: width/height unchanged in flight for a FREE request (512x512); other keys changed in flight: none
+FINDING H1: positive on the wire "SN-PREFIX-TEXT, Decoy Traveller meets Seam A"; persona name expanded true; character name expanded true
+FINDING H2: SN-CHAR-PREFIX reached the wire: true; positive "SN-PREFIX-TEXT, SN-CHAR-PREFIX, at the window"
+FINDING H3: text-endpoint requests 1; decoys in their bodies [DECOY-PERSONA-DESCRIPTION-7f3a, DECOY-CARD-DESCRIPTION-44d2, Decoy Traveller, DECOY-CHAT-MESSAGE-5e19]; background changed false; chat message added false; positive "SN-PREFIX-TEXT, The lantern glows. Welcome to the reading room, Mira says."; returned {"state":"resolved","type":"string","value":"/user/images/2026-11-08@18h24m15s278ms.png"}
+FINDING H4: text-endpoint requests 1; decoys in their bodies [DECOY-PERSONA-DESCRIPTION-7f3a, DECOY-CARD-DESCRIPTION-44d2, Decoy Traveller, DECOY-CHAT-MESSAGE-5e19]; background changed false; chat message added false; positive "SN-PREFIX-TEXT, The lantern glows. Welcome to the reading room, Mira says."
+FINDING H5: avatar base64 in /prompt body true (ETN_LoadImageBase64, 104808 chars, sha256 9eea025c9d0ad6d85a2d00a131d3233aa192efe885df943abace7cf68ef1d2c5); class_types KSampler,CheckpointLoaderSimple,CLIPTextEncode,CLIPTextEncode,VAEDecode,SaveImage,ETN_LoadImageBase64,VAEEncode,ImageScale
+FINDING H7: saved sampler 'DDIM' absent from the loaded options: after the call sd.sampler is "euler"; KSampler sampler_name on the wire "euler"
+FINDING H8: a DOM AbortController passed as _abortController: settled within 10 s of abort false ({"state":"pending"}); fixture logged /interrupt false; after release returned {"state":"resolved","type":"string","value":"/user/images/2026-11-08@18h24m26s124ms.png"}; new image files 1
+VERDICT GO
+Evidence /tmp/sn-m3-image-seam-sCF6jN/evidence.json

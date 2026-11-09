@@ -1,0 +1,841 @@
+{
+ "startedAt": "2026-11-09T01:23:38.253Z",
+ "host": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
+ "node": "v26.8.1",
+ "setup": {
+  "fixtureOrigin": "http://127.0.0.1:35299",
+  "sdDefaultsSeen": {
+   "source": "extras",
+   "comfy_type": "standard",
+   "comfy_workflow": "Default_Comfy_Workflow.json",
+   "comfyUrlIsDefault8188": true
+  },
+  "selectionsAligned": {
+   "sampler": {
+    "from": "DDIM",
+    "to": "euler"
+   }
+  },
+  "seam": {
+   "exists": true,
+   "callbackType": "function",
+   "arity": 2
+  },
+  "workflowsDirFiles": [
+   "Char_Avatar_Comfy_Workflow.json",
+   "Default_Comfy_Workflow.json"
+  ],
+  "workflowEndpoint": {
+   "status": 200,
+   "equalsShippedDefault": true,
+   "sha256": "18f3e44cdedb1bbc4e9597ce5f759b95f2dfc18f887d3614ff619792366c4fab"
+  },
+  "shippedDefaultSha256": "18f3e44cdedb1bbc4e9597ce5f759b95f2dfc18f887d3614ff619792366c4fab",
+  "hostStartupFixtureRequests": [
+   "GET /system_stats",
+   "GET /object_info",
+   "GET /object_info",
+   "GET /object_info",
+   "GET /object_info"
+  ],
+  "selectOptions": {
+   "#sd_model": [
+    "sn-synthetic.safetensors"
+   ],
+   "#sd_sampler": [
+    "euler"
+   ],
+   "#sd_scheduler": [
+    "normal"
+   ],
+   "#sd_vae": [
+    "sn-synthetic-vae.safetensors"
+   ]
+  },
+  "sdEffective": {
+   "source": "comfy",
+   "comfy_type": "standard",
+   "comfy_url": "http://127.0.0.1:35299",
+   "comfy_workflow": "Default_Comfy_Workflow.json",
+   "model": "sn-synthetic.safetensors",
+   "sampler": "euler",
+   "scheduler": "normal",
+   "vae": "sn-synthetic-vae.safetensors",
+   "seed": 1234,
+   "width": 512,
+   "height": 512,
+   "snap": false,
+   "prompt_prefix": "SN-PREFIX-TEXT,",
+   "negative_prompt": "SN-NEG-PREFIX"
+  }
+ },
+ "cases": [
+  {
+   "id": "R1",
+   "kind": "required",
+   "pass": true,
+   "failures": [],
+   "observed": {
+    "returned": {
+     "state": "resolved",
+     "type": "string",
+     "value": "/user/images/2026-11-08@18h23m57s340ms.png"
+    },
+    "prompts": 1,
+    "positiveText": "SN-PREFIX-TEXT, a quiet reading room at dusk",
+    "negativeText": "SN-DRAFT-NEG, SN-NEG-PREFIX",
+    "seed": 1234,
+    "imagesNew": [
+     "2026-11-08@18h23m57s340ms.png"
+    ],
+    "stalePollsAfterSettle": 0,
+    "textRequests": 0,
+    "decoysOnImageWire": [],
+    "decoysOnTextWire": [],
+    "toasts": [
+     "Image GenerationGenerating an image..."
+    ],
+    "pageErrors": [],
+    "dialogs": [],
+    "chatChanged": false,
+    "chatLength": [
+     2,
+     2
+    ],
+    "backgroundChanged": false,
+    "settingsChangedByCall": [],
+    "fetched": {
+     "status": 200,
+     "url": "http://127.0.0.1:45213/user/images/2026-11-08@18h23m57s340ms.png",
+     "sameUrl": true,
+     "redirected": false,
+     "length": 6085,
+     "head": "89504e470d0a1a0a",
+     "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448"
+    },
+    "savedFiles": [
+     "2026-11-08@18h23m57s340ms.png"
+    ],
+    "uploads": [
+     {
+      "ch_name": "",
+      "filename": "2026-11-08@18h23m57s340ms",
+      "format": "png",
+      "imageLength": 8116,
+      "imageSha256": "5c3b03fa3757c96123223eb238dbcbc691024d4c99c28c15d66cdac2e64ef99e"
+     }
+    ],
+    "classTypes": [
+     "CLIPTextEncode",
+     "CheckpointLoaderSimple",
+     "EmptyLatentImage",
+     "KSampler",
+     "SaveImage",
+     "VAEDecode"
+    ],
+    "generateUrl": "http://127.0.0.1:35299"
+   }
+  },
+  {
+   "id": "R2",
+   "kind": "required",
+   "pass": true,
+   "failures": [],
+   "observed": {
+    "returned": {
+     "state": "resolved",
+     "type": "string",
+     "value": "/user/images/2026-11-08@18h23m57s462ms.png"
+    },
+    "prompts": 1,
+    "positiveText": "SN-PREFIX-HEAD, harbor at noon, SN-PREFIX-TAIL",
+    "negativeText": "SN-NEG-PREFIX",
+    "seed": 1234,
+    "imagesNew": [
+     "2026-11-08@18h23m57s462ms.png"
+    ],
+    "stalePollsAfterSettle": 0,
+    "textRequests": 0,
+    "decoysOnImageWire": [],
+    "decoysOnTextWire": [],
+    "toasts": [
+     "Image GenerationGenerating an image..."
+    ],
+    "pageErrors": [],
+    "dialogs": [],
+    "chatChanged": false,
+    "chatLength": [
+     2,
+     2
+    ],
+    "backgroundChanged": false,
+    "settingsChangedByCall": []
+   }
+  },
+  {
+   "id": "R3",
+   "kind": "required",
+   "pass": true,
+   "failures": [],
+   "observed": {
+    "returned": {
+     "state": "resolved",
+     "type": "string",
+     "value": "/user/images/2026-11-08@18h23m57s554ms.png"
+    },
+    "prompts": 1,
+    "positiveText": "SN-PREFIX-TEXT, /sendas name=Seam SN-SLASH-INJECT <img src=x onerror=alert(1)> \"quoted\" é",
+    "negativeText": "SN-NEG-PREFIX",
+    "seed": 1234,
+    "imagesNew": [
+     "2026-11-08@18h23m57s554ms.png"
+    ],
+    "stalePollsAfterSettle": 0,
+    "textRequests": 0,
+    "decoysOnImageWire": [],
+    "decoysOnTextWire": [],
+    "toasts": [
+     "Image GenerationGenerating an image..."
+    ],
+    "pageErrors": [],
+    "dialogs": [],
+    "chatChanged": false,
+    "chatLength": [
+     2,
+     2
+    ],
+    "backgroundChanged": false,
+    "settingsChangedByCall": [],
+    "slashTextVisibleInPage": false
+   }
+  },
+  {
+   "id": "R4",
+   "kind": "required",
+   "pass": true,
+   "failures": [],
+   "observed": {
+    "returned": {
+     "state": "resolved",
+     "type": "undefined",
+     "value": null
+    },
+    "prompts": 1,
+    "positiveText": "SN-PREFIX-TEXT, a lantern on a shelf",
+    "negativeText": "SN-NEG-PREFIX",
+    "seed": 1234,
+    "imagesNew": [],
+    "stalePollsAfterSettle": 1,
+    "textRequests": 0,
+    "decoysOnImageWire": [],
+    "decoysOnTextWire": [],
+    "toasts": [
+     "Image GenerationGenerating an image...",
+     "Image GenerationImage generation stopped."
+    ],
+    "pageErrors": [],
+    "dialogs": [],
+    "chatChanged": false,
+    "chatLength": [
+     2,
+     2
+    ],
+    "backgroundChanged": false,
+    "settingsChangedByCall": [],
+    "afterAbort": {
+     "state": "resolved",
+     "type": "undefined",
+     "value": null
+    },
+    "interruptLoggedByFixture": true,
+    "historyPollsBeforeAbortEnded": 1
+   }
+  },
+  {
+   "id": "H9",
+   "kind": "hazard",
+   "observed": {
+    "returned": {
+     "state": "resolved",
+     "type": "undefined",
+     "value": null
+    },
+    "prompts": 1,
+    "positiveText": "SN-PREFIX-TEXT, a lantern on a shelf",
+    "negativeText": "SN-NEG-PREFIX",
+    "seed": 1234,
+    "imagesNew": [],
+    "stalePollsAfterSettle": 1,
+    "textRequests": 0,
+    "decoysOnImageWire": [],
+    "decoysOnTextWire": [],
+    "toasts": [
+     "Image GenerationGenerating an image...",
+     "Image GenerationImage generation stopped."
+    ],
+    "pageErrors": [],
+    "dialogs": [],
+    "chatChanged": false,
+    "chatLength": [
+     2,
+     2
+    ],
+    "backgroundChanged": false,
+    "settingsChangedByCall": [],
+    "jobIds": [
+     "sn-4"
+    ]
+   }
+  },
+  {
+   "id": "R5",
+   "kind": "required",
+   "pass": true,
+   "failures": [],
+   "observed": {
+    "returned": {
+     "state": "resolved",
+     "type": "undefined",
+     "value": null
+    },
+    "prompts": 1,
+    "positiveText": "SN-PREFIX-TEXT, a door left open",
+    "negativeText": "SN-NEG-PREFIX",
+    "seed": 1234,
+    "imagesNew": [],
+    "stalePollsAfterSettle": 0,
+    "textRequests": 0,
+    "decoysOnImageWire": [],
+    "decoysOnTextWire": [],
+    "toasts": [
+     "Image GenerationGenerating an image...",
+     "Image GenerationChat changed, generated image discarded."
+    ],
+    "pageErrors": [],
+    "dialogs": [],
+    "chatChanged": true,
+    "chatLength": [
+     2,
+     1
+    ],
+    "backgroundChanged": false,
+    "settingsChangedByCall": [],
+    "pendingBeforeRelease": true,
+    "viewAfterRelease": true,
+    "seamBChat": {
+     "before": "f39a32023bff3a24c951ce2d432b79f57889657c5c2d6ea97b679958974ca7bc",
+     "after": "f39a32023bff3a24c951ce2d432b79f57889657c5c2d6ea97b679958974ca7bc",
+     "length": 1
+    }
+   }
+  },
+  {
+   "id": "R6",
+   "kind": "required",
+   "pass": true,
+   "failures": [],
+   "observed": {
+    "returned": {
+     "state": "resolved",
+     "type": "undefined",
+     "value": null
+    },
+    "prompts": 1,
+    "positiveText": "SN-PREFIX-TEXT, a broken lamp",
+    "negativeText": "SN-NEG-PREFIX",
+    "seed": 1234,
+    "imagesNew": [],
+    "stalePollsAfterSettle": 0,
+    "textRequests": 0,
+    "decoysOnImageWire": [],
+    "decoysOnTextWire": [],
+    "toasts": [
+     "Image GenerationGenerating an image...",
+     "Image GenerationImage generation failed. Please try again.\n\nError: ComfyUI generation did not succeed.\n\nKSampler [3] SyntheticError: synthetic node failure"
+    ],
+    "pageErrors": [],
+    "dialogs": [],
+    "chatChanged": false,
+    "chatLength": [
+     2,
+     2
+    ],
+    "backgroundChanged": false,
+    "settingsChangedByCall": []
+   }
+  },
+  {
+   "id": "R7",
+   "kind": "required",
+   "pass": true,
+   "failures": [],
+   "observed": {
+    "returned": {
+     "state": "resolved",
+     "type": "string",
+     "value": "/user/images/2026-11-08@18h23m59s482ms.jpg"
+    },
+    "prompts": 1,
+    "positiveText": "SN-PREFIX-TEXT, a jpeg window",
+    "negativeText": "SN-NEG-PREFIX",
+    "seed": 1234,
+    "imagesNew": [
+     "2026-11-08@18h23m59s482ms.jpg"
+    ],
+    "stalePollsAfterSettle": 0,
+    "textRequests": 0,
+    "decoysOnImageWire": [],
+    "decoysOnTextWire": [],
+    "toasts": [
+     "Image GenerationGenerating an image..."
+    ],
+    "pageErrors": [],
+    "dialogs": [],
+    "chatChanged": false,
+    "chatLength": [
+     2,
+     2
+    ],
+    "backgroundChanged": false,
+    "settingsChangedByCall": [],
+    "returnedPath": "/user/images/2026-11-08@18h23m59s482ms.jpg",
+    "savedExtensions": [
+     ".jpg"
+    ],
+    "fetched": {
+     "status": 200,
+     "url": "http://127.0.0.1:45213/user/images/2026-11-08@18h23m59s482ms.jpg",
+     "sameUrl": true,
+     "redirected": false,
+     "length": 13,
+     "head": "73796e7468657469",
+     "sha256": "8db32b92ddda9a6b7ebcd13a5120ce44105a276543781547ba7e927892744220"
+    }
+   }
+  },
+  {
+   "id": "R8",
+   "kind": "required",
+   "pass": true,
+   "failures": [],
+   "observed": {
+    "returned": {
+     "state": "resolved",
+     "type": "string",
+     "value": "/user/images/2026-11-08@18h24m14s788ms.png"
+    },
+    "prompts": 1,
+    "positiveText": "SN-PREFIX-TEXT, a long night",
+    "negativeText": "SN-NEG-PREFIX",
+    "seed": 1234,
+    "imagesNew": [
+     "2026-11-08@18h24m14s788ms.png"
+    ],
+    "stalePollsAfterSettle": 0,
+    "textRequests": 0,
+    "decoysOnImageWire": [],
+    "decoysOnTextWire": [],
+    "toasts": [
+     "Image GenerationGenerating an image..."
+    ],
+    "pageErrors": [],
+    "dialogs": [],
+    "chatChanged": false,
+    "chatLength": [
+     2,
+     2
+    ],
+    "backgroundChanged": false,
+    "settingsChangedByCall": [],
+    "at15s": {
+     "state": "pending"
+    },
+    "freshHistoryPollAfter15s": true,
+    "cumulativeHistoryPollsAt15s": 147,
+    "settledAfterRelease": {
+     "state": "resolved",
+     "type": "string",
+     "value": "/user/images/2026-11-08@18h24m14s788ms.png"
+    }
+   }
+  },
+  {
+   "id": "H6",
+   "kind": "hazard",
+   "observed": {
+    "returned": {
+     "state": "resolved",
+     "type": "string",
+     "value": "/user/images/2026-11-08@18h24m14s788ms.png"
+    },
+    "prompts": 1,
+    "positiveText": "SN-PREFIX-TEXT, a long night",
+    "negativeText": "SN-NEG-PREFIX",
+    "seed": 1234,
+    "imagesNew": [
+     "2026-11-08@18h24m14s788ms.png"
+    ],
+    "stalePollsAfterSettle": 0,
+    "textRequests": 0,
+    "decoysOnImageWire": [],
+    "decoysOnTextWire": [],
+    "toasts": [
+     "Image GenerationGenerating an image..."
+    ],
+    "pageErrors": [],
+    "dialogs": [],
+    "chatChanged": false,
+    "chatLength": [
+     2,
+     2
+    ],
+    "backgroundChanged": false,
+    "settingsChangedByCall": [],
+    "sdDuringDiff": []
+   }
+  },
+  {
+   "id": "H1",
+   "kind": "hazard",
+   "observed": {
+    "returned": {
+     "state": "resolved",
+     "type": "string",
+     "value": "/user/images/2026-11-08@18h24m14s879ms.png"
+    },
+    "prompts": 1,
+    "positiveText": "SN-PREFIX-TEXT, Decoy Traveller meets Seam A",
+    "negativeText": "SN-NEG-PREFIX",
+    "seed": 1234,
+    "imagesNew": [
+     "2026-11-08@18h24m14s879ms.png"
+    ],
+    "stalePollsAfterSettle": 0,
+    "textRequests": 0,
+    "decoysOnImageWire": [
+     "Decoy Traveller"
+    ],
+    "decoysOnTextWire": [],
+    "toasts": [
+     "Image GenerationGenerating an image..."
+    ],
+    "pageErrors": [],
+    "dialogs": [],
+    "chatChanged": false,
+    "chatLength": [
+     2,
+     2
+    ],
+    "backgroundChanged": false,
+    "settingsChangedByCall": []
+   }
+  },
+  {
+   "id": "H2",
+   "kind": "hazard",
+   "observed": {
+    "returned": {
+     "state": "resolved",
+     "type": "string",
+     "value": "/user/images/2026-11-08@18h24m14s989ms.png"
+    },
+    "prompts": 1,
+    "positiveText": "SN-PREFIX-TEXT, SN-CHAR-PREFIX, at the window",
+    "negativeText": "SN-NEG-PREFIX",
+    "seed": 1234,
+    "imagesNew": [
+     "2026-11-08@18h24m14s989ms.png"
+    ],
+    "stalePollsAfterSettle": 0,
+    "textRequests": 0,
+    "decoysOnImageWire": [],
+    "decoysOnTextWire": [],
+    "toasts": [
+     "Image GenerationGenerating an image..."
+    ],
+    "pageErrors": [],
+    "dialogs": [],
+    "chatChanged": false,
+    "chatLength": [
+     2,
+     2
+    ],
+    "backgroundChanged": false,
+    "settingsChangedByCall": []
+   }
+  },
+  {
+   "id": "H3",
+   "kind": "hazard",
+   "observed": {
+    "returned": {
+     "state": "resolved",
+     "type": "string",
+     "value": "/user/images/2026-11-08@18h24m15s278ms.png"
+    },
+    "prompts": 1,
+    "positiveText": "SN-PREFIX-TEXT, The lantern glows. Welcome to the reading room, Mira says.",
+    "negativeText": "SN-NEG-PREFIX",
+    "seed": 1234,
+    "imagesNew": [
+     "2026-11-08@18h24m15s278ms.png"
+    ],
+    "stalePollsAfterSettle": 0,
+    "textRequests": 1,
+    "decoysOnImageWire": [],
+    "decoysOnTextWire": [
+     "DECOY-PERSONA-DESCRIPTION-7f3a",
+     "DECOY-CARD-DESCRIPTION-44d2",
+     "Decoy Traveller",
+     "DECOY-CHAT-MESSAGE-5e19"
+    ],
+    "toasts": [
+     "Image GenerationGenerating image prompt with an LLM...",
+     "Image GenerationGenerating an image..."
+    ],
+    "pageErrors": [],
+    "dialogs": [],
+    "chatChanged": false,
+    "chatLength": [
+     2,
+     2
+    ],
+    "backgroundChanged": false,
+    "settingsChangedByCall": []
+   }
+  },
+  {
+   "id": "H4",
+   "kind": "hazard",
+   "observed": {
+    "returned": {
+     "state": "resolved",
+     "type": "string",
+     "value": "/user/images/2026-11-08@18h24m15s435ms.png"
+    },
+    "prompts": 1,
+    "positiveText": "SN-PREFIX-TEXT, The lantern glows. Welcome to the reading room, Mira says.",
+    "negativeText": "SN-NEG-PREFIX",
+    "seed": 1234,
+    "imagesNew": [
+     "2026-11-08@18h24m15s435ms.png"
+    ],
+    "stalePollsAfterSettle": 0,
+    "textRequests": 1,
+    "decoysOnImageWire": [],
+    "decoysOnTextWire": [
+     "DECOY-PERSONA-DESCRIPTION-7f3a",
+     "DECOY-CARD-DESCRIPTION-44d2",
+     "Decoy Traveller",
+     "DECOY-CHAT-MESSAGE-5e19"
+    ],
+    "toasts": [
+     "Image GenerationGenerating image prompt with an LLM...",
+     "Image GenerationGenerating an image..."
+    ],
+    "pageErrors": [],
+    "dialogs": [],
+    "chatChanged": false,
+    "chatLength": [
+     2,
+     2
+    ],
+    "backgroundChanged": false,
+    "settingsChangedByCall": []
+   }
+  },
+  {
+   "id": "H5",
+   "kind": "hazard",
+   "observed": {
+    "returned": {
+     "state": "resolved",
+     "type": "string",
+     "value": "/user/images/2026-11-08@18h24m15s660ms.png"
+    },
+    "prompts": 1,
+    "positiveText": "SN-PREFIX-TEXT, a portrait study",
+    "negativeText": "SN-NEG-PREFIX",
+    "seed": 1234,
+    "imagesNew": [
+     "2026-11-08@18h24m15s660ms.png"
+    ],
+    "stalePollsAfterSettle": 0,
+    "textRequests": 0,
+    "decoysOnImageWire": [],
+    "decoysOnTextWire": [],
+    "toasts": [
+     "Image GenerationGenerating an image..."
+    ],
+    "pageErrors": [],
+    "dialogs": [],
+    "chatChanged": false,
+    "chatLength": [
+     2,
+     2
+    ],
+    "backgroundChanged": false,
+    "settingsChangedByCall": [],
+    "avatar": {
+     "length": 104808,
+     "sha256": "9eea025c9d0ad6d85a2d00a131d3233aa192efe885df943abace7cf68ef1d2c5",
+     "decodedBytes": 78605,
+     "node": "ETN_LoadImageBase64"
+    },
+    "classTypes": [
+     "KSampler",
+     "CheckpointLoaderSimple",
+     "CLIPTextEncode",
+     "CLIPTextEncode",
+     "VAEDecode",
+     "SaveImage",
+     "ETN_LoadImageBase64",
+     "VAEEncode",
+     "ImageScale"
+    ]
+   }
+  },
+  {
+   "id": "H7",
+   "kind": "hazard",
+   "observed": {
+    "returned": {
+     "state": "resolved",
+     "type": "string",
+     "value": "/user/images/2026-11-08@18h24m15s862ms.png"
+    },
+    "prompts": 1,
+    "positiveText": "SN-PREFIX-TEXT, a stale sampler",
+    "negativeText": "SN-NEG-PREFIX",
+    "seed": 1234,
+    "imagesNew": [
+     "2026-11-08@18h24m15s862ms.png"
+    ],
+    "stalePollsAfterSettle": 0,
+    "textRequests": 0,
+    "decoysOnImageWire": [],
+    "decoysOnTextWire": [],
+    "toasts": [
+     "Image GenerationGenerating an image..."
+    ],
+    "pageErrors": [],
+    "dialogs": [],
+    "chatChanged": false,
+    "chatLength": [
+     2,
+     2
+    ],
+    "backgroundChanged": false,
+    "settingsChangedByCall": [
+     "sampler"
+    ]
+   }
+  },
+  {
+   "id": "H8",
+   "kind": "hazard",
+   "observed": {
+    "returned": {
+     "state": "resolved",
+     "type": "string",
+     "value": "/user/images/2026-11-08@18h24m26s124ms.png"
+    },
+    "prompts": 1,
+    "positiveText": "SN-PREFIX-TEXT, a lantern on a shelf",
+    "negativeText": "SN-NEG-PREFIX",
+    "seed": 1234,
+    "imagesNew": [
+     "2026-11-08@18h24m26s124ms.png"
+    ],
+    "stalePollsAfterSettle": 0,
+    "textRequests": 0,
+    "decoysOnImageWire": [],
+    "decoysOnTextWire": [],
+    "toasts": [
+     "Image GenerationGenerating an image..."
+    ],
+    "pageErrors": [],
+    "dialogs": [],
+    "chatChanged": false,
+    "chatLength": [
+     2,
+     2
+    ],
+    "backgroundChanged": false,
+    "settingsChangedByCall": [],
+    "afterAbort": {
+     "state": "pending"
+    },
+    "settledWithinWait": false,
+    "interruptLoggedByFixture": false,
+    "historyPolls": 99
+   }
+  }
+ ],
+ "findings": [
+  {
+   "id": "H9",
+   "text": "server-side polling of /history/<id> continues after the client abort until the backend reports the job terminal; 1 stale polls observed after R4 settled"
+  },
+  {
+   "id": "H6",
+   "text": "width/height unchanged in flight for a FREE request (512x512); other keys changed in flight: none"
+  },
+  {
+   "id": "H1",
+   "text": "positive on the wire \"SN-PREFIX-TEXT, Decoy Traveller meets Seam A\"; persona name expanded true; character name expanded true"
+  },
+  {
+   "id": "H2",
+   "text": "SN-CHAR-PREFIX reached the wire: true; positive \"SN-PREFIX-TEXT, SN-CHAR-PREFIX, at the window\""
+  },
+  {
+   "id": "H3",
+   "text": "text-endpoint requests 1; decoys in their bodies [DECOY-PERSONA-DESCRIPTION-7f3a, DECOY-CARD-DESCRIPTION-44d2, Decoy Traveller, DECOY-CHAT-MESSAGE-5e19]; background changed false; chat message added false; positive \"SN-PREFIX-TEXT, The lantern glows. Welcome to the reading room, Mira says.\"; returned {\"state\":\"resolved\",\"type\":\"string\",\"value\":\"/user/images/2026-11-08@18h24m15s278ms.png\"}"
+  },
+  {
+   "id": "H4",
+   "text": "text-endpoint requests 1; decoys in their bodies [DECOY-PERSONA-DESCRIPTION-7f3a, DECOY-CARD-DESCRIPTION-44d2, Decoy Traveller, DECOY-CHAT-MESSAGE-5e19]; background changed false; chat message added false; positive \"SN-PREFIX-TEXT, The lantern glows. Welcome to the reading room, Mira says.\""
+  },
+  {
+   "id": "H5",
+   "text": "avatar base64 in /prompt body true (ETN_LoadImageBase64, 104808 chars, sha256 9eea025c9d0ad6d85a2d00a131d3233aa192efe885df943abace7cf68ef1d2c5); class_types KSampler,CheckpointLoaderSimple,CLIPTextEncode,CLIPTextEncode,VAEDecode,SaveImage,ETN_LoadImageBase64,VAEEncode,ImageScale"
+  },
+  {
+   "id": "H7",
+   "text": "saved sampler 'DDIM' absent from the loaded options: after the call sd.sampler is \"euler\"; KSampler sampler_name on the wire \"euler\""
+  },
+  {
+   "id": "H8",
+   "text": "a DOM AbortController passed as _abortController: settled within 10 s of abort false ({\"state\":\"pending\"}); fixture logged /interrupt false; after release returned {\"state\":\"resolved\",\"type\":\"string\",\"value\":\"/user/images/2026-11-08@18h24m26s124ms.png\"}; new image files 1"
+  }
+ ],
+ "restoreFailures": [],
+ "notTested": [
+  "Real ComfyUI (the owner's 127.0.0.1:8188 was never contacted); /interrupt is measured only as the fixture's log entry, not as real work stopping",
+  "Other host versions, including the owner's 1.18.0",
+  "Other image-aware extensions (SD_PROMPT_PROCESSING listeners)",
+  "RunPod serverless and every cloud source",
+  "Physical devices",
+  "Group chats",
+  "Non-default sampler/model/VAE selections"
+ ],
+ "candidate": "75b28076a4f1272bb7fd95dc3f228172329f77e4",
+ "fixtureSha256": "e9cdeb6723d2b7d44156d42b3bc529ddbb7deeb2f17dcc1509293ff915b0d949",
+ "browser": "151.0.7922.34",
+ "unexpectedPageErrors": [],
+ "verdict": "GO",
+ "dialogs": [],
+ "fixtureConsoleTail": "comfy endpoint listening on 35299\n",
+ "cleanup": {
+  "harnessClosed": true,
+  "fixtureExit": {
+   "code": null,
+   "signal": "SIGTERM"
+  },
+  "ownedRoot": "/tmp/sn-m3-image-seam-sCF6jN"
+ },
+ "exitCode": 0,
+ "endedAt": "2026-11-09T01:24:26.272Z",
+ "elapsedMs": 48019
+}

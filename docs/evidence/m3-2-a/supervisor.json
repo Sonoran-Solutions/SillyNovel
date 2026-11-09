@@ -1,0 +1,25 @@
+{
+ "task_id": "t5-frozen",
+ "attempt": 6,
+ "executor": "cmd",
+ "execution_status": "completed",
+ "exit_code": 0,
+ "failure_class": "none",
+ "duration_s": 62,
+ "stop_reason": "none",
+ "executed_cases": 17,
+ "leftover_processes_killed": 0,
+ "produced_bytes": 3249,
+ "retained_bytes": 3249,
+ "limits": {
+  "timeout_s": 900,
+  "kill_grace_s": 0,
+  "out_max_bytes": 67108864,
+  "log_max_bytes": 134217728,
+  "disk_min_gib": 10,
+  "heavy": false,
+  "head_bytes": 1048576,
+  "tail_bytes": 4194304
+ },
+ "observed_at": "2026-11-09T01:24:34Z"
+}
