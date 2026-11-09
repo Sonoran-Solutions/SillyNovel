@@ -3,7 +3,7 @@ from pathlib import Path
 import datetime, hashlib, json, os, re, shlex, shutil, subprocess, sys, time
 
 repo = Path(__file__).resolve().parents[3]
-node_files = [repo / 'tests' / (name + '.test.mjs') for name in ['m0', 'm1-reader-source', 'm1-source-prefix', 'm1-scene-reducer', 'm1-project-scene', 'm1-project-expressions', 'm2-director-proposal', 'm2-director-request', 'm2-director-controller', 'm2-director-overlay', 'm2-director-log', 'm2-gate-b-score', 'm3-image-workflow']]
+node_files = [repo / 'tests' / (name + '.test.mjs') for name in ['m0', 'm1-reader-source', 'm1-source-prefix', 'm1-scene-reducer', 'm1-project-scene', 'm1-project-expressions', 'm2-director-proposal', 'm2-director-request', 'm2-director-controller', 'm2-director-overlay', 'm2-director-log', 'm2-gate-b-score', 'm3-image-workflow', 'm3-image-request']]
 storage_files = []
 for directory, expected, files in [
     ('tests/probes/dyl19', {'owned-chat-probe.test.mjs', 'source-anchor.test.mjs'}, node_files),
