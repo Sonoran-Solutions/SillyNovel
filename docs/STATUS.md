@@ -1,5 +1,9 @@
 # Project status
 
+## M3.2 planning proposal (NOT approved) — 2026-11-08
+
+The [M3.2 first image route plan](M3_2_IMAGE_ROUTE_PLAN.md) takes up the deferred H3, H5, H6 and H7 as owner decisions I1–I10 with a recommendation each. It replaces the M3.1 plan's 1.18.0 host findings with a read-only inspection of the pinned 1.19.0 source (`7e8663c`): the typed `imagine` seam, quiet and gallery handling, FREE-mode rewrites, macro expansion of the host prefixes, the ComfyUI workflow substitutions including embedded avatars, the no-deadline history poll and the global interrupt are all VERIFIED on source and NOT_TESTED at runtime. It proposes a loopback-only standard-ComfyUI profile with a six-node workflow allowlist, an explicit image session of five submissions with one in flight, text-only content, memory-only candidates, a Cancel that never interrupts the backend, and three PRs (seam probe, pure module, adapter and UI) plus a separately authorized real-backend run. **It authorizes nothing**; runtime unchanged. Gate C NOT_RUN.
+
 ## M3.1 complete — 2026-11-08
 
 On the [owner's word](DECISIONS.md#owner-verdict--t73-pass-t60-wording-accepted--2026-11-08), T73 is PASS by owner report and the T60 wording proposed by the post-Gate-B cleanup is accepted. With both M3.1 PRs merged, DYL-207 is done. Next, only on the owner's word: the optional H8 director session and M3.2 planning (H3, H5, H6, H7, O05). Gate C NOT_RUN.
