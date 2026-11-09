@@ -1,0 +1,53 @@
+Expected answers SHA-256: ada4ff1ed766af87872a0b50973b95a0d7b652a0b773ddaeb0ad54a6804cacf5
+PROMPT_VERSION: 0ef22635aed99352
+Mode: loopback-proof
+All cases run: yes
+
+presence: 5 cases, 3 scored, refused 1 (NOT_SINGLE_JSON 1), failed 1 (TRANSPORT_ERROR 1), not run 0
+  background: correct 3, incorrect 0, abstained 0
+  presence: correct 7, incorrect 0, abstained 0
+  expression: correct 7, incorrect 0, abstained 0
+  noted: locked skips 0, repeated values 0, outfit updates 0, suggestions 0
+
+mentions: 5 cases, 4 scored, refused 1 (UNKNOWN_ASSET 1), failed 0, not run 0
+  background: correct 4, incorrect 0, abstained 0
+  presence: correct 10, incorrect 0, abstained 0
+  expression: correct 10, incorrect 0, abstained 0
+  noted: locked skips 0, repeated values 0, outfit updates 0, suggestions 0
+
+negation: 5 cases, 5 scored, refused 0, failed 0, not run 0
+  background: correct 4, incorrect 0, abstained 1
+  presence: correct 10, incorrect 0, abstained 0
+  expression: correct 10, incorrect 0, abstained 0
+  noted: locked skips 0, repeated values 0, outfit updates 0, suggestions 0
+
+hypothetical travel: 5 cases, 5 scored, refused 0, failed 0, not run 0
+  background: correct 4, incorrect 1, abstained 0
+  presence: correct 10, incorrect 0, abstained 0
+  expression: correct 10, incorrect 0, abstained 0
+  noted: locked skips 0, repeated values 0, outfit updates 0, suggestions 0
+
+flashbacks: 5 cases, 4 scored, refused 0, failed 1 (ABANDONED 1), not run 0
+  background: correct 4, incorrect 0, abstained 0
+  presence: correct 8, incorrect 0, abstained 0
+  expression: correct 8, incorrect 0, abstained 0
+  noted: locked skips 0, repeated values 0, outfit updates 0, suggestions 0
+
+outfit continuity: 5 cases, 5 scored, refused 0, failed 0, not run 0
+  background: correct 5, incorrect 0, abstained 0
+  presence: correct 10, incorrect 0, abstained 0
+  expression: correct 10, incorrect 0, abstained 0
+  outfit: correct 10, incorrect 0, abstained 0
+  noted: locked skips 0, repeated values 0, outfit updates 0, suggestions 0
+
+group authorship: 5 cases, 5 scored, refused 0, failed 0, not run 0
+  background: correct 5, incorrect 0, abstained 0
+  presence: correct 14, incorrect 0, abstained 0
+  expression: correct 14, incorrect 0, abstained 0
+  noted: locked skips 0, repeated values 0, outfit updates 0, suggestions 0
+
+user locks: 5 cases, 5 scored, refused 0, failed 0, not run 0
+  background: correct 5, incorrect 0, abstained 0
+  presence: correct 11, incorrect 0, abstained 0
+  expression: correct 11, incorrect 0, abstained 0
+  noted: locked skips 0, repeated values 0, outfit updates 0, suggestions 0

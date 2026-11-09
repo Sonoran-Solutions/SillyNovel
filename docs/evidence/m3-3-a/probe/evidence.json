@@ -1,0 +1,996 @@
+{
+ "startedAt": "2026-11-09T05:04:14.143Z",
+ "host": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
+ "node": "v26.8.1",
+ "cases": [
+  {
+   "id": "L1 absent",
+   "request": {
+    "path": "/api/images/list",
+    "body": {}
+   },
+   "status": 400,
+   "body": "{\"error\":\"No folder specified\"}",
+   "observed": {
+    "listsRoot": false,
+    "listsSubDecoy": false
+   }
+  },
+  {
+   "id": "L1 ''",
+   "request": {
+    "path": "/api/images/list",
+    "body": {
+     "folder": ""
+    }
+   },
+   "status": 400,
+   "body": "{\"error\":\"No folder specified\"}",
+   "observed": {
+    "listsRoot": false,
+    "listsSubDecoy": false
+   }
+  },
+  {
+   "id": "L1 '.'",
+   "request": {
+    "path": "/api/images/list",
+    "body": {
+     "folder": "."
+    }
+   },
+   "status": 200,
+   "body": "[\"sn-order-c.png\",\"sn-order-b.png\",\"sn-order-a.png\"]",
+   "observed": {
+    "listsRoot": true,
+    "listsSubDecoy": false
+   }
+  },
+  {
+   "id": "L1 '/'",
+   "request": {
+    "path": "/api/images/list",
+    "body": {
+     "folder": "/"
+    }
+   },
+   "status": 200,
+   "body": "[\"sn-order-c.png\",\"sn-order-b.png\",\"sn-order-a.png\"]",
+   "observed": {
+    "listsRoot": true,
+    "listsSubDecoy": false
+   }
+  },
+  {
+   "id": "L1 '..'",
+   "request": {
+    "path": "/api/images/list",
+    "body": {
+     "folder": ".."
+    }
+   },
+   "status": 200,
+   "body": "[\"sn-order-c.png\",\"sn-order-b.png\",\"sn-order-a.png\"]",
+   "observed": {
+    "listsRoot": true,
+    "listsSubDecoy": false
+   }
+  },
+  {
+   "id": "L1 subfolder",
+   "request": {
+    "path": "/api/images/list",
+    "body": {
+     "folder": "SN-DECOY-SUB"
+    }
+   },
+   "status": 200,
+   "body": "[\"sn-sub-decoy.png\"]",
+   "observed": {
+    "listsRoot": false,
+    "listsSubDecoy": true
+   }
+  },
+  {
+   "id": "L2",
+   "request": {
+    "path": "/api/images/list",
+    "bodies": {
+     "name": {
+      "folder": ".",
+      "sortField": "name"
+     },
+     "date": {
+      "folder": ".",
+      "sortField": "date"
+     },
+     "dateDesc": {
+      "folder": ".",
+      "sortField": "date",
+      "sortOrder": "desc"
+     },
+     "default": {
+      "folder": "."
+     },
+     "types": [
+      0,
+      1,
+      2,
+      4,
+      7
+     ]
+    }
+   },
+   "status": 200,
+   "body": "[\"sn-order-c.png\",\"sn-order-b.png\",\"sn-order-a.png\"]",
+   "observed": {
+    "elementTypes": [
+     "string"
+    ],
+    "byName": [
+     "sn-order-a.png",
+     "sn-order-b.png",
+     "sn-order-c.png"
+    ],
+    "byDate": [
+     "sn-order-c.png",
+     "sn-order-b.png",
+     "sn-order-a.png"
+    ],
+    "byDateDesc": [
+     "sn-order-a.png",
+     "sn-order-b.png",
+     "sn-order-c.png"
+    ],
+    "byDefault": [
+     "sn-order-c.png",
+     "sn-order-b.png",
+     "sn-order-a.png"
+    ],
+    "dateOrdered": true,
+    "fsMtimeMs": {
+     "sn-order-c.png": 1794200666982.893,
+     "sn-order-b.png": 1794200668090.8567,
+     "sn-order-a.png": 1794200669196.8203
+    },
+    "types": {
+     "0": {
+      "status": 200,
+      "list": []
+     },
+     "1": {
+      "status": 200,
+      "list": [
+       "sn-order-c.png",
+       "sn-order-b.png",
+       "sn-order-a.png"
+      ]
+     },
+     "2": {
+      "status": 200,
+      "list": []
+     },
+     "4": {
+      "status": 200,
+      "list": []
+     },
+     "7": {
+      "status": 200,
+      "list": [
+       "sn-order-c.png",
+       "sn-order-b.png",
+       "sn-order-a.png"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "id": "L3",
+   "request": {
+    "path": "/api/images/folders",
+    "body": {}
+   },
+   "status": 200,
+   "body": "[\"SN-DECOY-SUB\"]",
+   "observed": {
+    "list": [
+     "SN-DECOY-SUB"
+    ]
+   }
+  },
+  {
+   "id": "L4",
+   "request": {
+    "method": "GET",
+    "paths": [
+     "/user/images/sn-order-c.png",
+     "/user/images/sn-order-b.png",
+     "/user/images/sn-order-a.png"
+    ]
+   },
+   "status": null,
+   "body": null,
+   "observed": {
+    "uploadPaths": [
+     "/user/images/sn-order-c.png",
+     "/user/images/sn-order-b.png",
+     "/user/images/sn-order-a.png"
+    ],
+    "subUploadPath": "/user/images/SN-DECOY-SUB/sn-sub-decoy.png",
+    "pathFormIsSlashUserImagesName": true,
+    "headers": {
+     "sn-order-c.png": {
+      "path": "/user/images/sn-order-c.png",
+      "status": 200,
+      "lastModified": "Mon, 09 Nov 2026 05:04:26 GMT",
+      "etag": "W/\"1166-1a1beb18367\"",
+      "contentLength": "4454",
+      "contentType": "image/png",
+      "bodySha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
+      "uploadedSha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
+      "lastModifiedMatchesMtimeSecond": true
+     },
+     "sn-order-b.png": {
+      "path": "/user/images/sn-order-b.png",
+      "status": 200,
+      "lastModified": "Mon, 09 Nov 2026 05:04:28 GMT",
+      "etag": "W/\"11ba-1a1beb187bb\"",
+      "contentLength": "4538",
+      "contentType": "image/png",
+      "bodySha256": "f583c391c970a2c8fc4b20519cc17b05984ecfb65231d36d3ba87021f7366c3a",
+      "uploadedSha256": "f583c391c970a2c8fc4b20519cc17b05984ecfb65231d36d3ba87021f7366c3a",
+      "lastModifiedMatchesMtimeSecond": true
+     },
+     "sn-order-a.png": {
+      "path": "/user/images/sn-order-a.png",
+      "status": 200,
+      "lastModified": "Mon, 09 Nov 2026 05:04:29 GMT",
+      "etag": "W/\"109d-1a1beb18c0d\"",
+      "contentLength": "4253",
+      "contentType": "image/png",
+      "bodySha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
+      "uploadedSha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
+      "lastModifiedMatchesMtimeSecond": true
+     }
+    },
+    "lastModifiedStrictlyOrdered": true
+   }
+  },
+  {
+   "id": "D1",
+   "request": {
+    "path": "/api/images/delete",
+    "body": {
+     "path": "user/images/sn-del-d1.png"
+    },
+    "csrf": true
+   },
+   "status": 200,
+   "body": "OK",
+   "observed": {
+    "decoy": "sn-del-d1.png",
+    "decoyGone": true,
+    "diff": {
+     "removed": [
+      "default-user/user/images/sn-del-d1.png"
+     ],
+     "added": [],
+     "changed": []
+    },
+    "exact": true,
+    "before": {
+     "images": [
+      "",
+      "SN-DECOY-SUB/",
+      "SN-DECOY-SUB/sn-sub-decoy.png",
+      "sn-del-d1.png",
+      "sn-order-a.png",
+      "sn-order-b.png",
+      "sn-order-c.png"
+     ],
+     "canary": "8c183efb5db1d536ba8c6e23eb2f88b8219abda6ef156cb6c42ab08065b7604f",
+     "canaryInUser": "4c623504b37284a60414e8e93e8d55ac28ba8547284b3e44723ad89fb0251975",
+     "userSettings": "256479ac14a8562e639d0ff1e9ab7fd0870815e97a31760bd00fd23ea34c64e8",
+     "dataSettings": "absent:ENOENT",
+     "etcHostname": "6ce5c5ba1ac75b04ffce36c7bc8b36b66da634225ce86425b7956320aeede187"
+    },
+    "after": {
+     "images": [
+      "",
+      "SN-DECOY-SUB/",
+      "SN-DECOY-SUB/sn-sub-decoy.png",
+      "sn-order-a.png",
+      "sn-order-b.png",
+      "sn-order-c.png"
+     ],
+     "canary": "8c183efb5db1d536ba8c6e23eb2f88b8219abda6ef156cb6c42ab08065b7604f",
+     "canaryInUser": "4c623504b37284a60414e8e93e8d55ac28ba8547284b3e44723ad89fb0251975",
+     "userSettings": "256479ac14a8562e639d0ff1e9ab7fd0870815e97a31760bd00fd23ea34c64e8",
+     "dataSettings": "absent:ENOENT",
+     "etcHostname": "6ce5c5ba1ac75b04ffce36c7bc8b36b66da634225ce86425b7956320aeede187"
+    }
+   }
+  },
+  {
+   "id": "D2",
+   "request": {
+    "path": "/api/images/delete",
+    "body": {
+     "path": "/user/images/sn-del-d2.png"
+    },
+    "csrf": true
+   },
+   "status": 200,
+   "body": "OK",
+   "observed": {
+    "decoy": "sn-del-d2.png",
+    "decoyGone": true,
+    "diff": {
+     "removed": [
+      "default-user/user/images/sn-del-d2.png"
+     ],
+     "added": [],
+     "changed": []
+    },
+    "exact": true,
+    "before": {
+     "images": [
+      "",
+      "SN-DECOY-SUB/",
+      "SN-DECOY-SUB/sn-sub-decoy.png",
+      "sn-del-d2.png",
+      "sn-order-a.png",
+      "sn-order-b.png",
+      "sn-order-c.png"
+     ],
+     "canary": "8c183efb5db1d536ba8c6e23eb2f88b8219abda6ef156cb6c42ab08065b7604f",
+     "canaryInUser": "4c623504b37284a60414e8e93e8d55ac28ba8547284b3e44723ad89fb0251975",
+     "userSettings": "256479ac14a8562e639d0ff1e9ab7fd0870815e97a31760bd00fd23ea34c64e8",
+     "dataSettings": "absent:ENOENT",
+     "etcHostname": "6ce5c5ba1ac75b04ffce36c7bc8b36b66da634225ce86425b7956320aeede187"
+    },
+    "after": {
+     "images": [
+      "",
+      "SN-DECOY-SUB/",
+      "SN-DECOY-SUB/sn-sub-decoy.png",
+      "sn-order-a.png",
+      "sn-order-b.png",
+      "sn-order-c.png"
+     ],
+     "canary": "8c183efb5db1d536ba8c6e23eb2f88b8219abda6ef156cb6c42ab08065b7604f",
+     "canaryInUser": "4c623504b37284a60414e8e93e8d55ac28ba8547284b3e44723ad89fb0251975",
+     "userSettings": "256479ac14a8562e639d0ff1e9ab7fd0870815e97a31760bd00fd23ea34c64e8",
+     "dataSettings": "absent:ENOENT",
+     "etcHostname": "6ce5c5ba1ac75b04ffce36c7bc8b36b66da634225ce86425b7956320aeede187"
+    }
+   }
+  },
+  {
+   "id": "D3a",
+   "request": {
+    "path": "/api/images/delete",
+    "body": {
+     "path": "user/images/../DECOY-OUTSIDE.txt"
+    },
+    "csrf": true
+   },
+   "status": 400,
+   "body": "Invalid path",
+   "observed": {
+    "decoy": "sn-del-d3a.png",
+    "decoyGone": false,
+    "diff": {
+     "removed": [],
+     "added": [],
+     "changed": []
+    },
+    "exact": true,
+    "before": {
+     "images": [
+      "",
+      "SN-DECOY-SUB/",
+      "SN-DECOY-SUB/sn-sub-decoy.png",
+      "sn-del-d3a.png",
+      "sn-order-a.png",
+      "sn-order-b.png",
+      "sn-order-c.png"
+     ],
+     "canary": "8c183efb5db1d536ba8c6e23eb2f88b8219abda6ef156cb6c42ab08065b7604f",
+     "canaryInUser": "4c623504b37284a60414e8e93e8d55ac28ba8547284b3e44723ad89fb0251975",
+     "userSettings": "256479ac14a8562e639d0ff1e9ab7fd0870815e97a31760bd00fd23ea34c64e8",
+     "dataSettings": "absent:ENOENT",
+     "etcHostname": "6ce5c5ba1ac75b04ffce36c7bc8b36b66da634225ce86425b7956320aeede187"
+    },
+    "after": {
+     "images": [
+      "",
+      "SN-DECOY-SUB/",
+      "SN-DECOY-SUB/sn-sub-decoy.png",
+      "sn-del-d3a.png",
+      "sn-order-a.png",
+      "sn-order-b.png",
+      "sn-order-c.png"
+     ],
+     "canary": "8c183efb5db1d536ba8c6e23eb2f88b8219abda6ef156cb6c42ab08065b7604f",
+     "canaryInUser": "4c623504b37284a60414e8e93e8d55ac28ba8547284b3e44723ad89fb0251975",
+     "userSettings": "256479ac14a8562e639d0ff1e9ab7fd0870815e97a31760bd00fd23ea34c64e8",
+     "dataSettings": "absent:ENOENT",
+     "etcHostname": "6ce5c5ba1ac75b04ffce36c7bc8b36b66da634225ce86425b7956320aeede187"
+    }
+   }
+  },
+  {
+   "id": "D3b",
+   "request": {
+    "path": "/api/images/delete",
+    "body": {
+     "path": "../settings.json"
+    },
+    "csrf": true
+   },
+   "status": 400,
+   "body": "Invalid path",
+   "observed": {
+    "decoy": "sn-del-d3b.png",
+    "decoyGone": false,
+    "diff": {
+     "removed": [],
+     "added": [],
+     "changed": []
+    },
+    "exact": true,
+    "before": {
+     "images": [
+      "",
+      "SN-DECOY-SUB/",
+      "SN-DECOY-SUB/sn-sub-decoy.png",
+      "sn-del-d3a.png",
+      "sn-del-d3b.png",
+      "sn-order-a.png",
+      "sn-order-b.png",
+      "sn-order-c.png"
+     ],
+     "canary": "8c183efb5db1d536ba8c6e23eb2f88b8219abda6ef156cb6c42ab08065b7604f",
+     "canaryInUser": "4c623504b37284a60414e8e93e8d55ac28ba8547284b3e44723ad89fb0251975",
+     "userSettings": "256479ac14a8562e639d0ff1e9ab7fd0870815e97a31760bd00fd23ea34c64e8",
+     "dataSettings": "absent:ENOENT",
+     "etcHostname": "6ce5c5ba1ac75b04ffce36c7bc8b36b66da634225ce86425b7956320aeede187"
+    },
+    "after": {
+     "images": [
+      "",
+      "SN-DECOY-SUB/",
+      "SN-DECOY-SUB/sn-sub-decoy.png",
+      "sn-del-d3a.png",
+      "sn-del-d3b.png",
+      "sn-order-a.png",
+      "sn-order-b.png",
+      "sn-order-c.png"
+     ],
+     "canary": "8c183efb5db1d536ba8c6e23eb2f88b8219abda6ef156cb6c42ab08065b7604f",
+     "canaryInUser": "4c623504b37284a60414e8e93e8d55ac28ba8547284b3e44723ad89fb0251975",
+     "userSettings": "256479ac14a8562e639d0ff1e9ab7fd0870815e97a31760bd00fd23ea34c64e8",
+     "dataSettings": "absent:ENOENT",
+     "etcHostname": "6ce5c5ba1ac75b04ffce36c7bc8b36b66da634225ce86425b7956320aeede187"
+    }
+   }
+  },
+  {
+   "id": "D3c",
+   "request": {
+    "path": "/api/images/delete",
+    "body": {
+     "path": "/etc/hostname"
+    },
+    "csrf": true
+   },
+   "status": 400,
+   "body": "Invalid path",
+   "observed": {
+    "decoy": "sn-del-d3c.png",
+    "decoyGone": false,
+    "diff": {
+     "removed": [],
+     "added": [],
+     "changed": []
+    },
+    "exact": true,
+    "before": {
+     "images": [
+      "",
+      "SN-DECOY-SUB/",
+      "SN-DECOY-SUB/sn-sub-decoy.png",
+      "sn-del-d3a.png",
+      "sn-del-d3b.png",
+      "sn-del-d3c.png",
+      "sn-order-a.png",
+      "sn-order-b.png",
+      "sn-order-c.png"
+     ],
+     "canary": "8c183efb5db1d536ba8c6e23eb2f88b8219abda6ef156cb6c42ab08065b7604f",
+     "canaryInUser": "4c623504b37284a60414e8e93e8d55ac28ba8547284b3e44723ad89fb0251975",
+     "userSettings": "256479ac14a8562e639d0ff1e9ab7fd0870815e97a31760bd00fd23ea34c64e8",
+     "dataSettings": "absent:ENOENT",
+     "etcHostname": "6ce5c5ba1ac75b04ffce36c7bc8b36b66da634225ce86425b7956320aeede187"
+    },
+    "after": {
+     "images": [
+      "",
+      "SN-DECOY-SUB/",
+      "SN-DECOY-SUB/sn-sub-decoy.png",
+      "sn-del-d3a.png",
+      "sn-del-d3b.png",
+      "sn-del-d3c.png",
+      "sn-order-a.png",
+      "sn-order-b.png",
+      "sn-order-c.png"
+     ],
+     "canary": "8c183efb5db1d536ba8c6e23eb2f88b8219abda6ef156cb6c42ab08065b7604f",
+     "canaryInUser": "4c623504b37284a60414e8e93e8d55ac28ba8547284b3e44723ad89fb0251975",
+     "userSettings": "256479ac14a8562e639d0ff1e9ab7fd0870815e97a31760bd00fd23ea34c64e8",
+     "dataSettings": "absent:ENOENT",
+     "etcHostname": "6ce5c5ba1ac75b04ffce36c7bc8b36b66da634225ce86425b7956320aeede187"
+    }
+   }
+  },
+  {
+   "id": "D3d",
+   "request": {
+    "path": "/api/images/delete",
+    "body": {
+     "path": "user/images"
+    },
+    "csrf": true
+   },
+   "status": 500,
+   "body": "Internal Server Error",
+   "observed": {
+    "decoy": "sn-del-d3d.png",
+    "decoyGone": false,
+    "diff": {
+     "removed": [],
+     "added": [],
+     "changed": []
+    },
+    "exact": true,
+    "before": {
+     "images": [
+      "",
+      "SN-DECOY-SUB/",
+      "SN-DECOY-SUB/sn-sub-decoy.png",
+      "sn-del-d3a.png",
+      "sn-del-d3b.png",
+      "sn-del-d3c.png",
+      "sn-del-d3d.png",
+      "sn-order-a.png",
+      "sn-order-b.png",
+      "sn-order-c.png"
+     ],
+     "canary": "8c183efb5db1d536ba8c6e23eb2f88b8219abda6ef156cb6c42ab08065b7604f",
+     "canaryInUser": "4c623504b37284a60414e8e93e8d55ac28ba8547284b3e44723ad89fb0251975",
+     "userSettings": "256479ac14a8562e639d0ff1e9ab7fd0870815e97a31760bd00fd23ea34c64e8",
+     "dataSettings": "absent:ENOENT",
+     "etcHostname": "6ce5c5ba1ac75b04ffce36c7bc8b36b66da634225ce86425b7956320aeede187"
+    },
+    "after": {
+     "images": [
+      "",
+      "SN-DECOY-SUB/",
+      "SN-DECOY-SUB/sn-sub-decoy.png",
+      "sn-del-d3a.png",
+      "sn-del-d3b.png",
+      "sn-del-d3c.png",
+      "sn-del-d3d.png",
+      "sn-order-a.png",
+      "sn-order-b.png",
+      "sn-order-c.png"
+     ],
+     "canary": "8c183efb5db1d536ba8c6e23eb2f88b8219abda6ef156cb6c42ab08065b7604f",
+     "canaryInUser": "4c623504b37284a60414e8e93e8d55ac28ba8547284b3e44723ad89fb0251975",
+     "userSettings": "256479ac14a8562e639d0ff1e9ab7fd0870815e97a31760bd00fd23ea34c64e8",
+     "dataSettings": "absent:ENOENT",
+     "etcHostname": "6ce5c5ba1ac75b04ffce36c7bc8b36b66da634225ce86425b7956320aeede187"
+    }
+   }
+  },
+  {
+   "id": "D3e",
+   "request": {
+    "path": "/api/images/delete",
+    "body": {
+     "path": "user/images/"
+    },
+    "csrf": true
+   },
+   "status": 500,
+   "body": "Internal Server Error",
+   "observed": {
+    "decoy": "sn-del-d3e.png",
+    "decoyGone": false,
+    "diff": {
+     "removed": [],
+     "added": [],
+     "changed": []
+    },
+    "exact": true,
+    "before": {
+     "images": [
+      "",
+      "SN-DECOY-SUB/",
+      "SN-DECOY-SUB/sn-sub-decoy.png",
+      "sn-del-d3a.png",
+      "sn-del-d3b.png",
+      "sn-del-d3c.png",
+      "sn-del-d3d.png",
+      "sn-del-d3e.png",
+      "sn-order-a.png",
+      "sn-order-b.png",
+      "sn-order-c.png"
+     ],
+     "canary": "8c183efb5db1d536ba8c6e23eb2f88b8219abda6ef156cb6c42ab08065b7604f",
+     "canaryInUser": "4c623504b37284a60414e8e93e8d55ac28ba8547284b3e44723ad89fb0251975",
+     "userSettings": "256479ac14a8562e639d0ff1e9ab7fd0870815e97a31760bd00fd23ea34c64e8",
+     "dataSettings": "absent:ENOENT",
+     "etcHostname": "6ce5c5ba1ac75b04ffce36c7bc8b36b66da634225ce86425b7956320aeede187"
+    },
+    "after": {
+     "images": [
+      "",
+      "SN-DECOY-SUB/",
+      "SN-DECOY-SUB/sn-sub-decoy.png",
+      "sn-del-d3a.png",
+      "sn-del-d3b.png",
+      "sn-del-d3c.png",
+      "sn-del-d3d.png",
+      "sn-del-d3e.png",
+      "sn-order-a.png",
+      "sn-order-b.png",
+      "sn-order-c.png"
+     ],
+     "canary": "8c183efb5db1d536ba8c6e23eb2f88b8219abda6ef156cb6c42ab08065b7604f",
+     "canaryInUser": "4c623504b37284a60414e8e93e8d55ac28ba8547284b3e44723ad89fb0251975",
+     "userSettings": "256479ac14a8562e639d0ff1e9ab7fd0870815e97a31760bd00fd23ea34c64e8",
+     "dataSettings": "absent:ENOENT",
+     "etcHostname": "6ce5c5ba1ac75b04ffce36c7bc8b36b66da634225ce86425b7956320aeede187"
+    }
+   }
+  },
+  {
+   "id": "D3f",
+   "request": {
+    "path": "/api/images/delete",
+    "body": {
+     "path": "user/images/sn-no-such-file.png"
+    },
+    "csrf": true
+   },
+   "status": 404,
+   "body": "File not found",
+   "observed": {
+    "decoy": "sn-del-d3f.png",
+    "decoyGone": false,
+    "diff": {
+     "removed": [],
+     "added": [],
+     "changed": []
+    },
+    "exact": true,
+    "before": {
+     "images": [
+      "",
+      "SN-DECOY-SUB/",
+      "SN-DECOY-SUB/sn-sub-decoy.png",
+      "sn-del-d3a.png",
+      "sn-del-d3b.png",
+      "sn-del-d3c.png",
+      "sn-del-d3d.png",
+      "sn-del-d3e.png",
+      "sn-del-d3f.png",
+      "sn-order-a.png",
+      "sn-order-b.png",
+      "sn-order-c.png"
+     ],
+     "canary": "8c183efb5db1d536ba8c6e23eb2f88b8219abda6ef156cb6c42ab08065b7604f",
+     "canaryInUser": "4c623504b37284a60414e8e93e8d55ac28ba8547284b3e44723ad89fb0251975",
+     "userSettings": "256479ac14a8562e639d0ff1e9ab7fd0870815e97a31760bd00fd23ea34c64e8",
+     "dataSettings": "absent:ENOENT",
+     "etcHostname": "6ce5c5ba1ac75b04ffce36c7bc8b36b66da634225ce86425b7956320aeede187"
+    },
+    "after": {
+     "images": [
+      "",
+      "SN-DECOY-SUB/",
+      "SN-DECOY-SUB/sn-sub-decoy.png",
+      "sn-del-d3a.png",
+      "sn-del-d3b.png",
+      "sn-del-d3c.png",
+      "sn-del-d3d.png",
+      "sn-del-d3e.png",
+      "sn-del-d3f.png",
+      "sn-order-a.png",
+      "sn-order-b.png",
+      "sn-order-c.png"
+     ],
+     "canary": "8c183efb5db1d536ba8c6e23eb2f88b8219abda6ef156cb6c42ab08065b7604f",
+     "canaryInUser": "4c623504b37284a60414e8e93e8d55ac28ba8547284b3e44723ad89fb0251975",
+     "userSettings": "256479ac14a8562e639d0ff1e9ab7fd0870815e97a31760bd00fd23ea34c64e8",
+     "dataSettings": "absent:ENOENT",
+     "etcHostname": "6ce5c5ba1ac75b04ffce36c7bc8b36b66da634225ce86425b7956320aeede187"
+    }
+   }
+  },
+  {
+   "id": "D3g",
+   "request": {
+    "path": "/api/images/delete",
+    "body": {
+     "path": "user/images/%2e%2e%2fDECOY-OUTSIDE.txt"
+    },
+    "csrf": true
+   },
+   "status": 404,
+   "body": "File not found",
+   "observed": {
+    "decoy": "sn-del-d3g.png",
+    "decoyGone": false,
+    "diff": {
+     "removed": [],
+     "added": [],
+     "changed": []
+    },
+    "exact": true,
+    "before": {
+     "images": [
+      "",
+      "SN-DECOY-SUB/",
+      "SN-DECOY-SUB/sn-sub-decoy.png",
+      "sn-del-d3a.png",
+      "sn-del-d3b.png",
+      "sn-del-d3c.png",
+      "sn-del-d3d.png",
+      "sn-del-d3e.png",
+      "sn-del-d3f.png",
+      "sn-del-d3g.png",
+      "sn-order-a.png",
+      "sn-order-b.png",
+      "sn-order-c.png"
+     ],
+     "canary": "8c183efb5db1d536ba8c6e23eb2f88b8219abda6ef156cb6c42ab08065b7604f",
+     "canaryInUser": "4c623504b37284a60414e8e93e8d55ac28ba8547284b3e44723ad89fb0251975",
+     "userSettings": "256479ac14a8562e639d0ff1e9ab7fd0870815e97a31760bd00fd23ea34c64e8",
+     "dataSettings": "absent:ENOENT",
+     "etcHostname": "6ce5c5ba1ac75b04ffce36c7bc8b36b66da634225ce86425b7956320aeede187"
+    },
+    "after": {
+     "images": [
+      "",
+      "SN-DECOY-SUB/",
+      "SN-DECOY-SUB/sn-sub-decoy.png",
+      "sn-del-d3a.png",
+      "sn-del-d3b.png",
+      "sn-del-d3c.png",
+      "sn-del-d3d.png",
+      "sn-del-d3e.png",
+      "sn-del-d3f.png",
+      "sn-del-d3g.png",
+      "sn-order-a.png",
+      "sn-order-b.png",
+      "sn-order-c.png"
+     ],
+     "canary": "8c183efb5db1d536ba8c6e23eb2f88b8219abda6ef156cb6c42ab08065b7604f",
+     "canaryInUser": "4c623504b37284a60414e8e93e8d55ac28ba8547284b3e44723ad89fb0251975",
+     "userSettings": "256479ac14a8562e639d0ff1e9ab7fd0870815e97a31760bd00fd23ea34c64e8",
+     "dataSettings": "absent:ENOENT",
+     "etcHostname": "6ce5c5ba1ac75b04ffce36c7bc8b36b66da634225ce86425b7956320aeede187"
+    }
+   }
+  },
+  {
+   "id": "D4",
+   "request": {
+    "path": "/api/images/delete",
+    "body": {
+     "path": "user/images/../images/sn-del-d4.png"
+    },
+    "csrf": true
+   },
+   "status": 200,
+   "body": "OK",
+   "observed": {
+    "decoy": "sn-del-d4.png",
+    "decoyGone": true,
+    "diff": {
+     "removed": [
+      "default-user/user/images/sn-del-d4.png"
+     ],
+     "added": [],
+     "changed": []
+    },
+    "exact": true,
+    "before": {
+     "images": [
+      "",
+      "SN-DECOY-SUB/",
+      "SN-DECOY-SUB/sn-sub-decoy.png",
+      "sn-del-d3a.png",
+      "sn-del-d3b.png",
+      "sn-del-d3c.png",
+      "sn-del-d3d.png",
+      "sn-del-d3e.png",
+      "sn-del-d3f.png",
+      "sn-del-d3g.png",
+      "sn-del-d4.png",
+      "sn-order-a.png",
+      "sn-order-b.png",
+      "sn-order-c.png"
+     ],
+     "canary": "8c183efb5db1d536ba8c6e23eb2f88b8219abda6ef156cb6c42ab08065b7604f",
+     "canaryInUser": "4c623504b37284a60414e8e93e8d55ac28ba8547284b3e44723ad89fb0251975",
+     "userSettings": "256479ac14a8562e639d0ff1e9ab7fd0870815e97a31760bd00fd23ea34c64e8",
+     "dataSettings": "absent:ENOENT",
+     "etcHostname": "6ce5c5ba1ac75b04ffce36c7bc8b36b66da634225ce86425b7956320aeede187"
+    },
+    "after": {
+     "images": [
+      "",
+      "SN-DECOY-SUB/",
+      "SN-DECOY-SUB/sn-sub-decoy.png",
+      "sn-del-d3a.png",
+      "sn-del-d3b.png",
+      "sn-del-d3c.png",
+      "sn-del-d3d.png",
+      "sn-del-d3e.png",
+      "sn-del-d3f.png",
+      "sn-del-d3g.png",
+      "sn-order-a.png",
+      "sn-order-b.png",
+      "sn-order-c.png"
+     ],
+     "canary": "8c183efb5db1d536ba8c6e23eb2f88b8219abda6ef156cb6c42ab08065b7604f",
+     "canaryInUser": "4c623504b37284a60414e8e93e8d55ac28ba8547284b3e44723ad89fb0251975",
+     "userSettings": "256479ac14a8562e639d0ff1e9ab7fd0870815e97a31760bd00fd23ea34c64e8",
+     "dataSettings": "absent:ENOENT",
+     "etcHostname": "6ce5c5ba1ac75b04ffce36c7bc8b36b66da634225ce86425b7956320aeede187"
+    }
+   }
+  },
+  {
+   "id": "D5",
+   "request": {
+    "path": "/api/images/delete",
+    "body": {
+     "path": "user/images/sn-del-d5.png"
+    },
+    "csrf": false
+   },
+   "status": 403,
+   "body": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>ForbiddenError: Invalid CSRF token. Please refresh the page and try again.</pre>\n</body>\n</html>\n",
+   "observed": {
+    "decoy": "sn-del-d5.png",
+    "decoyGone": false,
+    "diff": {
+     "removed": [],
+     "added": [],
+     "changed": []
+    },
+    "exact": true,
+    "before": {
+     "images": [
+      "",
+      "SN-DECOY-SUB/",
+      "SN-DECOY-SUB/sn-sub-decoy.png",
+      "sn-del-d3a.png",
+      "sn-del-d3b.png",
+      "sn-del-d3c.png",
+      "sn-del-d3d.png",
+      "sn-del-d3e.png",
+      "sn-del-d3f.png",
+      "sn-del-d3g.png",
+      "sn-del-d5.png",
+      "sn-order-a.png",
+      "sn-order-b.png",
+      "sn-order-c.png"
+     ],
+     "canary": "8c183efb5db1d536ba8c6e23eb2f88b8219abda6ef156cb6c42ab08065b7604f",
+     "canaryInUser": "4c623504b37284a60414e8e93e8d55ac28ba8547284b3e44723ad89fb0251975",
+     "userSettings": "256479ac14a8562e639d0ff1e9ab7fd0870815e97a31760bd00fd23ea34c64e8",
+     "dataSettings": "absent:ENOENT",
+     "etcHostname": "6ce5c5ba1ac75b04ffce36c7bc8b36b66da634225ce86425b7956320aeede187"
+    },
+    "after": {
+     "images": [
+      "",
+      "SN-DECOY-SUB/",
+      "SN-DECOY-SUB/sn-sub-decoy.png",
+      "sn-del-d3a.png",
+      "sn-del-d3b.png",
+      "sn-del-d3c.png",
+      "sn-del-d3d.png",
+      "sn-del-d3e.png",
+      "sn-del-d3f.png",
+      "sn-del-d3g.png",
+      "sn-del-d5.png",
+      "sn-order-a.png",
+      "sn-order-b.png",
+      "sn-order-c.png"
+     ],
+     "canary": "8c183efb5db1d536ba8c6e23eb2f88b8219abda6ef156cb6c42ab08065b7604f",
+     "canaryInUser": "4c623504b37284a60414e8e93e8d55ac28ba8547284b3e44723ad89fb0251975",
+     "userSettings": "256479ac14a8562e639d0ff1e9ab7fd0870815e97a31760bd00fd23ea34c64e8",
+     "dataSettings": "absent:ENOENT",
+     "etcHostname": "6ce5c5ba1ac75b04ffce36c7bc8b36b66da634225ce86425b7956320aeede187"
+    }
+   }
+  }
+ ],
+ "findings": [
+  {
+   "id": "L2",
+   "text": "listing elements are string (no date or size); sortField 'date' orders by mtime true (default order equals date true); type 0 -> 0 items, 1 -> 3, 2 (video) -> 0, 4 (audio) -> 0, 7 -> 3"
+  },
+  {
+   "id": "L3",
+   "text": "/folders returns [\"SN-DECOY-SUB\"] (directory names only, no root entry)"
+  },
+  {
+   "id": "D3d",
+   "text": "\"user/images\" -> 500 \"Internal Server Error\"; nothing changed true"
+  },
+  {
+   "id": "D3e",
+   "text": "\"user/images/\" -> 500 \"Internal Server Error\"; nothing changed true"
+  },
+  {
+   "id": "D4",
+   "text": "'user/images/../images/<decoy>' -> 200; decoy deleted true; only the decoy changed true (the route normalizes, so SillyNovel must send only the exact upload path)"
+  }
+ ],
+ "notTested": [
+  "The owner's 1.18.0 install and other host versions",
+  "Files written by the real imagine/ComfyUI path (decoys go through /api/images/upload only)",
+  "gallery=true results in character subfolders (delete inside a subfolder)",
+  "Deleting a subfolder path, symlinks inside user/images, Windows path separators",
+  "Other user accounts' directories and multi-user isolation",
+  "Large folders (listing cost), concurrent writes during a listing, clock skew",
+  "The deprecated /api/images/list/:folder URL form and HEAD requests",
+  "Physical devices"
+ ],
+ "candidate": "bd15a9b720c2027a3e8ce07faa17da87a697ea41",
+ "browser": "151.0.7922.34",
+ "setup": {
+  "subUploadPath": "/user/images/SN-DECOY-SUB/sn-sub-decoy.png"
+ },
+ "j6": {
+  "rootForms": [
+   "'.'",
+   "'/'",
+   "'..'"
+  ],
+  "listedRootFiles": 3,
+  "lastModifiedForEach": true
+ },
+ "unexpectedPageErrors": [],
+ "verdicts": {
+  "J5": "GO",
+  "J6": "GO"
+ },
+ "hostLogDeleteLines": [
+  "Deleted image: user/images/sn-del-d1.png from default-user",
+  "Deleted image: /user/images/sn-del-d2.png from default-user",
+  "Error: EISDIR: illegal operation on a directory, unlink '/tmp/sn-m3-image-folder-ZKYvLk/data/default-user/user/images'",
+  "  code: 'EISDIR',",
+  "Error: EISDIR: illegal operation on a directory, unlink '/tmp/sn-m3-image-folder-ZKYvLk/data/default-user/user/images/'",
+  "  code: 'EISDIR',",
+  "Deleted image: user/images/../images/sn-del-d4.png from default-user",
+  "ForbiddenError: Invalid CSRF token. Please refresh the page and try again."
+ ],
+ "cleanup": {
+  "harnessClosed": true,
+  "ownedRoot": "/tmp/sn-m3-image-folder-ZKYvLk"
+ },
+ "exitCode": 0,
+ "endedAt": "2026-11-09T05:04:32.007Z",
+ "elapsedMs": 17863
+}
