@@ -4,7 +4,6 @@ import { createServer } from 'node:http';
 import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
-import { extname } from 'node:path';
 
 export const COMFY_MARKER = 'sn-comfy-fixture';
 const PORT = Number(process.env.SN_COMFY_PORT ?? 8129);

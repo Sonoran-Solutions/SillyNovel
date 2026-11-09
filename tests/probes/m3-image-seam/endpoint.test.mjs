@@ -24,7 +24,14 @@ async function waitDone(id) {
     }
     assert.fail(`${id} did not complete`);
 }
-after(() => { if (child && child.exitCode === null) child.kill('SIGTERM'); });
+after(async () => {
+    if (!child || child.exitCode !== null || child.signalCode !== null) return;
+    const exited = once(child, 'exit');
+    child.kill('SIGTERM');
+    if (await Promise.race([exited.then(() => true), sleep(5000).then(() => false)])) return;
+    child.kill('SIGKILL');
+    await exited;
+});
 
 test('deterministic loopback ComfyUI fixture contract', async () => {
     child = launch(0);

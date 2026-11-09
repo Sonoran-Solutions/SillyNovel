@@ -10,25 +10,30 @@ SillyTavern.getContext().SlashCommandParser.commands.imagine.callback({ quiet: '
 ```
 
 Synthetic data only: the harness decoys (persona, card, lorebook) plus a decoy chat message.
-
 Per case it records the browser's `/api/` requests (the `/api/sd/comfy/generate` body; upload metadata and the image
 field's length and SHA-256 only), the fixture's received requests, the loopback text endpoint's requests (any is a
 text-model call), chat length and hash, background, `extension_settings.sd` before/during/after, the user images
-directory, toasts, page errors and the exact return value. Base64 runs are replaced by length and SHA-256; each wire
-file is capped at 1 MiB.
+directory, toasts, page errors and the exact return value. Image fields (upload `image`, workflow `image` inputs such as
+avatar substitutions) are stored as length and SHA-256 whatever their size, bodies keep their own length and SHA-256,
+and each wire file is capped at 1 MiB. A returned path is validated (relative, same origin, under `/user/images/`)
+before it is fetched, and redirects are refused.
 
-- Required cases R1-R8 (baseline wire equality, `{prompt}` marker, inert text, abort, chat change, backend error,
-  non-PNG, no deadline) print `PASS` or `FAIL`.
-- Hazard cases H1-H8 (macros, character prefix, trigger word, `free_extend`, avatar workflow, in-flight dimensions,
-  stale sampler selection, abort with the host's own `SlashCommandAbortController`) print `FINDING`.
+- Required cases R1-R8 print `PASS` or `FAIL`: baseline wire equality, `{prompt}` marker, inert text, abort with the
+  host's own `SlashCommandAbortController` (the supported controller shape: settles to a non-path value, the fixture
+  logs `/interrupt`, no file), chat change, backend error, non-PNG (`.jpg` path and the fixture's non-PNG bytes), and
+  still polling after a 15 s hold. Every required case also requires unchanged settings, chat and background and no
+  text-endpoint request (R5 checks the chat it switched to instead).
+- Hazard cases H1-H8 print `FINDING`: macros, character prefix, trigger word, `free_extend`, avatar workflow,
+  in-flight dimensions, stale sampler selection, and a DOM `AbortController` passed as `_abortController` (ignored by
+  the host: still pending after abort, no `/interrupt`, file saved after release).
 
+`/interrupt` is the fixture's log of the host's request, not evidence that real ComfyUI work stops. R8 measures only
+that polling continues after 15 s; the absence of a host deadline is a source finding.
 ```
 SN_PLAYWRIGHT_MODULE=<playwright index.mjs> timeout --kill-after=5 600 node tests/probes/m3-image-seam/host.mjs <pinned-host-root>
 ```
 
-Port 8128 must be free. Output: `<owned root>/evidence.json` and `<owned root>/wire/<case>.json`; the owned root is
-printed first and holds a host clone with `node_modules`, so delete it when done.
+Port 8128 must be free. Output: `<owned root>/evidence.json` and `wire/<case>.json`; the printed owned root holds a host clone, so delete it after use.
 
-`VERDICT GO`: every required case passed; the seam behaves as the plan assumes. `VERDICT STOP`: at least one required
-case failed; the plan must change before PR B/C rely on that property. The exit code is non-zero only when the probe
-could not complete the measurement.
+`VERDICT GO`: every required case passed. `VERDICT STOP`: a required case failed; the plan must change before PR B/C
+rely on it. The exit code is non-zero only when the probe could not complete the measurement.
