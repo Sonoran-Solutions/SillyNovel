@@ -224,7 +224,7 @@ export function mountVisualStage({ document, stage, actions }) {
     const generation=make('div','sillynovel-image-workflow__generation');workflowBody.append(generation);generation.append(make('p','','Generate on this host'));
     const imageUnavailable=make('p','','Host image generation is not available to SillyNovel on this host'),imageControls=make('div','sillynovel-controls__panel');generation.append(imageUnavailable,imageControls);
     const imageToggle=wfField('Image session on this host','input');imageToggle.type='checkbox';imageToggle.parentElement.classList.add('sillynovel-image-workflow__session');imageControls.append(imageToggle.parentElement);
-    const allowanceLine=make('p',''),generationReview=make('pre','sillynovel-image-workflow__text'),generationProblems=make('p','sillynovel-image-workflow__generation-problems'),workflowPin=make('p','');
+    const allowanceLine=make('p',''),generationReview=make('pre','sillynovel-image-workflow__review'),generationProblems=make('p','sillynovel-image-workflow__generation-problems'),workflowPin=make('p','');
     generationReview.setAttribute('aria-label','Generation review');generationReview.tabIndex=0;imageControls.append(allowanceLine,generationReview,generationProblems,workflowPin);
     const submitImage=wfButton('Submit',()=>submitGeneration()),cancelImage=wfButton('Cancel',()=>cancelGeneration());imageControls.append(submitImage,cancelImage);
     const stopWarning=make('p','','Stop host job asks ComfyUI to interrupt whatever it is running now, not only this request.');stopWarning.id='sillynovel-image-stop-warning';imageControls.append(stopWarning);
