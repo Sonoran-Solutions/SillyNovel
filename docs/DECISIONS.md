@@ -1,5 +1,24 @@
 # Decision register
 
+## Owner rulings I1–I10 — M3.2 first image route — 2026-11-08
+
+**Approving owner: Dylan. Date: 2026-11-08, America/Phoenix. Status: APPROVED.** The owner was given the ten decisions in [section 4 of the M3.2 plan](M3_2_IMAGE_ROUTE_PLAN.md#4-owner-decisions-i1i10) ([PR #83](https://github.com/Sonoran-Solutions/SillyNovel/pull/83), unmerged at this entry) with a recommendation each, and said “Record as recommended.” Every row adopts the plan's recommendation; the alternatives the plan records are not adopted. M3.2 is tracked by [DYL-213](https://linear.app/devils17/issue/DYL-213/sillynovel-m32-first-image-route-host-image-generation-local-comfyui).
+
+| ID | Ruling |
+| --- | --- |
+| I1 (H3, O05) | **The first real image route is the host's Image Generation extension with standard local ComfyUI through the typed `imagine` seam**, under the plan's section 3.2 profile. O05 is resolved: local-first, through the host's existing integration, no new cloud adapter. If PR A's probe finds the seam unsafe, that is a recorded stop for this route, not a reason to try another. |
+| I2 (H5) | Image allowance: generation off until an explicit image session; one request in flight; five submissions per session; zero automatic retries; unknown outcomes keep their reservation. Independent of the director's ceiling 40. |
+| I3 (H6) | Content sent: the draft prompt and draft negative prompt only, plus what the host's own prefixes and workflow add, all shown before Submit. No references, style note, size hint, chat text, cards, persona or director window. |
+| I4 (H7) | Pre-approval storage: the candidate is browser memory plus the host's retained file. No schema change in M3.2; retention is M3.3's design. |
+| I5 | Cancel withdraws permission to apply and lets the host call finish. A separate **Stop host job** control aborts the request and discloses that ComfyUI's interrupt is global. |
+| I6 | `comfy_url` must be loopback (`localhost`, `127.0.0.1`, `[::1]`). Anything else is “not local” and refused in M3.2. No SillyNovel setting is introduced. |
+| I7 | The owner selects a workflow in the host that satisfies the six-node allowlist; SillyNovel pins its hash per session and installs nothing into the host. |
+| I8 | Campaign evidence on the disposable pinned 1.19.0 host; the owner's own session on their 1.18.0 install, recorded as a deviation as at Gate B, with both SHAs in the record. |
+| I9 | Allowance and in-flight state live in memory only; the session is off after reload; no cross-reload exactly-once claim in M3.2 (T78 in M3.3). |
+| I10 | **M3.2 is authorized as the three sequential PRs of plan section 7**, each with its own record, frozen SHA and the owner's review before the next starts: PR A (seam probe, tests only), PR B (pure module `src/image-request.mjs`), PR C (adapter seam and UI). **The real-backend run on the owner's machine is its own authorization.** The T74 and T77 clarifications of plan section 6 are applied to TESTING at this entry. |
+
+Already settled and not reopened: H1, H2, H4, H8, H9, H10, H11, O04, O06, O07, D4, D5, D7, the M2 rulings, and Gate B's verdict. This entry authorizes M3.2 PRs A, B and C only, in order. The real-backend run, M3.3 and later, Gate C, the H8 session, DYL-193 closure, live installation and release each need their own recorded step. Gate C NOT_RUN. Older entries below are historical.
+
 ## Owner verdict — T73 PASS; T60 wording accepted — 2026-11-08
 
 **Owner: Dylan. Date: 2026-11-08, America/Phoenix. Status: APPROVED.** The owner said “You can record that T73 passes and I accept T60 wording.” (1) **T73** (Image workflow keyboard, scaling, touch and screen-reader checks) is PASS on the owner's own report. The report names no device, assistive tool or revision, and no agent evidence exists for it. This closes the last open row of [DYL-207](https://linear.app/devils17/issue/DYL-207/sillynovel-m31-manual-image-exchange-promptreference-export-explicit). (2) The **T60** Expected text proposed in the [post-Gate-B cleanup record](POST_GATE_B_CLEANUP.md) is accepted as a matrix amendment: a real regenerate replaces the message under a new key, so no ‘message changed’ row remains at the replacement. Nothing further is authorized: M3.2 planning (H3, H5, H6, H7) and the optional H8 session wait for the owner's word. Gate C NOT_RUN.
@@ -363,7 +382,7 @@ Rows O02–O07 were ruled on in the [2026-11-01 owner rulings](#owner-rulings-on
 | O02 | Which host-supported storage/asset routes meet user scoping and save-safety needs? | RESOLVED by DYL-47/DYL-49; closed by reference 2026-11-01 |
 | O03 | Which source license should the repository use? | RESOLVED: AGPL-3.0, 2026-11-01 |
 | O04 | Which one text-director transport should be exercised first? | RESOLVED: host generation path on the user's selected connection, 2026-11-01 |
-| O05 | Which image route should be the first real adapter? | DEFERRED until Gate B PASS; local-first, 2026-11-01 |
+| O05 | Which image route should be the first real adapter? | RESOLVED: the host's Image Generation extension on standard loopback ComfyUI through the typed `imagine` seam ([I1](#owner-rulings-i1i10--m32-first-image-route--2026-11-08), 2026-11-08) |
 | O06 | What usage limits and content-sharing scope will the owner enable? | RESOLVED: evidence window only, one in flight, per-session ceiling 40, 2026-11-01 |
 | O07 | Is plan-backed ChatGPT text access worth a separate integration spike? | CLOSED, not pursued, 2026-11-01 |
 | O08 | Should a manual background or presence choice be markable as a default the director may move, given that D4 locks every manual choice and the M2.3 overlay therefore rarely moves a hand-arranged project? | RESOLVED: option A, per-field “director may move this” over the existing lock flags, no schema change, default stays locked ([G8](#owner-rulings-g1g14--m24-evidence-ui-corrections-and-gate-b--2026-11-02), 2026-11-02) |

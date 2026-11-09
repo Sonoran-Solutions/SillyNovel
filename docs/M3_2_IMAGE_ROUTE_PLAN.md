@@ -131,6 +131,8 @@ Three copies exist after a successful request: ComfyUI's output file, the host's
 
 ## 4. Owner decisions I1–I10
 
+**Ruled 2026-11-08:** see the [owner rulings](DECISIONS.md#owner-rulings-i1i10--m32-first-image-route--2026-11-08). Every row adopts the recommendation. The table below is the proposal as reviewed.
+
 Each row restates a deferred H decision or raises a new one. The recommendation is the agent's; nothing is adopted until the owner records it.
 
 | ID | Decision and options | Recommendation and reason |
