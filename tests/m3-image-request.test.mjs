@@ -476,3 +476,9 @@ test('leaseStatus never reports stale or mine on malformed clocks or tabs', () =
     assert.equal(leaseStatus({ ...session, heartbeatAt: undefined }, { tab: 'tab-b', now: 500000 }), 'held');
     assert.equal(leaseStatus({ ...session, tab: undefined }, { tab: undefined, now: 2000 }), 'held');
 });
+
+test('takeoverSession refuses a missing tab or a non-numeric clock', () => {
+    const session = { id: 's', tab: 'tab-a', allowance: 5, used: 1, workflowSha256: hash('a'), startedAt: 0, heartbeatAt: 1000, endedAt: null };
+    refuses(() => takeoverSession(session, { tab: 'tab-b', now: NaN }), 'NOT_HELD');
+    refuses(() => takeoverSession(session, { tab: undefined, now: 2000 }), 'NOT_HELD');
+});

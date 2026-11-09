@@ -106,11 +106,12 @@ export function cacheHit({ payloadSha256, seedPolicy, jobs, catalogAssetIds }) {
 export function leaseStatus(session, { tab, now }) {
     if (!session || session.endedAt != null) return 'free';
     if (typeof tab === 'string' && session.tab === tab) return 'mine';
-    // A missing or non-numeric clock never makes a lease look stale: takeover must not be offered on bad data.
+    // A missing or non-numeric clock reads as held, never stale or mine; takeoverSession refuses a bad tab or clock.
     return !(now - session.heartbeatAt > LEASE.staleMs) ? 'held' : 'stale';
 }
 
 export function takeoverSession(session, { tab, now }) {
+    if (typeof tab !== 'string' || !Number.isFinite(now)) throw Error('NOT_HELD');
     if (['free', 'mine'].includes(leaseStatus(session, { tab, now }))) throw Error('NOT_HELD');
     return Object.freeze({ ...session, tab, heartbeatAt: now });
 }
