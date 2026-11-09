@@ -36,7 +36,7 @@ function combinePrefixes(str1, str2, macro = '') {
 const IMAGE_KEYS = new Set(['image', 'images', 'data']);
 const imageField = s => ({ redacted: 'image field', length: s.length, sha256: sha(s) });
 function redact(value, key) {
-    if (typeof value === 'string') return IMAGE_KEYS.has(key) && !/^\d+$/.test(value) ? imageField(value) : value.replace(/[A-Za-z0-9+/]{256,}={0,2}/g, run => `<base64 length=${run.length} sha256=${sha(run)}>`);
+    if (typeof value === 'string') return IMAGE_KEYS.has(key) && value.length >= 16 ? imageField(value) : value.replace(/[A-Za-z0-9+/]{256,}={0,2}/g, run => `<base64 length=${run.length} sha256=${sha(run)}>`);
     if (Array.isArray(value)) return value.map(v => redact(v, IMAGE_KEYS.has(key) ? key : undefined));
     if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, redact(v, k)]));
     return value;
@@ -45,7 +45,7 @@ function body(text) {
     if (typeof text !== 'string') return text;
     let parsed;
     try { parsed = JSON.parse(text); if (typeof parsed?.prompt === 'string') parsed = { ...parsed, prompt: JSON.parse(parsed.prompt) }; } catch { parsed = undefined; }
-    return { length: Buffer.byteLength(text), sha256: sha(text), ...(parsed === undefined ? { text: redact(text) } : { json: redact(parsed) }) };
+    return { length: Buffer.byteLength(text), sha256: sha(text), ...(parsed === undefined ? {} : { json: redact(parsed) }) };
 }
 const forWire = o => redact({ ...o, generate: o.generate.map(e => ({ ...e, body: body(e.body) })), api: o.api.map(e => (e.body ? { ...e, body: body(e.body) } : e)),
     fixtureLog: o.fixtureLog.map(e => ({ ...e, rawBody: body(e.rawBody) })), prompts: undefined, text: o.text.map(e => ({ ...e, body: body(JSON.stringify(e.body)) })) });
@@ -67,9 +67,28 @@ async function stopFixture() {
     await Promise.race([done, delay(5000)]);
     if (fixture.exitCode === null && fixture.signalCode === null) { fixture.kill('SIGKILL'); await done; }
 }
-const comfy = async (path, payload) => (await fetch(fixtureOrigin + path, payload === undefined ? {} : { method: 'POST', body: JSON.stringify(payload) })).json();
-const until = async (check, what, ms = 20000) => { const end = Date.now() + ms; while (Date.now() < end) { if (await check()) return; await delay(50); } throw Error('Timed out: ' + what); };
-const poll = async (check, ms = 20000) => { const end = Date.now() + ms; while (Date.now() < end) { if (await check()) return true; await delay(50); } return false; };
+const comfy = async (path, payload, ms = 20000) => (await fetch(fixtureOrigin + path, { signal: AbortSignal.timeout(Math.max(1, ms)), ...(payload === undefined ? {} : { method: 'POST', body: JSON.stringify(payload) }) })).json();
+// Every awaited predicate is raced against the time left, so a stalled fetch or page evaluation cannot outlast the wait.
+// Predicates receive the remaining milliseconds for their own fetch signals.
+class Deadline extends Error {}
+function race(promise, ms, what) {
+    let timer;
+    return Promise.race([promise, new Promise((_, reject) => { timer = setTimeout(() => reject(new Deadline('Timed out: ' + what)), Math.max(0, ms)); })]).finally(() => clearTimeout(timer));
+}
+const until = async (check, what, ms = 20000) => {
+    const end = Date.now() + ms;
+    while (Date.now() < end) { if (await race(check(end - Date.now()), end - Date.now(), what)) return; await delay(50); }
+    throw new Deadline('Timed out: ' + what);
+};
+// A measured window: a predicate that has not held, or is still stalled, at its end counts as not met.
+const poll = async (check, ms = 20000) => {
+    const end = Date.now() + ms;
+    while (Date.now() < end) {
+        try { if (await race(check(end - Date.now()), end - Date.now(), 'poll')) return true; } catch (e) { if (e instanceof Deadline || e?.name === 'TimeoutError') return false; throw e; }
+        await delay(50);
+    }
+    return false;
+};
 
 function summarizeUpload(text) {
     try { const b = JSON.parse(text); return { ch_name: b.ch_name, filename: b.filename, format: b.format, imageLength: String(b.image ?? '').length, imageSha256: sha(String(b.image ?? '')) }; } catch { return { unparsed: true, length: text?.length ?? 0 }; }
@@ -156,17 +175,21 @@ async function startSeam(prompt, negative, abortable) {
 }
 const callState = () => page.evaluate(() => window.__call);
 const isPath = r => r?.state === 'resolved' && r.type === 'string' && r.value.length > 0;
-const untilPrompt = () => until(async () => (await comfy('/log')).some(e => e.path === '/prompt'), 'fixture /prompt');
-const untilNoHeldJob = () => until(async () => (await comfy('/control', {})).held === 0, 'fixture job terminal');
+const untilPrompt = () => until(async left => (await comfy('/log', undefined, left)).some(e => e.path === '/prompt'), 'fixture /prompt');
+const untilNoHeldJob = () => until(async left => (await comfy('/control', {}, left)).held === 0, 'fixture job terminal');
 
 // Validates a returned path before any fetch: a string, root- or document-relative, same origin, under /user/images/;
 // then fetches it with the page's own request context, refusing redirects.
 async function fetchReturned(path) {
     if (typeof path !== 'string' || !path) return { refused: 'not a non-empty string' };
-    if (/^[a-z][a-z0-9+.-]*:/i.test(path) || path.startsWith('//') || path.includes('\\')) return { refused: 'absolute or protocol-relative: ' + path };
+    if (path.includes('%') || path.includes('\\')) return { refused: 'contains % or backslash: ' + path };
+    let decoded;
+    try { decoded = decodeURIComponent(path); } catch { return { refused: 'does not decode: ' + path }; }
+    if (decoded.includes('..') || decoded.includes('//')) return { refused: 'contains .. or //: ' + path };
+    if (!decoded.startsWith('/user/images/')) return { refused: 'not under /user/images/: ' + path };
     const url = new URL(path, h.origin + '/');
     if (url.origin !== h.origin) return { refused: 'foreign origin: ' + url.origin };
-    if (!url.pathname.startsWith('/user/images/')) return { refused: 'outside /user/images/: ' + url.pathname };
+    if (url.pathname !== path) return { refused: 'URL normalisation changed the path: ' + url.pathname };
     return page.evaluate(async href => {
         try {
             const r = await fetch(href, { redirect: 'error' });
@@ -177,7 +200,9 @@ async function fetchReturned(path) {
     }, url.href);
 }
 
+let currentCase = null;
 async function seamCase(id, { prompt, negative = '', step, abortable = false, during }) {
+    currentCase = id;
     await comfy('/control', { reset: true });
     if (step) await comfy('/control', { script: [step] });
     const before = await snapshot(), imagesBefore = await images(), textStart = (await requests()).length;
@@ -389,7 +414,7 @@ try {
             // Measured window: up to 10 s for the call to settle after abort.
             settledWithinWait = await poll(async () => (await callState()).state !== 'pending', 10000);
             afterAbort = await callState();
-            interruptLogged = settledWithinWait ? await poll(async () => (await comfy('/log')).some(e => e.path === '/interrupt')) : (await comfy('/log')).some(e => e.path === '/interrupt');
+            interruptLogged = settledWithinWait ? await poll(async left => (await comfy('/log', undefined, left)).some(e => e.path === '/interrupt')) : (await comfy('/log')).some(e => e.path === '/interrupt');
             historyPolls = (await comfy('/log')).filter(e => e.path.startsWith('/history')).length;
             // Never leave the host polling a held job: release it if the abort did not end it.
             if ((await comfy('/control', {})).held) await comfy('/control', { release: true });
@@ -451,21 +476,24 @@ try {
     }
     // R8 still polling after a 15 s hold (the absence of any deadline is a source finding), and H6 during the hold
     {
-        let at15 = null, sdDuring = null, histories = null;
+        let at15 = null, sdDuring = null, histories = null, freshPoll = null;
         const o = await seamCase('R8', { prompt: 'a long night', step: { hold: true }, during: async () => {
             await untilPrompt();
             await delay(15000); // the measured interval
             at15 = await callState();
             sdDuring = await sdNow();
-            histories = (await comfy('/log')).filter(e => e.path.startsWith('/history')).length;
+            const log = await comfy('/log');
+            histories = log.filter(e => e.path.startsWith('/history')).length;
+            // Still polling at 15 s: at least one /history request arrives after the checkpoint, within 5 s.
+            freshPoll = await poll(async left => (await comfy('/log', undefined, left)).slice(log.length).some(e => e.path.startsWith('/history')), 5000);
             await comfy('/control', { release: true });
             return { sdDuring };
         } }), f = [];
         invariants(o, f);
         if (at15?.state !== 'pending') f.push('not still pending after 15 s: ' + JSON.stringify(at15));
-        if (!(histories > 20)) f.push('not still polling after 15 s: ' + histories + ' /history requests');
+        if (!freshPoll) f.push('not still polling after 15 s: no new /history request within 5 s of the checkpoint');
         if (!isPath(o.returned)) f.push('no successful path after release');
-        required('R8', o, f, { at15s: at15, historyPollsAt15s: histories, settledAfterRelease: o.returned });
+        required('R8', o, f, { at15s: at15, freshHistoryPollAfter15s: freshPoll, cumulativeHistoryPollsAt15s: histories, settledAfterRelease: o.returned });
         const changed = changedKeys(o.before.sd, sdDuring);
         finding('H6', o, changed.some(k => k === 'width' || k === 'height') ? 'width/height changed in flight: ' + ['width', 'height'].map(k => k + ' ' + o.before.sd[k] + '->' + sdDuring[k]).join(', ') : `width/height unchanged in flight for a FREE request (${o.before.sd.width}x${o.before.sd.height}); other keys changed in flight: ${changed.join(',') || 'none'}`, { sdDuringDiff: changed });
     }
@@ -517,6 +545,11 @@ try {
 } catch (error) {
     verdict = 'STOP';
     evidence.error = error.stack;
+    // A bounded wait that expired fails the case it belongs to and ends the run (a call may still be in flight).
+    if ((error instanceof Deadline || error?.name === 'TimeoutError') && currentCase && !evidence.cases.some(c => c.id === currentCase)) {
+        evidence.cases.push({ id: currentCase, kind: /^R/.test(currentCase) ? 'required' : 'hazard', pass: false, failures: [error.message] });
+        console.log('FAIL ' + currentCase + ': ' + error.message);
+    }
     console.error(error);
     if (root) await page?.screenshot({ path: join(root, 'failure.png') }).catch(() => {});
     process.exitCode = 1;
