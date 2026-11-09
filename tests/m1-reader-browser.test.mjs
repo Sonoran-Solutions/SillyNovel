@@ -1858,6 +1858,19 @@ test('M3.2 turning the session off during the call withdraws permission; the res
  await notApplied(page,x);assert.equal(await allowance(page).innerText(),'Submissions used 1 of 5');
 });
 
+test('M3.3 J8 the session turned off and on during a call names the running request; Submit waits until the deadline frees it',async t=>{
+ const x=await imageRoute(t,{clock:true}),{page,field}=x;await x.sessionOn();await x.hold();
+ await control(page,'Submit').click();await waitStatus(page,/^Generating on/);
+ await field('Image session on this host').uncheck();await field('Image session on this host').check();
+ await page.waitForFunction(()=>/A request from before is still running/.test(document.querySelector('.sillynovel-image-workflow__generation-problems').textContent));
+ assert.match(await problemsLine(page).innerText(),/A request from before is still running on the host; Submit returns when it settles or after Abandon\./);
+ assert.equal(await control(page,'Submit').isDisabled(),true);
+ await page.clock.fastForward(120_000);await control(page,'Abandon').waitFor({state:'visible'});
+ await control(page,'Abandon').click();await page.waitForFunction(()=>!/A request from before is still running/.test(document.querySelector('.sillynovel-image-workflow__generation-problems').textContent));
+ assert.equal(await control(page,'Submit').isEnabled(),true);
+ await x.release('/user/images/synthetic.png');await notApplied(page,x);
+});
+
 test('M3.2 a draft edit during the call discards the result as stale, with its path',async t=>{
  const x=await imageRoute(t),{page,field}=x;await x.sessionOn();await x.hold();
  await control(page,'Submit').click();await waitStatus(page,/^Generating on/);
@@ -1867,14 +1880,14 @@ test('M3.2 a draft edit during the call discards the result as stale, with its p
  await notApplied(page,x);
 });
 
-// A lock is a scene command, so it also advances the scene revision; staleReason checks the layout before the locks and names that first. Either way nothing applies.
-test('M3.2 a manual lock change during the call discards the result as stale (named by the scene revision it advances)',async t=>{
+// A lock is a scene command, so it also advances the scene revision; staleReason checks the locks before the layout (M3.3 J8), so the reason names the lock. Nothing applies.
+test('M3.2 a manual lock change during the call discards the result as stale, named as a lock change',async t=>{
  const x=await imageRoute(t),{page}=x;await x.sessionOn();await x.hold();
  await control(page,'Submit').click();await waitStatus(page,/^Generating on/);
  await page.getByLabel('Lock field',{exact:true}).selectOption('background');await button(page,'Lock choice').click();
  await page.waitForFunction(()=>/Background locked\./.test(document.querySelector('.sillynovel-visual-status').textContent));
  await x.release('/user/images/synthetic.png');await waitStatus(page,/^Result discarded: /);
- assert.equal(await generationStatus(page).innerText(),'Result discarded: the scene layout changed; the host kept a copy at /user/images/synthetic.png');
+ assert.equal(await generationStatus(page).innerText(),'Result discarded: the manual locks changed; the host kept a copy at /user/images/synthetic.png');
  await notApplied(page,x);
 });
 

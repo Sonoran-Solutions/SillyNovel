@@ -288,7 +288,7 @@ export function mountVisualStage({ document, stage, actions }) {
         allowanceLine.textContent='Submissions used '+state.used+' of '+DEFAULT_ALLOWANCE;
         if(state.on&&inspection)reviewGeneration();
         generationReview.hidden=!review;generationReview.textContent=review?reviewText(review):'';generationReview.classList.toggle('sillynovel-image-workflow__refused',Boolean(problems.length));
-        generationProblems.textContent=[...problems.map(imageProblem),...(state.on&&state.used>=state.allowance?['All '+state.allowance+' submissions in this image session are used.']:[]),...(state.inFlight!==null&&!pending?['A request from before is still running on the host; Submit returns when it settles or after Abandon.']:[])].join(' ');
+        generationProblems.textContent=[...problems.map(imageProblem),...(state.on&&state.used>=state.allowance?['All '+state.allowance+' submissions in this image session are used.']:[]),...(state.inFlight!==null&&(!pending||pending.cancelled)?['A request from before is still running on the host; Submit returns when it settles or after Abandon.']:[])].join(' ');
         workflowPin.hidden=!workflowSha256;workflowPin.textContent=workflowSha256?'Session workflow SHA-256: '+workflowSha256:'';
         submitImage.disabled=!state.on||!review?.ok||state.inFlight!==null||imageSubmitting||state.used>=state.allowance||!model.project;
         cancelImage.disabled=!pending||outcome!=='pending';
