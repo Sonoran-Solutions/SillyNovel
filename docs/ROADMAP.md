@@ -1,5 +1,13 @@
 # Staged implementation roadmap
 
+## M3.2 authorized — 2026-11-08
+
+[I1–I10 ruled](DECISIONS.md#owner-rulings-i1i10--m32-first-image-route--2026-11-08); [DYL-213](https://linear.app/devils17/issue/DYL-213/sillynovel-m32-first-image-route-host-image-generation-local-comfyui) implements plan section 7's PRs A, B and C in order, each reviewed by the owner before the next. O05 is resolved as the host's Image Generation extension on standard loopback ComfyUI. The real-backend run, M3.3 and Gate C stay gated.
+
+## M3.2 planning proposal (NOT approved) — 2026-11-08
+
+The [M3.2 first image route plan](M3_2_IMAGE_ROUTE_PLAN.md) proposes the route, profile, limits and PR sequence for one manual missing-background generation through the host's Image Generation extension on standard local ComfyUI, with owner decisions I1–I10. Nothing in M3.2 starts without a recorded owner authorization. Gate C NOT_RUN.
+
 ## M3.1 merged — 2026-11-04
 
 M3.1 is on main (`ad4279d`), with T73 NOT_RUN. Next, only on the owner's word: T73 on the owner's device, the optional H8 director session, and M3.2 planning (H3, H5, H6, H7, O05). Gate C NOT_RUN.
