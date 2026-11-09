@@ -128,7 +128,8 @@ Pending, cancelled, timeout-unknown and unknown are unresolved; leaving these fo
 a resolved state stamps `settledAt` once. Time passing alone does not transition
 rows: the client explicitly records timeout-unknown then unknown. Pending,
 cancelled and timeout-unknown transitions require the job session's recorded tab
-or, once that session has ended, the current open session's holder. The current
+while that session is open; once it has ended, only the current open session's
+holder may (ending a session withdraws its tab's permission). The current
 holder resolves jobs left by an ended session; unknown resolution requires that
 current holder. Candidate/reconciled approval remains owner-scoped.
 Ending does not remove or resolve jobs. Candidate/reconciled rows need explicit

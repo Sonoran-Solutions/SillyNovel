@@ -271,6 +271,14 @@ test('a new tab resolves an ended session pending job and can reserve again',t=>
  }
  assert.equal(f.reserve(next).state,'pending');
 });
+test('ending a session withdraws its own tab: only the current holder moves the ended session pending job',t=>{
+ const f=fixture(t),s=f.begin(),j=f.reserve(s);
+ f.store.endImageSession(owner,f.project,{sessionId:s.id,tab:'tab'});f.begin('reloaded');
+ const before=f.db.prepare('SELECT * FROM image_jobs WHERE id=?').get(j.id);
+ refuses(()=>f.move(j,'cancelled',{},'tab'),'LEASE_LOST');
+ assert.deepEqual(f.db.prepare('SELECT * FROM image_jobs WHERE id=?').get(j.id),before);
+ assert.equal(f.move(j,'cancelled',{},'reloaded').state,'cancelled');
+});
 function fillEndedSessions(f,s,total) {
  const insert=f.db.prepare('INSERT INTO image_sessions SELECT ?,owner,project,tab,workflow_sha256,allowance,used,started_at,heartbeat_at,ended_at FROM image_sessions WHERE id=?');
  f.db.exec('BEGIN');try {for(let i=1;i<total;i++)insert.run(randomUUID(),s.id);f.db.exec('COMMIT');}catch(e){f.db.exec('ROLLBACK');throw e;}
@@ -281,7 +289,7 @@ test('500 sessions refuse begin with 409 LEDGER_FULL; empty cleanup relieves the
  const before=f.db.prepare('SELECT * FROM image_sessions ORDER BY id').all();
  assert.throws(()=>f.begin('new'),e=>e.code==='LEDGER_FULL' && e.status===409);
  assert.deepEqual(f.db.prepare('SELECT * FROM image_sessions ORDER BY id').all(),before);
- assert.deepEqual(f.store.cleanupImageJobs(owner,f.project,{jobIds:[]}),{deletedIds:[],deletedCount:0});
+ assert.deepEqual(f.store.cleanupImageJobs(owner,f.project,{jobIds:[]}),{deletedIds:[],deletedCount:0,deletedSessions:500});
  assert.equal(f.db.prepare('SELECT count(*) AS n FROM image_sessions').get().n,0);assert.equal(f.begin('new').used,0);
 });
 test('job cleanup removes only ended sessions without remaining jobs in this project',t=>{

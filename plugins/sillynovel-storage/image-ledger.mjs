@@ -124,7 +124,8 @@ export function imageLedger(db,transaction,load,asset) {
                 demand(TRANSITIONS[j.state]?.includes(body.state),'INVALID_TRANSITION',409);
                 if(['pending','cancelled','timeout-unknown'].includes(j.state)) {
                     const owning=session(owner,project,j.session);
-                    demand(owning.tab===body.tab || owning.ended_at!==null && open(owner,project)?.tab===body.tab,'LEASE_LOST',409);
+                    // Ending a session withdraws its tab's permission; afterwards only the current open session's holder resolves its jobs.
+                    demand(owning.ended_at===null ? owning.tab===body.tab : open(owner,project)?.tab===body.tab,'LEASE_LOST',409);
                 }
                 else if(j.state==='unknown')holder(open(owner,project),body.tab);
                 if(Object.hasOwn(body,'hostPath')) {
@@ -165,8 +166,8 @@ export function imageLedger(db,transaction,load,asset) {
                 const rows=body.jobIds.map(id=>job(owner,project,id));
                 demand(rows.every(j=>TERMINAL.includes(j.state)),'UNRESOLVED_JOB',409);
                 for(const j of rows)db.prepare('DELETE FROM image_jobs WHERE owner=? AND project=? AND id=?').run(owner,project,j.id);
-                db.prepare('DELETE FROM image_sessions WHERE owner=? AND project=? AND ended_at IS NOT NULL AND NOT EXISTS (SELECT 1 FROM image_jobs WHERE session=image_sessions.id)').run(owner,project);
-                return {deletedIds:body.jobIds,deletedCount:rows.length};
+                const sessions=db.prepare('DELETE FROM image_sessions WHERE owner=? AND project=? AND ended_at IS NOT NULL AND NOT EXISTS (SELECT 1 FROM image_jobs WHERE session=image_sessions.id)').run(owner,project).changes;
+                return {deletedIds:body.jobIds,deletedCount:rows.length,deletedSessions:Number(sessions)};
             });
         },
     };

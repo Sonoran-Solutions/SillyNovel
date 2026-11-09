@@ -72,7 +72,7 @@ export async function runGroups({root,data,repo,page,alice,peer,project,field,bu
  const after=await canonical();assert.deepEqual(after,before);
  const db=new DatabaseSync(join(data,'.sillynovel-projects.sqlite'));const committed=db.prepare('SELECT * FROM projects WHERE id=?').get(record.projectId);db.close();assert.doesNotMatch(JSON.stringify(committed),/expression|prefixSha256|session-source|groupId|members/);
  const bundle=JSON.parse(await(await alice.request('/api/plugins/sillynovel-storage/projects/'+record.projectId+'/export')).text());assert.equal(bundle.version,1);assert.equal(Object.hasOwn(bundle,'catalog'),false);assert.doesNotMatch(JSON.stringify(bundle),/temporary-expression|prefixSha256|session-source|groupId|members/);
- const {createBackup,inspectBackup}=await import('../../../plugins/sillynovel-storage/recovery.mjs');const backup=join(root,'group-backup');await createBackup(join(data,'.sillynovel-projects.sqlite'),backup);const backupInfo=inspectBackup(backup);assert.equal(backupInfo.schemaVersion,2);
+ const {createBackup,inspectBackup}=await import('../../../plugins/sillynovel-storage/recovery.mjs');const backup=join(root,'group-backup');await createBackup(join(data,'.sillynovel-projects.sqlite'),backup);const backupInfo=inspectBackup(backup);assert.equal(backupInfo.schemaVersion,3);
  evidence.groups={cards,members,groups,sources,manualActors:keys,saved,outgoing,committed,bundle,backup:backupInfo,nativeBefore:before,nativeAfter:after,screenshots};
  pass('groups: equal-text same-name native sources keep separate temporary decisions; revisit/clear/manual actor, draft/focus, clean global save body and named native-file equality');
  // Intentional native edit/source and generation mutations begin after visual-only comparison.

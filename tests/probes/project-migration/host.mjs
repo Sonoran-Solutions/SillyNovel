@@ -31,7 +31,7 @@ export async function runMigration({root,data,repo,stop,start,session,select,pas
  const cli=join(repo,'plugins/sillynovel-storage/tools/recovery.mjs'),run=(...args)=>JSON.parse(execFileSync(process.execPath,[cli,...args],{encoding:'utf8'}));
  assert.equal(run('backup',database,backup).schemaVersion,1);const inspection=run('inspect',backup,'--data-root',legacy);assert.equal(inspection.accountBinding,'VERIFIED_SAME_ACCOUNT_INCARNATION');
  const preserved={};for(const name of ['snapshot.sqlite','manifest.json'])preserved[name]=hash(await readFile(join(backup,name)));
- await provision(legacy,target);const migrated=run('migrate',backup,join(target,DATABASE_NAME));assert.equal(migrated.code,'MIGRATED');assert.equal(migrated.schemaVersion,2);assert.equal(migrated.assets,assets.length);
+ await provision(legacy,target);const migrated=run('migrate',backup,join(target,DATABASE_NAME));assert.equal(migrated.code,'MIGRATED');assert.equal(migrated.schemaVersion,3);assert.equal(migrated.assets,assets.length);
  for(const [name,digest] of Object.entries(preserved))assert.equal(hash(await readFile(join(backup,name))),digest);assert.equal(hash(await readFile(database)),before);assert.deepEqual(await nativeFiles(target),native);
  pass('explicit operator CLI verifies preserved v1 backup and migrates only a new output; original/backup/native files remain unchanged');
  await start(true,target);const alice=await session(),bob=await session('sn-other');
