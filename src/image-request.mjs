@@ -22,7 +22,7 @@ export function effectiveTexts(snapshot, draft) {
 }
 
 /** Refuse every detectable mismatch; the partial review is still available when refused. */
-export function preflight({ snapshot = {}, workflowText, workflowSha256, draft = {}, options = {}, origin }) {
+export function preflight({ snapshot = {}, workflowText, workflowSha256, draft = {}, options = {} }) {
     const problems = [], add = (code, detail) => problems.push(detail === undefined ? { code } : { code, detail });
     if (snapshot.seam !== true) add('SEAM_MISSING');
     if (snapshot.source !== 'comfy') add('SOURCE_NOT_COMFY');
@@ -47,6 +47,7 @@ export function preflight({ snapshot = {}, workflowText, workflowSha256, draft =
         if (hasMacro(value)) add(code);
     if (text(snapshot.prompt_prefix).split('{prompt}').length > 2) add('PREFIX_MARKER_REPEATED');
     if (typeof workflowSha256 !== 'string' || !/^[a-f0-9]{64}$/.test(workflowSha256)) add('WORKFLOW_HASH_MISSING');
+    if (typeof snapshot.comfy_workflow !== 'string' || !snapshot.comfy_workflow) add('WORKFLOW_NAME_MISSING');
     let workflow;
     try {
         if (typeof workflowText !== 'string') throw Error();
@@ -86,13 +87,14 @@ export function reviewText(review) {
         ['Destination', review.destination.url + (review.destination.local ? ' (local, this machine)' : ' (not local)')],
         ['Workflow', review.workflow.name], ['Workflow SHA-256', review.workflow.sha256], ['Nodes', review.workflow.nodes.join(', ')],
         ['Model', s.model], ['Sampler', s.sampler], ['Scheduler', s.scheduler], ['VAE', s.vae], ['Steps', s.steps], ['CFG', s.scale],
+        ['Clip skip', s.clip_skip], ['Denoise', s.denoising_strength],
         ['Size', s.width + ' x ' + s.height], ['Seed', review.seedPolicy === 'fixed' ? 'fixed ' + review.seed : 'random each request'],
         ['Positive', review.texts.positive], ['Negative', review.texts.negative],
     ].map(([key, value]) => key + ': ' + (typeof value === 'number' ? String(value) : JSON.stringify(value))).join('\n') + '\n';
 }
 
 export function createRequest({ capture, hostChatKey, catalogRevision, layoutRevision, lockState, review, workflowSha256, payloadSha256, id, submittedAt }) {
-    if (!capture || !hostChatKey || !workflowSha256 || !payloadSha256 || !review?.texts || review.ok !== true || id === undefined || !Number.isFinite(submittedAt) || workflowSha256 !== review.workflow?.sha256) throw Error('INVALID_REQUEST');
+    if (!capture || !hostChatKey || !workflowSha256 || !payloadSha256 || !review?.texts || review.ok !== true || id === undefined || !Number.isFinite(submittedAt) || workflowSha256 !== review.workflow?.sha256 || !Number.isInteger(catalogRevision) || !Number.isInteger(layoutRevision)) throw Error('INVALID_REQUEST');
     return Object.freeze({ id, capture: captureOf(capture), hostChatKey, catalogRevision, layoutRevision, lockState: Object.freeze({ ...lockState }),
         effective: Object.freeze({ prompt: review.texts.positive, negative: review.texts.negative, workflowSha256, ...review.settings,
             seedPolicy: review.seedPolicy, ...(review.seedPolicy === 'fixed' ? { seed: review.seed } : {}) }),
@@ -118,7 +120,7 @@ export function resultPathProblem(path, origin) {
     try { url = new URL(path, origin); } catch { return 'RESULT_FOREIGN_ORIGIN'; }
     if (url.origin !== origin) return 'RESULT_FOREIGN_ORIGIN';
     const prefix = '/user/images/';
-    if (!url.pathname.startsWith(prefix) || url.pathname.includes('/../') || url.pathname.slice(prefix.length).includes('//') || (path.startsWith('/') && url.pathname !== path)) return 'RESULT_OUTSIDE_IMAGES';
+    if (!url.pathname.startsWith(prefix) || url.pathname.slice(prefix.length).includes('//') || url.pathname !== (path.startsWith('/') ? path : '/' + path)) return 'RESULT_OUTSIDE_IMAGES';
     if (!/\.png$/i.test(url.pathname)) return 'RESULT_NOT_PNG';
     return null;
 }

@@ -22,7 +22,7 @@ const good = () => ({
         prompt_prefix: 'SN-PREFIX-TEXT,', negative_prompt: 'SN-NEG-PREFIX', seed: 1234, width: 512, height: 512, steps: 20, scale: 7,
         model: 'synthetic.safetensors', vae: 'Automatic', sampler: 'euler', scheduler: 'normal', clip_skip: 1, denoising_strength: 1, comfy_placeholders: [] },
     workflowText, workflowSha256: hash('a'), draft: { prompt: 'a quiet reading room at dusk', negativePrompt: 'SN-DRAFT-NEG', styleNote: 'SN-STYLE-DECOY', sizeHint: 'portrait', label: 'SN-LABEL-DECOY', references: ['SN-REF-DECOY'] },
-    options: { model: ['synthetic.safetensors'], vae: ['Automatic'], sampler: ['euler'], scheduler: ['normal'] }, origin,
+    options: { model: ['synthetic.safetensors'], vae: ['Automatic'], sampler: ['euler'], scheduler: ['normal'] },
 });
 const codes = input => preflight(input).problems.map(p => p.code);
 const changeWorkflow = (input, mutate) => { const w = JSON.parse(input.workflowText); mutate(w); input.workflowText = JSON.stringify(w); };
@@ -94,6 +94,7 @@ const refusals = [
     ['SELECTION_STALE', i => { i.snapshot.sampler = 'missing'; }],
     ['OPTIONS_MISSING', i => { delete i.options.model; }],
     ['DIMENSIONS_INVALID', i => { i.snapshot.width = 0; }],
+    ['WORKFLOW_NAME_MISSING', i => { delete i.snapshot.comfy_workflow; }],
 ];
 for (const [code, mutate] of refusals) test('preflight refuses ' + code + ' alone from the good profile', () => {
     const input = good(); mutate(input);
@@ -188,7 +189,7 @@ test('dimensions use the imported PNG ceilings and seed policy preserves zero an
 });
 test('reviewText is deterministic with the fixed section order and one final newline', () => {
     const r = review();
-    const expected = 'Destination: "http://127.0.0.1:8188 (local, this machine)"\nWorkflow: "Default_Comfy_Workflow.json"\nWorkflow SHA-256: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"\nNodes: "CLIPTextEncode, CLIPTextEncode, CheckpointLoaderSimple, EmptyLatentImage, KSampler, SaveImage, VAEDecode"\nModel: "synthetic.safetensors"\nSampler: "euler"\nScheduler: "normal"\nVAE: "Automatic"\nSteps: 20\nCFG: 7\nSize: "512 x 512"\nSeed: "fixed 1234"\nPositive: "SN-PREFIX-TEXT, a quiet reading room at dusk"\nNegative: "SN-DRAFT-NEG, SN-NEG-PREFIX"\n';
+    const expected = 'Destination: "http://127.0.0.1:8188 (local, this machine)"\nWorkflow: "Default_Comfy_Workflow.json"\nWorkflow SHA-256: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"\nNodes: "CLIPTextEncode, CLIPTextEncode, CheckpointLoaderSimple, EmptyLatentImage, KSampler, SaveImage, VAEDecode"\nModel: "synthetic.safetensors"\nSampler: "euler"\nScheduler: "normal"\nVAE: "Automatic"\nSteps: 20\nCFG: 7\nClip skip: 1\nDenoise: 1\nSize: "512 x 512"\nSeed: "fixed 1234"\nPositive: "SN-PREFIX-TEXT, a quiet reading room at dusk"\nNegative: "SN-DRAFT-NEG, SN-NEG-PREFIX"\n';
     assert.equal(reviewText(r), expected); assert.equal(reviewText(structuredClone(r)), expected);
     r.seedPolicy = 'random'; delete r.seed; assert.match(reviewText(r), /\nSeed: "random each request"\n/);
     assert.doesNotMatch(reviewText(r), /DECOY/);
@@ -202,10 +203,10 @@ test('reviewText distinguishes draft negatives with trailing newlines byte for b
     assert.ok(withNewlines.endsWith('Negative: "negative\\n\\n"\n'));
     assert.ok(withoutNewlines.endsWith('Negative: "negative"\n'));
 });
-test('reviewText escapes a forged prompt line and keeps exactly 14 lines', () => {
+test('reviewText escapes a forged prompt line and keeps exactly 16 lines', () => {
     const input = good(); input.draft.prompt = 'a room\nNegative: forged';
     const r = preflight(input).review, rendered = reviewText(r);
-    assert.equal(rendered.split('\n').length, 15); assert.ok(rendered.endsWith('\n')); assert.ok(!rendered.endsWith('\n\n'));
+    assert.equal(rendered.split('\n').length, 17); assert.ok(rendered.endsWith('\n')); assert.ok(!rendered.endsWith('\n\n'));
     assert.ok(rendered.includes('Positive: ' + JSON.stringify(r.texts.positive) + '\n'));
     assert.equal(rendered.split('\n').filter(line => line.startsWith('Negative: ')).length, 1);
 });
@@ -227,7 +228,7 @@ test('request freezes copied identity, locks and effective settings with the exa
     input.review.seedPolicy = 'random'; delete input.review.seed; assert.equal(Object.hasOwn(createRequest(input).effective, 'seed'), false);
 });
 test('request refuses each missing required identity component', () => {
-    for (const key of ['capture', 'hostChatKey', 'workflowSha256', 'payloadSha256']) for (const missing of [undefined, null, '']) {
+    for (const key of ['capture', 'hostChatKey', 'workflowSha256', 'payloadSha256', 'catalogRevision', 'layoutRevision']) for (const missing of [undefined, null, '']) {
         const input = requestInput(); input[key] = missing; refuses(() => createRequest(input), 'INVALID_REQUEST');
     }
 });
@@ -259,6 +260,7 @@ test('result paths accept only unchanged same-origin PNG paths inside user image
         [null, 'RESULT_NOT_STRING'], [7, 'RESULT_NOT_STRING'], ['', 'RESULT_OUTSIDE_IMAGES'],
         ['/user/images/%2e%2e%2fx', 'RESULT_ENCODED'], ['/user/images/a\\b.png', 'RESULT_ENCODED'],
         ['/user/images/../x', 'RESULT_OUTSIDE_IMAGES'], ['/user/images/../images/a.png', 'RESULT_OUTSIDE_IMAGES'],
+        ['user/images/a/../b.png', 'RESULT_OUTSIDE_IMAGES'], ['user/images/./b.png', 'RESULT_OUTSIDE_IMAGES'], ['user/images/x/../../images/b.png', 'RESULT_OUTSIDE_IMAGES'],
         ['http://127.0.0.1:8188/x', 'RESULT_ABSOLUTE'], ['//evil/x', 'RESULT_ABSOLUTE'],
         ['https:evil.invalid/x.png', 'RESULT_FOREIGN_ORIGIN'], ['/user/images/a.jpg', 'RESULT_NOT_PNG'],
         ['/elsewhere/a.png', 'RESULT_OUTSIDE_IMAGES'], ['/user/images/a//b.png', 'RESULT_OUTSIDE_IMAGES'],
