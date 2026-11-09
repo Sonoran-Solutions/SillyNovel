@@ -46,7 +46,7 @@ export function preflight({ snapshot = {}, workflowText, workflowSha256, draft =
     for (const [value, code] of [[draft.prompt, 'PROMPT_MACRO'], [draft.negativePrompt, 'NEGATIVE_MACRO'], [snapshot.prompt_prefix, 'PREFIX_MACRO'], [snapshot.negative_prompt, 'NEGATIVE_PREFIX_MACRO']])
         if (hasMacro(value)) add(code);
     if (text(snapshot.prompt_prefix).split('{prompt}').length > 2) add('PREFIX_MARKER_REPEATED');
-    if (typeof workflowSha256 !== 'string' || workflowSha256.length !== 64 || !/^[a-f0-9]{64}$/.test(workflowSha256)) add('WORKFLOW_HASH_MISSING');
+    if (typeof workflowSha256 !== 'string' || !/^[a-f0-9]{64}$/.test(workflowSha256)) add('WORKFLOW_HASH_MISSING');
     let workflow;
     try {
         if (typeof workflowText !== 'string') throw Error();
@@ -88,11 +88,11 @@ export function reviewText(review) {
         ['Model', s.model], ['Sampler', s.sampler], ['Scheduler', s.scheduler], ['VAE', s.vae], ['Steps', s.steps], ['CFG', s.scale],
         ['Size', s.width + ' x ' + s.height], ['Seed', review.seedPolicy === 'fixed' ? 'fixed ' + review.seed : 'random each request'],
         ['Positive', review.texts.positive], ['Negative', review.texts.negative],
-    ].map(([key, value]) => key + ': ' + JSON.stringify(value)).join('\n') + '\n';
+    ].map(([key, value]) => key + ': ' + (typeof value === 'number' ? String(value) : JSON.stringify(value))).join('\n') + '\n';
 }
 
 export function createRequest({ capture, hostChatKey, catalogRevision, layoutRevision, lockState, review, workflowSha256, payloadSha256, id, submittedAt }) {
-    if (!capture || !hostChatKey || !workflowSha256 || !payloadSha256 || !review?.texts || review.ok !== true || id === undefined || !Number.isFinite(submittedAt)) throw Error('INVALID_REQUEST');
+    if (!capture || !hostChatKey || !workflowSha256 || !payloadSha256 || !review?.texts || review.ok !== true || id === undefined || !Number.isFinite(submittedAt) || workflowSha256 !== review.workflow?.sha256) throw Error('INVALID_REQUEST');
     return Object.freeze({ id, capture: captureOf(capture), hostChatKey, catalogRevision, layoutRevision, lockState: Object.freeze({ ...lockState }),
         effective: Object.freeze({ prompt: review.texts.positive, negative: review.texts.negative, workflowSha256, ...review.settings,
             seedPolicy: review.seedPolicy, ...(review.seedPolicy === 'fixed' ? { seed: review.seed } : {}) }),
@@ -162,7 +162,7 @@ export function createImageSession({ allowance = DEFAULT_ALLOWANCE } = {}) {
             requests.set(id, 'timeout-unknown'); return snapshot();
         },
         abandon(id) {
-            if (!['timeout-unknown', 'cancelled'].includes(requests.get(id))) throw Error('NOT_TIMED_OUT');
+            if (inFlight !== id || !['timeout-unknown', 'cancelled'].includes(requests.get(id))) throw Error('NOT_TIMED_OUT');
             requests.set(id, 'abandoned'); inFlight = null; return snapshot();
         },
         imported(id) {

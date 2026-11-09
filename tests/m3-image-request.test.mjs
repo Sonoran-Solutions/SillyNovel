@@ -342,3 +342,24 @@ test('request ledgers safely handle ordinary object property names as ids', () =
     assert.equal(session.discard('__proto__').requests.__proto__, 'discarded');
     session.submit(ticket('constructor')); session.settle('constructor', 'failed'); assert.equal(session.snapshot().used, 2);
 });
+
+test('abandon refuses a settled cancellation once a newer request holds the slot', () => {
+    const session = createImageSession(); session.begin(hash('a'));
+    session.submit(ticket('first')); session.cancel('first'); session.settle('first', 'candidate');
+    const before = session.submit(ticket('second'));
+    refuses(() => session.abandon('first'), 'NOT_TIMED_OUT');
+    assert.deepEqual(session.snapshot(), before);
+    assert.equal(session.snapshot().inFlight, 'second'); assert.equal(session.snapshot().requests.first, 'cancelled');
+});
+
+test('request refuses a workflow hash that differs from the reviewed one', () => {
+    const input = requestInput(); input.workflowSha256 = hash('other');
+    refuses(() => createRequest(input), 'INVALID_REQUEST');
+});
+
+test('reviewText renders numbers bare, including non-finite ones, so NaN and null differ', () => {
+    const base = preflight(good()).review;
+    const text = reviewText({ ...base, settings: { ...base.settings, steps: NaN } });
+    assert.match(text, /^Steps: NaN$/m);
+    assert.notEqual(text, reviewText({ ...base, settings: { ...base.settings, steps: null } }));
+});
