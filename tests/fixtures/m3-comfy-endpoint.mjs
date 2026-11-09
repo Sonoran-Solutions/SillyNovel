@@ -1,4 +1,5 @@
 // Deterministic loopback ComfyUI stand-in. PNG output is tests/fixtures/m12-stage/tavern.png.
+// Script steps: {} success, { hold }, { delayMs }, { status }, { error }, { refusal } (M3.3 J7), { noOutputs }, { format }.
 // No outbound requests; this fixture is only for the SillyTavern image seam probe.
 import { createServer } from 'node:http';
 import { createHash } from 'node:crypto';
@@ -14,7 +15,11 @@ let log = [], script = [], fallback = {}, jobs = new Map(), held = new Set(), st
 const send = (res, status, body, type = 'application/json') => {
     if (!res.destroyed && !res.headersSent) res.writeHead(status, { 'content-type': type }).end(typeof body === 'string' || Buffer.isBuffer(body) ? body : JSON.stringify(body));
 };
+// A synthetic content-policy refusal (M3.3 J7, T79): standard ComfyUI has none, so this only proves SillyNovel's handling.
+const REFUSAL = 'synthetic content-policy refusal: this request was refused under the provider content policy';
+const imageless = job => job.interrupted || job.step.error || job.step.refusal || job.step.noOutputs;
 function historyItem(job) {
+    if (job.step.refusal && !job.interrupted) return { prompt: [], status: { status_str: 'error', completed: true, messages: [['execution_error', { node_type: 'SaveImage', node_id: '9', exception_type: 'ContentPolicyRefusal', exception_message: REFUSAL }]] }, outputs: {} };
     return job.interrupted
         ? { prompt: [], status: { status_str: 'error', completed: true, messages: [['execution_interrupted', { prompt_id: job.id }]] }, outputs: {} }
         : job.step.error
@@ -75,9 +80,9 @@ const server = createServer(async (req, res) => {
         return send(res, 200, Object.fromEntries([...jobs.values()].filter(job => job.done).map(job => [job.id, historyItem(job)])));
     }
     if (req.method === 'GET' && url.pathname === '/view') {
-        const job = [...jobs.values()].find(item => item.done && !item.interrupted && !item.step.error && !item.step.noOutputs && item.step.format !== 'jpg' && item.step.format !== 'gif' && url.searchParams.get('filename') === `${item.id}.${item.step.format || 'png'}`);
+        const job = [...jobs.values()].find(item => item.done && !imageless(item) && item.step.format !== 'jpg' && item.step.format !== 'gif' && url.searchParams.get('filename') === `${item.id}.${item.step.format || 'png'}`);
         if (!job) {
-            const other = [...jobs.values()].find(item => item.done && !item.interrupted && !item.step.error && !item.step.noOutputs && url.searchParams.get('filename') === `${item.id}.${item.step.format || 'png'}`);
+            const other = [...jobs.values()].find(item => item.done && !imageless(item) && url.searchParams.get('filename') === `${item.id}.${item.step.format || 'png'}`);
             if (!other) return send(res, 404, {});
             const bytes = Buffer.from(`synthetic-${other.step.format}`);
             return send(res, 200, bytes, other.step.format === 'jpg' ? 'image/jpeg' : 'image/gif');

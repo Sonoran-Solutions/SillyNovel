@@ -139,3 +139,42 @@ The ledger on the owner's 1.18.0 install or a real backend; concurrent requests 
 ### Next
 
 The owner reviews this PR. PR C (the adapter and UI on the ledger) starts only after that review.
+
+## PR C — the adapter and the Generate on this host UI on the image ledger
+
+**Candidate, unmerged**, based on main `786b58a` (PR B merged). Tracked by [DYL-215](https://linear.app/devils17/issue/DYL-215/sillynovel-m33-complete-the-first-image-route-for-gate-c-ledger-lease). A renderer, adapter and client change under H4; no plugin or schema change.
+
+### What it adds
+
+| File | Change |
+| --- | --- |
+| `src/project-client.mjs` | One call per ledger route (session read, begin with optional takeover, heartbeat, end; reserve, transition, host-deleted; jobs, cache, cleanup) through the existing authenticated request and media type. Refusals are `StorageError` with the plugin's `code` (also the message) and its `details` (the `LEASE_HELD` holder); an unreachable plugin or unreadable reply is `STORAGE_UNAVAILABLE`, never a raw error. Existing calls keep their errors. |
+| `src/host-adapter.mjs` | `image.listHostImages({ since })`: `POST /api/images/list` with `folder: '.'`, `sortField: 'date'`, then a same-origin GET with the host's headers per file, newest first, reading `Last-Modified` and `Content-Length` with the body cancelled, stopping at the first file older than `since`, at most 50 dated files; names the result-path rule refuses are skipped unrequested. Returns `{ ok, files: [{ path, mtimeMs, size }] }` or `{ ok: false, code }`. `image.deleteHostCopy(path)`: `POST /api/images/delete` with exactly that path, only after `resultPathProblem(path, origin) === null` (the folder, traversal, encoded, foreign and non-PNG paths never leave the page); `{ ok, code }`. Neither throws. |
+| `src/project-scene.mjs` | `importFile` returns the stored asset id, so the ledger can record `imported` with it. |
+| `src/stage-view.mjs` | Inside **Generate on this host**: the toggle begins the project's lease (`LEASE_HELD` names the holding tab, held or stale, with **Take over**); a 30 s heartbeat; `LEASE_LOST` ends the session here with a notice; off ends it; the allowance reads the row's `used`. Submit asks the cache, then reserves, then calls the host; every outcome is a transition. Unresolved rows from another page are listed with their time and host folder; after the deadline, **Reconcile** lists dated host files from the submission's second on and the user picks one (fetch, PNG check, Import and apply) or **None of these**; **Abandon**. **Use the previous result** beside **Generate again**. **Delete the host's copy** with its sentence. **Inspect sent requests** (read-only). **Review finished image jobs** and **Remove finished image jobs**. Without the ledger, generation refuses; the manual export and import stay. |
+| `tests/fixtures/m3-comfy-endpoint.mjs` | A `refusal` step: an error history item whose message is a synthetic content-policy refusal (J7). |
+| `tests/m3-image-ledger-client.test.mjs`, `tests/m3-image-adapter.test.mjs` | Client routes, encoding, typed errors and failure mapping; the listing walk, stop, skip, bound and failures; the delete path rule and status. Registered (discovery 18/6/1). |
+| `tests/m1-reader-browser.test.mjs`, `tests/fixtures/reader-browser.html` | The mocked storage routes serve the plugin's own `image-ledger.mjs` over an in-memory SQLite database of the v3 schema (only project and asset lookups are stubbed), context-wide so a second page shares it. 11 new tests; every M3.2 and M3.3 image test unchanged. |
+| `tests/probes/m3-image-route/host.mjs`, `README.md` | Checkpoints J (cache), K (refusal), L (host copy), M (takeover and reconcile of a late file; the fixture PNG equals C's, so the import reuses that asset), N (reload), O (ledger rows). From C on, D–I use a second prompt because C's request is a cache hit. |
+
+### Implementation choices for owner review
+
+1. **`listHostImages` returns `{ ok, files }`, not a bare array**, so Reconcile can show the host's refusal and offer Abandon (plan section 4); `files` is the `[{ path, mtimeMs, size }]` that `reconcileCandidates` takes.
+2. **Each file's date comes from a GET whose body is cancelled**, not HEAD, which the PR A probe did not measure. The walk is bounded at 50 dated files (a `ponytail:` comment names the ceiling).
+3. **All ledger calls are serialized in the page**, so a transition queued before an end or a begin reaches the plugin first. A transition refused with `LEASE_LOST` after this tab's session ended (for example a late result after a chat switch) is kept and written by this tab's next session before it lists unresolved rows.
+4. **The session needs an attached project**, because the ledger lives with the project.
+5. **None of these leaves the request unresolved**, so Reconcile can be repeated once a slow file arrives; Abandon resolves it. A `pending` row past its deadline is recorded `timeout-unknown` then `unknown` on a chosen file, and `timeout-unknown` then `abandoned` on Abandon. A `cancelled` row offers Abandon only: a withdrawn request's result is never used (M3.2).
+6. **A reconciled candidate skips the request staleness check** (no request of this page exists); its own preview capture and the import gate still apply.
+7. **Use the previous result is the Apply background command on the catalog asset**, not a re-import: no upload and no host call. The catalog is the attached project's loaded backgrounds, so an imported but unsaved result is a hit in that page and a miss after a reload without Save. A failed cache read is a miss; the reserve then refuses if the ledger is down.
+8. **Delete the host's copy acts on the latest discarded, imported or abandoned job this page resolved**; the note names its path. Rows from before a reload are not offered (the inspect view is read-only).
+9. **Inspect and cleanup are button disclosures**, because a nested `<summary>` would make the existing `.sillynovel-controls summary` selector ambiguous.
+
+### Findings
+
+- **A reload never leaves a late host file.** The host saves a generated image from the page (`saveBase64AsFile` after the generate request returns), so a page that dies mid-request saves nothing, and the host's generate route sends ComfyUI `/interrupt` when its socket closes. Reconcile can find a file only when the generating page lived on, as after a takeover from a second page (campaign M); after a reload it correctly finds none (campaign N).
+- **The plugin allows `host-deleted` only on discarded, imported or abandoned rows**, so the host file kept by a cancelled request whose late result arrived (`stale` with a path) cannot be deleted from the UI. This matches J5's wording; it is a gap against plan 3.5's privacy aim, not a defect.
+- **The plugin README's ledger table lists the cleanup reply as `{deletedIds,deletedCount}`**; the route also returns `deletedSessions` (PR B choice 6).
+
+### Not covered
+
+The owner's 1.18.0 install and real ComfyUI; two real tabs reserving at the same instant (the plugin's transaction decides; the browser suite and campaign take over sequentially); deleting inside a character subfolder; physical devices and screen readers.

@@ -18,5 +18,16 @@ Checkpoints print `PASS <name>`; any failure throws, writes `evidence.json` with
 - D: Cancel with a held job; E: Stop host job (`/interrupt` logged); G: character switch while held; H: allowance of five; I: `free_extend` refused.
 - F (the 120 s timeout) is not run: the UI has no hook to shorten the wait. It is covered in the browser suite with fake timers and listed in `notTested`.
 
+M3.3 PR C adds the image ledger checkpoints (the plugin's own routes on the host). From C on, C's request is in the cache, so D–I use a second prompt.
+
+- J: C's identical request again: **Use the previous result** applies the imported asset; the fixture's `/prompt` count and host generate requests stay at zero; nothing counted or reserved.
+- K: the fixture's `refusal` step (a synthetic content-policy refusal, J7): shown as a failure; one `/prompt`, one host generate request (no retry, no fallback); the unit spent; the row `failed`.
+- L: after Discard preview, **Delete the host's copy** removes exactly that file from the host folder; the row records `hostDeletedAt`.
+- M: a second page sees the lease held and takes it over (count kept); the first page ends at its next heartbeat; its late file is kept by the host; after the real 120 s deadline **Reconcile** lists only that file and choosing it goes through the fetch, PNG check and Import and apply.
+- N: a reload during a held job; the reloaded page takes over and finds the job unresolved; the host folder gains no file (the host saves a result from the page); after the deadline Reconcile finds nothing, **None of these** attaches nothing and Abandon resolves it.
+- O: the ledger rows equal the campaign in order; nothing unresolved; no chat, card or persona text stored; saved `extension_settings.sd` and canonical files unchanged.
+
+M and N each wait for the real 120 s deadline, so the campaign takes about five minutes longer than M3.2's.
+
 The fixture's `/interrupt` entry is the host's request, not evidence that real ComfyUI work stops. Registered as the
 `image-route` step of `tests/probes/dyl60/run.py`.
