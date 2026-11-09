@@ -1,5 +1,7 @@
 # M3.2 first image route — implementation record
 
+**PR A accepted — 2026-11-08.** The owner [accepted](DECISIONS.md#owner-acceptance--m32-pr-a-merged-four-findings-adopted-pr-b-go-ahead--2026-11-08) PR A as merged (`3665f6e`), adopted its four findings into the plan, and authorized PR B.
+
 ## PR A — the seam probe, tests only
 
 **Candidate, unmerged. Frozen `75b2807`**, based on main `522b79d` (the [plan](M3_2_IMAGE_ROUTE_PLAN.md) and the [owner rulings I1–I10](DECISIONS.md#owner-rulings-i1i10--m32-first-image-route--2026-11-08)). Tracked by [DYL-213](https://linear.app/devils17/issue/DYL-213/sillynovel-m32-first-image-route-host-image-generation-local-comfyui). Tests and a fixture only (plan section 7, PR A): nothing under `src/`, `index.js`, `style.css` or the plugin changes, so the runtime behaves exactly as main does. No provider was contacted; the owner's ComfyUI on port 8188 was never reached.
@@ -108,3 +110,69 @@ A real ComfyUI (8188 never contacted); the owner's 1.18.0 install; other image-a
 ### Next
 
 The owner reviews this record and the four proposed plan findings. PR B (the pure request module `src/image-request.mjs`) starts only after that review.
+
+## PR B — the pure image-request module
+
+**Candidate, unmerged. Frozen `883d59b`**, based on `267be50` (the [owner's acceptance of PR A](DECISIONS.md#owner-acceptance--m32-pr-a-merged-four-findings-adopted-pr-b-go-ahead--2026-11-08) and the amended [plan](M3_2_IMAGE_ROUTE_PLAN.md)). Tracked by [DYL-213](https://linear.app/devils17/issue/DYL-213/sillynovel-m32-first-image-route-host-image-generation-local-comfyui). Pure module only (plan section 7, PR B; H4): nothing imports `src/image-request.mjs` yet, so the runtime behaves exactly as main does. No UI, adapter, host call, persistence or schema change.
+
+### What it adds
+
+`src/image-request.mjs`, following plan sections 3.2, 3.3 and 3.5 as amended by PR A's findings. It imports `captureOf`, `stillCurrent` and `RESULT_LIMITS` from `src/image-workflow.mjs` and nothing else.
+
+| Export | Behaviour |
+| --- | --- |
+| `combinePrefixes(str1, str2, macro)` | SillyTavern 1.19.0's rule byte for byte, as PR A measured it (R1, R2): a falsy second part returns the first unchanged and untrimmed; otherwise both parts are trimmed, stripped of one leading and one trailing comma and trimmed again; the first `{prompt}` marker in the first part is replaced when present, else the two are joined with `, `; the result is processed once more. |
+| `effectiveTexts(snapshot, draft)` | The FREE-mode texts the host will send: positive from `sd.prompt_prefix` and the draft prompt, negative from the draft negative and `sd.negative_prompt`. Only those two draft fields are ever used (I3). |
+| `preflight({ snapshot, workflowText, workflowSha256, draft, options })` | Every rule of plan 3.2 as a refusal code, all returned together: the workflow SHA-256 present as 64 lowercase hex characters; the workflow name present; seam present; `source` `comfy` and `comfy_type` `standard`; `comfy_url` a parseable `http:`/`https:` URL with a loopback hostname (I6); the five mode flags exactly `false`; the prompt non-empty, not a reserved trigger word, not a `char` prefix or `{{charPrefix}}`; no `{{ }}`, angle-bracket marker or `%…%` placeholder in the prompt, the negative or either host prefix; `{prompt}` at most once in the prefix; the workflow parseable, with `"%prompt%"` and `"%negative_prompt%"` exactly once each, exactly one `SaveImage`, no `LoadImage*`, no avatar placeholder, no custom placeholders, every `class_type` in the six-node allowlist; every saved model, VAE, sampler and scheduler among the options the host loaded (PR A, H7); dimensions within today's result limits. Returns a `review` (destination and local flag, workflow name and node types, the generation settings, seed policy, the effective texts, `ok`) even when refused, so the UI can show what would be sent greyed out. |
+| `reviewText(review)` | The one deterministic text PR C shows before Submit and hashes as the payload identity: fixed sections `Destination` to `Negative` including the workflow's SHA-256, one JSON-encoded value per line, ending in one newline. |
+| `createRequest({…})` | The frozen plan 3.3 request: capture, host chat key, catalog and layout revisions, lock state, the effective texts and settings, workflow and payload hashes, `submittedAt`, `deadlineAt` at 120 s, outcome `pending`. Throws `INVALID_REQUEST` when the capture, chat key or either hash is missing, when the catalog or layout revision is not an integer (so staleness can never be silently disabled), when the review is missing or not `ok`, when the id is undefined or `submittedAt` is not a finite number, or when the workflow hash differs from the reviewed one. |
+| `staleReason(request, now)` | The first of `CAPTURE_STALE` (via `stillCurrent`), `HOST_CHAT_CHANGED`, `CATALOG_CHANGED`, `LAYOUT_CHANGED`, `LOCK_CHANGED`, `WORKFLOW_CHANGED`, or `null`. |
+| `resultPathProblem(path, origin)` | PR A's returned-path rule as a pure check: a string, no `%` or `\`, not protocol-relative or absolute, same origin, under `/user/images/`, unchanged by URL normalisation (so `.` and `..` segments and double slashes refuse), and ending in `.png` (PR A's R7 showed a `.jpg` result is saved and returned). |
+| `createImageSession({ allowance })` | The I2 allowance and reservation state machine: off until `begin(workflowSha256)`; one request in flight; `used` counts every accepted submit and never decreases; `cancel` keeps the slot until `settle` or `abandon`; `timeout` keeps it until `abandon`; `settle` to `candidate`, `failed` or `stale`; `imported` and `discard` from `candidate`; `end()` forgets nothing; a submit against a changed workflow hash is refused. Refusals throw `Error(code)` as `src/image-workflow.mjs` does. |
+
+`tests/m3-image-request.test.mjs`, 66 tests, is registered in `tests/probes/dyl60/run.py`; `check-discovery.py` now expects 16 Node files.
+
+### TESTING coverage
+
+| Row | Covered here (Node, SYNTHETIC) | Still NOT_RUN |
+| --- | --- | --- |
+| T75 | Every preflight refusal that plan 3.2 names, each triggered alone from a known-good fixture and all returned together: non-comfy and RunPod sources, a non-loopback URL, each mode flag, each macro form in each of the four texts, the reserved triggers, the `char` prefix, every workflow rule including the avatar workflow's node types, stale saved selections, dimensions | The adapter refusing before dispatch on a real host, no connection rewrite, no fallback (PR C) |
+| T77 | The reservation rules: `cancelled` and `timeout-unknown` hold the slot, `abandon` releases either with the unit spent, a late settle after abandon is refused, no retry path exists, `used` never decreases; every staleness reason including A → B → A through `stillCurrent` | SillyNovel's own timeout, Cancel and Stop host job in the UI; the late result on a real host (PR C) |
+| T74, T76 | — (the wire and the host's result handling were measured in PR A; the adapter's use of `resultPathProblem` is PR C) | PR C |
+
+### Implementation choices for owner review
+
+1. **`preflight` returns a review even when it refuses**, so PR C can show the greyed destination and texts next to the refusal, as plan 3.1 step 2 wants.
+2. **The brief took precedence over the plan's pseudocode** where they differ in field names: the plan's `effective.prompt` and `effective.negative` keep those names; the `session` object exposes `requests` as an outcome map rather than a list.
+3. **`begin()` resets `used` to zero** for the new session (I2: five submissions per explicitly begun session) while an unresolved reservation, if any, stays reserved ([M3.1 plan section 5](M3_1_IMAGE_WORKFLOW_PLAN.md#5-m33-and-m34-outline): starting an allowance cannot clear unresolved reservations).
+4. **A `LoadImage*` node triggers both `WORKFLOW_LOAD_IMAGE` and `WORKFLOW_NODE_NOT_ALLOWED`**, since it is also outside the allowlist; the UI shows both.
+5. **`RESERVED_TRIGGERS` includes the host's interactive-mode phrases** (`portrait`, `scenery`, …) as well as the seven command triggers, because refusing them costs nothing and the mode flag check alone would otherwise be the only guard.
+6. **No hashing in the module.** The adapter computes the workflow and payload SHA-256 with WebCrypto and passes the strings; the module stays free of `crypto`.
+7. **A cancelled request whose host call never settles can be abandoned.** Plan 3.5 gives Abandon only after a timeout, but PR A's H9 shows the host polls with no deadline, so a Cancel followed by a hung backend would otherwise hold the single slot until reload. `abandon` therefore accepts `cancelled` as well as `timeout-unknown`, releasing the slot with the unit still spent; `timeout` never moves a cancelled request, so a late result can never become an importable candidate. **Proposed as an amendment to plan 3.5's Cancel row**, not adopted; the coordinator ruled it for this PR when the reviewer found the gap.
+8. **The review text JSON-encodes every string value and renders numbers bare**, so a newline or a forged `Negative:` inside a prompt cannot add a line, and a negative with trailing whitespace hashes differently from one without, keeping the shown text equal to the payload identity byte for byte. The workflow's SHA-256 is a review line, as plan 3.1 step 2 requires; the adapter computes it and preflight refuses without it. The review also carries clip skip and denoise, which the host substitutes into the workflow but plan 3.1 step 2 does not list, so every wire-affecting setting is in the payload identity. **Proposed** as the review-text format for plan 3.1 step 2; not adopted until the owner rules.
+9. **Written by a Codex worker** whose sandbox could not bind a loopback socket (the full Node list includes the director fixture) or commit; the coordinator ran the full list, checked scope and committed. A fresh reviewer of a different family (a native Claude agent) read `0df1074` and returned three should-fix findings (the review text stripped trailing newlines and could be forged by a value containing a newline; a cancelled request could never release its slot; the `char` prefix check ran on the untrimmed prompt while the host trims first) and four nits (request guard, allowance validation, duplicate node types hidden in the review, non-string prefixes). All were corrected in `e821af8`. The reviewer's confirmation pass found one new defect in that correction (abandoning a settled cancellation could free a newer request's slot) and three nits (the request's hash was not checked against the reviewed one, non-finite numbers rendered as `null`, a redundant length check); the coordinator fixed all four with tests in `9e3c5ac`, final verdict ACCEPT. A second fresh reviewer (a native Claude agent in a new context) then read the whole PR at `46612e4` against seven merge conditions and returned three should-fix findings (relative result paths with `.` or `..` segments passed because the URL parser had already normalised them; missing catalog or layout revisions would silently disable two staleness checks; choice 8 was not labelled a proposal) and five nits (an unused parameter, two record rows that understated the code, a wrong citation, a missing workflow-name check, and clip skip and denoise absent from the payload identity). All were corrected by the coordinator with tests in the refrozen `883d59b` and in this record; that reviewer's confirmation pass is recorded in the PR.
+
+### Commands and results
+
+From the PR B worktree at the frozen SHA, Node v26.8.1, Linux, synthetic fixtures only, each under `timeout --kill-after=5 300`:
+
+```sh
+node --test tests/m3-image-request.test.mjs
+node --test --test-isolation=none <the 16 node files from python3 tests/probes/dyl60/run.py --list-tests>
+python3 tests/probes/dyl60/check-discovery.py
+node --check src/image-request.mjs
+git diff --check
+```
+
+| Check | Result |
+| --- | --- |
+| Focused file | 66/66 pass |
+| Node runner list (16 files) | 439/439 pass (373 on main `3665f6e` plus these 66); earlier 421 on `0df1074`, 435 on `e821af8` and 438 on `9e3c5ac` |
+| Discovery | PASS, 16/5/1 |
+| Syntax and whitespace | PASS |
+
+Browser, storage and native suites NOT_RUN: a pure-module slice under the [M2 evidence standard](TESTING.md#m2-evidence-standard--2026-11-01), which H4 keeps for M3. No host, provider or device was used.
+
+### Next
+
+PR C (the adapter seam and the Generate on this host UI) starts only after the owner reviews this PR. It is a renderer and adapter change and needs the browser suite, storage suite, full native campaign on pinned SillyTavern 1.19.0 with the PR A fixture, the affected device replay, and T74–T77's adapter halves.
