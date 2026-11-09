@@ -1,0 +1,1 @@
+{"command":"python3 tests/probes/dyl60/run.py docs/evidence/m3-3-b/campaign","startedUTC":"2026-11-09T06:44:43Z","endedUTC":"2026-11-09T07:08:41Z","elapsedSeconds":1438,"exitCode":0,"timeoutSeconds":3300}

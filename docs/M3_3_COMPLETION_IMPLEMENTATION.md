@@ -1,5 +1,7 @@
 # M3.3 completion — implementation record
 
+**PR A merged — 2026-11-08.** [#92](https://github.com/Sonoran-Solutions/SillyNovel/pull/92) merged as `3dff21f` on the owner's word (“Merge, start B”).
+
 ## PR A — request-module changes and the host image-folder probe
 
 **Candidate, unmerged. Frozen `3827af7`** (the campaign ran on `7660a53`; see choice 8), based on main `f22a7e8` (the [owner rulings J1–J9](DECISIONS.md#owner-rulings-j1j9--m33-completion--2026-11-08) on the [M3.3 plan](M3_3_COMPLETION_PLAN.md)). Tracked by [DYL-215](https://linear.app/devils17/issue/DYL-215/sillynovel-m33-complete-the-first-image-route-for-gate-c-ledger-lease). No plugin, schema or adapter change. Because J8 checks locks before the layout, the reason sentence the existing UI shows for a lock change during a request changes, so this PR is a runtime change under H4 and carries the browser suite and a full campaign rather than Node evidence alone.
@@ -75,3 +77,65 @@ The owner's 1.18.0 install; files from a real generation; deleting inside a char
 ### Next
 
 The owner reviews this PR. PR B (storage plugin schema v3 and the ledger routes) starts only after that review.
+
+## PR B — the image ledger in the storage plugin (schema v3)
+
+**Candidate, unmerged. Frozen `9375642`**, based on main `3dff21f` (PR A merged). Tracked by [DYL-215](https://linear.app/devils17/issue/DYL-215/sillynovel-m33-complete-the-first-image-route-for-gate-c-ledger-lease). A persistence change: the storage plugin gains the durable image ledger J1 asks for. No `src/` or UI change; the extension does not call the new routes yet (PR C does).
+
+### What it adds
+
+| File | Change |
+| --- | --- |
+| `database-schema.mjs`, `store.mjs` | Additive migration v2 → v3 in one transaction (`image_sessions`, `image_jobs`, indexed by owner and project); a fresh database is created at v3; every v2 project, asset and catalog byte is unchanged. The job's `asset` column is a soft reference with no foreign key, so unused-asset cleanup and recovery are never blocked by the ledger. |
+| `image-ledger.mjs`, `index.mjs` | Routes under `/projects/:id/image/`, owner-scoped and `NOT_FOUND`-concealing like the project routes: `GET session` (the open session and unresolved jobs, including those of ended sessions); `POST session/begin` (`409 LEASE_HELD` with held or stale details, or `takeover: true` keeping the same row, id, count and jobs); `session/heartbeat` and `session/end` by the holder only (`409 LEASE_LOST`); `POST jobs` reserving in one transaction before the host call (`LEASE_LOST`, `IN_FLIGHT`, `ALLOWANCE_EXHAUSTED`, `WORKFLOW_CHANGED`, `LEDGER_FULL` at 500 rows); `POST jobs/:jobId` with the briefed transition table (`INVALID_TRANSITION`, `INVALID_PATH` mirroring the module's result-path rule); `jobs/:jobId/host-deleted`; `GET jobs`, `GET cache?payload=` (imported rows only); `POST jobs/cleanup` (terminal rows only, `UNRESOLVED_JOB`). `/capabilities` advertises `imageLedgerVersion: 1`; the project API schema stays v2. |
+| `recovery.mjs`, `tools/recovery.mjs` | Offline inspection and restore accept v3 and report ledger counts per project; the review text is masked unless `--show-review` is given; v2 databases inspect and restore as before. |
+| `README.md` | A ledger section: tables, routes, limits, masking, bundle exclusion; the operator still owns backups. |
+| `test/image-ledger.test.mjs`, `test/library.test.mjs`, `test/recovery.test.mjs` | 155 new storage tests (126 → 281), including an exhaustive forbidden-transition matrix (103 cases): fresh v3, v2 → v3 preservation, lease and takeover, every reserve refusal, the transition table, path refusals including the probe's folder, `..` and encoded forms, holder rules and the `unknown` exception, cache rows, cleanup, foreign-owner concealment, strict keys, recovery masking, bundles without ledger rows, unused-asset cleanup through the soft reference. Registered in the runner (storage 6 files). |
+
+### TESTING coverage
+
+| Row | Covered here | Still NOT_RUN |
+| --- | --- | --- |
+| T78 | The ledger's cache rows and the one-unresolved-job rule (storage) | The cache and coalescing in the UI and on the host (PR C) |
+| T81 | The lease, takeover and `LEASE_LOST` rules (storage) | The lease in the UI across real tabs and reloads (PR C) |
+| T82 | Unresolved rows survive and are listed; `unknown` resolvable after takeover (storage) | Reconcile in the UI (PR C) |
+| T83 | `host-deleted` marking and path refusals (storage) | Delete the host's copy in the UI (PR C) |
+
+### Implementation choices for owner review
+
+1. **`GET session` also returns unresolved jobs of ended sessions**, so a job left running when a session ended stays visible for reconcile or abandon.
+2. **Takeover keeps the session row**, as PR A's choice 3 proposed; plan 3.2's "ends the old session" wording is satisfied by `LEASE_LOST` on the old tab's next heartbeat.
+3. **The plugin never deletes a host file**; it only records that the client did.
+4. **The worker's sandbox needed a temporary stdio adapter** to run the suite; the coordinator reran every check without it.
+5. **Ending a session withdraws its tab.** An unresolved job of an ended session is resolved only by the holder of the project's current open session, so a reload (a new tab id) can always reconcile or abandon it, and the old tab cannot act on a job that is no longer its own.
+6. **Bounded growth.** Begin refuses `LEDGER_FULL` at 500 sessions per project; cleanup also removes ended sessions with no jobs and reports `deletedSessions`; recovery bounds its session load. Ledger rows never carry the owner, in the API or in recovery output.
+7. **Three campaign probes pinned the database version.** The library and native-groups campaigns now expect the live database backup at v3; the migration campaign still expects the v1 backup `migrate` command to produce v2, which is what it does. The first campaign on `89a2797` stopped at the library pin; a premature edit of the migration pin was caught by review before any evidence was recorded.
+8. **Review.** Written by a Codex sol worker in two rounds; a fresh senior reviewer (a native Claude agent) found one blocker (an ended session's unresolved job could be stranded for good after a reload), three should-fix findings (owner identities in recovery output, unbounded sessions, the transition table tested only from `pending`) and six nits, then on confirmation one more should-fix (the ended session's own tab could still move the job) and the migration-pin error above. All were fixed; the last two by the coordinator exactly as the reviewer prescribed.
+
+### Commands and results
+
+```sh
+cd plugins/sillynovel-storage && npm test
+python3 tests/probes/dyl60/check-discovery.py
+SILLYTAVERN_ROOT=<disposable pinned host> SN_PLAYWRIGHT_MODULE=<pinned Playwright> python3 tests/probes/dyl60/run.py docs/evidence/m3-3-b/campaign
+python3 tests/probes/dyl60/validate.py docs/evidence/m3-3-b/campaign
+```
+
+| Suite | Result |
+| --- | --- |
+| Storage | 281/281 (126 before plus 155) |
+| Node (17 files) | 503/503 |
+| Browser actual-entry | 126/126 |
+| Native campaigns | stage-library-migration 25, expressions 16, groups 22, recovery 17, cleanup 21, native-integrity-branches 18, director 60, image-route 8 checkpoints |
+| `validate.py` | PASS over 151 frozen inputs on the final candidate itself |
+| Discovery | PASS, 17/6/1 |
+
+Package: [`docs/evidence/m3-3-b/campaign/`](evidence/m3-3-b/campaign/) with `run.json` beside it. The campaign took 1438 s on the disposable pinned SillyTavern 1.19.0 host; the supervising runner reaped nothing at exit.
+
+### Not covered
+
+The ledger on the owner's 1.18.0 install or a real backend; concurrent requests from two real browser tabs (the storage suite exercises the transactional rules in-process); an upgrade of a database in active use by a running older plugin; physical devices. The extension does not use the ledger yet.
+
+### Next
+
+The owner reviews this PR. PR C (the adapter and UI on the ledger) starts only after that review.
