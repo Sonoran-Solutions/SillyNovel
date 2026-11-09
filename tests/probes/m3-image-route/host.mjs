@@ -106,11 +106,13 @@ async function openWorkflow() {
 // Turning the session on inspects the host; wait for that inspection, not a stale review.
 async function sessionOn() {
     const inspected = page.waitForResponse(r => r.url().endsWith('/api/sd/comfy/workflow'));
+    // After the ledger begins the session the page reads its unresolved rows; that read ends the begin, so the problems line is fresh after it.
+    const begun = page.waitForResponse(r => r.url().endsWith('/image/session') && r.request().method() === 'GET');
     await field('Image session on this host').check();
     await inspected;
+    await begun;
     await page.waitForFunction(() => !document.querySelector('.sillynovel-image-workflow__review').hidden && document.querySelector('.sillynovel-image-workflow__generation p:not([hidden])') !== null);
     await until(async () => /^Submissions used 0 of 5$/.test(await used()), 'fresh allowance');
-    // The session is on once the image ledger has begun it: Submit enables, or a refusal names itself.
     await until(async () => (await button('Submit').isEnabled()) || (await problems()) !== '', 'ledger session begun');
 }
 const ledgerJobs = () => h.plugin('/projects/' + project.projectId + '/image/jobs');
