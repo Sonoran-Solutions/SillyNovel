@@ -1,5 +1,9 @@
 # Verification and acceptance
 
+## M3.3 PR A candidate — T78, T81, T82 rules in Node; T82 and T83 host halves on the pinned host — 2026-11-08
+
+Full campaign on frozen `7660a53` on a disposable pinned SillyTavern 1.19.0 host, [`docs/evidence/m3-3-a/campaign/`](evidence/m3-3-a/campaign/): Node 500/500, storage 126/126, browser 125/125, native checkpoints 25/16/22/17/21/18/60/8, `validate.py` PASS over 149 frozen inputs. The host image-folder probe, [`docs/evidence/m3-3-a/probe/`](evidence/m3-3-a/probe/), 20 cases: root listing, `Last-Modified` timestamps, exact delete, refused traversal, folder-path 500, `..` normalization, CSRF. T78's cache rule, T81's lease rules and T82's reconcile filter are covered in Node; T82's and T83's host routes on the pinned host; the UI halves wait for PR C. Row text changes only at merge. [Record](M3_3_COMPLETION_IMPLEMENTATION.md#pr-a--request-module-changes-and-the-host-image-folder-probe). Gate C NOT_RUN.
+
 ## M3.3 rows adopted — 2026-11-08
 
 Per [J9](DECISIONS.md#owner-rulings-j1j9--m33-completion--2026-11-08), rows T81–T83 from [plan section 7](M3_3_COMPLETION_PLAN.md#7-proposed-testing-rows-and-pr-boundaries) are added to the matrix below as NOT_RUN. T78–T80 keep their earlier adoption. No evidence is claimed by this entry.
