@@ -73,3 +73,82 @@ A separate experimental local CLI now supports official SQLite online backup, st
 The attached project's **Unused Project Assets** controls require explicit review, selection and confirmation. Save/discard dirty edits and finish imports/saves first. Other tabs' unsaved drafts cannot be discovered and can lose artwork; already-cached Blob images elsewhere can remain visible until a missing-reference save refusal. Confirmed/uncertain removal evicts submitted alternatives from this editor's catalog. Lost responses are uncertain, never an automatic retry. No automatic garbage collection, project deletion or native-host writes. Missing/older plugins disable cleanup and preserve session-only visuals.
 
 Removal recovers **logical account quota**, not necessarily filesystem bytes: SQLite freelist pages may be reused without reducing file length. No VACUUM/compaction. Keep verified private database backups; portable bundles omit unused art and cannot recover it. No in-app undo, live-database replacement or automatic restore. [Full cleanup contract](../../docs/M1_PROJECT_ASSET_CLEANUP.md) and [implementation evidence](../../docs/M1_PROJECT_ASSET_CLEANUP_IMPLEMENTATION.md). Earlier no-cleanup statements above describe predecessor slices and are superseded only by this explicit operation; production installation/release remains unapproved.
+
+## Image ledger (M3.3 PR B, schema v3)
+
+Database v3 adds `image_sessions` (lease, pinned workflow, allowance and count) and
+`image_jobs` (review text, settings, hashes, outcome, times and host-path disclosures).
+Startup adds these tables to a validated v2 database in one transaction; existing
+project, catalog and PNG rows are untouched. Fresh databases use v3. Project API
+schema v2 and portable bundle v1 are unchanged; capabilities add `imageLedgerVersion:1`.
+The explicit v1 backup migration still produces v2, which startup then upgrades.
+Keep a verified operator backup before upgrading. The operator owns backups;
+the ledger and portable copies are not a backup.
+
+All paths below are under `/projects/:id/image/`, authenticated and owner/project
+scoped. Foreign or unknown projects, sessions and jobs return `404 NOT_FOUND`.
+Mutations use the existing CSRF protection, JSON media type and 32 KiB cap, with
+exact known keys. JSON rows use camelCase (`asset` is exposed as `assetId`,
+`settings` as a parsed object, with `owner` omitted); times are server Unix milliseconds.
+
+| Method | Path | Body / result and refusals |
+| --- | --- | --- |
+| GET | `session` | `{session,jobs}`; open session or null, plus all unresolved project jobs, including ended sessions' jobs |
+| POST | `session/begin` | `{tab,workflowSha256,takeover?}`; session (`status: mine` for the same tab); `409 LEDGER_FULL` at 500 retained sessions; `409 LEASE_HELD` includes `status` held/stale, `heartbeatAt`, `tab` |
+| POST | `session/heartbeat` | `{sessionId,tab}`; session; `409 LEASE_LOST` |
+| POST | `session/end` | `{sessionId,tab}`; session; holder-idempotent; `409 LEASE_LOST` |
+| POST | `jobs` | `{sessionId,tab,payloadSha256,workflowSha256,review,settings,seedPolicy,deadlineMs}`; reserved job (201); `409 LEASE_LOST`, `IN_FLIGHT`, `ALLOWANCE_EXHAUSTED`, `WORKFLOW_CHANGED`, `LEDGER_FULL` |
+| POST | `jobs/:jobId` | `{tab,state,hostPath?,resultSha256?,assetId?}`; job; `409 INVALID_TRANSITION`, `LEASE_LOST`; `400 INVALID_PATH` |
+| POST | `jobs/:jobId/host-deleted` | `{}`; job with `hostDeletedAt`; `409 INVALID_TRANSITION` unless imported/discarded/abandoned with a host path |
+| GET | `jobs?limit=` | Job fields without owner, newest submission first; positive integer limit, capped/default 500 |
+| GET | `cache?payload=` | Imported jobs with that 64 lowercase hex hash and non-null asset ID, newest first; the client must check the catalog and fixed seed policy |
+| POST | `jobs/cleanup` | `{jobIds}` (0–500 unique IDs); `{deletedIds,deletedCount}`; atomic refusal `409 UNRESOLVED_JOB` for any nonterminal row |
+
+One open session per owner/project is enforced by a unique index. Heartbeat every
+30 s; older than 90 s is reported stale. Explicit takeover of either held or stale
+leases changes only the same row's tab and heartbeat: its identity, workflow,
+five-unit allowance, count and jobs survive. Same-tab begin, with or without
+takeover, returns the existing session unchanged with `status: mine`. Only a new
+explicit session after ending starts at zero. Reserve atomically inserts pending before host dispatch
+and increments used; failure, cancel, timeout, abandonment and cleanup never refund.
+Any unresolved job in the project blocks reserve, including jobs of ended sessions.
+Deadline duration is an integer 1,000–600,000 ms; settings is a JSON object and
+seedPolicy is fixed/random. There are at most 500 retained jobs and 500 retained
+sessions per project.
+
+| From | Allowed next states |
+| --- | --- |
+| pending | candidate, failed, stale, cancelled, timeout-unknown |
+| cancelled | stale, abandoned |
+| timeout-unknown | candidate, failed, stale, abandoned, unknown |
+| unknown | reconciled, abandoned |
+| candidate / reconciled | imported (owned project assetId required), discarded |
+
+Pending, cancelled, timeout-unknown and unknown are unresolved; leaving these for
+a resolved state stamps `settledAt` once. Time passing alone does not transition
+rows: the client explicitly records timeout-unknown then unknown. Pending,
+cancelled and timeout-unknown transitions require the job session's recorded tab
+while that session is open; once it has ended, only the current open session's
+holder may (ending a session withdraws its tab's permission). The current
+holder resolves jobs left by an ended session; unknown resolution requires that
+current holder. Candidate/reconciled approval remains owner-scoped.
+Ending does not remove or resolve jobs. Candidate/reconciled rows need explicit
+import/discard before cleanup; failed/stale/abandoned/imported/discarded are terminal.
+
+Host paths must be literal PNG paths under `/user/images/`, with no encoding,
+backslash, traversal segment, doubled slash, query or fragment. `hostPath` and
+`resultSha256` may be supplied only for a candidate/reconciled target or when the
+respective stored value is null. The plugin never reads or deletes a host file. The host-deleted route only records the client's
+explicit deletion; it is idempotent. Asset IDs are soft references: unused-art
+cleanup can remove their bytes, leaving a cache miss after catalog filtering.
+Ledger cleanup removes selected terminal jobs and ended sessions with no remaining
+jobs, never assets or projects. An empty job list permits session-only cleanup.
+Project/session foreign keys cascade rather than imposing new deletion blockers.
+
+Portable export never includes ledger rows; import creates none and rejects extra
+ledger fields. Full operator backup/restore includes v3 rows; v2 still inspects and
+restores unchanged. Strict offline inspection reports counts and job rows per
+project, with `review: "[masked]"` and `reviewLength` (JavaScript string length).
+Only `node tools/recovery.mjs inspect BACKUP_DIR [--data-root TARGET_DATA_ROOT]
+--show-review` explicitly reveals review text. Backup/restore reports also mask it.
+This storage-only slice makes no live-host, provider, UI or Gate C claim.

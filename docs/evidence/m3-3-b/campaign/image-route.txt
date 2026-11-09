@@ -1,0 +1,14 @@
+Owned evidence root /tmp/sn-m3-image-route-XG93vj
+SETUP selections aligned {"sampler":{"from":"DDIM","to":"euler"}}
+PASS A: decoy character, chat and persona seeded; the host image extension points at the fixture (URL before source) with selections aligned {"sampler":{"from":"DDIM","to":"euler"}}; saved project with a background attached; the Image workflow open with the session off
+PASS B: session on; the review equals reviewText(preflight()) computed in Node from the host workflow text (sha256 18f3e44cdedb1bbc4e9597ce5f759b95f2dfc18f887d3614ff619792366c4fab) and settings snapshot; no /prompt and no text request
+SETUP settings.json paths changed by the host during C: []
+PASS C: one /prompt whose body deep-equals the independently substituted shipped workflow; review texts are the wire texts; no decoy on the image wire; zero text requests; candidate shown with the host path; Import and apply registered the PNG (catalog +1, background locked, stored bytes = fixture PNG); canonical files, chat and extension_settings.sd unchanged
+PASS D: Cancel withdrew permission while the host job was held (Abandon not offered before the deadline); after release nothing applied, no project asset, the host kept one file (disclosed), the slot released on settlement; used 2
+PASS E: Stop host job aborted the host controller; the fixture logged /interrupt; nothing applied; no new host file; used 3
+SKIP F: no UI hook shortens the 120 s wait; recorded in notTested
+PASS G: a character switch while held ended the session and named the still-running request with Submit disabled; after release the request settled, nothing was applied to either chat, the result was discarded and no host file was kept
+PASS H: five submissions; the fixture logged five /prompt, equal to the UI's "Submissions used 5 of 5"; the sixth Submit is disabled with its reason; nothing beyond five reached the fixture
+PASS I: free_extend on the real host is refused by preflight with its sentence and Submit disabled; no /prompt and no text request; restored
+RESULT PASS
+Evidence /tmp/sn-m3-image-route-XG93vj/evidence.json

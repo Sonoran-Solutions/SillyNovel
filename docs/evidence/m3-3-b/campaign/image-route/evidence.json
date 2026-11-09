@@ -1,0 +1,51 @@
+{
+  "candidate": "93756425764de2969f6f861d0f16008193eb1620",
+  "host": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
+  "node": "v26.8.1",
+  "checks": [
+    "A: decoy character, chat and persona seeded; the host image extension points at the fixture (URL before source) with selections aligned {\"sampler\":{\"from\":\"DDIM\",\"to\":\"euler\"}}; saved project with a background attached; the Image workflow open with the session off",
+    "B: session on; the review equals reviewText(preflight()) computed in Node from the host workflow text (sha256 18f3e44cdedb1bbc4e9597ce5f759b95f2dfc18f887d3614ff619792366c4fab) and settings snapshot; no /prompt and no text request",
+    "C: one /prompt whose body deep-equals the independently substituted shipped workflow; review texts are the wire texts; no decoy on the image wire; zero text requests; candidate shown with the host path; Import and apply registered the PNG (catalog +1, background locked, stored bytes = fixture PNG); canonical files, chat and extension_settings.sd unchanged",
+    "D: Cancel withdrew permission while the host job was held (Abandon not offered before the deadline); after release nothing applied, no project asset, the host kept one file (disclosed), the slot released on settlement; used 2",
+    "E: Stop host job aborted the host controller; the fixture logged /interrupt; nothing applied; no new host file; used 3",
+    "G: a character switch while held ended the session and named the still-running request with Submit disabled; after release the request settled, nothing was applied to either chat, the result was discarded and no host file was kept",
+    "H: five submissions; the fixture logged five /prompt, equal to the UI's \"Submissions used 5 of 5\"; the sixth Submit is disabled with its reason; nothing beyond five reached the fixture",
+    "I: free_extend on the real host is refused by preflight with its sentence and Submit disabled; no /prompt and no text request; restored"
+  ],
+  "counts": {
+    "prompts": 9,
+    "interrupts": 1,
+    "textRequests": 0,
+    "files": 7
+  },
+  "setup": {
+    "fixtureOrigin": "http://127.0.0.1:32907",
+    "selectionsAligned": {
+      "sampler": {
+        "from": "DDIM",
+        "to": "euler"
+      }
+    },
+    "C_settingsJsonChangedPaths": [],
+    "C": {
+      "hostFile": "2026-11-09@00h08m29s854ms.png",
+      "statusPath": "/user/images/2026-11-09@00h08m29s854ms.png",
+      "importedAssetId": "709c7e83-d2f3-4f50-b727-4f624b77cb67"
+    },
+    "G": {
+      "statusAfter": "Project changed: references and any preview cleared; your text is kept."
+    }
+  },
+  "notTested": [
+    "120 s timeout on the real host (covered in the browser suite with fake timers)",
+    "Real ComfyUI (the owner's 127.0.0.1:8188 was never contacted); /interrupt is the fixture's log entry, not real work stopping",
+    "Other host versions",
+    "Other image-aware extensions",
+    "Physical devices and screen readers",
+    "Group chats"
+  ],
+  "browser": "151.0.7922.34",
+  "pageErrors": [],
+  "result": "PASS",
+  "fixtureConsoleTail": "comfy endpoint listening on 32907\n"
+}

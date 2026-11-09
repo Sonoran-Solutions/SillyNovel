@@ -1,6 +1,6 @@
 import { chmodSync, lstatSync } from 'node:fs';
 import { join, isAbsolute } from 'node:path';
-import { demand } from './schema.mjs';
+import { demand, exact } from './schema.mjs';
 import { MAX_BYTES } from './png.mjs';
 import { BUNDLE_TYPE, BUNDLE_BYTES } from './bundle.mjs';
 export const info = { id: 'sillynovel-storage', name: 'SillyNovel project storage', description: 'Optional local project persistence; experimental.' };
@@ -34,7 +34,7 @@ export async function init(router) {
     });
     const route = fn => async (req,res) => {
         try { await fn(req,res); }
-        catch (error) { if (!res.headersSent) res.status(error.status || 503).json({code:error.code && error.status ? error.code : 'STORAGE_UNAVAILABLE'}); }
+        catch (error) { if (!res.headersSent) res.status(error.status || 503).json({code:error.code && error.status ? error.code : 'STORAGE_UNAVAILABLE',...error.details}); }
     };
     async function body(req,type,limit) {
         demand(req.headers['content-type']?.split(';')[0] === type && req.headers['content-encoding'] === undefined, 'CONTENT_TYPE', 415);
@@ -47,7 +47,7 @@ export async function init(router) {
         const bytes = await body(req,'application/vnd.sillynovel+json',32768);
         try { return JSON.parse(bytes.toString('utf8')); } catch { demand(false,'INVALID_JSON'); }
     };
-    router.get('/capabilities',route((req,res)=>res.json({apiVersion:1,schemaVersion:2,catalogVersion:1,formats:['image/png'],maxBytes:MAX_BYTES,bundleVersion:1,bundleMaxBytes:BUNDLE_BYTES,cleanupVersion:1})));
+    router.get('/capabilities',route((req,res)=>res.json({apiVersion:1,schemaVersion:2,catalogVersion:1,formats:['image/png'],maxBytes:MAX_BYTES,bundleVersion:1,bundleMaxBytes:BUNDLE_BYTES,cleanupVersion:1,imageLedgerVersion:1})));
     router.get('/projects',route((req,res)=>res.json(store.list(req.sillynovelOwner))));
     router.post('/projects',route(async(req,res)=>res.status(201).json(store.create(req.sillynovelOwner,await json(req)))));
     let bundleBusy=false;
@@ -69,6 +69,19 @@ export async function init(router) {
     }));
     router.get('/projects/:id/unused-assets',route((req,res)=>res.json(store.previewCleanup(req.sillynovelOwner,req.params.id))));
     router.post('/projects/:id/unused-assets/remove',route(async(req,res)=>res.json(store.removeUnusedAssets(req.sillynovelOwner,req.params.id,await json(req)))));
+    const imageRoute=fn=>route(async(req,res)=>{
+        store.load(req.sillynovelOwner,req.params.id);
+        await fn(req,res);
+    });
+    router.get('/projects/:id/image/session',imageRoute((req,res)=>{
+        demand(exact(req.query,[]));res.json(store.imageSession(req.sillynovelOwner,req.params.id));
+    }));
+    for(const [path,method] of [['session/begin','beginImageSession'],['session/heartbeat','heartbeatImageSession'],['session/end','endImageSession'],['jobs','reserveImageJob'],['jobs/cleanup','cleanupImageJobs']])
+        router.post('/projects/:id/image/'+path,imageRoute(async(req,res)=>res.status(path==='jobs'?201:200).json(store[method](req.sillynovelOwner,req.params.id,await json(req)))));
+    router.get('/projects/:id/image/jobs',imageRoute((req,res)=>res.json(store.imageJobs(req.sillynovelOwner,req.params.id,req.query))));
+    router.get('/projects/:id/image/cache',imageRoute((req,res)=>res.json(store.imageCache(req.sillynovelOwner,req.params.id,req.query))));
+    router.post('/projects/:id/image/jobs/:jobId',imageRoute(async(req,res)=>res.json(store.transitionImageJob(req.sillynovelOwner,req.params.id,req.params.jobId,await json(req)))));
+    router.post('/projects/:id/image/jobs/:jobId/host-deleted',imageRoute(async(req,res)=>res.json(store.imageHostDeleted(req.sillynovelOwner,req.params.id,req.params.jobId,await json(req)))));
     router.get('/projects/:id/assets/:asset',route((req,res)=> {
         const asset=store.asset(req.sillynovelOwner,req.params.id,req.params.asset);
         res.set('X-Content-Type-Options','nosniff').set('X-Content-SHA256',asset.sha256).type('png').send(Buffer.from(asset.bytes));

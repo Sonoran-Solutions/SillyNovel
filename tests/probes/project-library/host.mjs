@@ -89,7 +89,7 @@ export async function runLibrary({root,data,repo,page,alice,bob,peer,project,fie
  assert.equal((await get(entry.projectId)).catalog.length,3);await alice.request('/api/plugins/sillynovel-storage/projects/'+entry.projectId+'/assets/'+bg[0].assetId,'GET',undefined,404);
  pass('native switch abandons delayed PNG receipt; stale cleanup refuses; explicit unregister/save/selected cleanup removes only chosen alternative');
  const {createBackup,inspectBackup}=await import('../../../plugins/sillynovel-storage/recovery.mjs');
- const backup=join(root,'library-backup');await createBackup(join(data,'.sillynovel-projects.sqlite'),backup);assert.equal(inspectBackup(backup).schemaVersion,2);
+ const backup=join(root,'library-backup');await createBackup(join(data,'.sillynovel-projects.sqlite'),backup);assert.equal(inspectBackup(backup).schemaVersion,3);
  const bundle=JSON.parse(await(await alice.request('/api/plugins/sillynovel-storage/projects/'+entry.projectId+'/export')).body());assert.equal(bundle.version,1);assert.equal(bundle.assets.length,2);assert.equal(Object.hasOwn(bundle,'catalog'),false);
  evidence.library.final=await get(entry.projectId);evidence.library.cleanupStale=stale;evidence.library.backup=inspectBackup(backup);
  const db=new DatabaseSync(join(data,'.sillynovel-projects.sqlite'));evidence.library.inventory={projects:db.prepare('SELECT * FROM projects ORDER BY id').all(),assets:db.prepare('SELECT id,project,sha256,length(bytes) AS bytes FROM assets ORDER BY id').all()};db.close();
