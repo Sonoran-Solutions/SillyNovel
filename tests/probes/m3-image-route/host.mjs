@@ -111,6 +111,7 @@ async function sessionOn() {
     await field('Image session on this host').check();
     await inspected;
     await begun;
+    await delay(300); // the page renders after it has read that reply; the response event fires on its headers
     await page.waitForFunction(() => !document.querySelector('.sillynovel-image-workflow__review').hidden && document.querySelector('.sillynovel-image-workflow__generation p:not([hidden])') !== null);
     await until(async () => /^Submissions used 0 of 5$/.test(await used()), 'fresh allowance');
     await until(async () => (await button('Submit').isEnabled()) || (await problems()) !== '', 'ledger session begun');
