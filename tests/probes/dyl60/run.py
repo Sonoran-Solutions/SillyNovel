@@ -7,7 +7,7 @@ node_files = [repo / 'tests' / (name + '.test.mjs') for name in ['m0', 'm1-reade
 storage_files = []
 for directory, expected, files in [
     ('tests/probes/dyl19', {'owned-chat-probe.test.mjs', 'source-anchor.test.mjs'}, node_files),
-    ('plugins/sillynovel-storage/test', {'bundle.test.mjs', 'cleanup.test.mjs', 'library.test.mjs', 'recovery.test.mjs', 'store.test.mjs'}, storage_files),
+    ('plugins/sillynovel-storage/test', {'bundle.test.mjs', 'cleanup.test.mjs', 'image-ledger.test.mjs', 'library.test.mjs', 'recovery.test.mjs', 'store.test.mjs'}, storage_files),
 ]:
     discovered = sorted((repo / directory).glob('*.test.mjs'))
     assert {p.name for p in discovered} == expected, f'Unexpected or empty suite: {directory}: {[p.name for p in discovered]}'

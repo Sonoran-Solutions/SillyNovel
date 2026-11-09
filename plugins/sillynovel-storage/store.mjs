@@ -1,5 +1,6 @@
 import { DatabaseSync } from 'node:sqlite';
-import { SCHEMA_SQL, validateDatabaseSchema } from './database-schema.mjs';
+import { SCHEMA_SQL, upgradeV2, validateDatabaseSchema } from './database-schema.mjs';
+import { imageLedger } from './image-ledger.mjs';
 import { randomUUID } from 'node:crypto';
 import { demand, exact, label, validId, validateScene, validateCatalog, emptyScene, validateCleanupRequest, CLEANUP_WARNING } from './schema.mjs';
 import { decodePNG, digest, MAX_BYTES } from './png.mjs';
@@ -15,12 +16,13 @@ export function openStore(filename) {
     try {
         db.exec('PRAGMA foreign_keys=ON; PRAGMA synchronous=FULL; PRAGMA busy_timeout=3000;');
         const version = db.prepare('PRAGMA user_version').get().user_version;
-        demand([0,1,2].includes(version), 'UNSUPPORTED_SCHEMA', 503);
+        demand([0,1,2,3].includes(version), 'UNSUPPORTED_SCHEMA', 503);
         if (version === 0) transaction(() => {
             demand(db.prepare("SELECT count(*) AS n FROM sqlite_master WHERE type='table'").get().n === 0, 'UNSUPPORTED_SCHEMA', 503);
-            db.exec(SCHEMA_SQL.join(';') + '; PRAGMA user_version=2;');
+            db.exec(SCHEMA_SQL.join(';') + '; PRAGMA user_version=3;');
         });
         if(version===1){validateDatabaseSchema(db,[1]);demand(false,'MIGRATION_REQUIRED',503);}
+        if(version===2)transaction(()=>upgradeV2(db));
         validateDatabaseSchema(db);
         demand(db.prepare('PRAGMA quick_check').get().quick_check === 'ok', 'CORRUPT_STORE', 503);
     } catch (error) { db.close(); throw error; }
@@ -61,6 +63,7 @@ export function openStore(filename) {
             reclaimableBytes:candidates.reduce((sum,row)=>sum+row.byteCount,0),warning:CLEANUP_WARNING};
     }
     return {
+        ...imageLedger(db,transaction,load,asset),
         previewCleanup(owner,id) { return transaction(()=>cleanupInventory(owner,id)); },
         removeUnusedAssets(owner,id,body) {
             validateCleanupRequest(body);

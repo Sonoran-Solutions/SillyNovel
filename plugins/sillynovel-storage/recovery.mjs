@@ -4,6 +4,7 @@ import { resolve, dirname, basename, join, parse, isAbsolute } from 'node:path';
 import { createHash } from 'node:crypto';
 import { demand, exact, validId, label, validateScene, validateCatalog } from './schema.mjs';
 import { validateDatabaseSchema, upgradeV1 } from './database-schema.mjs';
+import { validateImageSession, validateImageJob, imageJsonRow } from './image-ledger.mjs';
 import { decodePNG, MAX_BYTES, digest } from './png.mjs';
 
 export const DATABASE_NAME = '.sillynovel-projects.sqlite';
@@ -73,7 +74,7 @@ function accounts(owners, dataRoot) {
     }
     return 'VERIFIED_SAME_ACCOUNT_INCARNATION';
 }
-export function validateDatabase(path) {
+export function validateDatabase(path, {showReview=false}={}) {
     const started = Date.now(); const budget = () => demand(Date.now() - started <= LIMITS.milliseconds, 'RECOVERY_LIMIT');
     const info = file(path, LIMITS.databaseBytes);
     const fd = openSync(path, constants.O_RDONLY | constants.O_NOFOLLOW), header = Buffer.alloc(20);
@@ -86,14 +87,14 @@ export function validateDatabase(path) {
     try {
         db = new sqlite.DatabaseSync(path, { readOnly: true, allowExtension: false });
         db.exec('PRAGMA query_only=ON; PRAGMA trusted_schema=OFF; PRAGMA busy_timeout=3000; PRAGMA cache_size=-2048;');
-        const schemaVersion=validateDatabaseSchema(db,[1,2]);
+        const schemaVersion=validateDatabaseSchema(db,[1,2,3]);
         demand(db.prepare('PRAGMA integrity_check').all().every(r => r.integrity_check === 'ok'), 'CORRUPT_DATABASE');
         const projects = db.prepare('SELECT count(*) AS n FROM projects').get().n, assets = db.prepare('SELECT count(*) AS n FROM assets').get().n;
         demand(projects <= LIMITS.projects && assets <= LIMITS.assets, 'RECOVERY_LIMIT');
         demand(!db.prepare('PRAGMA foreign_key_check').get(), 'INVALID_PROJECT_STATE');
         demand(!db.prepare('SELECT 1 FROM projects WHERE length(CAST(scene AS BLOB))>32768 OR length(CAST(owner AS BLOB))>1024 OR length(CAST(name AS BLOB))>320 OR length(CAST(id AS BLOB))>36 LIMIT 1').get(), 'INVALID_PROJECT_STATE');
         demand(!db.prepare('SELECT 1 FROM assets WHERE length(bytes)>? OR length(CAST(id AS BLOB))>36 OR length(CAST(project AS BLOB))>36 OR length(CAST(sha256 AS BLOB))>64 LIMIT 1').get(MAX_BYTES), 'INVALID_ASSET');
-        if(schemaVersion===2)demand(!db.prepare('SELECT 1 FROM projects WHERE length(CAST(catalog AS BLOB))>32768 LIMIT 1').get(),'INVALID_PROJECT_STATE');
+        if(schemaVersion>=2)demand(!db.prepare('SELECT 1 FROM projects WHERE length(CAST(catalog AS BLOB))>32768 LIMIT 1').get(),'INVALID_PROJECT_STATE');
         const owners = new Set();
         for (const p of db.prepare('SELECT * FROM projects').iterate()) {
             budget();
@@ -101,7 +102,7 @@ export function validateDatabase(path) {
                 demand(validId(p.id) && label(p.name) && Number.isSafeInteger(p.revision) && p.revision >= 0, 'INVALID_PROJECT_STATE');
                 ownerPair(p.owner); owners.add(p.owner);
                 const scene = validateScene(JSON.parse(p.scene));
-                const catalog=schemaVersion===2?validateCatalog(JSON.parse(p.catalog),scene):[];
+                const catalog=schemaVersion>=2?validateCatalog(JSON.parse(p.catalog),scene):[];
                 for (const id of [scene.backgroundAssetId, ...scene.actors.map(a => a.spriteAssetId),...catalog.map(a=>a.assetId)].filter(Boolean))
                     demand(db.prepare('SELECT 1 FROM assets WHERE id=? AND project=?').get(id,p.id), 'INVALID_PROJECT_STATE');
             } catch { fail('INVALID_PROJECT_STATE'); }
@@ -116,10 +117,32 @@ export function validateDatabase(path) {
                 demand(decoded.sha256 === a.sha256 && decoded.width === a.width && decoded.height === a.height, 'INVALID_ASSET');
             } catch (e) { if(e.code === 'RECOVERY_LIMIT') throw e; fail('INVALID_ASSET'); }
         }
+        const ledger=[];
+        if(schemaVersion===3) {
+            for(const p of db.prepare('SELECT id,owner FROM projects ORDER BY id').iterate()) {
+                budget();
+                const sessions=db.prepare('SELECT * FROM image_sessions WHERE owner=? AND project=? ORDER BY started_at,id').all(p.owner,p.id);
+                const jobs=db.prepare('SELECT * FROM image_jobs WHERE owner=? AND project=? ORDER BY submitted_at,id LIMIT 501').all(p.owner,p.id);
+                demand(jobs.length<=500,'RECOVERY_LIMIT');
+                for(const s of sessions) {budget();validateImageSession(s);}
+                for(const j of jobs) {
+                    budget();validateImageJob(j);
+                    demand(sessions.some(s=>s.id===j.session && s.workflow_sha256===j.workflow_sha256),'INVALID_IMAGE_LEDGER');
+                }
+                for(const s of sessions)demand(jobs.filter(j=>j.session===s.id).length<=s.used,'INVALID_IMAGE_LEDGER');
+                ledger.push({projectId:p.id,sessions:sessions.length,jobs:jobs.length,rows:jobs.map(j=>{
+                    const {review,...row}=j;
+                    return {...imageJsonRow(row),review:showReview?review:'[masked]',reviewLength:review.length};
+                })});
+            }
+            // Owner/project mismatches cannot hide ledger rows from inspection.
+            demand(!db.prepare('SELECT 1 FROM image_sessions s JOIN projects p ON p.id=s.project WHERE s.owner<>p.owner LIMIT 1').get()
+                && !db.prepare('SELECT 1 FROM image_jobs j JOIN projects p ON p.id=j.project JOIN image_sessions s ON s.id=j.session WHERE j.owner<>p.owner OR j.owner<>s.owner OR j.project<>s.project LIMIT 1').get(),'INVALID_IMAGE_LEDGER');
+        }
         budget();
         const final=file(path,LIMITS.databaseBytes);
         demand(final.sha256 === info.sha256 && final.byteLength === info.byteLength,'CHECKSUM_MISMATCH');
-        return { ...info, schemaVersion, integrity: 'ok', projects, assets, owners: [...owners], sqlite: db.prepare('SELECT sqlite_version() AS v').get().v, journalMode: 'delete' };
+        return { ...info, schemaVersion, integrity: 'ok', projects, assets, owners: [...owners], sqlite: db.prepare('SELECT sqlite_version() AS v').get().v, journalMode: 'delete', ...(schemaVersion===3?{ledger}:{}) };
     } catch (e) { if(e.code && !e.code.startsWith('ERR_')) throw e; fail('CORRUPT_DATABASE'); }
     finally { db?.close(); }
 }
@@ -127,7 +150,7 @@ function manifestFor(result) {
     return { format: 'sillynovel-database-backup', version: 1, createdAt: new Date().toISOString(), schemaVersion: result.schemaVersion,
         snapshot: { byteLength: result.byteLength, sha256: result.sha256 }, integrity: 'ok', projects: result.projects, assets: result.assets };
 }
-export function inspectBackup(directory, dataRoot) {
+export function inspectBackup(directory, dataRoot, options={}) {
     safePath(directory);
     const directoryStat=lstatSync(directory);
     demand(directoryStat.isDirectory(), 'INVALID_MANIFEST');
@@ -138,8 +161,8 @@ export function inspectBackup(directory, dataRoot) {
     demand(exact(m.snapshot,['byteLength','sha256']) && Number.isSafeInteger(m.snapshot.byteLength) && m.snapshot.byteLength>0 && m.snapshot.byteLength<=LIMITS.databaseBytes && typeof m.snapshot.sha256==='string' && /^[0-9a-f]{64}$/.test(m.snapshot.sha256) && Number.isSafeInteger(m.projects) && m.projects>=0 && m.projects<=LIMITS.projects && Number.isSafeInteger(m.assets) && m.assets>=0 && m.assets<=LIMITS.assets, 'INVALID_MANIFEST');
     const path = join(directory,SNAPSHOT), bytes = file(path,LIMITS.databaseBytes);
     demand(bytes.byteLength === m.snapshot.byteLength && bytes.sha256 === m.snapshot.sha256, 'CHECKSUM_MISMATCH');
-    demand([1,2].includes(m.schemaVersion), 'UNSUPPORTED_SCHEMA');
-    const result = validateDatabase(path);
+    demand([1,2,3].includes(m.schemaVersion), 'UNSUPPORTED_SCHEMA');
+    const result = validateDatabase(path,options);
     demand(result.schemaVersion===m.schemaVersion && result.projects === m.projects && result.assets === m.assets, 'INVALID_MANIFEST');
     const accountBinding = accounts(result.owners,dataRoot);
     const {owners,...publicResult}=result;
@@ -179,7 +202,7 @@ export async function createBackup(source, destination, hooks = {}) {
         writeFileSync(join(stage.path,SNAPSHOT),'',{flag:'wx',mode:0o600}); stage.own(SNAPSHOT);
         hooks.at?.('snapshot');
         db = new sqlite.DatabaseSync(source,{readOnly:true,allowExtension:false});
-        db.exec('PRAGMA busy_timeout=3000;'); validateDatabaseSchema(db,[1,2]);
+        db.exec('PRAGMA busy_timeout=3000;'); validateDatabaseSchema(db,[1,2,3]);
         demand(db.prepare('PRAGMA page_count').get().page_count * db.prepare('PRAGMA page_size').get().page_size <= LIMITS.databaseBytes,'RECOVERY_LIMIT');
         // SQLite owns journal/WAL coordination. No raw file copy of an active store.
         await sqlite.backup(db,join(stage.path,SNAPSHOT),{rate:64,progress:hooks.progress});

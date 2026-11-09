@@ -72,7 +72,7 @@ test('identical project PNG uploads reuse UUID/bytes/quota, including shared act
 });
 test('full database backup/recovery preserves library; portable v1 copy carries only selected bytes and no catalog labels/alternatives',async t=>{
  const f=fixture(t),p=library(f),saved=f.store.save(owner,p.projectId,body(p));
- const backup=join(f.root,'backup');await createBackup(f.path,backup);assert.equal(inspectBackup(backup).schemaVersion,2);assert.equal(inspectBackup(backup).assets,4);
+ const backup=join(f.root,'backup');await createBackup(f.path,backup);assert.equal(inspectBackup(backup).schemaVersion,3);assert.equal(inspectBackup(backup).assets,4);
  const target=join(f.root,'target');mkdirSync(target,{mode:0o700});mkdirSync(join(target,'_storage'));
  writeFileSync(join(target,'_storage',digest('user:alice')),JSON.stringify({key:'user:alice',value:{handle:'alice',created:1}}));
  restoreBackup(backup,join(target,DATABASE_NAME));const recovered=openStore(join(target,DATABASE_NAME));assert.deepEqual(recovered.load(owner,p.projectId),saved);recovered.close();
@@ -132,7 +132,7 @@ test('backup inspection rejects corrupt catalogs and mismatched schema declarati
   ['bad catalog',db=>db.exec("UPDATE projects SET catalog='{}'"),'INVALID_PROJECT_STATE'],
   ['dangling library asset',db=>db.prepare('UPDATE projects SET catalog=?').run(JSON.stringify([{...p.catalog[0],assetId:randomUUID()}])),'INVALID_PROJECT_STATE'],
   ['foreign manual actor',db=>db.prepare('UPDATE projects SET catalog=?').run(JSON.stringify([{...p.catalog[2],actorId:randomUUID()}])),'INVALID_PROJECT_STATE'],
-  ['unknown database version',db=>db.exec('PRAGMA user_version=3'),'UNSUPPORTED_SCHEMA'],
+  ['unknown database version',db=>db.exec('PRAGMA user_version=99'),'UNSUPPORTED_SCHEMA'],
   ['manifest schema mismatch',()=>{},'INVALID_MANIFEST']
  ])await t.test(name,async()=>{
   const directory=join(f.root,name);await createBackup(f.path,directory);const snapshot=join(directory,'snapshot.sqlite'),db=new DatabaseSync(snapshot);change(db);db.close();
