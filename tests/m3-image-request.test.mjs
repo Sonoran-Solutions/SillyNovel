@@ -21,7 +21,7 @@ const good = () => ({
         free_extend: false, multimodal_captioning: false, refine_mode: false, interactive_mode: false, function_tool: false,
         prompt_prefix: 'SN-PREFIX-TEXT,', negative_prompt: 'SN-NEG-PREFIX', seed: 1234, width: 512, height: 512, steps: 20, scale: 7,
         model: 'synthetic.safetensors', vae: 'Automatic', sampler: 'euler', scheduler: 'normal', clip_skip: 1, denoising_strength: 1, comfy_placeholders: [] },
-    workflowText, draft: { prompt: 'a quiet reading room at dusk', negativePrompt: 'SN-DRAFT-NEG', styleNote: 'SN-STYLE-DECOY', sizeHint: 'portrait', label: 'SN-LABEL-DECOY', references: ['SN-REF-DECOY'] },
+    workflowText, workflowSha256: hash('a'), draft: { prompt: 'a quiet reading room at dusk', negativePrompt: 'SN-DRAFT-NEG', styleNote: 'SN-STYLE-DECOY', sizeHint: 'portrait', label: 'SN-LABEL-DECOY', references: ['SN-REF-DECOY'] },
     options: { model: ['synthetic.safetensors'], vae: ['Automatic'], sampler: ['euler'], scheduler: ['normal'] }, origin,
 });
 const codes = input => preflight(input).problems.map(p => p.code);
@@ -61,7 +61,7 @@ test('known-good profile returns the full review without mutating its inputs', (
     const input = good(), before = structuredClone(input), result = preflight(input);
     assert.deepEqual(input, before); assert.deepEqual(result.problems, []); assert.equal(result.review.ok, true);
     assert.deepEqual(result.review.destination, { url: 'http://127.0.0.1:8188', local: true });
-    assert.deepEqual(result.review.workflow, { name: 'Default_Comfy_Workflow.json', nodeTypes: [...ALLOWLIST].sort(), saveNodes: 1 });
+    assert.deepEqual(result.review.workflow, { name: 'Default_Comfy_Workflow.json', sha256: hash('a'), nodes: [...ALLOWLIST, 'CLIPTextEncode'].sort(), saveNodes: 1 });
     assert.deepEqual(result.review.settings, { model: 'synthetic.safetensors', vae: 'Automatic', sampler: 'euler', scheduler: 'normal', steps: 20, scale: 7, width: 512, height: 512, clip_skip: 1, denoising_strength: 1 });
     assert.equal(result.review.seedPolicy, 'fixed'); assert.equal(result.review.seed, 1234);
 });
@@ -119,7 +119,7 @@ test('preflight accumulates independent failures and names every stale or missin
 });
 test('preflight checks all reserved triggers, character forms and macro syntaxes without rewriting', () => {
     for (const trigger of RESERVED_TRIGGERS) { const i = good(); i.draft.prompt = ' ' + trigger.toUpperCase() + ' '; assert.deepEqual(codes(i), ['PROMPT_RESERVED_TRIGGER']); }
-    for (const prompt of ['char room', 'char\troom', 'char\nroom', 'room {{CHARPREFIX}}']) {
+    for (const prompt of ['char room', 'char\troom', 'char\nroom', ' char, a room', 'room {{CHARPREFIX}}']) {
         const i = good(); i.draft.prompt = prompt;
         assert.deepEqual(codes(i), prompt.includes('{{') ? ['PROMPT_CHAR_PREFIX', 'PROMPT_MACRO'] : ['PROMPT_CHAR_PREFIX']);
     }
@@ -151,6 +151,31 @@ test('workflow checks raw exact placeholder counts, plain JSON objects, nodes an
     }
     const i = good(); changeWorkflow(i, w => { w['4'].inputs.extra = '%char_avatar%'; }); assert.deepEqual(codes(i), ['WORKFLOW_AVATAR']);
 });
+test('preflight refuses missing or noncanonical workflow SHA-256 values', () => {
+    for (const sha of [undefined, null, 7, '', hash('a').slice(1), hash('a') + 'a', hash('A'), hash('g'), hash('a') + '\n']) {
+        const input = good(); input.workflowSha256 = sha;
+        assert.deepEqual(codes(input), ['WORKFLOW_HASH_MISSING']); assert.equal(preflight(input).review.ok, false);
+    }
+});
+test('review keeps every workflow node, including two KSampler nodes', () => {
+    const input = good(); changeWorkflow(input, w => { w['10'] = w['3']; });
+    const result = preflight(input), nodes = [...ALLOWLIST, 'CLIPTextEncode', 'KSampler'].sort();
+    assert.deepEqual(result.problems, []); assert.deepEqual(result.review.workflow.nodes, nodes);
+    assert.ok(reviewText(result.review).includes('Nodes: "' + nodes.join(', ') + '"\n'));
+});
+for (const [key, code] of [['prompt_prefix', 'PREFIX_MACRO'], ['negative_prompt', 'NEGATIVE_PREFIX_MACRO']]) test('preflight refuses non-string ' + key, () => {
+    for (const value of [null, false, 0, {}, []]) {
+        const input = good(); input.snapshot[key] = value;
+        const result = preflight(input);
+        assert.deepEqual(result.problems, [{ code, detail: 'not a string' }]); assert.equal(result.review.ok, false);
+    }
+});
+test('absent host prefixes are accepted as empty strings', () => {
+    const input = good(); delete input.snapshot.prompt_prefix; input.snapshot.negative_prompt = undefined;
+    const result = preflight(input);
+    assert.deepEqual(result.problems, []);
+    assert.deepEqual(result.review.texts, { positive: input.draft.prompt, negative: input.draft.negativePrompt });
+});
 test('dimensions use the imported PNG ceilings and seed policy preserves zero and random', () => {
     for (const [width, height] of [[1, 1], [RESULT_LIMITS.edge, 3906], [4000, 4000]]) {
         const i = good(); Object.assign(i.snapshot, { width, height }); assert.deepEqual(codes(i), []);
@@ -163,11 +188,32 @@ test('dimensions use the imported PNG ceilings and seed policy preserves zero an
 });
 test('reviewText is deterministic with the fixed section order and one final newline', () => {
     const r = review();
-    const expected = 'Destination: http://127.0.0.1:8188 (local, this machine)\nWorkflow: Default_Comfy_Workflow.json\nNodes: CLIPTextEncode, CheckpointLoaderSimple, EmptyLatentImage, KSampler, SaveImage, VAEDecode\nModel: synthetic.safetensors\nSampler: euler\nScheduler: normal\nVAE: Automatic\nSteps: 20\nCFG: 7\nSize: 512 x 512\nSeed: fixed 1234\nPositive: SN-PREFIX-TEXT, a quiet reading room at dusk\nNegative: SN-DRAFT-NEG, SN-NEG-PREFIX\n';
+    const expected = 'Destination: "http://127.0.0.1:8188 (local, this machine)"\nWorkflow: "Default_Comfy_Workflow.json"\nWorkflow SHA-256: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"\nNodes: "CLIPTextEncode, CLIPTextEncode, CheckpointLoaderSimple, EmptyLatentImage, KSampler, SaveImage, VAEDecode"\nModel: "synthetic.safetensors"\nSampler: "euler"\nScheduler: "normal"\nVAE: "Automatic"\nSteps: 20\nCFG: 7\nSize: "512 x 512"\nSeed: "fixed 1234"\nPositive: "SN-PREFIX-TEXT, a quiet reading room at dusk"\nNegative: "SN-DRAFT-NEG, SN-NEG-PREFIX"\n';
     assert.equal(reviewText(r), expected); assert.equal(reviewText(structuredClone(r)), expected);
-    r.texts.negative = 'negative\n\n'; assert.ok(reviewText(r).endsWith('Negative: negative\n'));
-    r.seedPolicy = 'random'; delete r.seed; assert.match(reviewText(r), /\nSeed: random each request\n/);
+    r.seedPolicy = 'random'; delete r.seed; assert.match(reviewText(r), /\nSeed: "random each request"\n/);
     assert.doesNotMatch(reviewText(r), /DECOY/);
+});
+test('reviewText distinguishes draft negatives with trailing newlines byte for byte', () => {
+    const input = good(); input.snapshot.negative_prompt = ''; input.draft.negativePrompt = 'negative\n\n';
+    const withNewlines = reviewText(preflight(input).review);
+    input.draft.negativePrompt = 'negative';
+    const withoutNewlines = reviewText(preflight(input).review);
+    assert.notEqual(withNewlines, withoutNewlines);
+    assert.ok(withNewlines.endsWith('Negative: "negative\\n\\n"\n'));
+    assert.ok(withoutNewlines.endsWith('Negative: "negative"\n'));
+});
+test('reviewText escapes a forged prompt line and keeps exactly 14 lines', () => {
+    const input = good(); input.draft.prompt = 'a room\nNegative: forged';
+    const r = preflight(input).review, rendered = reviewText(r);
+    assert.equal(rendered.split('\n').length, 15); assert.ok(rendered.endsWith('\n')); assert.ok(!rendered.endsWith('\n\n'));
+    assert.ok(rendered.includes('Positive: ' + JSON.stringify(r.texts.positive) + '\n'));
+    assert.equal(rendered.split('\n').filter(line => line.startsWith('Negative: ')).length, 1);
+});
+test('reviewText is deterministic for whitespace, quotes and non-ASCII text', () => {
+    const input = good(); input.draft.prompt = '  a "room"\n雪\t'; input.draft.negativePrompt = 'negative\n\n'; input.snapshot.negative_prompt = '';
+    const r = preflight(input).review, rendered = reviewText(r);
+    assert.equal(reviewText(r), rendered); assert.equal(reviewText(structuredClone(r)), rendered);
+    assert.ok(rendered.includes('Positive: ' + JSON.stringify(r.texts.positive) + '\n'));
 });
 test('request freezes copied identity, locks and effective settings with the exact deadline', () => {
     const input = requestInput(), request = createRequest(input);
@@ -184,6 +230,14 @@ test('request refuses each missing required identity component', () => {
     for (const key of ['capture', 'hostChatKey', 'workflowSha256', 'payloadSha256']) for (const missing of [undefined, null, '']) {
         const input = requestInput(); input[key] = missing; refuses(() => createRequest(input), 'INVALID_REQUEST');
     }
+});
+for (const [name, mutate] of [
+    ['missing review texts', i => { delete i.review.texts; }],
+    ['unapproved review', i => { i.review.ok = false; }],
+    ['undefined id', i => { i.id = undefined; }],
+    ['non-finite submission time', i => { i.submittedAt = Infinity; }],
+]) test('request refuses ' + name, () => {
+    const input = requestInput(); mutate(input); refuses(() => createRequest(input), 'INVALID_REQUEST');
 });
 test('staleness checks every identity field in priority order and sorts lock keys', () => {
     const request = createRequest(requestInput()), now = nowFor(request);
@@ -213,6 +267,9 @@ test('result paths accept only unchanged same-origin PNG paths inside user image
     assert.equal(resultPathProblem('/user/images/a.png', 'invalid origin'), 'RESULT_FOREIGN_ORIGIN');
 });
 
+test('session refuses invalid allowances', () => {
+    for (const allowance of [0, -1, 1.5, '5', null, NaN, Infinity]) refuses(() => createImageSession({ allowance }), 'INVALID_ALLOWANCE');
+});
 test('session starts off, counts every submit, and keeps cancellation reserved until settlement', () => {
     const session = createImageSession();
     assert.deepEqual(session.snapshot(), { on: false, allowance: 5, used: 0, inFlight: null, workflowSha256: null, requests: {} });
@@ -227,6 +284,13 @@ test('session starts off, counts every submit, and keeps cancellation reserved u
     refuses(() => session.settle(1, 'candidate'), 'NOT_IN_FLIGHT'); assert.equal(pending.requests[1], 'pending', 'old snapshots stay unchanged');
     for (const value of [settled, settled.requests]) assert.equal(Object.isFrozen(value), true);
     assert.deepEqual(session.end(), settled, 'ending twice forgets nothing');
+});
+test('cancelled requests can be abandoned without settling or refunding; late results refuse', () => {
+    const session = createImageSession(); session.begin(hash('a')); session.submit(ticket(1)); session.cancel(1);
+    const cancelled = session.snapshot(); refuses(() => session.timeout(1), 'NOT_PENDING'); assert.deepEqual(session.snapshot(), cancelled);
+    const abandoned = session.abandon(1);
+    assert.equal(abandoned.inFlight, null); assert.equal(abandoned.used, 1); assert.equal(abandoned.requests[1], 'abandoned');
+    refuses(() => session.settle(1, 'candidate'), 'NOT_IN_FLIGHT'); assert.deepEqual(session.snapshot(), abandoned);
 });
 test('timeout holds the slot until abandon; late settlement cannot release a newer slot', () => {
     const session = createImageSession(); session.begin(hash('a')); session.submit(ticket('first'));

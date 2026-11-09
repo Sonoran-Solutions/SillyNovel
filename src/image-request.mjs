@@ -22,7 +22,7 @@ export function effectiveTexts(snapshot, draft) {
 }
 
 /** Refuse every detectable mismatch; the partial review is still available when refused. */
-export function preflight({ snapshot = {}, workflowText, draft = {}, options = {}, origin }) {
+export function preflight({ snapshot = {}, workflowText, workflowSha256, draft = {}, options = {}, origin }) {
     const problems = [], add = (code, detail) => problems.push(detail === undefined ? { code } : { code, detail });
     if (snapshot.seam !== true) add('SEAM_MISSING');
     if (snapshot.source !== 'comfy') add('SOURCE_NOT_COMFY');
@@ -40,10 +40,13 @@ export function preflight({ snapshot = {}, workflowText, draft = {}, options = {
     const prompt = text(draft.prompt);
     if (!prompt.trim()) add('PROMPT_EMPTY');
     if (RESERVED_TRIGGERS.includes(prompt.trim().toLowerCase())) add('PROMPT_RESERVED_TRIGGER');
-    if (/^char(\s|,)/i.test(prompt) || /{{charPrefix}}/i.test(prompt)) add('PROMPT_CHAR_PREFIX');
+    if (/^char(\s|,)/i.test(prompt.trimStart()) || /{{charPrefix}}/i.test(prompt)) add('PROMPT_CHAR_PREFIX');
+    for (const [value, code] of [[snapshot.prompt_prefix, 'PREFIX_MACRO'], [snapshot.negative_prompt, 'NEGATIVE_PREFIX_MACRO']])
+        if (value !== undefined && typeof value !== 'string') add(code, 'not a string');
     for (const [value, code] of [[draft.prompt, 'PROMPT_MACRO'], [draft.negativePrompt, 'NEGATIVE_MACRO'], [snapshot.prompt_prefix, 'PREFIX_MACRO'], [snapshot.negative_prompt, 'NEGATIVE_PREFIX_MACRO']])
         if (hasMacro(value)) add(code);
     if (text(snapshot.prompt_prefix).split('{prompt}').length > 2) add('PREFIX_MARKER_REPEATED');
+    if (typeof workflowSha256 !== 'string' || workflowSha256.length !== 64 || !/^[a-f0-9]{64}$/.test(workflowSha256)) add('WORKFLOW_HASH_MISSING');
     let workflow;
     try {
         if (typeof workflowText !== 'string') throw Error();
@@ -52,7 +55,8 @@ export function preflight({ snapshot = {}, workflowText, draft = {}, options = {
     } catch { workflow = null; add('WORKFLOW_UNPARSEABLE'); }
     const raw = text(workflowText);
     if (raw.split('"%prompt%"').length !== 2 || raw.split('"%negative_prompt%"').length !== 2) add('WORKFLOW_PROMPT_PLACEHOLDER');
-    const nodeTypes = [...new Set(Object.values(workflow ?? {}).map(node => node?.class_type))].sort();
+    const nodes = Object.values(workflow ?? {}).map(node => node?.class_type).sort();
+    const nodeTypes = [...new Set(nodes)];
     const saveNodes = Object.values(workflow ?? {}).filter(node => node?.class_type === 'SaveImage').length;
     if (workflow) {
         if (saveNodes !== 1) add('WORKFLOW_SAVE_NODES');
@@ -69,7 +73,7 @@ export function preflight({ snapshot = {}, workflowText, draft = {}, options = {
     const { width, height } = snapshot;
     if (![width, height].every(n => Number.isInteger(n) && n > 0 && n <= RESULT_LIMITS.edge) || width * height > RESULT_LIMITS.pixels) add('DIMENSIONS_INVALID');
     const seedPolicy = snapshot.seed >= 0 ? 'fixed' : 'random';
-    const review = { destination: { url: snapshot.comfy_url, local }, workflow: { name: snapshot.comfy_workflow, nodeTypes, saveNodes },
+    const review = { destination: { url: snapshot.comfy_url, local }, workflow: { name: snapshot.comfy_workflow, sha256: workflowSha256, nodes, saveNodes },
         settings: Object.fromEntries(SETTINGS.map(key => [key, snapshot[key]])), seedPolicy, ...(seedPolicy === 'fixed' ? { seed: snapshot.seed } : {}),
         texts: effectiveTexts({ prompt_prefix: text(snapshot.prompt_prefix), negative_prompt: text(snapshot.negative_prompt) }, { prompt, negativePrompt: text(draft.negativePrompt) }), ok: problems.length === 0 };
     return { problems, review };
@@ -80,15 +84,15 @@ export function reviewText(review) {
     const s = review.settings;
     return [
         ['Destination', review.destination.url + (review.destination.local ? ' (local, this machine)' : ' (not local)')],
-        ['Workflow', review.workflow.name], ['Nodes', review.workflow.nodeTypes.join(', ')],
+        ['Workflow', review.workflow.name], ['Workflow SHA-256', review.workflow.sha256], ['Nodes', review.workflow.nodes.join(', ')],
         ['Model', s.model], ['Sampler', s.sampler], ['Scheduler', s.scheduler], ['VAE', s.vae], ['Steps', s.steps], ['CFG', s.scale],
         ['Size', s.width + ' x ' + s.height], ['Seed', review.seedPolicy === 'fixed' ? 'fixed ' + review.seed : 'random each request'],
         ['Positive', review.texts.positive], ['Negative', review.texts.negative],
-    ].map(([key, value]) => key + ': ' + value).join('\n').replace(/\n+$/, '') + '\n';
+    ].map(([key, value]) => key + ': ' + JSON.stringify(value)).join('\n') + '\n';
 }
 
 export function createRequest({ capture, hostChatKey, catalogRevision, layoutRevision, lockState, review, workflowSha256, payloadSha256, id, submittedAt }) {
-    if (!capture || !hostChatKey || !workflowSha256 || !payloadSha256) throw Error('INVALID_REQUEST');
+    if (!capture || !hostChatKey || !workflowSha256 || !payloadSha256 || !review?.texts || review.ok !== true || id === undefined || !Number.isFinite(submittedAt)) throw Error('INVALID_REQUEST');
     return Object.freeze({ id, capture: captureOf(capture), hostChatKey, catalogRevision, layoutRevision, lockState: Object.freeze({ ...lockState }),
         effective: Object.freeze({ prompt: review.texts.positive, negative: review.texts.negative, workflowSha256, ...review.settings,
             seedPolicy: review.seedPolicy, ...(review.seedPolicy === 'fixed' ? { seed: review.seed } : {}) }),
@@ -121,6 +125,7 @@ export function resultPathProblem(path, origin) {
 
 /** Cancel and timeout keep the slot: only settlement or explicit abandonment frees it. */
 export function createImageSession({ allowance = DEFAULT_ALLOWANCE } = {}) {
+    if (!Number.isInteger(allowance) || allowance < 1) throw Error('INVALID_ALLOWANCE');
     let on = false, used = 0, inFlight = null, workflowSha256 = null;
     const requests = new Map();
     const snapshot = () => Object.freeze({ on, allowance, used, inFlight, workflowSha256, requests: Object.freeze(Object.fromEntries(requests)) });
@@ -157,7 +162,7 @@ export function createImageSession({ allowance = DEFAULT_ALLOWANCE } = {}) {
             requests.set(id, 'timeout-unknown'); return snapshot();
         },
         abandon(id) {
-            requireOutcome(id, 'timeout-unknown', 'NOT_TIMED_OUT');
+            if (!['timeout-unknown', 'cancelled'].includes(requests.get(id))) throw Error('NOT_TIMED_OUT');
             requests.set(id, 'abandoned'); inFlight = null; return snapshot();
         },
         imported(id) {
