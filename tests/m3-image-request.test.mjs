@@ -457,3 +457,22 @@ test('reviewText renders numbers bare, including non-finite ones, so NaN and nul
     assert.match(text, /^Steps: NaN$/m);
     assert.notEqual(text, reviewText({ ...base, settings: { ...base.settings, steps: null } }));
 });
+
+test('cacheHit fails closed on malformed input and the first of equal times wins', () => {
+    const row = (id, settledAt) => ({ id, state: 'imported', payloadSha256: hash('b'), assetId: 'asset', settledAt });
+    const base = { payloadSha256: hash('b'), seedPolicy: 'fixed', catalogAssetIds: ['asset'] };
+    assert.deepEqual(cacheHit({ ...base, jobs: [row('nan', NaN), row('valid', 5000)] }), { jobId: 'valid', assetId: 'asset' });
+    assert.deepEqual(cacheHit({ ...base, jobs: [row('missing', undefined), row('valid', 5000)] }), { jobId: 'valid', assetId: 'asset' });
+    assert.deepEqual(cacheHit({ ...base, jobs: [row('first', 7000), row('second', 7000)] }), { jobId: 'first', assetId: 'asset' });
+    assert.equal(cacheHit({ ...base, seedPolicy: undefined, jobs: [row('valid', 5000)] }), null);
+    assert.equal(cacheHit({ ...base, payloadSha256: undefined, jobs: [{ ...row('nohash', 5000), payloadSha256: undefined }] }), null);
+    assert.equal(cacheHit({ ...base, jobs: undefined }), null);
+    assert.equal(cacheHit({ ...base, jobs: [null, row('valid', 5000)] }).jobId, 'valid');
+});
+
+test('leaseStatus never reports stale or mine on malformed clocks or tabs', () => {
+    const session = { id: 's', tab: 'tab-a', allowance: 5, used: 1, workflowSha256: hash('a'), startedAt: 0, heartbeatAt: 1000, endedAt: null };
+    assert.equal(leaseStatus(session, { tab: 'tab-b', now: NaN }), 'held');
+    assert.equal(leaseStatus({ ...session, heartbeatAt: undefined }, { tab: 'tab-b', now: 500000 }), 'held');
+    assert.equal(leaseStatus({ ...session, tab: undefined }, { tab: undefined, now: 2000 }), 'held');
+});

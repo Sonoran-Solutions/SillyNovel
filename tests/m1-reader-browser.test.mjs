@@ -1871,6 +1871,17 @@ test('M3.3 J8 the session turned off and on during a call names the running requ
  await x.release('/user/images/synthetic.png');await notApplied(page,x);
 });
 
+test('M3.3 J8 a plain Cancel names the request still running until it settles, then the line clears',async t=>{
+ const x=await imageRoute(t),{page}=x;await x.sessionOn();await x.hold();
+ await control(page,'Submit').click();await waitStatus(page,/^Generating on/);
+ await control(page,'Cancel').click();
+ await page.waitForFunction(()=>/A request from before is still running/.test(document.querySelector('.sillynovel-image-workflow__generation-problems').textContent));
+ assert.match(await problemsLine(page).innerText(),/A request from before is still running on the host; Submit returns when it settles or after Abandon\./);
+ await x.release('/user/images/synthetic.png');await waitStatus(page,/^Cancelled · result discarded/);
+ await page.waitForFunction(()=>!/A request from before is still running/.test(document.querySelector('.sillynovel-image-workflow__generation-problems').textContent));
+ assert.equal(await control(page,'Submit').isEnabled(),true);await notApplied(page,x);
+});
+
 test('M3.2 a draft edit during the call discards the result as stale, with its path',async t=>{
  const x=await imageRoute(t),{page,field}=x;await x.sessionOn();await x.hold();
  await control(page,'Submit').click();await waitStatus(page,/^Generating on/);

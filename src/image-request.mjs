@@ -95,18 +95,19 @@ export function reviewText(review) {
 }
 
 export function cacheHit({ payloadSha256, seedPolicy, jobs, catalogAssetIds }) {
-    if (seedPolicy === 'random') return null;
+    if (seedPolicy !== 'fixed' || typeof payloadSha256 !== 'string' || !Array.isArray(jobs)) return null;
     const assets = new Set(catalogAssetIds);
     let hit = null;
     for (const job of jobs)
-        if (job.state === 'imported' && job.payloadSha256 === payloadSha256 && assets.has(job.assetId) && (!hit || job.settledAt > hit.settledAt)) hit = job;
+        if (job && Number.isFinite(job.settledAt) && job.state === 'imported' && job.payloadSha256 === payloadSha256 && assets.has(job.assetId) && (!hit || job.settledAt > hit.settledAt)) hit = job;
     return hit ? { jobId: hit.id, assetId: hit.assetId } : null;
 }
 
 export function leaseStatus(session, { tab, now }) {
     if (!session || session.endedAt != null) return 'free';
-    if (session.tab === tab) return 'mine';
-    return now - session.heartbeatAt <= LEASE.staleMs ? 'held' : 'stale';
+    if (typeof tab === 'string' && session.tab === tab) return 'mine';
+    // A missing or non-numeric clock never makes a lease look stale: takeover must not be offered on bad data.
+    return !(now - session.heartbeatAt > LEASE.staleMs) ? 'held' : 'stale';
 }
 
 export function takeoverSession(session, { tab, now }) {
