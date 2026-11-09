@@ -1,10 +1,11 @@
-/** Pure M3.2 image-request decisions and page-lifetime reservation. No host access or I/O. */
+/** Pure image-request decisions and page-lifetime reservation. No host access or I/O. */
 import { captureOf, stillCurrent, RESULT_LIMITS } from './image-workflow.mjs';
 
 export const ALLOWLIST = Object.freeze(['CheckpointLoaderSimple', 'CLIPTextEncode', 'EmptyLatentImage', 'KSampler', 'VAEDecode', 'SaveImage']);
 export const RESERVED_TRIGGERS = Object.freeze(['you', 'me', 'scene', 'raw_last', 'last', 'face', 'background', 'yourself', 'myself', 'story', 'scenario', 'whole story', 'last message', 'portrait', 'selfie', 'scene background', 'scenery', 'surroundings', 'environment']);
 export const LOOPBACK_HOSTS = Object.freeze(['localhost', '127.0.0.1', '[::1]']);
 export const DEFAULT_ALLOWANCE = 5, WAIT_MS = 120000;
+export const LEASE = Object.freeze({ heartbeatMs: 30000, staleMs: 90000 });
 const SETTINGS = ['model', 'vae', 'sampler', 'scheduler', 'steps', 'scale', 'width', 'height', 'clip_skip', 'denoising_strength'];
 const text = value => typeof value === 'string' ? value : '';
 const hasMacro = value => /{{|}}|<(USER|BOT|CHAR|GROUP|CHARIFNOTGROUP)>|%[a-z_]+%/i.test(text(value));
@@ -90,7 +91,27 @@ export function reviewText(review) {
         ['Clip skip', s.clip_skip], ['Denoise', s.denoising_strength],
         ['Size', s.width + ' x ' + s.height], ['Seed', review.seedPolicy === 'fixed' ? 'fixed ' + review.seed : 'random each request'],
         ['Positive', review.texts.positive], ['Negative', review.texts.negative],
-    ].map(([key, value]) => key + ': ' + (typeof value === 'number' ? String(value) : JSON.stringify(value))).join('\n') + '\n';
+    ].map(([key, value]) => key + ': ' + (value === undefined ? 'null' : typeof value === 'number' ? String(value) : JSON.stringify(value))).join('\n') + '\n';
+}
+
+export function cacheHit({ payloadSha256, seedPolicy, jobs, catalogAssetIds }) {
+    if (seedPolicy === 'random') return null;
+    const assets = new Set(catalogAssetIds);
+    let hit = null;
+    for (const job of jobs)
+        if (job.state === 'imported' && job.payloadSha256 === payloadSha256 && assets.has(job.assetId) && (!hit || job.settledAt > hit.settledAt)) hit = job;
+    return hit ? { jobId: hit.id, assetId: hit.assetId } : null;
+}
+
+export function leaseStatus(session, { tab, now }) {
+    if (!session || session.endedAt != null) return 'free';
+    if (session.tab === tab) return 'mine';
+    return now - session.heartbeatAt <= LEASE.staleMs ? 'held' : 'stale';
+}
+
+export function takeoverSession(session, { tab, now }) {
+    if (['free', 'mine'].includes(leaseStatus(session, { tab, now }))) throw Error('NOT_HELD');
+    return Object.freeze({ ...session, tab, heartbeatAt: now });
 }
 
 export function createRequest({ capture, hostChatKey, catalogRevision, layoutRevision, lockState, review, workflowSha256, payloadSha256, id, submittedAt }) {
@@ -106,8 +127,8 @@ export function staleReason(request, now) {
     if (!stillCurrent(request.capture, now)) return 'CAPTURE_STALE';
     if (request.hostChatKey !== now.hostChatKey) return 'HOST_CHAT_CHANGED';
     if (request.catalogRevision !== now.catalogRevision) return 'CATALOG_CHANGED';
-    if (request.layoutRevision !== now.layoutRevision) return 'LAYOUT_CHANGED';
     if (locks(request.lockState) !== locks(now.lockState)) return 'LOCK_CHANGED';
+    if (request.layoutRevision !== now.layoutRevision) return 'LAYOUT_CHANGED';
     if (request.effective.workflowSha256 !== now.workflowSha256) return 'WORKFLOW_CHANGED';
     return null;
 }
@@ -123,6 +144,13 @@ export function resultPathProblem(path, origin) {
     if (!url.pathname.startsWith(prefix) || url.pathname.slice(prefix.length).includes('//') || url.pathname !== (path.startsWith('/') ? path : '/' + path)) return 'RESULT_OUTSIDE_IMAGES';
     if (!/\.png$/i.test(url.pathname)) return 'RESULT_NOT_PNG';
     return null;
+}
+
+export function reconcileCandidates({ files, submittedAt, origin }) {
+    if (!Array.isArray(files) || !Number.isFinite(submittedAt)) return [];
+    return files.filter(file => file && typeof file === 'object' && !Array.isArray(file) && Number.isFinite(file.mtimeMs) && file.mtimeMs >= submittedAt
+        && Number.isSafeInteger(file.size) && file.size >= 0 && resultPathProblem(file.path, origin) === null)
+        .map(({ path, mtimeMs, size }) => Object.freeze({ path, mtimeMs, size })).sort((a, b) => a.mtimeMs - b.mtimeMs);
 }
 
 /** Cancel and timeout keep the slot: only settlement or explicit abandonment frees it. */

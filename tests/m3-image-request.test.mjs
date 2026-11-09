@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { ALLOWLIST, RESERVED_TRIGGERS, LOOPBACK_HOSTS, DEFAULT_ALLOWANCE, WAIT_MS, combinePrefixes, effectiveTexts, preflight, reviewText, createRequest, staleReason, resultPathProblem, createImageSession } from '../src/image-request.mjs';
+import { ALLOWLIST, RESERVED_TRIGGERS, LOOPBACK_HOSTS, DEFAULT_ALLOWANCE, WAIT_MS, LEASE, combinePrefixes, effectiveTexts, preflight, reviewText, cacheHit, leaseStatus, takeoverSession, createRequest, staleReason, resultPathProblem, reconcileCandidates, createImageSession } from '../src/image-request.mjs';
 import { RESULT_LIMITS } from '../src/image-workflow.mjs';
 
 const origin = 'http://127.0.0.1:8000';
@@ -38,8 +38,9 @@ test('constants are the frozen first profile and measured limits', () => {
     assert.deepEqual(ALLOWLIST, ['CheckpointLoaderSimple', 'CLIPTextEncode', 'EmptyLatentImage', 'KSampler', 'VAEDecode', 'SaveImage']);
     assert.deepEqual(LOOPBACK_HOSTS, ['localhost', '127.0.0.1', '[::1]']);
     assert.equal(RESERVED_TRIGGERS.length, 19);
-    for (const list of [ALLOWLIST, RESERVED_TRIGGERS, LOOPBACK_HOSTS]) assert.equal(Object.isFrozen(list), true);
+    for (const list of [ALLOWLIST, RESERVED_TRIGGERS, LOOPBACK_HOSTS, LEASE]) assert.equal(Object.isFrozen(list), true);
     assert.equal(DEFAULT_ALLOWANCE, 5); assert.equal(WAIT_MS, 120000);
+    assert.deepEqual(LEASE, { heartbeatMs: 30000, staleMs: 90000 });
 });
 test('combinePrefixes reproduces joins, markers, empty parts and single comma stripping', () => {
     assert.equal(combinePrefixes('head', 'body'), 'head, body');
@@ -194,6 +195,12 @@ test('reviewText is deterministic with the fixed section order and one final new
     r.seedPolicy = 'random'; delete r.seed; assert.match(reviewText(r), /\nSeed: "random each request"\n/);
     assert.doesNotMatch(reviewText(r), /DECOY/);
 });
+test('reviewText renders an absent clip skip as null', () => {
+    const input = good(); delete input.snapshot.clip_skip;
+    const result = preflight(input);
+    assert.deepEqual(result.problems, []);
+    assert.equal(reviewText(result.review).split('\n').find(line => line.startsWith('Clip skip: ')), 'Clip skip: null');
+});
 test('reviewText distinguishes draft negatives with trailing newlines byte for byte', () => {
     const input = good(); input.snapshot.negative_prompt = ''; input.draft.negativePrompt = 'negative\n\n';
     const withNewlines = reviewText(preflight(input).review);
@@ -216,6 +223,61 @@ test('reviewText is deterministic for whitespace, quotes and non-ASCII text', ()
     assert.equal(reviewText(r), rendered); assert.equal(reviewText(structuredClone(r)), rendered);
     assert.ok(rendered.includes('Positive: ' + JSON.stringify(r.texts.positive) + '\n'));
 });
+
+test('cacheHit chooses the latest imported matching asset without changing the ledger', () => {
+    const jobs = [
+        { id: 'old', state: 'imported', payloadSha256: hash('b'), assetId: 'first', settledAt: 1000 },
+        { id: 'latest', state: 'imported', payloadSha256: hash('b'), assetId: 'second', settledAt: 3000 },
+        { id: 'middle', state: 'imported', payloadSha256: hash('b'), assetId: 'first', settledAt: 2000 },
+    ], before = structuredClone(jobs);
+    for (const catalogAssetIds of [['first', 'second'], new Set(['first', 'second'])])
+        assert.deepEqual(cacheHit({ payloadSha256: hash('b'), seedPolicy: 'fixed', jobs, catalogAssetIds }), { jobId: 'latest', assetId: 'second' });
+    assert.deepEqual(jobs, before);
+});
+test('cacheHit ignores every state other than imported', () => {
+    const imported = { id: 'approved', state: 'imported', payloadSha256: hash('b'), assetId: 'asset', settledAt: 1000 };
+    for (const state of ['pending', 'candidate', 'refused', 'failed', 'cancelled', 'unknown', 'timeout-unknown', 'abandoned', 'discarded', 'stale', 'reconciled', 'unexpected', null, undefined]) {
+        const other = { ...imported, id: 'other', state, settledAt: 2000 };
+        assert.equal(cacheHit({ payloadSha256: hash('b'), seedPolicy: 'fixed', jobs: [other], catalogAssetIds: ['asset'] }), null);
+        assert.deepEqual(cacheHit({ payloadSha256: hash('b'), seedPolicy: 'fixed', jobs: [imported, other], catalogAssetIds: ['asset'] }), { jobId: 'approved', assetId: 'asset' });
+    }
+});
+test('cacheHit misses missing assets, different payloads, empty ledgers and random seeds', () => {
+    const job = { id: 'approved', state: 'imported', payloadSha256: hash('b'), assetId: 'asset', settledAt: 1000 };
+    const input = { payloadSha256: hash('b'), seedPolicy: 'fixed', jobs: [job], catalogAssetIds: ['asset'] };
+    assert.equal(cacheHit({ ...input, catalogAssetIds: [] }), null);
+    assert.equal(cacheHit({ ...input, payloadSha256: hash('c') }), null);
+    assert.equal(cacheHit({ ...input, jobs: [] }), null);
+    assert.equal(cacheHit({ ...input, seedPolicy: 'random' }), null);
+    assert.deepEqual(cacheHit({ ...input, jobs: [job, { ...job, id: 'missing', assetId: 'gone', settledAt: 2000 }, { ...job, id: 'different', payloadSha256: hash('c'), settledAt: 3000 }] }), { jobId: 'approved', assetId: 'asset' });
+});
+test('leaseStatus distinguishes free, mine, held and stale at the exact boundary', () => {
+    const session = { id: 'session', tab: 'first', allowance: 5, used: 3, workflowSha256: hash('a'), startedAt: 100, heartbeatAt: 1000, endedAt: null };
+    const input = { tab: 'second', now: 1000 + LEASE.staleMs };
+    for (const absent of [null, undefined]) assert.equal(leaseStatus(absent, input), 'free');
+    for (const endedAt of [0, 2000]) assert.equal(leaseStatus({ ...session, endedAt }, { ...input, tab: 'first' }), 'free');
+    assert.equal(leaseStatus(session, { ...input, now: 1000 }), 'held');
+    assert.equal(leaseStatus(session, { ...input, now: input.now - 1 }), 'held');
+    assert.equal(leaseStatus(session, input), 'held');
+    assert.equal(leaseStatus(session, { ...input, now: input.now + 1 }), 'stale');
+    for (const now of [1000, input.now, input.now + 1]) assert.equal(leaseStatus(session, { tab: 'first', now }), 'mine');
+    const open = { ...session }; delete open.endedAt;
+    assert.equal(leaseStatus(open, input), 'held');
+});
+test('takeoverSession freezes a new held or stale session and preserves its counts and identity', () => {
+    const session = { id: 'session', tab: 'first', allowance: 5, used: 3, workflowSha256: hash('a'), startedAt: 100, heartbeatAt: 1000, endedAt: null }, before = structuredClone(session);
+    for (const now of [1000 + LEASE.staleMs, 1001 + LEASE.staleMs]) {
+        const taken = takeoverSession(session, { tab: 'second', now });
+        assert.deepEqual(taken, { id: 'session', tab: 'second', allowance: 5, used: 3, workflowSha256: hash('a'), startedAt: 100, heartbeatAt: now, endedAt: null });
+        assert.equal(Object.isFrozen(taken), true); assert.notEqual(taken, session);
+        assert.equal(leaseStatus(taken, { tab: 'second', now }), 'mine');
+    }
+    assert.deepEqual(session, before);
+    for (const free of [null, undefined, { ...session, endedAt: 0 }]) refuses(() => takeoverSession(free, { tab: 'second', now: 2000 }), 'NOT_HELD');
+    refuses(() => takeoverSession(session, { tab: 'first', now: 1001 + LEASE.staleMs }), 'NOT_HELD');
+    assert.deepEqual(session, before);
+});
+
 test('request freezes copied identity, locks and effective settings with the exact deadline', () => {
     const input = requestInput(), request = createRequest(input);
     assert.deepEqual(request, { id: 1, capture: input.capture, hostChatKey: 'synthetic-chat', catalogRevision: 4, layoutRevision: 5, lockState: { background: true, presence: false },
@@ -246,12 +308,13 @@ test('staleness checks every identity field in priority order and sorts lock key
     assert.equal(staleReason(request, { ...now, lockState: { presence: false, background: true } }), null);
     for (const change of [{ projectModel: {} }, { projectModel: null }, { projectId: 'other' }, { sessionEpoch: 4 }, { draftRevision: 4 }]) assert.equal(staleReason(request, { ...now, ...change }), 'CAPTURE_STALE');
     assert.equal(staleReason(request, null), 'CAPTURE_STALE');
-    const changes = [ ['sessionEpoch', 4, 'CAPTURE_STALE'], ['hostChatKey', 'other', 'HOST_CHAT_CHANGED'], ['catalogRevision', 9, 'CATALOG_CHANGED'], ['layoutRevision', 9, 'LAYOUT_CHANGED'], ['lockState', { background: false, presence: false }, 'LOCK_CHANGED'], ['workflowSha256', hash('c'), 'WORKFLOW_CHANGED'] ];
+    const changes = [ ['sessionEpoch', 4, 'CAPTURE_STALE'], ['hostChatKey', 'other', 'HOST_CHAT_CHANGED'], ['catalogRevision', 9, 'CATALOG_CHANGED'], ['lockState', { background: false, presence: false }, 'LOCK_CHANGED'], ['layoutRevision', 9, 'LAYOUT_CHANGED'], ['workflowSha256', hash('c'), 'WORKFLOW_CHANGED'] ];
     for (let start = 0; start < changes.length; start++) {
         const changed = { ...now };
         for (const [key, value] of changes.slice(start)) changed[key] = value;
         assert.equal(staleReason(request, changed), changes[start][2]);
     }
+    assert.equal(staleReason(request, { ...now, lockState: { ...now.lockState, background: false }, layoutRevision: 6 }), 'LOCK_CHANGED');
 });
 test('result paths accept only unchanged same-origin PNG paths inside user images', () => {
     assert.equal(resultPathProblem('/user/images/2026-11-08@18h00m02s025ms.png', origin), null);
@@ -267,6 +330,35 @@ test('result paths accept only unchanged same-origin PNG paths inside user image
         ['/user/images/a.png?x=1', 'RESULT_OUTSIDE_IMAGES'], ['/user/images/a.png#fragment', 'RESULT_OUTSIDE_IMAGES'],
     ]) assert.equal(resultPathProblem(path, origin), code, String(path));
     assert.equal(resultPathProblem('/user/images/a.png', 'invalid origin'), 'RESULT_FOREIGN_ORIGIN');
+});
+
+test('reconcileCandidates lists every eligible file in time order, including the submission boundary', () => {
+    const files = [
+        { path: '/user/images/late.png', mtimeMs: 3000, size: 30 },
+        { path: '/user/images/old.png', mtimeMs: 999, size: 10 },
+        { path: 'user/images/boundary.PNG', mtimeMs: 1000, size: 0 },
+        { path: '/user/images/middle.png', mtimeMs: 2000, size: 20 },
+    ], before = structuredClone(files);
+    const candidates = reconcileCandidates({ files, submittedAt: 1000, origin });
+    assert.deepEqual(candidates, [
+        { path: 'user/images/boundary.PNG', mtimeMs: 1000, size: 0 },
+        { path: '/user/images/middle.png', mtimeMs: 2000, size: 20 },
+        { path: '/user/images/late.png', mtimeMs: 3000, size: 30 },
+    ]);
+    for (const candidate of candidates) { assert.equal(Object.isFrozen(candidate), true); assert.equal(files.includes(candidate), false); }
+    assert.deepEqual(files, before); assert.equal(Object.isFrozen(files[0]), false);
+    files[0].size = 99; assert.equal(candidates[2].size, 30);
+});
+test('reconcileCandidates drops malformed entries and paths without throwing', () => {
+    const valid = { path: '/user/images/valid.png', mtimeMs: 1000, size: 10 };
+    const files = [null, undefined, false, 7, 'file', [], {},
+        ...[null, undefined, 7, '', '/user/images/a.jpg', '/elsewhere/a.png', '/user/images/%61.png', '/user/images/a\\b.png', '/user/images/../images/a.png', '/user/images/a//b.png', '/user/images/a.png?x=1', '/user/images/a.png#fragment', origin + '/user/images/a.png', '//evil.invalid/a.png'].map(path => ({ ...valid, path })),
+        ...[null, undefined, '1000', NaN, Infinity, -Infinity].map(mtimeMs => ({ ...valid, mtimeMs })),
+        ...[null, undefined, '10', -1, 1.5, NaN, Infinity, 2 ** 53].map(size => ({ ...valid, size })), valid];
+    assert.deepEqual(reconcileCandidates({ files, submittedAt: 1000, origin }), [valid]);
+    assert.deepEqual(reconcileCandidates({ files: [valid], submittedAt: 1000, origin: 'invalid origin' }), []);
+    for (const malformed of [null, undefined, {}, 'files', 7]) assert.deepEqual(reconcileCandidates({ files: malformed, submittedAt: 1000, origin }), []);
+    for (const submittedAt of [null, undefined, '1000', NaN, Infinity]) assert.deepEqual(reconcileCandidates({ files: [valid], submittedAt, origin }), []);
 });
 
 test('session refuses invalid allowances', () => {
