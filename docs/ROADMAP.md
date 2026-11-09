@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## M3.2 complete — 2026-11-08
+
+PRs A ([#84](https://github.com/Sonoran-Solutions/SillyNovel/pull/84)), B ([#86](https://github.com/Sonoran-Solutions/SillyNovel/pull/86)) and C ([#88](https://github.com/Sonoran-Solutions/SillyNovel/pull/88)) are on main; M3.2's roadmap step 2 (one manual missing-background path through the verified host integration) is implemented and measured against a fake backend. Next, only on the owner's word: the real-backend run on the owner's machine (I8), then M3.3 planning (step 3: approval, cache, stale-job handling, privacy controls, usage limits) toward Gate C. Gate C NOT_RUN.
+
 ## M3.2 PR B merged; PR C authorized — 2026-11-08
 
 PR B ([#86](https://github.com/Sonoran-Solutions/SillyNovel/pull/86), `2bc9fea`) is on main; the [two proposals adopted](DECISIONS.md#owner-acceptance--m32-pr-b-merged-two-proposals-adopted-pr-c-go-ahead--2026-11-08) amend the [plan](M3_2_IMAGE_ROUTE_PLAN.md). PR C (adapter seam and UI) is authorized; the real-backend run, M3.3 and Gate C stay gated. Gate C NOT_RUN.

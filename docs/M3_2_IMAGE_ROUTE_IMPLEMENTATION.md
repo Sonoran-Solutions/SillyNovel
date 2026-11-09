@@ -2,6 +2,8 @@
 
 **PR A accepted — 2026-11-08.** The owner [accepted](DECISIONS.md#owner-acceptance--m32-pr-a-merged-four-findings-adopted-pr-b-go-ahead--2026-11-08) PR A as merged (`3665f6e`), adopted its four findings into the plan, and authorized PR B.
 
+**PR C merged — 2026-11-08.** [#88](https://github.com/Sonoran-Solutions/SillyNovel/pull/88) merged as `d31254a` (frozen runtime `afac1f9`) on the owner's word after the senior review's confirmation pass returned MERGE; M3.2's three PRs are on main.
+
 **PR B accepted — 2026-11-08.** The owner [accepted](DECISIONS.md#owner-acceptance--m32-pr-b-merged-two-proposals-adopted-pr-c-go-ahead--2026-11-08) PR B as merged (`2bc9fea`), adopted its two proposals into the plan, and authorized PR C.
 
 ## PR A — the seam probe, tests only
