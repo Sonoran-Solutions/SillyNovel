@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## M3.2 PR B merged; PR C authorized — 2026-11-08
+
+PR B ([#86](https://github.com/Sonoran-Solutions/SillyNovel/pull/86), `2bc9fea`) is on main; the [two proposals adopted](DECISIONS.md#owner-acceptance--m32-pr-b-merged-two-proposals-adopted-pr-c-go-ahead--2026-11-08) amend the [plan](M3_2_IMAGE_ROUTE_PLAN.md). PR C (adapter seam and UI) is authorized; the real-backend run, M3.3 and Gate C stay gated. Gate C NOT_RUN.
+
 ## M3.2 PR A merged; PR B authorized — 2026-11-08
 
 PR A ([#84](https://github.com/Sonoran-Solutions/SillyNovel/pull/84), `3665f6e`) is on main with `VERDICT GO`; the [four findings adopted](DECISIONS.md#owner-acceptance--m32-pr-a-merged-four-findings-adopted-pr-b-go-ahead--2026-11-08) amend the [plan](M3_2_IMAGE_ROUTE_PLAN.md). PR B (pure request module) is authorized; PR C waits for the owner's review of PR B. Gate C NOT_RUN.

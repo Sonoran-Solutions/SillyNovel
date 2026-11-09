@@ -1,5 +1,9 @@
 # Project status
 
+## M3.2 PR B merged; proposals adopted; PR C authorized — 2026-11-08
+
+[#86](https://github.com/Sonoran-Solutions/SillyNovel/pull/86) is on main (`2bc9fea`; test candidate `883d59b`) on the owner's word after a senior review returned MERGE: the pure request module `src/image-request.mjs` and its 66 Node tests, imported by nothing yet. The owner [adopted the two proposals](DECISIONS.md#owner-acceptance--m32-pr-b-merged-two-proposals-adopted-pr-c-go-ahead--2026-11-08) and the [plan](M3_2_IMAGE_ROUTE_PLAN.md) is amended: the review text with every wire-affecting setting, and Abandon after a cancel whose host call never settles. **PR C (adapter seam and the Generate on this host UI; the first runtime change of M3.2) is authorized and starts now** under [DYL-213](https://linear.app/devils17/issue/DYL-213/sillynovel-m32-first-image-route-host-image-generation-local-comfyui), with the full evidence standard. Runtime unchanged by this entry. Gate C NOT_RUN.
+
 ## M3.2 PR B candidate (draft, unmerged) — 2026-11-08
 
 The pure image-request module is implemented on frozen `883d59b` for owner review under [DYL-213](https://linear.app/devils17/issue/DYL-213/sillynovel-m32-first-image-route-host-image-generation-local-comfyui): the host's exact `combinePrefixes` rule, every plan 3.2 preflight refusal as a code with all problems returned together, the deterministic review text, the frozen request identity with its staleness reasons, PR A's result-path rule, and the allowance and reservation state machine in which Cancel and timeout hold the slot. Nothing imports it yet; runtime unchanged. Node 439/439 over the 16 registered files (66 new), discovery PASS 16/5/1; browser, storage and native NOT_RUN for a pure-module slice (H4). See the [record](M3_2_IMAGE_ROUTE_IMPLEMENTATION.md#pr-b--the-pure-image-request-module). PR C waits for the owner's review. Gate C NOT_RUN.
