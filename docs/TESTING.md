@@ -1,5 +1,9 @@
 # Verification and acceptance
 
+## M3.2 PR B candidate — T75 and T77 covered in Node — 2026-11-08
+
+Node-level SYNTHETIC evidence on frozen `883d59b`, unmerged: T75's refusal rules (every plan 3.2 code, each triggered alone and all together) and T77's reservation and staleness rules are covered in `tests/m3-image-request.test.mjs`. Node 439/439 over the runner's 16 files; `python3 tests/probes/dyl60/check-discovery.py` PASS (16/5/1). Browser, storage and native NOT_RUN: a pure-module slice under the M2 evidence standard (H4). The adapter halves of T74–T77 wait for PR C. [Record](M3_2_IMAGE_ROUTE_IMPLEMENTATION.md#pr-b--the-pure-image-request-module). Gate C NOT_RUN.
+
 ## M3.2 PR A merged — T74 row annotated — 2026-11-08
 
 On the owner's [acceptance](DECISIONS.md#owner-acceptance--m32-pr-a-merged-four-findings-adopted-pr-b-go-ahead--2026-11-08) of [#84](https://github.com/Sonoran-Solutions/SillyNovel/pull/84) (`3665f6e`, test candidate `75b2807`), row T74 below carries its SYNTHETIC annotation from the PR A probe ([record](M3_2_IMAGE_ROUTE_IMPLEMENTATION.md#pr-a--the-seam-probe-tests-only), [evidence](evidence/m3-2-a/)); the real route stays NOT_RUN. T75–T77 are unchanged. No suite was run for this docs-only change.
