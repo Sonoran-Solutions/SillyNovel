@@ -13,11 +13,11 @@
 | I5 | Cancel withdraws permission to apply and lets the host call finish. A separate **Stop host job** control aborts the request and discloses that ComfyUI's interrupt is global. |
 | I6 | `comfy_url` must be loopback (`localhost`, `127.0.0.1`, `[::1]`). Anything else is “not local” and refused in M3.2. No SillyNovel setting is introduced. |
 | I7 | The owner selects a workflow in the host that satisfies the six-node allowlist; SillyNovel pins its hash per session and installs nothing into the host. |
-| I8 | Campaign evidence on the disposable pinned 1.19.0 host; the owner's own session on their 1.18.0 install, recorded as a deviation as at Gate B, with both SHAs in the record. |
+| I8 | Campaign evidence on the disposable pinned 1.19.0 host; a separately authorized real-backend run on the owner's 1.18.0 install, recorded as a deviation as at Gate B, with both SHAs in the record. |
 | I9 | Allowance and in-flight state live in memory only; the session is off after reload; no cross-reload exactly-once claim in M3.2 (T78 in M3.3). |
-| I10 | **M3.2 is authorized as the three sequential PRs of plan section 7**, each with its own record, frozen SHA and the owner's review before the next starts: PR A (seam probe, tests only), PR B (pure module `src/image-request.mjs`), PR C (adapter seam and UI). **The real-backend run on the owner's machine is its own authorization.** The T74 and T77 clarifications of plan section 6 are applied to TESTING at this entry. |
+| I10 | **M3.2 is authorized as the three sequential PRs of plan section 7**, each with its own record, frozen SHA and the owner's review before the next starts: PR A (seam probe, tests only), PR B (pure module `src/image-request.mjs`), PR C (adapter seam and UI). **The real-backend run on the owner's machine is its own authorization.** |
 
-Already settled and not reopened: H1, H2, H4, H8, H9, H10, H11, O04, O06, O07, D4, D5, D7, the M2 rulings, and Gate B's verdict. This entry authorizes M3.2 PRs A, B and C only, in order. The real-backend run, M3.3 and later, Gate C, the H8 session, DYL-193 closure, live installation and release each need their own recorded step. Gate C NOT_RUN. Older entries below are historical.
+Already settled and not reopened: H1, H2, H4, H9, H10, H11, O04, O06, O07, D4, D5, D7, the M2 rulings, and Gate B's verdict. Per plan section 6, the T74 and T77 clarifications are applied to TESTING at this entry. This entry authorizes M3.2 PRs A, B and C only, in order. The real-backend run, M3.3 and later, Gate C, the H8 session, DYL-193 closure, live installation and release each need their own recorded step. Gate C NOT_RUN. Older entries below are historical.
 
 ## Owner verdict — T73 PASS; T60 wording accepted — 2026-11-08
 
