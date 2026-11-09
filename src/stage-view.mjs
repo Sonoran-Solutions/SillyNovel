@@ -3,6 +3,7 @@ import { createProjectScene } from './project-scene.mjs';
 import { createTransientScene, TEST_ACTORS, evidenceStamp } from './transient-scene.mjs';
 import { supportsProjectConversation } from './host-adapter.mjs';
 import { emptyDraft, draftProblems, exportText, referenceFilename, captureOf, stillCurrent, pngProblem, SIZE_HINTS, PROMPT_FILENAME, RESULT_LIMITS, PREVIEW_TIMEOUT_MS } from './image-workflow.mjs';
+import { preflight, reviewText, createRequest, staleReason, createImageSession, WAIT_MS, DEFAULT_ALLOWANCE } from './image-request.mjs';
 
 export function mountVisualStage({ document, stage, actions }) {
     const make = (tag, cls, text) => { const e=document.createElement(tag); e.className=cls; if(text)e.textContent=text; return e; };
@@ -194,7 +195,7 @@ export function mountVisualStage({ document, stage, actions }) {
     const selectedArt=make('p','sillynovel-selected-art');sceneArea.append(selectedArt);
     const file=field('Temporary raster file','input');file.type='file';file.accept='image/png,image/jpeg,image/webp';
     listen(file,'change',()=>{const selected=file.files[0],kind=fileKind.value,key=actor.value;file.value='';if(selected)run(()=>model.importFile(selected,kind,key,importLabel.value),true);});
-    // M3.1 manual image exchange (H2, H9, H10): nothing here sends a request. Text and chosen PNGs leave only by Copy or Download; a result enters only by Import and apply.
+    // M3.1 manual exchange stays explicit; M3.2 sends only the reviewed draft prompt and negative on Submit. A result enters only by Import and apply.
     // A button disclosure, not a nested <details>: one summary inside the controls keeps every existing selector unambiguous.
     const workflow=make('div','sillynovel-image-workflow'),workflowToggle=make('button','menu_button sillynovel-button','Image workflow'),workflowBody=make('div','sillynovel-controls__panel');
     workflowToggle.type='button';workflowBody.id='sillynovel-image-workflow-body';workflowBody.hidden=true;workflowToggle.setAttribute('aria-controls',workflowBody.id);workflowToggle.setAttribute('aria-expanded','false');
@@ -220,8 +221,28 @@ export function mountVisualStage({ document, stage, actions }) {
     const resultFile=wfField('Result PNG','input');resultFile.type='file';resultFile.accept='image/png';
     const resultImage=make('img','sillynovel-image-workflow__preview');resultImage.alt='Chosen result, not imported';resultImage.hidden=true;workflowBody.append(resultImage);
     const importResult=wfButton('Import and apply background',()=>applyResult()),discardResult=wfButton('Discard preview',()=>clearPreview('Preview discarded · nothing was uploaded.'));
+    const generation=make('div','sillynovel-image-workflow__generation');workflowBody.append(generation);generation.append(make('p','','Generate on this host'));
+    const imageUnavailable=make('p','','Host image generation is not available to SillyNovel on this host'),imageControls=make('div','sillynovel-controls__panel');generation.append(imageUnavailable,imageControls);
+    const imageToggle=wfField('Image session on this host','input');imageToggle.type='checkbox';imageToggle.parentElement.classList.add('sillynovel-image-workflow__session');imageControls.append(imageToggle.parentElement);
+    const allowanceLine=make('p',''),generationReview=make('pre','sillynovel-image-workflow__text'),generationProblems=make('p','sillynovel-image-workflow__problems'),workflowPin=make('p','');
+    generationReview.setAttribute('aria-label','Generation review');generationReview.tabIndex=0;imageControls.append(allowanceLine,generationReview,generationProblems,workflowPin);
+    const submitImage=wfButton('Submit',()=>submitGeneration()),cancelImage=wfButton('Cancel',()=>cancelGeneration());imageControls.append(submitImage,cancelImage);
+    const stopWarning=make('p','','Stop host job asks ComfyUI to interrupt whatever it is running now, not only this request.');stopWarning.id='sillynovel-image-stop-warning';imageControls.append(stopWarning);
+    const stopImage=wfButton('Stop host job',()=>stopGeneration()),abandonImage=wfButton('Abandon',()=>abandonGeneration());stopImage.setAttribute('aria-describedby',stopWarning.id);imageControls.append(stopImage,abandonImage);
     const wfStatus=make('p','sillynovel-image-workflow__status');wfStatus.setAttribute('role','status');workflowBody.append(wfStatus);
     let wfModel=model,wfRevision=0,wfBusy=false,resultPreview=null,previewSeq=0,layoutReady=false;
+    const session=createImageSession();
+    let pending=null,inspection=null,workflowSha256=null,review=null,problems=[],reviewDraft=null,imageStarting=false,imageSubmitting=false,imageEpoch=0,imageSeq=0;
+    const IMAGE_PROBLEMS={SEAM_MISSING:'Host image generation is not available to SillyNovel on this host.',SOURCE_NOT_COMFY:"The host's image source is not ComfyUI.",COMFY_TYPE_NOT_STANDARD:'Only standard ComfyUI is supported, not RunPod.',
+        URL_INVALID:'The ComfyUI address must be this machine (localhost, 127.0.0.1 or [::1]).',URL_NOT_LOOPBACK:'The ComfyUI address must be this machine (localhost, 127.0.0.1 or [::1]).',
+        MODE_FREE_EXTEND:"Turn off free extend in the host's Image Generation settings.",MODE_MULTIMODAL:"Turn off multimodal captioning in the host's Image Generation settings.",MODE_REFINE:"Turn off refine mode in the host's Image Generation settings.",MODE_INTERACTIVE:"Turn off interactive mode in the host's Image Generation settings.",MODE_FUNCTION_TOOL:"Turn off function tool in the host's Image Generation settings.",
+        PROMPT_EMPTY:'Write a prompt.',PROMPT_RESERVED_TRIGGER:'That prompt is a host trigger word; write a description instead.',PROMPT_CHAR_PREFIX:"A prompt may not start with 'char' or use {{charPrefix}}.",
+        PROMPT_MACRO:'Remove {{ }}, <USER>-style markers and %placeholders% from the prompt.',NEGATIVE_MACRO:'Remove {{ }}, <USER>-style markers and %placeholders% from the negative prompt.',PREFIX_MACRO:'Remove {{ }}, <USER>-style markers and %placeholders% from the host prompt prefix.',NEGATIVE_PREFIX_MACRO:'Remove {{ }}, <USER>-style markers and %placeholders% from the host negative prefix.',
+        PREFIX_MARKER_REPEATED:'The host prompt prefix has more than one {prompt} marker.',WORKFLOW_HASH_MISSING:'The workflow could not be read from the host.',WORKFLOW_NAME_MISSING:'The workflow could not be read from the host.',WORKFLOW_UNPARSEABLE:'The workflow must be a JSON object.',WORKFLOW_PROMPT_PLACEHOLDER:'The workflow must contain exactly one quoted %prompt% and one quoted %negative_prompt% placeholder.',
+        WORKFLOW_SAVE_NODES:'The workflow must contain exactly one SaveImage node.',WORKFLOW_LOAD_IMAGE:'The workflow may not contain LoadImage nodes.',WORKFLOW_NODE_NOT_ALLOWED:'The workflow contains a node outside the six allowed node types.',WORKFLOW_AVATAR:'The workflow may not contain avatar placeholders.',WORKFLOW_CUSTOM_PLACEHOLDERS:'The workflow may not use custom placeholders.',WORKFLOW_CHANGED:'The workflow changed; turn the image session off and on to review it again.',
+        DIMENSIONS_INVALID:'Width and height must be positive and within 4096 pixels and 16 million pixels.',HOST_NO_RESULT:'The host returned no image.',HOST_THREW:"The host's image command failed.",DRAFT_CHANGED:'The draft changed; review it before submitting.',INVALID_REQUEST:'The request identity is unavailable; nothing was sent.'};
+    const imageProblem=({code,detail})=>code==='SELECTION_STALE'?'A saved '+String(detail).split(':')[0]+" is not among the host's loaded options; reselect it in the host.":code==='OPTIONS_MISSING'?"The host has not loaded its "+detail+' options yet; open Image Generation settings and connect.':code.startsWith('RESULT_')?"The host's result was refused: "+code+'.':(IMAGE_PROBLEMS[code]??code)+(code==='WORKFLOW_NODE_NOT_ALLOWED'&&detail?' '+detail:'');
+    const STALE_REASONS={CAPTURE_STALE:'the project, conversation or draft changed',HOST_CHAT_CHANGED:'the host conversation changed',CATALOG_CHANGED:'the project catalog changed',LAYOUT_CHANGED:'the scene layout changed',LOCK_CHANGED:'the manual locks changed',WORKFLOW_CHANGED:'the workflow changed'};
     const PROBLEMS={PROMPT_REQUIRED:'Write a prompt to export.',PROMPT_TOO_LONG:'The prompt is over 8 KiB.',NEGATIVE_PROMPT_TOO_LONG:'The negative prompt is over 2 KiB.',STYLE_NOTE_TOO_LONG:'The style note is over 1 KiB.',
         BAD_LABEL:'Use a label of 1–80 characters on one line.',DUPLICATE_REFERENCE:'A reference is selected twice.',UNKNOWN_REFERENCE:'A reference is no longer in this project.',REFERENCE_CHANGED:'A reference changed; select it again.',
         NOT_PNG:'Choose a PNG file.',PNG_TOO_LARGE:'The PNG is over 5 MiB.',PNG_DIMENSIONS:'The PNG must be at most 4096 pixels on an edge and 16 million pixels.',ANIMATED_PNG:'Animated PNGs are unsupported.',MALFORMED_PNG:'The PNG is damaged or incomplete.',
@@ -235,6 +256,106 @@ export function mountVisualStage({ document, stage, actions }) {
     const catalog=refs=>refs.map(({assetId,sha256})=>({assetId,sha256,byteCount:0}));
     const draft=()=>{const refs=references();return {...emptyDraft(),label:wfLabel.value,prompt:wfPrompt.value,negativePrompt:wfNegative.value,styleNote:wfStyle.value,sizeHint:wfSize.value,
         references:wfRefs.map(s=>s.value).filter(Boolean).map(assetId=>({assetId,sha256:refs.find(r=>r.assetId===assetId)?.sha256??'0'.repeat(64)}))};};
+    const nowFull=()=>({...now(wfRevision),hostChatKey:actions.image.hostChatKey(),catalogRevision:model.project?model.status().revision:null,layoutRevision:model.project?model.status().sceneRevision:null,lockState:model.project?model.globalLocks():{},workflowSha256:inspection?.workflowSha256});
+    function reviewGeneration(){
+        const d=draft();reviewDraft={prompt:d.prompt,negativePrompt:d.negativePrompt};
+        ({review,problems}=preflight({...inspection,snapshot:inspection?.snapshot??{},draft:reviewDraft}));
+        for(const missing of inspection?.missing??[]){const p=typeof missing==='string'?{code:missing}:missing;if(!problems.some(item=>item.code===p.code))problems.push(p);}
+        if(inspection?.workflowSha256!==workflowSha256)problems.push({code:'WORKFLOW_CHANGED'});
+        review.ok=problems.length===0;
+    }
+    function endImageSession(){
+        session.end();imageEpoch++;imageStarting=false;imageSubmitting=false;if(pending)clearTimeout(pending.timer);pending=null;
+        inspection=null;workflowSha256=null;review=null;problems=[];reviewDraft=null;imageToggle.checked=false;
+        if(resultPreview?.generated)clearPreview();
+    }
+    listen(imageToggle,'change',()=>wfRun(async()=>{
+        if(!imageToggle.checked){session.end();imageEpoch++;imageStarting=false;imageSubmitting=false;renderWorkflow();return;}
+        if(session.snapshot().on||imageStarting)return;
+        const captured=model,epoch=actions.getSnapshot().sessionEpoch,token=++imageEpoch;imageStarting=true;renderWorkflow();
+        try{const inspected=await actions.image.inspect();
+            if(disposed||captured!==model||epoch!==actions.getSnapshot().sessionEpoch||token!==imageEpoch)return;
+            inspection=inspected;workflowSha256=inspected.workflowSha256;session.begin(workflowSha256);reviewGeneration();
+        }catch{if(!disposed&&captured===model&&epoch===actions.getSnapshot().sessionEpoch&&token===imageEpoch)wfStatus.textContent='The host image settings could not be read; nothing was sent.';}
+        finally{if(token===imageEpoch)imageStarting=false;}
+    }));
+    function renderGeneration(){
+        const available=Boolean(actions.image?.available().ok),state=session.snapshot(),outcome=pending?state.requests[pending.id]:null;
+        imageUnavailable.hidden=available;imageControls.hidden=!available;if(!available)return;
+        imageToggle.checked=state.on||imageStarting;
+        allowanceLine.textContent='Submissions used '+state.used+' of '+DEFAULT_ALLOWANCE;
+        if(state.on&&inspection)reviewGeneration();
+        generationReview.hidden=!review;generationReview.textContent=review?reviewText(review):'';generationReview.classList.toggle('sillynovel-image-workflow__refused',Boolean(problems.length));
+        generationProblems.textContent=problems.map(imageProblem).join(' ');
+        workflowPin.hidden=!workflowSha256;workflowPin.textContent=workflowSha256?'Session workflow SHA-256: '+workflowSha256:'';
+        submitImage.disabled=!state.on||!review?.ok||state.inFlight!==null||imageSubmitting||state.used>=state.allowance||!model.project;
+        cancelImage.disabled=!pending||outcome!=='pending';
+        stopImage.disabled=!pending||pending.timer===null||!['pending','cancelled'].includes(outcome)||!pending.controller;
+        abandonImage.hidden=!pending||!(outcome==='timeout-unknown'||outcome==='cancelled'&&pending.timer!==null);abandonImage.disabled=abandonImage.hidden;
+    }
+    function cancelGeneration(){
+        if(!pending)return;const outcome=session.snapshot().requests[pending.id];
+        if(outcome==='pending')session.cancel(pending.id);else if(outcome!=='cancelled')return;
+        pending.cancelled=true;wfStatus.textContent='Cancelled · permission to apply withdrawn; the host keeps polling until the job is terminal';renderWorkflow();
+    }
+    function stopGeneration(){
+        if(stopImage.disabled||!pending)return;
+        try{pending.controller.abort('Stopped by SillyNovel');}finally{cancelGeneration();}
+    }
+    function abandonGeneration(){
+        if(!pending||abandonImage.disabled)return;
+        session.abandon(pending.id);clearTimeout(pending.timer);pending=null;wfStatus.textContent='Abandoned · the unit stays spent.';renderWorkflow();
+    }
+    function dropGeneration(job){
+        if(session.snapshot().inFlight===job.id)session.settle(job.id,'stale');
+        if(pending===job)pending=null;if(!disposed)renderWorkflow();
+    }
+    function discardGeneration(job,reason,path){
+        session.settle(job.id,'stale');pending=null;
+        wfStatus.textContent='Result discarded: '+(STALE_REASONS[reason]??reason)+(path?'; the host kept a copy at '+path:'; no host file was returned.');renderWorkflow();
+    }
+    async function submitGeneration(){
+        if(submitImage.disabled)return;
+        const capture=captureOf(now(wfRevision)),token=imageEpoch,shown=reviewText(review);let job=null;imageSubmitting=true;renderWorkflow();
+        try{
+            // Refresh the host before hashing; changed settings must be shown for another explicit Submit.
+            const inspected=await actions.image.inspect();
+            if(disposed||token!==imageEpoch||!session.snapshot().on||!stillCurrent(capture,now(wfRevision)))return;
+            inspection=inspected;reviewGeneration();
+            if(!review.ok||reviewText(review)!==shown){wfStatus.textContent='The host image settings changed · review them before submitting.';return;}
+            const reviewed=review,raw={...reviewDraft},payloadSha256=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(shown))),byte=>byte.toString(16).padStart(2,'0')).join('');
+            if(disposed||token!==imageEpoch||!session.snapshot().on||!stillCurrent(capture,now(wfRevision)))return;
+            const d=draft();if(d.prompt!==raw.prompt||d.negativePrompt!==raw.negativePrompt)throw Error('DRAFT_CHANGED');
+            const id=++imageSeq,request=createRequest({capture:now(wfRevision),hostChatKey:actions.image.hostChatKey(),catalogRevision:model.status().revision,layoutRevision:model.status().sceneRevision,lockState:model.globalLocks(),review:reviewed,workflowSha256,payloadSha256,id,submittedAt:Date.now()});
+            session.submit(request);
+            job={id,request,controller:null,timer:null,cancelled:false};pending=job;imageSubmitting=false;
+            try{job.controller=actions.image.createController();}catch{session.settle(id,'failed');pending=null;wfStatus.textContent="The host's image controller could not be created; the unit stays spent.";return;}
+            job.timer=setTimeout(()=>{if(pending!==job||session.snapshot().requests[id]!=='pending')return;session.timeout(id);wfStatus.textContent="No result after 120 s · outcome unknown; the slot stays reserved. Check ComfyUI's queue and the host's image folder; the host keeps polling until the job is terminal.";renderWorkflow();},WAIT_MS);
+            wfStatus.textContent='Generating on '+new URL(reviewed.destination.url).host+' · reading and replying continue';renderWorkflow();
+            let result;
+            try{result=await actions.image.request({prompt:raw.prompt,negative:raw.negativePrompt,controller:job.controller});}catch{result={ok:false,code:'HOST_THREW'};}
+            clearTimeout(job.timer);job.timer=null;
+            if(pending!==job||disposed){dropGeneration(job);return;}
+            if(job.cancelled){session.settle(id,'stale');pending=null;wfStatus.textContent='Cancelled · result discarded'+(result.path?'; the host kept a copy at '+result.path:'.');return;}
+            let reason=staleReason(request,nowFull());if(reason){discardGeneration(job,reason,result.path);return;}
+            if(!result.ok){session.settle(id,'failed');pending=null;wfStatus.textContent=imageProblem(result);return;}
+            let fetched;
+            try{fetched=await actions.image.fetchResult(result.path);}catch{fetched={ok:false,code:'RESULT_FETCH_FAILED',path:result.path};}
+            if(pending!==job||disposed){dropGeneration(job);return;}
+            if(job.cancelled){session.settle(id,'stale');pending=null;wfStatus.textContent='Cancelled · result discarded; the host kept a copy at '+result.path;return;}
+            if(fetched.ok){
+                try{const latest=await actions.image.inspect();if(pending===job)inspection=latest;}catch{fetched={ok:false,code:'RESULT_REVIEW_FAILED',path:result.path};}
+                if(pending!==job||disposed){dropGeneration(job);return;}
+                if(job.cancelled){session.settle(id,'stale');pending=null;wfStatus.textContent='Cancelled · result discarded; the host kept a copy at '+result.path;return;}
+            }
+            if(!fetched.ok){session.settle(id,'failed');pending=null;wfStatus.textContent=imageProblem(fetched)+' The host kept a copy at '+result.path;return;}
+            reason=staleReason(request,nowFull());if(reason){discardGeneration(job,reason,result.path);return;}
+            clearPreview();session.settle(id,'candidate');pending=null;
+            resultPreview={file:fetched.file,url:URL.createObjectURL(fetched.file),capture:captureOf(now(0)),generated:{id,path:result.path,request}};resultImage.src=resultPreview.url;resultImage.hidden=false;
+            wfStatus.textContent='Candidate, not imported · the host kept a copy at '+result.path+'. Import and apply it, or discard it.';
+        }catch(error){if(job&&pending===job){clearTimeout(job.timer);session.settle(job.id,'failed');pending=null;}if(!disposed&&token===imageEpoch&&stillCurrent(capture,now(wfRevision)))wfStatus.textContent='Image workflow: '+imageProblem({code:error.message});}
+        finally{if(!job&&token===imageEpoch)imageSubmitting=false;if(!disposed)renderWorkflow();}
+    }
     function saveFile(blob,name){const a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download=name;a.hidden=true;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
     async function downloadReference(i){
         const assetId=wfRefs[i].value,expected=references().find(r=>r.assetId===assetId)?.sha256;
@@ -246,7 +367,7 @@ export function mountVisualStage({ document, stage, actions }) {
             saveFile(blob,referenceFilename(i));wfStatus.textContent='Reference '+(i+1)+' download started as '+referenceFilename(i)+'. It is the stored file and may contain embedded PNG metadata.';
         }finally{wfBusy=false;}
     }
-    function clearPreview(message){previewSeq++;if(resultPreview)URL.revokeObjectURL(resultPreview.url);resultPreview=null;resultImage.hidden=true;resultImage.removeAttribute('src');if(message!==undefined)wfStatus.textContent=message;}
+    function clearPreview(message){previewSeq++;if(resultPreview?.generated&&session.snapshot().requests[resultPreview.generated.id]==='candidate')session.discard(resultPreview.generated.id);if(resultPreview)URL.revokeObjectURL(resultPreview.url);resultPreview=null;resultImage.hidden=true;resultImage.removeAttribute('src');if(message!==undefined)wfStatus.textContent=message;}
     // A preview belongs to the attachment, not to draft edits: the label is read when importing (draft revision 0 on both sides).
     async function choosePreview(file){
         clearPreview('Checking the PNG · nothing is uploaded.');const seq=previewSeq;
@@ -268,8 +389,13 @@ export function mountVisualStage({ document, stage, actions }) {
         if(!stillCurrent(chosen.capture,now(0))){clearPreview('The project changed · preview discarded, nothing uploaded.');return;}
         if(!layoutReady){wfStatus.textContent='Wait for the selected message to settle, then import.';return;}
         if(projectBusy||model.status().importing)return;
+        if(chosen.generated){
+            const inspected=await actions.image.inspect();if(resultPreview!==chosen||disposed)return;inspection=inspected;
+            const reason=staleReason(chosen.generated.request,nowFull());if(reason){clearPreview('Result discarded: '+(STALE_REASONS[reason]??reason)+'; the host kept a copy at '+chosen.generated.path);return;}
+            if(!layoutReady||projectBusy||model.status().importing)return;
+        }
         await model.importFile(chosen.file,'background',undefined,wfLabel.value.trim());
-        if(resultPreview===chosen)clearPreview('Imported and applied as the background · unsaved project change. Save project to keep it.');
+        if(resultPreview===chosen){if(chosen.generated)session.imported(chosen.generated.id);clearPreview('Imported and applied as the background · unsaved project change. Save project to keep it.');}
     }
     for(const e of [wfLabel,wfPrompt,wfNegative,wfStyle])listen(e,'input',()=>{wfRevision++;renderWorkflow();});
     for(const e of [wfSize,...wfRefs])listen(e,'change',()=>{wfRevision++;renderWorkflow();});
@@ -277,7 +403,7 @@ export function mountVisualStage({ document, stage, actions }) {
     function renderWorkflow(){
         if(wfModel!==model){
             // Your text survives attach, detach and replacement (owner direction on PR B); references and previews belong to one attachment and never carry over.
-            const left=Boolean(wfModel.project);for(const s of wfRefs)s.value='';wfModel=model;wfRevision++;clearPreview(left?'Project changed: references and any preview cleared; your text is kept.':'');
+            endImageSession();const left=Boolean(wfModel.project);for(const s of wfRefs)s.value='';wfModel=model;wfRevision++;clearPreview(left?'Project changed: references and any preview cleared; your text is kept.':'');
         }
         const attached=Boolean(model.project),refs=references(),d=draft(),text=draftProblems(d),all=draftProblems(d,catalog(refs)),importing=attached&&model.status().importing;
         for(const s of wfRefs){options(s,[['','None'],...refs.map(r=>[r.assetId,(r.kind==='background'?'Background':'Actor sprite')+' · '+r.label])]);s.disabled=!attached;}
@@ -290,6 +416,7 @@ export function mountVisualStage({ document, stage, actions }) {
         importResult.textContent=attached?'Import and apply background to '+model.status().name:'Import and apply background';
         importResult.disabled=!resultPreview||importing||projectBusy||!layoutReady;discardResult.disabled=!resultPreview;
         wfNote.textContent=attached?'Import adds the PNG to this project, sets it as the background and locks it, like any manual import. Save project to keep it.':'Attach a saved project to download references or import a result. The prompt can be copied or downloaded now.';
+        renderGeneration();
     }
     target.append(make('h4','','Unused Project Assets'));
     const reviewUnused=button('Review unused artwork',()=>model.project&&model.reviewUnused());
@@ -554,6 +681,7 @@ export function mountVisualStage({ document, stage, actions }) {
     }
     function update(snapshot) {
         if(snapshot.sessionEpoch!==activation){
+            endImageSession();
             activation=snapshot.sessionEpoch;projectEpoch++;projectBusy=false;bundleStatus.textContent='';
             if(model.project){attachmentNotice='Project detached after a native conversation switch. Explicitly reopen to use a saved global layout.';model.dispose();model=createTransientScene(actions,render);}
         }
@@ -567,5 +695,5 @@ export function mountVisualStage({ document, stage, actions }) {
         run(()=>model.sync(false));
     }
     render();update(actions.getSnapshot());
-    return {update,dispose(){disposed=true;projectEpoch++;clearPreview();for(const remove of removers)remove();model.dispose();}};
+    return {update,dispose(){disposed=true;projectEpoch++;endImageSession();clearPreview();for(const remove of removers)remove();model.dispose();}};
 }

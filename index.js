@@ -122,6 +122,7 @@ async function install() {
                 getRequestHeaders: () => getContext().getRequestHeaders(),
                 getSceneEvidence: controller.getSceneEvidence,
                 director,
+                image: adapter.image,
                 fail: view.reportFailure,
             } });
         },
