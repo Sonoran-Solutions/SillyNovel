@@ -119,7 +119,7 @@ for(const journal of ['delete','wal'])test('coherent committed revisions with ov
 
 test('killed backup retains an incomplete private stage, no completed package and unchanged committed source',async()=>{
  const f=fixture();try{const before=inventory(f.source),moduleURL=new URL('../recovery.mjs',import.meta.url).href;
- const script=`import {createBackup} from ${JSON.stringify(moduleURL)};await createBackup(${JSON.stringify(f.source)},${JSON.stringify(f.backup)},{at(p){if(p==='snapshot-written'){process.stdout.write('ready');Atomics.wait(new Int32Array(new SharedArrayBuffer(4)),0,0);}}});`;
+ const script=`import {writeSync} from 'node:fs';import {createBackup} from ${JSON.stringify(moduleURL)};await createBackup(${JSON.stringify(f.source)},${JSON.stringify(f.backup)},{at(p){if(p==='snapshot-written'){writeSync(1,'ready');Atomics.wait(new Int32Array(new SharedArrayBuffer(4)),0,0);}}});`;
  const child=spawn(process.execPath,['--input-type=module','-e',script],{stdio:['ignore','pipe','pipe']});await new Promise((res,rej)=>{child.stdout.once('data',res);child.once('exit',code=>rej(Error('premature exit '+code)));});
  const ended=new Promise(res=>child.once('exit',res));child.kill('SIGKILL');await ended;assert.ok(!readdirSync(f.root).includes('backup'));const stage=readdirSync(f.root).find(n=>n.startsWith('.sn-recovery-'));assert.ok(stage);assert.ok(!readdirSync(join(f.root,stage)).includes('manifest.json'));assert.deepEqual(inventory(f.source),before);
  }finally{f.cleanup();}
@@ -138,7 +138,7 @@ test('actual operator CLI creates, inspects, restores and refuses replacement',a
 
 test('process killed inside a rollback transaction: backup refuses hot journal, normal SQLite reopen recovers the original commit',async()=>{
  const f=fixture();try{const before=inventory(f.source);
- const script=`import {DatabaseSync} from 'node:sqlite';const db=new DatabaseSync(${JSON.stringify(f.source)});db.exec("PRAGMA cache_size=1; BEGIN IMMEDIATE; UPDATE projects SET name='uncommitted'; UPDATE assets SET bytes=zeroblob(1048576)");process.stdout.write('ready');Atomics.wait(new Int32Array(new SharedArrayBuffer(4)),0,0);`;
+ const script=`import {writeSync} from 'node:fs';import {DatabaseSync} from 'node:sqlite';const db=new DatabaseSync(${JSON.stringify(f.source)});db.exec("PRAGMA cache_size=1; BEGIN IMMEDIATE; UPDATE projects SET name='uncommitted'; UPDATE assets SET bytes=zeroblob(1048576)");writeSync(1,'ready');Atomics.wait(new Int32Array(new SharedArrayBuffer(4)),0,0);`;
  const child=spawn(process.execPath,['--input-type=module','-e',script],{stdio:['ignore','pipe','pipe']});await new Promise((res,rej)=>{child.stdout.once('data',res);child.once('exit',code=>rej(Error('premature exit '+code)));});const ended=new Promise(res=>child.once('exit',res));child.kill('SIGKILL');await ended;
  assert.ok(statSync(f.source+'-journal').size>0);
  await assert.rejects(createBackup(f.source,f.backup));assert.ok(!readdirSync(f.root).includes('backup'));

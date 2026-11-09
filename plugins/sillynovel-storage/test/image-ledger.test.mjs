@@ -97,6 +97,9 @@ const edges={pending:['candidate','failed','stale','cancelled','timeout-unknown'
 function reach(f,state) {
  const s=f.begin(),j=f.reserve(s);
  if(['candidate','cancelled','timeout-unknown'].includes(state))return f.move(j,state);
+ if(['failed','stale'].includes(state))return f.move(j,state);
+ if(['imported','discarded'].includes(state)){f.move(j,'candidate');return f.move(j,state,state==='imported'?{assetId:f.store.importAsset(owner,f.project,png).assetId}:{});}
+ if(state==='abandoned'){f.move(j,'cancelled');return f.move(j,'abandoned');}
  if(['unknown','reconciled'].includes(state)){f.move(j,'timeout-unknown');const u=f.move(j,'unknown');return state==='unknown'?u:f.move(j,'reconciled');}
  return j;
 }
@@ -154,16 +157,18 @@ for(const state of ['pending','cancelled','timeout-unknown','unknown','candidate
 });
 test('recovery v3 counts, masked inspection/CLI opt-in, restore and v2 compatibility',async t=>{
  const f=fixture(t),s=f.begin(),j=f.reserve(s);f.move(j,'failed');const backup=join(f.root,'backup');
- await createBackup(f.path,backup);const info=inspectBackup(backup);assert.equal(info.schemaVersion,3);assert.equal(info.ledger[0].sessions,1);assert.equal(info.ledger[0].jobs,1);assert.equal(info.ledger[0].rows[0].review,'[masked]');assert.equal(info.ledger[0].rows[0].reviewLength,review.length);
+ const saved=await createBackup(f.path,backup);assert.ok(!JSON.stringify(saved).includes('alice'));
+ const info=inspectBackup(backup);assert.equal(info.schemaVersion,3);assert.equal(info.ledger[0].sessions,1);assert.equal(info.ledger[0].jobs,1);assert.equal(info.ledger[0].rows[0].review,'[masked]');assert.equal(info.ledger[0].rows[0].reviewLength,review.length);
+ assert.ok(!JSON.stringify(info).includes('alice'));assert.ok(!JSON.stringify(info).includes(JSON.stringify(owner)));
  assert.ok(!JSON.stringify(info).includes(review));assert.equal(inspectBackup(backup,undefined,{showReview:true}).ledger[0].rows[0].review,review);
  const cli=new URL('../tools/recovery.mjs',import.meta.url).pathname,run=args=>JSON.parse(execFileSync(process.execPath,[cli,...args],{stdio:['ignore','pipe','pipe'],encoding:'utf8',timeout:15000,maxBuffer:1024*1024}));
  assert.equal(run(['inspect',backup]).ledger[0].rows[0].review,'[masked]');assert.equal(run(['inspect',backup,'--show-review']).ledger[0].rows[0].review,review);
  const target=join(f.root,'target');mkdirSync(target,{mode:0o700});mkdirSync(join(target,'_storage'));writeFileSync(join(target,'_storage',digest('user:alice')),JSON.stringify({key:'user:alice',value:{handle:'alice',created:1}}));
- const restored=restoreBackup(backup,join(target,DATABASE_NAME));assert.equal(restored.ledger[0].jobs,1);const recovered=openStore(join(target,DATABASE_NAME));assert.deepEqual(recovered.imageJobs(owner,f.project),f.store.imageJobs(owner,f.project));recovered.close();
+ const restored=restoreBackup(backup,join(target,DATABASE_NAME));assert.ok(!JSON.stringify(restored).includes('alice'));assert.equal(restored.ledger[0].jobs,1);const recovered=openStore(join(target,DATABASE_NAME));assert.deepEqual(recovered.imageJobs(owner,f.project),f.store.imageJobs(owner,f.project));recovered.close();
  const v2=join(f.root,'v2');legacy(v2);assert.equal(validateDatabase(v2).schemaVersion,2);const v2Backup=join(f.root,'v2-backup');await createBackup(v2,v2Backup);assert.equal(inspectBackup(v2Backup).schemaVersion,2);
  writeFileSync(join(target,'_storage',digest('user:bob')),JSON.stringify({key:'user:bob',value:{handle:'bob',created:2}}));rmSync(join(target,DATABASE_NAME));assert.equal(restoreBackup(v2Backup,join(target,DATABASE_NAME)).schemaVersion,2);
 });
-test('strict recovery rejects ledger corruption while missing soft assets are valid',t=>{
+test('strict recovery rejects invalid ledger states, settings, paths, ownership and settlement',t=>{
  const f=fixture(t),j=reach(f,'pending');
  for(const sql of ["UPDATE image_jobs SET state='invented'","UPDATE image_jobs SET settings='[]'","UPDATE image_jobs SET settings='{'","UPDATE image_jobs SET host_path='/user/images/../x.png'","UPDATE image_jobs SET owner='[\"bob\",2]'", "UPDATE image_jobs SET settled_at=submitted_at"]){
   f.db.exec('BEGIN');f.db.exec(sql); // Validate a standalone copy of the bad commit below.
@@ -187,7 +192,7 @@ async function routes(t) {
   const req=Readable.from([bytes]);Object.assign(req,{method,headers:{'content-type':'application/vnd.sillynovel+json','x-csrf-token':'x'.repeat(32),...headers},query,params:{id:project,jobId},session:{handle,csrfToken:'x'.repeat(32)},user:{profile:{handle,created}}});
   const res={statusCode:200,set(){return this;},status(code){this.statusCode=code;return this;},json(value){this.value=value;return this;}};
   for(const fn of middleware){let next=false;fn(req,res,()=>{next=true;});if(!next)return res;}
-  await registered.find(r=>r.method===method && r.path==='/projects/:id/image/'+path).fn(req,res);return res;
+  await registered.find(r=>r.method===method && r.path===(path==='capabilities'?'/capabilities':'/projects/:id/image/'+path)).fn(req,res);return res;
  };
  return {...f,call};
 }
@@ -222,6 +227,7 @@ for(const state of ['discarded','abandoned'])test('host deletion records '+state
 });
 test('HTTP ledger happy path stamps times, reserves, lists, discards and cleans without sockets',async t=>{
  const f=await routes(t),call=f.call;
+ assert.equal((await call('GET','capabilities')).value.imageLedgerVersion,1);
  const begin=await call('POST','session/begin',{body:{tab:'tab',workflowSha256:workflow}});assert.equal(begin.statusCode,200);const s=begin.value;
  assert.equal((await call('POST','session/heartbeat',{body:{sessionId:s.id,tab:'tab'}})).value.id,s.id);
  const reserved=await call('POST','jobs',{body:f.request(s)});assert.equal(reserved.statusCode,201);const j=reserved.value;assert.equal(j.deadlineAt-j.submittedAt,120000);
@@ -232,4 +238,77 @@ test('HTTP ledger happy path stamps times, reserves, lists, discards and cleans 
  assert.equal((await call('POST','jobs/cleanup',{body:{jobIds:[j.id]}})).value.deletedCount,1);
  assert.ok((await call('POST','session/end',{body:{sessionId:s.id,tab:'tab'}})).value.endedAt);
  assert.equal((await call('GET','session')).value.session,null);
+});
+
+// A second opener upgrades after this opener reads v2, before it acquires the write lock.
+test('v2 opener rechecks the version inside the transaction after a concurrent upgrade',t=>{
+ const f=fixture(t),path=join(f.root,'concurrent-v2'),before=legacy(path),exec=DatabaseSync.prototype.exec;let upgraded=false;
+ DatabaseSync.prototype.exec=function(sql){
+  if(sql==='BEGIN IMMEDIATE' && !upgraded){upgraded=true;const peer=openStore(path);peer.close();}
+  return exec.call(this,sql);
+ };
+ try {const store=openStore(path);store.close();}finally{DatabaseSync.prototype.exec=exec;}
+ assert.equal(upgraded,true);const db=new DatabaseSync(path);
+ try {assert.equal(validateDatabaseSchema(db),3);assert.deepEqual(db.prepare('SELECT * FROM projects ORDER BY id').all(),before.projects);assert.deepEqual(db.prepare('SELECT * FROM assets ORDER BY id').all(),before.assets);}finally{db.close();}
+});
+test('same-tab begin with or without takeover returns mine without changing the session',t=>{
+ const f=fixture(t),s=f.begin(),j=f.reserve(s),before=f.db.prepare('SELECT * FROM image_sessions').get(),now=Date.now;
+ Date.now=()=>s.heartbeatAt+10000;
+ try {
+  for(const extra of [{},{takeover:false},{takeover:true}])assert.deepEqual(f.begin('tab',{...extra,workflowSha256:'c'.repeat(64)}),{...s,used:1,status:'mine'});
+ }finally{Date.now=now;}
+ assert.deepEqual(f.db.prepare('SELECT * FROM image_sessions').get(),before);
+ assert.equal(f.store.imageSession(owner,f.project).jobs[0].id,j.id);
+ assert.ok(!Object.hasOwn(s,'owner'));assert.ok(!Object.hasOwn(j,'owner'));
+});
+test('a new tab resolves an ended session pending job and can reserve again',t=>{
+ const f=fixture(t),s=f.begin(),j=f.reserve(s);
+ f.store.endImageSession(owner,f.project,{sessionId:s.id,tab:'tab'});f.restart();const next=f.begin('reloaded');
+ refuses(()=>f.reserve(next),'IN_FLIGHT');
+ for(const state of ['timeout-unknown','unknown','abandoned']){
+  refuses(()=>f.move(j,state,{},'bystander'),'LEASE_LOST');
+  assert.equal(f.move(j,state,{},'reloaded').state,state);
+ }
+ assert.equal(f.reserve(next).state,'pending');
+});
+function fillEndedSessions(f,s,total) {
+ const insert=f.db.prepare('INSERT INTO image_sessions SELECT ?,owner,project,tab,workflow_sha256,allowance,used,started_at,heartbeat_at,ended_at FROM image_sessions WHERE id=?');
+ f.db.exec('BEGIN');try {for(let i=1;i<total;i++)insert.run(randomUUID(),s.id);f.db.exec('COMMIT');}catch(e){f.db.exec('ROLLBACK');throw e;}
+}
+test('500 sessions refuse begin with 409 LEDGER_FULL; empty cleanup relieves the cap',t=>{
+ const f=fixture(t),s=f.begin();f.store.endImageSession(owner,f.project,{sessionId:s.id,tab:s.tab});fillEndedSessions(f,s,500);
+ assert.equal(validateDatabase(f.path).ledger[0].sessions,500);
+ const before=f.db.prepare('SELECT * FROM image_sessions ORDER BY id').all();
+ assert.throws(()=>f.begin('new'),e=>e.code==='LEDGER_FULL' && e.status===409);
+ assert.deepEqual(f.db.prepare('SELECT * FROM image_sessions ORDER BY id').all(),before);
+ assert.deepEqual(f.store.cleanupImageJobs(owner,f.project,{jobIds:[]}),{deletedIds:[],deletedCount:0});
+ assert.equal(f.db.prepare('SELECT count(*) AS n FROM image_sessions').get().n,0);assert.equal(f.begin('new').used,0);
+});
+test('job cleanup removes only ended sessions without remaining jobs in this project',t=>{
+ const f=fixture(t),s=f.begin(),j=f.reserve(s);f.move(j,'failed');f.store.endImageSession(owner,f.project,{sessionId:s.id,tab:s.tab});
+ const current=f.begin('new'),other=f.store.create(foreign,{name:'Other'}),foreignSession=f.store.beginImageSession(foreign,other.projectId,{tab:'other',workflowSha256:workflow});
+ f.store.endImageSession(foreign,other.projectId,{sessionId:foreignSession.id,tab:'other'});
+ f.store.cleanupImageJobs(owner,f.project,{jobIds:[]});assert.equal(f.db.prepare('SELECT count(*) AS n FROM image_sessions').get().n,3);
+ f.store.cleanupImageJobs(owner,f.project,{jobIds:[j.id]});
+ assert.deepEqual(f.db.prepare('SELECT id FROM image_sessions ORDER BY id').all().map(r=>r.id).sort(),[current.id,foreignSession.id].sort());
+});
+test('recovery refuses 501 sessions with RECOVERY_LIMIT',t=>{
+ const f=fixture(t),s=f.begin();f.store.endImageSession(owner,f.project,{sessionId:s.id,tab:s.tab});fillEndedSessions(f,s,501);
+ refuses(()=>validateDatabase(f.path),'RECOVERY_LIMIT');
+});
+const states=[...Object.keys(edges),'imported','discarded','failed','stale','abandoned'];
+for(const from of states)for(const to of states.filter(to=>!edges[from]?.includes(to)))test('refuse transition '+from+' → '+to+' without mutation',t=>{
+ const f=fixture(t),j=reach(f,from),before=f.db.prepare('SELECT * FROM image_jobs WHERE id=?').get(j.id);
+ refuses(()=>f.move(j,to),'INVALID_TRANSITION');
+ assert.deepEqual(f.db.prepare('SELECT * FROM image_jobs WHERE id=?').get(j.id),before);
+});
+for(const field of ['hostPath','resultSha256'])test('candidate → imported cannot replace stored '+field,t=>{
+ const f=fixture(t),j=reach(f,'pending'),values={hostPath:'/user/images/first.png',resultSha256:payload},candidate=f.move(j,'candidate',values),assetId=f.store.importAsset(owner,f.project,png).assetId;
+ refuses(()=>f.move(j,'imported',{assetId,[field]:field==='hostPath'?'/user/images/replacement.png':'c'.repeat(64)}),'INVALID_TRANSITION');
+ assert.deepEqual(f.store.imageJobs(owner,f.project)[0],candidate);
+ assert.equal(f.move(j,'imported',{assetId}).state,'imported');
+});
+test('direct store reservations enforce the body byte cap',t=>{
+ const f=fixture(t),s=f.begin();refuses(()=>f.reserve(s,{review:'x'.repeat(32769)}),'BODY_LIMIT');
+ assert.equal(f.store.imageSession(owner,f.project).session.used,0);assert.deepEqual(f.store.imageJobs(owner,f.project),[]);
 });

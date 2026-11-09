@@ -121,8 +121,9 @@ export function validateDatabase(path, {showReview=false}={}) {
         if(schemaVersion===3) {
             for(const p of db.prepare('SELECT id,owner FROM projects ORDER BY id').iterate()) {
                 budget();
-                const sessions=db.prepare('SELECT * FROM image_sessions WHERE owner=? AND project=? ORDER BY started_at,id').all(p.owner,p.id);
+                const sessions=db.prepare('SELECT * FROM image_sessions WHERE owner=? AND project=? ORDER BY started_at,id LIMIT 501').all(p.owner,p.id);
                 const jobs=db.prepare('SELECT * FROM image_jobs WHERE owner=? AND project=? ORDER BY submitted_at,id LIMIT 501').all(p.owner,p.id);
+                demand(sessions.length<=500,'RECOVERY_LIMIT');
                 demand(jobs.length<=500,'RECOVERY_LIMIT');
                 for(const s of sessions) {budget();validateImageSession(s);}
                 for(const j of jobs) {

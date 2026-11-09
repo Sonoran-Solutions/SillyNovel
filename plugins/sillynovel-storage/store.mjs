@@ -22,7 +22,9 @@ export function openStore(filename) {
             db.exec(SCHEMA_SQL.join(';') + '; PRAGMA user_version=3;');
         });
         if(version===1){validateDatabaseSchema(db,[1]);demand(false,'MIGRATION_REQUIRED',503);}
-        if(version===2)transaction(()=>upgradeV2(db));
+        if(version===2)transaction(()=>{
+            if(db.prepare('PRAGMA user_version').get().user_version!==3)upgradeV2(db);
+        });
         validateDatabaseSchema(db);
         demand(db.prepare('PRAGMA quick_check').get().quick_check === 'ok', 'CORRUPT_STORE', 503);
     } catch (error) { db.close(); throw error; }

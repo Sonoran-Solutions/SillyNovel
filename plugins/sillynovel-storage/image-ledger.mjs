@@ -16,12 +16,13 @@ const tabId = v => typeof v==='string' && v.length>0 && v.length<=128 && !/[\x00
 const object = v => v && typeof v==='object' && !Array.isArray(v);
 const time = v => Number.isSafeInteger(v) && v>=0;
 const optional = (body,required,allowed=[]) => exact(body,[...required,...allowed.filter(k=>Object.hasOwn(body??{},k))]);
+// Guard direct store callers too; HTTP routes separately cap streamed request bytes.
 const bounded = body => demand(Buffer.byteLength(JSON.stringify(body))<=32768,'BODY_LIMIT',413);
 export const hostPathValid = path => {
     if(typeof path!=='string' || !path.startsWith('/user/images/') || /[%\\]/.test(path) || path.includes('//') || path.split('/').includes('..') || !/\.png$/i.test(path))return false;
     try {return new URL(path,'http://localhost').pathname===path;} catch {return false;}
 };
-export const imageJsonRow = row => row ? Object.fromEntries(Object.entries(row).map(([key,value])=>[
+export const imageJsonRow = row => row ? Object.fromEntries(Object.entries(row).filter(([key])=>key!=='owner').map(([key,value])=>[
     key==='asset'?'assetId':key.replace(/_([a-z])/g,(_,c)=>c.toUpperCase()),key==='settings'?JSON.parse(value):value])) : null;
 
 // Shared with offline inspection: the ledger never makes an asset reference hard.
@@ -69,10 +70,12 @@ export function imageLedger(db,transaction,load,asset) {
                 demand(optional(body,['tab','workflowSha256'],['takeover']) && tabId(body.tab) && hash(body.workflowSha256) && (!Object.hasOwn(body,'takeover') || typeof body.takeover==='boolean'));
                 const prior=open(owner,project),now=Date.now();
                 if(prior) {
+                    if(prior.tab===body.tab)return {...imageJsonRow(prior),status:'mine'};
                     if(!body.takeover)throw Object.assign(Error('LEASE_HELD'),{code:'LEASE_HELD',status:409,details:{status:now-prior.heartbeat_at>90000?'stale':'held',heartbeatAt:prior.heartbeat_at,tab:prior.tab}});
                     db.prepare('UPDATE image_sessions SET tab=?,heartbeat_at=? WHERE owner=? AND project=? AND id=?').run(body.tab,now,owner,project,prior.id);
                     return imageJsonRow(session(owner,project,prior.id));
                 }
+                demand(db.prepare('SELECT count(*) AS n FROM image_sessions WHERE owner=? AND project=?').get(owner,project).n<500,'LEDGER_FULL',409);
                 const id=randomUUID();
                 db.prepare('INSERT INTO image_sessions VALUES (?,?,?,?,?,5,0,?,?,NULL)').run(id,owner,project,body.tab,body.workflowSha256,now,now);
                 return imageJsonRow(session(owner,project,id));
@@ -119,10 +122,19 @@ export function imageLedger(db,transaction,load,asset) {
                 demand(optional(body,['tab','state'],['hostPath','resultSha256','assetId']) && tabId(body.tab) && typeof body.state==='string');
                 bounded(body);
                 demand(TRANSITIONS[j.state]?.includes(body.state),'INVALID_TRANSITION',409);
-                if(['pending','cancelled','timeout-unknown'].includes(j.state))demand(session(owner,project,j.session).tab===body.tab,'LEASE_LOST',409);
+                if(['pending','cancelled','timeout-unknown'].includes(j.state)) {
+                    const owning=session(owner,project,j.session);
+                    demand(owning.tab===body.tab || owning.ended_at!==null && open(owner,project)?.tab===body.tab,'LEASE_LOST',409);
+                }
                 else if(j.state==='unknown')holder(open(owner,project),body.tab);
-                if(Object.hasOwn(body,'hostPath'))demand(hostPathValid(body.hostPath),'INVALID_PATH');
-                if(Object.hasOwn(body,'resultSha256'))demand(hash(body.resultSha256));
+                if(Object.hasOwn(body,'hostPath')) {
+                    demand(['candidate','reconciled'].includes(body.state) || j.host_path===null,'INVALID_TRANSITION',409);
+                    demand(hostPathValid(body.hostPath),'INVALID_PATH');
+                }
+                if(Object.hasOwn(body,'resultSha256')) {
+                    demand(['candidate','reconciled'].includes(body.state) || j.result_sha256===null,'INVALID_TRANSITION',409);
+                    demand(hash(body.resultSha256));
+                }
                 demand(!Object.hasOwn(body,'assetId') || body.state==='imported','INVALID_TRANSITION',409);
                 if(body.state==='imported') {demand(validId(body.assetId));asset(owner,project,body.assetId);}
                 const settled=UNRESOLVED.includes(j.state) && !UNRESOLVED.includes(body.state)?Date.now():j.settled_at;
@@ -149,10 +161,11 @@ export function imageLedger(db,transaction,load,asset) {
         },
         cleanupImageJobs(owner,project,body) {
             return transaction(()=>{
-                load(owner,project);demand(exact(body,['jobIds']) && Array.isArray(body.jobIds) && body.jobIds.length>0 && body.jobIds.length<=500 && body.jobIds.every(validId) && new Set(body.jobIds).size===body.jobIds.length);
+                load(owner,project);demand(exact(body,['jobIds']) && Array.isArray(body.jobIds) && body.jobIds.length<=500 && body.jobIds.every(validId) && new Set(body.jobIds).size===body.jobIds.length);
                 const rows=body.jobIds.map(id=>job(owner,project,id));
                 demand(rows.every(j=>TERMINAL.includes(j.state)),'UNRESOLVED_JOB',409);
                 for(const j of rows)db.prepare('DELETE FROM image_jobs WHERE owner=? AND project=? AND id=?').run(owner,project,j.id);
+                db.prepare('DELETE FROM image_sessions WHERE owner=? AND project=? AND ended_at IS NOT NULL AND NOT EXISTS (SELECT 1 FROM image_jobs WHERE session=image_sessions.id)').run(owner,project);
                 return {deletedIds:body.jobIds,deletedCount:rows.length};
             });
         },
