@@ -169,6 +169,18 @@ The owner reviews this PR. PR C (the adapter and UI on the ledger) starts only a
 8. **Delete the host's copy acts on the latest discarded, imported or abandoned job this page resolved**; the note names its path. Rows from before a reload are not offered (the inspect view is read-only).
 9. **Inspect and cleanup are button disclosures**, because a nested `<summary>` would make the existing `.sillynovel-controls summary` selector ambiguous.
 
+### Worker evidence (on `3567b2a`; the coordinator's full campaign is separate)
+
+| Check | Result |
+| --- | --- |
+| Node (18 files) | 521/521 (503 before plus 10 adapter and 8 client tests) |
+| Storage (`npm test`) | 281/281 (unchanged plugin) |
+| Browser actual-entry | 137/137 (126 before plus 11) |
+| Native image-route campaign | PASS, checkpoints A–E and G–O (F not run, as before), 275 s, on the disposable pinned 1.19.0 host with the fixture on an ephemeral port; host `/interrupt` on reload observed |
+| Discovery | PASS, 18/6/1 |
+
+Two earlier campaign runs failed on test assumptions and are not evidence: L expected no Delete control while a candidate showed (the control names the latest discarded job, H's last); M expected a new library entry (the fixture PNG equals C's, so the import reuses the asset). A third failed on a race in the campaign's `sessionOn`, which now waits for the ledger begin to finish.
+
 ### Findings
 
 - **A reload never leaves a late host file.** The host saves a generated image from the page (`saveBase64AsFile` after the generate request returns), so a page that dies mid-request saves nothing, and the host's generate route sends ComfyUI `/interrupt` when its socket closes. Reconcile can find a file only when the generating page lived on, as after a takeover from a second page (campaign M); after a reload it correctly finds none (campaign N).
