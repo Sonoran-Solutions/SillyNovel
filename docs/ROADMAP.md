@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## M3.2 PR A merged; PR B authorized — 2026-11-08
+
+PR A ([#84](https://github.com/Sonoran-Solutions/SillyNovel/pull/84), `3665f6e`) is on main with `VERDICT GO`; the [four findings adopted](DECISIONS.md#owner-acceptance--m32-pr-a-merged-four-findings-adopted-pr-b-go-ahead--2026-11-08) amend the [plan](M3_2_IMAGE_ROUTE_PLAN.md). PR B (pure request module) is authorized; PR C waits for the owner's review of PR B. Gate C NOT_RUN.
+
 ## M3.2 authorized — 2026-11-08
 
 [I1–I10 ruled](DECISIONS.md#owner-rulings-i1i10--m32-first-image-route--2026-11-08); [DYL-213](https://linear.app/devils17/issue/DYL-213/sillynovel-m32-first-image-route-host-image-generation-local-comfyui) implements plan section 7's PRs A, B and C in order, each reviewed by the owner before the next. O05 is resolved as the host's Image Generation extension on standard loopback ComfyUI. The real-backend run, M3.3 and Gate C stay gated.
