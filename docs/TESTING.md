@@ -1,5 +1,9 @@
 # Verification and acceptance
 
+## M3.3 rows adopted — 2026-11-08
+
+Per [J9](DECISIONS.md#owner-rulings-j1j9--m33-completion--2026-11-08), rows T81–T83 from [plan section 7](M3_3_COMPLETION_PLAN.md#7-proposed-testing-rows-and-pr-boundaries) are added to the matrix below as NOT_RUN. T78–T80 keep their earlier adoption. No evidence is claimed by this entry.
+
 ## M3.2 PR C merged — T74, T76 and T77 rows annotated — 2026-11-08
 
 On the owner's merge of [#88](https://github.com/Sonoran-Solutions/SillyNovel/pull/88) (`d31254a`, frozen runtime `afac1f9`), rows T74, T76 and T77 below carry their SYNTHETIC annotations from the PR C campaign ([record](M3_2_IMAGE_ROUTE_IMPLEMENTATION.md#pr-c--the-adapter-seam-and-the-generate-on-this-host-section), [evidence](evidence/m3-2-c/campaign/)); T75 keeps its PR B annotation with the UI gap the record names. The real route, the real 120 s wait on the host, physical devices and screen readers stay NOT_RUN or NOT_TESTED. No suite was run for this docs-only change.
@@ -301,6 +305,9 @@ Harness assertions model event shapes and do not prove host ordering. In the liv
 | T78 | Concurrent identical image requests and cache hits | Concurrent identical requests and repeated clicks coalesce; cache hit sends zero; changed effective inputs miss; reload/second-tab recovery cannot cause a duplicate authorized job in the supported mode. NOT_RUN. | M3.3 |
 | T79 | Image refusal, auth, rate and error fixtures | Refusal/auth/rate/error fixtures preserve canonical data and reading/replying, with no provider hopping; count/budget reservations include failed and unresolved jobs. NOT_RUN. | M3.3 |
 | T80 | Generated candidate reject, delete and approve | Generated candidate reject/delete/approve, approved-asset deletion protection, metadata redaction and recovery/portability behavior match the adopted retention contract. NOT_RUN. | M3.3 |
+| T81 | Image session lease | A second tab or a reload sees the open session and is refused or offered an explicit takeover; a lease with a heartbeat older than 90 s is stale; takeover keeps reservations and the count; the old tab ends its session with a notice. NOT_RUN. | M3.3 |
+| T82 | Reload reconciliation | Pending and unknown job rows survive a reload; reconcile lists only host image files newer than the submission; attaching passes path validation, the PNG check and the import gate; abandoning keeps the unit spent; nothing auto-attaches. NOT_RUN. | M3.3 |
+| T83 | Host-copy deletion | Delete the host's copy removes exactly the job's file through the host's delete route; refused and traversal paths change nothing; the row records the deletion; the catalog is untouched. NOT_RUN. | M3.3 |
 
 ## 3. Fixture design
 

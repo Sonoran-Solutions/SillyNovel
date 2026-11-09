@@ -1,5 +1,13 @@
 # Staged implementation roadmap
 
+## M3.3 authorized — 2026-11-08
+
+[J1–J9 ruled](DECISIONS.md#owner-rulings-j1j9--m33-completion--2026-11-08); [DYL-215](https://linear.app/devils17/issue/DYL-215/sillynovel-m33-complete-the-first-image-route-for-gate-c-ledger-lease) implements plan section 7's PRs A–D in order, each reviewed by the owner before the next. Gate C's seven demonstrations map to those PRs; the owner's Gate C session and verdict stay their own steps. Gate C NOT_RUN.
+
+## M3.3 planning proposal (NOT approved) — 2026-11-08
+
+The [M3.3 completion plan](M3_3_COMPLETION_PLAN.md) proposes the durable ledger, lease, reconciliation, cache, privacy controls and usage-limit persistence that let Gate C's seven demonstrations be shown, as four reviewed PRs with owner decisions J1–J9. Nothing in M3.3 starts without a recorded owner authorization. Gate C NOT_RUN.
+
 ## M3.2 complete — 2026-11-08
 
 PRs A ([#84](https://github.com/Sonoran-Solutions/SillyNovel/pull/84)), B ([#86](https://github.com/Sonoran-Solutions/SillyNovel/pull/86)) and C ([#88](https://github.com/Sonoran-Solutions/SillyNovel/pull/88)) are on main; M3.2's roadmap step 2 (one manual missing-background path through the verified host integration) is implemented and measured against a fake backend. Next, only on the owner's word: the real-backend run on the owner's machine (I8), then M3.3 planning (step 3: approval, cache, stale-job handling, privacy controls, usage limits) toward Gate C. Gate C NOT_RUN.
