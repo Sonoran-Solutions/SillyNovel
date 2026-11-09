@@ -267,7 +267,50 @@ export function createHostAdapter(getContext, { onComposerInput, image: imageEnv
         } catch { return { ok: false, code: 'RESULT_FETCH_FAILED', path }; }
     }
 
-    const image = { available: imageAvailable, inspect: inspectImage, createController: createImageController, request: requestImage, fetchResult: fetchImageResult, hostChatKey: imageHostChatKey };
+    // M3.3 J6: the host's own root image listing (folder '.', PR A probe L1), dated by each file's Last-Modified (one-second resolution, L4).
+    // The listing is oldest first by modification time, so the walk goes back from the newest and stops at the first file older than `since`.
+    const LIST_FILES = 50; // ponytail: at most 50 dated files per Reconcile; raise it, or page the walk, if a slow backend writes more than that per job.
+    async function listHostImages({ since } = {}) {
+        try {
+            if (!Number.isFinite(since)) return { ok: false, code: 'LIST_INVALID' };
+            const context = contextOrNull(), origin = imageOrigin(), headers = new Headers(context.getRequestHeaders());
+            headers.set('Content-Type', 'application/json');
+            const response = await imageFetch(new URL('/api/images/list', origin), { method: 'POST', headers, body: JSON.stringify({ folder: '.', sortField: 'date' }), redirect: 'error' });
+            if (response.status !== 200) return { ok: false, code: 'LIST_REFUSED' };
+            const bytes = await readImageBody(response, 1024 * 1024);
+            if (bytes === null) return { ok: false, code: 'LIST_TOO_LARGE' };
+            const names = await new Response(bytes).json();
+            if (!Array.isArray(names)) return { ok: false, code: 'LIST_INVALID' };
+            const files = [];
+            for (const name of names.slice().reverse()) {
+                if (files.length >= LIST_FILES) break;
+                const path = '/user/images/' + name;
+                if (typeof name !== 'string' || resultPathProblem(path, origin)) continue;
+                const url = new URL(path, origin), file = await imageFetch(url, { headers: context.getRequestHeaders(), redirect: 'error' });
+                try { await file.body?.cancel(); } catch { /* only the headers are read */ }
+                if (file.status !== 200 || file.url !== url.href) continue;
+                const mtimeMs = Date.parse(file.headers.get('Last-Modified') ?? ''), size = Number(file.headers.get('Content-Length'));
+                if (!Number.isFinite(mtimeMs)) continue;
+                if (mtimeMs < since) break;
+                files.push({ path, mtimeMs, size });
+            }
+            return { ok: true, files };
+        } catch { return { ok: false, code: 'LIST_FAILED' }; }
+    }
+
+    // M3.3 J5: the host's delete route with exactly this path, after the result-path rule; the folder path never passes that rule (it is not a PNG).
+    async function deleteHostCopy(path) {
+        try {
+            const origin = imageOrigin(), code = resultPathProblem(path, origin);
+            if (code) return { ok: false, code };
+            const headers = new Headers(contextOrNull().getRequestHeaders());
+            headers.set('Content-Type', 'application/json');
+            const response = await imageFetch(new URL('/api/images/delete', origin), { method: 'POST', headers, body: JSON.stringify({ path }), redirect: 'error' });
+            return response.status === 200 ? { ok: true, code: null } : { ok: false, code: 'HOST_DELETE_' + response.status };
+        } catch { return { ok: false, code: 'HOST_DELETE_FAILED' }; }
+    }
+
+    const image = { available: imageAvailable, inspect: inspectImage, createController: createImageController, request: requestImage, fetchResult: fetchImageResult, hostChatKey: imageHostChatKey, listHostImages, deleteHostCopy };
 
     function readChatIdentity(context = contextOrNull()) {
         if (!context) return null;

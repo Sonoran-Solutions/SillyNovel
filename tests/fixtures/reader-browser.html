@@ -41,9 +41,10 @@ window.fixture = {
             removeListener(name, cb) { listeners.set(name,(listeners.get(name) || []).filter(item => item !== cb)); },
         },
     },
-    imagineCalls: [], imagineReturns: [], imagineHold: null, imagineResult: '/user/images/synthetic.png',
+    imagineCalls: [], imagineReturns: [], imagineHold: null, imagineResult: '/user/images/synthetic.png', imagineError: null,
     async imagine(args, trigger) {
         this.imagineCalls.push({ args, trigger });
+        if (this.imagineError) throw Error(this.imagineError); // a host-side refusal or failure (M3.3 J7)
         const controller = args?._abortController;
         const aborted = new Promise(resolve => controller?.addEventListener?.('abort', () => resolve(ABORTED)));
         const held = await Promise.race([Promise.resolve(this.imagineHold), aborted]);

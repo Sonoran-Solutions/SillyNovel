@@ -190,6 +190,7 @@ export async function createProjectScene(project,client,actions,changed,isCurren
                 if(!current())return;
                 if(prior<0)library.push(entry);else library[prior]=entry;
                 refresh();apply({type:kind==='background'?'setBackground':'setOutfit',assetId:ref,...(kind==='background'?{}:{characterKey:key})});notice='Imported · unsaved project arrangement.'+clearOverlay();edit++;
+                return result.assetId;
             } catch(error){notice='Import failed: '+error.message;throw error;}
             finally{importing=false;notify();}
         },

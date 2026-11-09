@@ -5,6 +5,10 @@ import { resolve } from 'node:path';
 import test, { before, after } from 'node:test';
 import { createHash } from 'node:crypto';
 import { preflight, reviewText } from '../src/image-request.mjs';
+import { DatabaseSync } from 'node:sqlite';
+import { SCHEMA_SQL } from '../plugins/sillynovel-storage/database-schema.mjs';
+import { imageLedger } from '../plugins/sillynovel-storage/image-ledger.mjs';
+import { demand } from '../plugins/sillynovel-storage/schema.mjs';
 
 // Test tooling is external; production reuses the pinned host's installed libraries.
 const { chromium } = await import(process.env.SN_PLAYWRIGHT_MODULE || 'playwright');
@@ -1618,28 +1622,68 @@ async function expectedReview(page,draft){
  const {review,problems}=preflight({snapshot,workflowText:shippedWorkflow,workflowSha256:createHash('sha256').update(shippedWorkflow).digest('hex'),draft,options});
  assert.deepEqual(problems,[]);return reviewText(review);
 }
+// M3.3 PR C: the image ledger behind the mocked storage routes is the plugin's own image-ledger.mjs over an in-memory SQLite database
+// of the v3 schema, so the lease, refusals and transition table are the plugin's rules, not a copy. Only project and asset lookups are stubbed.
+const OWNER='synthetic-owner';
+function ledgerStub(projectId,assetIds){
+ const db=new DatabaseSync(':memory:');db.exec('PRAGMA foreign_keys=ON;'+SCHEMA_SQL.join(';'));
+ db.prepare('INSERT INTO projects (id,owner,name,revision,scene,catalog) VALUES (?,?,?,?,?,?)').run(projectId,OWNER,'Harbor project',0,JSON.stringify({backgroundAssetId:null,backgroundLocked:false,actors:[]}),'[]');
+ const transaction=fn=>{db.exec('BEGIN IMMEDIATE');try{const value=fn();db.exec('COMMIT');return value;}catch(error){db.exec('ROLLBACK');throw error;}};
+ const load=(owner,id)=>demand(owner===OWNER&&id===projectId,'NOT_FOUND',404);
+ const api=imageLedger(db,transaction,load,(owner,project,id)=>{load(owner,project);demand(assetIds.includes(id),'NOT_FOUND',404);});
+ const ledger={db,calls:[],down:false,gate:null,
+  jobs:()=>db.prepare('SELECT id,state,host_path AS hostPath,asset,result_sha256 AS resultSha256,host_deleted_at AS hostDeletedAt,review,submitted_at AS submittedAt,deadline_at AS deadlineAt FROM image_jobs ORDER BY submitted_at,rowid').all(),
+  sessions:()=>db.prepare('SELECT id,tab,used,ended_at AS endedAt,heartbeat_at AS heartbeatAt FROM image_sessions ORDER BY started_at,rowid').all(),
+  // A page that died long ago: its heartbeat and its jobs' deadlines move into the past; nothing else changes.
+  age:ms=>{db.prepare('UPDATE image_sessions SET started_at=started_at-?,heartbeat_at=heartbeat_at-?').run(ms,ms);db.prepare('UPDATE image_jobs SET submitted_at=submitted_at-?,deadline_at=deadline_at-?').run(ms,ms);},
+  async serve(route,request,path){
+   const [,id,rest]=/\/projects\/([^/]+)\/image\/(.+)$/.exec(path),method=request.method();ledger.calls.push(method+' '+rest);
+   if(ledger.gate&&method==='POST'&&rest==='jobs')await ledger.gate;
+   if(ledger.down)return route.fulfill({status:503,json:{code:'STORAGE_UNAVAILABLE'}});
+   try{
+    let body;if(method==='POST'){demand(request.headers()['content-type']==='application/vnd.sillynovel+json','CONTENT_TYPE',415);body=JSON.parse(request.postData());}
+    const query=Object.fromEntries(new URL(request.url()).searchParams),job=rest.split('/')[1];
+    const call={'GET session':()=>api.imageSession(OWNER,id),'GET jobs':()=>api.imageJobs(OWNER,id,query),'GET cache':()=>api.imageCache(OWNER,id,query),
+     'POST session/begin':()=>api.beginImageSession(OWNER,id,body),'POST session/heartbeat':()=>api.heartbeatImageSession(OWNER,id,body),'POST session/end':()=>api.endImageSession(OWNER,id,body),
+     'POST jobs':()=>api.reserveImageJob(OWNER,id,body),'POST jobs/cleanup':()=>api.cleanupImageJobs(OWNER,id,body)}[method+' '+rest]
+     ??(method==='POST'&&/^jobs\/[^/]+\/host-deleted$/.test(rest)?()=>api.imageHostDeleted(OWNER,id,job,body):method==='POST'&&/^jobs\/[^/]+$/.test(rest)?()=>api.transitionImageJob(OWNER,id,job,body):null);
+    if(!call)return route.fulfill({status:404,json:{code:'NOT_FOUND'}});
+    return route.fulfill({status:method+' '+rest==='POST jobs'?201:200,json:call()});
+   }catch(error){return route.fulfill({status:error.status||503,json:{code:error.code&&error.status?error.code:'STORAGE_UNAVAILABLE',...error.details}});}
+  }};
+ return ledger;
+}
 async function imageRoute(t,{clock=false}={}){
  const page=await fixture(t,'',null,clock?p=>p.clock.install():null);page.setDefaultTimeout(5000);await page.locator('#sillynovel-enabled').uncheck();
  const id='11111111-1111-4111-8111-111111111111',bg='33333333-3333-4333-8333-333333333333',uploaded='55555555-5555-4555-8555-555555555555';
  const record={schemaVersion:2,projectId:id,name:'Harbor project',revision:0,scene:{backgroundAssetId:null,backgroundLocked:false,actors:[]},catalog:[{assetId:bg,label:'Harbor 1',kind:'background',actorId:null}]};
  const sha=b=>createHash('sha256').update(b).digest('hex'),tavern=await readFile(resolve(root,'tests/fixtures/m12-stage/tavern.png')),forest=await readFile(resolve(root,'tests/fixtures/m12-stage/forest.png'));
- const state={uploads:0};
- await page.route('**/api/plugins/sillynovel-storage/**',async route=>{
+ const state={uploads:0},ledger=ledgerStub(id,[bg,uploaded]);
+ // Context-wide, so a second page of the same browser shares the storage plugin and its ledger.
+ await page.context().route('**/api/plugins/sillynovel-storage/**',async route=>{
   const request=route.request(),path=new URL(request.url()).pathname;
+  if(path.includes('/image/'))return ledger.serve(route,request,path);
   if(request.method()==='POST'&&path.endsWith('/assets')){state.uploads++;return route.fulfill({status:201,json:{assetId:uploaded}});}
   if(path.includes('/assets/'))return route.fulfill({contentType:'image/png',headers:{'X-Content-SHA256':sha(path.endsWith(uploaded)?tavern:forest)},body:path.endsWith(uploaded)?tavern:forest});
   return route.fulfill({json:path.endsWith('/capabilities')?{apiVersion:1,schemaVersion:2,catalogVersion:1}:path.endsWith('/projects')?[record]:record});
  });
- await page.locator('#sillynovel-enabled').check();await page.locator('.sillynovel-controls summary').click();await button(page,'Image workflow').click();
- const field=name=>page.locator('.sillynovel-image-workflow').getByLabel(name,{exact:true});
- await button(page,'Open project and use with this chat').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('Harbor project · revision'));
  const draft={prompt:'harbor at dusk, lanterns on the water',negativePrompt:'blurry, text'};
- await field('Background label').fill('Generated harbor');await field('Image prompt').fill(draft.prompt);await field('Negative prompt').fill(draft.negativePrompt);
+ const fieldOf=p=>name=>p.locator('.sillynovel-image-workflow').getByLabel(name,{exact:true}),field=fieldOf(page);
+ // Enable, open the controls and the Image workflow, attach the project and write the draft: on the first page, after a reload, or on a second page.
+ const attach=async p=>{
+  await p.locator('#sillynovel-enabled').check();await p.locator('.sillynovel-controls summary').click();await button(p,'Image workflow').click();
+  await button(p,'Open project and use with this chat').click();await p.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('Harbor project · revision'));
+  const f=fieldOf(p);await f('Background label').fill('Generated harbor');await f('Image prompt').fill(draft.prompt);await f('Negative prompt').fill(draft.negativePrompt);
+ };
+ await attach(page);
  const sessionOn=async()=>{await field('Image session on this host').check();await page.locator('.sillynovel-image-workflow__review:not([hidden])').waitFor();};
  const hold=()=>page.evaluate(()=>{fixture.imagineHold=new Promise(r=>{fixture.release=r;});});
  const release=path=>page.evaluate(path=>fixture.release(path),path);
  const references=()=>field('Reference 1').locator('option').count();
- return {page,field,draft,state,sessionOn,hold,release,references};
+ // A fresh page of the same context (another tab), loaded and attached like the first.
+ const another=async()=>{const p=await page.context().newPage();p.setDefaultTimeout(5000);await p.goto(origin+'/');await p.waitForFunction(()=>document.getElementById('sillynovel-settings-status')?.textContent!=='');await attach(p);return p;};
+ const reload=async()=>{await page.reload();await page.waitForFunction(()=>document.getElementById('sillynovel-settings-status')?.textContent!=='');await attach(page);};
+ return {page,field,fieldOf,draft,state,sessionOn,hold,release,references,ledger,tavern,sha,uploaded,bg,another,reload};
 }
 
 test('M3.2 off by default and reachable: the section lives in the Image workflow disclosure, the session is off, every action is disabled, the reply field stays focusable',async t=>{

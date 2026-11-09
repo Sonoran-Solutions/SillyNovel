@@ -3,7 +3,7 @@ import { createProjectScene } from './project-scene.mjs';
 import { createTransientScene, TEST_ACTORS, evidenceStamp } from './transient-scene.mjs';
 import { supportsProjectConversation } from './host-adapter.mjs';
 import { emptyDraft, draftProblems, exportText, referenceFilename, captureOf, stillCurrent, pngProblem, SIZE_HINTS, PROMPT_FILENAME, RESULT_LIMITS, PREVIEW_TIMEOUT_MS } from './image-workflow.mjs';
-import { preflight, reviewText, createRequest, staleReason, createImageSession, WAIT_MS, DEFAULT_ALLOWANCE } from './image-request.mjs';
+import { preflight, reviewText, createRequest, staleReason, createImageSession, cacheHit, reconcileCandidates, resultPathProblem, WAIT_MS, DEFAULT_ALLOWANCE, LEASE } from './image-request.mjs';
 
 export function mountVisualStage({ document, stage, actions }) {
     const make = (tag, cls, text) => { const e=document.createElement(tag); e.className=cls; if(text)e.textContent=text; return e; };
@@ -224,15 +224,33 @@ export function mountVisualStage({ document, stage, actions }) {
     const generation=make('div','sillynovel-image-workflow__generation');workflowBody.append(generation);generation.append(make('p','','Generate on this host'));
     const imageUnavailable=make('p','','Host image generation is not available to SillyNovel on this host'),imageControls=make('div','sillynovel-controls__panel');generation.append(imageUnavailable,imageControls);
     const imageToggle=wfField('Image session on this host','input');imageToggle.type='checkbox';imageToggle.parentElement.classList.add('sillynovel-image-workflow__session');imageControls.append(imageToggle.parentElement);
+    // M3.3 J2: the image session is the ledger's lease. A lease held elsewhere is named and only an explicit Take over moves it.
+    const leaseLine=make('p','sillynovel-image-workflow__lease'),takeOver=wfButton('Take over',()=>beginGeneration(true));imageControls.append(leaseLine,takeOver);
     const allowanceLine=make('p',''),generationReview=make('pre','sillynovel-image-workflow__review'),generationProblems=make('p','sillynovel-image-workflow__generation-problems'),workflowPin=make('p','');
     generationReview.setAttribute('aria-label','Generation review');generationReview.tabIndex=0;imageControls.append(allowanceLine,generationReview,generationProblems,workflowPin);
     const submitImage=wfButton('Submit',()=>submitGeneration()),cancelImage=wfButton('Cancel',()=>cancelGeneration());imageControls.append(submitImage,cancelImage);
+    // M3.3 J3: a cache hit is offered beside a counted Generate again; neither happens without a click.
+    const usePrevious=wfButton('Use the previous result',()=>usePreviousResult()),generateAgain=wfButton('Generate again',()=>submitGeneration(true));imageControls.append(usePrevious,generateAgain);
     const stopWarning=make('p','','Stop host job asks ComfyUI to interrupt whatever it is running now, not only this request.');stopWarning.id='sillynovel-image-stop-warning';imageControls.append(stopWarning);
     const stopImage=wfButton('Stop host job',()=>stopGeneration()),abandonImage=wfButton('Abandon',()=>abandonGeneration());stopImage.setAttribute('aria-describedby',stopWarning.id);imageControls.append(stopImage,abandonImage);
+    // M3.3 J6: unresolved requests from an earlier page or tab, with Reconcile and Abandon after their deadline.
+    const recoveryList=make('div','sillynovel-image-workflow__recovery');imageControls.append(recoveryList);
+    // M3.3 J5: an explicit, separate control for one file in the host's image folder.
+    const hostCopyNote=make('p','');hostCopyNote.id='sillynovel-image-host-copy-note';
+    const deleteHostCopy=wfButton("Delete the host's copy",()=>deleteHostFile());deleteHostCopy.setAttribute('aria-describedby',hostCopyNote.id);imageControls.append(hostCopyNote,deleteHostCopy);
+    // Inspect and cleanup need the project's ledger, not the host seam. A button disclosure: a nested <summary> would make `.sillynovel-controls summary` ambiguous.
+    const inspectToggle=make('button','menu_button sillynovel-button','Inspect sent requests'),inspectBody=make('div','sillynovel-image-workflow__inspect');
+    inspectToggle.type='button';inspectBody.id='sillynovel-image-inspect-body';inspectBody.hidden=true;inspectToggle.setAttribute('aria-controls',inspectBody.id);inspectToggle.setAttribute('aria-expanded','false');
+    listen(inspectToggle,'click',()=>wfRun(async()=>{const open=inspectBody.hidden;inspectBody.hidden=!open;inspectToggle.setAttribute('aria-expanded',String(open));if(open)await refreshInspect();}));
+    generation.append(inspectToggle,inspectBody);
+    const reviewJobs=wfButton('Review finished image jobs',()=>reviewFinishedJobs()),removeJobs=wfButton('Remove finished image jobs',()=>removeFinishedJobs());generation.append(reviewJobs,removeJobs);
     const wfStatus=make('p','sillynovel-image-workflow__status');wfStatus.setAttribute('role','status');workflowBody.append(wfStatus);
     let wfModel=model,wfRevision=0,wfBusy=false,resultPreview=null,previewSeq=0,layoutReady=false;
     const session=createImageSession();
     let pending=null,orphan=null,inspection=null,workflowSha256=null,review=null,problems=[],reviewDraft=null,imageStarting=false,imageSubmitting=false,imageEpoch=0,imageSeq=0;
+    // This page's lease identity: a reload or another tab is another one (PR A choice 3).
+    const tab=crypto.randomUUID(),deferred=[];
+    let ledger=null,held=null,recovery=[],reconcile=null,recoveryBusy=false,cacheOffer=null,hostCopy=null,finished=null,heartbeat=null,deadlineTimer=null,ledgerQueue=Promise.resolve();
     const IMAGE_PROBLEMS={SEAM_MISSING:'Host image generation is not available to SillyNovel on this host.',SOURCE_NOT_COMFY:"The host's image source is not ComfyUI.",COMFY_TYPE_NOT_STANDARD:'Only standard ComfyUI is supported, not RunPod.',
         URL_INVALID:'The ComfyUI address must be this machine (localhost, 127.0.0.1 or [::1]).',URL_NOT_LOOPBACK:'The ComfyUI address must be this machine (localhost, 127.0.0.1 or [::1]).',
         MODE_FREE_EXTEND:"Turn off free extend in the host's Image Generation settings.",MODE_MULTIMODAL:"Turn off multimodal captioning in the host's Image Generation settings.",MODE_REFINE:"Turn off refine mode in the host's Image Generation settings.",MODE_INTERACTIVE:"Turn off interactive mode in the host's Image Generation settings.",MODE_FUNCTION_TOOL:"Turn off function tool in the host's Image Generation settings.",
@@ -264,41 +282,212 @@ export function mountVisualStage({ document, stage, actions }) {
         if(inspection?.workflowSha256!==workflowSha256)problems.push({code:'WORKFLOW_CHANGED'});
         review.ok=problems.length===0;
     }
+    // M3.3: every ledger call is serialized, so a transition queued before an end or a begin reaches the plugin before it.
+    const ledgerCall=fn=>{const call=ledgerQueue.then(fn);ledgerQueue=call.catch(()=>{});return call;};
+    const hex=bytes=>Array.from(new Uint8Array(bytes),b=>b.toString(16).padStart(2,'0')).join('');
+    const sha256=async bytes=>hex(await crypto.subtle.digest('SHA-256',bytes));
+    const iso=ms=>Number.isFinite(ms)?new Date(ms).toISOString():'unknown time';
+    // The ledger stores the leading-slash form the host's imagine returns; anything the result-path rule refuses is not recorded.
+    const ledgerPath=path=>typeof path==='string'&&resultPathProblem(path,globalThis.location.origin)===null?(path.startsWith('/')?path:'/'+path):undefined;
+    const TERMINAL=['imported','discarded','failed','stale','abandoned'];
+    const LEDGER_PROBLEMS={LEASE_LOST:'This image session ended here: another tab or page took it over.',IN_FLIGHT:'An earlier request in this project is unresolved; Reconcile or Abandon it before submitting.',
+        ALLOWANCE_EXHAUSTED:'All 5 submissions in this image session are used.',WORKFLOW_CHANGED:IMAGE_PROBLEMS.WORKFLOW_CHANGED,LEDGER_FULL:'The image ledger for this project is full; review and remove finished image jobs first.',
+        INVALID_TRANSITION:'That request changed in the image ledger; the list was read again.',NOT_FOUND:'This project or request is not in the image ledger.'};
+    // Plan section 4: no memory-only fallback. Without the ledger nothing is sent; the manual export and import stay available.
+    const ledgerProblem=code=>LEDGER_PROBLEMS[code]??'The image ledger is unavailable, so generation is refused and nothing was sent. The manual export and import stay available.';
+    const backgroundAssets=()=>{if(!model.project)return[];const {assets,media}=model.get();return assets.filter(a=>a.kind==='background'&&a.available).map(a=>({assetId:a.id,label:media.get(a.id)?.label??a.id}));};
+    function record(job,state,extra={}){
+        if(!job?.ledgerId)return Promise.resolve(null);
+        const body={tab,state,...Object.fromEntries(Object.entries(extra).filter(([,value])=>value!==undefined))};
+        return ledgerCall(()=>client.transitionImageJob(job.projectId,job.ledgerId,body)).then(row=>{
+            if(row?.hostPath&&!row.hostDeletedAt&&['discarded','imported','abandoned'].includes(row.state))hostCopy={projectId:job.projectId,ledgerId:row.id,path:row.hostPath};
+            if(!disposed){refreshInspect();renderWorkflow();}return row;
+        },error=>{
+            // Ending a session withdraws this tab (PR B choice 5); this tab's next session writes the outcome it already knows.
+            if(error.code==='LEASE_LOST'){deferred.push({projectId:job.projectId,ledgerId:job.ledgerId,body});if(ledger?.projectId===job.projectId){leaseLost();if(!disposed)renderWorkflow();}}
+            return null;
+        });
+    }
+    async function flushDeferred(projectId){
+        for(const item of deferred.splice(0)){
+            if(item.projectId!==projectId){deferred.push(item);continue;}
+            await ledgerCall(()=>client.transitionImageJob(projectId,item.ledgerId,item.body)).catch(()=>{});
+        }
+    }
+    async function loadRecovery(held_){
+        try{
+            const {jobs}=await ledgerCall(()=>client.imageSession(held_.projectId));if(ledger!==held_)return;
+            const live=new Set([pending,orphan].map(job=>job?.ledgerId).filter(Boolean));
+            recovery=jobs.filter(job=>!live.has(job.id));if(reconcile&&!recovery.some(job=>job.id===reconcile.ledgerId))reconcile=null;
+        }catch(error){if(ledger===held_)wfStatus.textContent=ledgerProblem(error.code);}
+    }
+    function stopLedger(){clearInterval(heartbeat);heartbeat=null;clearTimeout(deadlineTimer);ledger=null;held=null;recovery=[];reconcile=null;cacheOffer=null;}
+    function endLedger(){
+        const ended=ledger;stopLedger();
+        if(ended)ledgerCall(()=>client.endImageSession(ended.projectId,{sessionId:ended.session.id,tab})).catch(()=>{});
+    }
+    function withdraw(job){if(session.snapshot().requests[job.id]==='pending'){session.cancel(job.id);record(job,'cancelled');}job.cancelled=true;}
+    function leaseLost(){
+        stopLedger();if(pending)withdraw(pending);session.end();imageEpoch++;imageStarting=false;imageSubmitting=false;
+        wfStatus.textContent=LEDGER_PROBLEMS.LEASE_LOST+' Reading and replying continue, and the manual export and import stay available.';
+    }
+    function beat(){
+        const held_=ledger;if(!held_)return;
+        ledgerCall(()=>client.heartbeatImageSession(held_.projectId,{sessionId:held_.session.id,tab})).then(row=>{if(ledger===held_)held_.session=row;},
+            error=>{if(ledger===held_&&['LEASE_LOST','NOT_FOUND'].includes(error.code)){leaseLost();if(!disposed)renderWorkflow();}});
+    }
     function endImageSession(){
         // A call that never settles must stay abandonable after a chat switch, detach or dispose: keep it as the orphan with its deadline.
-        if(pending){if(session.snapshot().requests[pending.id]==='pending')session.cancel(pending.id);pending.cancelled=true;if(disposed)clearTimeout(pending.timer);orphan=pending;}
-        session.end();imageEpoch++;imageStarting=false;imageSubmitting=false;pending=null;
-        inspection=null;workflowSha256=null;review=null;problems=[];reviewDraft=null;imageToggle.checked=false;
+        if(pending){withdraw(pending);if(disposed)clearTimeout(pending.timer);orphan=pending;}
         if(resultPreview?.generated)clearPreview();
+        session.end();endLedger();imageEpoch++;imageStarting=false;imageSubmitting=false;pending=null;hostCopy=null;finished=null;
+        inspection=null;workflowSha256=null;review=null;problems=[];reviewDraft=null;imageToggle.checked=false;
+        inspectBody.hidden=true;inspectToggle.setAttribute('aria-expanded','false');
     }
     listen(imageToggle,'change',()=>wfRun(async()=>{
-        if(!imageToggle.checked){if(pending){if(session.snapshot().requests[pending.id]==='pending')session.cancel(pending.id);pending.cancelled=true;}session.end();imageEpoch++;imageStarting=false;imageSubmitting=false;renderWorkflow();return;}
-        if(session.snapshot().on||imageStarting)return;
-        const captured=model,epoch=actions.getSnapshot().sessionEpoch,token=++imageEpoch;imageStarting=true;renderWorkflow();
-        try{const inspected=await actions.image.inspect();
-            if(disposed||captured!==model||epoch!==actions.getSnapshot().sessionEpoch||token!==imageEpoch)return;
-            inspection=inspected;workflowSha256=inspected.workflowSha256;session.begin(workflowSha256);reviewGeneration();
-        }catch{if(!disposed&&captured===model&&epoch===actions.getSnapshot().sessionEpoch&&token===imageEpoch)wfStatus.textContent='The host image settings could not be read; nothing was sent.';}
-        finally{if(token===imageEpoch)imageStarting=false;}
+        if(imageToggle.checked){await beginGeneration(false);return;}
+        if(pending)withdraw(pending);session.end();endLedger();imageEpoch++;imageStarting=false;imageSubmitting=false;renderWorkflow();
     }));
+    // Begin (or, after an explicit click, take over) the project's lease; the session is on only once the ledger agrees (J1, J2).
+    async function beginGeneration(takeover){
+        if(session.snapshot().on||imageStarting)return;
+        if(!model.project){imageToggle.checked=false;wfStatus.textContent='Attach a saved project first: the image ledger keeps each request with its project.';return;}
+        const captured=model,epoch=actions.getSnapshot().sessionEpoch,token=++imageEpoch,projectId=model.status().projectId;
+        const current=()=>!disposed&&captured===model&&epoch===actions.getSnapshot().sessionEpoch&&token===imageEpoch;
+        imageStarting=true;renderWorkflow();
+        try{
+            let inspected;
+            try{inspected=await actions.image.inspect();}catch{if(current())wfStatus.textContent='The host image settings could not be read; nothing was sent.';return;}
+            if(!current())return;
+            let row;
+            try{row=await ledgerCall(()=>client.beginImageSession(projectId,{tab,workflowSha256:inspected.workflowSha256,takeover}));}
+            catch(error){
+                if(!current())return;
+                if(error.code==='LEASE_HELD')held={projectId,status:error.details?.status,heartbeatAt:error.details?.heartbeatAt,tab:String(error.details?.tab??'')};
+                else{held=null;wfStatus.textContent=ledgerProblem(error.code);}
+                return;
+            }
+            if(!current()){ledgerCall(()=>client.endImageSession(projectId,{sessionId:row.id,tab})).catch(()=>{});return;}
+            // A taken-over session keeps its pinned workflow; a different host workflow then shows WORKFLOW_CHANGED until off and on.
+            const held_={projectId,session:row};held=null;ledger=held_;inspection=inspected;workflowSha256=row.workflowSha256;session.begin(workflowSha256);reviewGeneration();
+            heartbeat=setInterval(beat,LEASE.heartbeatMs);
+            if(takeover)wfStatus.textContent="Took over this project's image session · its count and reservations are kept; the other page stops at its next heartbeat.";
+            await flushDeferred(projectId);await loadRecovery(held_);
+        }finally{if(token===imageEpoch)imageStarting=false;}
+    }
+    function renderRecovery(){
+        const at=Date.now(),items=recovery.map(job=>({id:job.id,state:job.state,submittedAt:job.submittedAt,deadlineAt:job.deadlineAt,due:at>=job.deadlineAt,files:reconcile?.ledgerId===job.id?reconcile.files:null}));
+        clearTimeout(deadlineTimer);
+        const next=Math.min(...items.filter(item=>!item.due).map(item=>item.deadlineAt));
+        if(Number.isFinite(next))deadlineTimer=setTimeout(()=>{if(!disposed)renderWorkflow();},next-at+50);
+        const signature=JSON.stringify([items,recoveryBusy]);
+        if(recoveryList.dataset.signature===signature)return;
+        recoveryList.dataset.signature=signature;
+        const press=(text,label,data)=>{const e=make('button','menu_button sillynovel-button',text);e.type='button';e.setAttribute('aria-label',label);Object.assign(e.dataset,data);e.disabled=recoveryBusy;return e;};
+        recoveryList.replaceChildren(...items.map(item=>{
+            const row=make('div','sillynovel-image-workflow__unresolved'),when=iso(item.submittedAt);
+            const outcome=item.state==='cancelled'?'cancelled; its result will never be used':item.state==='pending'&&!item.due?'may still be running':'outcome unknown';
+            row.append(make('p','','Unresolved request submitted '+when+' · host folder /user/images/ · '+outcome+(item.due?'':' · Reconcile and Abandon wait for its deadline at '+iso(item.deadlineAt)+'.')));
+            if(!item.due)return row;
+            if(item.state!=='cancelled')row.append(press('Reconcile','Reconcile the request submitted '+when,{action:'reconcile',job:item.id}));
+            row.append(press('Abandon','Abandon the request submitted '+when,{action:'abandon',job:item.id}));
+            if(item.files){
+                const list=make('div','sillynovel-image-workflow__choices');
+                if(!item.files.length)list.append(make('p','','No image in the host folder is dated at or after this request.'));
+                for(const file of item.files)list.append(press('Use '+file.path.slice('/user/images/'.length)+' · '+iso(file.mtimeMs)+' · '+file.size+' bytes','Use '+file.path+' as the result of the request submitted '+when,{action:'choose',job:item.id,path:file.path}));
+                list.append(press('None of these','None of these is the result of the request submitted '+when,{action:'none',job:item.id}));
+                row.append(list);
+            }
+            return row;
+        }));
+    }
+    listen(recoveryList,'click',event=>{
+        const target=event.target.closest?.('button[data-action]');if(!target||target.disabled)return;
+        const {action,job,path}=target.dataset;
+        wfRun(()=>action==='reconcile'?reconcileJob(job):action==='abandon'?abandonRecovered(job):action==='choose'?chooseReconciled(job,path):noneOfThese(job));
+    });
+    async function ledgerFailure(error,held_){
+        if(error.code==='LEASE_LOST'&&ledger===held_){leaseLost();return;}
+        if(ledger!==held_)return;
+        wfStatus.textContent=ledgerProblem(error.code);await loadRecovery(held_);
+    }
+    // Recovery acts on the ledger row only; the deadline has passed, so `pending` is recorded as the unknown it is (PR B: time alone moves nothing).
+    async function settleUnknown(job,held_,to){
+        for(const [from,next] of [['pending','timeout-unknown'],...(to==='unknown'?[['timeout-unknown','unknown']]:[])])
+            if(job.state===from)Object.assign(job,await ledgerCall(()=>client.transitionImageJob(held_.projectId,job.id,{tab,state:next})));
+    }
+    async function reconcileJob(id){
+        const job=recovery.find(item=>item.id===id),held_=ledger;if(!job||!held_||recoveryBusy||Date.now()<job.deadlineAt||job.state==='cancelled')return;
+        recoveryBusy=true;renderWorkflow();
+        try{
+            // Last-Modified has one-second resolution (PR A probe L4): files from the submission's own second are offered too.
+            const since=Math.floor(job.submittedAt/1000)*1000,listed=await actions.image.listHostImages({since});
+            if(ledger!==held_||!recovery.includes(job))return;
+            if(!listed?.ok){reconcile=null;wfStatus.textContent="The host's image folder could not be listed ("+(listed?.code??'LIST_FAILED')+'); nothing was attached. Abandon stays available.';return;}
+            reconcile={ledgerId:id,files:reconcileCandidates({files:listed.files,submittedAt:since,origin:globalThis.location.origin})};
+            wfStatus.textContent=reconcile.files.length?"Choose the file that is this request's result, or None of these. Nothing is attached until you choose a file and import it.":'No image in the host folder is dated at or after this request. Reconcile again later, or Abandon it.';
+        }finally{recoveryBusy=false;}
+    }
+    async function chooseReconciled(id,path){
+        const job=recovery.find(item=>item.id===id),held_=ledger;if(!job||!held_||recoveryBusy||!reconcile?.files.some(file=>file.path===path))return;
+        recoveryBusy=true;renderWorkflow();
+        try{
+            await settleUnknown(job,held_,'unknown');
+            // The same path rule, fetch and PNG check as a fresh candidate; the import gate stays Import and apply.
+            const fetched=await actions.image.fetchResult(path);
+            if(ledger!==held_||!recovery.includes(job))return;
+            if(!fetched.ok){wfStatus.textContent=imageProblem(fetched)+' Nothing was attached; choose another file, None of these, or Abandon.';return;}
+            const resultSha256=await sha256(fetched.bytes);
+            await ledgerCall(()=>client.transitionImageJob(held_.projectId,id,{tab,state:'reconciled',...(ledgerPath(path)?{hostPath:ledgerPath(path)}:{}),resultSha256}));
+            if(ledger!==held_)return;
+            recovery=recovery.filter(item=>item!==job);reconcile=null;clearPreview();
+            resultPreview={file:fetched.file,url:URL.createObjectURL(fetched.file),capture:captureOf(now(0)),generated:{id:null,ledgerId:id,projectId:held_.projectId,path,request:null}};resultImage.src=resultPreview.url;resultImage.hidden=false;
+            wfStatus.textContent='Reconciled candidate, not imported · the host kept a copy at '+path+'. Import and apply it, or discard it.';
+        }catch(error){await ledgerFailure(error,held_);}
+        finally{recoveryBusy=false;}
+    }
+    function noneOfThese(id){if(reconcile?.ledgerId!==id)return;reconcile=null;wfStatus.textContent='Nothing attached. The request stays unresolved; Reconcile again later, or Abandon it.';}
+    async function abandonRecovered(id){
+        const job=recovery.find(item=>item.id===id),held_=ledger;if(!job||!held_||recoveryBusy||Date.now()<job.deadlineAt)return;
+        recoveryBusy=true;renderWorkflow();
+        try{
+            await settleUnknown(job,held_,'abandoned');
+            await ledgerCall(()=>client.transitionImageJob(held_.projectId,id,{tab,state:'abandoned'}));
+            if(ledger!==held_)return;
+            recovery=recovery.filter(item=>item!==job);if(reconcile?.ledgerId===id)reconcile=null;wfStatus.textContent='Abandoned · the unit stays spent.';
+        }catch(error){await ledgerFailure(error,held_);}
+        finally{recoveryBusy=false;}
+    }
     function renderGeneration(){
         const seam=actions.image?.available(),available=Boolean(seam?.ok||seam?.missing.join()==='SlashCommandAbortController'),state=session.snapshot(),job=pending??orphan,outcome=job?state.requests[job.id]:null;
+        const attached=Boolean(model.project),projectId=attached?model.status().projectId:null;
+        inspectToggle.disabled=!attached;reviewJobs.disabled=!attached;removeJobs.disabled=!finished||finished.projectId!==projectId;
         imageUnavailable.hidden=available;imageControls.hidden=!available;if(!available)return;
         imageToggle.checked=state.on||imageStarting;
-        allowanceLine.textContent='Submissions used '+state.used+' of '+DEFAULT_ALLOWANCE;
+        const used=ledger?ledger.session.used:state.used;
+        allowanceLine.textContent='Submissions used '+used+' of '+DEFAULT_ALLOWANCE;
         if(state.on&&inspection)reviewGeneration();
         generationReview.hidden=!review;generationReview.textContent=review?reviewText(review):'';generationReview.classList.toggle('sillynovel-image-workflow__refused',Boolean(problems.length));
-        generationProblems.textContent=[...problems.map(imageProblem),...(state.on&&state.used>=state.allowance?['All '+state.allowance+' submissions in this image session are used.']:[]),...(state.inFlight!==null&&(!pending||pending.cancelled)?['A request from before is still running on the host; Submit returns when it settles or after Abandon.']:[])].join(' ');
+        leaseLine.hidden=!held;takeOver.hidden=!held;takeOver.disabled=!held||imageStarting||held.projectId!==projectId;
+        leaseLine.textContent=held?"This project's image session is "+(held.status==='stale'?'held by a tab or page that stopped responding':'open in another tab or page')+' (tab '+held.tab.slice(0,8)+', last heartbeat '+iso(held.heartbeatAt)+'). Take over keeps its count and reservations; the other page stops at its next heartbeat.':'';
+        generationProblems.textContent=[...problems.map(imageProblem),...(state.on&&used>=state.allowance?['All '+state.allowance+' submissions in this image session are used.']:[]),...(state.inFlight!==null&&(!pending||pending.cancelled)?['A request from before is still running on the host; Submit returns when it settles or after Abandon.']:[]),...(recovery.length?[LEDGER_PROBLEMS.IN_FLIGHT]:[])].join(' ');
         workflowPin.hidden=!workflowSha256;workflowPin.textContent=workflowSha256?'Session workflow SHA-256: '+workflowSha256:'';
-        submitImage.disabled=!state.on||!review?.ok||state.inFlight!==null||imageSubmitting||state.used>=state.allowance||!model.project;
+        submitImage.disabled=!state.on||!ledger||!review?.ok||state.inFlight!==null||imageSubmitting||used>=state.allowance||!attached||recovery.length>0||recoveryBusy;
         cancelImage.disabled=!pending||outcome!=='pending';
         stopImage.disabled=!pending||pending.timer===null||!['pending','cancelled'].includes(outcome)||!pending.controller;
         abandonImage.hidden=!job||!(outcome==='timeout-unknown'||outcome==='cancelled'&&job.expired);abandonImage.disabled=abandonImage.hidden;
+        if(cacheOffer&&(!review||reviewText(review)!==cacheOffer.shown||!stillCurrent(cacheOffer.capture,now(wfRevision))))cacheOffer=null;
+        usePrevious.hidden=!cacheOffer||Boolean(cacheOffer.gone);usePrevious.disabled=usePrevious.hidden||projectBusy||!layoutReady||model.status().importing;
+        generateAgain.hidden=!cacheOffer;generateAgain.disabled=generateAgain.hidden||submitImage.disabled;
+        const copy=hostCopy&&hostCopy.projectId===projectId?hostCopy:null;
+        hostCopyNote.hidden=!copy;deleteHostCopy.hidden=!copy;deleteHostCopy.disabled=!copy;
+        hostCopyNote.textContent=copy?"Delete the host's copy removes "+copy.path+" from SillyTavern's image folder. ComfyUI's own output folder may hold another copy that SillyNovel cannot see.":'';
+        renderRecovery();
     }
     function cancelGeneration(){
         if(!pending)return;const outcome=session.snapshot().requests[pending.id];
-        if(outcome==='pending')session.cancel(pending.id);else if(outcome!=='cancelled')return;
-        pending.cancelled=true;wfStatus.textContent='Cancelled · permission to apply withdrawn; the host keeps polling until the job is terminal';renderWorkflow();
+        if(outcome!=='pending'&&outcome!=='cancelled')return;
+        withdraw(pending);wfStatus.textContent='Cancelled · permission to apply withdrawn; the host keeps polling until the job is terminal';renderWorkflow();
     }
     function stopGeneration(){
         if(stopImage.disabled||!pending)return;
@@ -306,59 +495,131 @@ export function mountVisualStage({ document, stage, actions }) {
     }
     function abandonGeneration(){
         const job=pending??orphan;if(!job||abandonImage.disabled)return;
-        session.abandon(job.id);clearTimeout(job.timer);if(pending===job)pending=null;if(orphan===job)orphan=null;wfStatus.textContent='Abandoned · the unit stays spent.';renderWorkflow();
+        session.abandon(job.id);record(job,'abandoned');clearTimeout(job.timer);if(pending===job)pending=null;if(orphan===job)orphan=null;wfStatus.textContent='Abandoned · the unit stays spent.';renderWorkflow();
     }
-    function dropGeneration(job){
-        if(session.snapshot().inFlight===job.id)session.settle(job.id,'stale');
+    function settleJob(job,outcome,path){session.settle(job.id,outcome);record(job,outcome,{hostPath:ledgerPath(path)});}
+    function dropGeneration(job,path){
+        if(session.snapshot().inFlight===job.id)settleJob(job,'stale',path);
         if(pending===job)pending=null;if(orphan===job)orphan=null;if(!disposed)renderWorkflow();
     }
     function discardGeneration(job,reason,path){
-        session.settle(job.id,'stale');pending=null;
+        settleJob(job,'stale',path);pending=null;
         wfStatus.textContent='Result discarded: '+(STALE_REASONS[reason]??reason)+(path?'; the host kept a copy at '+path:'; no host file was returned.');renderWorkflow();
     }
-    async function submitGeneration(){
+    // J3: the previous result is the project's own background asset, applied like Apply background: no host call, nothing counted.
+    async function usePreviousResult(){
+        const offer=cacheOffer;if(!offer||offer.gone||!model.project||usePrevious.disabled)return;
+        if(!backgroundAssets().some(a=>a.assetId===offer.assetId)){cacheOffer=null;wfStatus.textContent='The previous result is no longer in this project; Submit to check again.';return;}
+        cacheOffer=null;
+        if(await model.dispatch({type:'setBackground',assetId:offer.assetId})===false)return;
+        wfStatus.textContent='Applied the previous result “'+offer.label+'” as the background · nothing was sent and nothing was counted; unsaved project change. Save project to keep it.';
+    }
+    async function deleteHostFile(){
+        const target=hostCopy;if(!target||!model.project||model.status().projectId!==target.projectId)return;
+        const result=await actions.image.deleteHostCopy(target.path);
+        if(!result?.ok){wfStatus.textContent='The host refused to delete '+target.path+' ('+(result?.code??'HOST_DELETE_FAILED')+'); the job record is unchanged.';return;}
+        if(hostCopy===target)hostCopy=null;
+        const row=await ledgerCall(()=>client.imageHostDeleted(target.projectId,target.ledgerId)).catch(()=>null);
+        wfStatus.textContent="Deleted the host's copy at "+target.path+'.'+(row?'':' The image ledger could not record the deletion.')+" ComfyUI's own output folder may still hold another copy that SillyNovel cannot see.";
+        await refreshInspect();
+    }
+    // Inspect sent scope (plan 3.5): read-only rows, newest first, with the review text the user saw.
+    async function refreshInspect(){
+        if(inspectBody.hidden||!model.project)return;
+        const captured=model,projectId=model.status().projectId;let jobs;
+        try{jobs=await ledgerCall(()=>client.imageJobs(projectId));}catch(error){if(captured===model&&!inspectBody.hidden)inspectBody.replaceChildren(make('p','',ledgerProblem(error.code)));return;}
+        if(captured!==model||inspectBody.hidden)return;
+        inspectBody.replaceChildren(...(jobs.length?jobs.map(job=>{
+            const item=make('div','sillynovel-image-workflow__job'),text=make('pre','sillynovel-image-workflow__sent',job.review);
+            text.tabIndex=0;text.setAttribute('aria-label','Review text sent at '+iso(job.submittedAt));
+            item.append(make('p','',iso(job.submittedAt)+' · '+job.state+' · host path '+(job.hostPath??'none')+(job.hostDeletedAt?' (host copy deleted)':'')),text);return item;
+        }):[make('p','','No image requests are recorded for this project.')]));
+    }
+    // Cleanup removes finished job rows only (PR B): never artwork, never an unresolved row.
+    async function reviewFinishedJobs(){
+        if(!model.project)return;const captured=model,projectId=model.status().projectId;finished=null;
+        let jobs;try{jobs=await ledgerCall(()=>client.imageJobs(projectId));}catch(error){if(captured===model)wfStatus.textContent=ledgerProblem(error.code);return;}
+        if(captured!==model)return;
+        const ids=jobs.filter(job=>TERMINAL.includes(job.state)).map(job=>job.id);finished={projectId,ids};
+        wfStatus.textContent=ids.length+' finished image job record'+(ids.length===1?'':'s')+' can be removed from the ledger; '+(jobs.length-ids.length)+' unresolved or awaiting import are kept. Artwork is never removed.';
+    }
+    async function removeFinishedJobs(){
+        const target=finished;if(!target||!model.project||model.status().projectId!==target.projectId)return;finished=null;
+        try{
+            const receipt=await ledgerCall(()=>client.cleanupImageJobs(target.projectId,target.ids));
+            if(hostCopy&&receipt.deletedIds.includes(hostCopy.ledgerId))hostCopy=null;
+            wfStatus.textContent='Removed '+receipt.deletedCount+' image job record'+(receipt.deletedCount===1?'':'s')+' and '+receipt.deletedSessions+' ended session'+(receipt.deletedSessions===1?'':'s')+' from the ledger; no artwork was touched.';
+        }catch(error){wfStatus.textContent=['UNRESOLVED_JOB','NOT_FOUND'].includes(error.code)?'The image jobs changed since the review; nothing was removed. Review them again.':ledgerProblem(error.code);}
+        await refreshInspect();
+    }
+    async function submitGeneration(again=false){
         if(submitImage.disabled)return;
-        const capture=captureOf(now(wfRevision)),token=imageEpoch,shown=reviewText(review);let job=null;imageSubmitting=true;renderWorkflow();
+        const capture=captureOf(now(wfRevision)),token=imageEpoch,shown=reviewText(review),held_=ledger;let job=null;imageSubmitting=true;cacheOffer=null;renderWorkflow();
+        const live=()=>!disposed&&token===imageEpoch&&session.snapshot().on&&ledger===held_&&stillCurrent(capture,now(wfRevision));
         try{
             // Refresh the host before hashing; changed settings must be shown for another explicit Submit.
             const inspected=await actions.image.inspect();
-            if(disposed||token!==imageEpoch||!session.snapshot().on||!stillCurrent(capture,now(wfRevision)))return;
+            if(!live())return;
             inspection=inspected;reviewGeneration();
             if(!review.ok||reviewText(review)!==shown){wfStatus.textContent='The host image settings changed · review them before submitting.';return;}
-            const reviewed=review,raw={...reviewDraft},payloadSha256=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(shown))),byte=>byte.toString(16).padStart(2,'0')).join('');
-            if(disposed||token!==imageEpoch||!session.snapshot().on||!stillCurrent(capture,now(wfRevision)))return;
+            const reviewed=review,raw={...reviewDraft},payloadSha256=await sha256(new TextEncoder().encode(shown));
+            if(!live())return;
             const d=draft();if(d.prompt!==raw.prompt||d.negativePrompt!==raw.negativePrompt)throw Error('DRAFT_CHANGED');
+            // J3: before anything is reserved or sent. Only an imported job of this project whose background is still in its catalog is a hit; a random seed never is.
+            if(!again){
+                const rows=await ledgerCall(()=>client.imageCache(held_.projectId,payloadSha256)).catch(()=>null);
+                if(!live())return;
+                const assets=backgroundAssets(),hit=Array.isArray(rows)?cacheHit({payloadSha256,seedPolicy:reviewed.seedPolicy,jobs:rows,catalogAssetIds:assets.map(a=>a.assetId)}):null;
+                if(hit){cacheOffer={...hit,label:assets.find(a=>a.assetId===hit.assetId).label,shown,capture};wfStatus.textContent='This exact request was imported before as “'+cacheOffer.label+'”. Use the previous result (nothing is sent or counted), or Generate again (counted).';return;}
+                if(rows?.length&&reviewed.seedPolicy==='fixed'){cacheOffer={gone:true,shown,capture};wfStatus.textContent='The previous result for this exact request is no longer in this project. Generate again sends a new request (counted).';return;}
+            }
             const controller=actions.image.createController();if(!controller)throw Error('SEAM_MISSING');
-            const id=++imageSeq,request=createRequest({capture:now(wfRevision),hostChatKey:actions.image.hostChatKey(),catalogRevision:model.status().revision,layoutRevision:model.status().sceneRevision,lockState:model.globalLocks(),review:reviewed,workflowSha256,payloadSha256,id,submittedAt:Date.now()});
+            // J1: the reservation is written before the host call; any refusal sends nothing.
+            let reserved;
+            try{reserved=await ledgerCall(()=>client.reserveImageJob(held_.projectId,{sessionId:held_.session.id,tab,payloadSha256,workflowSha256,review:shown,settings:{...reviewed.settings},seedPolicy:reviewed.seedPolicy,deadlineMs:WAIT_MS}));}
+            catch(error){
+                if(error.code==='LEASE_LOST'&&ledger===held_)leaseLost();
+                else if(live()){wfStatus.textContent=ledgerProblem(error.code);if(error.code==='IN_FLIGHT')await loadRecovery(held_);}
+                return;
+            }
+            const id=++imageSeq;job={id,ledgerId:reserved.id,projectId:held_.projectId,request:null,controller,timer:null,cancelled:false,timedOut:false,expired:false};
+            if(ledger===held_)held_.session={...held_.session,used:held_.session.used+1};
+            if(!live()){record(job,'stale');return;}
+            const request=createRequest({capture:now(wfRevision),hostChatKey:actions.image.hostChatKey(),catalogRevision:model.status().revision,layoutRevision:model.status().sceneRevision,lockState:model.globalLocks(),review:reviewed,workflowSha256,payloadSha256,id,submittedAt:Date.now()});
             session.submit(request);
-            job={id,request,controller,timer:null,cancelled:false,timedOut:false,expired:false};pending=job;imageSubmitting=false;
+            job.request=request;pending=job;imageSubmitting=false;
             // A cancelled call that never settles becomes abandonable only at the deadline (plan 3.5), so Cancel cannot free the slot for a new host job at once.
             job.timer=setTimeout(()=>{if((pending===job||orphan===job)&&session.snapshot().requests[id]==='cancelled'){job.expired=true;if(!disposed)renderWorkflow();return;}
-                if(pending!==job||session.snapshot().requests[id]!=='pending')return;session.timeout(id);job.timedOut=true;wfStatus.textContent="No result after 120 s · outcome unknown; the slot stays reserved. Check ComfyUI's queue and the host's image folder; the host keeps polling until the job is terminal.";renderWorkflow();},WAIT_MS);
+                if(pending!==job||session.snapshot().requests[id]!=='pending')return;session.timeout(id);record(job,'timeout-unknown');job.timedOut=true;wfStatus.textContent="No result after 120 s · outcome unknown; the slot stays reserved. Check ComfyUI's queue and the host's image folder; the host keeps polling until the job is terminal.";renderWorkflow();},WAIT_MS);
             wfStatus.textContent='Generating on '+new URL(reviewed.destination.url).host+' · reading and replying continue';renderWorkflow();
             let result;
             try{result=await actions.image.request({prompt:raw.prompt,negative:raw.negativePrompt,controller:job.controller});}catch{result={ok:false,code:'HOST_THREW'};}
             clearTimeout(job.timer);job.timer=null;
-            if(pending!==job||disposed){dropGeneration(job);const late=!disposed&&!pending&&result.path?staleReason(request,nowFull()):null;if(late)wfStatus.textContent='Result discarded: '+(STALE_REASONS[late]??late)+'; the host kept a copy at '+result.path;return;}
-            if(job.cancelled||job.timedOut){session.settle(id,'stale');pending=null;wfStatus.textContent=(job.timedOut?'No result within 120 s':'Cancelled')+' · result discarded'+(result.path?'; the host kept a copy at '+result.path:'.');return;}
+            if(pending!==job||disposed){dropGeneration(job,result.path);const late=!disposed&&!pending&&result.path?staleReason(request,nowFull()):null;if(late)wfStatus.textContent='Result discarded: '+(STALE_REASONS[late]??late)+'; the host kept a copy at '+result.path;return;}
+            if(job.cancelled||job.timedOut){settleJob(job,'stale',result.path);pending=null;wfStatus.textContent=(job.timedOut?'No result within 120 s':'Cancelled')+' · result discarded'+(result.path?'; the host kept a copy at '+result.path:'.');return;}
             let reason=staleReason(request,nowFull());if(reason){discardGeneration(job,reason,result.path);return;}
-            if(!result.ok){session.settle(id,'failed');pending=null;wfStatus.textContent=imageProblem(result);return;}
+            // A failure, a refusal included (J7), spends the unit; there is no retry and no fallback route.
+            if(!result.ok){settleJob(job,'failed');pending=null;wfStatus.textContent=imageProblem(result);return;}
             let fetched;
             try{fetched=await actions.image.fetchResult(result.path);}catch{fetched={ok:false,code:'RESULT_FETCH_FAILED',path:result.path};}
-            if(pending!==job||disposed){dropGeneration(job);return;}
-            if(job.cancelled||job.timedOut){session.settle(id,'stale');pending=null;wfStatus.textContent='Cancelled · result discarded; the host kept a copy at '+result.path;return;}
+            const resultSha256=fetched.ok?await sha256(fetched.bytes):undefined;
+            if(pending!==job||disposed){dropGeneration(job,result.path);return;}
+            if(job.cancelled||job.timedOut){settleJob(job,'stale',result.path);pending=null;wfStatus.textContent='Cancelled · result discarded; the host kept a copy at '+result.path;return;}
             if(fetched.ok){
                 const latest=await actions.image.inspect();if(pending===job)inspection=latest;if(!latest.ok)fetched={ok:false,code:'RESULT_REVIEW_FAILED',path:result.path};
-                if(pending!==job||disposed){dropGeneration(job);return;}
-                if(job.cancelled||job.timedOut){session.settle(id,'stale');pending=null;wfStatus.textContent='Cancelled · result discarded; the host kept a copy at '+result.path;return;}
+                if(pending!==job||disposed){dropGeneration(job,result.path);return;}
+                if(job.cancelled||job.timedOut){settleJob(job,'stale',result.path);pending=null;wfStatus.textContent='Cancelled · result discarded; the host kept a copy at '+result.path;return;}
             }
-            if(!fetched.ok){session.settle(id,'failed');pending=null;wfStatus.textContent=imageProblem(fetched)+' The host kept a copy at '+result.path;return;}
+            if(!fetched.ok){settleJob(job,'failed',result.path);pending=null;wfStatus.textContent=imageProblem(fetched)+' The host kept a copy at '+result.path;return;}
             reason=staleReason(request,nowFull());if(reason){discardGeneration(job,reason,result.path);return;}
-            clearPreview();session.settle(id,'candidate');pending=null;
-            resultPreview={file:fetched.file,url:URL.createObjectURL(fetched.file),capture:captureOf(now(0)),generated:{id,path:result.path,request}};resultImage.src=resultPreview.url;resultImage.hidden=false;
+            clearPreview();session.settle(id,'candidate');record(job,'candidate',{hostPath:ledgerPath(result.path),resultSha256});pending=null;
+            resultPreview={file:fetched.file,url:URL.createObjectURL(fetched.file),capture:captureOf(now(0)),generated:{id,ledgerId:job.ledgerId,projectId:job.projectId,path:result.path,request}};resultImage.src=resultPreview.url;resultImage.hidden=false;
             wfStatus.textContent='Candidate, not imported · the host kept a copy at '+result.path+'. Import and apply it, or discard it.';
-        }catch(error){if(job&&pending===job){clearTimeout(job.timer);session.settle(job.id,'failed');pending=null;}if(!disposed&&token===imageEpoch&&stillCurrent(capture,now(wfRevision)))wfStatus.textContent='Image workflow: '+imageProblem({code:error.message});}
-        finally{if(!job&&token===imageEpoch)imageSubmitting=false;if(!disposed)renderWorkflow();}
+        }catch(error){
+            if(job&&pending===job){clearTimeout(job.timer);settleJob(job,'failed');pending=null;}else if(job&&!job.request)record(job,'failed');
+            if(!disposed&&token===imageEpoch&&stillCurrent(capture,now(wfRevision)))wfStatus.textContent='Image workflow: '+imageProblem({code:error.message});
+        }
+        finally{if(token===imageEpoch&&!job?.request)imageSubmitting=false;if(!disposed)renderWorkflow();}
     }
     function saveFile(blob,name){const a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download=name;a.hidden=true;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
     async function downloadReference(i){
@@ -371,7 +632,11 @@ export function mountVisualStage({ document, stage, actions }) {
             saveFile(blob,referenceFilename(i));wfStatus.textContent='Reference '+(i+1)+' download started as '+referenceFilename(i)+'. It is the stored file and may contain embedded PNG metadata.';
         }finally{wfBusy=false;}
     }
-    function clearPreview(message){previewSeq++;if(resultPreview?.generated&&session.snapshot().requests[resultPreview.generated.id]==='candidate')session.discard(resultPreview.generated.id);if(resultPreview)URL.revokeObjectURL(resultPreview.url);resultPreview=null;resultImage.hidden=true;resultImage.removeAttribute('src');if(message!==undefined)wfStatus.textContent=message;}
+    function clearPreview(message){
+        // A generated or reconciled candidate dropped without import is recorded as discarded (plan 3.5); its host copy stays until Delete the host's copy.
+        previewSeq++;const generated=resultPreview?.generated;
+        if(generated&&!generated.done){generated.done=true;if(generated.id===null||session.snapshot().requests[generated.id]==='candidate'){if(generated.id!==null)session.discard(generated.id);record(generated,'discarded');}}
+        if(resultPreview)URL.revokeObjectURL(resultPreview.url);resultPreview=null;resultImage.hidden=true;resultImage.removeAttribute('src');if(message!==undefined)wfStatus.textContent=message;}
     // A preview belongs to the attachment, not to draft edits: the label is read when importing (draft revision 0 on both sides).
     async function choosePreview(file){
         clearPreview('Checking the PNG · nothing is uploaded.');const seq=previewSeq;
@@ -393,13 +658,14 @@ export function mountVisualStage({ document, stage, actions }) {
         if(!stillCurrent(chosen.capture,now(0))){clearPreview('The project changed · preview discarded, nothing uploaded.');return;}
         if(!layoutReady){wfStatus.textContent='Wait for the selected message to settle, then import.';return;}
         if(projectBusy||model.status().importing)return;
-        if(chosen.generated){
+        // A reconciled candidate has no request of this page to compare; its own preview capture and the import gate still apply (J6).
+        if(chosen.generated?.request){
             const inspected=await actions.image.inspect();if(resultPreview!==chosen||disposed)return;inspection=inspected;
             const reason=staleReason(chosen.generated.request,nowFull());if(reason){clearPreview('Result discarded: '+(STALE_REASONS[reason]??reason)+'; the host kept a copy at '+chosen.generated.path);return;}
             if(!layoutReady||projectBusy||model.status().importing)return;
         }
-        await model.importFile(chosen.file,'background',undefined,wfLabel.value.trim());
-        if(resultPreview===chosen){if(chosen.generated)session.imported(chosen.generated.id);clearPreview('Imported and applied as the background · unsaved project change. Save project to keep it.');}
+        const assetId=await model.importFile(chosen.file,'background',undefined,wfLabel.value.trim());
+        if(resultPreview===chosen){const generated=chosen.generated;if(generated){generated.done=true;if(generated.id!==null)session.imported(generated.id);if(assetId)record(generated,'imported',{assetId});}clearPreview('Imported and applied as the background · unsaved project change. Save project to keep it.');}
     }
     for(const e of [wfLabel,wfPrompt,wfNegative,wfStyle])listen(e,'input',()=>{wfRevision++;renderWorkflow();});
     for(const e of [wfSize,...wfRefs])listen(e,'change',()=>{wfRevision++;renderWorkflow();});
