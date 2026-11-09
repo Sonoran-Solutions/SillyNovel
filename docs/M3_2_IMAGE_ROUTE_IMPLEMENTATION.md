@@ -178,3 +178,72 @@ Browser, storage and native suites NOT_RUN: a pure-module slice under the [M2 ev
 ### Next
 
 PR C (the adapter seam and the Generate on this host UI) starts only after the owner reviews this PR. It is a renderer and adapter change and needs the browser suite, storage suite, full native campaign on pinned SillyTavern 1.19.0 with the PR A fixture, the affected device replay, and T74–T77's adapter halves.
+
+## PR C — the adapter seam and the Generate on this host section
+
+**Candidate, unmerged. Frozen `afac1f9`**, based on `e950986` (the [owner's acceptance of PR B](DECISIONS.md#owner-acceptance--m32-pr-b-merged-two-proposals-adopted-pr-c-go-ahead--2026-11-08) and the amended [plan](M3_2_IMAGE_ROUTE_PLAN.md)). Tracked by [DYL-213](https://linear.app/devils17/issue/DYL-213/sillynovel-m32-first-image-route-host-image-generation-local-comfyui). The first runtime change of M3.2 (plan section 7, PR C): the host adapter gains the image seam, the Image workflow disclosure gains the Generate on this host section, and the PR B module decides. No plugin or schema change; no image provider is contacted by any test; the owner's ComfyUI on port 8188 was never reached.
+
+### What it adds
+
+| File | Change |
+| --- | --- |
+| `src/host-adapter.mjs` | `adapter.image`: `available()` (the typed `imagine` command with a two-argument callback, `extensionSettings.sd`, `getRequestHeaders`, `getCurrentChatId`, and the host's `SlashCommandAbortController` module); `inspect()` (a verbatim copy of the image settings the plan names, the option lists of the host's four selects, the workflow text fetched by name through `/api/sd/comfy/workflow` with the host's own headers and bounded at 1 MiB, its lowercase SHA-256, the host chat key, the page origin); `createController()` (the host's own class, never a DOM `AbortController`, which PR A showed the host ignores); `request({ prompt, negative, controller })` (exactly `{ quiet: 'true', gallery: 'false', negative, _abortController }` and the prompt as the trigger; a non-empty string path or a code, never a throw, never a retry; refused before the call when the seam is missing or `comfy_url` is not loopback); `fetchResult(path)` (the module's path rule first, then a same-origin fetch with the host's headers and `redirect: 'error'`, a body bound at the PNG ceiling, and `pngProblem` before a `File` is returned). Testable through optional `document`, `fetch` and `importController` overrides. |
+| `src/stage-view.mjs`, `style.css` | Inside the Image workflow disclosure, after the manual export: a paragraph **Generate on this host**; the **Image session on this host** checkbox; the review `<pre aria-label="Generation review">` showing the module's review text, greyed while refused; the session's workflow SHA-256 line; the **Submissions used N of 5** line; a problems paragraph mapping every module and adapter code to a plain sentence; **Submit**, **Cancel**, **Stop host job** (with its always-visible sentence “Stop host job asks ComfyUI to interrupt whatever it is running now, not only this request.”) and **Abandon**; a 120 s timer; the candidate shown in the existing preview slot and imported through the existing **Import and apply background** and **Discard preview**, so the scene is entered only by today's import gate. Submit re-reads the host and refuses when the settings snapshot, the workflow hash or the draft moved since the review. |
+| `index.js` | Passes `image: adapter.image` in the actions the stage view receives. |
+| `src/project-scene.mjs` | `status()` also reports `sceneRevision`, the scene's edit revision, for the request identity. |
+| `tests/m3-image-adapter.test.mjs` | 53 Node tests with a fake context, document, fetch and controller import; registered in `run.py` (17 Node files). |
+| `tests/m1-reader-browser.test.mjs`, `tests/fixtures/reader-browser.html` | A scriptable image seam in the host mock (settings, selects, `SlashCommandParser.commands.imagine`, a controller stub, the shipped workflow route, synthetic result files) and 19 new actual-entry tests (13 at first, 6 added after the senior review). |
+| `tests/probes/m3-image-route/host.mjs` | The native campaign on the pinned host against the PR A fake ComfyUI, registered in `run.py` as the eleventh step and in `validate.py`. |
+
+### TESTING coverage
+
+| Row | Covered here | Still NOT_RUN |
+| --- | --- | --- |
+| T74 | Adapter half on the pinned host (campaign C): one `/prompt` per Submit whose workflow `deepEqual`s the independently substituted shipped default; no decoy on the image wire; zero text-model requests; `extension_settings.sd` and the canonical chat files unchanged | Other image-aware extensions; the owner's 1.18.0 |
+| T75 | `free_extend` and a stale saved selection refuse before dispatch in the browser suite against the real entry (test 3) and `free_extend` on the pinned host (campaign I); the adapter refuses a non-loopback `comfy_url` before calling the seam (Node, `m3-image-adapter`); non-comfy and RunPod sources and the other mode flags are refused by the module (PR B's tests), not exercised through the UI; no connection is rewritten and no fallback exists | Non-comfy, RunPod and the other mode flags through the UI |
+| T76 | The returned path validated before fetch; a `.jpg` result refused with the path disclosed (browser test 7); approval alone copies into the project through the shared import, which locks the background (browser test 5, campaign C); the host's retained file disclosed in every status | — |
+| T77 | Cancel holds the slot and the late result is dropped (browser 8, campaign D); Abandon is offered only after the 120 s deadline, also after a Cancel whose host call never settled (browser, campaign D); a result arriving after the timeout is discarded, never a candidate (browser); turning the session off in flight drops the result (browser); Stop host job aborts the host's controller and the fixture logs `/interrupt` (browser 9, campaign E); the 120 s timeout and Abandon (browser 10 with fake timers); stale discard on a chat switch, which detaches the project (browser 12, campaign G), after a draft edit and after a scene change made by a lock (browser); a request that outlives a chat switch stays abandonable (browser, campaign G); allowance exhaustion (browser 11, campaign H) | The real 120 s wait on the pinned host (the UI has no test hook to shorten it; covered with fake timers in the browser suite); manual lock after Submit on the pinned host |
+| T73-style | Keyboard order, accessible names, the status role and Escape on the new controls (browser 13, emulated) | Physical devices and screen readers |
+
+### Implementation choices for owner review
+
+1. **The candidate reuses the M3.1 preview slot and its Import and apply**, so a generated result enters the scene by exactly the gate a hand-imported PNG uses (H10): registers, applies, locks, dirties; Save stays explicit.
+2. **The draft fields are what SillyNovel hands the host**, never the combined review texts; the host adds its own prefixes, and the review shows the result (I3, PR A R1 and R2). Browser test 4 and campaign C assert this on the wire.
+3. **Submit re-inspects the host** and refuses when the settings snapshot, the workflow hash or the draft changed since the review was shown, with one generic sentence (“The host image settings changed · review them before submitting.”; a draft edit during the re-read returns silently to the review); turning the session off and on re-reviews and resets the allowance (I2). Editing the prompt re-runs preflight on the draft only.
+4. **The controls are shown when the host's controller class is the only piece still loading.** The adapter imports it lazily inside `inspect()`; without this tolerance the toggle could never be turned on (C3 found it). If the import then fails, preflight refuses with `SEAM_MISSING`. An eager import at adapter creation was tried and reverted because the adapter tests install their fake importer after construction; the lazy design stands.
+5. **An exhausted allowance names itself** in the problems line; **a late result after a chat switch or detach is reported**, with the host's retained path, as plan 3.3 asks (both found by C3).
+6. **The review `<pre>` and the generation problems paragraph have their own classes**, so the M3.1 browser tests' strict locators keep matching one element each.
+7. **The campaign does not wait 120 s on the real host**: step F is recorded as not tested there and covered with fake timers in the browser suite.
+8. **`settings.json` on the pinned host changes bytes but no values** when the extension saves; campaign C therefore compares the `sd` section by value and the chat files by hash.
+9. **Workers and review.** C1 (adapter) and C2 (UI) were written in parallel by Codex sol workers against a fixed interface; their sandboxes could not bind a socket or commit, so the coordinator ran the Node list and the existing browser suite, found two selector collisions and an unserved module in the browser fixture, fixed those, and committed. C3 (browser tests and the campaign) was written by a native Claude agent, which found the three UI defects above and fixed each with one line. A fresh senior reviewer (a native Claude agent in a new context, a different family from the C1 and C2 authors) read the whole PR at `4613898` against seven merge conditions and returned three blockers (a result arriving after the 120 s timeout could become a candidate; Abandon was offered as soon as a request was cancelled, which let five host jobs start in seconds; the T75 coverage row overclaimed), five should-fix findings (a placeholder left in this record; turning the session off in flight let the result through; a chat switch left the slot held for the life of the page with no reason and no Abandon; in-flight staleness beyond a chat switch was untested; a `.catch` and two sleeps in the campaign) and five nits (dead `catch` blocks and a `null` controller path; three wording points; plan 3.5's reload notice not implemented). The runtime and test corrections were made by a native Claude agent and refrozen as `afac1f9`; the record corrections are in this text; the reviewer's confirmation pass is recorded in the PR.
+10. **`LOCK_CHANGED` is unreachable through the UI.** Setting a lock in the Scene panel also advances the scene revision, and `staleReason` checks the layout before the locks, so a lock during a request discards the result with the layout reason. The result is still never applied; the test asserts the reason actually produced. Reordering the module's checks is a PR B module change and is left for the owner.
+11. **Two one-second sleeps remain in the campaign** (steps H and I), each after a dispatched click on a disabled Submit where nothing happening is the expected outcome and there is no condition to wait for.
+
+### Commands and results
+
+One supervised campaign from the clean worktree at `afac1f9` on a disposable pinned SillyTavern 1.19.0 host (`7e8663cd9c184a550b37238218bdd32c6efc68e9`, a fresh clone with `npm ci`; the owner's install untouched), Node v26.8.1, headless Chromium 151.0.7922.34, the PR A fake ComfyUI as the image backend and the M2 loopback as the text backend:
+
+```sh
+SILLYTAVERN_ROOT=<disposable pinned host> SN_PLAYWRIGHT_MODULE=<pinned Playwright> python3 tests/probes/dyl60/run.py docs/evidence/m3-2-c/campaign
+python3 tests/probes/dyl60/validate.py docs/evidence/m3-2-c/campaign
+python3 tests/probes/dyl60/check-discovery.py
+```
+
+| Suite | Result |
+| --- | --- |
+| Node (17 files) | 492/492 (439 on main `2bc9fea` plus the 53 adapter tests) |
+| Storage | 126/126 |
+| Browser actual-entry | 124/124 (105 before plus the 19 new tests) |
+| Native campaigns | stage-library-migration 25, expressions 16, groups 22, recovery 17, cleanup 21, native-integrity-branches 18, director 60, image-route 8 checkpoints |
+| `validate.py` | PASS over 147 frozen inputs, a native inventory of 84 files and 119 artifact hashes; physical and owner gates NOT_TESTED or NOT_RUN |
+| Discovery | PASS, 17/5/1 |
+
+Package: [`docs/evidence/m3-2-c/campaign/`](evidence/m3-2-c/campaign/) with `run.json` beside it (the wrapping script's timing and exit code). The campaign took 1555 s (the director campaign 737 s of it); the supervising runner reaped nothing at exit. The earlier campaign on `6d88fa6` (1540 s, same counts except browser 118 and image-route 8) was superseded by the review corrections and is not evidence.
+
+### Not covered
+
+A real ComfyUI (8188 never contacted; the real-backend run on the owner's machine is its own authorization, I8); the owner's 1.18.0 install; other image-aware extensions listening on `SD_PROMPT_PROCESSING`; RunPod and every cloud source; physical devices and screen readers (the new controls' keyboard pass is emulated; the Galaxy Tab replay was not attempted in this PR, so whether the device was reachable is unknown, and the replay is NOT_TESTED); the real 120 s wait on the pinned host; a manual lock set during a request on the pinned host; plan 3.5's reload notice (“a job may still be running and where its output would land”) is not implemented: after a reload the session simply starts off, and the host's retained file is disclosed only in the status texts of the session that ran. Nothing here shows that a real ComfyUI stops work on `/interrupt`.
+
+### Next
+
+The owner reviews this record. With PRs A, B and C merged, M3.2 is complete except the separately authorized real-backend run on the owner's machine; M3.3 (candidate retention, cache, recovery, privacy controls) and Gate C each need their own recorded step.
