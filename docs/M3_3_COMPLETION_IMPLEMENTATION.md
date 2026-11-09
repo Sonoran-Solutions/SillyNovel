@@ -2,16 +2,16 @@
 
 ## PR A — request-module changes and the host image-folder probe
 
-**Candidate, unmerged. Frozen `7660a53`**, based on main `f22a7e8` (the [owner rulings J1–J9](DECISIONS.md#owner-rulings-j1j9--m33-completion--2026-11-08) on the [M3.3 plan](M3_3_COMPLETION_PLAN.md)). Tracked by [DYL-215](https://linear.app/devils17/issue/DYL-215/sillynovel-m33-complete-the-first-image-route-for-gate-c-ledger-lease). No plugin, schema or adapter change. Because J8 checks locks before the layout, the reason sentence the existing UI shows for a lock change during a request changes, so this PR is a runtime change under H4 and carries the browser suite and a full campaign rather than Node evidence alone.
+**Candidate, unmerged. Frozen `fdfa313`** (the campaign ran on `7660a53`; see choice 8), based on main `f22a7e8` (the [owner rulings J1–J9](DECISIONS.md#owner-rulings-j1j9--m33-completion--2026-11-08) on the [M3.3 plan](M3_3_COMPLETION_PLAN.md)). Tracked by [DYL-215](https://linear.app/devils17/issue/DYL-215/sillynovel-m33-complete-the-first-image-route-for-gate-c-ledger-lease). No plugin, schema or adapter change. Because J8 checks locks before the layout, the reason sentence the existing UI shows for a lock change during a request changes, so this PR is a runtime change under H4 and carries the browser suite and a full campaign rather than Node evidence alone.
 
 ### What it adds
 
 | File | Change |
 | --- | --- |
 | `src/image-request.mjs` | `staleReason` checks `LOCK_CHANGED` before `LAYOUT_CHANGED` (J8). `reviewText` renders an absent value as `null` (J8). `cacheHit({ payloadSha256, seedPolicy, jobs, catalogAssetIds })`: the latest imported job with the same payload identity whose asset is still in the catalog; a random seed policy never hits, since two random-seed reviews share their text but not their wire seed; refused, failed, cancelled, unknown, abandoned, discarded and stale jobs never hit (J3). `LEASE` (heartbeat 30 s, stale after 90 s), `leaseStatus` (`free`, `mine`, `held`, `stale`) and `takeoverSession`, which keeps the id, allowance, count and workflow hash and refuses a free or own lease (J2). `reconcileCandidates({ files, submittedAt, origin })`: host files at or after the submission that pass the result-path rule, sorted by time, malformed entries dropped, never a choice made for the user (J6). Nothing new is imported by the runtime yet; PR C wires these. |
-| `src/stage-view.mjs` | The "A request from before is still running" problem line also shows when the pending request was cancelled by turning the session off, so Submit's wait after turning it back on has a reason (J8). |
-| `tests/m3-image-request.test.mjs` | 74 tests (66 before). |
-| `tests/m1-reader-browser.test.mjs` | The lock-change test now asserts the lock sentence; one new test for the toggled-session reason (125 browser tests). |
+| `src/stage-view.mjs` | The "A request from before is still running" problem line also shows while the pending request is cancelled, by Cancel or by turning the session off, so Submit's wait has a reason until the host call settles or is abandoned (J8). |
+| `tests/m3-image-request.test.mjs` | 76 tests (66 before). |
+| `tests/m1-reader-browser.test.mjs` | The lock-change test now asserts the lock sentence; new tests for the toggled-session and plain-Cancel reasons (126 browser tests). |
 | `tests/probes/m3-image-folder/host.mjs`, `README.md` | A test-only measurement on the disposable pinned host of the host's `/api/images/list`, `/api/images/folders` and `/api/images/delete` routes with synthetic decoys, deciding J5 and J6. Not registered in the campaign runner. |
 
 ### What the probe measured
@@ -29,7 +29,7 @@ One run on `bd15a9b` (the probe's own commit; its files are byte-identical in th
 | D4 normalization | `user/images/../images/<name>` is normalized by the route and **deletes the file** (200). |
 | D5 CSRF | Without the token: 403, nothing deleted. |
 
-**Verdicts: J5 GO, J6 GO.** For PR C, as findings and not rulings: reconcile lists the root with `folder: '.'` and takes each file's time from `Last-Modified`; the delete control sends only the exact path the request returned, after the module's result-path rule, never a path SillyNovel built, because the host normalizes `..` inside the folder and its own check accepts the folder path.
+**Verdicts: J5 GO, J6 GO.** For PR C, as findings and not rulings: reconcile lists the root with `folder: '.'` and takes each file's time from `Last-Modified`, which has one-second resolution, so PR C compares against `Math.floor(submittedAt / 1000) * 1000` and may add files from up to one second earlier to the user's choice list (the ETag's millisecond mtime is an undocumented server detail and is not relied on); the delete control sends the path the request returned, or for a reconciled job `/user/images/` plus the listed name, only after the module's result-path rule returns null, because the host normalizes `..` inside the folder and its own check accepts the folder path.
 
 ### Campaign
 
@@ -43,6 +43,7 @@ One supervised campaign from the clean worktree at `7660a53` on the same disposa
 | Native campaigns | stage-library-migration 25, expressions 16, groups 22, recovery 17, cleanup 21, native-integrity-branches 18, director 60, image-route 8 checkpoints |
 | `validate.py` | PASS over 149 frozen inputs, a native inventory of 84 files and 119 artifact hashes; physical and owner gates NOT_TESTED or NOT_RUN |
 | Discovery | PASS, 17/5/1 |
+| On the final candidate `fdfa313` | Node list 502/502, browser actual-entry 126/126 (the 500 and 125 above plus the review's three tests); campaign evidence reused per choice 8 |
 
 Package: [`docs/evidence/m3-3-a/campaign/`](evidence/m3-3-a/campaign/) with `run.json` beside it. The campaign took 1558 s (the director campaign 741 s of it); the supervising runner reaped nothing at exit.
 
@@ -60,10 +61,12 @@ Package: [`docs/evidence/m3-3-a/campaign/`](evidence/m3-3-a/campaign/) with `run
 
 1. **PR A runs the full evidence standard**, not the pure-module one, because J8's reorder changes a status sentence the shipped UI shows.
 2. **A random seed policy never hits the cache.** The review text says "random each request" for every such request, so its hash cannot tell them apart; reusing would hand back an image the user did not ask to repeat.
-3. **A lease held by another live tab can be taken over**, not only a stale one, because a reload looks like a different tab with a fresh heartbeat; `leaseStatus` distinguishes `held` from `stale` so the UI can word the two cases differently.
-4. **`reconcileCandidates` never picks**; it returns the dated list and the user chooses.
+3. **A lease held by another live tab can be taken over**, not only a stale one, because a reload looks like a different tab with a fresh heartbeat; `leaseStatus` distinguishes `held` from `stale` so the UI can word the two cases differently. Takeover keeps the same session row and id rather than ending it and starting another, which differs from plan 3.2's wording “ends the old session”; PR B's schema confirms or revises this. `leaseStatus` never reports `stale` on a missing or non-numeric clock and never `mine` without a tab string, so bad data cannot offer a takeover.
+4. **`reconcileCandidates` never picks**; it returns the dated list and the user chooses. `cacheHit` fails closed on malformed input (a non-fixed seed policy, a missing hash, a non-array, a row without a finite `settledAt`), the first of equal times wins, and the caller passes only this owner's and project's jobs (J3: nothing cached across projects or owners).
 5. **The probe uses the upload route for decoys**, not a real generation, so it measures the folder and routes, not the backend.
-6. **Workers.** The module was written by a Codex sol worker whose sandbox could not commit; the coordinator committed it, made the one-line UI change and the two browser-test changes, and merged the probe written by a native Claude agent. A fresh senior review is recorded in the PR.
+6. **Workers.** The module was written by a Codex sol worker whose sandbox could not commit; the coordinator committed it, made the one-line UI change and the two browser-test changes, and merged the probe written by a native Claude agent. A fresh senior reviewer (a native Claude agent in a new context) read the PR at `8d94457` and returned three should-fix findings (`cacheHit` failed open on malformed rows; the `Last-Modified` one-second resolution would drop a result written in the submission's own second; the problem line also shows after a plain Cancel, which the record did not say and no test asserted) and four nits (`leaseStatus` on malformed clocks; takeover keeps the session row; the reconciled-path wording; `Size` rendering for a missing dimension). All were acted on except the last, declined as choice 7.
+7. **Declined: `Size: "undefined x undefined"` for a missing dimension.** It is reachable only in a review already refused by `DIMENSIONS_INVALID`, so no payload is affected, and `reviewText` is called by the runtime, so changing it would void the campaign evidence for a cosmetic gap; it waits for PR C.
+8. **Tested revision.** The campaign ran on `7660a53`. The final candidate `fdfa313` differs from it only in `cacheHit` and `leaseStatus`, which no runtime file calls (a search of `src/` and `index.js` finds no caller), and in tests; Node and the browser suite were rerun on the final candidate, and the campaign evidence on `7660a53` applies to the runtime unchanged.
 
 ### Not covered
 
