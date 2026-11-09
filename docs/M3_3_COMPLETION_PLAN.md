@@ -100,6 +100,8 @@ The ledger stores what SillyNovel itself produced: hashes, settings, outcomes, h
 
 ## 5. Owner decisions J1–J9
 
+**Ruled 2026-11-08:** see the [owner rulings](DECISIONS.md#owner-rulings-j1j9--m33-completion--2026-11-08). Every row adopts the recommendation. The table below is the proposal as reviewed.
+
 | ID | Decision and options | Recommendation and reason |
 | --- | --- | --- |
 | J1 | Durable image ledger: A, plugin schema v3 with sessions and jobs as in 3.1; B, keep memory only and refuse generation after any reload or in a second tab. | **A.** B cannot prove "one eligible request never becomes duplicate jobs" and makes slow local backends unusable; A is the design M3.1 plan section 5 asked for. |

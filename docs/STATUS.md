@@ -1,5 +1,9 @@
 # Project status
 
+## M3.3 authorized (PRs A–D) — 2026-11-08
+
+The owner [ruled on J1–J9](DECISIONS.md#owner-rulings-j1j9--m33-completion--2026-11-08) on the [M3.3 plan](M3_3_COMPLETION_PLAN.md): every recommendation adopted. M3.3 is authorized as four sequential PRs tracked by [DYL-215](https://linear.app/devils17/issue/DYL-215/sillynovel-m33-complete-the-first-image-route-for-gate-c-ledger-lease): PR A (pure module changes and a test-only probe of the host's image list and delete routes on the pinned host), PR B (storage plugin schema v3 with the image ledger and its routes), PR C (adapter and UI: lease, takeover, reconcile, cache hit, Delete the host's copy, inspect sent scope, cleanup; extended campaign), PR D (Gate C readiness), each reviewed by the owner before the next. TESTING rows T81–T83 added as NOT_RUN. Runtime unchanged by this entry. The M3.2 real-backend run stays authorized and NOT_RUN. Gate C NOT_RUN.
+
 ## M3.3 planning proposal (NOT approved) — 2026-11-08
 
 The [M3.3 completion plan](M3_3_COMPLETION_PLAN.md) proposes how roadmap step 3 completes the first image route for Gate C: a durable image ledger in the storage plugin (schema v3: sessions and jobs, written before the host call), a per-project session lease with explicit takeover, reconciliation against the host's image folder after an unknown outcome, a request cache keyed on the payload identity and satisfied only by an imported asset that still exists, an explicit Delete the host's copy control, an inspect-sent-scope view, cleanup, a synthetic policy-refusal fixture, the allowance moved into the session row, and the three PR C limits folded into the first PR. Owner decisions J1–J9 with a recommendation each; TESTING rows T81–T83 proposed; four PRs (module and host-route probe, plugin and schema, adapter and UI, Gate C readiness). **It authorizes nothing**; runtime unchanged. The real-backend run stays authorized and NOT_RUN. Gate C NOT_RUN.
