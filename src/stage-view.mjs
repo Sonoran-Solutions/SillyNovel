@@ -232,7 +232,7 @@ export function mountVisualStage({ document, stage, actions }) {
     const wfStatus=make('p','sillynovel-image-workflow__status');wfStatus.setAttribute('role','status');workflowBody.append(wfStatus);
     let wfModel=model,wfRevision=0,wfBusy=false,resultPreview=null,previewSeq=0,layoutReady=false;
     const session=createImageSession();
-    let pending=null,inspection=null,workflowSha256=null,review=null,problems=[],reviewDraft=null,imageStarting=false,imageSubmitting=false,imageEpoch=0,imageSeq=0;
+    let pending=null,orphan=null,inspection=null,workflowSha256=null,review=null,problems=[],reviewDraft=null,imageStarting=false,imageSubmitting=false,imageEpoch=0,imageSeq=0;
     const IMAGE_PROBLEMS={SEAM_MISSING:'Host image generation is not available to SillyNovel on this host.',SOURCE_NOT_COMFY:"The host's image source is not ComfyUI.",COMFY_TYPE_NOT_STANDARD:'Only standard ComfyUI is supported, not RunPod.',
         URL_INVALID:'The ComfyUI address must be this machine (localhost, 127.0.0.1 or [::1]).',URL_NOT_LOOPBACK:'The ComfyUI address must be this machine (localhost, 127.0.0.1 or [::1]).',
         MODE_FREE_EXTEND:"Turn off free extend in the host's Image Generation settings.",MODE_MULTIMODAL:"Turn off multimodal captioning in the host's Image Generation settings.",MODE_REFINE:"Turn off refine mode in the host's Image Generation settings.",MODE_INTERACTIVE:"Turn off interactive mode in the host's Image Generation settings.",MODE_FUNCTION_TOOL:"Turn off function tool in the host's Image Generation settings.",
@@ -265,12 +265,14 @@ export function mountVisualStage({ document, stage, actions }) {
         review.ok=problems.length===0;
     }
     function endImageSession(){
-        session.end();imageEpoch++;imageStarting=false;imageSubmitting=false;if(pending)clearTimeout(pending.timer);pending=null;
+        // A call that never settles must stay abandonable after a chat switch, detach or dispose: keep it as the orphan with its deadline.
+        if(pending){if(session.snapshot().requests[pending.id]==='pending')session.cancel(pending.id);pending.cancelled=true;if(disposed)clearTimeout(pending.timer);orphan=pending;}
+        session.end();imageEpoch++;imageStarting=false;imageSubmitting=false;pending=null;
         inspection=null;workflowSha256=null;review=null;problems=[];reviewDraft=null;imageToggle.checked=false;
         if(resultPreview?.generated)clearPreview();
     }
     listen(imageToggle,'change',()=>wfRun(async()=>{
-        if(!imageToggle.checked){session.end();imageEpoch++;imageStarting=false;imageSubmitting=false;renderWorkflow();return;}
+        if(!imageToggle.checked){if(pending){if(session.snapshot().requests[pending.id]==='pending')session.cancel(pending.id);pending.cancelled=true;}session.end();imageEpoch++;imageStarting=false;imageSubmitting=false;renderWorkflow();return;}
         if(session.snapshot().on||imageStarting)return;
         const captured=model,epoch=actions.getSnapshot().sessionEpoch,token=++imageEpoch;imageStarting=true;renderWorkflow();
         try{const inspected=await actions.image.inspect();
@@ -280,18 +282,18 @@ export function mountVisualStage({ document, stage, actions }) {
         finally{if(token===imageEpoch)imageStarting=false;}
     }));
     function renderGeneration(){
-        const seam=actions.image?.available(),available=Boolean(seam?.ok||seam?.missing.join()==='SlashCommandAbortController'),state=session.snapshot(),outcome=pending?state.requests[pending.id]:null;
+        const seam=actions.image?.available(),available=Boolean(seam?.ok||seam?.missing.join()==='SlashCommandAbortController'),state=session.snapshot(),job=pending??orphan,outcome=job?state.requests[job.id]:null;
         imageUnavailable.hidden=available;imageControls.hidden=!available;if(!available)return;
         imageToggle.checked=state.on||imageStarting;
         allowanceLine.textContent='Submissions used '+state.used+' of '+DEFAULT_ALLOWANCE;
         if(state.on&&inspection)reviewGeneration();
         generationReview.hidden=!review;generationReview.textContent=review?reviewText(review):'';generationReview.classList.toggle('sillynovel-image-workflow__refused',Boolean(problems.length));
-        generationProblems.textContent=[...problems.map(imageProblem),...(state.on&&state.used>=state.allowance?['All '+state.allowance+' submissions in this image session are used.']:[])].join(' ');
+        generationProblems.textContent=[...problems.map(imageProblem),...(state.on&&state.used>=state.allowance?['All '+state.allowance+' submissions in this image session are used.']:[]),...(state.inFlight!==null&&!pending?['A request from before is still running on the host; Submit returns when it settles or after Abandon.']:[])].join(' ');
         workflowPin.hidden=!workflowSha256;workflowPin.textContent=workflowSha256?'Session workflow SHA-256: '+workflowSha256:'';
         submitImage.disabled=!state.on||!review?.ok||state.inFlight!==null||imageSubmitting||state.used>=state.allowance||!model.project;
         cancelImage.disabled=!pending||outcome!=='pending';
         stopImage.disabled=!pending||pending.timer===null||!['pending','cancelled'].includes(outcome)||!pending.controller;
-        abandonImage.hidden=!pending||!(outcome==='timeout-unknown'||outcome==='cancelled'&&pending.timer!==null);abandonImage.disabled=abandonImage.hidden;
+        abandonImage.hidden=!job||!(outcome==='timeout-unknown'||outcome==='cancelled'&&job.expired);abandonImage.disabled=abandonImage.hidden;
     }
     function cancelGeneration(){
         if(!pending)return;const outcome=session.snapshot().requests[pending.id];
@@ -303,12 +305,12 @@ export function mountVisualStage({ document, stage, actions }) {
         try{pending.controller.abort('Stopped by SillyNovel');}finally{cancelGeneration();}
     }
     function abandonGeneration(){
-        if(!pending||abandonImage.disabled)return;
-        session.abandon(pending.id);clearTimeout(pending.timer);pending=null;wfStatus.textContent='Abandoned · the unit stays spent.';renderWorkflow();
+        const job=pending??orphan;if(!job||abandonImage.disabled)return;
+        session.abandon(job.id);clearTimeout(job.timer);if(pending===job)pending=null;if(orphan===job)orphan=null;wfStatus.textContent='Abandoned · the unit stays spent.';renderWorkflow();
     }
     function dropGeneration(job){
         if(session.snapshot().inFlight===job.id)session.settle(job.id,'stale');
-        if(pending===job)pending=null;if(!disposed)renderWorkflow();
+        if(pending===job)pending=null;if(orphan===job)orphan=null;if(!disposed)renderWorkflow();
     }
     function discardGeneration(job,reason,path){
         session.settle(job.id,'stale');pending=null;
@@ -326,27 +328,29 @@ export function mountVisualStage({ document, stage, actions }) {
             const reviewed=review,raw={...reviewDraft},payloadSha256=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(shown))),byte=>byte.toString(16).padStart(2,'0')).join('');
             if(disposed||token!==imageEpoch||!session.snapshot().on||!stillCurrent(capture,now(wfRevision)))return;
             const d=draft();if(d.prompt!==raw.prompt||d.negativePrompt!==raw.negativePrompt)throw Error('DRAFT_CHANGED');
+            const controller=actions.image.createController();if(!controller)throw Error('SEAM_MISSING');
             const id=++imageSeq,request=createRequest({capture:now(wfRevision),hostChatKey:actions.image.hostChatKey(),catalogRevision:model.status().revision,layoutRevision:model.status().sceneRevision,lockState:model.globalLocks(),review:reviewed,workflowSha256,payloadSha256,id,submittedAt:Date.now()});
             session.submit(request);
-            job={id,request,controller:null,timer:null,cancelled:false};pending=job;imageSubmitting=false;
-            try{job.controller=actions.image.createController();}catch{session.settle(id,'failed');pending=null;wfStatus.textContent="The host's image controller could not be created; the unit stays spent.";return;}
-            job.timer=setTimeout(()=>{if(pending!==job||session.snapshot().requests[id]!=='pending')return;session.timeout(id);wfStatus.textContent="No result after 120 s · outcome unknown; the slot stays reserved. Check ComfyUI's queue and the host's image folder; the host keeps polling until the job is terminal.";renderWorkflow();},WAIT_MS);
+            job={id,request,controller,timer:null,cancelled:false,timedOut:false,expired:false};pending=job;imageSubmitting=false;
+            // A cancelled call that never settles becomes abandonable only at the deadline (plan 3.5), so Cancel cannot free the slot for a new host job at once.
+            job.timer=setTimeout(()=>{if((pending===job||orphan===job)&&session.snapshot().requests[id]==='cancelled'){job.expired=true;if(!disposed)renderWorkflow();return;}
+                if(pending!==job||session.snapshot().requests[id]!=='pending')return;session.timeout(id);job.timedOut=true;wfStatus.textContent="No result after 120 s · outcome unknown; the slot stays reserved. Check ComfyUI's queue and the host's image folder; the host keeps polling until the job is terminal.";renderWorkflow();},WAIT_MS);
             wfStatus.textContent='Generating on '+new URL(reviewed.destination.url).host+' · reading and replying continue';renderWorkflow();
             let result;
             try{result=await actions.image.request({prompt:raw.prompt,negative:raw.negativePrompt,controller:job.controller});}catch{result={ok:false,code:'HOST_THREW'};}
             clearTimeout(job.timer);job.timer=null;
             if(pending!==job||disposed){dropGeneration(job);const late=!disposed&&!pending&&result.path?staleReason(request,nowFull()):null;if(late)wfStatus.textContent='Result discarded: '+(STALE_REASONS[late]??late)+'; the host kept a copy at '+result.path;return;}
-            if(job.cancelled){session.settle(id,'stale');pending=null;wfStatus.textContent='Cancelled · result discarded'+(result.path?'; the host kept a copy at '+result.path:'.');return;}
+            if(job.cancelled||job.timedOut){session.settle(id,'stale');pending=null;wfStatus.textContent=(job.timedOut?'No result within 120 s':'Cancelled')+' · result discarded'+(result.path?'; the host kept a copy at '+result.path:'.');return;}
             let reason=staleReason(request,nowFull());if(reason){discardGeneration(job,reason,result.path);return;}
             if(!result.ok){session.settle(id,'failed');pending=null;wfStatus.textContent=imageProblem(result);return;}
             let fetched;
             try{fetched=await actions.image.fetchResult(result.path);}catch{fetched={ok:false,code:'RESULT_FETCH_FAILED',path:result.path};}
             if(pending!==job||disposed){dropGeneration(job);return;}
-            if(job.cancelled){session.settle(id,'stale');pending=null;wfStatus.textContent='Cancelled · result discarded; the host kept a copy at '+result.path;return;}
+            if(job.cancelled||job.timedOut){session.settle(id,'stale');pending=null;wfStatus.textContent='Cancelled · result discarded; the host kept a copy at '+result.path;return;}
             if(fetched.ok){
-                try{const latest=await actions.image.inspect();if(pending===job)inspection=latest;}catch{fetched={ok:false,code:'RESULT_REVIEW_FAILED',path:result.path};}
+                const latest=await actions.image.inspect();if(pending===job)inspection=latest;if(!latest.ok)fetched={ok:false,code:'RESULT_REVIEW_FAILED',path:result.path};
                 if(pending!==job||disposed){dropGeneration(job);return;}
-                if(job.cancelled){session.settle(id,'stale');pending=null;wfStatus.textContent='Cancelled · result discarded; the host kept a copy at '+result.path;return;}
+                if(job.cancelled||job.timedOut){session.settle(id,'stale');pending=null;wfStatus.textContent='Cancelled · result discarded; the host kept a copy at '+result.path;return;}
             }
             if(!fetched.ok){session.settle(id,'failed');pending=null;wfStatus.textContent=imageProblem(fetched)+' The host kept a copy at '+result.path;return;}
             reason=staleReason(request,nowFull());if(reason){discardGeneration(job,reason,result.path);return;}

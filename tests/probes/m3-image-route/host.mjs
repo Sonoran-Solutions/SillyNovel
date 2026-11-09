@@ -273,6 +273,7 @@ try {
     await button('Cancel').click();
     assert.equal(await status(), 'Cancelled · permission to apply withdrawn; the host keeps polling until the job is terminal');
     assert.equal(await button('Submit').isDisabled(), true, 'slot held');
+    assert.equal(await button('Abandon').isHidden(), true, 'Abandon waits for the 120 s deadline after a Cancel');
     await comfy('/control', { release: true });
     await untilStatus(/^Cancelled · result discarded; the host kept a copy at /, 30000);
     await until(hostJobsTerminal, 'D host poll terminal');
@@ -285,7 +286,7 @@ try {
     assert.equal(await used(), 'Submissions used 2 of 5');
     assert.equal(await textCount() - textStart, 0);
     evidence.counts.prompts += 1; evidence.counts.files += added.length;
-    pass('D: Cancel withdrew permission while the host job was held; after release nothing applied, no project asset, the host kept one file (disclosed), the slot released on settlement; used 2');
+    pass('D: Cancel withdrew permission while the host job was held (Abandon not offered before the deadline); after release nothing applied, no project asset, the host kept one file (disclosed), the slot released on settlement; used 2');
 
     // E. Stop host job.
     await comfy('/control', { reset: true, script: [{ hold: true }] });
@@ -319,24 +320,29 @@ try {
     await submit();
     await until(async () => (await comfyLog()).some(e => e.path === '/prompt'), 'G /prompt');
     await select('Seam B');
-    await delay(1500); // the host creates and saves Seam B's first chat on selection; that file is the host's, not the result's
-    const seamB = await chatState(), invB = await inventory();
+    // The host creates and saves Seam B's first chat on selection; that file is the host's, not the result's. Wait until it exists and two reads agree.
+    let seamBFiles = null;
+    await until(async () => { const { files } = await inventory(), now = JSON.stringify(Object.keys(files).filter(k => k.includes('/chats/Seam B/')).map(k => [k, files[k]])), ok = now !== '[]' && now === seamBFiles; seamBFiles = now; return ok; }, 'Seam B chat file saved', 15000);
+    const seamB = await chatState(), invB = await inventory(), RUNNING = 'A request from before is still running on the host';
+    assert.ok((await problems()).includes(RUNNING), 'the request that outlived the switch is named');
+    assert.equal(await button('Submit').isDisabled(), true, 'Submit waits for it');
     await comfy('/control', { release: true });
     await until(hostJobsTerminal, 'G host poll terminal', 30000);
-    await delay(1000);
+    await until(async () => !(await problems()).includes(RUNNING), 'G seam returned and the request settled', 30000);
     assert.deepEqual(await chatState(), seamB, 'Seam B chat unchanged');
     const invG2 = await inventory();
     const changed = (a, b) => Object.keys({ ...a.files, ...b.files }).filter(k => k !== 'default-user/settings.json' && !isDeepStrictEqual(a.files[k], b.files[k]));
     assert.deepEqual(changed(invB, invG2), [], 'no file changed by the late result');
     assert.deepEqual(changed(invG, invG2).filter(k => !k.includes('/chats/Seam B/')), [], 'Seam A\'s chat and every other canonical file unchanged');
     assert.deepEqual(newFiles(imagesBeforeCase, await images()), [], 'the host discarded the bytes');
-    const sessionAfterSwitch = await page.locator('.sillynovel-image-workflow').getByLabel('Image session on this host', { exact: true }).isChecked().catch(() => false);
-    assert.equal(sessionAfterSwitch, false, 'session off after the switch');
+    const toggle = page.locator('.sillynovel-image-workflow').getByLabel('Image session on this host', { exact: true });
+    assert.equal(await toggle.count(), 1);
+    assert.equal(await toggle.isChecked(), false, 'session off after the switch');
     assert.equal(await page.locator('.sillynovel-image-workflow__preview').isVisible().catch(() => false), false, 'no candidate');
     assert.equal(await textCount() - textStart, 0);
     evidence.counts.prompts += 1;
     evidence.setup.G = { statusAfter: await status().catch(() => null) };
-    pass('G: a character switch while held ended the session; after release nothing was applied to either chat, the result was discarded and no host file was kept');
+    pass('G: a character switch while held ended the session and named the still-running request with Submit disabled; after release the request settled, nothing was applied to either chat, the result was discarded and no host file was kept');
     await select('Seam A');
     await openRouteChat();
     await page.locator('#sillynovel-stage').waitFor();

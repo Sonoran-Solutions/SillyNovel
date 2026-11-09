@@ -1818,8 +1818,87 @@ test('M3.2 a chat switch during the call ends the session; the late result is di
  assert.match(await generationStatus(page).innerText(),/Result discarded: .*the host kept a copy at \/user\/images\/synthetic\.png/,'the stale result is disclosed');
 });
 
+// M3.2 PR C senior-review corrections: a late, withdrawn or stale result never becomes a candidate, and Abandon waits for the deadline.
+const problemsLine=page=>page.locator('.sillynovel-image-workflow__generation-problems');
+const notApplied=async(page,x)=>{assert.equal(await page.locator('.sillynovel-image-workflow__preview').isHidden(),true,'no preview');assert.equal(x.state.uploads,0,'nothing uploaded');assert.equal(await button(page,'Import and apply background to Harbor project').isDisabled(),true,'nothing importable');};
+test('M3.2 a result after the 120 s timeout is never a candidate: not fetched, discarded with its path, the slot released',async t=>{
+ const x=await imageRoute(t,{clock:true}),{page}=x;let fetched=0;page.on('request',r=>{if(new URL(r.url()).pathname.startsWith('/user/images/'))fetched++;});
+ await x.sessionOn();await x.hold();
+ await control(page,'Submit').click();await waitStatus(page,/^Generating on/);
+ await page.clock.fastForward(120_000);await waitStatus(page,/^No result after 120 s · outcome unknown/);
+ await x.release('/user/images/synthetic.png');await waitStatus(page,/^No result within 120 s · result discarded/);
+ assert.equal(await generationStatus(page).innerText(),'No result within 120 s · result discarded; the host kept a copy at /user/images/synthetic.png');
+ await notApplied(page,x);assert.equal(fetched,0,'the late result is not fetched');
+ assert.equal(await control(page,'Submit').isEnabled(),true);assert.equal(await allowance(page).innerText(),'Submissions used 1 of 5');
+ assert.equal(await control(page,'Abandon').isHidden(),true,'nothing left to abandon');
+});
+
+test('M3.2 Abandon after Cancel waits for the 120 s deadline; then it releases the slot with the unit spent',async t=>{
+ const x=await imageRoute(t,{clock:true}),{page}=x;await x.sessionOn();await x.hold();
+ await control(page,'Submit').click();await waitStatus(page,/^Generating on/);
+ await control(page,'Cancel').click();await waitStatus(page,/^Cancelled · permission to apply withdrawn/);
+ assert.equal(await control(page,'Abandon').isHidden(),true);assert.equal(await control(page,'Abandon').isDisabled(),true);assert.equal(await control(page,'Submit').isDisabled(),true,'the slot is held');
+ await page.clock.fastForward(119_000);assert.equal(await control(page,'Abandon').isHidden(),true,'not before the deadline');
+ await page.clock.fastForward(1_000);await control(page,'Abandon').waitFor({state:'visible'});
+ assert.equal(await control(page,'Abandon').isEnabled(),true);assert.equal(await page.evaluate(()=>fixture.imagineCalls.length),1,'one host job');
+ await control(page,'Abandon').click();
+ assert.equal(await generationStatus(page).innerText(),'Abandoned · the unit stays spent.');
+ assert.equal(await control(page,'Submit').isEnabled(),true);assert.equal(await allowance(page).innerText(),'Submissions used 1 of 5');
+ await x.release('/user/images/synthetic.png');await page.waitForFunction(()=>fixture.imagineReturns.length===1);await page.waitForTimeout(200);
+ assert.equal(await generationStatus(page).innerText(),'Abandoned · the unit stays spent.');await notApplied(page,x);
+});
+
+test('M3.2 turning the session off during the call withdraws permission; the result is dropped and not importable',async t=>{
+ const x=await imageRoute(t),{page,field}=x;await x.sessionOn();await x.hold();
+ await control(page,'Submit').click();await waitStatus(page,/^Generating on/);
+ await field('Image session on this host').uncheck();
+ assert.equal(await control(page,'Submit').isDisabled(),true);assert.equal(await control(page,'Abandon').isHidden(),true,'Abandon waits for the deadline');
+ await x.release('/user/images/synthetic.png');await waitStatus(page,/^Cancelled · result discarded/);
+ assert.equal(await generationStatus(page).innerText(),'Cancelled · result discarded; the host kept a copy at /user/images/synthetic.png');
+ await notApplied(page,x);assert.equal(await allowance(page).innerText(),'Submissions used 1 of 5');
+});
+
+test('M3.2 a draft edit during the call discards the result as stale, with its path',async t=>{
+ const x=await imageRoute(t),{page,field}=x;await x.sessionOn();await x.hold();
+ await control(page,'Submit').click();await waitStatus(page,/^Generating on/);
+ await field('Image prompt').fill(x.draft.prompt+' x');
+ await x.release('/user/images/synthetic.png');await waitStatus(page,/^Result discarded: /);
+ assert.equal(await generationStatus(page).innerText(),'Result discarded: the project, conversation or draft changed; the host kept a copy at /user/images/synthetic.png');
+ await notApplied(page,x);
+});
+
+// A lock is a scene command, so it also advances the scene revision; staleReason checks the layout before the locks and names that first. Either way nothing applies.
+test('M3.2 a manual lock change during the call discards the result as stale (named by the scene revision it advances)',async t=>{
+ const x=await imageRoute(t),{page}=x;await x.sessionOn();await x.hold();
+ await control(page,'Submit').click();await waitStatus(page,/^Generating on/);
+ await page.getByLabel('Lock field',{exact:true}).selectOption('background');await button(page,'Lock choice').click();
+ await page.waitForFunction(()=>/Background locked\./.test(document.querySelector('.sillynovel-visual-status').textContent));
+ await x.release('/user/images/synthetic.png');await waitStatus(page,/^Result discarded: /);
+ assert.equal(await generationStatus(page).innerText(),'Result discarded: the scene layout changed; the host kept a copy at /user/images/synthetic.png');
+ await notApplied(page,x);
+});
+
+test('M3.2 a call that outlives a chat switch stays abandonable: the reason is named, Submit waits, Abandon after the deadline frees it',async t=>{
+ const x=await imageRoute(t,{clock:true}),{page,field}=x;await x.sessionOn();await x.hold();
+ await control(page,'Submit').click();await waitStatus(page,/^Generating on/);
+ await page.evaluate(()=>{fixture.context.chatId='synthetic-B';fixture.emit('CHAT_CHANGED','synthetic-B');});
+ await page.waitForFunction(()=>!document.querySelector('.sillynovel-project-status').textContent.includes('Harbor project · revision'));
+ // Reattach and turn the session on again, so the running request is the only thing holding Submit.
+ await button(page,'Open project and use with this chat').click();await page.waitForFunction(()=>document.querySelector('.sillynovel-project-status').textContent.includes('Harbor project · revision'));
+ await x.sessionOn();
+ assert.match(await problemsLine(page).innerText(),/A request from before is still running on the host; Submit returns when it settles or after Abandon\./);
+ assert.equal(await control(page,'Submit').isDisabled(),true);assert.equal(await control(page,'Abandon').isHidden(),true);
+ await page.clock.fastForward(120_000);await control(page,'Abandon').waitFor({state:'visible'});
+ assert.equal(await control(page,'Abandon').isEnabled(),true);await control(page,'Abandon').click();
+ assert.equal(await generationStatus(page).innerText(),'Abandoned · the unit stays spent.');
+ await page.waitForFunction(()=>document.querySelector('.sillynovel-image-workflow__generation-problems').textContent==='');
+ assert.equal(await control(page,'Submit').isEnabled(),true);
+ await x.release('/user/images/synthetic.png');await page.waitForFunction(()=>fixture.imagineReturns.length===1);await page.waitForTimeout(200);
+ await notApplied(page,x);assert.equal(await field('Image session on this host').isChecked(),true);
+});
+
 test('M3.2 keyboard and names (emulated check, not a screen-reader run): Tab reaches every new control from the disclosure toggle, each is named, status is role=status, Escape closes and refocuses',async t=>{
- const x=await imageRoute(t),{page}=x;await x.sessionOn();
+ const x=await imageRoute(t,{clock:true}),{page}=x;await x.sessionOn();
  const walk=async()=>{
   await button(page,'Image workflow').focus();const seen=[];
   for(let i=0;i<80;i++){await page.keyboard.press('Tab');const e=await page.evaluate(()=>{const a=document.activeElement;return {id:a.id,name:a.getAttribute('aria-label')||a.textContent.trim(),inBody:!!a.closest('#sillynovel-image-workflow-body')};});if(!e.inBody)break;seen.push(e.name);}
@@ -1830,6 +1909,8 @@ test('M3.2 keyboard and names (emulated check, not a screen-reader run): Tab rea
  await x.hold();await control(page,'Submit').click();await waitStatus(page,/^Generating on/);
  seen=await walk();for(const name of ['Cancel','Stop host job'])assert.ok(seen.includes(name),name+' in '+JSON.stringify(seen));
  await control(page,'Cancel').click();
+ seen=await walk();assert.ok(!seen.includes('Abandon'),'Abandon waits for the deadline: '+JSON.stringify(seen));
+ await page.clock.fastForward(120_000);await control(page,'Abandon').waitFor({state:'visible'});
  seen=await walk();assert.ok(seen.includes('Abandon'),'Abandon in '+JSON.stringify(seen));
  for(const name of ['Submit','Cancel','Stop host job','Abandon'])assert.equal(await control(page,name).count(),1,name+' has its accessible name');
  assert.equal(await page.getByRole('checkbox',{name:'Image session on this host',exact:true}).count(),1);
