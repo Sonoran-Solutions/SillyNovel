@@ -1,5 +1,9 @@
 # Verification and acceptance
 
+## M3.2 PR A candidate — T74 covered on the pinned host; T76 and T77 host halves; T75 NOT_RUN — 2026-11-08
+
+One supervised probe run on frozen `75b2807` on a disposable pinned SillyTavern 1.19.0 host against the committed fake ComfyUI, [`docs/evidence/m3-2-a/`](evidence/m3-2-a/): fixture self-test 1/1, probe exit 0, R1–R8 PASS, H1–H9 recorded, `VERDICT GO`. T74's supported configuration is covered with decoys absent from both wires, and its four hazards are recorded (H1 and H2 on the image wire, H3 and H4 as text-model requests with decoys on the text wire); T76 and T77 have their host halves (result path and folder, non-PNG saved as `.jpg`, abort with the host's controller, chat-change discard, still polling after 15 s, the fixture's `/interrupt` entry); T75 and the adapter halves wait for PR B and C. No row text changes until the owner's review. [Record](M3_2_IMAGE_ROUTE_IMPLEMENTATION.md#pr-a--the-seam-probe-tests-only). Gate C NOT_RUN.
+
 ## T74 and T77 amended on M3.2 authorization — 2026-11-08
 
 Per [I10](DECISIONS.md#owner-rulings-i1i10--m32-first-image-route--2026-11-08), the two clarifications proposed in [M3.2 plan section 6](M3_2_IMAGE_ROUTE_PLAN.md#6-testing-rows) are applied: T74 names its supported configuration and what “the wire” is; T77 separates the required “SillyNovel applied nothing” from the measured “ComfyUI stopped” and adds the Stop host job disclosure to the assistive pass. Both rows stay NOT_RUN. No evidence is claimed by this entry.
