@@ -180,17 +180,17 @@ The senior review of `45a7d42` (read-only) raised two blockers and three should-
 4. **Transition failures lost known outcomes** (confirmed: `record` returned `null` on any refusal but `LEASE_LOST`, and the deferred replay discarded failures). Fixed as choice 3. Test: *an outage after the reservation keeps the settled outcome* (uncertain line, Submit reserves nothing, the kept outcomes are written in order before the next reserve).
 5. **Host-copy deletion was unavailable for retained historical rows** (confirmed). Fixed as choice 8. Test: *the finished-jobs review offers Delete the host's copy for every retained row, including rows from before a reload*.
 
-### Worker evidence (on `3567b2a`; the coordinator's full campaign is separate)
+### Worker evidence (code on `0377b5f`, record on `779c15e`; the coordinator's full campaign is separate)
 
 | Check | Result |
 | --- | --- |
-| Node (18 files) | 521/521 (503 before plus 10 adapter and 8 client tests) |
-| Storage (`npm test`) | 281/281 (unchanged plugin) |
-| Browser actual-entry | 137/137 (126 before plus 11) |
-| Native image-route campaign | PASS, checkpoints A–E and G–O (F not run, as before), 275 s, on the disposable pinned 1.19.0 host with the fixture on an ephemeral port; host `/interrupt` on reload observed |
+| Node (18 files) | 521/521 on `0377b5f` |
+| Storage (`npm test`) | not rerun: the plugin is unchanged since 281/281 on `3567b2a` |
+| Browser actual-entry | 141/141 on `0377b5f` (137 before plus 4 review tests; 2 tests extended). The 4 new and 2 extended tests were run against `45a7d42`'s `src/` and all 6 failed at their review assertions |
+| Native image-route campaign | PASS three times: once on `0377b5f`, twice on `779c15e` (279 s, 287 s); checkpoints A–E and G–O (F not run, as before), on the disposable pinned 1.19.0 host with the fixture on an ephemeral port; no page errors |
 | Discovery | PASS, 18/6/1 |
 
-Two earlier campaign runs failed on test assumptions and are not evidence: L expected no Delete control while a candidate showed (the control names the latest discarded job, H's last); M expected a new library entry (the fixture PNG equals C's, so the import reuses the asset). A third failed on a race in the campaign's `sessionOn`, which now waits for the ledger begin to finish.
+**The coordinator's campaign failure at image-route** (`docs/evidence/m3-3-c/campaign/image-route.txt`, after B) was a test-harness race, not a host exit: `host.log` ends with the host's own shutdown title, written by its SIGTERM handler when the harness closed it after the failure, and no exception. Playwright's request context keeps sockets alive in a shared agent that ignores the host's `Keep-Alive: timeout=5` hint, while the host (Node 26) closes an idle socket after `keepAliveTimeout` plus `keepAliveTimeoutBuffer`, 6 s. C's post-Save GET was the harness's first request since A's project PUT; the data root's file times put that gap at about 6 s (PUT about 10:17:03.3, Save about 10:17:09.3), so the request reused a socket the host was closing: `socket hang up`. A loopback reproduction against a plain Node 26 server with the same Playwright 1.62.1 reused the socket up to 5.9 s idle and reset 3 of 81 requests at 5.96–6.04 s; with `Connection: close` it reset none of 243. Earlier runs had other A-to-C gaps. The harness's `native` and `plugin` calls, and the probe's two direct asset GETs, now send `Connection: close` (`CLOSE` in `tests/probes/m2-director/harness.mjs`); no assertion changed. Other probes that call `context.request` directly (`m2-director/host.mjs` export GETs, the portability, storage, cleanup, folder and `dyl193` probes) have the same latent race and were not changed.
 
 ### Findings
 
