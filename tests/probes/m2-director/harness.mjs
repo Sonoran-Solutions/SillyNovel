@@ -14,6 +14,7 @@ export const ENDPOINT = 'http://127.0.0.1:8128';
 export const DECOYS = { persona: 'DECOY-PERSONA-DESCRIPTION-7f3a', lore: 'DECOY-LOREBOOK-ENTRY-91bc', card: 'DECOY-CARD-DESCRIPTION-44d2', personaName: 'Decoy Traveller' };
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 const BOUND = 2 * 1024 * 1024;
+export const CLOSE = Object.freeze({ Connection: 'close' });
 
 export async function createHarness(source, label) {
     assert.equal(execFileSync('git', ['-C', source, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(), PIN);
@@ -60,15 +61,18 @@ export async function createHarness(source, label) {
     }
     browser = await chromium.launch({ headless: true });
     const context = await browser.newContext({ viewport: { width: 1440, height: 1100 } });
-    const token = (await (await context.request.get(origin + '/csrf-token')).json()).token;
-    assert.equal((await context.request.post(origin + '/api/users/login', { headers: { 'X-CSRF-Token': token }, data: { handle: 'default-user' } })).status(), 200);
+    // Playwright's request agent keeps sockets alive without honouring the host's Keep-Alive hint, so a request about 6 s after the last one
+    // (the host's keepAliveTimeout plus its buffer) races the host closing that socket: `socket hang up` / ECONNRESET. The harness's own
+    // requests use a fresh connection each; no assertion changes. Probes that call context.request directly pass CLOSE themselves.
+    const token = (await (await context.request.get(origin + '/csrf-token', { headers: CLOSE })).json()).token;
+    assert.equal((await context.request.post(origin + '/api/users/login', { headers: { ...CLOSE, 'X-CSRF-Token': token }, data: { handle: 'default-user' } })).status(), 200);
     const native = async (path, body) => {
-        const res = await context.request.post(origin + path, { headers: { 'X-CSRF-Token': token, 'Content-Type': 'application/json' }, data: JSON.stringify(body) });
+        const res = await context.request.post(origin + path, { headers: { ...CLOSE, 'X-CSRF-Token': token, 'Content-Type': 'application/json' }, data: JSON.stringify(body) });
         assert.equal(res.status(), 200, path + ' ' + await res.text());
         return res;
     };
     const plugin = async (path, method = 'GET', body, status = 200, type = 'application/vnd.sillynovel+json') => {
-        const res = await context.request.fetch(origin + '/api/plugins/sillynovel-storage' + path, { method, headers: { 'X-CSRF-Token': token, ...(body === undefined ? {} : { 'Content-Type': type }) }, data: body === undefined ? undefined : Buffer.isBuffer(body) ? body : JSON.stringify(body) });
+        const res = await context.request.fetch(origin + '/api/plugins/sillynovel-storage' + path, { method, headers: { ...CLOSE, 'X-CSRF-Token': token, ...(body === undefined ? {} : { 'Content-Type': type }) }, data: body === undefined ? undefined : Buffer.isBuffer(body) ? body : JSON.stringify(body) });
         assert.equal(res.status(), status, path + ' ' + await res.text());
         return res.json();
     };

@@ -9,7 +9,7 @@ import { join, resolve } from 'node:path';
 import { createHash } from 'node:crypto';
 import { execFileSync, spawn } from 'node:child_process';
 import { setTimeout as delay } from 'node:timers/promises';
-import { createHarness, DECOYS, PIN, repo } from '../m2-director/harness.mjs';
+import { createHarness, CLOSE, DECOYS, PIN, repo } from '../m2-director/harness.mjs';
 import { RESULT_PNG_SHA256 } from '../../fixtures/m3-comfy-endpoint.mjs';
 import { preflight, reviewText } from '../../../src/image-request.mjs';
 
@@ -280,7 +280,7 @@ try {
     const importedAsset = savedProject.catalog.find(a => a.assetId !== forest);
     assert.equal(savedProject.scene.backgroundAssetId, importedAsset.assetId);
     assert.equal(savedProject.scene.backgroundLocked, true, 'background locked');
-    const stored = await h.context.request.get(h.origin + '/api/plugins/sillynovel-storage/projects/' + project.projectId + '/assets/' + importedAsset.assetId);
+    const stored = await h.context.request.get(h.origin + '/api/plugins/sillynovel-storage/projects/' + project.projectId + '/assets/' + importedAsset.assetId, { headers: CLOSE });
     assert.equal(sha(await stored.body()), RESULT_PNG_SHA256, 'the stored PNG is the fixture PNG');
     const invAfter = await inventory(), sdAfter = await sdNow(), chatAfter = await chatState();
     // settings.json is the host's own (it re-saves it as it pleases); it is judged by its extension_settings.sd and the changed keys are disclosed.
@@ -552,7 +552,7 @@ try {
     const rowM = await until(async () => { const row = (await ledgerJobs())[0]; return row.state === 'imported' ? row : null; }, 'M imported row').then(async () => (await ledgerJobs())[0]);
     assert.equal(rowM.hostPath, lateFile); assert.equal(rowM.resultSha256, RESULT_PNG_SHA256);
     assert.equal(rowM.assetId, evidence.setup.C.importedAssetId, 'the ledger links the reused asset');
-    const storedM = await h.context.request.get(h.origin + '/api/plugins/sillynovel-storage/projects/' + project.projectId + '/assets/' + rowM.assetId);
+    const storedM = await h.context.request.get(h.origin + '/api/plugins/sillynovel-storage/projects/' + project.projectId + '/assets/' + rowM.assetId, { headers: CLOSE });
     assert.equal(sha(await storedM.body()), RESULT_PNG_SHA256, 'the imported bytes are the late file');
     evidence.counts.prompts += 1; evidence.counts.files += 1;
     evidence.setup.M = { lateFile, assetId: rowM.assetId };
