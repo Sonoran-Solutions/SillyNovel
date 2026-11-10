@@ -306,19 +306,29 @@ export function mountVisualStage({ document, stage, actions }) {
     // Review finding 4: an outcome is kept, in order, until the ledger acknowledges it. Each pass runs inside the serialized ledger queue, so an outcome
     // recorded before an end or a begin still reaches the plugin first. An unreachable ledger stops the pass (the next record, heartbeat, begin or Submit
     // retries it); LEASE_LOST holds that job's outcomes for this tab's next session on the project (PR B choice 5); any other refusal means the row moved elsewhere.
-    const unacked=[];
+    // Any other coded refusal is resolved by rereading the row (second review): a row already in the outcome's state is this page's write whose reply was
+    // lost, and counts as acknowledged; a row elsewhere was moved by another page, and the outcome is dropped with a notice. A failed reread keeps it queued.
+    const unacked=[],transient=error=>!error?.code||error.code==='STORAGE_UNAVAILABLE';
+    const written=(row,body)=>row?.state===body.state&&['hostPath','resultSha256','assetId'].every(key=>body[key]===undefined||row[key]===body[key]);
     async function writeOutcomes(){
         if(!unacked.length)return;
         const blocked=new Set();
-        for(const item of [...unacked]){
+        const ack=(item,row)=>{unacked.splice(unacked.indexOf(item),1);item.row=row;
+            if(row?.hostPath&&!row.hostDeletedAt&&['discarded','imported','abandoned'].includes(row.state))hostCopy={projectId:item.projectId,ledgerId:row.id,path:row.hostPath};};
+        pass:for(const item of [...unacked]){
             if(blocked.has(item.ledgerId))continue;
-            try{
-                const row=await client.transitionImageJob(item.projectId,item.ledgerId,item.body);unacked.splice(unacked.indexOf(item),1);item.row=row;
-                if(row?.hostPath&&!row.hostDeletedAt&&['discarded','imported','abandoned'].includes(row.state))hostCopy={projectId:item.projectId,ledgerId:row.id,path:row.hostPath};
-            }catch(error){
-                if(!error?.code||error.code==='STORAGE_UNAVAILABLE')break;
+            try{ack(item,await client.transitionImageJob(item.projectId,item.ledgerId,item.body));}
+            catch(error){
+                if(transient(error))break;
                 if(error.code==='LEASE_LOST'){blocked.add(item.ledgerId);if(ledger?.projectId===item.projectId)leaseLost();continue;}
+                let row=null;
+                try{row=(await client.imageJobs(item.projectId)).find(job=>job.id===item.ledgerId)??null;}catch(reread){if(transient(reread))break pass;}
+                if(written(row,item.body)){ack(item,row);continue;}
                 unacked.splice(unacked.indexOf(item),1);
+                if(!disposed&&model.project&&model.status().projectId===item.projectId){
+                    wfStatus.textContent='The image ledger refused to record a request as '+item.body.state+': another page changed it'+(row?' (it is now '+row.state+')':' (it is no longer recorded)')+'. The list was read again.';
+                    if(ledger?.projectId===item.projectId)loadRecovery(ledger);
+                }
             }
         }
         if(!disposed){refreshInspect();renderWorkflow();}
@@ -467,8 +477,15 @@ export function mountVisualStage({ document, stage, actions }) {
             if(!fetched.ok){wfStatus.textContent=imageProblem(fetched)+' Nothing was attached; choose another file, None of these, or Abandon.';return;}
             const resultSha256=await sha256(fetched.bytes);
             if(!here())return;if(changed()){refuse(changed());return;}
-            await ledgerCall(()=>client.transitionImageJob(held_.projectId,id,{tab,state:'reconciled',...(ledgerPath(path)?{hostPath:ledgerPath(path)}:{}),resultSha256}));
+            // Second review: through the outcome queue, so a write whose reply is lost is kept, reread and resolved, never lost from recovery.
             const generated={id:null,ledgerId:id,projectId:held_.projectId,path,held:held_,check:()=>staleReason(chosen.ident,nowFull(0))};
+            const row=await record(generated,'reconciled',{...(ledgerPath(path)?{hostPath:ledgerPath(path)}:{}),resultSha256});
+            if(!row){
+                // Not acknowledged: nothing is attached, and the choice is recorded discarded after it (its host copy stays deletable from the finished-jobs review).
+                generated.done=true;record(generated,'discarded');recovery=recovery.filter(item=>item!==job);if(reconcile===chosen)reconcile=null;
+                if(ledger===held_)wfStatus.textContent='The image ledger did not record this choice, so nothing is attached; it is recorded as discarded once the ledger answers. The host kept a copy at '+path+'.';
+                return;
+            }
             // Recorded but no longer this page's to show: it is discarded, never left awaiting an import.
             if(ledger!==held_||changed()){const reason=ledger===held_?changed():null;generated.done=true;record(generated,'discarded');if(reason){recovery=recovery.filter(item=>item!==job);if(reconcile===chosen)reconcile=null;wfStatus.textContent='Result discarded: '+(STALE_REASONS[reason]??reason)+' since Reconcile started; the host kept a copy at '+path+'.';}return;}
             recovery=recovery.filter(item=>item!==job);reconcile=null;clearPreview();

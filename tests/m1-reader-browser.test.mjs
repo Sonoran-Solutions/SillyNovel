@@ -1631,7 +1631,8 @@ function ledgerStub(projectId,assetIds){
  const transaction=fn=>{db.exec('BEGIN IMMEDIATE');try{const value=fn();db.exec('COMMIT');return value;}catch(error){db.exec('ROLLBACK');throw error;}};
  const load=(owner,id)=>demand(owner===OWNER&&id===projectId,'NOT_FOUND',404);
  const api=imageLedger(db,transaction,load,(owner,project,id)=>{load(owner,project);demand(assetIds.includes(id),'NOT_FOUND',404);});
- const ledger={db,calls:[],down:false,gate:null,
+ // `lose(method,rest,body)`, when it returns true once, commits the call and then answers 503: the plugin wrote it, the page never hears so.
+ const ledger={db,calls:[],down:false,gate:null,lose:null,
   jobs:()=>db.prepare('SELECT id,state,host_path AS hostPath,asset,result_sha256 AS resultSha256,host_deleted_at AS hostDeletedAt,review,submitted_at AS submittedAt,deadline_at AS deadlineAt FROM image_jobs ORDER BY submitted_at,rowid').all(),
   sessions:()=>db.prepare('SELECT id,tab,used,ended_at AS endedAt,heartbeat_at AS heartbeatAt FROM image_sessions ORDER BY started_at,rowid').all(),
   // A page that died long ago: its heartbeat and its jobs' deadlines move into the past; nothing else changes.
@@ -1648,7 +1649,9 @@ function ledgerStub(projectId,assetIds){
      'POST jobs':()=>api.reserveImageJob(OWNER,id,body),'POST jobs/cleanup':()=>api.cleanupImageJobs(OWNER,id,body)}[method+' '+rest]
      ??(method==='POST'&&/^jobs\/[^/]+\/host-deleted$/.test(rest)?()=>api.imageHostDeleted(OWNER,id,job,body):method==='POST'&&/^jobs\/[^/]+$/.test(rest)?()=>api.transitionImageJob(OWNER,id,job,body):null);
     if(!call)return route.fulfill({status:404,json:{code:'NOT_FOUND'}});
-    return route.fulfill({status:method+' '+rest==='POST jobs'?201:200,json:call()});
+    const value=call();
+    if(ledger.lose?.(method,rest,body)){ledger.lose=null;return route.fulfill({status:503,json:{code:'STORAGE_UNAVAILABLE'}});}
+    return route.fulfill({status:method+' '+rest==='POST jobs'?201:200,json:value});
    }catch(error){return route.fulfill({status:error.status||503,json:{code:error.code&&error.status?error.code:'STORAGE_UNAVAILABLE',...error.details}});}
   }};
  return ledger;
@@ -1664,6 +1667,7 @@ async function imageRoute(t,{clock=false}={}){
   const request=route.request(),path=new URL(request.url()).pathname;
   if(path.includes('/image/'))return ledger.serve(route,request,path);
   if(request.method()==='POST'&&path.endsWith('/assets')){state.uploads++;if(state.uploadGate)await state.uploadGate;return route.fulfill({status:201,json:{assetId:uploaded}});}
+  if(path.includes('/assets/')&&path.endsWith(uploaded)){state.assetGets=(state.assetGets??0)+1;if(state.assetGate)await state.assetGate;}
   if(path.includes('/assets/'))return route.fulfill({contentType:'image/png',headers:{'X-Content-SHA256':sha(path.endsWith(uploaded)?tavern:forest)},body:path.endsWith(uploaded)?tavern:forest});
   return route.fulfill({json:path.endsWith('/capabilities')?{apiVersion:1,schemaVersion:2,catalogVersion:1}:path.endsWith('/projects')?[record]:record});
  });
@@ -2350,4 +2354,69 @@ test("M3.3 review 5: the finished-jobs review offers Delete the host's copy for 
  assert.equal(await control(page,name(first)).count(),0,'a deleted copy leaves the list');assert.equal(await control(page,name(second)).isVisible(),true);
  await control(page,'Inspect sent requests').click();const body=page.locator('#sillynovel-image-inspect-body');await body.locator('.sillynovel-image-workflow__job').nth(1).waitFor();
  assert.equal(await body.locator('button,input,select,textarea').count(),0,'Inspect stays read-only');
+});
+
+// M3.3 PR C second review (each of the first three fails on e06e89f; the fourth is lost-acknowledgement coverage).
+test('M3.3 second review 1: an Import withdrawn while its asset is read leaves the catalog consistent; the next manual command applies',async t=>{
+ const x=await imageRoute(t),{page}=x;await x.ready();
+ await control(page,'Submit').click();await waitStatus(page,/^Candidate, not imported/);
+ let open;x.state.assetGate=new Promise(r=>{open=r;});
+ await button(page,'Import and apply background to Harbor project').click();await until(()=>x.state.assetGets===1,'the uploaded asset read held');
+ await button(page,'Discard preview').click();
+ open();x.state.assetGate=null;
+ await until(()=>states(x).join()==='discarded','recorded discarded');await new Promise(r=>setTimeout(r,300));
+ assert.doesNotMatch(await page.locator('.sillynovel-selected-art').innerText(),/Generated harbor/,'nothing applied');
+ await page.getByLabel('Lock field',{exact:true}).selectOption('background');await button(page,'Lock choice').click();
+ await page.waitForFunction(()=>/Background locked\./.test(document.querySelector('.sillynovel-visual-status').textContent));
+ await page.getByLabel('Background',{exact:true}).selectOption(x.bg);await button(page,'Apply background').click();
+ await page.waitForFunction(()=>/Selected background: Harbor 1/.test(document.querySelector('.sillynovel-selected-art').textContent));
+});
+
+test('M3.3 second review 2: a reconciled choice whose reply is lost is kept, reread and discarded; its host copy stays deletable',async t=>{
+ const x=await imageRoute(t),{page,field}=x;await x.ready();await x.hold();
+ await control(page,'Submit').click();await waitStatus(page,/^Generating on/);
+ await x.reload();x.ledger.age(200_000);
+ const [job]=x.ledger.jobs(),since=Math.floor(job.submittedAt/1000)*1000,when=iso(job.submittedAt);
+ await hostImages(page,{names:['late-1.png'],files:{'late-1.png':{mtimeMs:since+5_000,body:x.tavern}}});
+ await field('Image session on this host').check();await page.locator('.sillynovel-image-workflow__lease').waitFor({state:'visible'});
+ await control(page,'Take over').click();
+ const row=page.locator('.sillynovel-image-workflow__unresolved');await row.waitFor();
+ await control(page,'Reconcile the request submitted '+when).click();await waitStatus(page,/^Choose the file/);
+ x.ledger.lose=(method,rest,body)=>method==='POST'&&rest==='jobs/'+job.id&&body?.state==='reconciled';
+ await row.getByRole('button',{name:'Use /user/images/late-1.png as the result of the request submitted '+when,exact:true}).click();
+ await waitStatus(page,/^The image ledger did not record this choice, so nothing is attached; it is recorded as discarded once the ledger answers\. The host kept a copy at \/user\/images\/late-1\.png\.$/);
+ assert.equal(await page.locator('.sillynovel-image-workflow__preview').isHidden(),true);
+ await until(()=>states(x).join()==='discarded','the committed choice reread and discarded');
+ assert.deepEqual(x.ledger.jobs().map(j=>[j.state,j.hostPath]),[['discarded','/user/images/late-1.png']]);
+ await page.waitForFunction(()=>!/uncertain/.test(document.querySelector('.sillynovel-image-workflow__generation-problems').textContent));
+ await control(page,'Review finished image jobs').click();await waitStatus(page,/^1 finished image job record can be removed/);
+ assert.equal(await control(page,"Delete the host's copy at /user/images/late-1.png (request submitted "+when+')').isVisible(),true);
+ assert.equal(await control(page,'Submit').isEnabled(),true);
+});
+
+test('M3.3 second review 3: an outcome refused because another page moved the row is reread and named, not dropped silently; nothing stays blocked',async t=>{
+ const x=await imageRoute(t),{page}=x;await x.ready();
+ await control(page,'Submit').click();await waitStatus(page,/^Candidate, not imported/);
+ // Another of the owner's pages may discard a candidate (owner-scoped): simulated by moving the row directly.
+ x.ledger.db.prepare("UPDATE image_jobs SET state='discarded'").run();
+ await button(page,'Import and apply background to Harbor project').click();
+ await waitStatus(page,/^The image ledger refused to record a request as imported: another page changed it \(it is now discarded\)\. The list was read again\.$/);
+ assert.equal(states(x).join(),'discarded');
+ await page.waitForFunction(()=>!/uncertain/.test(document.querySelector('.sillynovel-image-workflow__generation-problems').textContent));
+ assert.equal(await control(page,'Submit').isEnabled(),true,'never blocked');
+});
+
+test('M3.3 second review 4: an ordinary outcome whose reply is lost is kept, reread as written, and Submit then proceeds',async t=>{
+ const x=await imageRoute(t),{page}=x;await x.ready();
+ await page.evaluate(()=>{fixture.imagineResult='/user/images/synthetic.jpg';});
+ const [first]=await Promise.all([new Promise(r=>{x.ledger.lose=(method,rest)=>{if(method==='POST'&&/^jobs\/[^/]+$/.test(rest)){r(rest);return true;}return false;};}),control(page,'Submit').click()]);
+ await waitStatus(page,/RESULT_NOT_PNG/);
+ assert.deepEqual(states(x),['failed'],'the plugin wrote it');
+ await page.waitForFunction(()=>/The image ledger has not yet recorded an outcome from this page, so its state is uncertain/.test(document.querySelector('.sillynovel-image-workflow__generation-problems').textContent));
+ await page.evaluate(()=>{fixture.imagineResult='/user/images/synthetic.png';});
+ await control(page,'Submit').click();await waitStatus(page,/^Candidate, not imported/);
+ assert.deepEqual(states(x),['failed','candidate'],'reread as written, then the new request');
+ assert.ok(x.ledger.calls.lastIndexOf('POST '+first)<x.ledger.calls.lastIndexOf('POST jobs'),'resolved before the reserve');
+ assert.doesNotMatch(await problemsText(page),/uncertain/);
+ assert.doesNotMatch(await generationStatus(page).innerText(),/another page changed it/);
 });
