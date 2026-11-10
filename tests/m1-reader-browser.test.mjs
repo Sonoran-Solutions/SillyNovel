@@ -1663,7 +1663,7 @@ async function imageRoute(t,{clock=false}={}){
  await page.context().route('**/api/plugins/sillynovel-storage/**',async route=>{
   const request=route.request(),path=new URL(request.url()).pathname;
   if(path.includes('/image/'))return ledger.serve(route,request,path);
-  if(request.method()==='POST'&&path.endsWith('/assets')){state.uploads++;return route.fulfill({status:201,json:{assetId:uploaded}});}
+  if(request.method()==='POST'&&path.endsWith('/assets')){state.uploads++;if(state.uploadGate)await state.uploadGate;return route.fulfill({status:201,json:{assetId:uploaded}});}
   if(path.includes('/assets/'))return route.fulfill({contentType:'image/png',headers:{'X-Content-SHA256':sha(path.endsWith(uploaded)?tavern:forest)},body:path.endsWith(uploaded)?tavern:forest});
   return route.fulfill({json:path.endsWith('/capabilities')?{apiVersion:1,schemaVersion:2,catalogVersion:1}:path.endsWith('/projects')?[record]:record});
  });
@@ -1997,16 +1997,21 @@ const iso=ms=>new Date(ms).toISOString();
 const problemsText=page=>page.locator('.sillynovel-image-workflow__generation-problems').innerText();
 async function hostImages(page,{names,files,deleted=[]}){
  // The host's image folder for one test: the root listing, dated files (Last-Modified, one-second resolution) and the delete route.
- const listed=[];
+ // `host.gate`, when set, holds every file GET until it resolves; `host.gets` counts them (the listing's dated read, then the chosen file's fetch).
+ const listed=[],host={listed,deleted,gate:null,gets:0};
  await page.context().route('**/api/images/list',async route=>{listed.push(route.request().postDataJSON());await route.fulfill({json:names});});
  await page.context().route('**/user/images/*.png',async route=>{
   const name=new URL(route.request().url()).pathname.slice('/user/images/'.length),file=files[name];
   if(!file)return route.fallback();
+  host.gets++;if(host.gate)await host.gate;
   await route.fulfill({status:200,contentType:'image/png',headers:{'Last-Modified':new Date(file.mtimeMs).toUTCString(),'Content-Length':String(file.body.length)},body:file.body});
  });
  await page.context().route('**/api/images/delete',async route=>{const body=route.request().postDataJSON();deleted.push({body,headers:route.request().headers()});await route.fulfill({status:deleted.status??200,body:'OK'});});
- return {listed,deleted};
+ return host;
 }
+// Node-side wait for a condition on the ledger rows or the routes (the page clock may be fake).
+const until=async(check,what,ms=5000)=>{const end=Date.now()+ms;while(Date.now()<end){if(await check())return;await new Promise(r=>setTimeout(r,25));}throw Error('Timed out: '+what);};
+const states=x=>x.ledger.jobs().map(j=>j.state);
 
 test('M3.3 the ledger is the session: on begins the lease row, Submit reserves before the host call, every outcome is a transition, off ends it',async t=>{
  const x=await imageRoute(t),{page,field}=x;
@@ -2033,6 +2038,17 @@ test('M3.3 the ledger is the session: on begins the lease row, Submit reserves b
  assert.notEqual(x.ledger.sessions()[0].endedAt,null,'off ends the session row');
  await x.ready();
  assert.equal(x.ledger.sessions().length,2,'on again begins a new session');assert.equal(await allowance(page).innerText(),'Submissions used 0 of 5');
+ // Review finding 3: a lock change while the reservation is pending changes the request's identity: the row is stale and the host is never called.
+ await field('Image prompt').fill(x.draft.prompt+', fog');
+ x.ledger.gate=new Promise(r=>{open=r;});
+ await control(page,'Submit').click();await until(()=>x.ledger.calls.filter(c=>c==='POST jobs').length===2,'second reservation held');
+ await page.getByLabel('Lock field',{exact:true}).selectOption('background');await button(page,'Release lock').click();
+ await page.waitForFunction(()=>!/Background locked\./.test(document.querySelector('.sillynovel-visual-status').textContent));
+ open();x.ledger.gate=null;
+ await waitStatus(page,/^Nothing was sent: the manual locks changed while the request was being prepared\. The reservation is recorded as stale; its unit stays spent\.$/);
+ await until(()=>states(x).join()==='imported,stale','the reservation recorded stale');
+ assert.equal(await page.evaluate(()=>fixture.imagineCalls.length),1,'no host call for the changed request');
+ assert.equal(await allowance(page).innerText(),'Submissions used 1 of 5','the reserved unit stays spent');
 });
 
 test('M3.3 outcomes in the ledger (fake timers): failed, cancelled then stale with its path, discarded, timeout-unknown then abandoned; every unit stays spent',async t=>{
@@ -2079,6 +2095,11 @@ test('M3.3 J2 takeover from a second page keeps the count; the first page ends a
  assert.equal(await field('Image session on this host').isChecked(),false);assert.equal(await control(page,'Submit').isDisabled(),true);
  assert.equal(await page.evaluate(()=>fixture.imagineCalls.length)+await second.evaluate(()=>fixture.imagineCalls.length),1,'no host call from the takeover');
  assert.equal(await page.locator('#send_textarea').isEnabled(),true,'reading and replying continue');
+ // Review finding 1: the candidate went with the lease; it is recorded as discarded and cannot be imported from this page.
+ await until(()=>states(x).join()==='discarded','the candidate recorded discarded');
+ assert.equal(await page.locator('.sillynovel-image-workflow__preview').isHidden(),true,'the lost lease takes the candidate');
+ assert.equal(await button(page,'Import and apply background to Harbor project').isDisabled(),true,'Import after the loss is unavailable');
+ assert.equal(x.state.uploads,0);
 });
 
 test('M3.3 reserve refusals are sentences and send nothing; an unreachable ledger refuses generation while the manual export and import stay available',async t=>{
@@ -2234,4 +2255,99 @@ test('M3.3 J7 a host-side refusal is a failure: the unit is spent, one host call
  assert.deepEqual(x.ledger.jobs().map(j=>j.state),['failed']);
  assert.equal(await page.locator('.sillynovel-image-workflow__preview').isHidden(),true);assert.equal(x.state.uploads,0);
  assert.equal(await control(page,'Submit').isEnabled(),true);
+});
+
+// M3.3 PR C senior-review regressions (each fails on 45a7d42).
+test('M3.3 review 1: a lease lost while Import uploads applies nothing; the candidate is recorded discarded, never imported',async t=>{
+ const x=await imageRoute(t,{clock:true}),{page}=x;await x.ready();
+ await control(page,'Submit').click();await waitStatus(page,/^Candidate, not imported/);
+ let open;x.state.uploadGate=new Promise(r=>{open=r;});
+ await button(page,'Import and apply background to Harbor project').click();await until(()=>x.state.uploads===1,'upload held');
+ const second=await x.another(),f2=x.fieldOf(second);
+ await f2('Image session on this host').check();await second.locator('.sillynovel-image-workflow__lease').waitFor({state:'visible'});
+ await control(second,'Take over').click();
+ await second.waitForFunction(()=>/^Took over this project's image session/.test(document.querySelector('.sillynovel-image-workflow__status').textContent));
+ await page.clock.fastForward(30_000);await waitStatus(page,/^This image session ended here: another tab or page took it over\./);
+ open();x.state.uploadGate=null;
+ await until(()=>states(x).join()==='discarded','the candidate recorded discarded');
+ await new Promise(r=>setTimeout(r,500));
+ assert.equal(states(x).join(),'discarded','never imported');
+ assert.doesNotMatch(await page.locator('.sillynovel-selected-art').innerText(),/Generated harbor/,'nothing applied');
+ assert.match(await generationStatus(page).innerText(),/^This image session ended here/);
+ assert.equal(await page.locator('.sillynovel-image-workflow__preview').isHidden(),true);
+});
+
+test('M3.3 review 1 and 4: an outage after the reservation keeps the settled outcome; no preview without the ledger\'s acknowledgement, nothing new is reserved, and the outcome is written first',async t=>{
+ const x=await imageRoute(t),{page}=x;await x.ready();await x.hold();
+ await control(page,'Submit').click();await waitStatus(page,/^Generating on/);
+ x.ledger.down=true;
+ await x.release('/user/images/synthetic.png');
+ await waitStatus(page,/^The image ledger did not record this result, so it is not shown; it is recorded as discarded once the ledger answers\. The host kept a copy at \/user\/images\/synthetic\.png\.$/);
+ assert.equal(await page.locator('.sillynovel-image-workflow__preview').isHidden(),true,'no preview for an unacknowledged candidate');
+ assert.deepEqual(states(x),['pending'],'the durable row is unchanged');
+ await page.waitForFunction(()=>/The image ledger has not yet recorded 2 outcomes from this page, so its state is uncertain; they are written before any new request\./.test(document.querySelector('.sillynovel-image-workflow__generation-problems').textContent));
+ await page.locator('.sillynovel-image-workflow').getByLabel('Image prompt',{exact:true}).fill(x.draft.prompt+', fog');
+ await control(page,'Submit').click();
+ await waitStatus(page,/^The image ledger has not acknowledged an earlier outcome from this page, so nothing was reserved or sent\. Submit again once the ledger answers\.$/);
+ assert.equal(await page.evaluate(()=>fixture.imagineCalls.length),1,'no host call');assert.deepEqual(states(x),['pending'],'nothing reserved');
+ x.ledger.down=false;
+ await control(page,'Submit').click();await waitStatus(page,/^Candidate, not imported/);
+ assert.deepEqual(x.ledger.jobs().map(j=>[j.state,j.hostPath]),[['discarded','/user/images/synthetic.png'],['candidate','/user/images/synthetic.png']],'the kept outcomes were written, in order, before the new reservation');
+ assert.ok(x.ledger.calls.lastIndexOf('POST jobs')>x.ledger.calls.lastIndexOf('POST jobs/'+x.ledger.jobs()[0].id),'written before the reserve');
+ assert.equal(await page.evaluate(()=>fixture.imagineCalls.length),2);
+ assert.doesNotMatch(await problemsText(page),/uncertain/);
+});
+
+test('M3.3 review 2: a reconciled candidate keeps the identity taken when Reconcile started: a lock change during a held fetch attaches nothing; one after the preview discards it at Import',async t=>{
+ const x=await imageRoute(t),{page,field}=x;await x.ready();await x.hold();
+ await control(page,'Submit').click();await waitStatus(page,/^Generating on/);
+ await x.reload();x.ledger.age(200_000);
+ const [job]=x.ledger.jobs(),since=Math.floor(job.submittedAt/1000)*1000,when=iso(job.submittedAt);
+ const host=await hostImages(page,{names:['late-1.png'],files:{'late-1.png':{mtimeMs:since+5_000,body:x.tavern}}});
+ await field('Image session on this host').check();await page.locator('.sillynovel-image-workflow__lease').waitFor({state:'visible'});
+ await control(page,'Take over').click();
+ const row=page.locator('.sillynovel-image-workflow__unresolved');await row.waitFor();
+ const use=()=>row.getByRole('button',{name:'Use /user/images/late-1.png as the result of the request submitted '+when,exact:true});
+ const lock=async name=>{await page.getByLabel('Lock field',{exact:true}).selectOption('background');await button(page,name).click();};
+ await control(page,'Reconcile the request submitted '+when).click();await waitStatus(page,/^Choose the file/);
+ let open;host.gate=new Promise(r=>{open=r;});
+ await use().click();await until(()=>host.gets===2,'the chosen file fetch held');
+ await lock('Lock choice');await page.waitForFunction(()=>/Background locked\./.test(document.querySelector('.sillynovel-visual-status').textContent));
+ open();host.gate=null;
+ await waitStatus(page,/^Nothing was attached: the manual locks changed since Reconcile started\. Reconcile again, or Abandon it\.$/);
+ assert.equal(await page.locator('.sillynovel-image-workflow__preview').isHidden(),true,'nothing attached');
+ assert.deepEqual(states(x),['unknown'],'not reconciled; still unresolved');assert.equal(x.state.uploads,0);
+ await control(page,'Reconcile the request submitted '+when).click();await waitStatus(page,/^Choose the file/);
+ await use().click();await waitStatus(page,/^Reconciled candidate, not imported/);
+ await lock('Release lock');await page.waitForFunction(()=>!/Background locked\./.test(document.querySelector('.sillynovel-visual-status').textContent));
+ await button(page,'Import and apply background to Harbor project').click();
+ await waitStatus(page,/^Result discarded: the manual locks changed; the host kept a copy at \/user\/images\/late-1\.png$/);
+ await until(()=>states(x).join()==='discarded','recorded discarded');
+ assert.equal(x.state.uploads,0,'nothing uploaded');assert.equal(await page.locator('.sillynovel-image-workflow__preview').isHidden(),true);
+ assert.equal(await page.evaluate(()=>fixture.imagineCalls.length),0,'recovery never calls the host');
+});
+
+test("M3.3 review 5: the finished-jobs review offers Delete the host's copy for every retained row, including rows from before a reload; Inspect stays read-only",async t=>{
+ const x=await imageRoute(t),{page,field}=x;await x.ready();
+ await control(page,'Submit').click();await waitStatus(page,/^Candidate, not imported/);await button(page,'Discard preview').click();
+ await field('Image prompt').fill(x.draft.prompt+', fog');
+ await control(page,'Submit').click();await waitStatus(page,/^Candidate, not imported/);
+ await button(page,'Import and apply background to Harbor project').click();await waitStatus(page,/^Imported and applied/);
+ await until(()=>states(x).join()==='discarded,imported','both rows finished');
+ await x.reload();
+ const host=await hostImages(page,{names:[],files:{}});
+ assert.equal(await control(page,"Delete the host's copy").isHidden(),true,'the latest-job control does not survive a reload');
+ await control(page,'Review finished image jobs').click();await waitStatus(page,/^2 finished image job records can be removed/);
+ const [first,second]=x.ledger.jobs(),name=job=>"Delete the host's copy at /user/images/synthetic.png (request submitted "+iso(job.submittedAt)+')';
+ assert.equal(await control(page,name(first)).isVisible(),true);assert.equal(await control(page,name(second)).isVisible(),true);
+ assert.equal(await page.locator('#sillynovel-image-host-copies-note').innerText(),"Delete the host's copy removes that one file from SillyTavern's image folder. ComfyUI's own output folder may hold another copy that SillyNovel cannot see.");
+ assert.equal(await control(page,name(first)).getAttribute('aria-describedby'),'sillynovel-image-host-copies-note');
+ assert.deepEqual(host.deleted,[],'never automatic');
+ await control(page,name(first)).click();
+ await waitStatus(page,/^Deleted the host's copy at \/user\/images\/synthetic\.png\./);
+ assert.deepEqual(host.deleted.map(d=>d.body),[{path:'/user/images/synthetic.png'}],'exactly the recorded path');
+ assert.notEqual(x.ledger.jobs()[0].hostDeletedAt,null);assert.equal(x.ledger.jobs()[1].hostDeletedAt,null);
+ assert.equal(await control(page,name(first)).count(),0,'a deleted copy leaves the list');assert.equal(await control(page,name(second)).isVisible(),true);
+ await control(page,'Inspect sent requests').click();const body=page.locator('#sillynovel-image-inspect-body');await body.locator('.sillynovel-image-workflow__job').nth(1).waitFor();
+ assert.equal(await body.locator('button,input,select,textarea').count(),0,'Inspect stays read-only');
 });

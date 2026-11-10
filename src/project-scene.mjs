@@ -169,7 +169,8 @@ export async function createProjectScene(project,client,actions,changed,isCurren
         async sync(refresh=true){if(!current()){if(actions.getSnapshot().sessionEpoch!==epoch)expressions.dispose();return false;}await expressions.sync(refresh);syncOverlay();director?.observe();notify();return true;},
         async dispatch(command){if(['setExpression','clearExpression'].includes(command.type)){const replaced=expressions.get().view.cast.find(a=>a.key===command.characterKey)?.expression?.origin==='automatic',done=await expressions.dispatch(command);if(replaced)director?.noteCorrection('expression');return done;}if(importing||cleanupBusy)throw Error('Wait for the PNG import or cleanup to finish.');invalidateCleanup();if(!current())return false;apply(command);const cleared=clearOverlay();await expressions.sync();edit++;notice='Applied · unsaved project changes.'+cleared;notify();return true;},
         async register(_preset,name){if(importing||cleanupBusy)throw Error('Wait for the PNG import or cleanup to finish.');invalidateCleanup();if(!current())return;if(!label(name)||actors.length>=20)throw Error('Use a name of 1–80 characters; maximum 20 actors.');const key=crypto.randomUUID();actors.push({key,label:name,description:'Project actor',defaultURL:null});refresh();apply({type:'addCharacter',characterKey:key});clearOverlay();edit++;notify();return key;},
-        async importFile(file,kind,key,displayLabel){
+        // `still` lets a caller withdraw its permission while the upload is in flight (M3.3 review finding 1); nothing is applied once it is false.
+        async importFile(file,kind,key,displayLabel,still=()=>true){
             if(!current())return;
             displayLabel=displayLabel?.trim() || file.name?.replace(/\.png$/i,'').slice(0,80) || 'Imported PNG';
             if(!label(displayLabel))throw Error('Use a label of 1–80 characters.');
@@ -181,13 +182,13 @@ export async function createProjectScene(project,client,actions,changed,isCurren
             importing=true;notice='Importing PNG · visual edits paused.';notify();
             try {
                 const result=await client.upload(project.projectId,file);
-                if(!current())return;
+                if(!current()||!still())return;
                 if(!validId(result.assetId))throw Error('INVALID_RECEIPT');
                 const entry={assetId:result.assetId,label:displayLabel,kind:kind==='background'?'background':'sprite',actorId:kind==='background'?null:key};
                 const prior=library.findIndex(a=>a.assetId===entry.assetId && a.kind===entry.kind && a.actorId===entry.actorId);
                 if(prior<0 && library.length>=100)throw Error('Maximum 100 library entries.');
                 const ref=await install(result.assetId,kind,kind==='background'?undefined:key,displayLabel);
-                if(!current())return;
+                if(!current()||!still())return;
                 if(prior<0)library.push(entry);else library[prior]=entry;
                 refresh();apply({type:kind==='background'?'setBackground':'setOutfit',assetId:ref,...(kind==='background'?{}:{characterKey:key})});notice='Imported · unsaved project arrangement.'+clearOverlay();edit++;
                 return result.assetId;
