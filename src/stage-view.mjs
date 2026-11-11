@@ -310,7 +310,7 @@ export function mountVisualStage({ document, stage, actions }) {
     // lost, and counts as acknowledged; a row elsewhere was moved by another page, and the outcome is dropped with a notice and marked a conflict, after which
     // no follow-up transition is queued for it (third review). Only a successful read decides: any failed reread keeps the outcome queued, and a row is
     // absent only when a list that was read lacks it.
-    const unacked=[],transient=error=>!error?.code||error.code==='STORAGE_UNAVAILABLE';
+    const unacked=[],conflicted=new Set(),transient=error=>!error?.code||error.code==='STORAGE_UNAVAILABLE';
     const written=(row,body)=>row?.state===body.state&&['hostPath','resultSha256','assetId'].every(key=>body[key]===undefined||row[key]===body[key]);
     async function writeOutcomes(){
         if(!unacked.length)return;
@@ -318,7 +318,7 @@ export function mountVisualStage({ document, stage, actions }) {
         const ack=(item,row)=>{unacked.splice(unacked.indexOf(item),1);item.row=row;
             if(row?.hostPath&&!row.hostDeletedAt&&['discarded','imported','abandoned'].includes(row.state))hostCopy={projectId:item.projectId,ledgerId:row.id,path:row.hostPath};};
         pass:for(const item of [...unacked]){
-            if(blocked.has(item.ledgerId))continue;
+            if(blocked.has(item.ledgerId)||!unacked.includes(item))continue;
             try{ack(item,await client.transitionImageJob(item.projectId,item.ledgerId,item.body));}
             catch(error){
                 if(transient(error))break;
@@ -327,9 +327,12 @@ export function mountVisualStage({ document, stage, actions }) {
                 try{row=(await client.imageJobs(item.projectId)).find(job=>job.id===item.ledgerId)??null;}
                 catch(reread){if(transient(reread))break pass;blocked.add(item.ledgerId);continue;}
                 if(written(row,item.body)){ack(item,row);continue;}
-                unacked.splice(unacked.indexOf(item),1);item.conflict=true;
+                // Fourth review: the conflict is the job's, so every outcome queued for it goes too (those this pass already captured included); later ones are refused.
+                const dropped=unacked.filter(other=>other.projectId===item.projectId&&other.ledgerId===item.ledgerId);
+                for(const other of dropped){unacked.splice(unacked.indexOf(other),1);other.conflict=true;}
+                conflicted.add(item.projectId+'/'+item.ledgerId);
                 if(!disposed&&model.project&&model.status().projectId===item.projectId){
-                    wfStatus.textContent='The image ledger refused to record a request as '+item.body.state+': another page changed it'+(row?' (it is now '+row.state+')':' (it is no longer recorded)')+'. The list was read again.';
+                    wfStatus.textContent='The image ledger refused to record a request as '+item.body.state+': another page changed it'+(row?' (it is now '+row.state+')':' (it is no longer recorded)')+'.'+(dropped.length>1?' '+(dropped.length-1)+' later outcome'+(dropped.length>2?'s':'')+' this page had queued for it '+(dropped.length>2?'were':'was')+' dropped too.':'')+' The list was read again.';
                     if(ledger?.projectId===item.projectId)loadRecovery(ledger);
                 }
             }
@@ -341,6 +344,7 @@ export function mountVisualStage({ document, stage, actions }) {
     // Resolves to the acknowledged row, null while the outcome waits in the queue, or false after a conflict (another page's result stands; follow nothing up).
     function record(job,state,extra={}){
         if(!job?.ledgerId)return Promise.resolve(null);
+        if(conflicted.has(job.projectId+'/'+job.ledgerId))return Promise.resolve(false);
         const item={projectId:job.projectId,ledgerId:job.ledgerId,body:{tab,state,...Object.fromEntries(Object.entries(extra).filter(([,value])=>value!==undefined))}};
         unacked.push(item);return flushOutcomes().then(()=>item.row??(item.conflict?false:null));
     }

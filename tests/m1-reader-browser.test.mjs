@@ -1632,7 +1632,7 @@ function ledgerStub(projectId,assetIds){
  const load=(owner,id)=>demand(owner===OWNER&&id===projectId,'NOT_FOUND',404);
  const api=imageLedger(db,transaction,load,(owner,project,id)=>{load(owner,project);demand(assetIds.includes(id),'NOT_FOUND',404);});
  // `lose(method,rest,body)`, when it returns true once, commits the call and then answers 503: the plugin wrote it, the page never hears so.
- // `fail(method,rest)` may return {status,code}: a coded refusal before anything is read or written.
+ // `fail(method,rest,body,request)` may return {status,code}: a refusal before anything is read or written (the request names its page).
  const ledger={db,calls:[],down:false,gate:null,lose:null,fail:null,
   jobs:()=>db.prepare('SELECT id,state,host_path AS hostPath,asset,result_sha256 AS resultSha256,host_deleted_at AS hostDeletedAt,review,submitted_at AS submittedAt,deadline_at AS deadlineAt FROM image_jobs ORDER BY submitted_at,rowid').all(),
   sessions:()=>db.prepare('SELECT id,tab,used,ended_at AS endedAt,heartbeat_at AS heartbeatAt FROM image_sessions ORDER BY started_at,rowid').all(),
@@ -1642,7 +1642,7 @@ function ledgerStub(projectId,assetIds){
    const [,id,rest]=/\/projects\/([^/]+)\/image\/(.+)$/.exec(path),method=request.method();ledger.calls.push(method+' '+rest);
    if(ledger.gate&&method==='POST'&&rest==='jobs')await ledger.gate;
    if(ledger.down)return route.fulfill({status:503,json:{code:'STORAGE_UNAVAILABLE'}});
-   const failed=ledger.fail?.(method,rest);if(failed)return route.fulfill({status:failed.status,json:{code:failed.code}});
+   const failed=ledger.fail?.(method,rest,method==='POST'?JSON.parse(request.postData()||'null'):undefined,request);if(failed)return route.fulfill({status:failed.status,json:{code:failed.code}});
    try{
     let body;if(method==='POST'){demand(request.headers()['content-type']==='application/vnd.sillynovel+json','CONTENT_TYPE',415);body=JSON.parse(request.postData());}
     const query=Object.fromEntries(new URL(request.url()).searchParams),job=rest.split('/')[1];
@@ -2477,4 +2477,62 @@ test('M3.3 third review 2: a reread refused with a coded error keeps the outcome
  assert.deepEqual(states(x),['failed','candidate'],'the kept outcome was reread as written, then the new request');
  assert.doesNotMatch(await problemsText(page),/uncertain/);
  assert.equal(await page.evaluate(()=>fixture.imagineCalls.length),2);
+});
+
+// M3.3 PR C fourth review (both fail on 89327f0): a conflict found on replay drops every outcome this page queued for that request.
+// Page A's write for a request fails before the plugin commits, so A queues `discarded` behind it; page B takes over and reconciles the same request
+// to another file; A replays: its first outcome conflicts with B's row, and the queued `discarded` must not run on B's choice.
+async function replayAfterTakeover(x,page,job,{aFails,aAct}){
+ const when=iso(job.submittedAt),since=Math.floor(job.submittedAt/1000)*1000;
+ await hostImages(page,{names:['late-1.png','late-2.png'],files:{'late-1.png':{mtimeMs:since+5_000,body:x.tavern},'late-2.png':{mtimeMs:since+6_000,body:x.tavern}}});
+ x.ledger.fail=(method,rest,body,request)=>method==='POST'&&request.frame().page()===page&&aFails(body)?{status:503,code:'STORAGE_UNAVAILABLE'}:null;
+ await aAct();
+ await page.waitForFunction(()=>/The image ledger has not yet recorded 2 outcomes from this page, so its state is uncertain/.test(document.querySelector('.sillynovel-image-workflow__generation-problems').textContent));
+ const second=await x.another(),f2=x.fieldOf(second);
+ await f2('Image session on this host').check();await second.locator('.sillynovel-image-workflow__lease').waitFor({state:'visible'});
+ await control(second,'Take over').click();
+ const rowB=second.locator('.sillynovel-image-workflow__unresolved');await rowB.waitFor();
+ await control(second,'Reconcile the request submitted '+when).click();
+ await second.waitForFunction(()=>/^Choose the file/.test(document.querySelector('.sillynovel-image-workflow__status').textContent));
+ await rowB.getByRole('button',{name:'Use /user/images/late-2.png as the result of the request submitted '+when,exact:true}).click();
+ await second.waitForFunction(()=>/^Reconciled candidate, not imported/.test(document.querySelector('.sillynovel-image-workflow__status').textContent));
+ // A's ledger answers again; its next Submit replays the queue first.
+ x.ledger.fail=null;
+ await page.evaluate(()=>{const e=document.querySelector('.sillynovel-image-workflow__status');window.__statuses=[];new MutationObserver(()=>window.__statuses.push(e.textContent)).observe(e,{childList:true,characterData:true,subtree:true});});
+ await control(page,'Submit').click();
+ await page.waitForFunction(()=>window.__statuses.some(t=>/another page changed it \(it is now reconciled\)/.test(t)));
+ await new Promise(r=>setTimeout(r,500));
+ assert.deepEqual(x.ledger.jobs().map(j=>[j.state,j.hostPath]),[['reconciled','/user/images/late-2.png']],'B\'s choice stands');
+ assert.ok(await page.evaluate(()=>window.__statuses.some(t=>/another page changed it \(it is now reconciled\)\. 1 later outcome this page had queued for it was dropped too\. The list was read again\./.test(t))),'the notice says the queued discard was dropped');
+ assert.doesNotMatch(await problemsText(page),/uncertain/,'nothing left queued');
+ await button(second,'Import and apply background to Harbor project').click();
+ await second.waitForFunction(()=>/^Imported and applied/.test(document.querySelector('.sillynovel-image-workflow__status').textContent));
+ await until(()=>states(x).join()==='imported','B imports its choice');
+}
+
+test('M3.3 fourth review: a reconciled choice queued during an outage, then another page\'s reconcile; the replay drops the queued discard too',async t=>{
+ const x=await imageRoute(t),{page,field}=x;await x.ready();await x.hold();
+ await control(page,'Submit').click();await waitStatus(page,/^Generating on/);
+ await x.reload();x.ledger.age(200_000);
+ const [job]=x.ledger.jobs(),when=iso(job.submittedAt);
+ await replayAfterTakeover(x,page,job,{aFails:body=>body?.state==='reconciled'||body?.state==='discarded',aAct:async()=>{
+  await field('Image session on this host').check();await page.locator('.sillynovel-image-workflow__lease').waitFor({state:'visible'});
+  await control(page,'Take over').click();
+  const rowA=page.locator('.sillynovel-image-workflow__unresolved');await rowA.waitFor();
+  await control(page,'Reconcile the request submitted '+when).click();await waitStatus(page,/^Choose the file/);
+  await rowA.getByRole('button',{name:'Use /user/images/late-1.png as the result of the request submitted '+when,exact:true}).click();
+  await waitStatus(page,/^The image ledger did not record this choice, so nothing is attached; it is recorded as discarded once the ledger answers\./);
+ }});
+});
+
+test('M3.3 fourth review: a candidate queued during an outage, then another page\'s reconcile of the overdue request; the replay drops the queued discard too',async t=>{
+ const x=await imageRoute(t),{page}=x;await x.ready();await x.hold();
+ await control(page,'Submit').click();await waitStatus(page,/^Generating on/);
+ // The request passes its deadline while the host still holds it, so another page may reconcile it.
+ x.ledger.age(200_000);
+ const [job]=x.ledger.jobs();
+ await replayAfterTakeover(x,page,job,{aFails:body=>body?.state==='candidate'||body?.state==='discarded',aAct:async()=>{
+  await x.release('/user/images/synthetic.png');
+  await waitStatus(page,/^The image ledger did not record this result, so it is not shown; it is recorded as discarded once the ledger answers\./);
+ }});
 });
