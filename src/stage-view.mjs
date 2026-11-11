@@ -310,7 +310,7 @@ export function mountVisualStage({ document, stage, actions }) {
     // lost, and counts as acknowledged; a row elsewhere was moved by another page, and the outcome is dropped with a notice and marked a conflict, after which
     // no follow-up transition is queued for it (third review). Only a successful read decides: any failed reread keeps the outcome queued, and a row is
     // absent only when a list that was read lacks it.
-    const unacked=[],conflicted=new Set(),transient=error=>!error?.code||error.code==='STORAGE_UNAVAILABLE';
+    const unacked=[],transient=error=>!error?.code||error.code==='STORAGE_UNAVAILABLE';
     const written=(row,body)=>row?.state===body.state&&['hostPath','resultSha256','assetId'].every(key=>body[key]===undefined||row[key]===body[key]);
     async function writeOutcomes(){
         if(!unacked.length)return;
@@ -327,10 +327,12 @@ export function mountVisualStage({ document, stage, actions }) {
                 try{row=(await client.imageJobs(item.projectId)).find(job=>job.id===item.ledgerId)??null;}
                 catch(reread){if(transient(reread))break pass;blocked.add(item.ledgerId);continue;}
                 if(written(row,item.body)){ack(item,row);continue;}
-                // Fourth review: the conflict is the job's, so every outcome queued for it goes too (those this pass already captured included); later ones are refused.
+                // Fourth review: the conflict is the request's, so every outcome queued for it goes too (those this pass already captured included).
+                // Fifth review: the operations that queued them are superseded, not the request: each is the job or candidate object its callbacks hold,
+                // so those callbacks can never write again, while a fresh, authorized action (a new Reconcile after a takeover) is a new object and records.
+                // The mark lives on those objects and goes when they do; nothing page-wide is kept or cleared.
                 const dropped=unacked.filter(other=>other.projectId===item.projectId&&other.ledgerId===item.ledgerId);
-                for(const other of dropped){unacked.splice(unacked.indexOf(other),1);other.conflict=true;}
-                conflicted.add(item.projectId+'/'+item.ledgerId);
+                for(const other of dropped){unacked.splice(unacked.indexOf(other),1);other.conflict=true;other.job.superseded=true;}
                 if(!disposed&&model.project&&model.status().projectId===item.projectId){
                     wfStatus.textContent='The image ledger refused to record a request as '+item.body.state+': another page changed it'+(row?' (it is now '+row.state+')':' (it is no longer recorded)')+'.'+(dropped.length>1?' '+(dropped.length-1)+' later outcome'+(dropped.length>2?'s':'')+' this page had queued for it '+(dropped.length>2?'were':'was')+' dropped too.':'')+' The list was read again.';
                     if(ledger?.projectId===item.projectId)loadRecovery(ledger);
@@ -341,11 +343,11 @@ export function mountVisualStage({ document, stage, actions }) {
     }
     const flushOutcomes=()=>ledgerCall(writeOutcomes).catch(()=>{});
     const uncertain=projectId=>unacked.filter(item=>item.projectId===projectId).length;
-    // Resolves to the acknowledged row, null while the outcome waits in the queue, or false after a conflict (another page's result stands; follow nothing up).
+    // Resolves to the acknowledged row, null while the outcome waits in the queue, or false once this operation is superseded by a conflict (another page's result stands; follow nothing up).
     function record(job,state,extra={}){
         if(!job?.ledgerId)return Promise.resolve(null);
-        if(conflicted.has(job.projectId+'/'+job.ledgerId))return Promise.resolve(false);
-        const item={projectId:job.projectId,ledgerId:job.ledgerId,body:{tab,state,...Object.fromEntries(Object.entries(extra).filter(([,value])=>value!==undefined))}};
+        if(job.superseded)return Promise.resolve(false);
+        const item={job,projectId:job.projectId,ledgerId:job.ledgerId,body:{tab,state,...Object.fromEntries(Object.entries(extra).filter(([,value])=>value!==undefined))}};
         unacked.push(item);return flushOutcomes().then(()=>item.row??(item.conflict?false:null));
     }
     async function loadRecovery(held_){

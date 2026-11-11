@@ -2003,13 +2003,13 @@ const iso=ms=>new Date(ms).toISOString();
 const problemsText=page=>page.locator('.sillynovel-image-workflow__generation-problems').innerText();
 async function hostImages(page,{names,files,deleted=[]}){
  // The host's image folder for one test: the root listing, dated files (Last-Modified, one-second resolution) and the delete route.
- // `host.gate`, when set, holds every file GET (only `host.gatePage`'s, when that is set) until it resolves; `host.gets` counts them (the listing's dated read, then the chosen file's fetch).
+ // `host.refuse` names a file whose reads fail with 500. `host.gate`, when set, holds every file GET (only `host.gatePage`'s, when that is set) until it resolves; `host.gets` counts them (the listing's dated read, then the chosen file's fetch).
  const listed=[],host={listed,deleted,gate:null,gets:0};
  await page.context().route('**/api/images/list',async route=>{listed.push(route.request().postDataJSON());await route.fulfill({json:names});});
  await page.context().route('**/user/images/*.png',async route=>{
   const name=new URL(route.request().url()).pathname.slice('/user/images/'.length),file=files[name];
   if(!file)return route.fallback();
-  host.gets++;if(host.gate&&(!host.gatePage||route.request().frame().page()===host.gatePage))await host.gate;
+  host.gets++;if(host.refuse===name)return route.fulfill({status:500,body:''});if(host.gate&&(!host.gatePage||route.request().frame().page()===host.gatePage))await host.gate;
   await route.fulfill({status:200,contentType:'image/png',headers:{'Last-Modified':new Date(file.mtimeMs).toUTCString(),'Content-Length':String(file.body.length)},body:file.body});
  });
  await page.context().route('**/api/images/delete',async route=>{const body=route.request().postDataJSON();deleted.push({body,headers:route.request().headers()});await route.fulfill({status:deleted.status??200,body:'OK'});});
@@ -2535,4 +2535,49 @@ test('M3.3 fourth review: a candidate queued during an outage, then another page
   await x.release('/user/images/synthetic.png');
   await waitStatus(page,/^The image ledger did not record this result, so it is not shown; it is recorded as discarded once the ledger answers\./);
  }});
+});
+
+// M3.3 PR C fifth review (fails on bc49d09): a conflict supersedes the operations that queued the outcomes, not the request.
+test('M3.3 fifth review: after a replay conflict on a request that stays unresolved, a fresh Reconcile after takeover records; the superseded outcomes never write',async t=>{
+ const x=await imageRoute(t),{page,field}=x;await x.ready();await x.hold();
+ await control(page,'Submit').click();await waitStatus(page,/^Generating on/);
+ x.ledger.age(200_000);
+ const [job]=x.ledger.jobs(),when=iso(job.submittedAt),since=Math.floor(job.submittedAt/1000)*1000;
+ const host=await hostImages(page,{names:['late-1.png','late-2.png'],files:{'late-1.png':{mtimeMs:since+5_000,body:x.tavern},'late-2.png':{mtimeMs:since+6_000,body:x.tavern}}});
+ // Page A's candidate, and the discard it queues behind it, fail before the plugin commits.
+ const sentByA=[];
+ x.ledger.fail=(method,rest,body,request)=>{if(method!=='POST'||request.frame().page()!==page||!/^jobs\/[^/]+$/.test(rest))return null;sentByA.push(body.state);return ['candidate','discarded'].includes(body.state)?{status:503,code:'STORAGE_UNAVAILABLE'}:null;};
+ await x.release('/user/images/synthetic.png');
+ await waitStatus(page,/^The image ledger did not record this result, so it is not shown/);
+ await page.waitForFunction(()=>/has not yet recorded 2 outcomes/.test(document.querySelector('.sillynovel-image-workflow__generation-problems').textContent));
+ // Page B takes over; its Reconcile moves the row to unknown, but the chosen file cannot be read, so the request stays unresolved.
+ const second=await x.another(),f2=x.fieldOf(second);
+ await f2('Image session on this host').check();await second.locator('.sillynovel-image-workflow__lease').waitFor({state:'visible'});
+ await control(second,'Take over').click();
+ const rowB=second.locator('.sillynovel-image-workflow__unresolved');await rowB.waitFor();
+ await control(second,'Reconcile the request submitted '+when).click();
+ await second.waitForFunction(()=>/^Choose the file/.test(document.querySelector('.sillynovel-image-workflow__status').textContent));
+ host.refuse='late-2.png';
+ await rowB.getByRole('button',{name:'Use /user/images/late-2.png as the result of the request submitted '+when,exact:true}).click();
+ await second.waitForFunction(()=>/Nothing was attached; choose another file, None of these, or Abandon\.$/.test(document.querySelector('.sillynovel-image-workflow__status').textContent));
+ host.refuse=null;assert.deepEqual(states(x),['unknown'],'still unresolved');
+ // A recovers: its replay meets the unknown row, a conflict that drops both queued outcomes; its Submit then finds the lease gone.
+ x.ledger.fail=(method,rest,body,request)=>{if(method==='POST'&&request.frame().page()===page&&/^jobs\/[^/]+$/.test(rest))sentByA.push(body.state);return null;};
+ await control(page,'Submit').click();
+ await waitStatus(page,/^This image session ended here: another tab or page took it over\./);
+ assert.deepEqual(states(x),['unknown'],'the replay wrote nothing');
+ const atConflict=sentByA.length;assert.equal(sentByA[atConflict-1],'candidate','the replay met the conflict on the candidate');
+ // A takes the session back and reconciles the still-unresolved request: a fresh, authorized action that records.
+ await field('Image session on this host').check();await page.locator('.sillynovel-image-workflow__lease').waitFor({state:'visible'});
+ await control(page,'Take over').click();
+ const rowA=page.locator('.sillynovel-image-workflow__unresolved');await rowA.waitFor();
+ await control(page,'Reconcile the request submitted '+when).click();await waitStatus(page,/^Choose the file/);
+ await rowA.getByRole('button',{name:'Use /user/images/late-1.png as the result of the request submitted '+when,exact:true}).click();
+ await waitStatus(page,/^Reconciled candidate, not imported · the host kept a copy at \/user\/images\/late-1\.png\./);
+ assert.deepEqual(x.ledger.jobs().map(j=>[j.state,j.hostPath]),[['reconciled','/user/images/late-1.png']]);
+ await button(page,'Import and apply background to Harbor project').click();await waitStatus(page,/^Imported and applied/);
+ await until(()=>states(x).join()==='imported','the fresh choice imports');
+ // After the conflict A sent only its fresh choice and its import: the superseded candidate and discard never wrote again.
+ await new Promise(r=>setTimeout(r,300));
+ assert.deepEqual(sentByA.slice(atConflict),['reconciled','imported']);
 });
