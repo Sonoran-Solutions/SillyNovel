@@ -307,7 +307,9 @@ export function mountVisualStage({ document, stage, actions }) {
     // recorded before an end or a begin still reaches the plugin first. An unreachable ledger stops the pass (the next record, heartbeat, begin or Submit
     // retries it); LEASE_LOST holds that job's outcomes for this tab's next session on the project (PR B choice 5); any other refusal means the row moved elsewhere.
     // Any other coded refusal is resolved by rereading the row (second review): a row already in the outcome's state is this page's write whose reply was
-    // lost, and counts as acknowledged; a row elsewhere was moved by another page, and the outcome is dropped with a notice. A failed reread keeps it queued.
+    // lost, and counts as acknowledged; a row elsewhere was moved by another page, and the outcome is dropped with a notice and marked a conflict, after which
+    // no follow-up transition is queued for it (third review). Only a successful read decides: any failed reread keeps the outcome queued, and a row is
+    // absent only when a list that was read lacks it.
     const unacked=[],transient=error=>!error?.code||error.code==='STORAGE_UNAVAILABLE';
     const written=(row,body)=>row?.state===body.state&&['hostPath','resultSha256','assetId'].every(key=>body[key]===undefined||row[key]===body[key]);
     async function writeOutcomes(){
@@ -321,10 +323,11 @@ export function mountVisualStage({ document, stage, actions }) {
             catch(error){
                 if(transient(error))break;
                 if(error.code==='LEASE_LOST'){blocked.add(item.ledgerId);if(ledger?.projectId===item.projectId)leaseLost();continue;}
-                let row=null;
-                try{row=(await client.imageJobs(item.projectId)).find(job=>job.id===item.ledgerId)??null;}catch(reread){if(transient(reread))break pass;}
+                let row;
+                try{row=(await client.imageJobs(item.projectId)).find(job=>job.id===item.ledgerId)??null;}
+                catch(reread){if(transient(reread))break pass;blocked.add(item.ledgerId);continue;}
                 if(written(row,item.body)){ack(item,row);continue;}
-                unacked.splice(unacked.indexOf(item),1);
+                unacked.splice(unacked.indexOf(item),1);item.conflict=true;
                 if(!disposed&&model.project&&model.status().projectId===item.projectId){
                     wfStatus.textContent='The image ledger refused to record a request as '+item.body.state+': another page changed it'+(row?' (it is now '+row.state+')':' (it is no longer recorded)')+'. The list was read again.';
                     if(ledger?.projectId===item.projectId)loadRecovery(ledger);
@@ -335,11 +338,11 @@ export function mountVisualStage({ document, stage, actions }) {
     }
     const flushOutcomes=()=>ledgerCall(writeOutcomes).catch(()=>{});
     const uncertain=projectId=>unacked.filter(item=>item.projectId===projectId).length;
-    // Resolves to the acknowledged row, or null while the outcome waits in the queue.
+    // Resolves to the acknowledged row, null while the outcome waits in the queue, or false after a conflict (another page's result stands; follow nothing up).
     function record(job,state,extra={}){
         if(!job?.ledgerId)return Promise.resolve(null);
         const item={projectId:job.projectId,ledgerId:job.ledgerId,body:{tab,state,...Object.fromEntries(Object.entries(extra).filter(([,value])=>value!==undefined))}};
-        unacked.push(item);return flushOutcomes().then(()=>item.row??null);
+        unacked.push(item);return flushOutcomes().then(()=>item.row??(item.conflict?false:null));
     }
     async function loadRecovery(held_){
         try{
@@ -480,6 +483,8 @@ export function mountVisualStage({ document, stage, actions }) {
             // Second review: through the outcome queue, so a write whose reply is lost is kept, reread and resolved, never lost from recovery.
             const generated={id:null,ledgerId:id,projectId:held_.projectId,path,held:held_,check:()=>staleReason(chosen.ident,nowFull(0))};
             const row=await record(generated,'reconciled',{...(ledgerPath(path)?{hostPath:ledgerPath(path)}:{}),resultSha256});
+            // A conflict: another page resolved this request; its result stands and the notice names it. Nothing is attached and nothing follows.
+            if(row===false){generated.done=true;recovery=recovery.filter(item=>item!==job);if(reconcile===chosen)reconcile=null;return;}
             if(!row){
                 // Not acknowledged: nothing is attached, and the choice is recorded discarded after it (its host copy stays deletable from the finished-jobs review).
                 generated.done=true;record(generated,'discarded');recovery=recovery.filter(item=>item!==job);if(reconcile===chosen)reconcile=null;
@@ -688,8 +693,9 @@ export function mountVisualStage({ document, stage, actions }) {
             const row=await record(job,'candidate',{hostPath:ledgerPath(result.path),resultSha256});
             const after=disposed||token!==imageEpoch||ledger!==held_?'SESSION':staleReason(request,nowFull());
             if(!row||after){
-                if(session.snapshot().requests[id]==='candidate')session.discard(id);record(job,'discarded');
-                if(!disposed&&token===imageEpoch)wfStatus.textContent=!row?'The image ledger did not record this result, so it is not shown; it is recorded as discarded once the ledger answers. The host kept a copy at '+result.path+'.':after!=='SESSION'?'Result discarded: '+(STALE_REASONS[after]??after)+'; the host kept a copy at '+result.path:wfStatus.textContent;
+                // After a conflict another page's result stands: nothing is queued after it.
+                if(session.snapshot().requests[id]==='candidate')session.discard(id);if(row!==false)record(job,'discarded');
+                if(row!==false&&!disposed&&token===imageEpoch)wfStatus.textContent=!row?'The image ledger did not record this result, so it is not shown; it is recorded as discarded once the ledger answers. The host kept a copy at '+result.path+'.':after!=='SESSION'?'Result discarded: '+(STALE_REASONS[after]??after)+'; the host kept a copy at '+result.path:wfStatus.textContent;
                 return;
             }
             clearPreview();
