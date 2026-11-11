@@ -1,0 +1,39 @@
+Node version: v26.8.1. Running in undefined environment. Server directory: /home/dq/.hermes/cache/scratch/sn-portability-host-VdqR7i/host
+Using config path: /home/dq/.hermes/cache/scratch/sn-portability-host-VdqR7i/config.yaml
+Using data root: /home/dq/.hermes/cache/scratch/sn-portability-host-VdqR7i/data
+Preferring IPv4 for DNS resolution
+
+SillyTavern 1.19.0
+Running 'HEAD' (7e8663cd9) - 9/14/2026, 10:55:46 AM MST
+
+
+Compiling frontend libraries...
+webpack 5.105.4 compiled [1m[32msuccessfully[39m[22m in 380 ms
+
+]2;SillyTavern WebServer\SillyTavern is listening on IPv4: 127.0.0.1:44719
+
+==================================================
+
+Go to: http://127.0.0.1:44719/ to open SillyTavern
+
+==================================================
+
+Login successful: default-user from 127.0.0.1 at 11/10/2026, 10:29:04 PM
+Extensions available for default-user [
+  { type: 'system', name: 'assets' },
+  { type: 'system', name: 'attachments' },
+  { type: 'system', name: 'caption' },
+  { type: 'system', name: 'connection-manager' },
+  { type: 'system', name: 'expressions' },
+  { type: 'system', name: 'gallery' },
+  { type: 'system', name: 'memory' },
+  { type: 'system', name: 'quick-reply' },
+  { type: 'system', name: 'regex' },
+  { type: 'system', name: 'stable-diffusion' },
+  { type: 'system', name: 'token-counter' },
+  { type: 'system', name: 'translate' },
+  { type: 'system', name: 'tts' },
+  { type: 'system', name: 'vectors' },
+  { type: 'global', name: 'third-party/SillyNovel' }
+]
+]2;/home/dq/.hermes/node/bin/node\

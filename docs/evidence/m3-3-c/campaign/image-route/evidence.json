@@ -1,0 +1,152 @@
+{
+  "candidate": "2ff328d8971458f9161445434b3a2632601ec5ee",
+  "host": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
+  "node": "v26.8.1",
+  "checks": [
+    "A: decoy character, chat and persona seeded; the host image extension points at the fixture (URL before source) with selections aligned {\"sampler\":{\"from\":\"DDIM\",\"to\":\"euler\"}}; saved project with a background attached; the Image workflow open with the session off",
+    "B: session on; the review equals reviewText(preflight()) computed in Node from the host workflow text (sha256 18f3e44cdedb1bbc4e9597ce5f759b95f2dfc18f887d3614ff619792366c4fab) and settings snapshot; no /prompt and no text request",
+    "C: one /prompt whose body deep-equals the independently substituted shipped workflow; review texts are the wire texts; no decoy on the image wire; zero text requests; candidate shown with the host path; Import and apply registered the PNG (catalog +1, background locked, stored bytes = fixture PNG); canonical files, chat and extension_settings.sd unchanged",
+    "D: Cancel withdrew permission while the host job was held (Abandon not offered before the deadline); after release nothing applied, no project asset, the host kept one file (disclosed), the slot released on settlement; used 2",
+    "E: Stop host job aborted the host controller; the fixture logged /interrupt; nothing applied; no new host file; used 3",
+    "G: a character switch while held ended the session and named the still-running request with Submit disabled; after release the request settled, nothing was applied to either chat, the result was discarded and no host file was kept",
+    "H: five submissions; the fixture logged five /prompt, equal to the UI's \"Submissions used 5 of 5\"; the sixth Submit is disabled with its reason; nothing beyond five reached the fixture",
+    "I: free_extend on the real host is refused by preflight with its sentence and Submit disabled; no /prompt and no text request; restored",
+    "J: C's identical request was a cache hit: Use the previous result applied the imported asset (saved as the background) with zero /prompt, no host generate request, nothing counted (Submissions used 0 of 5) and nothing reserved",
+    "K: the synthetic content-policy refusal shows as a failure (\"The host returned no image.\"); one /prompt and one host generate request (no retry, no fallback); no host file; the unit spent; the ledger row failed",
+    "L: after Discard preview, Delete the host's copy (shown with its sentence, never automatic) removed exactly 2026-11-10@22h44m13s796ms.png and nothing else; the ledger row is discarded with hostDeletedAt",
+    "M: a second page saw the lease held and took it over (count kept at 3); the first page ended at its next heartbeat (LEASE_LOST); its late file 2026-11-10@22h44m41s230ms.png was kept by the host; after the deadline Reconcile listed only that file, and choosing it went through the fetch, the PNG check and Import and apply (background applied and locked, the identical bytes reusing C's asset, ledger reconciled then imported with that asset, stored bytes = fixture PNG)",
+    "N: a reload during a held job left its reservation (used 4 of 5 after takeover) and the job unresolved; the host folder gained no file (the host saves results from the page; host /interrupt on reload: true); after the deadline Reconcile found nothing, None of these attached nothing, and Abandon resolved it with the unit spent",
+    "O: the ledger rows match the campaign in order (C imported; D, E, G stale; H five discarded; K failed; L discarded with its host copy deleted; M imported from the reconciled late file; N abandoned); nothing unresolved; no chat, card or persona text stored; saved extension_settings.sd and canonical files unchanged"
+  ],
+  "counts": {
+    "prompts": 13,
+    "interrupts": 2,
+    "textRequests": 0,
+    "files": 8
+  },
+  "setup": {
+    "fixtureOrigin": "http://127.0.0.1:34971",
+    "selectionsAligned": {
+      "sampler": {
+        "from": "DDIM",
+        "to": "euler"
+      }
+    },
+    "C_settingsJsonChangedPaths": [],
+    "C": {
+      "hostFile": "2026-11-10@22h44m03s843ms.png",
+      "statusPath": "/user/images/2026-11-10@22h44m03s843ms.png",
+      "importedAssetId": "cea13e83-89d8-4475-9256-e735b32fefa3"
+    },
+    "G": {
+      "statusAfter": "Project changed: references and any preview cleared; your text is kept."
+    },
+    "K": {
+      "status": "The host returned no image."
+    },
+    "L": {
+      "hostFile": "2026-11-10@22h44m13s796ms.png",
+      "path": "/user/images/2026-11-10@22h44m13s796ms.png"
+    },
+    "M": {
+      "lateFile": "/user/images/2026-11-10@22h44m41s230ms.png",
+      "assetId": "cea13e83-89d8-4475-9256-e735b32fefa3"
+    },
+    "N": {
+      "hostInterruptOnReload": true
+    },
+    "ledger": [
+      {
+        "state": "imported",
+        "hostPath": "/user/images/2026-11-10@22h44m03s843ms.png",
+        "hostDeleted": false,
+        "assetId": "cea13e83-89d8-4475-9256-e735b32fefa3"
+      },
+      {
+        "state": "stale",
+        "hostPath": "/user/images/2026-11-10@22h44m04s477ms.png",
+        "hostDeleted": false,
+        "assetId": null
+      },
+      {
+        "state": "stale",
+        "hostPath": null,
+        "hostDeleted": false,
+        "assetId": null
+      },
+      {
+        "state": "stale",
+        "hostPath": null,
+        "hostDeleted": false,
+        "assetId": null
+      },
+      {
+        "state": "discarded",
+        "hostPath": "/user/images/2026-11-10@22h44m07s478ms.png",
+        "hostDeleted": false,
+        "assetId": null
+      },
+      {
+        "state": "discarded",
+        "hostPath": "/user/images/2026-11-10@22h44m07s636ms.png",
+        "hostDeleted": false,
+        "assetId": null
+      },
+      {
+        "state": "discarded",
+        "hostPath": "/user/images/2026-11-10@22h44m07s879ms.png",
+        "hostDeleted": false,
+        "assetId": null
+      },
+      {
+        "state": "discarded",
+        "hostPath": "/user/images/2026-11-10@22h44m08s092ms.png",
+        "hostDeleted": false,
+        "assetId": null
+      },
+      {
+        "state": "discarded",
+        "hostPath": "/user/images/2026-11-10@22h44m08s403ms.png",
+        "hostDeleted": false,
+        "assetId": null
+      },
+      {
+        "state": "failed",
+        "hostPath": null,
+        "hostDeleted": false,
+        "assetId": null
+      },
+      {
+        "state": "discarded",
+        "hostPath": "/user/images/2026-11-10@22h44m13s796ms.png",
+        "hostDeleted": true,
+        "assetId": null
+      },
+      {
+        "state": "imported",
+        "hostPath": "/user/images/2026-11-10@22h44m41s230ms.png",
+        "hostDeleted": false,
+        "assetId": "cea13e83-89d8-4475-9256-e735b32fefa3"
+      },
+      {
+        "state": "abandoned",
+        "hostPath": null,
+        "hostDeleted": false,
+        "assetId": null
+      }
+    ]
+  },
+  "notTested": [
+    "120 s timeout on the real host (covered in the browser suite with fake timers); M and N wait for the real 120 s deadline before Reconcile",
+    "A real provider's content-policy refusal (K is the fixture's synthetic refusal, J7)",
+    "Real ComfyUI (the owner's 127.0.0.1:8188 was never contacted); /interrupt is the fixture's log entry, not real work stopping",
+    "Other host versions",
+    "Other image-aware extensions",
+    "Physical devices and screen readers",
+    "Group chats"
+  ],
+  "browser": "151.0.7922.34",
+  "pageErrors": [],
+  "result": "PASS",
+  "fixtureConsoleTail": "comfy endpoint listening on 34971\n"
+}

@@ -1,0 +1,1576 @@
+{
+ "recordedSha256": "ada4ff1ed766af87872a0b50973b95a0d7b652a0b773ddaeb0ad54a6804cacf5",
+ "promptVersion": "0ef22635aed99352",
+ "mode": "loopback-proof",
+ "complete": true,
+ "categories": {
+  "presence": {
+   "cases": 5,
+   "scored": 3,
+   "refused": {
+    "count": 1,
+    "codes": {
+     "NOT_SINGLE_JSON": 1
+    }
+   },
+   "failed": {
+    "count": 1,
+    "codes": {
+     "TRANSPORT_ERROR": 1
+    }
+   },
+   "notRun": 0,
+   "fields": {
+    "background": {
+     "correct": 3,
+     "incorrect": 0,
+     "abstained": 0
+    },
+    "presence": {
+     "correct": 7,
+     "incorrect": 0,
+     "abstained": 0
+    },
+    "expression": {
+     "correct": 7,
+     "incorrect": 0,
+     "abstained": 0
+    },
+    "outfit": {
+     "correct": 0,
+     "incorrect": 0,
+     "abstained": 0
+    }
+   },
+   "notes": {
+    "lockedSkips": 0,
+    "unchanged": 0,
+    "outfitUpdates": 0,
+    "suggestions": 0
+   }
+  },
+  "mentions": {
+   "cases": 5,
+   "scored": 4,
+   "refused": {
+    "count": 1,
+    "codes": {
+     "UNKNOWN_ASSET": 1
+    }
+   },
+   "failed": {
+    "count": 0,
+    "codes": {}
+   },
+   "notRun": 0,
+   "fields": {
+    "background": {
+     "correct": 4,
+     "incorrect": 0,
+     "abstained": 0
+    },
+    "presence": {
+     "correct": 10,
+     "incorrect": 0,
+     "abstained": 0
+    },
+    "expression": {
+     "correct": 10,
+     "incorrect": 0,
+     "abstained": 0
+    },
+    "outfit": {
+     "correct": 0,
+     "incorrect": 0,
+     "abstained": 0
+    }
+   },
+   "notes": {
+    "lockedSkips": 0,
+    "unchanged": 0,
+    "outfitUpdates": 0,
+    "suggestions": 0
+   }
+  },
+  "negation": {
+   "cases": 5,
+   "scored": 5,
+   "refused": {
+    "count": 0,
+    "codes": {}
+   },
+   "failed": {
+    "count": 0,
+    "codes": {}
+   },
+   "notRun": 0,
+   "fields": {
+    "background": {
+     "correct": 4,
+     "incorrect": 0,
+     "abstained": 1
+    },
+    "presence": {
+     "correct": 10,
+     "incorrect": 0,
+     "abstained": 0
+    },
+    "expression": {
+     "correct": 10,
+     "incorrect": 0,
+     "abstained": 0
+    },
+    "outfit": {
+     "correct": 0,
+     "incorrect": 0,
+     "abstained": 0
+    }
+   },
+   "notes": {
+    "lockedSkips": 0,
+    "unchanged": 0,
+    "outfitUpdates": 0,
+    "suggestions": 0
+   }
+  },
+  "hypothetical travel": {
+   "cases": 5,
+   "scored": 5,
+   "refused": {
+    "count": 0,
+    "codes": {}
+   },
+   "failed": {
+    "count": 0,
+    "codes": {}
+   },
+   "notRun": 0,
+   "fields": {
+    "background": {
+     "correct": 4,
+     "incorrect": 1,
+     "abstained": 0
+    },
+    "presence": {
+     "correct": 10,
+     "incorrect": 0,
+     "abstained": 0
+    },
+    "expression": {
+     "correct": 10,
+     "incorrect": 0,
+     "abstained": 0
+    },
+    "outfit": {
+     "correct": 0,
+     "incorrect": 0,
+     "abstained": 0
+    }
+   },
+   "notes": {
+    "lockedSkips": 0,
+    "unchanged": 0,
+    "outfitUpdates": 0,
+    "suggestions": 0
+   }
+  },
+  "flashbacks": {
+   "cases": 5,
+   "scored": 4,
+   "refused": {
+    "count": 0,
+    "codes": {}
+   },
+   "failed": {
+    "count": 1,
+    "codes": {
+     "ABANDONED": 1
+    }
+   },
+   "notRun": 0,
+   "fields": {
+    "background": {
+     "correct": 4,
+     "incorrect": 0,
+     "abstained": 0
+    },
+    "presence": {
+     "correct": 8,
+     "incorrect": 0,
+     "abstained": 0
+    },
+    "expression": {
+     "correct": 8,
+     "incorrect": 0,
+     "abstained": 0
+    },
+    "outfit": {
+     "correct": 0,
+     "incorrect": 0,
+     "abstained": 0
+    }
+   },
+   "notes": {
+    "lockedSkips": 0,
+    "unchanged": 0,
+    "outfitUpdates": 0,
+    "suggestions": 0
+   }
+  },
+  "outfit continuity": {
+   "cases": 5,
+   "scored": 5,
+   "refused": {
+    "count": 0,
+    "codes": {}
+   },
+   "failed": {
+    "count": 0,
+    "codes": {}
+   },
+   "notRun": 0,
+   "fields": {
+    "background": {
+     "correct": 5,
+     "incorrect": 0,
+     "abstained": 0
+    },
+    "presence": {
+     "correct": 10,
+     "incorrect": 0,
+     "abstained": 0
+    },
+    "expression": {
+     "correct": 10,
+     "incorrect": 0,
+     "abstained": 0
+    },
+    "outfit": {
+     "correct": 10,
+     "incorrect": 0,
+     "abstained": 0
+    }
+   },
+   "notes": {
+    "lockedSkips": 0,
+    "unchanged": 0,
+    "outfitUpdates": 0,
+    "suggestions": 0
+   }
+  },
+  "group authorship": {
+   "cases": 5,
+   "scored": 5,
+   "refused": {
+    "count": 0,
+    "codes": {}
+   },
+   "failed": {
+    "count": 0,
+    "codes": {}
+   },
+   "notRun": 0,
+   "fields": {
+    "background": {
+     "correct": 5,
+     "incorrect": 0,
+     "abstained": 0
+    },
+    "presence": {
+     "correct": 14,
+     "incorrect": 0,
+     "abstained": 0
+    },
+    "expression": {
+     "correct": 14,
+     "incorrect": 0,
+     "abstained": 0
+    },
+    "outfit": {
+     "correct": 0,
+     "incorrect": 0,
+     "abstained": 0
+    }
+   },
+   "notes": {
+    "lockedSkips": 0,
+    "unchanged": 0,
+    "outfitUpdates": 0,
+    "suggestions": 0
+   }
+  },
+  "user locks": {
+   "cases": 5,
+   "scored": 5,
+   "refused": {
+    "count": 0,
+    "codes": {}
+   },
+   "failed": {
+    "count": 0,
+    "codes": {}
+   },
+   "notRun": 0,
+   "fields": {
+    "background": {
+     "correct": 5,
+     "incorrect": 0,
+     "abstained": 0
+    },
+    "presence": {
+     "correct": 11,
+     "incorrect": 0,
+     "abstained": 0
+    },
+    "expression": {
+     "correct": 11,
+     "incorrect": 0,
+     "abstained": 0
+    },
+    "outfit": {
+     "correct": 0,
+     "incorrect": 0,
+     "abstained": 0
+    }
+   },
+   "notes": {
+    "lockedSkips": 0,
+    "unchanged": 0,
+    "outfitUpdates": 0,
+    "suggestions": 0
+   }
+  }
+ },
+ "perCase": [
+  {
+   "id": "presence-1",
+   "outcome": "scored",
+   "fields": [
+    {
+     "field": "background",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "presence-2",
+   "outcome": "refused",
+   "code": "NOT_SINGLE_JSON"
+  },
+  {
+   "id": "presence-3",
+   "outcome": "failed",
+   "code": "TRANSPORT_ERROR"
+  },
+  {
+   "id": "presence-4",
+   "outcome": "scored",
+   "fields": [
+    {
+     "field": "background",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "presence-5",
+   "outcome": "scored",
+   "fields": [
+    {
+     "field": "background",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000003-0000-4000-8000-000000000003",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000003-0000-4000-8000-000000000003",
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "mentions-1",
+   "outcome": "refused",
+   "code": "UNKNOWN_ASSET"
+  },
+  {
+   "id": "mentions-2",
+   "outcome": "scored",
+   "fields": [
+    {
+     "field": "background",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "mentions-3",
+   "outcome": "scored",
+   "fields": [
+    {
+     "field": "background",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000003-0000-4000-8000-000000000003",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000003-0000-4000-8000-000000000003",
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "mentions-4",
+   "outcome": "scored",
+   "fields": [
+    {
+     "field": "background",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000003-0000-4000-8000-000000000003",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000003-0000-4000-8000-000000000003",
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "mentions-5",
+   "outcome": "scored",
+   "fields": [
+    {
+     "field": "background",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000003-0000-4000-8000-000000000003",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000003-0000-4000-8000-000000000003",
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "negation-1",
+   "outcome": "scored",
+   "fields": [
+    {
+     "field": "background",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "negation-2",
+   "outcome": "scored",
+   "fields": [
+    {
+     "field": "background",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "negation-3",
+   "outcome": "scored",
+   "fields": [
+    {
+     "field": "background",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "negation-4",
+   "outcome": "scored",
+   "fields": [
+    {
+     "field": "background",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "negation-5",
+   "outcome": "scored",
+   "fields": [
+    {
+     "field": "background",
+     "verdict": "abstained"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "hypothetical-travel-1",
+   "outcome": "scored",
+   "fields": [
+    {
+     "field": "background",
+     "verdict": "incorrect"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "hypothetical-travel-2",
+   "outcome": "scored",
+   "fields": [
+    {
+     "field": "background",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "hypothetical-travel-3",
+   "outcome": "scored",
+   "fields": [
+    {
+     "field": "background",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "hypothetical-travel-4",
+   "outcome": "scored",
+   "fields": [
+    {
+     "field": "background",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "hypothetical-travel-5",
+   "outcome": "scored",
+   "fields": [
+    {
+     "field": "background",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "flashbacks-1",
+   "outcome": "failed",
+   "code": "ABANDONED"
+  },
+  {
+   "id": "flashbacks-2",
+   "outcome": "scored",
+   "fields": [
+    {
+     "field": "background",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000003-0000-4000-8000-000000000003",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000003-0000-4000-8000-000000000003",
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "flashbacks-3",
+   "outcome": "scored",
+   "fields": [
+    {
+     "field": "background",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "flashbacks-4",
+   "outcome": "scored",
+   "fields": [
+    {
+     "field": "background",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "flashbacks-5",
+   "outcome": "scored",
+   "fields": [
+    {
+     "field": "background",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "outfit-continuity-1",
+   "outcome": "scored",
+   "fields": [
+    {
+     "field": "background",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "outfit",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "outfit",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "outfit-continuity-2",
+   "outcome": "scored",
+   "fields": [
+    {
+     "field": "background",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "outfit",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "outfit",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "outfit-continuity-3",
+   "outcome": "scored",
+   "fields": [
+    {
+     "field": "background",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "outfit",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "outfit",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "outfit-continuity-4",
+   "outcome": "scored",
+   "fields": [
+    {
+     "field": "background",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "outfit",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000003-0000-4000-8000-000000000003",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000003-0000-4000-8000-000000000003",
+     "verdict": "correct"
+    },
+    {
+     "field": "outfit",
+     "characterKey": "a0000003-0000-4000-8000-000000000003",
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "outfit-continuity-5",
+   "outcome": "scored",
+   "fields": [
+    {
+     "field": "background",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "outfit",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "outfit",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "group-authorship-1",
+   "outcome": "scored",
+   "fields": [
+    {
+     "field": "background",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000003-0000-4000-8000-000000000003",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000003-0000-4000-8000-000000000003",
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "group-authorship-2",
+   "outcome": "scored",
+   "fields": [
+    {
+     "field": "background",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000003-0000-4000-8000-000000000003",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000003-0000-4000-8000-000000000003",
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "group-authorship-3",
+   "outcome": "scored",
+   "fields": [
+    {
+     "field": "background",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000003-0000-4000-8000-000000000003",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000003-0000-4000-8000-000000000003",
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "group-authorship-4",
+   "outcome": "scored",
+   "fields": [
+    {
+     "field": "background",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000004-0000-4000-8000-000000000004",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000004-0000-4000-8000-000000000004",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "group-authorship-5",
+   "outcome": "scored",
+   "fields": [
+    {
+     "field": "background",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "user-locks-1",
+   "outcome": "scored",
+   "fields": [
+    {
+     "field": "background",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "user-locks-2",
+   "outcome": "scored",
+   "fields": [
+    {
+     "field": "background",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "user-locks-3",
+   "outcome": "scored",
+   "fields": [
+    {
+     "field": "background",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "user-locks-4",
+   "outcome": "scored",
+   "fields": [
+    {
+     "field": "background",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000003-0000-4000-8000-000000000003",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000003-0000-4000-8000-000000000003",
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "user-locks-5",
+   "outcome": "scored",
+   "fields": [
+    {
+     "field": "background",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000001-0000-4000-8000-000000000001",
+     "verdict": "correct"
+    },
+    {
+     "field": "presence",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    },
+    {
+     "field": "expression",
+     "characterKey": "a0000002-0000-4000-8000-000000000002",
+     "verdict": "correct"
+    }
+   ]
+  }
+ ]
+}

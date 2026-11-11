@@ -1,0 +1,4010 @@
+{
+ "schemaVersion": 1,
+ "note": "Invented, public-safe Gate B fixtures. Frozen: tests/fixtures/m2-gate-b/expected-answers.sha256 holds the SHA-256 of this file. Changing anything here, an answer above all, is a new measurement; the old result is retained.",
+ "cases": [
+  {
+   "id": "presence-1",
+   "category": "presence",
+   "why": "Rowan walks out of the room in the anchored message.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-101",
+      "author": {
+       "kind": "user",
+       "label": "Traveller"
+      },
+      "text": "Are you staying for supper?"
+     },
+     {
+      "key": "session-source-102",
+      "author": {
+       "kind": "character",
+       "label": "Rowan"
+      },
+      "text": "Rowan slings his pack over one shoulder. \"Not tonight.\" He walks out of the tavern, and the door swings shut behind him."
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {
+     "a0000002-0000-4000-8000-000000000002": false
+    },
+    "expression": {}
+   }
+  },
+  {
+   "id": "presence-2",
+   "category": "presence",
+   "why": "Sage, absent, enters the room in the anchored message.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-103",
+      "author": {
+       "kind": "character",
+       "label": "Mira"
+      },
+      "text": "Mira wipes the last mug dry and sets it on the shelf."
+     },
+     {
+      "key": "session-source-104",
+      "author": {
+       "kind": "character",
+       "label": "Mira"
+      },
+      "text": "The door opens and Sage steps inside, shaking rain from a grey cloak. \"Is there room for one more?\""
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000003-0000-4000-8000-000000000003",
+      "label": "Sage",
+      "present": false,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000025-0000-4000-8000-000000000025",
+      "label": "Happy",
+      "characterKey": "a0000003-0000-4000-8000-000000000003"
+     },
+     {
+      "expressionId": "temporary-expression:a0000026-0000-4000-8000-000000000026",
+      "label": "Sad",
+      "characterKey": "a0000003-0000-4000-8000-000000000003"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {
+     "a0000003-0000-4000-8000-000000000003": true
+    },
+    "expression": {}
+   }
+  },
+  {
+   "id": "presence-3",
+   "category": "presence",
+   "why": "Nobody arrives or leaves; both stay as they are.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-105",
+      "author": {
+       "kind": "user",
+       "label": "Traveller"
+      },
+      "text": "How long until the rain stops?"
+     },
+     {
+      "key": "session-source-106",
+      "author": {
+       "kind": "character",
+       "label": "Mira"
+      },
+      "text": "Mira and Rowan sit by the fire and watch the rain run down the window. \"A while yet,\" Mira says."
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {},
+    "expression": {}
+   }
+  },
+  {
+   "id": "presence-4",
+   "category": "presence",
+   "why": "Rowan already left; he stays absent, and an empty chair is not an arrival.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-107",
+      "author": {
+       "kind": "character",
+       "label": "Mira"
+      },
+      "text": "Mira looks at the empty chair where Rowan sat an hour ago, and turns back to the ledger."
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": false,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {},
+    "expression": {}
+   }
+  },
+  {
+   "id": "presence-5",
+   "category": "presence",
+   "why": "Sage leaves the hall; Rowan and Mira stay.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-108",
+      "author": {
+       "kind": "user",
+       "label": "Traveller"
+      },
+      "text": "Good night, Sage."
+     },
+     {
+      "key": "session-source-109",
+      "author": {
+       "kind": "character",
+       "label": "Sage"
+      },
+      "text": "Sage bows to the table, climbs the stairs and is gone from the hall."
+     },
+     {
+      "key": "session-source-110",
+      "author": {
+       "kind": "character",
+       "label": "Rowan"
+      },
+      "text": "Rowan raises his mug toward the stairs and keeps talking with Mira about the harvest."
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000003-0000-4000-8000-000000000003",
+      "label": "Sage",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000025-0000-4000-8000-000000000025",
+      "label": "Happy",
+      "characterKey": "a0000003-0000-4000-8000-000000000003"
+     },
+     {
+      "expressionId": "temporary-expression:a0000026-0000-4000-8000-000000000026",
+      "label": "Sad",
+      "characterKey": "a0000003-0000-4000-8000-000000000003"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {
+     "a0000003-0000-4000-8000-000000000003": false
+    },
+    "expression": {}
+   }
+  },
+  {
+   "id": "mentions-1",
+   "category": "mentions",
+   "why": "Rowan is only spoken of.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-111",
+      "author": {
+       "kind": "character",
+       "label": "Mira"
+      },
+      "text": "\"Rowan would love this place,\" Mira says, topping up your tea."
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": false,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {},
+    "expression": {}
+   }
+  },
+  {
+   "id": "mentions-2",
+   "category": "mentions",
+   "why": "The harbor is only spoken of; the scene stays in the tavern.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-112",
+      "author": {
+       "kind": "character",
+       "label": "Mira"
+      },
+      "text": "\"The harbor is lovely this time of year,\" Mira says, pouring another cup at the tavern table."
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {},
+    "expression": {}
+   }
+  },
+  {
+   "id": "mentions-3",
+   "category": "mentions",
+   "why": "A letter from Sage is not Sage.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-113",
+      "author": {
+       "kind": "character",
+       "label": "Rowan"
+      },
+      "text": "Rowan slides a letter across the table. \"From Sage. Read it when you have a moment.\""
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000003-0000-4000-8000-000000000003",
+      "label": "Sage",
+      "present": false,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000025-0000-4000-8000-000000000025",
+      "label": "Happy",
+      "characterKey": "a0000003-0000-4000-8000-000000000003"
+     },
+     {
+      "expressionId": "temporary-expression:a0000026-0000-4000-8000-000000000026",
+      "label": "Sad",
+      "characterKey": "a0000003-0000-4000-8000-000000000003"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {},
+    "expression": {}
+   }
+  },
+  {
+   "id": "mentions-4",
+   "category": "mentions",
+   "why": "A question about Sage and the market changes nothing.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-114",
+      "author": {
+       "kind": "user",
+       "label": "Traveller"
+      },
+      "text": "Have you seen Sage at the market lately?"
+     },
+     {
+      "key": "session-source-115",
+      "author": {
+       "kind": "character",
+       "label": "Mira"
+      },
+      "text": "\"Not since spring,\" Mira says, without looking up from her mending."
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000003-0000-4000-8000-000000000003",
+      "label": "Sage",
+      "present": false,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000025-0000-4000-8000-000000000025",
+      "label": "Happy",
+      "characterKey": "a0000003-0000-4000-8000-000000000003"
+     },
+     {
+      "expressionId": "temporary-expression:a0000026-0000-4000-8000-000000000026",
+      "label": "Sad",
+      "characterKey": "a0000003-0000-4000-8000-000000000003"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {},
+    "expression": {}
+   }
+  },
+  {
+   "id": "mentions-5",
+   "category": "mentions",
+   "why": "Control: Sage is spoken of, then really walks in. Sage becomes present.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-116",
+      "author": {
+       "kind": "character",
+       "label": "Mira"
+      },
+      "text": "\"Sage owes me for that last round,\" Mira says."
+     },
+     {
+      "key": "session-source-117",
+      "author": {
+       "kind": "character",
+       "label": "Rowan"
+      },
+      "text": "As if summoned, Sage pushes through the tavern door and drops a few coins on the bar. Rowan laughs out loud."
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000003-0000-4000-8000-000000000003",
+      "label": "Sage",
+      "present": false,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000025-0000-4000-8000-000000000025",
+      "label": "Happy",
+      "characterKey": "a0000003-0000-4000-8000-000000000003"
+     },
+     {
+      "expressionId": "temporary-expression:a0000026-0000-4000-8000-000000000026",
+      "label": "Sad",
+      "characterKey": "a0000003-0000-4000-8000-000000000003"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {
+     "a0000003-0000-4000-8000-000000000003": true
+    },
+    "expression": {
+     "a0000002-0000-4000-8000-000000000002": [
+      "temporary-expression:a0000023-0000-4000-8000-000000000023"
+     ]
+    }
+   }
+  },
+  {
+   "id": "negation-1",
+   "category": "negation",
+   "why": "Rowan does not come.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-118",
+      "author": {
+       "kind": "character",
+       "label": "Mira"
+      },
+      "text": "Mira waits at the window until the candle burns low, but Rowan does not come."
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": false,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {},
+    "expression": {}
+   }
+  },
+  {
+   "id": "negation-2",
+   "category": "negation",
+   "why": "They never reach the harbor; the scene stays in the forest.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-119",
+      "author": {
+       "kind": "character",
+       "label": "Rowan"
+      },
+      "text": "The road ahead is washed out. They never reach the harbor, and Rowan turns the cart around among the forest trees."
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000011-0000-4000-8000-000000000011"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {},
+    "expression": {}
+   }
+  },
+  {
+   "id": "negation-3",
+   "category": "negation",
+   "why": "Mira does not leave.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-120",
+      "author": {
+       "kind": "character",
+       "label": "Rowan"
+      },
+      "text": "Rowan points at the door. \"Go, if you want to.\""
+     },
+     {
+      "key": "session-source-121",
+      "author": {
+       "kind": "character",
+       "label": "Mira"
+      },
+      "text": "Mira does not leave. She folds her arms and stays right where she is at the table."
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {},
+    "expression": {}
+   }
+  },
+  {
+   "id": "negation-4",
+   "category": "negation",
+   "why": "Mira does not smile, so no happy expression.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-122",
+      "author": {
+       "kind": "character",
+       "label": "Mira"
+      },
+      "text": "Rowan tells his best joke. Mira does not smile, and she does not look up from her book either."
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {},
+    "expression": {}
+   }
+  },
+  {
+   "id": "negation-5",
+   "category": "negation",
+   "why": "Control: they do not stop at the market, and do end up in the library.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-123",
+      "author": {
+       "kind": "character",
+       "label": "Mira"
+      },
+      "text": "They do not stop at the market. They walk on until they stand inside the library, and Mira closes its heavy door behind them."
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000011-0000-4000-8000-000000000011"
+    }
+   },
+   "expected": {
+    "background": {
+     "to": "a0000014-0000-4000-8000-000000000014"
+    },
+    "presence": {},
+    "expression": {}
+   }
+  },
+  {
+   "id": "hypothetical-travel-1",
+   "category": "hypothetical travel",
+   "why": "A conditional, not a journey.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-124",
+      "author": {
+       "kind": "character",
+       "label": "Rowan"
+      },
+      "text": "\"If we went to the harbor, we could catch the morning boat,\" Rowan says, and takes another bite of bread."
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {},
+    "expression": {}
+   }
+  },
+  {
+   "id": "hypothetical-travel-2",
+   "category": "hypothetical travel",
+   "why": "Imagining the market is not going there.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-125",
+      "author": {
+       "kind": "character",
+       "label": "Mira"
+      },
+      "text": "\"Imagine the market at dawn,\" Mira says from her stool by the fire, \"all those lanterns going out one by one.\""
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {},
+    "expression": {}
+   }
+  },
+  {
+   "id": "hypothetical-travel-3",
+   "category": "hypothetical travel",
+   "why": "A plan for tomorrow; they are still here.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-126",
+      "author": {
+       "kind": "user",
+       "label": "Traveller"
+      },
+      "text": "Should we head to the library tomorrow?"
+     },
+     {
+      "key": "session-source-127",
+      "author": {
+       "kind": "character",
+       "label": "Mira"
+      },
+      "text": "\"Perhaps tomorrow,\" Mira says. \"Tonight I am not moving from this chair.\""
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {},
+    "expression": {}
+   }
+  },
+  {
+   "id": "hypothetical-travel-4",
+   "category": "hypothetical travel",
+   "why": "Plans for the future do not move the scene yet.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-128",
+      "author": {
+       "kind": "character",
+       "label": "Rowan"
+      },
+      "text": "\"Tomorrow we walk to the harbor and sell the cart,\" Rowan says, unrolling the map on the tavern table."
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {},
+    "expression": {}
+   }
+  },
+  {
+   "id": "hypothetical-travel-5",
+   "category": "hypothetical travel",
+   "why": "Control: earlier they only talked of it; now they arrive.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-129",
+      "author": {
+       "kind": "character",
+       "label": "Rowan"
+      },
+      "text": "\"If we keep to this path we could be at the harbor by evening,\" Rowan says."
+     },
+     {
+      "key": "session-source-130",
+      "author": {
+       "kind": "character",
+       "label": "Mira"
+      },
+      "text": "Hours later the trees give way to masts and gulls. They have reached the harbor at last, and Mira sets down her bag on the pier."
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000011-0000-4000-8000-000000000011"
+    }
+   },
+   "expected": {
+    "background": {
+     "to": "a0000012-0000-4000-8000-000000000012"
+    },
+    "presence": {},
+    "expression": {}
+   }
+  },
+  {
+   "id": "flashbacks-1",
+   "category": "flashbacks",
+   "why": "A remembered summer at the harbor; the scene stays here.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-131",
+      "author": {
+       "kind": "character",
+       "label": "Mira"
+      },
+      "text": "Mira remembered the summer at the harbor, when Rowan still lived above the chandler and sang off key every morning. She blinks and turns the page."
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": false,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {},
+    "expression": {}
+   }
+  },
+  {
+   "id": "flashbacks-2",
+   "category": "flashbacks",
+   "why": "Years ago, in that forest. Sage is only remembered.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-132",
+      "author": {
+       "kind": "character",
+       "label": "Mira"
+      },
+      "text": "Years ago, in the forest, Sage had pulled her out of the river. Mira touches the old scar on her wrist and says nothing."
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000003-0000-4000-8000-000000000003",
+      "label": "Sage",
+      "present": false,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000025-0000-4000-8000-000000000025",
+      "label": "Happy",
+      "characterKey": "a0000003-0000-4000-8000-000000000003"
+     },
+     {
+      "expressionId": "temporary-expression:a0000026-0000-4000-8000-000000000026",
+      "label": "Sad",
+      "characterKey": "a0000003-0000-4000-8000-000000000003"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {},
+    "expression": {}
+   }
+  },
+  {
+   "id": "flashbacks-3",
+   "category": "flashbacks",
+   "why": "A told flashback at the market; nobody moves now.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-133",
+      "author": {
+       "kind": "character",
+       "label": "Rowan"
+      },
+      "text": "Ten years earlier the market had been bright with banners. Rowan had run between the stalls with a stolen pear, and Mira had laughed at him. \"We were so young,\" he says now, staring into his mug."
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {},
+    "expression": {}
+   }
+  },
+  {
+   "id": "flashbacks-4",
+   "category": "flashbacks",
+   "why": "Rowan recounts leaving the library long ago; Rowan is here now.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-134",
+      "author": {
+       "kind": "character",
+       "label": "Rowan"
+      },
+      "text": "\"I left the library that night and never went back,\" Rowan says quietly, turning his mug on the table."
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {},
+    "expression": {}
+   }
+  },
+  {
+   "id": "flashbacks-5",
+   "category": "flashbacks",
+   "why": "Control: the memory ends and Rowan really walks in.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-135",
+      "author": {
+       "kind": "character",
+       "label": "Mira"
+      },
+      "text": "In the memory the forest was full of snow, and Rowan was walking away from her. Then the memory fades. Mira looks up as Rowan comes back through the tavern door."
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": false,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {
+     "a0000002-0000-4000-8000-000000000002": true
+    },
+    "expression": {}
+   }
+  },
+  {
+   "id": "outfit-continuity-1",
+   "category": "outfit continuity",
+   "why": "Mira changes clothes; the director does not change outfits (F7).",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-136",
+      "author": {
+       "kind": "character",
+       "label": "Mira"
+      },
+      "text": "Mira changes into a blue travelling dress behind the screen and comes back to the table."
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": "a0000001-0000-4000-8000-000000000001:a0000031-0000-4000-8000-000000000031",
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": true,
+      "outfitId": "a0000002-0000-4000-8000-000000000002:a0000032-0000-4000-8000-000000000032",
+      "presenceLocked": false,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {},
+    "expression": {}
+   }
+  },
+  {
+   "id": "outfit-continuity-2",
+   "category": "outfit continuity",
+   "why": "A coat goes on, and he is plainly happy.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-137",
+      "author": {
+       "kind": "character",
+       "label": "Rowan"
+      },
+      "text": "Rowan throws on his heavy coat and laughs with delight. \"Snow! Real snow at last!\""
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": "a0000001-0000-4000-8000-000000000001:a0000031-0000-4000-8000-000000000031",
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": true,
+      "outfitId": "a0000002-0000-4000-8000-000000000002:a0000032-0000-4000-8000-000000000032",
+      "presenceLocked": false,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {},
+    "expression": {
+     "a0000002-0000-4000-8000-000000000002": [
+      "temporary-expression:a0000023-0000-4000-8000-000000000023"
+     ]
+    }
+   }
+  },
+  {
+   "id": "outfit-continuity-3",
+   "category": "outfit continuity",
+   "why": "Clothes are not mentioned at all.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-138",
+      "author": {
+       "kind": "user",
+       "label": "Traveller"
+      },
+      "text": "Is the stew ready?"
+     },
+     {
+      "key": "session-source-139",
+      "author": {
+       "kind": "character",
+       "label": "Mira"
+      },
+      "text": "\"Nearly,\" Mira says, stirring the pot."
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": "a0000001-0000-4000-8000-000000000001:a0000031-0000-4000-8000-000000000031",
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": true,
+      "outfitId": "a0000002-0000-4000-8000-000000000002:a0000032-0000-4000-8000-000000000032",
+      "presenceLocked": false,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {},
+    "expression": {}
+   }
+  },
+  {
+   "id": "outfit-continuity-4",
+   "category": "outfit continuity",
+   "why": "A cloak comes off, with a locked outfit.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-140",
+      "author": {
+       "kind": "character",
+       "label": "Sage"
+      },
+      "text": "Sage takes off the wet cloak and hangs it on the peg by the door, then sits down beside Mira."
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": "a0000001-0000-4000-8000-000000000001:a0000031-0000-4000-8000-000000000031",
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000003-0000-4000-8000-000000000003",
+      "label": "Sage",
+      "present": true,
+      "outfitId": "a0000003-0000-4000-8000-000000000003:a0000033-0000-4000-8000-000000000033",
+      "presenceLocked": false,
+      "outfitLocked": true
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000025-0000-4000-8000-000000000025",
+      "label": "Happy",
+      "characterKey": "a0000003-0000-4000-8000-000000000003"
+     },
+     {
+      "expressionId": "temporary-expression:a0000026-0000-4000-8000-000000000026",
+      "label": "Sad",
+      "characterKey": "a0000003-0000-4000-8000-000000000003"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {},
+    "expression": {}
+   }
+  },
+  {
+   "id": "outfit-continuity-5",
+   "category": "outfit continuity",
+   "why": "A gown goes on, and she is plainly delighted.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-141",
+      "author": {
+       "kind": "character",
+       "label": "Mira"
+      },
+      "text": "Mira slips into the ball gown and spins once, beaming with joy. \"It fits!\""
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": "a0000001-0000-4000-8000-000000000001:a0000031-0000-4000-8000-000000000031",
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {},
+    "expression": {
+     "a0000001-0000-4000-8000-000000000001": [
+      "temporary-expression:a0000021-0000-4000-8000-000000000021"
+     ]
+    }
+   }
+  },
+  {
+   "id": "group-authorship-1",
+   "category": "group authorship",
+   "why": "First person from a message authored by Rowan: Rowan leaves.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-142",
+      "author": {
+       "kind": "character",
+       "label": "Mira"
+      },
+      "text": "\"Is everyone staying the night?\" Mira asks the table."
+     },
+     {
+      "key": "session-source-143",
+      "author": {
+       "kind": "character",
+       "label": "Rowan"
+      },
+      "text": "I shoulder my pack, nod to the table and walk out of the tavern into the rain."
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000003-0000-4000-8000-000000000003",
+      "label": "Sage",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000025-0000-4000-8000-000000000025",
+      "label": "Happy",
+      "characterKey": "a0000003-0000-4000-8000-000000000003"
+     },
+     {
+      "expressionId": "temporary-expression:a0000026-0000-4000-8000-000000000026",
+      "label": "Sad",
+      "characterKey": "a0000003-0000-4000-8000-000000000003"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {
+     "a0000002-0000-4000-8000-000000000002": false
+    },
+    "expression": {}
+   }
+  },
+  {
+   "id": "group-authorship-2",
+   "category": "group authorship",
+   "why": "First person from Mira: only Mira is happy.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-144",
+      "author": {
+       "kind": "character",
+       "label": "Rowan"
+      },
+      "text": "\"I found your ring under the bench,\" Rowan says, holding it out."
+     },
+     {
+      "key": "session-source-145",
+      "author": {
+       "kind": "character",
+       "label": "Mira"
+      },
+      "text": "I laugh out loud, delighted, and take the ring from his hand."
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000003-0000-4000-8000-000000000003",
+      "label": "Sage",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000025-0000-4000-8000-000000000025",
+      "label": "Happy",
+      "characterKey": "a0000003-0000-4000-8000-000000000003"
+     },
+     {
+      "expressionId": "temporary-expression:a0000026-0000-4000-8000-000000000026",
+      "label": "Sad",
+      "characterKey": "a0000003-0000-4000-8000-000000000003"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {},
+    "expression": {
+     "a0000001-0000-4000-8000-000000000001": [
+      "temporary-expression:a0000021-0000-4000-8000-000000000021"
+     ]
+    }
+   }
+  },
+  {
+   "id": "group-authorship-3",
+   "category": "group authorship",
+   "why": "First person from Sage: only Sage is sad.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-146",
+      "author": {
+       "kind": "character",
+       "label": "Mira"
+      },
+      "text": "Mira reads the news aloud from the broadsheet."
+     },
+     {
+      "key": "session-source-147",
+      "author": {
+       "kind": "character",
+       "label": "Sage"
+      },
+      "text": "I lower my eyes, close to tears, and cannot finish my drink."
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000003-0000-4000-8000-000000000003",
+      "label": "Sage",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000025-0000-4000-8000-000000000025",
+      "label": "Happy",
+      "characterKey": "a0000003-0000-4000-8000-000000000003"
+     },
+     {
+      "expressionId": "temporary-expression:a0000026-0000-4000-8000-000000000026",
+      "label": "Sad",
+      "characterKey": "a0000003-0000-4000-8000-000000000003"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {},
+    "expression": {
+     "a0000003-0000-4000-8000-000000000003": [
+      "temporary-expression:a0000026-0000-4000-8000-000000000026"
+     ]
+    }
+   }
+  },
+  {
+   "id": "group-authorship-4",
+   "category": "group authorship",
+   "why": "Two cards named Mira and nothing says which one left, so neither moves.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-148",
+      "author": {
+       "kind": "character",
+       "label": "Rowan"
+      },
+      "text": "\"Mira went out an hour ago,\" Rowan says, shrugging. \"Or so the stable boy told me.\""
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000004-0000-4000-8000-000000000004",
+      "label": "Mira",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000027-0000-4000-8000-000000000027",
+      "label": "Happy",
+      "characterKey": "a0000004-0000-4000-8000-000000000004"
+     },
+     {
+      "expressionId": "temporary-expression:a0000028-0000-4000-8000-000000000028",
+      "label": "Sad",
+      "characterKey": "a0000004-0000-4000-8000-000000000004"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {},
+    "expression": {}
+   }
+  },
+  {
+   "id": "group-authorship-5",
+   "category": "group authorship",
+   "why": "The user says \"I\" and leaves; the user is not on stage, and Mira stays.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-149",
+      "author": {
+       "kind": "user",
+       "label": "Traveller"
+      },
+      "text": "I pick up my bag and step out into the street for some air."
+     },
+     {
+      "key": "session-source-150",
+      "author": {
+       "kind": "character",
+       "label": "Mira"
+      },
+      "text": "Mira watches you go from behind the bar, and goes back to counting the coins with Rowan."
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {},
+    "expression": {}
+   }
+  },
+  {
+   "id": "user-locks-1",
+   "category": "user locks",
+   "why": "They arrive at the harbor but the background is locked: it stays.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-151",
+      "author": {
+       "kind": "character",
+       "label": "Mira"
+      },
+      "text": "They have reached the harbor at last, and Mira sets down her bag on the pier."
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": true
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": true
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": true
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": true
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": true
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {},
+    "expression": {}
+   }
+  },
+  {
+   "id": "user-locks-2",
+   "category": "user locks",
+   "why": "Rowan walks out but his presence is locked: he stays.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-152",
+      "author": {
+       "kind": "character",
+       "label": "Rowan"
+      },
+      "text": "Rowan drains his mug, stands and walks out of the tavern without a word."
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": true,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {},
+    "expression": {}
+   }
+  },
+  {
+   "id": "user-locks-3",
+   "category": "user locks",
+   "why": "The background is locked and stays; Rowan is free to go.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-153",
+      "author": {
+       "kind": "character",
+       "label": "Mira"
+      },
+      "text": "They have reached the market. Rowan peels off toward the far stalls and is soon gone from sight, leaving Mira alone."
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": true
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": true
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": true
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": true
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": true
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {
+     "a0000002-0000-4000-8000-000000000002": false
+    },
+    "expression": {}
+   }
+  },
+  {
+   "id": "user-locks-4",
+   "category": "user locks",
+   "why": "Sage walks in but the absence is locked: Sage stays absent.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-154",
+      "author": {
+       "kind": "character",
+       "label": "Rowan"
+      },
+      "text": "The door bangs open and Sage strides in, snow on both shoulders. Rowan pulls out a chair."
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": false,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000003-0000-4000-8000-000000000003",
+      "label": "Sage",
+      "present": false,
+      "outfitId": null,
+      "presenceLocked": true,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000025-0000-4000-8000-000000000025",
+      "label": "Happy",
+      "characterKey": "a0000003-0000-4000-8000-000000000003"
+     },
+     {
+      "expressionId": "temporary-expression:a0000026-0000-4000-8000-000000000026",
+      "label": "Sad",
+      "characterKey": "a0000003-0000-4000-8000-000000000003"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": false
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": false
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {},
+    "expression": {}
+   }
+  },
+  {
+   "id": "user-locks-5",
+   "category": "user locks",
+   "why": "Background and both presences locked; the expression has no lock and moves.",
+   "input": {
+    "window": [
+     {
+      "key": "session-source-155",
+      "author": {
+       "kind": "character",
+       "label": "Mira"
+      },
+      "text": "Mira beams with joy as they walk into the market, and Rowan runs ahead toward the far stalls and out of sight."
+     }
+    ],
+    "cast": [
+     {
+      "characterKey": "a0000001-0000-4000-8000-000000000001",
+      "label": "Mira",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": true,
+      "outfitLocked": false
+     },
+     {
+      "characterKey": "a0000002-0000-4000-8000-000000000002",
+      "label": "Rowan",
+      "present": true,
+      "outfitId": null,
+      "presenceLocked": true,
+      "outfitLocked": false
+     }
+    ],
+    "expressions": [
+     {
+      "expressionId": "temporary-expression:a0000021-0000-4000-8000-000000000021",
+      "label": "Happy",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000022-0000-4000-8000-000000000022",
+      "label": "Sad",
+      "characterKey": "a0000001-0000-4000-8000-000000000001"
+     },
+     {
+      "expressionId": "temporary-expression:a0000023-0000-4000-8000-000000000023",
+      "label": "Happy",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     },
+     {
+      "expressionId": "temporary-expression:a0000024-0000-4000-8000-000000000024",
+      "label": "Sad",
+      "characterKey": "a0000002-0000-4000-8000-000000000002"
+     }
+    ],
+    "backgrounds": [
+     {
+      "backgroundId": "a0000011-0000-4000-8000-000000000011",
+      "label": "Forest",
+      "locked": true
+     },
+     {
+      "backgroundId": "a0000012-0000-4000-8000-000000000012",
+      "label": "Harbor",
+      "locked": true
+     },
+     {
+      "backgroundId": "a0000013-0000-4000-8000-000000000013",
+      "label": "Tavern",
+      "locked": true
+     },
+     {
+      "backgroundId": "a0000014-0000-4000-8000-000000000014",
+      "label": "Library",
+      "locked": true
+     },
+     {
+      "backgroundId": "a0000015-0000-4000-8000-000000000015",
+      "label": "Market",
+      "locked": true
+     }
+    ],
+    "scene": {
+     "backgroundId": "a0000013-0000-4000-8000-000000000013"
+    }
+   },
+   "expected": {
+    "background": "stay",
+    "presence": {},
+    "expression": {
+     "a0000001-0000-4000-8000-000000000001": [
+      "temporary-expression:a0000021-0000-4000-8000-000000000021"
+     ]
+    }
+   }
+  }
+ ]
+}

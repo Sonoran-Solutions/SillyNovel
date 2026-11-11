@@ -2,6 +2,8 @@
 
 **PR A merged — 2026-11-08.** [#92](https://github.com/Sonoran-Solutions/SillyNovel/pull/92) merged as `3dff21f` on the owner's word (“Merge, start B”).
 
+**PR B merged — 2026-11-09.** [#93](https://github.com/Sonoran-Solutions/SillyNovel/pull/93) merged as `786b58a` on the owner's word (“Merge, start C”).
+
 ## PR A — request-module changes and the host image-folder probe
 
 **Candidate, unmerged. Frozen `3827af7`** (the campaign ran on `7660a53`; see choice 8), based on main `f22a7e8` (the [owner rulings J1–J9](DECISIONS.md#owner-rulings-j1j9--m33-completion--2026-11-08) on the [M3.3 plan](M3_3_COMPLETION_PLAN.md)). Tracked by [DYL-215](https://linear.app/devils17/issue/DYL-215/sillynovel-m33-complete-the-first-image-route-for-gate-c-ledger-lease). No plugin, schema or adapter change. Because J8 checks locks before the layout, the reason sentence the existing UI shows for a lock change during a request changes, so this PR is a runtime change under H4 and carries the browser suite and a full campaign rather than Node evidence alone.
@@ -142,7 +144,7 @@ The owner reviews this PR. PR C (the adapter and UI on the ledger) starts only a
 
 ## PR C — the adapter and the Generate on this host UI on the image ledger
 
-**Candidate, unmerged**, based on main `786b58a` (PR B merged). Tracked by [DYL-215](https://linear.app/devils17/issue/DYL-215/sillynovel-m33-complete-the-first-image-route-for-gate-c-ledger-lease). A renderer, adapter and client change under H4; no plugin or schema change.
+**Candidate, unmerged. Frozen `2ff328d`**, based on main `786b58a` (PR B merged). Tracked by [DYL-215](https://linear.app/devils17/issue/DYL-215/sillynovel-m33-complete-the-first-image-route-for-gate-c-ledger-lease). A renderer, adapter and client change under H4; no plugin or schema change.
 
 ### What it adds
 
@@ -196,6 +198,29 @@ The fourth review of `89327f0` confirmed the third-round fixes and raised one mo
 
 The fifth review of `bc49d09` confirmed the queued-discard fix and found one should-fix it introduced, confirmed and fixed: **the refusal was page-lifetime and keyed by request**, so after a replay conflict on a request that stayed unresolved (another page's Reconcile moved it to `unknown` and then could not read its file), a later authorized Reconcile of that request on this page was refused locally and never recorded. Now the conflict supersedes the operations, not the request (choice 3). Test: *after a replay conflict on a request that stays unresolved, a fresh Reconcile after takeover records; the superseded outcomes never write* (the ledger row ends `reconciled` then `imported`, and after the conflict this page sends only its fresh choice and its import). It failed on `bc49d09` where the fresh choice should be recorded.
 
+The sixth review of `2ff328d` (the same Codex reviewer, read-only) passed with one nit: the new test drains already-queued old outcomes but does not call a held old callback after supersession, so `record()`'s refusal of a superseded operation rests on source tracing, not on a test that exercises it. It is recorded here, not fixed. The reviewer judged PR C ready for owner review on its scope; that is not a Gate C verdict.
+
+### Coordinator's commands and results (frozen `2ff328d`)
+
+The coordinator reran every check on the frozen candidate from a clean worktree, under the orchestrator's supervisor (deadline 3400 s, bounded output), holding the host-wide heavy-job lock, on a disposable SillyTavern 1.19.0 host pinned at `7e8663c`, Node v26.8.1, Chromium 151.0.7922.34.
+
+```sh
+SILLYTAVERN_ROOT=<disposable pinned host> SN_PLAYWRIGHT_MODULE=<pinned Playwright> python3 tests/probes/dyl60/run.py docs/evidence/m3-3-c/campaign
+python3 tests/probes/dyl60/validate.py docs/evidence/m3-3-c/campaign
+python3 tests/probes/dyl60/check-discovery.py
+```
+
+| Suite | Result |
+| --- | --- |
+| Node (18 files) | 521/521 (503 before PR C plus 18) |
+| Storage | 281/281 (plugin unchanged) |
+| Browser actual-entry | 150/150 (126 before PR C plus 24) |
+| Native campaigns | stage-library-migration 25, expressions 16, groups 22, recovery 17, cleanup 21, native-integrity-branches 18, director 60, image-route 14 checkpoints |
+| `validate.py` | PASS over 152 frozen inputs on the candidate itself |
+| Discovery | PASS, 18/6/1 |
+
+Package: [`docs/evidence/m3-3-c/campaign/`](evidence/m3-3-c/campaign/) with `run.json` beside it. The campaign took 1652 s; the supervisor reaped nothing at exit. Full campaigns also passed on `e06e89f`, `df549d9`, `89327f0` and `bc49d09` during the review rounds; only the frozen candidate's run is committed.
+
 ### Worker evidence (the fifth-review commit; the coordinator's full campaign passed 11/11 on `bc49d09`)
 
 | Check | Result |
@@ -206,7 +231,7 @@ The fifth review of `bc49d09` confirmed the queued-discard fix and found one sho
 | Native image-route campaign | run once on the commit holding this record, after it was written; the result is in the handoff. Earlier PASS on `0377b5f`, `779c15e` (twice), `2e5c50a`, `df549d9`, `89327f0` and `bc49d09`. Checkpoints A–E and G–O (F not run, as before), disposable pinned 1.19.0 host, fixture on an ephemeral port, no page errors |
 | Discovery | PASS, 18/6/1 |
 
-**The coordinator's campaign failure at image-route** (`docs/evidence/m3-3-c/campaign/image-route.txt`, after B) was a test-harness race, not a host exit: `host.log` ends with the host's own shutdown title, written by its SIGTERM handler when the harness closed it after the failure, and no exception. Playwright's request context keeps sockets alive in a shared agent that ignores the host's `Keep-Alive: timeout=5` hint, while the host (Node 26) closes an idle socket after `keepAliveTimeout` plus `keepAliveTimeoutBuffer`, 6 s. C's post-Save GET was the harness's first request since A's project PUT; the data root's file times put that gap at about 6 s (PUT about 10:17:03.3, Save about 10:17:09.3), so the request reused a socket the host was closing: `socket hang up`. A loopback reproduction against a plain Node 26 server with the same Playwright 1.62.1 reused the socket up to 5.9 s idle and reset 3 of 81 requests at 5.96–6.04 s; with `Connection: close` it reset none of 243. Earlier runs had other A-to-C gaps. The harness's `native` and `plugin` calls, and the probe's two direct asset GETs, now send `Connection: close` (`CLOSE` in `tests/probes/m2-director/harness.mjs`); no assertion changed. Other probes that call `context.request` directly (`m2-director/host.mjs` export GETs, the portability, storage, cleanup, folder and `dyl193` probes) have the same latent race and were not changed.
+**The coordinator's campaign failure at image-route** (the first campaign, on `45a7d42`, after checkpoint B; that failed run's evidence is kept outside the repository and not committed) was a test-harness race, not a host exit: `host.log` ends with the host's own shutdown title, written by its SIGTERM handler when the harness closed it after the failure, and no exception. Playwright's request context keeps sockets alive in a shared agent that ignores the host's `Keep-Alive: timeout=5` hint, while the host (Node 26) closes an idle socket after `keepAliveTimeout` plus `keepAliveTimeoutBuffer`, 6 s. C's post-Save GET was the harness's first request since A's project PUT; the data root's file times put that gap at about 6 s (PUT about 10:17:03.3, Save about 10:17:09.3), so the request reused a socket the host was closing: `socket hang up`. A loopback reproduction against a plain Node 26 server with the same Playwright 1.62.1 reused the socket up to 5.9 s idle and reset 3 of 81 requests at 5.96–6.04 s; with `Connection: close` it reset none of 243. Earlier runs had other A-to-C gaps. The harness's `native` and `plugin` calls, and the probe's two direct asset GETs, now send `Connection: close` (`CLOSE` in `tests/probes/m2-director/harness.mjs`); no assertion changed. Other probes that call `context.request` directly (`m2-director/host.mjs` export GETs, the portability, storage, cleanup, folder and `dyl193` probes) have the same latent race and were not changed.
 
 ### Findings
 
