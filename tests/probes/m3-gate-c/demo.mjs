@@ -72,24 +72,24 @@ const STORE_ONLY = ['/api/settings/save', '/api/plugins/'];
 const originOf = value => { try { const u = new URL(value); return /^https?:$/.test(u.protocol) ? u.origin : null; } catch { return null; } };
 export function guardDecision({ pathname, body, contentType = '' }, { fixtureOrigin, textOrigin = TEXT_ORIGIN }) {
     if (!pathname.startsWith('/api/')) return { allow: true };
-    const parsed = (() => { if (body == null || body === '') return {}; try { const v = JSON.parse(body); return v && typeof v === 'object' && !Array.isArray(v) ? v : undefined; } catch { return undefined; } })();
+    // A JSON array (the tokenizer's message list) has no top-level keys, so it carries no backend address.
+    const json = (() => { if (body == null || body === '') return {}; try { const v = JSON.parse(body); return v && typeof v === 'object' ? v : undefined; } catch { return undefined; } })();
+    const parsed = json && !Array.isArray(json) ? json : json && {};
+    const addresses = Object.entries(parsed ?? {}).filter(([key, value]) => URL_KEY.test(key) && value !== '' && value != null).flatMap(([key, value]) => (Array.isArray(value) ? value : [value]).map(item => [key, item]));
     if (pathname.startsWith('/api/sd/')) {
         const [, , , source, route, extra] = pathname.split('/');
         if (source !== 'comfy' || extra !== undefined || !(COMFY_BACKEND.has(route) || COMFY_LOCAL.has(route))) return { allow: false, reason: 'image route other than the fixture ComfyUI' };
-        if (parsed === undefined) return { allow: false, reason: 'unparseable body' };
-        if (COMFY_LOCAL.has(route)) return Object.keys(parsed).some(k => URL_KEY.test(k)) ? { allow: false, reason: 'backend address on a local route' } : { allow: true };
+        if (json === undefined || Array.isArray(json)) return { allow: false, reason: 'unparseable body' };
+        // The workflow routes read local files, but the page still sends `url`; it must be the fixture too.
+        if (COMFY_LOCAL.has(route)) return addresses.every(([, item]) => originOf(item) === fixtureOrigin) ? { allow: true } : { allow: false, reason: 'backend address on a local route is not the fixture' };
         return typeof parsed.url === 'string' && originOf(parsed.url) === fixtureOrigin ? { allow: true } : { allow: false, reason: 'ComfyUI URL is not the fixture' };
     }
     if (STORE_ONLY.some(p => pathname.startsWith(p))) return { allow: true };
     if (!/json/i.test(contentType)) return { allow: true };
-    if (parsed === undefined) return { allow: false, reason: 'unparseable body' };
-    for (const [key, value] of Object.entries(parsed)) {
-        if (!URL_KEY.test(key) || value === '' || value == null) continue;
-        // Some keys hold a choice name (zai_endpoint: 'common'); only a value that is an http(s) address is a backend address.
-        for (const item of Array.isArray(value) ? value : [value])
-            if (originOf(item) !== null && ![fixtureOrigin, textOrigin].includes(originOf(item))) return { allow: false, reason: 'backend address ' + key + ' is not a fixture' };
-    }
-    return { allow: true };
+    if (json === undefined) return { allow: false, reason: 'unparseable body' };
+    // Some keys hold a choice name (zai_endpoint: 'common'); only a value that is an http(s) address is a backend address.
+    const foreign = addresses.find(([, item]) => originOf(item) !== null && ![fixtureOrigin, textOrigin].includes(originOf(item)));
+    return foreign ? { allow: false, reason: 'backend address ' + foreign[0] + ' is not a fixture' } : { allow: true };
 }
 
 async function main() {

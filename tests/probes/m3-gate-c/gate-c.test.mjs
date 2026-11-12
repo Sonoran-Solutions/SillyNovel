@@ -55,6 +55,8 @@ test('guard: ComfyUI routes pass only with the fixture origin in the parsed body
     assert.equal(decide('/api/sd/comfy/generate', '[1]'), false, 'not an object');
     assert.equal(decide('/api/sd/comfy/workflow', JSON.stringify({ file_name: 'Default_Comfy_Workflow.json' })), true);
     assert.equal(decide('/api/sd/comfy/workflows', ''), true);
+    assert.equal(decide('/api/sd/comfy/workflows', JSON.stringify({ url: FIXTURE })), true, 'the page sends url on the workflow list too');
+    assert.equal(decide('/api/sd/comfy/workflows', JSON.stringify({ url: 'http://127.0.0.1:8188' })), false);
     assert.equal(decide('/api/sd/comfy/workflow', JSON.stringify({ file_name: 'x', url: 'http://127.0.0.1:8188' })), false);
     for (const route of ['/api/sd/comfyrunpod/generate', '/api/sd/generate', '/api/sd/pollinations/generate', '/api/sd/comfy/save-workflow', '/api/sd/comfy/generate/x', '/api/sd/ping'])
         assert.equal(decide(route, JSON.stringify({ url: FIXTURE })), false, route);
@@ -69,6 +71,7 @@ test('guard: other host routes carrying a backend address pass only with a fixtu
     assert.equal(decide('/api/backends/chat-completions/generate', JSON.stringify({ pollinations_endpoint: 'https://example.com' })), false);
     assert.equal(decide('/api/backends/chat-completions/generate', JSON.stringify({ urls: [FIXTURE, 'http://127.0.0.1:8188'] })), false);
     assert.equal(decide('/api/backends/chat-completions/generate', '{broken'), false, 'unparseable JSON');
+    assert.equal(decide('/api/tokenizers/openai/count', JSON.stringify([{ role: 'user', content: 'see http://127.0.0.1:8188' }])), true, 'a JSON array carries no backend keys');
     assert.equal(decide('/api/backends/chat-completions/generate', JSON.stringify({ zai_endpoint: 'common', siliconflow_endpoint: 'global', custom_url: 'http://127.0.0.1:8128/v1' })), true, 'choice names are not addresses');
     assert.equal(decide('/api/characters/create', JSON.stringify({ avatar_url: 'a.png', ch_name: 'x' })), true, 'a file name is not a backend');
     assert.equal(decide('/api/settings/save', JSON.stringify({ api_server: 'http://127.0.0.1:5000' })), true, 'storing settings contacts nothing');

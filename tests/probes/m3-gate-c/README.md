@@ -1,0 +1,35 @@
+# M3.3 PR D: Gate C readiness scripts
+
+Two scripts for the [Gate C record](../../../docs/GATE_C_RECORD_TEMPLATE.md). Neither changes the runtime.
+
+## `demo.mjs`: the seven demonstrations, SYNTHETIC
+
+It runs on the disposable pinned SillyTavern 1.19.0 host (`createHarness` from `../m2-director/harness.mjs` refuses any other source and clones it into an owned `sn-*` root under TMPDIR). It uses the fake ComfyUI `tests/fixtures/m3-comfy-endpoint.mjs` on an ephemeral loopback port and the synthetic text endpoint on 8128. Port 8128 must be free. Demonstrations, in order: `new-background`, `cache-hit`, `rejected-candidate`, `policy-refusal` (the fixture's synthetic refusal, J7), `timeout` (a held job, the real 120 s wait, then the late image), `cancelled-or-stale` (Cancel; a newer scene; a reload and takeover), `usage-limit` (five, the sixth refused, still five after a reload).
+
+```
+SN_PLAYWRIGHT_MODULE=<playwright>/index.mjs node tests/probes/m3-gate-c/demo.mjs --proof-loopback <pinned-host-root>   # coordinator: automated, asserted
+SN_PLAYWRIGHT_MODULE=<playwright>/index.mjs node tests/probes/m3-gate-c/demo.mjs --owner <pinned-host-root> [--only id,id]   # owner: headed, Enter between steps
+```
+
+It writes `observations.json` (labelled SYNTHETIC) in the owned root it prints. Owner mode records what it observes against the expected changes and asserts nothing. The proof also runs the capture pipeline below on its own synthetic data.
+
+**The 8188 guard.** The host contacts ComfyUI from its server, so every page request goes to the host's own origin and the ComfyUI address travels in the JSON body as `url`. A route on each browser context reads the body. It aborts any `/api/sd/*` request that is not one of ComfyUI's routes with exactly the fixture origin, aborts unparseable bodies there, and aborts any other host API request whose backend-address keys (`url`, `api_server`, `custom_url`, `reverse_proxy`, `server_url`, `*_endpoint` and similar) hold an http(s) address other than the fixture or the text endpoint. Before each demonstration it also reads the host's saved image settings and stops unless the ComfyUI URL is the fixture. The proof sets a tampered URL in the page (an unused loopback port with a sentinel listening there, never 8188) and checks that it is aborted and that neither the sentinel nor the fixture sees a request. **Limit:** the guard sees only requests from the browser contexts this script opens. A request from another client of the disposable host, or a host-side job not started by a page, is not covered. The disposable host listens on loopback only and is stopped at the end.
+
+## `capture.mjs`: read-only capture of the owner's real session
+
+**It runs on the owner's install only on the owner's word, recorded in DECISIONS first.** Without `--owner-accepts-read-only-capture` it refuses. It has no network code, never reads `settings.json`, `secrets.json`, keys or headers, and never writes into the image folder. It reads the PNGs in the given `user/images` folder newer than `--since`, the review texts the owner copied (`--review`, repeatable) and, optionally, the JSON of the storage plugin's recovery tool (`tools/recovery.mjs backup`, then `inspect`, both outside the repository). For each file it reports name, size, SHA-256 and PNG signature. It parses ComfyUI's `prompt` metadata, the graph the backend actually ran, which the host stores unchanged, and checks it field by field against the review. It also cross-checks ledger rows against files. Its output holds no prompt or review text, must be outside the repository, and is never overwritten.
+
+```
+node tests/probes/m3-gate-c/capture.mjs --owner-accepts-read-only-capture --images <data>/<user>/user/images --since <ISO> \
+     --review <copied review.txt> --ledger <inspect.json> --out <new file outside the repository>
+```
+
+`--proof-loopback` accepts only an owned `sn-*` root under TMPDIR.
+
+## Tests and registration
+
+```
+node --test --test-isolation=none tests/probes/m3-gate-c/gate-c.test.mjs
+```
+
+**Not registered in `tests/probes/dyl60/run.py`.** That keeps every frozen input of the PR C campaign byte-identical, so `validate.py docs/evidence/m3-3-c/campaign` still passes and that campaign is reused by SHA. `ponytail:` the ceiling is that a full campaign does not run these tests. Upgrade path: register the test file in `run.py` (discovery 19/6/1) when the Gate C frozen candidate gets its own full campaign, which that gate needs anyway. The page helpers in `demo.mjs` restate `../m3-image-route/host.mjs` for the same reason; move them into a shared module at that point.
