@@ -6,6 +6,8 @@
 
 **PR C merged — 2026-11-11.** [#94](https://github.com/Sonoran-Solutions/SillyNovel/pull/94) merged as `3cd3056` (frozen runtime `5518a51`, record and evidence `8fdc37f`) on the owner's standing word for this PR (“if it passes merge”), after the Codex terra senior review's third round returned MERGE WITH NITS. Choice 12, the holder-only `imported` rule in the plugin, remains an implementation choice for owner review, not an owner ruling. PR D has not started. Gate C NOT_RUN.
 
+**PR D merged — 2026-11-12.** [#96](https://github.com/Sonoran-Solutions/SillyNovel/pull/96) merged as `cfffa48` (frozen code `69dc4cb`, record and evidence `5ef1b91`) on the owner's word (“Merge 96”), after the Codex terra senior review's sixth round returned MERGE WITH NITS and the nit was fixed. Tests and docs only; PR C's campaign on `5518a51` stands by SHA. Choice 12 and PR D's twelve choices remain implementation choices for owner review, not owner rulings. The frozen Gate C candidate, the owner's Gate C session and verdict, and the PR 90 real-backend run each need their own word. Gate C NOT_RUN.
+
 **PR D candidate — 2026-11-11.** Gate C readiness on the owner's [go-ahead](DECISIONS.md#owner-go-ahead--m33-pr-d-gate-c-readiness--2026-11-11); see [PR D](#pr-d--gate-c-readiness). Tests and docs only. Gate C NOT_RUN.
 
 ## PR A — request-module changes and the host image-folder probe
