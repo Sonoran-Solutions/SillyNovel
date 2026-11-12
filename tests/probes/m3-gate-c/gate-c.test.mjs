@@ -1,12 +1,12 @@
 // M3.3 PR D: Node tests for the Gate C demonstration and capture scripts. Unregistered in dyl60 on purpose (see README).
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, mkdirSync, readFileSync, rmSync, utimesSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, readFileSync, rmSync, symlinkSync, utimesSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import { crc32, deflateSync } from 'node:zlib';
 import { DEMOS, guardDecision, parseDemoArgs } from './demo.mjs';
-import { capture, compareGraph, crossCheck, parseCaptureArgs, parseReview, pngText } from './capture.mjs';
+import { capture, compareGraph, crossCheck, matched, parseCaptureArgs, parseReview, pngText } from './capture.mjs';
 import { reviewText } from '../../../src/image-request.mjs';
 
 const FIXTURE = 'http://127.0.0.1:43123';
@@ -29,7 +29,9 @@ test('demo arguments: exactly one mode and one host root; --only only in owner m
     assert.throws(() => parseDemoArgs(['--owner', '--real', '/h']), /unknown option --real/);
     assert.throws(() => parseDemoArgs(['--proof-loopback', '--only', 'timeout', '/h']), /proof runs every/);
     assert.throws(() => parseDemoArgs(['--owner', '--only', 'nope', '/h']), /--only takes ids/);
-    assert.deepEqual(parseDemoArgs(['--owner', '--only', 'timeout,cache-hit', '/h']), { mode: 'owner', host: resolve('/h'), demos: ['cache-hit', 'timeout'] });
+    assert.throws(() => parseDemoArgs(['--owner', '--only', 'timeout,cache-hit', '/h']), /cache-hit needs new-background in the same run/);
+    assert.deepEqual(parseDemoArgs(['--owner', '--only', 'timeout,cache-hit,new-background', '/h']), { mode: 'owner', host: resolve('/h'), demos: ['new-background', 'cache-hit', 'timeout'] });
+    assert.deepEqual(parseDemoArgs(['--owner', '--only', 'usage-limit', '/h']).demos, ['usage-limit']);
     assert.equal(parseDemoArgs(['--proof-loopback', '/h']).demos.length, 7);
 });
 
@@ -103,6 +105,20 @@ test('compareGraph: a matching graph matches every compared field; a changed val
     assert.equal(compareGraph(GRAPH, parseReview(REVIEW.replace('Seed: "fixed 1234"', 'Seed: "random each request"'))).fields.seed, 'random-not-compared');
 });
 
+test('matched: every field the review states and the six-node workflow carries must match (terra review finding 2)', () => {
+    const review = parseReview(REVIEW);
+    assert.equal(matched(compareGraph(GRAPH, review)), true, 'VAE and clip skip are the only fields allowed outside the graph');
+    assert.equal(matched(compareGraph(GRAPH, parseReview(REVIEW.replace('Seed: "fixed 1234"', 'Seed: "random each request"')))), true, 'a random seed is not compared');
+    const without = type => Object.fromEntries(Object.entries(GRAPH).filter(([, n]) => n.class_type !== type));
+    const noSampler = compareGraph(without('KSampler'), review), noModel = compareGraph(without('CheckpointLoaderSimple'), review);
+    assert.equal(noSampler.fields.steps, 'not-in-graph');
+    assert.equal(matched(noSampler), false, 'a graph without the sampler is not the request');
+    assert.equal(noModel.fields.model, 'not-in-graph');
+    assert.equal(matched(noModel), false, 'a graph without the model loader is not the request');
+    const latent = compareGraph(without('EmptyLatentImage'), review);
+    assert.equal(matched(latent), false);
+});
+
 test('crossCheck: each new file belongs to exactly one ledger row, and retained files exist', () => {
     const inspect = { ledger: [{ rows: [{ state: 'imported', hostPath: '/user/images/Gate%20C/a.png' }, { state: 'discarded', hostPath: '/user/images/Gate C/b.png', hostDeletedAt: 5 }, { state: 'failed', hostPath: null }] }] };
     const clean = crossCheck(['Gate C/a.png'], inspect, name => name === 'Gate C/a.png');
@@ -126,6 +142,43 @@ test('capture arguments refuse by default, inside the repository, over an existi
         assert.throws(() => parseCaptureArgs(['--owner-accepts-read-only-capture', '--images', images, '--since', 'soon', '--out', join(tmp, 'o.json')]), /must be a date/);
         assert.throws(() => parseCaptureArgs(['--proof-loopback', ...base, '--out', join(tmp, 'o.json')], { tmp: join(tmp, 'elsewhere') }), /owned sn-\* root/);
         assert.equal(parseCaptureArgs(['--proof-loopback', ...base, '--out', join(tmp, 'o.json')]).mode, 'loopback-proof');
+    } finally { rmSync(tmp, { recursive: true, force: true }); }
+});
+
+test('capture --out: a symlinked parent into the repository or the images folder is refused (terra review finding 1)', () => {
+    const tmp = mkdtempSync(join(tmpdir(), 'sn-gate-c-test-')), images = join(tmp, 'data/default-user/user/images');
+    try {
+        mkdirSync(images, { recursive: true });
+        symlinkSync(resolve('docs'), join(tmp, 'into-repo'));
+        symlinkSync(images, join(tmp, 'into-images'));
+        const args = out => ['--owner-accepts-read-only-capture', '--images', images, '--since', '2026-11-11T00:00:00Z', '--out', out];
+        assert.throws(() => parseCaptureArgs(args(join(tmp, 'into-repo/capture.json'))), /outside the repository/);
+        assert.throws(() => parseCaptureArgs(args(join(tmp, 'into-repo/new/capture.json'))), /outside the repository/, 'a missing directory below the link');
+        assert.throws(() => parseCaptureArgs(args(join(tmp, 'into-images/capture.json'))), /outside the images folder/);
+        assert.equal(parseCaptureArgs(args(join(tmp, 'out/capture.json'))).out, join(tmp, 'out/capture.json'));
+    } finally { rmSync(tmp, { recursive: true, force: true }); }
+});
+
+test('capture --review and --ledger: host settings, secrets and anything in a data root are refused, directly or through a symlink (terra review finding 3)', () => {
+    const tmp = mkdtempSync(join(tmpdir(), 'sn-gate-c-test-')), user = join(tmp, 'data/default-user'), images = join(user, 'user/images');
+    try {
+        mkdirSync(images, { recursive: true });
+        writeFileSync(join(user, 'settings.json'), '{"secret":"x"}');
+        writeFileSync(join(user, 'secrets.json'), '{"key":"x"}');
+        writeFileSync(join(user, 'notes.txt'), 'x');
+        writeFileSync(join(tmp, 'review.txt'), REVIEW);
+        writeFileSync(join(tmp, 'big.txt'), 'x'.repeat(1024 * 1024 + 1));
+        symlinkSync(join(user, 'secrets.json'), join(tmp, 'innocent.txt'));
+        symlinkSync(join(user, 'notes.txt'), join(tmp, 'notes-link.txt'));
+        const args = (...more) => parseCaptureArgs(['--owner-accepts-read-only-capture', '--images', images, '--since', '2026-11-11T00:00:00Z', '--out', join(tmp, 'o.json'), ...more]);
+        assert.throws(() => args('--review', join(user, 'settings.json')), /settings or secrets file/);
+        assert.throws(() => args('--ledger', join(user, 'secrets.json')), /settings or secrets file/);
+        assert.throws(() => args('--review', join(tmp, 'innocent.txt')), /settings or secrets file/, 'a symlink to secrets.json');
+        assert.throws(() => args('--review', join(user, 'notes.txt')), /inside a SillyTavern data root/);
+        assert.throws(() => args('--ledger', join(tmp, 'notes-link.txt')), /inside a SillyTavern data root/, 'a symlink into a data root');
+        assert.throws(() => args('--review', join(tmp, 'big.txt')), /at most 1048576 bytes/);
+        assert.throws(() => args('--review', join(tmp, 'missing.txt')), /cannot be read/);
+        assert.deepEqual(args('--review', join(tmp, 'review.txt')).reviews, [join(tmp, 'review.txt')]);
     } finally { rmSync(tmp, { recursive: true, force: true }); }
 });
 
@@ -153,5 +206,9 @@ test('capture has no network code and reads no host settings', () => {
     const source = readFileSync(new URL('./capture.mjs', import.meta.url), 'utf8');
     const imports = [...source.matchAll(/^import .* from '([^']+)';$/gm)].map(m => m[1]);
     assert.deepEqual(imports, ['node:fs', 'node:path', 'node:crypto', 'node:zlib', 'node:os', 'node:url', '../../../src/image-request.mjs']);
-    assert.doesNotMatch(source.replace(/^\/\/.*$/gm, ''), /fetch\(|node:https?|node:net|settings\.json|secrets\.json|import\(/);
+    // The two host file names appear once, in the refusal list; nowhere else.
+    const code = source.replace(/^\s*(\/\/|\*|\/\*\*).*$/gm, '');
+    assert.equal(code.match(/settings\.json|secrets\.json/g).length, 2);
+    assert.match(code, /^const HOST_FILES = \['settings\.json', 'secrets\.json'\];$/m);
+    assert.doesNotMatch(code.replace(/^const HOST_FILES = .*$/m, ''), /fetch\(|node:https?|node:net|settings\.json|secrets\.json|import\(/);
 });

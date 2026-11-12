@@ -5,8 +5,8 @@
 // --proof-loopback accepts only an owned sn-* root under TMPDIR (synthetic data).
 // It has no network code at all, never reads settings.json, secrets.json, keys or headers, and never writes into the images folder.
 // The output holds names, sizes, hashes, counts and per-field match flags; never the prompt or review text.
-import { closeSync, existsSync, lstatSync, openSync, readdirSync, readFileSync, readSync, realpathSync, writeFileSync } from 'node:fs';
-import { basename, join, relative, resolve, sep } from 'node:path';
+import { closeSync, existsSync, lstatSync, openSync, readdirSync, readFileSync, readSync, realpathSync, statSync, writeFileSync } from 'node:fs';
+import { basename, dirname, join, relative, resolve, sep } from 'node:path';
 import { createHash } from 'node:crypto';
 import { inflateSync } from 'node:zlib';
 import { tmpdir } from 'node:os';
@@ -14,10 +14,34 @@ import { pathToFileURL } from 'node:url';
 import { ALLOWLIST } from '../../../src/image-request.mjs';
 
 const REPO = resolve(import.meta.dirname, '../../..');
-const MAX_FILE = 32 * 1024 * 1024, MAX_FILES = 200, MAX_TEXT = 1024 * 1024;
+const MAX_FILE = 32 * 1024 * 1024, MAX_FILES = 200, MAX_TEXT = 1024 * 1024, MAX_LEDGER = 16 * 1024 * 1024;
+const HOST_FILES = ['settings.json', 'secrets.json'];
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const SIGNATURE = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
 const inside = (path, root) => { const r = relative(root, path); return r === '' || !r.startsWith('..') && !r.startsWith(sep) && r !== '..'; };
+/** The real path a not-yet-existing file would get: the nearest existing parent through realpathSync, plus the rest. */
+export function realDestination(path) {
+    let parent = resolve(path), rest = [];
+    while (!existsSync(parent)) { rest.unshift(basename(parent)); const up = dirname(parent); if (up === parent) break; parent = up; }
+    return join(realpathSync(parent), ...rest);
+}
+/**
+ * One rule for --review and --ledger: the real path must not be named settings.json or secrets.json, and no directory
+ * above it may hold either file (that directory is a SillyTavern user data root, such as data/<user>/), so host settings,
+ * keys and anything beside them are never read, directly or through a symlink.
+ */
+export function readableInput(path, max) {
+    let real;
+    try { real = realpathSync(path); } catch { throw Error('Refused: ' + path + ' cannot be read.'); }
+    if (HOST_FILES.includes(basename(real))) throw Error('Refused: ' + path + ' is a host settings or secrets file.');
+    for (let dir = dirname(real); ; dir = dirname(dir)) {
+        if (HOST_FILES.some(name => existsSync(join(dir, name)))) throw Error('Refused: ' + path + ' is inside a SillyTavern data root.');
+        if (dirname(dir) === dir) break;
+    }
+    const stat = statSync(real);
+    if (!stat.isFile() || stat.size > max) throw Error('Refused: ' + path + ' is not a file of at most ' + max + ' bytes.');
+    return real;
+}
 
 export function parseCaptureArgs(argv, { repo = REPO, tmp = tmpdir() } = {}) {
     const values = { review: [] }, flags = [];
@@ -37,14 +61,17 @@ export function parseCaptureArgs(argv, { repo = REPO, tmp = tmpdir() } = {}) {
     const images = resolve(values.images), out = resolve(values.out), since = Date.parse(values.since);
     if (basename(images) !== 'images' || basename(resolve(images, '..')) !== 'user') throw Error('Refused: --images must be a host user/images folder.');
     if (!Number.isFinite(since)) throw Error('Refused: --since must be a date.');
-    if (inside(out, repo)) throw Error('Refused: --out must be outside the repository.');
-    if (existsSync(out)) throw Error('Refused: ' + out + ' exists; a capture is never overwritten.');
-    if (inside(out, images)) throw Error('Refused: --out must be outside the images folder.');
+    if (!existsSync(images)) throw Error('Refused: --images does not exist.');
+    // Lexical and real: a symlinked parent must not lead the capture into the repository or the images folder.
+    const realOut = realDestination(out), realRepo = existsSync(repo) ? realpathSync(repo) : repo, realImages = realpathSync(images);
+    if (inside(out, repo) || inside(realOut, realRepo)) throw Error('Refused: --out must be outside the repository.');
+    if (existsSync(out) || existsSync(realOut)) throw Error('Refused: ' + out + ' exists; a capture is never overwritten.');
+    if (inside(out, images) || inside(realOut, realImages)) throw Error('Refused: --out must be outside the images folder.');
     if (proof) {
         const owned = relative(resolve(tmp), images).split(sep)[0];
         if (!inside(images, resolve(tmp)) || !/^sn-[\w-]+$/.test(owned ?? '')) throw Error('Refused: a proof reads only an owned sn-* root under TMPDIR.');
     }
-    return { mode: owner ? 'owner' : 'loopback-proof', images, since, out, reviews: values.review, ledger: values.ledger ? resolve(values.ledger) : null };
+    return { mode: owner ? 'owner' : 'loopback-proof', images, since, out: realOut, repo: realRepo, reviews: values.review.map(path => readableInput(path, MAX_TEXT)), ledger: values.ledger ? readableInput(resolve(values.ledger), MAX_LEDGER) : null };
 }
 
 /** Text chunks of a PNG (tEXt, zTXt, iTXt), or null when the bytes are not a PNG. */
@@ -103,6 +130,12 @@ export function compareGraph(graph, review) {
     };
 }
 
+// Every field the review states and the six-node workflow carries must match. The only exceptions: a random seed policy
+// (not compared), VAE and clip skip (not in that workflow), and a field the review renders as null (nothing stated).
+const EXEMPT = { seed: ['random-not-compared', 'not-in-review'], vae: ['not-in-graph', 'not-in-review'], clipSkip: ['not-in-graph', 'not-in-review'] };
+export const matched = c => c.nodeTypesAllowed && c.unexplainedTextInputs === 0
+    && Object.entries(c.fields).every(([field, flag]) => flag === 'match' || (EXEMPT[field] ?? ['not-in-review']).includes(flag));
+
 function readBounded(path) {
     const fd = openSync(path, 'r');
     try { const size = lstatSync(path).size, bytes = Buffer.alloc(Math.min(size, MAX_FILE)); readSync(fd, bytes, 0, bytes.length, 0); return { bytes, size }; } finally { closeSync(fd); }
@@ -139,7 +172,7 @@ export function crossCheck(files, inspect, exists) {
 }
 
 export function capture(options) {
-    const reviews = options.reviews.map(path => { const text = readFileSync(path, 'utf8'); if (text.length > MAX_TEXT) throw Error('Refused: review file too large.'); return { sha256: sha(text), review: parseReview(text) }; });
+    const reviews = options.reviews.map(path => { const text = readFileSync(readableInput(path, MAX_TEXT), 'utf8'); return { sha256: sha(text), review: parseReview(text) }; });
     const realImages = realpathSync(options.images);
     const files = listPngs(realImages, options.since).map(path => {
         const { bytes, size } = readBounded(path), name = relative(realImages, path).split(sep).join('/');
@@ -151,12 +184,11 @@ export function capture(options) {
         if (graph) {
             entry.backendGraphSha256 = sha(raw);
             entry.comparisons = reviews.map(r => ({ reviewSha256: r.sha256, ...compareGraph(graph, r.review) }));
-            entry.matchedReview = entry.comparisons.find(c => c.fields.positive === 'match' && c.fields.negative === 'match' && c.unexplainedTextInputs === 0 && c.nodeTypesAllowed
-                && !Object.values(c.fields).includes('mismatch'))?.reviewSha256 ?? null;
+            entry.matchedReview = entry.comparisons.find(matched)?.reviewSha256 ?? null;
         }
         return entry;
     });
-    const inspect = options.ledger ? JSON.parse(readFileSync(options.ledger, 'utf8')) : null;
+    const inspect = options.ledger ? JSON.parse(readFileSync(readableInput(options.ledger, MAX_LEDGER), 'utf8')) : null;
     return { schemaVersion: 1, mode: options.mode, since: new Date(options.since).toISOString(), reviews: reviews.map(r => r.sha256), files,
         ledger: inspect ? crossCheck(files.map(f => f.name), inspect, name => name !== null && existsSync(join(realImages, ...name.split('/')))) : 'not-given' };
 }

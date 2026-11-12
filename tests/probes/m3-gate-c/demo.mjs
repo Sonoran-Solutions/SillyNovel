@@ -25,7 +25,7 @@ export const DEMOS = Object.freeze([
     { id: 'new-background', title: 'New background', fixture: [{ hold: true }], expect: { prompts: 1, rows: ['imported'], filesNet: 1, replies: 1 },
         owner: [{ say: 'Turn on Image session on this host if it is off, then press Submit. While it says Generating, send one chat message and watch the reply arrive. Press Enter here to let the fixture finish.', then: 'release' },
             { say: 'Press Import and apply background, then Save project. Press Enter.' }] },
-    { id: 'cache-hit', title: 'Cache hit', fixture: [], expect: { prompts: 0, rows: [], filesNet: 0, replies: 0 },
+    { id: 'cache-hit', title: 'Cache hit', needs: ['new-background'], fixture: [], expect: { prompts: 0, rows: [], filesNet: 0, replies: 0 },
         owner: [{ say: 'Pick Forest in Background and press Apply background. Keep the same prompt and press Submit: it should offer Use the previous result. Press it (nothing is sent or counted). Press Enter.' }] },
     { id: 'rejected-candidate', title: 'Rejected candidate', fixture: [{}], expect: { prompts: 1, rows: ['discarded'], filesNet: 0, replies: 0, hostDeleted: 1 },
         owner: [{ say: 'Change the Image prompt (add ", second take"), press Submit, then Discard preview, then Delete the host\'s copy. Press Enter.' }] },
@@ -59,6 +59,9 @@ export function parseDemoArgs(argv) {
         if (proof) throw Error('Refused: the proof runs every demonstration.');
         const asked = only.split(',').filter(Boolean);
         if (!asked.length || asked.some(id => !demos.includes(id))) throw Error('Refused: --only takes ids from ' + demos.join(', ') + '.');
+        // A demonstration that builds on an earlier one's result (the cache hit needs the imported new background) needs it selected too.
+        const missing = DEMOS.filter(d => asked.includes(d.id)).flatMap(d => (d.needs ?? []).filter(n => !asked.includes(n)).map(n => d.id + ' needs ' + n));
+        if (missing.length) throw Error('Refused: ' + missing.join('; ') + ' in the same run.');
         demos = demos.filter(id => asked.includes(id));
     }
     return { mode: owner ? 'owner' : 'proof', host: resolve(rest[0]), demos };
