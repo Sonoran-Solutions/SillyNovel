@@ -2404,6 +2404,7 @@ test('M3.3 second review 3: an outcome refused because another page moved the ro
  await button(page,'Import and apply background to Harbor project').click();
  await waitStatus(page,/^The image ledger refused to record a request as imported: another page changed it \(it is now discarded\)\. The list was read again\.$/);
  assert.equal(states(x).join(),'discarded');
+ assert.doesNotMatch(await page.locator('.sillynovel-selected-art').innerText(),/Generated harbor/,'terra review: an import the ledger refused is not applied');
  await page.waitForFunction(()=>!/uncertain/.test(document.querySelector('.sillynovel-image-workflow__generation-problems').textContent));
  assert.equal(await control(page,'Submit').isEnabled(),true,'never blocked');
 });
@@ -2580,4 +2581,70 @@ test('M3.3 fifth review: after a replay conflict on a request that stays unresol
  // After the conflict A sent only its fresh choice and its import: the superseded candidate and discard never wrote again.
  await new Promise(r=>setTimeout(r,300));
  assert.deepEqual(sentByA.slice(atConflict),['reconciled','imported']);
+});
+
+// M3.3 PR C terra review (each fails on ab6f163).
+const takenOver=async x=>{
+ const second=await x.another(),f2=x.fieldOf(second);
+ await f2('Image session on this host').check();await second.locator('.sillynovel-image-workflow__lease').waitFor({state:'visible'});
+ await control(second,'Take over').click();
+ await second.waitForFunction(()=>/^Took over this project's image session/.test(document.querySelector('.sillynovel-image-workflow__status').textContent));
+ return second;
+};
+const importRefused=async(page,x)=>{
+ await waitStatus(page,/^This image session ended here: another tab or page took it over\./);
+ await until(()=>states(x).join()==='discarded','the candidate recorded discarded');await new Promise(r=>setTimeout(r,300));
+ assert.equal(states(x).join(),'discarded','never imported');assert.equal(x.ledger.jobs()[0].asset,null);
+ assert.doesNotMatch(await page.locator('.sillynovel-selected-art').innerText(),/Generated harbor/,'nothing applied');
+ assert.equal(await page.locator('.sillynovel-image-workflow__preview').isHidden(),true);
+ assert.equal(await page.getByLabel('Background',{exact:true}).locator('option',{hasText:'Generated harbor'}).count(),0,'the install is undone');
+};
+test('M3.3 terra review 1: a takeover before this page\'s next heartbeat; its Import applies nothing, the row is never imported by it, the lease-lost line shows',async t=>{
+ const x=await imageRoute(t,{clock:true}),{page}=x;await x.ready();
+ await control(page,'Submit').click();await waitStatus(page,/^Candidate, not imported/);
+ await takenOver(x);
+ await button(page,'Import and apply background to Harbor project').click();
+ await importRefused(page,x);assert.equal(x.state.uploads,1);
+});
+test('M3.3 terra review 1: a takeover while this page\'s Import upload is held, before its next heartbeat; nothing is applied, the row is never imported by it',async t=>{
+ const x=await imageRoute(t,{clock:true}),{page}=x;await x.ready();
+ await control(page,'Submit').click();await waitStatus(page,/^Candidate, not imported/);
+ let open;x.state.uploadGate=new Promise(r=>{open=r;});
+ await button(page,'Import and apply background to Harbor project').click();await until(()=>x.state.uploads===1,'upload held');
+ await takenOver(x);
+ open();x.state.uploadGate=null;
+ await importRefused(page,x);
+});
+for(const kind of ['candidate','reconciled'])test('M3.3 terra review 2: a '+kind+' row left by a reload is listed while this page holds the lease; Discard records it discarded and cleanup then removes it',async t=>{
+ const x=await imageRoute(t),{page,field}=x;await x.ready();
+ if(kind==='candidate'){await control(page,'Submit').click();await waitStatus(page,/^Candidate, not imported/);}
+ else{
+  await x.hold();await control(page,'Submit').click();await waitStatus(page,/^Generating on/);
+  await x.reload();x.ledger.age(200_000);
+  const [job]=x.ledger.jobs(),since=Math.floor(job.submittedAt/1000)*1000,when=iso(job.submittedAt);
+  await hostImages(page,{names:['late-1.png'],files:{'late-1.png':{mtimeMs:since+5_000,body:x.tavern}}});
+  await field('Image session on this host').check();await page.locator('.sillynovel-image-workflow__lease').waitFor({state:'visible'});
+  await control(page,'Take over').click();
+  const row=page.locator('.sillynovel-image-workflow__unresolved');await row.waitFor();
+  await control(page,'Reconcile the request submitted '+when).click();await waitStatus(page,/^Choose the file/);
+  await row.getByRole('button',{name:'Use /user/images/late-1.png as the result of the request submitted '+when,exact:true}).click();
+  await waitStatus(page,/^Reconciled candidate, not imported/);
+ }
+ assert.deepEqual(states(x),[kind]);
+ await x.reload();
+ await field('Image session on this host').check();await page.locator('.sillynovel-image-workflow__lease').waitFor({state:'visible'});
+ assert.equal(await page.locator('.sillynovel-image-workflow__stranded').count(),0,'not listed without the lease');
+ await control(page,'Take over').click();
+ const [job]=x.ledger.jobs(),when=iso(job.submittedAt),what=kind==='candidate'?'candidate':'reconciled result';
+ const row=page.locator('.sillynovel-image-workflow__stranded');await row.waitFor();
+ assert.equal(await row.locator('p').innerText(),'A '+what+' of the request submitted '+when+' was never imported or discarded; its preview went with the page that showed it · host copy '+job.hostPath+'.');
+ assert.equal(await page.locator('.sillynovel-image-workflow__preview').isHidden(),true,'nothing is attached by listing');
+ assert.equal(await control(page,'Submit').isEnabled(),true,'a listed row does not block Submit');
+ await control(page,'Discard the '+what+' of the request submitted '+when).click();
+ await waitStatus(page,/^Discarded · nothing was imported\./);
+ assert.deepEqual(states(x),['discarded']);
+ await page.waitForFunction(()=>!document.querySelector('.sillynovel-image-workflow__stranded'));
+ await control(page,'Review finished image jobs').click();await waitStatus(page,/^1 finished image job record can be removed/);
+ await control(page,'Remove finished image jobs').click();await waitStatus(page,/^Removed 1 image job record/);
+ assert.deepEqual(states(x),[]);
 });

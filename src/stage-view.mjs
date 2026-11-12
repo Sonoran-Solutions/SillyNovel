@@ -253,7 +253,7 @@ export function mountVisualStage({ document, stage, actions }) {
     let pending=null,orphan=null,inspection=null,workflowSha256=null,review=null,problems=[],reviewDraft=null,imageStarting=false,imageSubmitting=false,imageEpoch=0,imageSeq=0;
     // This page's lease identity: a reload or another tab is another one (PR A choice 3).
     const tab=crypto.randomUUID();
-    let ledger=null,held=null,recovery=[],reconcile=null,recoveryBusy=false,cacheOffer=null,hostCopy=null,copies=null,finished=null,heartbeat=null,deadlineTimer=null,ledgerQueue=Promise.resolve();
+    let ledger=null,held=null,recovery=[],stranded=[],reconcile=null,recoveryBusy=false,cacheOffer=null,hostCopy=null,copies=null,finished=null,heartbeat=null,deadlineTimer=null,ledgerQueue=Promise.resolve();
     const IMAGE_PROBLEMS={SEAM_MISSING:'Host image generation is not available to SillyNovel on this host.',SOURCE_NOT_COMFY:"The host's image source is not ComfyUI.",COMFY_TYPE_NOT_STANDARD:'Only standard ComfyUI is supported, not RunPod.',
         URL_INVALID:'The ComfyUI address must be this machine (localhost, 127.0.0.1 or [::1]).',URL_NOT_LOOPBACK:'The ComfyUI address must be this machine (localhost, 127.0.0.1 or [::1]).',
         MODE_FREE_EXTEND:"Turn off free extend in the host's Image Generation settings.",MODE_MULTIMODAL:"Turn off multimodal captioning in the host's Image Generation settings.",MODE_REFINE:"Turn off refine mode in the host's Image Generation settings.",MODE_INTERACTIVE:"Turn off interactive mode in the host's Image Generation settings.",MODE_FUNCTION_TOOL:"Turn off function tool in the host's Image Generation settings.",
@@ -310,6 +310,7 @@ export function mountVisualStage({ document, stage, actions }) {
     // lost, and counts as acknowledged; a row elsewhere was moved by another page, and the outcome is dropped with a notice and marked a conflict, after which
     // no follow-up transition is queued for it (third review). Only a successful read decides: any failed reread keeps the outcome queued, and a row is
     // absent only when a list that was read lacks it.
+    const conflictLine=(state,row)=>'The image ledger refused to record a request as '+state+': another page changed it'+(row?' (it is now '+row.state+')':' (it is no longer recorded)')+'.';
     const unacked=[],transient=error=>!error?.code||error.code==='STORAGE_UNAVAILABLE';
     const written=(row,body)=>row?.state===body.state&&['hostPath','resultSha256','assetId'].every(key=>body[key]===undefined||row[key]===body[key]);
     async function writeOutcomes(){
@@ -334,7 +335,7 @@ export function mountVisualStage({ document, stage, actions }) {
                 const dropped=unacked.filter(other=>other.projectId===item.projectId&&other.ledgerId===item.ledgerId);
                 for(const other of dropped){unacked.splice(unacked.indexOf(other),1);other.conflict=true;other.job.superseded=true;}
                 if(!disposed&&model.project&&model.status().projectId===item.projectId){
-                    wfStatus.textContent='The image ledger refused to record a request as '+item.body.state+': another page changed it'+(row?' (it is now '+row.state+')':' (it is no longer recorded)')+'.'+(dropped.length>1?' '+(dropped.length-1)+' later outcome'+(dropped.length>2?'s':'')+' this page had queued for it '+(dropped.length>2?'were':'was')+' dropped too.':'')+' The list was read again.';
+                    wfStatus.textContent=conflictLine(item.body.state,row)+(dropped.length>1?' '+(dropped.length-1)+' later outcome'+(dropped.length>2?'s':'')+' this page had queued for it '+(dropped.length>2?'were':'was')+' dropped too.':'')+' The list was read again.';
                     if(ledger?.projectId===item.projectId)loadRecovery(ledger);
                 }
             }
@@ -355,9 +356,16 @@ export function mountVisualStage({ document, stage, actions }) {
             const {jobs}=await ledgerCall(()=>client.imageSession(held_.projectId));if(ledger!==held_)return;
             const live=new Set([pending,orphan].map(job=>job?.ledgerId).filter(Boolean));
             recovery=jobs.filter(job=>!live.has(job.id));if(reconcile&&!recovery.some(job=>job.id===reconcile.ledgerId))reconcile=null;
-        }catch(error){if(ledger===held_)wfStatus.textContent=ledgerProblem(error.code);}
+        }catch(error){if(ledger===held_)wfStatus.textContent=ledgerProblem(error.code);return;}
+        // Terra review finding 2: a candidate or reconciled row that no page shows (its preview went with a reload) is listed for an explicit Discard,
+        // so it can reach cleanup. Not this page's live preview, nor a row whose outcome this page still has queued. A failed read lists nothing new.
+        // ponytail: no Resume (refetch hostPath, check resultSha256, show as a candidate); Discard then a new Submit covers it. Add it through the
+        // Reconcile fetch/PNG/identity path, taking the identity when Resume starts (the original source identity is gone after a reload).
+        const all=await ledgerCall(()=>client.imageJobs(held_.projectId)).catch(()=>null);if(ledger!==held_||!Array.isArray(all))return;
+        const shown=resultPreview?.generated&&!resultPreview.generated.done?resultPreview.generated.ledgerId:null,queued=new Set(unacked.map(item=>item.ledgerId));
+        stranded=all.filter(job=>['candidate','reconciled'].includes(job.state)&&job.id!==shown&&!queued.has(job.id));
     }
-    function stopLedger(){clearInterval(heartbeat);heartbeat=null;clearTimeout(deadlineTimer);ledger=null;held=null;recovery=[];reconcile=null;cacheOffer=null;}
+    function stopLedger(){clearInterval(heartbeat);heartbeat=null;clearTimeout(deadlineTimer);ledger=null;held=null;recovery=[];stranded=[];reconcile=null;cacheOffer=null;}
     function endLedger(){
         const ended=ledger;stopLedger();
         if(ended)ledgerCall(()=>client.endImageSession(ended.projectId,{sessionId:ended.session.id,tab})).catch(()=>{});
@@ -411,7 +419,8 @@ export function mountVisualStage({ document, stage, actions }) {
             const held_={projectId,session:row};held=null;ledger=held_;inspection=inspected;workflowSha256=row.workflowSha256;session.begin(workflowSha256);reviewGeneration();
             heartbeat=setInterval(beat,LEASE.heartbeatMs);
             if(takeover)wfStatus.textContent="Took over this project's image session · its count and reservations are kept; the other page stops at its next heartbeat.";
-            await flushOutcomes();await loadRecovery(held_);
+            // Shown at once: the recovery reads below take two ledger round trips.
+            renderWorkflow();await flushOutcomes();await loadRecovery(held_);
         }finally{if(token===imageEpoch)imageStarting=false;}
     }
     function renderRecovery(){
@@ -419,7 +428,7 @@ export function mountVisualStage({ document, stage, actions }) {
         clearTimeout(deadlineTimer);
         const next=Math.min(...items.filter(item=>!item.due).map(item=>item.deadlineAt));
         if(Number.isFinite(next))deadlineTimer=setTimeout(()=>{if(!disposed)renderWorkflow();},next-at+50);
-        const signature=JSON.stringify([items,recoveryBusy]);
+        const signature=JSON.stringify([items,stranded,recoveryBusy]);
         if(recoveryList.dataset.signature===signature)return;
         recoveryList.dataset.signature=signature;
         const press=(text,label,data)=>{const e=make('button','menu_button sillynovel-button',text);e.type='button';e.setAttribute('aria-label',label);Object.assign(e.dataset,data);e.disabled=recoveryBusy;return e;};
@@ -438,12 +447,17 @@ export function mountVisualStage({ document, stage, actions }) {
                 row.append(list);
             }
             return row;
+        }),...stranded.map(job=>{
+            const row=make('div','sillynovel-image-workflow__stranded'),when=iso(job.submittedAt),what=job.state==='candidate'?'candidate':'reconciled result';
+            row.append(make('p','','A '+what+' of the request submitted '+when+' was never imported or discarded; its preview went with the page that showed it'+(job.hostPath?' · host copy '+job.hostPath:'')+'.'),
+                press('Discard','Discard the '+what+' of the request submitted '+when,{action:'discard',job:job.id}));
+            return row;
         }));
     }
     listen(recoveryList,'click',event=>{
         const target=event.target.closest?.('button[data-action]');if(!target||target.disabled)return;
         const {action,job,path}=target.dataset;
-        wfRun(()=>action==='reconcile'?reconcileJob(job):action==='abandon'?abandonRecovered(job):action==='choose'?chooseReconciled(job,path):noneOfThese(job));
+        wfRun(()=>action==='reconcile'?reconcileJob(job):action==='abandon'?abandonRecovered(job):action==='choose'?chooseReconciled(job,path):action==='discard'?discardStranded(job):noneOfThese(job));
     });
     async function ledgerFailure(error,held_){
         if(error.code==='LEASE_LOST'&&ledger===held_){leaseLost();return;}
@@ -504,6 +518,15 @@ export function mountVisualStage({ document, stage, actions }) {
             wfStatus.textContent='Reconciled candidate, not imported · the host kept a copy at '+path+'. Import and apply it, or discard it.';
         }catch(error){await ledgerFailure(error,held_);}
         finally{recoveryBusy=false;}
+    }
+    // Through the outcome queue: a lost reply is reread, and a row another page moved is named there (record resolves false).
+    async function discardStranded(id){
+        const job=stranded.find(item=>item.id===id),held_=ledger;if(!job||!held_||recoveryBusy)return;
+        recoveryBusy=true;renderWorkflow();
+        try{
+            const row=await record({ledgerId:id,projectId:held_.projectId},'discarded');stranded=stranded.filter(item=>item!==job);
+            if(row&&ledger===held_)wfStatus.textContent='Discarded · nothing was imported.'+(row.hostPath?" Delete the host's copy removes "+row.hostPath+'.':'');
+        }finally{recoveryBusy=false;}
     }
     function noneOfThese(id){if(reconcile?.ledgerId!==id)return;reconcile=null;wfStatus.textContent='Nothing attached. The request stays unresolved; Reconcile again later, or Abandon it.';}
     async function abandonRecovered(id){
@@ -757,7 +780,7 @@ export function mountVisualStage({ document, stage, actions }) {
             return assetId;
         }
         // Review findings 1 and 2: a generated or reconciled candidate needs the image session it came from and its captured source identity,
-        // before the import starts and again before the uploaded PNG is applied (the plugin lets any of the owner's pages record `imported`).
+        // before the import starts and again before the uploaded PNG is applied.
         const authority=()=>!disposed&&ledger===generated.held&&session.snapshot().on;
         const gone='This image session is no longer held here, so the candidate was discarded and nothing was imported.';
         if(!authority()){clearPreview(gone);return;}
@@ -765,11 +788,37 @@ export function mountVisualStage({ document, stage, actions }) {
         if(!authority()){clearPreview(gone);return;}
         const reason=generated.check();if(reason){clearPreview('Result discarded: '+(STALE_REASONS[reason]??reason)+'; the host kept a copy at '+generated.path);return;}
         if(!layoutReady||projectBusy||model.status().importing)return;
-        const assetId=await model.importFile(chosen.file,'background',undefined,wfLabel.value.trim(),()=>resultPreview===chosen&&authority()&&!generated.check());
+        // Terra review finding 1: the ledger's acknowledgement of `imported` is the authorization to apply. It is written once the PNG is uploaded and
+        // installed, just before the synchronous apply, and the plugin accepts it only from the current open session's holder, so a takeover between
+        // heartbeats applies nothing. While it is written no discard is queued for this candidate (`done`); a refusal gives that back.
+        let refused=null;
+        const authorize=async assetId=>{generated.done=true;refused=await authorizeImport(generated,assetId);if(refused)generated.done=false;return !refused;};
+        // Dropped meanwhile (lease lost, session off, project changed) while `done` held its discard back: record it now.
+        const drop=message=>{if(resultPreview===chosen)clearPreview(message);else if(!generated.done){generated.done=true;record(generated,'discarded');}};
+        const assetId=await model.importFile(chosen.file,'background',undefined,wfLabel.value.trim(),id=>id===undefined?resultPreview===chosen&&authority()&&!generated.check():authorize(id));
+        if(refused?.code==='LEASE_LOST'){if(ledger===generated.held)leaseLost();drop(gone);return;}
+        if(refused?.code==='CONFLICT'){generated.done=true;drop(conflictLine('imported',refused.row)+' The list was read again.');if(ledger===generated.held)await loadRecovery(ledger);return;}
+        if(refused){if(resultPreview===chosen)wfStatus.textContent='The image ledger did not acknowledge the import, so nothing was applied; the candidate is kept. Import again once the ledger answers.';else drop();return;}
         if(resultPreview!==chosen)return;
         if(!assetId){const late=generated.check();clearPreview(!authority()?gone:late?'Result discarded: '+(STALE_REASONS[late]??late)+' during the import; nothing was applied.':'Nothing was applied.');return;}
-        generated.done=true;if(generated.id!==null)session.imported(generated.id);record(generated,'imported',{assetId});
+        generated.done=true;if(generated.id!==null)session.imported(generated.id);
         clearPreview('Imported and applied as the background · unsaved project change. Save project to keep it.');
+    }
+    // Written directly, not queued: nothing is applied without this acknowledgement. Resolves null once written, else {code}: LEASE_LOST, CONFLICT
+    // (another page moved the row), or UNACKNOWLEDGED (unreachable, or an earlier outcome of this project still unwritten), which keeps the candidate.
+    async function authorizeImport(generated,assetId){
+        await flushOutcomes();
+        if(uncertain(generated.projectId))return {code:'UNACKNOWLEDGED'};
+        const body={tab,state:'imported',assetId};
+        try{await ledgerCall(()=>client.transitionImageJob(generated.projectId,generated.ledgerId,body));return null;}
+        catch(error){
+            if(error.code==='LEASE_LOST')return {code:'LEASE_LOST'};
+            if(transient(error))return {code:'UNACKNOWLEDGED'};
+            // The reread rule: on a retry after a lost reply, a row already imported with this asset is this page's own write.
+            let row;
+            try{row=(await ledgerCall(()=>client.imageJobs(generated.projectId))).find(job=>job.id===generated.ledgerId)??null;}catch{return {code:'UNACKNOWLEDGED'};}
+            return written(row,body)?null:{code:'CONFLICT',row};
+        }
     }
     for(const e of [wfLabel,wfPrompt,wfNegative,wfStyle])listen(e,'input',()=>{wfRevision++;renderWorkflow();});
     for(const e of [wfSize,...wfRefs])listen(e,'change',()=>{wfRevision++;renderWorkflow();});

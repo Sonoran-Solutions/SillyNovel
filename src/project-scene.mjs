@@ -170,6 +170,8 @@ export async function createProjectScene(project,client,actions,changed,isCurren
         async dispatch(command){if(['setExpression','clearExpression'].includes(command.type)){const replaced=expressions.get().view.cast.find(a=>a.key===command.characterKey)?.expression?.origin==='automatic',done=await expressions.dispatch(command);if(replaced)director?.noteCorrection('expression');return done;}if(importing||cleanupBusy)throw Error('Wait for the PNG import or cleanup to finish.');invalidateCleanup();if(!current())return false;apply(command);const cleared=clearOverlay();await expressions.sync();edit++;notice='Applied · unsaved project changes.'+cleared;notify();return true;},
         async register(_preset,name){if(importing||cleanupBusy)throw Error('Wait for the PNG import or cleanup to finish.');invalidateCleanup();if(!current())return;if(!label(name)||actors.length>=20)throw Error('Use a name of 1–80 characters; maximum 20 actors.');const key=crypto.randomUUID();actors.push({key,label:name,description:'Project actor',defaultURL:null});refresh();apply({type:'addCharacter',characterKey:key});clearOverlay();edit++;notify();return key;},
         // `still` lets a caller withdraw its permission while the upload is in flight (M3.3 review finding 1); nothing is applied once it is false.
+        // After the install it is also awaited once as `still(assetId)`, where a caller may write its own authorization (M3.3 terra review);
+        // a final synchronous `still()` then decides the apply. A refusal undoes the install.
         async importFile(file,kind,key,displayLabel,still=()=>true){
             if(!current())return;
             displayLabel=displayLabel?.trim() || file.name?.replace(/\.png$/i,'').slice(0,80) || 'Imported PNG';
@@ -190,8 +192,10 @@ export async function createProjectScene(project,client,actions,changed,isCurren
                 const shared=media.get(kind==='background'?result.assetId:key+':'+result.assetId),sharedLabel=shared?.label;
                 const ref=await install(result.assetId,kind,kind==='background'?undefined:key,displayLabel);
                 if(!current())return;
-                // Withdrawn during the asset read (M3.3 second review): undo the install so the reducer's catalog matches what is installed.
-                if(!still()){
+                const allowed=still()&&await still(result.assetId);
+                if(!current())return;
+                // Withdrawn during the asset read (M3.3 second review) or refused its authorization: undo the install so the reducer's catalog matches what is installed.
+                if(!allowed||!still()){
                     if(shared){shared.label=sharedLabel;return;}
                     const item=media.get(ref);if(item?.url)URL.revokeObjectURL(item.url);media.delete(ref);assets.splice(assets.findIndex(a=>a.id===ref),1);
                     catalogRevision++;refresh();return;
