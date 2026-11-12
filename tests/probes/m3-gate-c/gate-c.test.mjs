@@ -5,7 +5,7 @@ import { mkdtempSync, mkdirSync, readFileSync, rmSync, symlinkSync, utimesSync, 
 import { join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import { crc32, deflateSync } from 'node:zlib';
-import { DEMOS, descendantPids, guardDecision, HOST_CHOSEN, ownerPreamble, parseDemoArgs, stopDescendants } from './demo.mjs';
+import { DEMOS, descendantPids, guardDecision, HOST_CHOSEN, normalizePath, ownerPreamble, parseDemoArgs, stopDescendants } from './demo.mjs';
 import { spawn } from 'node:child_process';
 import { capture, compareGraph, crossCheck, matched, parseCaptureArgs, parseReview, pngText, underImages } from './capture.mjs';
 import { reviewText } from '../../../src/image-request.mjs';
@@ -116,6 +116,27 @@ test('stopDescendants walks /proc by parent PID from this process, stops a sleep
     assert.deepEqual(result.survivors, []);
     assert.equal(await exited, 'SIGTERM', 'the child ended on TERM and Node reaped it');
     assert.equal(descendantPids(process.pid).length, 0, 'nothing of ours remains');
+});
+
+test('guard: one normalized path for every rule; case, encoding, slashes and dot segments cannot slip past (terra review round 5)', () => {
+    assert.equal(normalizePath('/API/Horde//Status/'), '/api/horde/status');
+    assert.equal(normalizePath('/api/%68orde%2Fstatus'), '/api/horde/status');
+    for (const bad of ['/api/horde/%2568', '/api/%zz', '/api/./horde', '/api/x/../horde', '/api/horde/%2e%2e/sd', '/api/%2E/horde']) assert.equal(normalizePath(bad), null, bad);
+    const decide = (pathname, body = JSON.stringify({})) => guardDecision({ pathname, body, contentType: 'application/json' }, { fixtureOrigin: FIXTURE });
+    for (const route of ['/api/HORDE/status', '/api/Horde/Status', '/api/%68orde/status', '/api/horde%2Fstatus', '/api//horde/status', '/api/horde//status', '/api/horde/status/', '/api/horde', '/API/OPENAI/', '/api/content/importURL'])
+        assert.deepEqual(decide(route), { allow: false, reason: 'a host-chosen external endpoint' }, route);
+    for (const route of ['/api/./horde/status', '/api/x/../horde/status', '/api/%2568orde/status'])
+        assert.deepEqual(decide(route), { allow: false, reason: 'a path that does not normalize' }, route);
+    const tampered = JSON.stringify({ url: 'http://127.0.0.1:8188' }), fixture = JSON.stringify({ url: FIXTURE, prompt: '{}' });
+    for (const route of ['/api/SD/Comfy/Generate', '/api/sd/comfy/%67enerate', '/api/sd%2Fcomfy%2Fgenerate', '/api//sd/comfy/generate', '/api/sd/comfy//generate', '/api/sd/comfy/generate/']) {
+        assert.equal(decide(route, tampered).allow, false, route + ' with the owner\'s port');
+        assert.equal(decide(route, fixture).allow, true, route + ' with the fixture');
+    }
+    for (const route of ['/api/sd/comfy/./generate', '/api/sd/x/../comfy/generate']) assert.equal(decide(route, fixture).allow, false, route);
+    assert.equal(decide('/API/SD/COMFYRUNPOD/generate', fixture).allow, false, 'another image source in upper case');
+    assert.equal(decide('/API/Backends/Chat-Completions/Generate', JSON.stringify({ chat_completion_source: 'openai' })).allow, false, 'the text rule in mixed case');
+    assert.equal(decide('/API/settings/save', JSON.stringify({ api_server: 'http://127.0.0.1:5000' })).allow, true, 'storing settings in any case');
+    assert.equal(decide('/api/openaix/x').allow, true, 'segment-aware: a different first segment is not the openai router');
 });
 
 test('pngText reads tEXt, zTXt and iTXt chunks and refuses non-PNG bytes', () => {

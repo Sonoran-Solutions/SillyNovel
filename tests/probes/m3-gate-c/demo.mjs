@@ -107,17 +107,36 @@ const TEXT_ROUTE = '/api/backends/chat-completions/';
 // None is needed by a demonstration, so all are refused, whatever their body says.
 export const HOST_CHOSEN = Object.freeze(['/api/backends/text-completions/', '/api/backends/kobold/', '/api/openai/', '/api/google/', '/api/anthropic/', '/api/novelai/', '/api/horde/',
     '/api/translate/', '/api/extra/', '/api/search/', '/api/openrouter/', '/api/nanogpt/', '/api/speech/', '/api/azure/', '/api/volcengine/', '/api/minimax/', '/api/vector/',
-    '/api/tokenizers/remote/', '/api/assets/download', '/api/content/importURL', '/api/content/importUUID',
+    '/api/tokenizers/remote/', '/api/assets/download', '/api/content/importurl', '/api/content/importuuid',
     '/api/extensions/install', '/api/extensions/update', '/api/extensions/branches', '/api/extensions/switch', '/api/extensions/version']);
 export const HOST_CHOSEN_REASON = 'a host-chosen external endpoint';
 const originOf = value => { try { const u = new URL(value); return /^https?:$/.test(u.protocol) ? u.origin : null; } catch { return null; } };
-export function guardDecision({ pathname, body, contentType = '' }, { fixtureOrigin, textOrigin = TEXT_ORIGIN }) {
-    if (!pathname.startsWith('/api/')) return { allow: true };
+/**
+ * The one form every guard rule matches. The pinned host's Express 4.22.1 sets neither `case sensitive routing` nor
+ * `strict routing`, so it treats `/api/HORDE/status`, `/api/horde/status/` and (below a mount) `/api/horde//status` as the
+ * same route. Lower case, one percent-decode, duplicate slashes collapsed, a trailing slash stripped. Returns null, to be
+ * refused, when decoding fails, a `%` survives one decode, or a `.` or `..` segment appears.
+ */
+export function normalizePath(pathname) {
+    let path;
+    try { path = decodeURIComponent(String(pathname)); } catch { return null; }
+    if (path.includes('%')) return null;
+    path = path.toLowerCase().replace(/\/{2,}/g, '/');
+    if (path.length > 1) path = path.replace(/\/$/, '');
+    return path.split('/').some(part => part === '.' || part === '..') ? null : path;
+}
+// Segment-aware: `/api/openai/` covers `/api/openai` and everything below it, never `/api/openaix`.
+const under = (path, prefix) => { const base = prefix.replace(/\/$/, ''); return path === base || path.startsWith(base + '/'); };
+
+export function guardDecision({ pathname: raw, body, contentType = '' }, { fixtureOrigin, textOrigin = TEXT_ORIGIN }) {
+    const pathname = normalizePath(raw);
+    if (pathname === null) return { allow: false, reason: 'a path that does not normalize' };
+    if (!under(pathname, '/api')) return { allow: true };
     // A JSON array (the tokenizer's message list) has no top-level keys, so it carries no backend address.
     const json = (() => { if (body == null || body === '') return {}; try { const v = JSON.parse(body); return v && typeof v === 'object' ? v : undefined; } catch { return undefined; } })();
     const parsed = json && !Array.isArray(json) ? json : json && {};
     const addresses = Object.entries(parsed ?? {}).filter(([key, value]) => URL_KEY.test(key) && value !== '' && value != null).flatMap(([key, value]) => (Array.isArray(value) ? value : [value]).map(item => [key, item]));
-    if (pathname.startsWith('/api/sd/')) {
+    if (under(pathname, '/api/sd')) {
         const [, , , source, route, extra] = pathname.split('/');
         if (source !== 'comfy' || extra !== undefined || !(COMFY_BACKEND.has(route) || COMFY_LOCAL.has(route))) return { allow: false, reason: 'image route other than the fixture ComfyUI' };
         if (json === undefined || Array.isArray(json)) return { allow: false, reason: 'unparseable body' };
@@ -125,9 +144,9 @@ export function guardDecision({ pathname, body, contentType = '' }, { fixtureOri
         if (COMFY_LOCAL.has(route)) return addresses.every(([, item]) => originOf(item) === fixtureOrigin) ? { allow: true } : { allow: false, reason: 'backend address on a local route is not the fixture' };
         return typeof parsed.url === 'string' && originOf(parsed.url) === fixtureOrigin ? { allow: true } : { allow: false, reason: 'ComfyUI URL is not the fixture' };
     }
-    if (STORE_ONLY.some(p => pathname.startsWith(p))) return { allow: true };
-    if (HOST_CHOSEN.some(p => pathname.startsWith(p))) return { allow: false, reason: HOST_CHOSEN_REASON };
-    if (pathname.startsWith(TEXT_ROUTE)) {
+    if (STORE_ONLY.some(p => under(pathname, p))) return { allow: true };
+    if (HOST_CHOSEN.some(p => under(pathname, p))) return { allow: false, reason: HOST_CHOSEN_REASON };
+    if (under(pathname, TEXT_ROUTE)) {
         // The host chooses the provider from chat_completion_source, so the source must be the seeded `custom` at the text fixture.
         if (json === undefined || Array.isArray(json)) return { allow: false, reason: 'unparseable body' };
         if (parsed.chat_completion_source !== 'custom') return { allow: false, reason: 'text source other than the seeded custom source' };
@@ -174,7 +193,8 @@ async function main() {
     const savedSd = async () => JSON.parse(await readFile(join(h.data, 'default-user/settings.json'))).extension_settings?.sd;
     const iso = ms => new Date(ms).toISOString();
     async function installGuard(context) {
-        await context.route(url => url.origin === h.origin && url.pathname.startsWith('/api/'), async route => {
+        // Every request to the host goes through the guard, which normalizes the path before any rule (any case or encoding of /api).
+        await context.route(url => url.origin === h.origin, async route => {
             const request = route.request(), { pathname } = new URL(request.url());
             let body; try { body = request.postData(); } catch { body = undefined; }
             const decision = body === undefined ? { allow: !pathname.startsWith('/api/sd/'), reason: 'unreadable body' } : guardDecision({ pathname, body, contentType: request.headers()['content-type'] }, { fixtureOrigin });
