@@ -2615,6 +2615,21 @@ test('M3.3 terra review 1: a takeover while this page\'s Import upload is held, 
  open();x.state.uploadGate=null;
  await importRefused(page,x);
 });
+test('M3.3 terra review 1: an import whose acknowledgement is lost applies nothing and keeps the candidate; Import again rereads the row as written and applies',async t=>{
+ const x=await imageRoute(t),{page}=x;await x.ready();
+ await control(page,'Submit').click();await waitStatus(page,/^Candidate, not imported/);
+ x.ledger.lose=(method,rest,body)=>method==='POST'&&/^jobs\/[^/]+$/.test(rest)&&body?.state==='imported';
+ const importButton=button(page,'Import and apply background to Harbor project');
+ await importButton.click();
+ await waitStatus(page,/^The image ledger did not acknowledge the import, so nothing was applied; the candidate is kept\. Import again once the ledger answers\.$/);
+ assert.equal(states(x).join(),'imported','the plugin committed it; the page never heard');
+ assert.doesNotMatch(await page.locator('.sillynovel-selected-art').innerText(),/Generated harbor/,'nothing applied without the acknowledgement');
+ assert.equal(await page.locator('.sillynovel-image-workflow__preview').isVisible(),true,'the candidate is kept');
+ assert.equal(await page.getByLabel('Background',{exact:true}).locator('option',{hasText:'Generated harbor'}).count(),0,'the install is undone');
+ await importButton.click();await waitStatus(page,/^Imported and applied as the background/);
+ assert.match(await page.locator('.sillynovel-selected-art').innerText(),/Generated harbor/);
+ assert.deepEqual(x.ledger.jobs().map(j=>[j.state,j.asset]),[['imported',x.uploaded]]);
+});
 for(const kind of ['candidate','reconciled'])test('M3.3 terra review 2: a '+kind+' row left by a reload is listed while this page holds the lease; Discard records it discarded and cleanup then removes it',async t=>{
  const x=await imageRoute(t),{page,field}=x;await x.ready();
  if(kind==='candidate'){await control(page,'Submit').click();await waitStatus(page,/^Candidate, not imported/);}

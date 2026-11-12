@@ -190,7 +190,7 @@ export async function createProjectScene(project,client,actions,changed,isCurren
                 const prior=library.findIndex(a=>a.assetId===entry.assetId && a.kind===entry.kind && a.actorId===entry.actorId);
                 if(prior<0 && library.length>=100)throw Error('Maximum 100 library entries.');
                 const shared=media.get(kind==='background'?result.assetId:key+':'+result.assetId),sharedLabel=shared?.label;
-                const ref=await install(result.assetId,kind,kind==='background'?undefined:key,displayLabel);
+                const before=catalogRevision,ref=await install(result.assetId,kind,kind==='background'?undefined:key,displayLabel);
                 if(!current())return;
                 const allowed=still()&&await still(result.assetId);
                 if(!current())return;
@@ -198,7 +198,10 @@ export async function createProjectScene(project,client,actions,changed,isCurren
                 if(!allowed||!still()){
                     if(shared){shared.label=sharedLabel;return;}
                     const item=media.get(ref);if(item?.url)URL.revokeObjectURL(item.url);media.delete(ref);assets.splice(assets.findIndex(a=>a.id===ref),1);
-                    catalogRevision++;refresh();return;
+                    // When only this install moved the catalog, the scene (not refreshed since) is exactly as before once its revision is restored,
+                    // so a candidate kept for a retry stays current (M3.3 terra review); otherwise advance and reconcile as before.
+                    if(catalogRevision===before+1)catalogRevision=before;else{catalogRevision++;refresh();}
+                    return;
                 }
                 if(prior<0)library.push(entry);else library[prior]=entry;
                 refresh();apply({type:kind==='background'?'setBackground':'setOutfit',assetId:ref,...(kind==='background'?{}:{characterKey:key})});notice='Imported · unsaved project arrangement.'+clearOverlay();edit++;
