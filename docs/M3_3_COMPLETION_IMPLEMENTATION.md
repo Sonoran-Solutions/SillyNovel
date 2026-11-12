@@ -280,7 +280,7 @@ The owner's 1.18.0 install and real ComfyUI; two real tabs reserving at the same
 | [`docs/GATE_C_RECORD_TEMPLATE.md`](GATE_C_RECORD_TEMPLATE.md) | The Gate C record: the human gate record of TESTING section 6; a field for the host the owner uses, any deviation, and the database backup; the synthetic hard gates; one block per demonstration on the synthetic fixture; the real session's lines (each shown, NOT_RUN or NOT_TESTED); the read-only capture's lines; owner verdict NOT_RUN / PASS / REVISE / STOP. Counts, hashes and the owner's words only. |
 | `tests/probes/m3-gate-c/demo.mjs` | The seven demonstrations on the fake ComfyUI and the disposable pinned 1.19.0 host. `--proof-loopback` (headless, automated, asserted; the coordinator's) or `--owner` (a headed browser of its own on the disposable host, Enter between steps; records what it observes against the expected changes and asserts nothing). Writes `observations.json` labelled SYNTHETIC. Includes the 8188 guard below. |
 | `tests/probes/m3-gate-c/capture.mjs` | A read-only capture for the owner's real session. It refuses without `--owner-accepts-read-only-capture` and has no network code. It reads only new PNGs in the host's `user/images` folder, the review texts the owner copied, and the recovery tool's `inspect` JSON. A review or ledger file is refused if its real path is `settings.json` or `secrets.json`, or if any directory above it holds either file (a SillyTavern user data root), directly or through a symlink; each is size-capped. It reports each file's name, size, SHA-256 and PNG signature, and checks ComfyUI's `prompt` metadata (the graph the backend actually ran, stored unchanged by the host) field by field against the review. It cross-checks ledger rows against files. Its output holds no prompt or review text and is never overwritten. It must lie outside the repository and the images folder, checked on both the path as given and the real path. |
-| `tests/probes/m3-gate-c/gate-c.test.mjs` | 13 Node tests (10, plus 3 from the terra review): argument refusals for both scripts, the demonstration table, the guard on ComfyUI and other backend-address routes, PNG text chunks (`tEXt`, `zTXt`, `iTXt`), review parsing and graph comparison, the ledger cross-check, a capture end to end with no text in its output, and capture's imports (no network module, no settings read). |
+| `tests/probes/m3-gate-c/gate-c.test.mjs` | 15 Node tests (10, plus 3 from the terra review and 2 from its second round): argument refusals for both scripts, the demonstration table, the guard on ComfyUI and other backend-address routes, PNG text chunks (`tEXt`, `zTXt`, `iTXt`), review parsing and graph comparison, the ledger cross-check, a capture end to end with no text in its output, and capture's imports (no network module, no settings read). |
 | `tests/probes/m3-gate-c/README.md` | Commands, the guard and its limit, registration. |
 | `docs/evidence/m3-3-d/proof/`, `docs/evidence/m3-3-d/failed-50e9b57/` | The loopback proof's bounded output (`observations.json`, `capture.json`, `ledger-inspect.json` with the review text masked by the tool, the console log, `SHA256SUMS`) and the retained failed first run. Synthetic only. |
 
@@ -333,7 +333,7 @@ TMPDIR=<scratch> SN_PLAYWRIGHT_MODULE=<playwright>/index.mjs timeout --kill-afte
 
 | Check | Result |
 | --- | --- |
-| `gate-c.test.mjs` | 13/13 on the final head (10/10 before the terra review) |
+| `gate-c.test.mjs` | 15/15 on the final head (13/13 after round 1, 10/10 before the terra review) |
 | `check-discovery.py` | PASS, 18/6/1 (unchanged) |
 | `validate.py docs/evidence/m3-3-c/campaign` on this head | PASS: 152 frozen inputs; Node 521, storage 283, browser 157, eight native campaigns; 119 artifact hashes. Reused evidence of `5518a51`, not a fresh run |
 | Runtime diff from `5518a51` | Empty |
@@ -356,8 +356,8 @@ Proposals, not owner rulings; each is reversible.
 7. **Canonical files on the real install rest on the owner's report.** The agent does not hash the owner's chats or cards.
 8. **A ROADMAP entry is added**, as M2.4 PR D did. M3.3 PRs A–C did not add one.
 9. **PR 90 (the M3.2 real-backend run) is left untouched.** The real new-background demonstration overlaps it; the owner decides whether the run stays separate, is superseded by Gate C, or comes first.
-10. **A file matches a review only if every field the review states and the six-node workflow carries matches** (positive, negative, steps, CFG, sampler, scheduler, denoise, size, model, and the seed when fixed). The only exceptions are a random seed (not compared), VAE and clip skip (not in that workflow, reported "not in graph"), and a field the review renders as `null`. Every node must be on the allowlist, and every text input must be the positive or negative text. A graph missing a node the workflow carries is therefore unmatched.
-11. **`--only` refuses a selection that leaves out a prerequisite.** `cache-hit` needs `new-background` in the same run. The other demonstrations stand alone in owner mode, and the proof always runs all seven.
+10. **A file matches a review only if its graph is wired as the six-node workflow and every field the review states and that workflow carries matches** (positive, negative, steps, CFG, sampler, scheduler, denoise, size, model, and the seed when fixed). The only exceptions are a random seed (not compared), VAE and clip skip (not in that workflow, reported "not in graph"), and a field the review renders as `null`. Every node must be on the allowlist, and every text input must be the positive or negative text. A graph missing a node the workflow carries is therefore unmatched.
+11. **`--only` refuses a selection that leaves out a prerequisite.** `cache-hit` needs `new-background` in the same run. The other demonstrations stand alone in owner mode; each begins by telling the owner to turn the session on if it is off. The proof always runs all seven.
 12. **Capture inputs follow one rule.** A `--review` or `--ledger` file is refused if its real path is named `settings.json` or `secrets.json`, or if any directory above it holds either file (a SillyTavern user data root such as `data/<user>/`). Reviews are capped at 1 MiB and the ledger JSON at 16 MiB.
 
 ### Senior review
@@ -369,7 +369,15 @@ A Codex terra senior review of `5fe4eab` returned CHANGES REQUIRED with four fin
 3. **Should-fix: `--review` and `--ledger` could read any path,** including `settings.json` or `secrets.json`, directly or through a symlink. Now choice 12's rule applies, with size caps. Tests: direct, symlinked, data-root and oversize refusals.
 4. **Nit: `--only` could start a dependent demonstration without its prerequisite.** Now refused (choice 11).
 
-The runtime is still untouched. The proof was rerun once on the final code head, `d0cfca1` (PASS, above).
+The runtime is still untouched. The proof was rerun once on `d0cfca1` (PASS).
+
+**Terra review, round 2** (of `45a0065`) confirmed those four fixes and raised three more, each confirmed reachable and fixed with regressions:
+
+1. **Should-fix: proof ownership was checked on the lexical images path.** An `sn-*` root could hold a symlinked `user/images` leading to the owner's folder. Now the images path is resolved with `realpath` and must lie inside the resolved owned root. In either mode, the real path must itself be a `user/images` folder, and the walk skips symlinked files and folders and opens each file with `O_NOFOLLOW` after checking its real path. Tests: a symlinked `images`, a symlinked `user`, an `images` link to another folder, and a symlinked file and folder inside.
+2. **Should-fix: matching did not check the wiring.** Swapped conditioning still matched. Now `compareGraph` follows the sampler's links and requires the six-node wiring: model from the checkpoint, latent from the empty latent, positive and negative from two distinct text encodes reading the checkpoint's CLIP, decode from the sampler and the checkpoint's VAE, save from the decode. Values are read through those links. Tests: swapped conditioning, one encode on both inputs, six single rewired links, and a third text encode.
+3. **Nit: a standalone `--only` demonstration started with the session off.** Every demonstration now opens with a line telling the owner to turn the session on (choice 11).
+
+**Sweep of `capture.mjs` for the same two classes**, fixed and named here. A ledger `hostPath` with a `..` or empty segment could steer the existence check outside the images folder; now such a row counts as missing, and existence is checked without following links below the real images folder. Pairing a ledger row with a file was by name only; now a row that recorded the result's SHA-256 must hash-match its file (`rowsWhoseHashDiffers`), and the proof requires at least one such check with none differing. Tests: a traversal path and a linked file in the ledger; same name, other bytes. The proof was then rerun once on the final code head (below).
 
 ### NOT_RUN and NOT_TESTED
 

@@ -23,7 +23,7 @@ export const OWNER_PORTS = Object.freeze([8000, 8188]);
 // Expected changes per demonstration, counted from the fixture's /prompt log, the ledger and the host's image folder.
 export const DEMOS = Object.freeze([
     { id: 'new-background', title: 'New background', fixture: [{ hold: true }], expect: { prompts: 1, rows: ['imported'], filesNet: 1, replies: 1 },
-        owner: [{ say: 'Turn on Image session on this host if it is off, then press Submit. While it says Generating, send one chat message and watch the reply arrive. Press Enter here to let the fixture finish.', then: 'release' },
+        owner: [{ say: 'Press Submit. While it says Generating, send one chat message and watch the reply arrive. Press Enter here to let the fixture finish.', then: 'release' },
             { say: 'Press Import and apply background, then Save project. Press Enter.' }] },
     { id: 'cache-hit', title: 'Cache hit', needs: ['new-background'], fixture: [], expect: { prompts: 0, rows: [], filesNet: 0, replies: 0 },
         owner: [{ say: 'Pick Forest in Background and press Apply background. Keep the same prompt and press Submit: it should offer Use the previous result. Press it (nothing is sent or counted). Press Enter.' }] },
@@ -42,6 +42,11 @@ export const DEMOS = Object.freeze([
     { id: 'usage-limit', title: 'Configured usage limit', fixture: [], fresh: true, expect: { prompts: 5, rows: ['candidate|discarded', 'candidate|discarded', 'candidate|discarded', 'candidate|discarded', 'candidate|discarded'], filesNet: 5, replies: 0 },
         owner: [{ say: 'Press Submit five times, waiting for each candidate. The sixth Submit is disabled. Reload, reopen, turn the session on and Take over: it still says 5 of 5. Press Enter.' }] },
 ]);
+
+// Every demonstration starts with the session on, whether it runs alone (--only) or after another.
+export const ownerPreamble = demo => demo.fresh
+    ? 'Start a fresh session: if Image session on this host is on, turn it off; then turn it on.'
+    : 'If Image session on this host is off, turn it on (press Take over if another tab or page holds it).';
 
 export function parseDemoArgs(argv) {
     const flags = [], rest = [];
@@ -447,7 +452,7 @@ async function main() {
             try {
                 if (proof) await steps[demo.id](note);
                 else {
-                    console.log('\n== ' + demo.title + ' (SYNTHETIC) ==' + (demo.fresh ? '\nStart a fresh session: turn Image session on this host off and on.' : ''));
+                    console.log('\n== ' + demo.title + ' (SYNTHETIC) ==\n' + ownerPreamble(demo));
                     for (const phase of demo.owner) { await ask.question(phase.say + ' '); await checkSaved(); if (phase.then === 'release') await comfy('/control', { release: true }); }
                 }
             } catch (e) { error = e; if ((await comfy('/control', {})).held) await comfy('/control', { release: true }); }
@@ -512,7 +517,7 @@ async function main() {
                     textFree: !reviews.some(t => JSON.stringify(c).includes(parseReviewPositive(t))) };
                 const l = c.ledger;
                 assert.ok(c.files.length === net && record.capture.signatures && l.ledgerRows === record.gates.ledgerRows && l.filesWithoutRow === 0 && l.filesWithSeveralRows === 0
-                    && l.rowsWhoseFileIsMissing === 0 && l.rowsDeletedButPresent === 0 && l.rowsDeleted === 1 && record.capture.textFree, 'capture: ' + JSON.stringify(record.capture));
+                    && l.rowsWhoseFileIsMissing === 0 && l.rowsDeletedButPresent === 0 && l.rowsDeleted === 1 && l.rowsHashChecked > 0 && l.rowsWhoseHashDiffers === 0 && record.capture.textFree, 'capture: ' + JSON.stringify(record.capture));
                 console.log('PASS capture: ' + JSON.stringify(record.capture));
             } catch (error) { record.result = 'FAIL'; record.captureError = String(error.stack ?? error).slice(0, 4000); console.error(error); }
         }

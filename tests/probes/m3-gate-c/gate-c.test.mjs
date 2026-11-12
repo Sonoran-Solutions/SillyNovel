@@ -5,7 +5,7 @@ import { mkdtempSync, mkdirSync, readFileSync, rmSync, symlinkSync, utimesSync, 
 import { join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import { crc32, deflateSync } from 'node:zlib';
-import { DEMOS, guardDecision, parseDemoArgs } from './demo.mjs';
+import { DEMOS, guardDecision, ownerPreamble, parseDemoArgs } from './demo.mjs';
 import { capture, compareGraph, crossCheck, matched, parseCaptureArgs, parseReview, pngText } from './capture.mjs';
 import { reviewText } from '../../../src/image-request.mjs';
 
@@ -16,10 +16,11 @@ const tEXt = (key, text) => chunk('tEXt', Buffer.from(key + '\0' + text, 'latin1
 const REVIEW = reviewText({ destination: { url: 'http://127.0.0.1:8188', local: true }, workflow: { name: 'Default_Comfy_Workflow.json', sha256: 'a'.repeat(64), nodes: ['KSampler'] },
     settings: { model: 'm.safetensors', sampler: 'euler', scheduler: 'normal', vae: 'v.safetensors', steps: 20, scale: 7, clip_skip: 1, denoising_strength: 1, width: 512, height: 512 },
     seedPolicy: 'fixed', seed: 1234, texts: { positive: 'PREFIX, a quiet harbor at dusk,', negative: 'NEG, PREFIX-NEG' } });
-const GRAPH = { 3: { class_type: 'KSampler', inputs: { seed: 1234, steps: 20, cfg: 7, sampler_name: 'euler', scheduler: 'normal', denoise: 1, model: ['4', 0] } },
+// The host's shipped Default_Comfy_Workflow.json at the pin, substituted: the six-node wiring.
+const GRAPH = { 3: { class_type: 'KSampler', inputs: { seed: 1234, steps: 20, cfg: 7, sampler_name: 'euler', scheduler: 'normal', denoise: 1, model: ['4', 0], positive: ['6', 0], negative: ['7', 0], latent_image: ['5', 0] } },
     4: { class_type: 'CheckpointLoaderSimple', inputs: { ckpt_name: 'm.safetensors' } }, 5: { class_type: 'EmptyLatentImage', inputs: { width: 512, height: 512, batch_size: 1 } },
-    6: { class_type: 'CLIPTextEncode', inputs: { text: 'PREFIX, a quiet harbor at dusk,' } }, 7: { class_type: 'CLIPTextEncode', inputs: { text: 'NEG, PREFIX-NEG' } },
-    8: { class_type: 'VAEDecode', inputs: {} }, 9: { class_type: 'SaveImage', inputs: { filename_prefix: 'x' } } };
+    6: { class_type: 'CLIPTextEncode', inputs: { text: 'PREFIX, a quiet harbor at dusk,', clip: ['4', 1] } }, 7: { class_type: 'CLIPTextEncode', inputs: { text: 'NEG, PREFIX-NEG', clip: ['4', 1] } },
+    8: { class_type: 'VAEDecode', inputs: { samples: ['3', 0], vae: ['4', 2] } }, 9: { class_type: 'SaveImage', inputs: { filename_prefix: 'x', images: ['8', 0] } } };
 
 test('demo arguments: exactly one mode and one host root; --only only in owner mode, with known ids', () => {
     assert.throws(() => parseDemoArgs(['/h']), /exactly one of --owner or --proof-loopback/);
@@ -36,6 +37,7 @@ test('demo arguments: exactly one mode and one host root; --only only in owner m
 });
 
 test('the seven roadmap demonstrations, each with expectations and owner steps', () => {
+    for (const d of DEMOS) assert.match(ownerPreamble(d), /turn it on/, d.id + ' starts with the session on, alone or not (round 2, finding 3)');
     assert.deepEqual(DEMOS.map(d => d.id), ['new-background', 'cache-hit', 'rejected-candidate', 'policy-refusal', 'timeout', 'cancelled-or-stale', 'usage-limit']);
     for (const d of DEMOS) {
         assert.ok(d.owner.length > 0 && d.owner.every(p => typeof p.say === 'string'), d.id);
@@ -99,7 +101,7 @@ test('compareGraph: a matching graph matches every compared field; a changed val
     assert.deepEqual(Object.entries(ok.fields).filter(([, v]) => v !== 'match'), [['vae', 'not-in-graph'], ['clipSkip', 'not-in-graph']]);
     const changed = structuredClone(GRAPH); changed[3].inputs.steps = 21; changed[6].inputs.text = 'something else';
     const bad = compareGraph(changed, review);
-    assert.equal(bad.fields.steps, 'mismatch'); assert.equal(bad.fields.positive, 'mismatch'); assert.equal(bad.unexplainedTextInputs, 1);
+    assert.equal(bad.fields.steps, 'mismatch'); assert.equal(bad.fields.positive, 'mismatch'); assert.equal(matched(bad), false);
     const foreign = structuredClone(GRAPH); foreign[10] = { class_type: 'LoadImage', inputs: {} };
     assert.equal(compareGraph(foreign, review).nodeTypesAllowed, false);
     assert.equal(compareGraph(GRAPH, parseReview(REVIEW.replace('Seed: "fixed 1234"', 'Seed: "random each request"'))).fields.seed, 'random-not-compared');
@@ -119,11 +121,31 @@ test('matched: every field the review states and the six-node workflow carries m
     assert.equal(matched(latent), false);
 });
 
+test('matched is structural: swapped conditioning or one rewired link is unmatched (terra review round 2, finding 2)', () => {
+    const review = parseReview(REVIEW);
+    assert.equal(compareGraph(GRAPH, review).wiring, 'six-node');
+    const swapped = structuredClone(GRAPH); swapped[3].inputs.positive = ['7', 0]; swapped[3].inputs.negative = ['6', 0];
+    const s = compareGraph(swapped, review);
+    assert.equal(s.fields.positive, 'mismatch'); assert.equal(s.fields.negative, 'mismatch'); assert.equal(matched(s), false, 'both texts present, but on the wrong inputs');
+    const same = structuredClone(GRAPH); same[3].inputs.negative = ['6', 0];
+    assert.equal(matched(compareGraph(same, review)), false, 'one encode on both inputs');
+    for (const [node, key, value, why] of [[8, 'samples', ['5', 0], 'decode reads the latent, not the sampler'], [3, 'model', ['4', 1], 'wrong checkpoint slot'], [3, 'latent_image', ['3', 0], 'sampler fed by itself'],
+        [9, 'images', ['3', 0], 'save skips the decode'], [6, 'clip', ['4', 0], 'encode reads the model slot'], [8, 'vae', ['4', 1], 'decode reads the CLIP slot']]) {
+        const rewired = structuredClone(GRAPH); rewired[node].inputs[key] = value;
+        const c = compareGraph(rewired, review);
+        assert.notEqual(c.wiring, 'six-node', why); assert.equal(matched(c), false, why);
+    }
+    const extra = structuredClone(GRAPH); extra[10] = { class_type: 'CLIPTextEncode', inputs: { text: 'hidden', clip: ['4', 1] } };
+    const third = compareGraph(extra, review);
+    assert.equal(third.unexplainedTextInputs, 1); assert.equal(matched(third), false, 'a third text encode');
+});
+
 test('crossCheck: each new file belongs to exactly one ledger row, and retained files exist', () => {
-    const inspect = { ledger: [{ rows: [{ state: 'imported', hostPath: '/user/images/Gate%20C/a.png' }, { state: 'discarded', hostPath: '/user/images/Gate C/b.png', hostDeletedAt: 5 }, { state: 'failed', hostPath: null }] }] };
-    const clean = crossCheck(['Gate C/a.png'], inspect, name => name === 'Gate C/a.png');
-    assert.deepEqual(clean, { ledgerRows: 3, statesByCount: { imported: 1, discarded: 1, failed: 1 }, filesWithoutRow: 0, filesWithSeveralRows: 0, rowsWhoseFileIsMissing: 0, rowsDeletedButPresent: 0, rowsDeleted: 1 });
-    const dirty = crossCheck(['Gate C/a.png', 'Gate C/stray.png'], { ledger: [{ rows: [...inspect.ledger[0].rows, { state: 'stale', hostPath: '/user/images/Gate C/a.png' }] }] }, () => true);
+    const inspect = { ledger: [{ rows: [{ state: 'imported', hostPath: '/user/images/Gate%20C/a.png', resultSha256: 'a'.repeat(64) }, { state: 'discarded', hostPath: '/user/images/Gate C/b.png', hostDeletedAt: 5 }, { state: 'failed', hostPath: null }] }] };
+    const clean = crossCheck([{ name: 'Gate C/a.png', sha256: 'a'.repeat(64) }], inspect, name => name === 'Gate C/a.png');
+    assert.deepEqual(clean, { ledgerRows: 3, statesByCount: { imported: 1, discarded: 1, failed: 1 }, filesWithoutRow: 0, filesWithSeveralRows: 0, rowsWhoseFileIsMissing: 0, rowsDeletedButPresent: 0, rowsDeleted: 1, rowsHashChecked: 1, rowsWhoseHashDiffers: 0 });
+    assert.equal(crossCheck([{ name: 'Gate C/a.png', sha256: 'b'.repeat(64) }], inspect, () => true).rowsWhoseHashDiffers, 1, 'same name, other bytes');
+    const dirty = crossCheck([{ name: 'Gate C/a.png' }, { name: 'Gate C/stray.png' }], { ledger: [{ rows: [...inspect.ledger[0].rows, { state: 'stale', hostPath: '/user/images/Gate C/a.png' }] }] }, () => true);
     assert.equal(dirty.filesWithoutRow, 1); assert.equal(dirty.filesWithSeveralRows, 1); assert.equal(dirty.rowsDeletedButPresent, 1);
 });
 
@@ -141,6 +163,21 @@ test('capture arguments refuse by default, inside the repository, over an existi
         assert.throws(() => parseCaptureArgs(['--owner-accepts-read-only-capture', ...base, '--out', join(images, 'o.json')]), /outside the images folder/);
         assert.throws(() => parseCaptureArgs(['--owner-accepts-read-only-capture', '--images', images, '--since', 'soon', '--out', join(tmp, 'o.json')]), /must be a date/);
         assert.throws(() => parseCaptureArgs(['--proof-loopback', ...base, '--out', join(tmp, 'o.json')], { tmp: join(tmp, 'elsewhere') }), /owned sn-\* root/);
+        // Round 2, finding 1: a link inside an owned root that leads to another images folder is refused in proof mode.
+        const outside = mkdtempSync(join(tmpdir(), 'gate-c-outside-')), realImages = join(outside, 'data/default-user/user/images');
+        try {
+            mkdirSync(realImages, { recursive: true });
+            mkdirSync(join(tmp, 'linked-images/user'), { recursive: true });
+            symlinkSync(realImages, join(tmp, 'linked-images/user/images'));
+            assert.throws(() => parseCaptureArgs(['--proof-loopback', '--images', join(tmp, 'linked-images/user/images'), '--since', '2026-11-11', '--out', join(tmp, 'o1.json')]), /owned sn-\* root/, 'symlinked images');
+            symlinkSync(join(outside, 'data/default-user/user'), join(tmp, 'linked-user'));
+            mkdirSync(join(tmp, 'linked-user-parent'));
+            symlinkSync(join(outside, 'data/default-user/user'), join(tmp, 'linked-user-parent/user'));
+            assert.throws(() => parseCaptureArgs(['--proof-loopback', '--images', join(tmp, 'linked-user-parent/user/images'), '--since', '2026-11-11', '--out', join(tmp, 'o2.json')]), /owned sn-\* root/, 'symlinked user');
+            mkdirSync(join(tmp, 'renamed/user'), { recursive: true }); mkdirSync(join(tmp, 'renamed/elsewhere'));
+            symlinkSync(join(tmp, 'renamed/elsewhere'), join(tmp, 'renamed/user/images'));
+            assert.throws(() => parseCaptureArgs(['--owner-accepts-read-only-capture', '--images', join(tmp, 'renamed/user/images'), '--since', '2026-11-11', '--out', join(tmp, 'o3.json')]), /not a link to another folder/);
+        } finally { rmSync(outside, { recursive: true, force: true }); }
         assert.equal(parseCaptureArgs(['--proof-loopback', ...base, '--out', join(tmp, 'o.json')]).mode, 'loopback-proof');
     } finally { rmSync(tmp, { recursive: true, force: true }); }
 });
@@ -180,6 +217,22 @@ test('capture --review and --ledger: host settings, secrets and anything in a da
         assert.throws(() => args('--review', join(tmp, 'missing.txt')), /cannot be read/);
         assert.deepEqual(args('--review', join(tmp, 'review.txt')).reviews, [join(tmp, 'review.txt')]);
     } finally { rmSync(tmp, { recursive: true, force: true }); }
+});
+
+test('capture never follows a symlinked file or folder out of the images folder, and checks ledger paths below it (round 2)', () => {
+    const tmp = mkdtempSync(join(tmpdir(), 'sn-gate-c-test-')), images = join(tmp, 'data/default-user/user/images'), outside = mkdtempSync(join(tmpdir(), 'gate-c-outside-'));
+    try {
+        mkdirSync(join(images, 'Gate C'), { recursive: true });
+        writeFileSync(join(images, 'Gate C/real.png'), png());
+        writeFileSync(join(outside, 'private.png'), png(tEXt('prompt', '{"secret":1}')));
+        mkdirSync(join(outside, 'folder')); writeFileSync(join(outside, 'folder/inner.png'), png());
+        symlinkSync(join(outside, 'private.png'), join(images, 'Gate C/linked.png'));
+        symlinkSync(join(outside, 'folder'), join(images, 'linked-folder'));
+        writeFileSync(join(tmp, 'inspect.json'), JSON.stringify({ ledger: [{ rows: [{ state: 'imported', hostPath: '/user/images/Gate%20C/real.png' }, { state: 'discarded', hostPath: '/user/images/../../secrets.json' }, { state: 'discarded', hostPath: '/user/images/Gate%20C/linked.png' }] }] }));
+        const result = capture(parseCaptureArgs(['--proof-loopback', '--images', images, '--since', '2026-01-01T00:00:00Z', '--ledger', join(tmp, 'inspect.json'), '--out', join(tmp, 'o.json')]));
+        assert.deepEqual(result.files.map(f => f.name), ['Gate C/real.png'], 'linked file and linked folder skipped');
+        assert.equal(result.ledger.rowsWhoseFileIsMissing, 2, 'a traversal path and a link are not files below the folder');
+    } finally { rmSync(tmp, { recursive: true, force: true }); rmSync(outside, { recursive: true, force: true }); }
 });
 
 test('capture reads only new PNGs, compares the backend graph, and writes no prompt or review text', () => {
