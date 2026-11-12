@@ -4,6 +4,8 @@
 
 **PR B merged — 2026-11-09.** [#93](https://github.com/Sonoran-Solutions/SillyNovel/pull/93) merged as `786b58a` on the owner's word (“Merge, start C”).
 
+**PR C merged — 2026-11-11.** [#94](https://github.com/Sonoran-Solutions/SillyNovel/pull/94) merged as `3cd3056` (frozen runtime `5518a51`, record and evidence `8fdc37f`) on the owner's standing word for this PR (“if it passes merge”), after the Codex terra senior review's third round returned MERGE WITH NITS. Choice 12, the holder-only `imported` rule in the plugin, remains an implementation choice for owner review, not an owner ruling. PR D has not started. Gate C NOT_RUN.
+
 ## PR A — request-module changes and the host image-folder probe
 
 **Candidate, unmerged. Frozen `3827af7`** (the campaign ran on `7660a53`; see choice 8), based on main `f22a7e8` (the [owner rulings J1–J9](DECISIONS.md#owner-rulings-j1j9--m33-completion--2026-11-08) on the [M3.3 plan](M3_3_COMPLETION_PLAN.md)). Tracked by [DYL-215](https://linear.app/devils17/issue/DYL-215/sillynovel-m33-complete-the-first-image-route-for-gate-c-ledger-lease). No plugin, schema or adapter change. Because J8 checks locks before the layout, the reason sentence the existing UI shows for a lock change during a request changes, so this PR is a runtime change under H4 and carries the browser suite and a full campaign rather than Node evidence alone.
