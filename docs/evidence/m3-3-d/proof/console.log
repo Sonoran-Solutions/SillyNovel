@@ -1,4 +1,4 @@
-Owned evidence root /home/dq/.hermes/cache/scratch/sn-m3-gate-c-rsQkGj
+Owned evidence root /home/dq/.hermes/cache/scratch/sn-m3-gate-c-71xpeQ
 GUARD aborted POST /api/sd/comfy/workflows: backend address on a local route is not the fixture
 GUARD aborted POST /api/sd/comfy/ping: ComfyUI URL is not the fixture
 GUARD aborted POST /api/sd/comfy/generate: ComfyUI URL is not the fixture
@@ -16,8 +16,8 @@ REPLY served during the image job (1 text request)
 PASS cancelled-or-stale {"prompts":3,"rows":["stale","stale","abandoned"],"filesNet":2,"replies":1,"matchesExpected":true}
 PASS usage-limit {"prompts":5,"rows":["discarded","discarded","discarded","discarded","candidate"],"filesNet":5,"replies":null,"matchesExpected":true}
 GATES {"submitClicks":12,"fixturePrompts":12,"ledgerRows":12,"noDuplicateJobs":true,"noAutomaticGeneration":true,"unresolved":0,"canonicalFilesChanged":[],"earlierChatMessagesUnchanged":true,"imageSettingsUnchanged":true,"ledgerHoldsNoChatText":true}
-Capture /home/dq/.hermes/cache/scratch/sn-m3-gate-c-rsQkGj/capture.json: 9 files; backend graph absent,absent,absent,absent,absent,absent,absent,absent,absent; ledger {"ledgerRows":12,"statesByCount":{"imported":1,"discarded":5,"failed":1,"stale":3,"abandoned":1,"candidate":1},"filesWithoutRow":0,"filesWithSeveralRows":0,"rowsWhoseFileIsMissing":0,"rowsDeletedButPresent":0,"rowsDeleted":1}
-PASS capture: {"files":9,"expectedFiles":9,"signatures":true,"backendGraph":["absent"],"ledger":{"ledgerRows":12,"statesByCount":{"imported":1,"discarded":5,"failed":1,"stale":3,"abandoned":1,"candidate":1},"filesWithoutRow":0,"filesWithSeveralRows":0,"rowsWhoseFileIsMissing":0,"rowsDeletedButPresent":0,"rowsDeleted":1},"textFree":true}
+Capture /home/dq/.hermes/cache/scratch/sn-m3-gate-c-71xpeQ/capture.json: 9 files; backend graph absent,absent,absent,absent,absent,absent,absent,absent,absent; ledger {"ledgerRows":12,"statesByCount":{"imported":1,"discarded":5,"failed":1,"stale":3,"abandoned":1,"candidate":1},"filesWithoutRow":0,"filesWithSeveralRows":0,"rowsWhoseFileIsMissing":0,"rowsDeletedButPresent":0,"rowsDeleted":1,"rowsHashChecked":6,"rowsWhoseHashDiffers":0}
+PASS capture: {"files":9,"expectedFiles":9,"signatures":true,"backendGraph":["absent"],"ledger":{"ledgerRows":12,"statesByCount":{"imported":1,"discarded":5,"failed":1,"stale":3,"abandoned":1,"candidate":1},"filesWithoutRow":0,"filesWithSeveralRows":0,"rowsWhoseFileIsMissing":0,"rowsDeletedButPresent":0,"rowsDeleted":1,"rowsHashChecked":6,"rowsWhoseHashDiffers":0},"textFree":true}
 RESULT PASS
-Observations /home/dq/.hermes/cache/scratch/sn-m3-gate-c-rsQkGj/observations.json
+Observations /home/dq/.hermes/cache/scratch/sn-m3-gate-c-71xpeQ/observations.json
 exit 0

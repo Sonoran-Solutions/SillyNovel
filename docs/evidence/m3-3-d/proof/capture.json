@@ -1,82 +1,82 @@
 {
  "schemaVersion": 1,
  "mode": "loopback-proof",
- "since": "2026-11-12T06:13:35.540Z",
+ "since": "2026-11-12T06:22:55.542Z",
  "reviews": [
-  "8636be48f7a3dbb9186e2ae7482229058cf56a0d5e80c3426e850f45d14bce22",
-  "4f68a40eeea3c332d6bcc1ce9b337d449e53bd2a2cb042335c770ab6244f2fd1"
+  "6f9616fe077bb9d2f2522ce4342df1cd6e27d223945dc521c20704b9714b667f",
+  "bc4dfbacc05c222fff5cf3361e3ee4165a4d5279d8132bb1863890d395209c07"
  ],
  "files": [
   {
-   "name": "2026-11-11@23h13m38s428ms.png",
+   "name": "2026-11-11@23h22m58s230ms.png",
    "size": 6085,
    "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
    "pngSignature": true,
-   "mtime": "2026-11-12T06:13:38.430Z",
+   "mtime": "2026-11-12T06:22:58.234Z",
    "backendGraph": "absent"
   },
   {
-   "name": "2026-11-11@23h15m45s919ms.png",
+   "name": "2026-11-11@23h25m05s665ms.png",
    "size": 6085,
    "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
    "pngSignature": true,
-   "mtime": "2026-11-12T06:15:45.922Z",
+   "mtime": "2026-11-12T06:25:05.668Z",
    "backendGraph": "absent"
   },
   {
-   "name": "2026-11-11@23h15m48s140ms.png",
+   "name": "2026-11-11@23h25m07s869ms.png",
    "size": 6085,
    "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
    "pngSignature": true,
-   "mtime": "2026-11-12T06:15:48.145Z",
+   "mtime": "2026-11-12T06:25:07.873Z",
    "backendGraph": "absent"
   },
   {
-   "name": "2026-11-11@23h15m48s504ms.png",
+   "name": "2026-11-11@23h25m08s255ms.png",
    "size": 6085,
    "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
    "pngSignature": true,
-   "mtime": "2026-11-12T06:15:48.506Z",
+   "mtime": "2026-11-12T06:25:08.259Z",
    "backendGraph": "absent"
   },
   {
-   "name": "2026-11-11@23h17m50s436ms.png",
+   "name": "2026-11-11@23h27m10s215ms.png",
    "size": 6085,
    "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
    "pngSignature": true,
-   "mtime": "2026-11-12T06:17:50.440Z",
+   "mtime": "2026-11-12T06:27:10.218Z",
    "backendGraph": "absent"
   },
   {
-   "name": "2026-11-11@23h17m50s632ms.png",
+   "name": "2026-11-11@23h27m10s501ms.png",
    "size": 6085,
    "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
    "pngSignature": true,
-   "mtime": "2026-11-12T06:17:50.634Z",
+   "mtime": "2026-11-12T06:27:10.504Z",
    "backendGraph": "absent"
   },
   {
-   "name": "2026-11-11@23h17m50s935ms.png",
+   "name": "2026-11-11@23h27m10s672ms.png",
    "size": 6085,
    "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
    "pngSignature": true,
-   "mtime": "2026-11-12T06:17:50.938Z",
+   "mtime": "2026-11-12T06:27:10.676Z",
    "backendGraph": "absent"
   },
   {
-   "name": "2026-11-11@23h17m51s096ms.png",
+   "name": "2026-11-11@23h27m10s967ms.png",
    "size": 6085,
    "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
    "pngSignature": true,
-   "mtime": "2026-11-12T06:17:51.099Z",
+   "mtime": "2026-11-12T06:27:10.971Z",
    "backendGraph": "absent"
   },
   {
-   "name": "2026-11-11@23h17m51s290ms.png",
+   "name": "2026-11-11@23h27m11s137ms.png",
    "size": 6085,
    "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
    "pngSignature": true,
-   "mtime": "2026-11-12T06:17:51.293Z",
+   "mtime": "2026-11-12T06:27:11.140Z",
    "backendGraph": "absent"
   }
  ],
@@ -94,6 +94,8 @@
   "filesWithSeveralRows": 0,
   "rowsWhoseFileIsMissing": 0,
   "rowsDeletedButPresent": 0,
-  "rowsDeleted": 1
+  "rowsDeleted": 1,
+  "rowsHashChecked": 6,
+  "rowsWhoseHashDiffers": 0
  }
 }
