@@ -1,6 +1,6 @@
-Node version: v26.8.1. Running in undefined environment. Server directory: /home/dq/.hermes/cache/scratch/sn-portability-host-xYajt2/host
-Using config path: /home/dq/.hermes/cache/scratch/sn-portability-host-xYajt2/config.yaml
-Using data root: /home/dq/.hermes/cache/scratch/sn-portability-host-xYajt2/data
+Node version: v26.8.1. Running in undefined environment. Server directory: /home/dq/.hermes/cache/scratch/sn-portability-host-zS2hk0/host
+Using config path: /home/dq/.hermes/cache/scratch/sn-portability-host-zS2hk0/config.yaml
+Using data root: /home/dq/.hermes/cache/scratch/sn-portability-host-zS2hk0/data
 Preferring IPv4 for DNS resolution
 
 SillyTavern 1.19.0
@@ -8,17 +8,17 @@ Running 'HEAD' (7e8663cd9) - 9/14/2026, 10:55:46 AM MST
 
 
 Compiling frontend libraries...
-webpack 5.105.4 compiled [1m[32msuccessfully[39m[22m in 373 ms
+webpack 5.105.4 compiled [1m[32msuccessfully[39m[22m in 755 ms
 
-]2;SillyTavern WebServer\SillyTavern is listening on IPv4: 127.0.0.1:40093
-
-==================================================
-
-Go to: http://127.0.0.1:40093/ to open SillyTavern
+]2;SillyTavern WebServer\SillyTavern is listening on IPv4: 127.0.0.1:39427
 
 ==================================================
 
-Login successful: default-user from 127.0.0.1 at 11/10/2026, 10:31:48 PM
+Go to: http://127.0.0.1:39427/ to open SillyTavern
+
+==================================================
+
+Login successful: default-user from 127.0.0.1 at 11/11/2026, 10:12:46 PM
 Extensions available for default-user [
   { type: 'system', name: 'assets' },
   { type: 'system', name: 'attachments' },

@@ -5,8 +5,8 @@ export const longAnswer = '# The reading room\n\n' + shortAnswer + '\n\n```js\nc
 
 const server = createServer(async (req,res) => {
     const origin=req.headers.origin;
-    if (origin && origin !== 'http://127.0.0.1:36241') {res.writeHead(403).end();return;}
-    res.setHeader('Access-Control-Allow-Origin','http://127.0.0.1:36241');
+    if (origin && origin !== 'http://127.0.0.1:36167') {res.writeHead(403).end();return;}
+    res.setHeader('Access-Control-Allow-Origin','http://127.0.0.1:36167');
     res.setHeader('Access-Control-Allow-Headers','Content-Type, Authorization');
     if (req.method==='OPTIONS') {res.writeHead(204).end();return;}
     if (req.url==='/v1/models') {res.writeHead(200,{'content-type':'application/json'}).end(JSON.stringify({data:[{id:'sn-reader-local',object:'model'}]}));return;}

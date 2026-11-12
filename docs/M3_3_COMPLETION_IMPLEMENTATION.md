@@ -144,7 +144,7 @@ The owner reviews this PR. PR C (the adapter and UI on the ledger) starts only a
 
 ## PR C — the adapter and the Generate on this host UI on the image ledger
 
-**Candidate, unmerged. Frozen `2ff328d`**, based on main `786b58a` (PR B merged). Tracked by [DYL-215](https://linear.app/devils17/issue/DYL-215/sillynovel-m33-complete-the-first-image-route-for-gate-c-ledger-lease). A renderer, adapter and client change under H4; no schema change. The terra review adds one plugin rule (choice 12), an implementation choice proposed for owner review, not an owner ruling.
+**Candidate, unmerged. Frozen `5518a51`**, based on main `786b58a` (PR B merged). Tracked by [DYL-215](https://linear.app/devils17/issue/DYL-215/sillynovel-m33-complete-the-first-image-route-for-gate-c-ledger-lease). A renderer, adapter and client change under H4; no schema change. The terra review adds one plugin rule (choice 12), an implementation choice proposed for owner review, not an owner ruling.
 
 ### What it adds
 
@@ -216,7 +216,9 @@ Every new browser test and both new plugin tests fail on `ab6f163` (its `src/` a
 2. **Nit: the known edge claimed the cache offers nothing**; qualified in choice 10 (identical bytes already catalogued can be a hit, on the same image).
 3. **Nit: a failed read of the rows a reload left was silent and never retried.** Now it shows the ledger problem and is read again after the next successful heartbeat (no new timer). Test: *a failed read of the rows a reload left names the ledger problem and is read again after the next heartbeat* (fails on `50f8431`). Taking over now renders the session at once, before the two recovery reads, which the existing takeover test's count check relied on.
 
-### Coordinator's commands and results (frozen `2ff328d`)
+**Terra review, third round** (of `5518a51`, read-only): **MERGE WITH NITS**. Every earlier finding traced closed: the holder check gates both the first import and the lost-reply retry; stranded candidate and reconciled rows can be discarded and then cleaned up; the cache sentence is qualified; a failed stranded read is reported and retried. The reviewer found no new defect in the outcome-queue ordering, the `done` hand-off, the identity and revision checks across the new await in `install`, the unchanged manual import, lifecycle, row rendering or the docs, and called the holder-only `imported` rule a reasonable proposed change, identified as such for owner review. One nit, recorded here and not fixed: after a failed read of the rows a reload left succeeds on the heartbeat's retry, the rows show but the ledger-problem status line stays until another status replaces it (`src/stage-view.mjs` ~369). The reviewer's permitted Node command passed 148/148; the browser and storage suites are the coordinator's.
+
+### Coordinator's commands and results (frozen `5518a51`)
 
 The coordinator reran every check on the frozen candidate from a clean worktree, under the orchestrator's supervisor (deadline 3400 s, bounded output), holding the host-wide heavy-job lock, on a disposable SillyTavern 1.19.0 host pinned at `7e8663c`, Node v26.8.1, Chromium 151.0.7922.34.
 
@@ -229,13 +231,13 @@ python3 tests/probes/dyl60/check-discovery.py
 | Suite | Result |
 | --- | --- |
 | Node (18 files) | 521/521 (503 before PR C plus 18) |
-| Storage | 281/281 (plugin unchanged) |
-| Browser actual-entry | 150/150 (126 before PR C plus 24) |
+| Storage | 283/283 (281 before PR C plus the two terra-review plugin tests) |
+| Browser actual-entry | 157/157 (126 before PR C plus 31) |
 | Native campaigns | stage-library-migration 25, expressions 16, groups 22, recovery 17, cleanup 21, native-integrity-branches 18, director 60, image-route 14 checkpoints |
 | `validate.py` | PASS over 152 frozen inputs on the candidate itself |
 | Discovery | PASS, 18/6/1 |
 
-Package: [`docs/evidence/m3-3-c/campaign/`](evidence/m3-3-c/campaign/) with `run.json` beside it. The campaign took 1652 s; the supervisor reaped nothing at exit. Full campaigns also passed on `e06e89f`, `df549d9`, `89327f0` and `bc49d09` during the review rounds; only the frozen candidate's run is committed.
+Package: [`docs/evidence/m3-3-c/campaign/`](evidence/m3-3-c/campaign/) with `run.json` beside it. The campaign took 1903 s; the supervisor reaped nothing at exit. It ran from a clean worktree of `5518a51` in which only the previous run's `docs/evidence/m3-3-c/campaign/` was staged as removed, so the probes wrote into an empty directory. Full campaigns also passed on `e06e89f`, `df549d9`, `89327f0`, `bc49d09` and `2ff328d` (1652 s; that run was committed before the terra review and is replaced here with `git rm`); only the frozen candidate's run is committed.
 
 ### Worker evidence (the terra-review commits; runtime `960132f`, after the second terra round; record on the next commit)
 
@@ -246,7 +248,7 @@ Run by the fix worker on the disposable SillyTavern 1.19.0 host pinned at `7e866
 | Node (18 files listed by `run.py --list-tests`) | 521/521 |
 | Storage (`npm test`) | 283/283 on `7de5d7d` (281 plus the two terra-review plugin tests); not rerun since, as no later commit changes a plugin file |
 | Browser actual-entry | 157/157 (150 on `2ff328d` plus 5 terra-review tests and 2 second-round tests; the lost-acknowledgement test asserts the retry's refused write and reread). The four required regressions, the lost-acknowledgement test and both plugin tests fail on `ab6f163`'s `src/` and `image-ledger.mjs`; the two second-round tests fail on `50f8431`'s `src/` |
-| Native image-route campaign | run once on the commit holding this record, after it was written; the result is in the handoff |
+| Native image-route campaign | PASS on `5518a51` (checkpoints A–E and G–O; F skipped as in every run), run once after this record was written |
 | Discovery | PASS, 18/6/1 |
 
 **The coordinator's campaign failure at image-route** (the first campaign, on `45a7d42`, after checkpoint B; that failed run's evidence is kept outside the repository and not committed) was a test-harness race, not a host exit: `host.log` ends with the host's own shutdown title, written by its SIGTERM handler when the harness closed it after the failure, and no exception. Playwright's request context keeps sockets alive in a shared agent that ignores the host's `Keep-Alive: timeout=5` hint, while the host (Node 26) closes an idle socket after `keepAliveTimeout` plus `keepAliveTimeoutBuffer`, 6 s. C's post-Save GET was the harness's first request since A's project PUT; the data root's file times put that gap at about 6 s (PUT about 10:17:03.3, Save about 10:17:09.3), so the request reused a socket the host was closing: `socket hang up`. A loopback reproduction against a plain Node 26 server with the same Playwright 1.62.1 reused the socket up to 5.9 s idle and reset 3 of 81 requests at 5.96–6.04 s; with `Connection: close` it reset none of 243. Earlier runs had other A-to-C gaps. The harness's `native` and `plugin` calls, and the probe's two direct asset GETs, now send `Connection: close` (`CLOSE` in `tests/probes/m2-director/harness.mjs`); no assertion changed. Other probes that call `context.request` directly (`m2-director/host.mjs` export GETs, the portability, storage, cleanup, folder and `dyl193` probes) have the same latent race and were not changed.

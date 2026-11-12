@@ -1,5 +1,5 @@
 {
-  "candidate": "2ff328d8971458f9161445434b3a2632601ec5ee",
+  "candidate": "5518a512114183f70264deb68e65387721f79515",
   "host": "7e8663cd9c184a550b37238218bdd32c6efc68e9",
   "node": "v26.8.1",
   "checks": [
@@ -13,8 +13,8 @@
     "I: free_extend on the real host is refused by preflight with its sentence and Submit disabled; no /prompt and no text request; restored",
     "J: C's identical request was a cache hit: Use the previous result applied the imported asset (saved as the background) with zero /prompt, no host generate request, nothing counted (Submissions used 0 of 5) and nothing reserved",
     "K: the synthetic content-policy refusal shows as a failure (\"The host returned no image.\"); one /prompt and one host generate request (no retry, no fallback); no host file; the unit spent; the ledger row failed",
-    "L: after Discard preview, Delete the host's copy (shown with its sentence, never automatic) removed exactly 2026-11-10@22h44m13s796ms.png and nothing else; the ledger row is discarded with hostDeletedAt",
-    "M: a second page saw the lease held and took it over (count kept at 3); the first page ended at its next heartbeat (LEASE_LOST); its late file 2026-11-10@22h44m41s230ms.png was kept by the host; after the deadline Reconcile listed only that file, and choosing it went through the fetch, the PNG check and Import and apply (background applied and locked, the identical bytes reusing C's asset, ledger reconciled then imported with that asset, stored bytes = fixture PNG)",
+    "L: after Discard preview, Delete the host's copy (shown with its sentence, never automatic) removed exactly 2026-11-11@22h25m32s157ms.png and nothing else; the ledger row is discarded with hostDeletedAt",
+    "M: a second page saw the lease held and took it over (count kept at 3); the first page ended at its next heartbeat (LEASE_LOST); its late file 2026-11-11@22h25m59s786ms.png was kept by the host; after the deadline Reconcile listed only that file, and choosing it went through the fetch, the PNG check and Import and apply (background applied and locked, the identical bytes reusing C's asset, ledger reconciled then imported with that asset, stored bytes = fixture PNG)",
     "N: a reload during a held job left its reservation (used 4 of 5 after takeover) and the job unresolved; the host folder gained no file (the host saves results from the page; host /interrupt on reload: true); after the deadline Reconcile found nothing, None of these attached nothing, and Abandon resolved it with the unit spent",
     "O: the ledger rows match the campaign in order (C imported; D, E, G stale; H five discarded; K failed; L discarded with its host copy deleted; M imported from the reconciled late file; N abandoned); nothing unresolved; no chat, card or persona text stored; saved extension_settings.sd and canonical files unchanged"
   ],
@@ -25,18 +25,21 @@
     "files": 8
   },
   "setup": {
-    "fixtureOrigin": "http://127.0.0.1:34971",
+    "fixtureOrigin": "http://127.0.0.1:45055",
     "selectionsAligned": {
       "sampler": {
         "from": "DDIM",
         "to": "euler"
       }
     },
-    "C_settingsJsonChangedPaths": [],
+    "C_settingsJsonChangedPaths": [
+      "accountStorage.StoryStringValidationCache",
+      "extension_settings.sillynovel"
+    ],
     "C": {
-      "hostFile": "2026-11-10@22h44m03s843ms.png",
-      "statusPath": "/user/images/2026-11-10@22h44m03s843ms.png",
-      "importedAssetId": "cea13e83-89d8-4475-9256-e735b32fefa3"
+      "hostFile": "2026-11-11@22h25m21s936ms.png",
+      "statusPath": "/user/images/2026-11-11@22h25m21s936ms.png",
+      "importedAssetId": "38aa7c10-1b0f-449c-b20a-71683cc8f66f"
     },
     "G": {
       "statusAfter": "Project changed: references and any preview cleared; your text is kept."
@@ -45,12 +48,12 @@
       "status": "The host returned no image."
     },
     "L": {
-      "hostFile": "2026-11-10@22h44m13s796ms.png",
-      "path": "/user/images/2026-11-10@22h44m13s796ms.png"
+      "hostFile": "2026-11-11@22h25m32s157ms.png",
+      "path": "/user/images/2026-11-11@22h25m32s157ms.png"
     },
     "M": {
-      "lateFile": "/user/images/2026-11-10@22h44m41s230ms.png",
-      "assetId": "cea13e83-89d8-4475-9256-e735b32fefa3"
+      "lateFile": "/user/images/2026-11-11@22h25m59s786ms.png",
+      "assetId": "38aa7c10-1b0f-449c-b20a-71683cc8f66f"
     },
     "N": {
       "hostInterruptOnReload": true
@@ -58,19 +61,13 @@
     "ledger": [
       {
         "state": "imported",
-        "hostPath": "/user/images/2026-11-10@22h44m03s843ms.png",
+        "hostPath": "/user/images/2026-11-11@22h25m21s936ms.png",
         "hostDeleted": false,
-        "assetId": "cea13e83-89d8-4475-9256-e735b32fefa3"
+        "assetId": "38aa7c10-1b0f-449c-b20a-71683cc8f66f"
       },
       {
         "state": "stale",
-        "hostPath": "/user/images/2026-11-10@22h44m04s477ms.png",
-        "hostDeleted": false,
-        "assetId": null
-      },
-      {
-        "state": "stale",
-        "hostPath": null,
+        "hostPath": "/user/images/2026-11-11@22h25m22s654ms.png",
         "hostDeleted": false,
         "assetId": null
       },
@@ -81,32 +78,38 @@
         "assetId": null
       },
       {
-        "state": "discarded",
-        "hostPath": "/user/images/2026-11-10@22h44m07s478ms.png",
+        "state": "stale",
+        "hostPath": null,
         "hostDeleted": false,
         "assetId": null
       },
       {
         "state": "discarded",
-        "hostPath": "/user/images/2026-11-10@22h44m07s636ms.png",
+        "hostPath": "/user/images/2026-11-11@22h25m26s082ms.png",
         "hostDeleted": false,
         "assetId": null
       },
       {
         "state": "discarded",
-        "hostPath": "/user/images/2026-11-10@22h44m07s879ms.png",
+        "hostPath": "/user/images/2026-11-11@22h25m26s291ms.png",
         "hostDeleted": false,
         "assetId": null
       },
       {
         "state": "discarded",
-        "hostPath": "/user/images/2026-11-10@22h44m08s092ms.png",
+        "hostPath": "/user/images/2026-11-11@22h25m26s498ms.png",
         "hostDeleted": false,
         "assetId": null
       },
       {
         "state": "discarded",
-        "hostPath": "/user/images/2026-11-10@22h44m08s403ms.png",
+        "hostPath": "/user/images/2026-11-11@22h25m26s716ms.png",
+        "hostDeleted": false,
+        "assetId": null
+      },
+      {
+        "state": "discarded",
+        "hostPath": "/user/images/2026-11-11@22h25m26s881ms.png",
         "hostDeleted": false,
         "assetId": null
       },
@@ -118,15 +121,15 @@
       },
       {
         "state": "discarded",
-        "hostPath": "/user/images/2026-11-10@22h44m13s796ms.png",
+        "hostPath": "/user/images/2026-11-11@22h25m32s157ms.png",
         "hostDeleted": true,
         "assetId": null
       },
       {
         "state": "imported",
-        "hostPath": "/user/images/2026-11-10@22h44m41s230ms.png",
+        "hostPath": "/user/images/2026-11-11@22h25m59s786ms.png",
         "hostDeleted": false,
-        "assetId": "cea13e83-89d8-4475-9256-e735b32fefa3"
+        "assetId": "38aa7c10-1b0f-449c-b20a-71683cc8f66f"
       },
       {
         "state": "abandoned",
@@ -148,5 +151,5 @@
   "browser": "151.0.7922.34",
   "pageErrors": [],
   "result": "PASS",
-  "fixtureConsoleTail": "comfy endpoint listening on 34971\n"
+  "fixtureConsoleTail": "comfy endpoint listening on 45055\n"
 }

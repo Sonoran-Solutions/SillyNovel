@@ -2,84 +2,84 @@
   "before": {
     "projects": [
       {
-        "id": "19e450be-cc44-4c11-87df-6c806c889050",
-        "owner": "[\"default-user\",1794374985441]",
-        "name": "Browser project",
-        "revision": 1,
-        "scene": "{\"backgroundAssetId\":\"8bdf42f5-2571-4e56-9d8b-ad214c1b612d\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"496454ca-70ab-4b11-9ddd-b5089bfe925c\",\"name\":\"One\",\"spriteAssetId\":\"64fab8ff-7b05-4af1-a89e-fda60a15415c\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"b5a054fc-962b-4b32-8b8f-613cfa5931b9\",\"name\":\"Two\",\"spriteAssetId\":\"e4b0f0fd-7152-4fd0-ba56-d53d174970e7\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
-        "catalog": "[{\"assetId\":\"8bdf42f5-2571-4e56-9d8b-ad214c1b612d\",\"label\":\"forest\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"64fab8ff-7b05-4af1-a89e-fda60a15415c\",\"label\":\"mira-a\",\"kind\":\"sprite\",\"actorId\":\"496454ca-70ab-4b11-9ddd-b5089bfe925c\"},{\"assetId\":\"e4b0f0fd-7152-4fd0-ba56-d53d174970e7\",\"label\":\"rowan\",\"kind\":\"sprite\",\"actorId\":\"b5a054fc-962b-4b32-8b8f-613cfa5931b9\"}]"
-      },
-      {
-        "id": "31407ffb-32ad-4f37-9676-2f991eb56e8e",
-        "owner": "[\"default-user\",1794374985441]",
-        "name": "API project",
-        "revision": 1,
+        "id": "817c196e-9118-4831-a9fc-8fa6de5edfc8",
+        "owner": "[\"sn-other\",1794460211108]",
+        "name": "Bob project",
+        "revision": 0,
         "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
         "catalog": "[]"
       },
       {
-        "id": "3657ca58-8b58-4b63-8001-81a57906c5f2",
-        "owner": "[\"sn-other\",1794374993421]",
-        "name": "Bob project",
-        "revision": 0,
+        "id": "cd483820-8e43-4e7f-8c01-dbe191a0df64",
+        "owner": "[\"default-user\",1794460195567]",
+        "name": "Browser project",
+        "revision": 1,
+        "scene": "{\"backgroundAssetId\":\"fd02cbd5-6e57-47ce-8e88-689c8175fa88\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"5a92b033-bdb1-4628-bc84-7dcf76892ccb\",\"name\":\"One\",\"spriteAssetId\":\"50178f2c-3f55-415a-b3c3-c83754605711\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"02fbfb37-47e9-4985-aeff-e826b7897acf\",\"name\":\"Two\",\"spriteAssetId\":\"10040690-55e5-4b0e-866d-cd263317bab5\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
+        "catalog": "[{\"assetId\":\"fd02cbd5-6e57-47ce-8e88-689c8175fa88\",\"label\":\"forest\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"50178f2c-3f55-415a-b3c3-c83754605711\",\"label\":\"mira-a\",\"kind\":\"sprite\",\"actorId\":\"5a92b033-bdb1-4628-bc84-7dcf76892ccb\"},{\"assetId\":\"10040690-55e5-4b0e-866d-cd263317bab5\",\"label\":\"rowan\",\"kind\":\"sprite\",\"actorId\":\"02fbfb37-47e9-4985-aeff-e826b7897acf\"}]"
+      },
+      {
+        "id": "e75bf568-5aea-47ae-8518-3669251a4870",
+        "owner": "[\"default-user\",1794460195567]",
+        "name": "API project",
+        "revision": 1,
         "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
         "catalog": "[]"
       }
     ],
     "assets": [
       {
-        "id": "1212728e-f883-46de-a4df-1aa1eea10005",
-        "project": "19e450be-cc44-4c11-87df-6c806c889050",
-        "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
-        "width": 1280,
-        "height": 720,
-        "byteCount": 6085
-      },
-      {
-        "id": "2a3a1d3f-79e0-4b90-8acd-1d04e1fbb4d3",
-        "project": "19e450be-cc44-4c11-87df-6c806c889050",
-        "sha256": "ebc67fb00f77658f0f3fff534659afaa569e34f87d663be4e255002b16e85ea6",
+        "id": "10040690-55e5-4b0e-866d-cd263317bab5",
+        "project": "cd483820-8e43-4e7f-8c01-dbe191a0df64",
+        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
         "width": 420,
         "height": 660,
-        "byteCount": 4557
+        "byteCount": 4253
       },
       {
-        "id": "64fab8ff-7b05-4af1-a89e-fda60a15415c",
-        "project": "19e450be-cc44-4c11-87df-6c806c889050",
+        "id": "17586dc7-56f3-4925-88fa-b07990fe564d",
+        "project": "e75bf568-5aea-47ae-8518-3669251a4870",
+        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
+        "width": 1280,
+        "height": 720,
+        "byteCount": 11591
+      },
+      {
+        "id": "50178f2c-3f55-415a-b3c3-c83754605711",
+        "project": "cd483820-8e43-4e7f-8c01-dbe191a0df64",
         "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
         "width": 420,
         "height": 660,
         "byteCount": 4454
       },
       {
-        "id": "8bdf42f5-2571-4e56-9d8b-ad214c1b612d",
-        "project": "19e450be-cc44-4c11-87df-6c806c889050",
-        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
+        "id": "8d8a58d6-c3b1-4a7c-9183-8f936f885de5",
+        "project": "cd483820-8e43-4e7f-8c01-dbe191a0df64",
+        "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
         "width": 1280,
         "height": 720,
-        "byteCount": 11591
+        "byteCount": 6085
       },
       {
-        "id": "b538496f-e6b5-4f82-a632-bb38ca425909",
-        "project": "31407ffb-32ad-4f37-9676-2f991eb56e8e",
-        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
-        "width": 1280,
-        "height": 720,
-        "byteCount": 11591
-      },
-      {
-        "id": "e4b0f0fd-7152-4fd0-ba56-d53d174970e7",
-        "project": "19e450be-cc44-4c11-87df-6c806c889050",
-        "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
+        "id": "c75f2658-ecde-43fc-8e50-993333b39afe",
+        "project": "cd483820-8e43-4e7f-8c01-dbe191a0df64",
+        "sha256": "ebc67fb00f77658f0f3fff534659afaa569e34f87d663be4e255002b16e85ea6",
         "width": 420,
         "height": 660,
-        "byteCount": 4253
+        "byteCount": 4557
+      },
+      {
+        "id": "fd02cbd5-6e57-47ce-8e88-689c8175fa88",
+        "project": "cd483820-8e43-4e7f-8c01-dbe191a0df64",
+        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
+        "width": 1280,
+        "height": 720,
+        "byteCount": 11591
       }
     ]
   },
   "nativeBefore": {
-    "default-user/characters/Project A.png": "cdb106a6b095b5e32f56fd2ba84653b67781e5349883b32ebf73eff7a0147257",
-    "default-user/characters/Project B.png": "b373558a572f070e59ab20fcfb8761d31e8405f1c8e4e39272376e7c600ac1c1",
+    "default-user/characters/Project A.png": "cb7ffb12801e955daa2c6c6ad93b88e28e2b1f2907a81beb9ebae5c7baa3717e",
+    "default-user/characters/Project B.png": "dadfa1d752525ac4f7a78a44d099a49ca4970108a0b6da8ea1a605bfc44ad922",
     "default-user/characters/Seraphina/admiration.png": "e451994487b3a5b7c72d6e6025c8cbe6bbcfbf01a490042b8b581522e6ba4f96",
     "default-user/characters/Seraphina/amusement.png": "1cedaee06fb1c740c5c8c52de8973f733789d51fe9b23fcb633635e755ae6e6f",
     "default-user/characters/Seraphina/anger.png": "d657d77b1bce609dd6006582cf687691871411eb041f9f4c41da4765b12ea069",
@@ -109,8 +109,8 @@
     "default-user/characters/Seraphina/sadness.png": "3819c2bca59224f67767eb3762c846e35d5eb5272be03f35c21fc32163df67a6",
     "default-user/characters/Seraphina/surprise.png": "f6a9f657d081f670a961649a5a21526ec251262ca06adf99626509059fbbb103",
     "default-user/characters/default_Seraphina.png": "8a71e8270f54fafbccf905b1bdf053a6a55f57bea89c01fcd8c0e87ee76a2d52",
-    "default-user/chats/Project A/Project A - 2026-11-10@22h29m53s559ms.jsonl": "cf1e6e61c19cc2943f4142b65677152e063bac4aa0f4e266ff686985aa74581b",
-    "default-user/chats/Project B/Project B - 2026-11-10@22h29m53s586ms.jsonl": "8c7dced2545158a61cf5db61bd71fb3ba0835d6ba32adae1d0a9edc46f6827e8",
+    "default-user/chats/Project A/Project A - 2026-11-11@22h10m11s293ms.jsonl": "bf5c8cd1e22784889771cb97acb9dc27c7df3cf42df7955d7c9928685bee3a65",
+    "default-user/chats/Project B/Project B - 2026-11-11@22h10m11s330ms.jsonl": "db16f88a81d9eac74e54dfe905c0b78b97eae9fcd917be0e9c035317b8003174",
     "default-user/worlds/Eldoria.json": "bfc2548443c890746a54d54e35e41265b02d1b59fd06d72552b305bf9b1e063c",
     "sn-other/characters/Seraphina/admiration.png": "e451994487b3a5b7c72d6e6025c8cbe6bbcfbf01a490042b8b581522e6ba4f96",
     "sn-other/characters/Seraphina/amusement.png": "1cedaee06fb1c740c5c8c52de8973f733789d51fe9b23fcb633635e755ae6e6f",
@@ -145,19 +145,19 @@
   },
   "sqlite": "3.53.4",
   "preview": {
-    "projectId": "19e450be-cc44-4c11-87df-6c806c889050",
+    "projectId": "cd483820-8e43-4e7f-8c01-dbe191a0df64",
     "revision": 1,
-    "inventoryRevision": "1e8f55b9328f1b81258cd89fb2f3ead6cff18e3ecd99288403e9aead93053dde",
+    "inventoryRevision": "9ce9793ca9b4daca83181cbd7a31b56b5f0fda48f7f079339a2b896b9a5f9be9",
     "candidates": [
       {
-        "assetId": "1212728e-f883-46de-a4df-1aa1eea10005",
+        "assetId": "8d8a58d6-c3b1-4a7c-9183-8f936f885de5",
         "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
         "width": 1280,
         "height": 720,
         "byteCount": 6085
       },
       {
-        "assetId": "2a3a1d3f-79e0-4b90-8acd-1d04e1fbb4d3",
+        "assetId": "c75f2658-ecde-43fc-8e50-993333b39afe",
         "sha256": "ebc67fb00f77658f0f3fff534659afaa569e34f87d663be4e255002b16e85ea6",
         "width": 420,
         "height": 660,
@@ -170,7 +170,7 @@
   "firstDeletion": {
     "deleted": [
       {
-        "assetId": "1212728e-f883-46de-a4df-1aa1eea10005",
+        "assetId": "8d8a58d6-c3b1-4a7c-9183-8f936f885de5",
         "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
         "width": 1280,
         "height": 720,
@@ -181,26 +181,26 @@
   },
   "quota": {
     "before": {
-      "logical": 104079920,
+      "logical": 104079944,
       "fileBytes": 104255488,
       "freePages": 0
     },
     "after": {
-      "logical": 100078247,
+      "logical": 100078271,
       "fileBytes": 104255488,
       "freePages": 978
     },
     "receipt": {
-      "projectId": "d3a20132-ef6a-458c-86f5-f29476e8dc03",
+      "projectId": "197ef824-50d0-4679-9aa9-d61de61a54ae",
       "revision": 0,
       "deletedIds": [
-        "0ecefc7a-d440-458e-b209-1df0a80b3d97"
+        "0d96eccf-1273-4aad-8654-5209ae7da3a7"
       ],
       "deletedCount": 1,
       "reclaimedBytes": 4001673
     },
     "afterUpload": {
-      "logical": 104079920,
+      "logical": 104079944,
       "fileBytes": 104255488,
       "freePages": 0
     }
@@ -208,308 +208,308 @@
   "after": {
     "projects": [
       {
-        "id": "19e450be-cc44-4c11-87df-6c806c889050",
-        "owner": "[\"default-user\",1794374985441]",
-        "name": "Browser project",
-        "revision": 2,
-        "scene": "{\"backgroundAssetId\":\"8bdf42f5-2571-4e56-9d8b-ad214c1b612d\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"496454ca-70ab-4b11-9ddd-b5089bfe925c\",\"name\":\"One\",\"spriteAssetId\":\"64fab8ff-7b05-4af1-a89e-fda60a15415c\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"b5a054fc-962b-4b32-8b8f-613cfa5931b9\",\"name\":\"Two\",\"spriteAssetId\":\"e4b0f0fd-7152-4fd0-ba56-d53d174970e7\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
-        "catalog": "[{\"assetId\":\"8bdf42f5-2571-4e56-9d8b-ad214c1b612d\",\"label\":\"forest\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"64fab8ff-7b05-4af1-a89e-fda60a15415c\",\"label\":\"mira-a\",\"kind\":\"sprite\",\"actorId\":\"496454ca-70ab-4b11-9ddd-b5089bfe925c\"},{\"assetId\":\"e4b0f0fd-7152-4fd0-ba56-d53d174970e7\",\"label\":\"rowan\",\"kind\":\"sprite\",\"actorId\":\"b5a054fc-962b-4b32-8b8f-613cfa5931b9\"}]"
-      },
-      {
-        "id": "31407ffb-32ad-4f37-9676-2f991eb56e8e",
-        "owner": "[\"default-user\",1794374985441]",
-        "name": "API project",
-        "revision": 1,
-        "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
-        "catalog": "[]"
-      },
-      {
-        "id": "3657ca58-8b58-4b63-8001-81a57906c5f2",
-        "owner": "[\"sn-other\",1794374993421]",
-        "name": "Bob project",
-        "revision": 0,
-        "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
-        "catalog": "[]"
-      },
-      {
-        "id": "d3a20132-ef6a-458c-86f5-f29476e8dc03",
-        "owner": "[\"default-user\",1794374985441]",
+        "id": "197ef824-50d0-4679-9aa9-d61de61a54ae",
+        "owner": "[\"default-user\",1794460195567]",
         "name": "Cleanup quota",
         "revision": 0,
         "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
         "catalog": "[]"
       },
       {
-        "id": "f2f0ea85-a33b-42ee-8f4d-a8cfdb5bea0f",
-        "owner": "[\"sn-other\",1794374993421]",
+        "id": "71bc5d97-5cfb-4d4d-8e60-cd70f17ef961",
+        "owner": "[\"sn-other\",1794460211108]",
         "name": "Cleanup foreign",
         "revision": 0,
+        "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
+        "catalog": "[]"
+      },
+      {
+        "id": "817c196e-9118-4831-a9fc-8fa6de5edfc8",
+        "owner": "[\"sn-other\",1794460211108]",
+        "name": "Bob project",
+        "revision": 0,
+        "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
+        "catalog": "[]"
+      },
+      {
+        "id": "cd483820-8e43-4e7f-8c01-dbe191a0df64",
+        "owner": "[\"default-user\",1794460195567]",
+        "name": "Browser project",
+        "revision": 2,
+        "scene": "{\"backgroundAssetId\":\"fd02cbd5-6e57-47ce-8e88-689c8175fa88\",\"backgroundLocked\":true,\"actors\":[{\"actorId\":\"5a92b033-bdb1-4628-bc84-7dcf76892ccb\",\"name\":\"One\",\"spriteAssetId\":\"50178f2c-3f55-415a-b3c3-c83754605711\",\"slot\":\"left\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}},{\"actorId\":\"02fbfb37-47e9-4985-aeff-e826b7897acf\",\"name\":\"Two\",\"spriteAssetId\":\"10040690-55e5-4b0e-866d-cd263317bab5\",\"slot\":\"right\",\"present\":true,\"locks\":{\"presence\":true,\"slot\":true,\"outfit\":true}}]}",
+        "catalog": "[{\"assetId\":\"fd02cbd5-6e57-47ce-8e88-689c8175fa88\",\"label\":\"forest\",\"kind\":\"background\",\"actorId\":null},{\"assetId\":\"50178f2c-3f55-415a-b3c3-c83754605711\",\"label\":\"mira-a\",\"kind\":\"sprite\",\"actorId\":\"5a92b033-bdb1-4628-bc84-7dcf76892ccb\"},{\"assetId\":\"10040690-55e5-4b0e-866d-cd263317bab5\",\"label\":\"rowan\",\"kind\":\"sprite\",\"actorId\":\"02fbfb37-47e9-4985-aeff-e826b7897acf\"}]"
+      },
+      {
+        "id": "e75bf568-5aea-47ae-8518-3669251a4870",
+        "owner": "[\"default-user\",1794460195567]",
+        "name": "API project",
+        "revision": 1,
         "scene": "{\"backgroundAssetId\":null,\"backgroundLocked\":false,\"actors\":[]}",
         "catalog": "[]"
       }
     ],
     "assets": [
       {
-        "id": "28556c37-48f5-4fb1-a9fa-f82a0ad0081d",
-        "project": "d3a20132-ef6a-458c-86f5-f29476e8dc03",
-        "sha256": "5611d9015544549f5ac5ba8d81b7675b861a5a67f2b8bff82eaf2d9df1b09699",
-        "width": 1000,
-        "height": 1000,
-        "byteCount": 4001673
-      },
-      {
-        "id": "3203bbe7-d599-4205-a64c-e02372d40097",
-        "project": "d3a20132-ef6a-458c-86f5-f29476e8dc03",
-        "sha256": "55985f992bec153047acbe04bafed54abce09d3170a50696ebb94b4dad09fd18",
-        "width": 1000,
-        "height": 1000,
-        "byteCount": 4001673
-      },
-      {
-        "id": "3d128a41-b0b9-4e98-8eee-9547278d8a61",
-        "project": "d3a20132-ef6a-458c-86f5-f29476e8dc03",
-        "sha256": "40d4bf8cc9f756d9ea80114d0989666db9e0af17c97301ba42b8b0d97e2a8626",
-        "width": 1000,
-        "height": 1000,
-        "byteCount": 4001673
-      },
-      {
-        "id": "3e7da2c3-ac3c-4151-a777-b4aca424568c",
-        "project": "d3a20132-ef6a-458c-86f5-f29476e8dc03",
-        "sha256": "8d8f45db6a42c6eaf856c962912543bd4edc885762eb525cedcd72e82f951883",
-        "width": 1000,
-        "height": 1000,
-        "byteCount": 4001673
-      },
-      {
-        "id": "53f77487-e2b9-4ae4-b38f-8f57f6f6e54d",
-        "project": "d3a20132-ef6a-458c-86f5-f29476e8dc03",
-        "sha256": "d46c2cb61cfe32691dd17d16b9cd8414a9cad2aece3b04bd0cf14e628c0e5f8c",
-        "width": 1000,
-        "height": 1000,
-        "byteCount": 4001673
-      },
-      {
-        "id": "540ed941-6896-43b3-9bef-494b0de2b6e1",
-        "project": "d3a20132-ef6a-458c-86f5-f29476e8dc03",
-        "sha256": "77dc89006f469d27be7837553d43aa1e7ea647ba525b3a3f1470d9aee204d5b8",
-        "width": 1000,
-        "height": 1000,
-        "byteCount": 4001673
-      },
-      {
-        "id": "55c92ce9-9037-4b6e-bba9-042ce20e88c4",
-        "project": "d3a20132-ef6a-458c-86f5-f29476e8dc03",
-        "sha256": "974baabe30f4c5c5f44a21416c949eddb41dedeebd71badc1fb5888da9710421",
-        "width": 1000,
-        "height": 1000,
-        "byteCount": 4001673
-      },
-      {
-        "id": "577d6fe3-f09b-47e7-83f8-4fd9f50f0d10",
-        "project": "d3a20132-ef6a-458c-86f5-f29476e8dc03",
-        "sha256": "84eeb3bbdba208204c3f8020a38c45ad97e7ee98f81bc70b03f06a2ee4255e78",
-        "width": 1000,
-        "height": 1000,
-        "byteCount": 4001673
-      },
-      {
-        "id": "64fab8ff-7b05-4af1-a89e-fda60a15415c",
-        "project": "19e450be-cc44-4c11-87df-6c806c889050",
-        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
-        "width": 420,
-        "height": 660,
-        "byteCount": 4454
-      },
-      {
-        "id": "6b1500a0-6f57-44f5-9f78-62f04b99ece6",
-        "project": "d3a20132-ef6a-458c-86f5-f29476e8dc03",
-        "sha256": "4b779ac0fdd966ff95f8790422d7d6777e4a08625dbaf56212cae9f350b2cbf0",
-        "width": 1000,
-        "height": 1000,
-        "byteCount": 4001673
-      },
-      {
-        "id": "6d0793ab-050b-4a38-a972-284bc0d11d46",
-        "project": "d3a20132-ef6a-458c-86f5-f29476e8dc03",
-        "sha256": "2649270cbc4512dda259c4f58981c75caad37e04c4f2f8a383bd6b616fc820e8",
-        "width": 1000,
-        "height": 1000,
-        "byteCount": 4001673
-      },
-      {
-        "id": "70091a4a-2a4e-4e0f-a72c-0428a72e16a6",
-        "project": "d3a20132-ef6a-458c-86f5-f29476e8dc03",
-        "sha256": "6332d1509ea839da3a62593905359605e3094a597ad63428755df67410076d2a",
-        "width": 1000,
-        "height": 1000,
-        "byteCount": 4001673
-      },
-      {
-        "id": "719a3ba2-ecc1-4238-87af-e52e48ac992e",
-        "project": "d3a20132-ef6a-458c-86f5-f29476e8dc03",
-        "sha256": "2d04c251ab9f51954c5317751cd8bc2b4440ae3364e54f972b327679bbb386d6",
-        "width": 1000,
-        "height": 1000,
-        "byteCount": 4001673
-      },
-      {
-        "id": "755a784f-0c19-4ec9-81aa-6056be37fbef",
-        "project": "d3a20132-ef6a-458c-86f5-f29476e8dc03",
-        "sha256": "b8ae7cf44bb761e2991cca0f43b576cc3d64c49cea90735fd2307335c4cdbc75",
-        "width": 1000,
-        "height": 1000,
-        "byteCount": 4001673
-      },
-      {
-        "id": "7b473f0d-166b-4144-8885-e01a21116b11",
-        "project": "d3a20132-ef6a-458c-86f5-f29476e8dc03",
-        "sha256": "7e29d671802df24a491d56cb0b8108f760262bc61374d394066095b6c681eebc",
-        "width": 1000,
-        "height": 1000,
-        "byteCount": 4001673
-      },
-      {
-        "id": "843dd2a2-64ed-4440-a3ef-98dd983888ed",
-        "project": "d3a20132-ef6a-458c-86f5-f29476e8dc03",
-        "sha256": "17c5fc3ead4b61cd23061908c1996230c60aef092189768cc40f743745ccfc5a",
-        "width": 1000,
-        "height": 1000,
-        "byteCount": 4001673
-      },
-      {
-        "id": "859360b6-d9f3-4e15-aa1e-888ceb3bdbd5",
-        "project": "d3a20132-ef6a-458c-86f5-f29476e8dc03",
-        "sha256": "f3a2f92d7355e5e6909c1e6e07312631614f2d03397567b4cd3c581cb9f3eb4f",
-        "width": 1000,
-        "height": 1000,
-        "byteCount": 4001673
-      },
-      {
-        "id": "8691491e-2d74-4857-bf07-d5949f43ea94",
-        "project": "d3a20132-ef6a-458c-86f5-f29476e8dc03",
-        "sha256": "4d80c30fc48f0a2135834e256dcbecb48038c0e1ea62aec9b6a83082a9307b22",
-        "width": 1000,
-        "height": 1000,
-        "byteCount": 4001673
-      },
-      {
-        "id": "8bdf42f5-2571-4e56-9d8b-ad214c1b612d",
-        "project": "19e450be-cc44-4c11-87df-6c806c889050",
-        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
-        "width": 1280,
-        "height": 720,
-        "byteCount": 11591
-      },
-      {
-        "id": "9228c1ed-65d6-4165-9b4b-30c9c9a819dd",
-        "project": "d3a20132-ef6a-458c-86f5-f29476e8dc03",
-        "sha256": "9d1bb5a897337137edcd51426403793f6ccfff73d8392bc0a2b632d15a8e8988",
-        "width": 1000,
-        "height": 1000,
-        "byteCount": 4001673
-      },
-      {
-        "id": "954f8e61-8df3-4a89-a606-477ed944ed19",
-        "project": "d3a20132-ef6a-458c-86f5-f29476e8dc03",
-        "sha256": "fc74ec9b0afcb116644e1ab8cd52d1ab459952f93ff350cab84ab3fadfbf9350",
-        "width": 1000,
-        "height": 1000,
-        "byteCount": 4001673
-      },
-      {
-        "id": "95df3c5d-c60b-4e91-9071-399cf418989b",
-        "project": "d3a20132-ef6a-458c-86f5-f29476e8dc03",
-        "sha256": "214eba21c466cb95bef76b08e3e1ba0acead0ec30723d412b7b8a86ad556b0d3",
-        "width": 1000,
-        "height": 1000,
-        "byteCount": 4001673
-      },
-      {
-        "id": "a15c2dce-fded-4f25-a93a-3d85aa474187",
-        "project": "d3a20132-ef6a-458c-86f5-f29476e8dc03",
-        "sha256": "a5d21f65f483f668934e5f0c7996b89c2aeba7a9638fd223b5a3d2c99636c2a5",
-        "width": 1000,
-        "height": 1000,
-        "byteCount": 4001673
-      },
-      {
-        "id": "b538496f-e6b5-4f82-a632-bb38ca425909",
-        "project": "31407ffb-32ad-4f37-9676-2f991eb56e8e",
-        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
-        "width": 1280,
-        "height": 720,
-        "byteCount": 11591
-      },
-      {
-        "id": "c1a4cc42-d28e-49d5-85ef-f3a53af23052",
-        "project": "d3a20132-ef6a-458c-86f5-f29476e8dc03",
-        "sha256": "d208ffe60aa6c1a063e0c5a5ec3807da8be21bfcc2cacf2e0dcf2eaeae4dbc7a",
-        "width": 1000,
-        "height": 1000,
-        "byteCount": 4001673
-      },
-      {
-        "id": "cacf358d-42cc-4865-883e-18869da7ae18",
-        "project": "d3a20132-ef6a-458c-86f5-f29476e8dc03",
-        "sha256": "99f4ddc5470d710b794125b03b6f7f3cd50aa186e15af393d485fa828df6a1d8",
-        "width": 1000,
-        "height": 1000,
-        "byteCount": 4001673
-      },
-      {
-        "id": "cbb91b3d-9ca7-448b-bb4c-ad539d16f815",
-        "project": "f2f0ea85-a33b-42ee-8f4d-a8cfdb5bea0f",
-        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
-        "width": 420,
-        "height": 660,
-        "byteCount": 4454
-      },
-      {
-        "id": "cef9286c-dae8-4ebf-b63f-5c5ba75ff08e",
-        "project": "d3a20132-ef6a-458c-86f5-f29476e8dc03",
-        "sha256": "257f8dd668863d4ae7112d5811e0c04e0b057dc164571646445b584c463a4f72",
-        "width": 1000,
-        "height": 1000,
-        "byteCount": 4001673
-      },
-      {
-        "id": "e4b0f0fd-7152-4fd0-ba56-d53d174970e7",
-        "project": "19e450be-cc44-4c11-87df-6c806c889050",
+        "id": "10040690-55e5-4b0e-866d-cd263317bab5",
+        "project": "cd483820-8e43-4e7f-8c01-dbe191a0df64",
         "sha256": "fa15ed5552e8a102cbb659fe4359f288f6cfcc667247d893b4725704d92b1b46",
         "width": 420,
         "height": 660,
         "byteCount": 4253
       },
       {
-        "id": "eccd46d1-a15d-46e2-8922-070d171d7352",
-        "project": "19e450be-cc44-4c11-87df-6c806c889050",
-        "sha256": "0e721dca1cb8314e16003b617406da3c6aab80a603c6706a1b7884857802faff",
+        "id": "17586dc7-56f3-4925-88fa-b07990fe564d",
+        "project": "e75bf568-5aea-47ae-8518-3669251a4870",
+        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
+        "width": 1280,
+        "height": 720,
+        "byteCount": 11591
+      },
+      {
+        "id": "17dee3be-7399-41af-bc29-ade1960c8676",
+        "project": "197ef824-50d0-4679-9aa9-d61de61a54ae",
+        "sha256": "44edb3d0a2b13ffe96ab343e23257e377dc18885d572afc8daa7e056b6f2ba6d",
+        "width": 1000,
+        "height": 1000,
+        "byteCount": 4001673
+      },
+      {
+        "id": "1d3f5646-f694-48b1-824b-71c1432a939c",
+        "project": "71bc5d97-5cfb-4d4d-8e60-cd70f17ef961",
+        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
         "width": 420,
         "height": 660,
-        "byteCount": 4533
+        "byteCount": 4454
       },
       {
-        "id": "f11b3b12-d499-474a-b4e1-c97e23e7dd85",
-        "project": "d3a20132-ef6a-458c-86f5-f29476e8dc03",
-        "sha256": "7438d01c988b80b9f8c5fa5e70a0906d875336d42bbe4220ff1fafcdacecd4ac",
+        "id": "20eb4662-4726-49d2-aba7-02d2223f0e02",
+        "project": "197ef824-50d0-4679-9aa9-d61de61a54ae",
+        "sha256": "338e962ec35a9c5a3560e7050b0f51cc9f5b4257d5579098ff564a5139fc1091",
         "width": 1000,
         "height": 1000,
         "byteCount": 4001673
       },
       {
-        "id": "fe5017af-480a-481f-bc9c-5638ec4a3798",
-        "project": "d3a20132-ef6a-458c-86f5-f29476e8dc03",
-        "sha256": "52c266eb24cda37ac437487537ffa7b6bbd37c8914ce3b319d7121114e65292a",
+        "id": "26deb0eb-4909-45e7-996e-57ee72f110c3",
+        "project": "197ef824-50d0-4679-9aa9-d61de61a54ae",
+        "sha256": "26dba6b1f20001de8ae6e80768df58e53ebd1e8aba1a4d42591751c86f77d004",
         "width": 1000,
         "height": 1000,
         "byteCount": 4001673
+      },
+      {
+        "id": "26fba07b-5b72-47c2-bfd1-006cdc99a6d9",
+        "project": "197ef824-50d0-4679-9aa9-d61de61a54ae",
+        "sha256": "c1f570d2195590d42d58a39588242068adf11660ce379087566734656b42564b",
+        "width": 1000,
+        "height": 1000,
+        "byteCount": 4001673
+      },
+      {
+        "id": "28764ee7-fe15-42bd-8bff-4f45503be07a",
+        "project": "197ef824-50d0-4679-9aa9-d61de61a54ae",
+        "sha256": "8a28673824fc349d3da96cf8a70cd744c7508128292ad747fba435e174cefc31",
+        "width": 1000,
+        "height": 1000,
+        "byteCount": 4001673
+      },
+      {
+        "id": "2b992ff8-f913-4497-9ee4-c56c64c776f3",
+        "project": "197ef824-50d0-4679-9aa9-d61de61a54ae",
+        "sha256": "333130e027376d7e8f5b648ee7949887dd3c28de1797b4a555f443adfd2650f5",
+        "width": 1000,
+        "height": 1000,
+        "byteCount": 4001673
+      },
+      {
+        "id": "2e5ccb2a-7577-4989-ac11-89b8a4db8e4e",
+        "project": "197ef824-50d0-4679-9aa9-d61de61a54ae",
+        "sha256": "437e28fc45ae905ba4629e16413c82eecfad1d968dd0ddb20716b71f9a41213f",
+        "width": 1000,
+        "height": 1000,
+        "byteCount": 4001673
+      },
+      {
+        "id": "4745b0e1-2338-4f24-a96b-40891b4ac2fd",
+        "project": "197ef824-50d0-4679-9aa9-d61de61a54ae",
+        "sha256": "cd9a97179fa0094ea7ee496c13db64540c318e98a9d87cb4ed831d3b0577da0c",
+        "width": 1000,
+        "height": 1000,
+        "byteCount": 4001673
+      },
+      {
+        "id": "4dc9d6a1-e3db-4ddf-a5f7-17a62be82a80",
+        "project": "197ef824-50d0-4679-9aa9-d61de61a54ae",
+        "sha256": "988191d802ecb9e485bd2606e42ffcaa876747f77a9369f1cbc66694e849f4ca",
+        "width": 1000,
+        "height": 1000,
+        "byteCount": 4001673
+      },
+      {
+        "id": "50178f2c-3f55-415a-b3c3-c83754605711",
+        "project": "cd483820-8e43-4e7f-8c01-dbe191a0df64",
+        "sha256": "794277e5167e757658fe33b58e702e51d32668d427f86a5b1c67bfa5f1f5786f",
+        "width": 420,
+        "height": 660,
+        "byteCount": 4454
+      },
+      {
+        "id": "5a6fd923-9df3-4817-95c1-935978ffb2ea",
+        "project": "197ef824-50d0-4679-9aa9-d61de61a54ae",
+        "sha256": "e01869933fd6d78f3b4525622cc9157f4cc3ecd30a08a8fce40bf4ef2cfef5d7",
+        "width": 1000,
+        "height": 1000,
+        "byteCount": 4001673
+      },
+      {
+        "id": "5db02a2d-ea4c-4ca7-9704-4fe960764621",
+        "project": "197ef824-50d0-4679-9aa9-d61de61a54ae",
+        "sha256": "8eee80194cdfb3dd29d75dff1c9c030da5ba13a8bbd677579bc28da26d172fc4",
+        "width": 1000,
+        "height": 1000,
+        "byteCount": 4001673
+      },
+      {
+        "id": "60abb4ed-f738-4c30-9cd9-331483223820",
+        "project": "197ef824-50d0-4679-9aa9-d61de61a54ae",
+        "sha256": "35c5419d7ea3ad2d85d4e54f0326641abb7f6a587b2075392954fd958cfbaf96",
+        "width": 1000,
+        "height": 1000,
+        "byteCount": 4001673
+      },
+      {
+        "id": "78604aef-0aa4-4b2f-9f7e-4c3890975ccc",
+        "project": "197ef824-50d0-4679-9aa9-d61de61a54ae",
+        "sha256": "485ebb5b3c3d87fef66e4f4386cfa82d957da5f2ca3b3b93fec567c215df7003",
+        "width": 1000,
+        "height": 1000,
+        "byteCount": 4001673
+      },
+      {
+        "id": "842bad79-1ff1-414e-b6a6-06d1f97be51b",
+        "project": "197ef824-50d0-4679-9aa9-d61de61a54ae",
+        "sha256": "93afaf70630f0a39b298387cacf9b162eed9b3a2ea0d13b5f769c55c3a083005",
+        "width": 1000,
+        "height": 1000,
+        "byteCount": 4001673
+      },
+      {
+        "id": "8687cfd5-92a8-401e-b3fa-171336a30463",
+        "project": "197ef824-50d0-4679-9aa9-d61de61a54ae",
+        "sha256": "72f3e90ad932357e6a45b1faaec7cb1b25a9df1b83437e746598d47e5163b12b",
+        "width": 1000,
+        "height": 1000,
+        "byteCount": 4001673
+      },
+      {
+        "id": "897a5f53-817f-4d1d-b07f-b6069ab4d4d9",
+        "project": "197ef824-50d0-4679-9aa9-d61de61a54ae",
+        "sha256": "ba74e3bb5185636006783c8fde432b2ba3f6515a03536774778f47c379306e61",
+        "width": 1000,
+        "height": 1000,
+        "byteCount": 4001673
+      },
+      {
+        "id": "8b54ca42-16d1-425f-bd11-23c98e7ec0a6",
+        "project": "197ef824-50d0-4679-9aa9-d61de61a54ae",
+        "sha256": "fb66f7a0eacee9adbba7e376f983a1f32eaeaf93868935fa435d41205aba3c25",
+        "width": 1000,
+        "height": 1000,
+        "byteCount": 4001673
+      },
+      {
+        "id": "908d6275-3248-49a0-9ee1-b8052cea2c02",
+        "project": "197ef824-50d0-4679-9aa9-d61de61a54ae",
+        "sha256": "74b540c19a28a5e6c47a3111274fe0f7a7c4212fc956bea32f2c941d2d13aea5",
+        "width": 1000,
+        "height": 1000,
+        "byteCount": 4001673
+      },
+      {
+        "id": "abc395d8-f224-4dbd-ae36-36ce40d2b9e6",
+        "project": "197ef824-50d0-4679-9aa9-d61de61a54ae",
+        "sha256": "f6895eab4528d04c894f293cc6a8efae1f610634a1f684103492aff7a27750f8",
+        "width": 1000,
+        "height": 1000,
+        "byteCount": 4001673
+      },
+      {
+        "id": "b26a46b5-540d-482d-921e-2d37146627d4",
+        "project": "197ef824-50d0-4679-9aa9-d61de61a54ae",
+        "sha256": "cf7a353f6e13aa456efa477ceadc2c0f7a42fdcaa5d871211726d0e37edf3631",
+        "width": 1000,
+        "height": 1000,
+        "byteCount": 4001673
+      },
+      {
+        "id": "c75f2658-ecde-43fc-8e50-993333b39afe",
+        "project": "cd483820-8e43-4e7f-8c01-dbe191a0df64",
+        "sha256": "ebc67fb00f77658f0f3fff534659afaa569e34f87d663be4e255002b16e85ea6",
+        "width": 420,
+        "height": 660,
+        "byteCount": 4557
+      },
+      {
+        "id": "dcaf07b0-ca97-48cb-b279-f9f2659147eb",
+        "project": "197ef824-50d0-4679-9aa9-d61de61a54ae",
+        "sha256": "3fd6befd056b85880f6ffcca30cd5b4fec51ac182ab0e87bd1056678347f90a3",
+        "width": 1000,
+        "height": 1000,
+        "byteCount": 4001673
+      },
+      {
+        "id": "dfc1bdc6-347f-4236-b826-450c19c0b8ba",
+        "project": "197ef824-50d0-4679-9aa9-d61de61a54ae",
+        "sha256": "70eac202dc17ce27313ad80fec71bffa30bc1a69f9b73e9edb50013f102835e5",
+        "width": 1000,
+        "height": 1000,
+        "byteCount": 4001673
+      },
+      {
+        "id": "e69979eb-200a-4265-9737-2e6583ba4ba3",
+        "project": "197ef824-50d0-4679-9aa9-d61de61a54ae",
+        "sha256": "2a52475de9a1cb9f4d481b88e094b38e6b1e2fdbd52ea6569e46476df02ab2b7",
+        "width": 1000,
+        "height": 1000,
+        "byteCount": 4001673
+      },
+      {
+        "id": "e6df828c-9202-4c31-a80b-ac6503008fce",
+        "project": "197ef824-50d0-4679-9aa9-d61de61a54ae",
+        "sha256": "83f71d0531dce80123f7ab99bbfe925c91432614cd58d94e362e555593becac6",
+        "width": 1000,
+        "height": 1000,
+        "byteCount": 4001673
+      },
+      {
+        "id": "e98e9b7e-bbf0-48a7-88a3-7479174cc3c8",
+        "project": "197ef824-50d0-4679-9aa9-d61de61a54ae",
+        "sha256": "24016c05b02a50b1396058ba1b8803d535cb78944f74197202499593e370850c",
+        "width": 1000,
+        "height": 1000,
+        "byteCount": 4001673
+      },
+      {
+        "id": "ea91f068-6920-45bc-a8cc-b90f3ec2c23e",
+        "project": "197ef824-50d0-4679-9aa9-d61de61a54ae",
+        "sha256": "6b92fcea57b10a77c10b5c16df43a1cc6c631258cf62b3b8de7ab6bf96db82ea",
+        "width": 1000,
+        "height": 1000,
+        "byteCount": 4001673
+      },
+      {
+        "id": "fd02cbd5-6e57-47ce-8e88-689c8175fa88",
+        "project": "cd483820-8e43-4e7f-8c01-dbe191a0df64",
+        "sha256": "5ec7d5cb2f89ee08e5493088ff85a71830078e4d95a0010cec1743294f8ef5a2",
+        "width": 1280,
+        "height": 720,
+        "byteCount": 11591
       }
     ]
   },
   "nativeAfter": {
-    "default-user/characters/Project A.png": "cdb106a6b095b5e32f56fd2ba84653b67781e5349883b32ebf73eff7a0147257",
-    "default-user/characters/Project B.png": "b373558a572f070e59ab20fcfb8761d31e8405f1c8e4e39272376e7c600ac1c1",
+    "default-user/characters/Project A.png": "cb7ffb12801e955daa2c6c6ad93b88e28e2b1f2907a81beb9ebae5c7baa3717e",
+    "default-user/characters/Project B.png": "dadfa1d752525ac4f7a78a44d099a49ca4970108a0b6da8ea1a605bfc44ad922",
     "default-user/characters/Seraphina/admiration.png": "e451994487b3a5b7c72d6e6025c8cbe6bbcfbf01a490042b8b581522e6ba4f96",
     "default-user/characters/Seraphina/amusement.png": "1cedaee06fb1c740c5c8c52de8973f733789d51fe9b23fcb633635e755ae6e6f",
     "default-user/characters/Seraphina/anger.png": "d657d77b1bce609dd6006582cf687691871411eb041f9f4c41da4765b12ea069",
@@ -539,8 +539,8 @@
     "default-user/characters/Seraphina/sadness.png": "3819c2bca59224f67767eb3762c846e35d5eb5272be03f35c21fc32163df67a6",
     "default-user/characters/Seraphina/surprise.png": "f6a9f657d081f670a961649a5a21526ec251262ca06adf99626509059fbbb103",
     "default-user/characters/default_Seraphina.png": "8a71e8270f54fafbccf905b1bdf053a6a55f57bea89c01fcd8c0e87ee76a2d52",
-    "default-user/chats/Project A/Project A - 2026-11-10@22h29m53s559ms.jsonl": "cf1e6e61c19cc2943f4142b65677152e063bac4aa0f4e266ff686985aa74581b",
-    "default-user/chats/Project B/Project B - 2026-11-10@22h29m53s586ms.jsonl": "8c7dced2545158a61cf5db61bd71fb3ba0835d6ba32adae1d0a9edc46f6827e8",
+    "default-user/chats/Project A/Project A - 2026-11-11@22h10m11s293ms.jsonl": "bf5c8cd1e22784889771cb97acb9dc27c7df3cf42df7955d7c9928685bee3a65",
+    "default-user/chats/Project B/Project B - 2026-11-11@22h10m11s330ms.jsonl": "db16f88a81d9eac74e54dfe905c0b78b97eae9fcd917be0e9c035317b8003174",
     "default-user/worlds/Eldoria.json": "bfc2548443c890746a54d54e35e41265b02d1b59fd06d72552b305bf9b1e063c",
     "sn-other/characters/Seraphina/admiration.png": "e451994487b3a5b7c72d6e6025c8cbe6bbcfbf01a490042b8b581522e6ba4f96",
     "sn-other/characters/Seraphina/amusement.png": "1cedaee06fb1c740c5c8c52de8973f733789d51fe9b23fcb633635e755ae6e6f",

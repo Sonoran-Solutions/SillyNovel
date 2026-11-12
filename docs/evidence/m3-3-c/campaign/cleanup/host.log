@@ -1,27 +1,27 @@
-Node version: v26.8.1. Running in undefined environment. Server directory: /home/dq/.hermes/cache/scratch/sn-portability-host-LKy4H7/host
-Using config path: /home/dq/.hermes/cache/scratch/sn-portability-host-LKy4H7/config.yaml
+Node version: v26.8.1. Running in undefined environment. Server directory: /home/dq/.hermes/cache/scratch/sn-portability-host-hJXqSU/host
+Using config path: /home/dq/.hermes/cache/scratch/sn-portability-host-hJXqSU/config.yaml
 
 CSRF protection is disabled. This will make your server vulnerable to CSRF attacks.
 
-Using data root: /home/dq/.hermes/cache/scratch/sn-portability-host-LKy4H7/data
+Using data root: /home/dq/.hermes/cache/scratch/sn-portability-host-hJXqSU/data
 Preferring IPv4 for DNS resolution
 
 SillyTavern 1.19.0
 Running 'HEAD' (7e8663cd9) - 9/14/2026, 10:55:46 AM MST
 
-Initializing plugin from /home/dq/.hermes/cache/scratch/sn-portability-host-LKy4H7/host/plugins/sillynovel-storage/index.mjs
+Initializing plugin from /home/dq/.hermes/cache/scratch/sn-portability-host-hJXqSU/host/plugins/sillynovel-storage/index.mjs
 1 server plugin(s) are currently loaded. Make sure you know exactly what they do, and only install plugins from trusted sources!
 
 Compiling frontend libraries...
-webpack 5.105.4 compiled [1m[32msuccessfully[39m[22m in 376 ms
+webpack 5.105.4 compiled [1m[32msuccessfully[39m[22m in 506 ms
 
-]2;SillyTavern WebServer\SillyTavern is listening on IPv4: 127.0.0.1:41041
-
-==================================================
-
-Go to: http://127.0.0.1:41041/ to open SillyTavern
+]2;SillyTavern WebServer\SillyTavern is listening on IPv4: 127.0.0.1:44627
 
 ==================================================
 
-Login successful: default-user from 127.0.0.1 at 11/10/2026, 10:30:42 PM
+Go to: http://127.0.0.1:44627/ to open SillyTavern
+
+==================================================
+
+Login successful: default-user from 127.0.0.1 at 11/11/2026, 10:11:22 PM
 ]2;/home/dq/.hermes/node/bin/node\

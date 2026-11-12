@@ -1,11 +1,11 @@
 {
  "schemaVersion": 1,
  "mode": "loopback-proof",
- "candidate": "2ff328d8971458f9161445434b3a2632601ec5ee",
+ "candidate": "5518a512114183f70264deb68e65387721f79515",
  "casesSha256": "ada4ff1ed766af87872a0b50973b95a0d7b652a0b773ddaeb0ad54a6804cacf5",
  "promptVersion": "0ef22635aed99352",
  "perCaseMs": 2000,
- "startedUTC": "2026-11-11T05:43:34.386Z",
+ "startedUTC": "2026-11-12T05:24:43.235Z",
  "results": [
   {
    "id": "presence-1",
@@ -25,21 +25,21 @@
      }
     ]
    },
-   "elapsedMs": 8
+   "elapsedMs": 15
   },
   {
    "id": "presence-2",
    "category": "presence",
    "status": "refused",
    "code": "NOT_SINGLE_JSON",
-   "elapsedMs": 5
+   "elapsedMs": 8
   },
   {
    "id": "presence-3",
    "category": "presence",
    "status": "failed",
    "code": "TRANSPORT_ERROR",
-   "elapsedMs": 13
+   "elapsedMs": 22
   },
   {
    "id": "presence-4",
@@ -49,7 +49,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 12
+   "elapsedMs": 16
   },
   {
    "id": "presence-5",
@@ -69,7 +69,7 @@
      }
     ]
    },
-   "elapsedMs": 10
+   "elapsedMs": 14
   },
   {
    "id": "mentions-1",
@@ -88,7 +88,7 @@
      }
     ]
    },
-   "elapsedMs": 5
+   "elapsedMs": 12
   },
   {
    "id": "mentions-2",
@@ -98,7 +98,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 7
+   "elapsedMs": 11
   },
   {
    "id": "mentions-3",
@@ -108,7 +108,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 4
+   "elapsedMs": 16
   },
   {
    "id": "mentions-4",
@@ -118,7 +118,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 9
+   "elapsedMs": 12
   },
   {
    "id": "mentions-5",
@@ -147,7 +147,7 @@
      }
     ]
    },
-   "elapsedMs": 6
+   "elapsedMs": 10
   },
   {
    "id": "negation-1",
@@ -157,7 +157,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 5
+   "elapsedMs": 13
   },
   {
    "id": "negation-2",
@@ -167,7 +167,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 9
+   "elapsedMs": 12
   },
   {
    "id": "negation-3",
@@ -177,7 +177,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 5
+   "elapsedMs": 9
   },
   {
    "id": "negation-4",
@@ -187,7 +187,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 5
+   "elapsedMs": 13
   },
   {
    "id": "negation-5",
@@ -197,7 +197,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 9
+   "elapsedMs": 13
   },
   {
    "id": "hypothetical-travel-1",
@@ -216,7 +216,7 @@
      }
     ]
    },
-   "elapsedMs": 6
+   "elapsedMs": 12
   },
   {
    "id": "hypothetical-travel-2",
@@ -226,7 +226,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 6
+   "elapsedMs": 15
   },
   {
    "id": "hypothetical-travel-3",
@@ -246,7 +246,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 5
+   "elapsedMs": 9
   },
   {
    "id": "hypothetical-travel-5",
@@ -265,7 +265,7 @@
      }
     ]
    },
-   "elapsedMs": 5
+   "elapsedMs": 7
   },
   {
    "id": "flashbacks-1",
@@ -282,7 +282,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 16
+   "elapsedMs": 5
   },
   {
    "id": "flashbacks-3",
@@ -292,7 +292,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 11
+   "elapsedMs": 3
   },
   {
    "id": "flashbacks-4",
@@ -302,7 +302,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 6
+   "elapsedMs": 3
   },
   {
    "id": "flashbacks-5",
@@ -322,7 +322,7 @@
      }
     ]
    },
-   "elapsedMs": 6
+   "elapsedMs": 4
   },
   {
    "id": "outfit-continuity-1",
@@ -332,7 +332,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 7
+   "elapsedMs": 3
   },
   {
    "id": "outfit-continuity-2",
@@ -352,7 +352,7 @@
      }
     ]
    },
-   "elapsedMs": 6
+   "elapsedMs": 3
   },
   {
    "id": "outfit-continuity-3",
@@ -362,7 +362,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 5
+   "elapsedMs": 3
   },
   {
    "id": "outfit-continuity-4",
@@ -372,7 +372,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 6
+   "elapsedMs": 3
   },
   {
    "id": "outfit-continuity-5",
@@ -392,7 +392,7 @@
      }
     ]
    },
-   "elapsedMs": 11
+   "elapsedMs": 3
   },
   {
    "id": "group-authorship-1",
@@ -412,7 +412,7 @@
      }
     ]
    },
-   "elapsedMs": 5
+   "elapsedMs": 2
   },
   {
    "id": "group-authorship-2",
@@ -432,7 +432,7 @@
      }
     ]
    },
-   "elapsedMs": 5
+   "elapsedMs": 3
   },
   {
    "id": "group-authorship-3",
@@ -452,7 +452,7 @@
      }
     ]
    },
-   "elapsedMs": 11
+   "elapsedMs": 4
   },
   {
    "id": "group-authorship-4",
@@ -472,7 +472,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 4
+   "elapsedMs": 6
   },
   {
    "id": "user-locks-1",
@@ -492,7 +492,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 4
+   "elapsedMs": 3
   },
   {
    "id": "user-locks-3",
@@ -512,7 +512,7 @@
      }
     ]
    },
-   "elapsedMs": 4
+   "elapsedMs": 3
   },
   {
    "id": "user-locks-4",
@@ -522,7 +522,7 @@
     "schemaVersion": 1,
     "updates": []
    },
-   "elapsedMs": 4
+   "elapsedMs": 3
   },
   {
    "id": "user-locks-5",
@@ -542,7 +542,7 @@
      }
     ]
    },
-   "elapsedMs": 4
+   "elapsedMs": 3
   }
  ]
 }
