@@ -2665,3 +2665,34 @@ for(const kind of ['candidate','reconciled'])test('M3.3 terra review 2: a '+kind
  await control(page,'Remove finished image jobs').click();await waitStatus(page,/^Removed 1 image job record/);
  assert.deepEqual(states(x),[]);
 });
+// Terra review, second round (fails on 50f8431).
+test('M3.3 terra review 1, second round: an import written with its reply lost, then a takeover; the retry applies nothing and shows the lease-lost line',async t=>{
+ const x=await imageRoute(t,{clock:true}),{page}=x;await x.ready();
+ await control(page,'Submit').click();await waitStatus(page,/^Candidate, not imported/);
+ x.ledger.lose=(method,rest,body)=>method==='POST'&&/^jobs\/[^/]+$/.test(rest)&&body?.state==='imported';
+ const importButton=button(page,'Import and apply background to Harbor project');
+ await importButton.click();await waitStatus(page,/^The image ledger did not acknowledge the import/);
+ assert.equal(states(x).join(),'imported','written; the reply was lost');
+ await takenOver(x);
+ await importButton.click();
+ await waitStatus(page,/^This image session ended here: another tab or page took it over\./);
+ await new Promise(r=>setTimeout(r,300));
+ assert.match(await generationStatus(page).innerText(),/^This image session ended here/,'no later notice replaces the lease-lost line');
+ assert.doesNotMatch(await page.locator('.sillynovel-selected-art').innerText(),/Generated harbor/,'nothing applied without the lease');
+ assert.equal(await page.locator('.sillynovel-image-workflow__preview').isHidden(),true);
+ assert.equal(await page.getByLabel('Background',{exact:true}).locator('option',{hasText:'Generated harbor'}).count(),0,'nothing is installed');
+ assert.equal(states(x).join(),'imported');
+});
+test('M3.3 terra review nit: a failed read of the rows a reload left names the ledger problem and is read again after the next heartbeat',async t=>{
+ const x=await imageRoute(t,{clock:true}),{page,field}=x;await x.ready();
+ await control(page,'Submit').click();await waitStatus(page,/^Candidate, not imported/);
+ await x.reload();
+ let failures=0;x.ledger.fail=(method,rest)=>method==='GET'&&rest==='jobs'&&failures++===0?{status:503,code:'STORAGE_UNAVAILABLE'}:null;
+ await field('Image session on this host').check();await page.locator('.sillynovel-image-workflow__lease').waitFor({state:'visible'});
+ await control(page,'Take over').click();
+ await waitStatus(page,/^The image ledger is unavailable/);
+ assert.equal(await page.locator('.sillynovel-image-workflow__stranded').count(),0);
+ await page.clock.fastForward(30_000);
+ await page.locator('.sillynovel-image-workflow__stranded').waitFor();
+ assert.equal(failures,2,'read once more, after the heartbeat');
+});

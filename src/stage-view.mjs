@@ -357,11 +357,17 @@ export function mountVisualStage({ document, stage, actions }) {
             const live=new Set([pending,orphan].map(job=>job?.ledgerId).filter(Boolean));
             recovery=jobs.filter(job=>!live.has(job.id));if(reconcile&&!recovery.some(job=>job.id===reconcile.ledgerId))reconcile=null;
         }catch(error){if(ledger===held_)wfStatus.textContent=ledgerProblem(error.code);return;}
-        // Terra review finding 2: a candidate or reconciled row that no page shows (its preview went with a reload) is listed for an explicit Discard,
-        // so it can reach cleanup. Not this page's live preview, nor a row whose outcome this page still has queued. A failed read lists nothing new.
-        // ponytail: no Resume (refetch hostPath, check resultSha256, show as a candidate); Discard then a new Submit covers it. Add it through the
-        // Reconcile fetch/PNG/identity path, taking the identity when Resume starts (the original source identity is gone after a reload).
-        const all=await ledgerCall(()=>client.imageJobs(held_.projectId)).catch(()=>null);if(ledger!==held_||!Array.isArray(all))return;
+        await loadStranded(held_);
+    }
+    // Terra review finding 2: a candidate or reconciled row that no page shows (its preview went with a reload) is listed for an explicit Discard,
+    // so it can reach cleanup. Not this page's live preview, nor a row whose outcome this page still has queued.
+    // ponytail: no Resume (refetch hostPath, check resultSha256, show as a candidate); Discard then a new Submit covers it. Add it through the
+    // Reconcile fetch/PNG/identity path, taking the identity when Resume starts (the original source identity is gone after a reload).
+    // A failed read names the ledger problem and is read again after the next successful heartbeat (no timer of its own).
+    async function loadStranded(held_){
+        let all;
+        try{all=await ledgerCall(()=>client.imageJobs(held_.projectId));}catch(error){if(ledger===held_){held_.strandedFailed=true;wfStatus.textContent=ledgerProblem(error.code);}return;}
+        if(ledger!==held_||!Array.isArray(all))return;held_.strandedFailed=false;
         const shown=resultPreview?.generated&&!resultPreview.generated.done?resultPreview.generated.ledgerId:null,queued=new Set(unacked.map(item=>item.ledgerId));
         stranded=all.filter(job=>['candidate','reconciled'].includes(job.state)&&job.id!==shown&&!queued.has(job.id));
     }
@@ -380,7 +386,7 @@ export function mountVisualStage({ document, stage, actions }) {
     function beat(){
         const held_=ledger;if(!held_)return;
         flushOutcomes();
-        ledgerCall(()=>client.heartbeatImageSession(held_.projectId,{sessionId:held_.session.id,tab})).then(row=>{if(ledger===held_)held_.session=row;},
+        ledgerCall(()=>client.heartbeatImageSession(held_.projectId,{sessionId:held_.session.id,tab})).then(row=>{if(ledger!==held_)return;held_.session=row;if(held_.strandedFailed)loadStranded(held_).then(()=>{if(!disposed)renderWorkflow();});},
             error=>{if(ledger===held_&&['LEASE_LOST','NOT_FOUND'].includes(error.code)){leaseLost();if(!disposed)renderWorkflow();}});
     }
     function endImageSession(){
@@ -796,7 +802,8 @@ export function mountVisualStage({ document, stage, actions }) {
         // Dropped meanwhile (lease lost, session off, project changed) while `done` held its discard back: record it now.
         const drop=message=>{if(resultPreview===chosen)clearPreview(message);else if(!generated.done){generated.done=true;record(generated,'discarded');}};
         const assetId=await model.importFile(chosen.file,'background',undefined,wfLabel.value.trim(),id=>id===undefined?resultPreview===chosen&&authority()&&!generated.check():authorize(id));
-        if(refused?.code==='LEASE_LOST'){if(ledger===generated.held)leaseLost();drop(gone);return;}
+        // A row this page already wrote `imported` takes no discard after it (the plugin would refuse it and the notice would hide the lease line).
+        if(refused?.code==='LEASE_LOST'){generated.done=Boolean(refused.written);if(ledger===generated.held)leaseLost();drop(gone);return;}
         if(refused?.code==='CONFLICT'){generated.done=true;drop(conflictLine('imported',refused.row)+' The list was read again.');if(ledger===generated.held)await loadRecovery(ledger);return;}
         if(refused){if(resultPreview===chosen)wfStatus.textContent='The image ledger did not acknowledge the import, so nothing was applied; the candidate is kept. Import again once the ledger answers.';else drop();return;}
         if(resultPreview!==chosen)return;
@@ -817,7 +824,12 @@ export function mountVisualStage({ document, stage, actions }) {
             // The reread rule: on a retry after a lost reply, a row already imported with this asset is this page's own write.
             let row;
             try{row=(await ledgerCall(()=>client.imageJobs(generated.projectId))).find(job=>job.id===generated.ledgerId)??null;}catch{return {code:'UNACKNOWLEDGED'};}
-            return written(row,body)?null:{code:'CONFLICT',row};
+            if(!written(row,body))return {code:'CONFLICT',row};
+            // Terra second round: imported→imported is no transition, so the plugin never checked the holder. An imported row cannot move back,
+            // so a holder-checked heartbeat for this page's session decides whether the earlier write may be applied here now.
+            if(ledger!==generated.held)return {code:'LEASE_LOST',written:true};
+            try{const session=await ledgerCall(()=>client.heartbeatImageSession(generated.projectId,{sessionId:generated.held.session.id,tab}));if(ledger===generated.held)generated.held.session=session;return null;}
+            catch(beat){return ['LEASE_LOST','NOT_FOUND'].includes(beat.code)?{code:'LEASE_LOST',written:true}:{code:'UNACKNOWLEDGED'};}
         }
     }
     for(const e of [wfLabel,wfPrompt,wfNegative,wfStyle])listen(e,'input',()=>{wfRevision++;renderWorkflow();});
