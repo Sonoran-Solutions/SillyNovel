@@ -1,0 +1,101 @@
+{
+ "schemaVersion": 1,
+ "mode": "loopback-proof",
+ "since": "2026-11-12T06:47:37.128Z",
+ "reviews": [
+  "553e89dd60cc4be28f670c3b46bdabf6d282b15a3e4273eca42caeb3d688afd4",
+  "04c78cde5036333fa01dabbb34aa2f35083dea7b33ae65424ac0afc1443884e3"
+ ],
+ "files": [
+  {
+   "name": "2026-11-11@23h47m39s762ms.png",
+   "size": 6085,
+   "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
+   "pngSignature": true,
+   "mtime": "2026-11-12T06:47:39.767Z",
+   "backendGraph": "absent"
+  },
+  {
+   "name": "2026-11-11@23h49m47s229ms.png",
+   "size": 6085,
+   "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
+   "pngSignature": true,
+   "mtime": "2026-11-12T06:49:47.234Z",
+   "backendGraph": "absent"
+  },
+  {
+   "name": "2026-11-11@23h49m49s437ms.png",
+   "size": 6085,
+   "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
+   "pngSignature": true,
+   "mtime": "2026-11-12T06:49:49.441Z",
+   "backendGraph": "absent"
+  },
+  {
+   "name": "2026-11-11@23h49m49s804ms.png",
+   "size": 6085,
+   "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
+   "pngSignature": true,
+   "mtime": "2026-11-12T06:49:49.808Z",
+   "backendGraph": "absent"
+  },
+  {
+   "name": "2026-11-11@23h51m51s758ms.png",
+   "size": 6085,
+   "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
+   "pngSignature": true,
+   "mtime": "2026-11-12T06:51:51.760Z",
+   "backendGraph": "absent"
+  },
+  {
+   "name": "2026-11-11@23h51m51s957ms.png",
+   "size": 6085,
+   "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
+   "pngSignature": true,
+   "mtime": "2026-11-12T06:51:51.960Z",
+   "backendGraph": "absent"
+  },
+  {
+   "name": "2026-11-11@23h51m52s158ms.png",
+   "size": 6085,
+   "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
+   "pngSignature": true,
+   "mtime": "2026-11-12T06:51:52.160Z",
+   "backendGraph": "absent"
+  },
+  {
+   "name": "2026-11-11@23h51m52s357ms.png",
+   "size": 6085,
+   "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
+   "pngSignature": true,
+   "mtime": "2026-11-12T06:51:52.359Z",
+   "backendGraph": "absent"
+  },
+  {
+   "name": "2026-11-11@23h51m52s556ms.png",
+   "size": 6085,
+   "sha256": "7b76e59e5e9c3927db0dec2e492c8cd1924ba5a61919c37ac4d880af1cebd448",
+   "pngSignature": true,
+   "mtime": "2026-11-12T06:51:52.558Z",
+   "backendGraph": "absent"
+  }
+ ],
+ "ledger": {
+  "ledgerRows": 12,
+  "statesByCount": {
+   "imported": 1,
+   "discarded": 5,
+   "failed": 1,
+   "stale": 3,
+   "abandoned": 1,
+   "candidate": 1
+  },
+  "filesWithoutRow": 0,
+  "filesWithSeveralRows": 0,
+  "rowsWhoseFileIsMissing": 0,
+  "rowsDeletedButPresent": 0,
+  "rowsDeleted": 1,
+  "rowsHashChecked": 6,
+  "rowsWhoseHashDiffers": 0
+ }
+}

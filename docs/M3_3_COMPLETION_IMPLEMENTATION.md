@@ -6,6 +6,8 @@
 
 **PR C merged — 2026-11-11.** [#94](https://github.com/Sonoran-Solutions/SillyNovel/pull/94) merged as `3cd3056` (frozen runtime `5518a51`, record and evidence `8fdc37f`) on the owner's standing word for this PR (“if it passes merge”), after the Codex terra senior review's third round returned MERGE WITH NITS. Choice 12, the holder-only `imported` rule in the plugin, remains an implementation choice for owner review, not an owner ruling. PR D has not started. Gate C NOT_RUN.
 
+**PR D candidate — 2026-11-11.** Gate C readiness on the owner's [go-ahead](DECISIONS.md#owner-go-ahead--m33-pr-d-gate-c-readiness--2026-11-11); see [PR D](#pr-d--gate-c-readiness). Tests and docs only. Gate C NOT_RUN.
+
 ## PR A — request-module changes and the host image-folder probe
 
 **Candidate, unmerged. Frozen `3827af7`** (the campaign ran on `7660a53`; see choice 8), based on main `f22a7e8` (the [owner rulings J1–J9](DECISIONS.md#owner-rulings-j1j9--m33-completion--2026-11-08) on the [M3.3 plan](M3_3_COMPLETION_PLAN.md)). Tracked by [DYL-215](https://linear.app/devils17/issue/DYL-215/sillynovel-m33-complete-the-first-image-route-for-gate-c-ledger-lease). No plugin, schema or adapter change. Because J8 checks locks before the layout, the reason sentence the existing UI shows for a lock change during a request changes, so this PR is a runtime change under H4 and carries the browser suite and a full campaign rather than Node evidence alone.
@@ -264,3 +266,158 @@ Run by the fix worker on the disposable SillyTavern 1.19.0 host pinned at `7e866
 ### Not covered
 
 The owner's 1.18.0 install and real ComfyUI; two real tabs reserving at the same instant (the plugin's transaction decides; the browser suite and campaign take over sequentially); deleting inside a character subfolder; physical devices and screen readers.
+
+## PR D — Gate C readiness
+
+**Candidate, unmerged. Frozen `69dc4cb`** (the last code change; later commits are record and evidence only). Based on main `c6f421d` (PR C merged as `3cd3056`, merged notes `c6f421d`), under the owner's [go-ahead](DECISIONS.md#owner-go-ahead--m33-pr-d-gate-c-readiness--2026-11-11), “Go ahead and orchestrate D”, which authorizes PR D only: no Gate C session, no real-backend request, no PR 90 run, no merge. Tracked by [DYL-215](https://linear.app/devils17/issue/DYL-215/sillynovel-m33-complete-the-first-image-route-for-gate-c-ledger-lease). Tests and docs only. **Gate C NOT_RUN.**
+
+**Runtime and reused evidence.** Main `c6f421d`'s runtime and tests are byte-identical to PR C's frozen `5518a51`: `git diff --quiet 5518a51 c6f421d -- src tests plugins index.js style.css manifest.json` is empty. PR D adds only new files under `tests/probes/m3-gate-c/` and docs. `git diff --quiet 5518a51 HEAD -- src index.js style.css manifest.json plugins` is empty, and no existing test file changes. So [PR C's campaign](#coordinators-commands-and-results-frozen-5518a51) applies **by SHA, as reused evidence, not as a fresh run**: tested revision `5518a51`, current revision this PR's head. `python3 tests/probes/dyl60/validate.py docs/evidence/m3-3-c/campaign` passes on this PR's head (152 frozen inputs, 119 artifact hashes). **The new proof below is synthetic. Every real half is NOT_RUN. A real-provider policy refusal is NOT_TESTED (J7).**
+
+### What it adds
+
+| File | Change |
+| --- | --- |
+| [`docs/GATE_C_RECORD_TEMPLATE.md`](GATE_C_RECORD_TEMPLATE.md) | The Gate C record: the human gate record of TESTING section 6; a field for the host the owner uses, any deviation, and the database backup; the synthetic hard gates; one block per demonstration on the synthetic fixture; the real session's lines (each shown, NOT_RUN or NOT_TESTED); the read-only capture's lines; owner verdict NOT_RUN / PASS / REVISE / STOP. Counts, hashes and the owner's words only. |
+| `tests/probes/m3-gate-c/demo.mjs` | The seven demonstrations on the fake ComfyUI and the disposable pinned 1.19.0 host. `--proof-loopback` (headless, automated, asserted; the coordinator's) or `--owner` (a headed browser of its own on the disposable host, Enter between steps; records what it observes against the expected changes and asserts nothing). Writes `observations.json` labelled SYNTHETIC. Includes the 8188 guard below. |
+| `tests/probes/m3-gate-c/capture.mjs` | A read-only capture for the owner's real session. It refuses without `--owner-accepts-read-only-capture` and has no network code. It reads only new PNGs in the host's `user/images` folder, the review texts the owner copied, and the recovery tool's `inspect` JSON. A review or ledger file is refused if its real path is `settings.json` or `secrets.json`, or if any directory above it holds either file (a SillyTavern user data root), directly or through a symlink; each is size-capped. It reports each file's name, size, SHA-256 and PNG signature, and checks ComfyUI's `prompt` metadata (the graph the backend actually ran, stored unchanged by the host) field by field against the review. It cross-checks ledger rows against files. Its output holds no prompt or review text and is never overwritten. It must lie outside the repository and the images folder, checked on both the path as given and the real path. |
+| `tests/probes/m3-gate-c/gate-c.test.mjs` | 19 Node tests (10, plus 3 from the terra review, 2 from its second round, 1 from its third, 2 from its fourth and 1 from its fifth): argument refusals for both scripts, the demonstration table, the guard on ComfyUI and other backend-address routes, PNG text chunks (`tEXt`, `zTXt`, `iTXt`), review parsing and graph comparison, the ledger cross-check, a capture end to end with no text in its output, and capture's imports (no network module, no settings read). |
+| `tests/probes/m3-gate-c/README.md` | Commands, the guard and its limit, registration. |
+| `docs/evidence/m3-3-d/proof/`, `docs/evidence/m3-3-d/failed-50e9b57/` | The loopback proof's bounded output (`observations.json`, `capture.json`, `ledger-inspect.json` with the review text masked by the tool, the console log, `SHA256SUMS`) and the retained failed first run. Synthetic only. |
+
+Not touched: `src/`, `index.js`, `style.css`, `manifest.json`, `plugins/`, and every existing file under `tests/`.
+
+### The seven demonstrations and the hard gates
+
+| Demonstration | Real backend in the owner's session | Synthetic (demo.mjs; the proof on `69dc4cb`) | Who records |
+| --- | --- | --- | --- |
+| New background | Yes, first; capture checks the file and the backend graph against the review | Held job, a reply during it, Import and apply, saved; 1 `/prompt`, 1 row `imported`, +1 host file | Agent: capture and counts; owner: usefulness |
+| Cache hit | Only with a fixed seed the owner sets; no new file and no new row | Use the previous result; 0 `/prompt`, 0 rows, nothing counted | Agent: counts; owner: words |
+| Rejected candidate | Yes: Discard, then Delete the host's copy | 1 `/prompt`, row `discarded` with the host copy deleted, net 0 files | Agent: capture `rowsDeleted`; owner |
+| Timeout | Optional, only if the owner slows ComfyUI by their own means (for example a long job queued in ComfyUI's own UI first) and 120 s pass; otherwise NOT_RUN | Held job, a reply, the real 120 s wait to "outcome unknown" with Abandon offered, then the late image: discarded, nothing applied, row `stale`. This is the on-page timeout the campaign never ran on the host (checkpoint F) | Owner; agent for synthetic |
+| Policy refusal | **NOT_TESTED** (J7) | The fixture's `refusal` step: shown as a failure, 1 `/prompt`, row `failed`, no retry or fallback, a reply after it | Agent |
+| Cancelled or stale job | Yes: Cancel; a newer scene while generating; a second tab or a reload | Cancel then release (row `stale`); a newer background while held, then the late result discarded with the newer scene kept; a reload while held: takeover, Submit refused while unresolved, Abandon after the deadline | Owner; agent: capture cross-check |
+| Configured usage limit | Optional (five local generations) | Five Submits, the sixth refused, still 5 of 5 after a reload and takeover | Agent; owner |
+
+Hard gates:
+
+- **No duplicate jobs.** Synthetic: fixture `/prompt` count equals ledger rows equals Submit clicks over the whole proof (12 = 12 = 12), plus campaign J, M, N. Real: capture's file-to-row cross-check (no file without a row, none with several), and the owner reads ComfyUI's own queue history. The agent never contacts 8188.
+- **A late image never replaces a newer scene.** Synthetic: campaign D, G, M, N and the proof's timeout and stale steps. Real: Cancel or a newer scene during a real generation; the owner sees nothing applied, and the row is `stale` or `cancelled`.
+- **The data actually sent is verified.** Synthetic: campaign B and C (the wire deep-equals the expected workflow; the review is the wire). Real: PR 90's protocol already reads the owner's copied review text, the new host file (size, SHA-256, signature), the host's server log (which names ComfyUI's outputs but not the prompt) and the saved project. PR D adds the backend's own record of what it ran: the host stores ComfyUI's PNG bytes unchanged (`/api/sd/comfy/generate` returns the `/view` bytes and the page uploads them as is, verified in the pinned source), so `capture.mjs` compares the embedded `prompt` graph with the review. Whether ComfyUI v0.43.2 embeds it is unverified; absent metadata is reported NOT_AVAILABLE. Nothing reads the owner's settings.
+- **Reading and replying continue.** Synthetic: a message answered by the synthetic text endpoint while a job was held (4 replies, in new background, timeout, cancelled and, after the failure, policy refusal). Real: the owner.
+- **Canonical files unchanged.** Synthetic: cards, lorebooks, personas and the saved image settings unchanged, and the chat's earlier messages unchanged (new turns are the proof's own replies). Real: the owner's report.
+- **No automatic CGs or outfit batches.** Every `/prompt` followed a Submit click; real: files equal rows equal the owner's Submit presses.
+
+### The 8188 guard
+
+The host contacts ComfyUI from its server, so every page request goes to the host's own origin. At the pin (`src/endpoints/stable-diffusion.js`), every image backend route takes the backend address in the JSON body as `url`. Other host routes carry `api_server`, `custom_url`, `reverse_proxy`, `server_url`, `*_endpoint` and similar keys. `demo.mjs` therefore routes every `/api/` request of each browser context it opens through `guardDecision`, which reads the body:
+
+- Under `/api/sd/` it passes only ComfyUI's `ping`, `samplers`, `models`, `schedulers`, `vaes` and `generate` with `url` at exactly the fixture's origin. It also passes `workflows` and `workflow`, which read local files, but only when any `url` they carry is the fixture's. Everything else there is aborted, including other image sources, RunPod, and unparseable bodies.
+- Any other host API request whose backend-address keys hold an http(s) address other than the fixture or the text endpoint is aborted, and so is unparseable JSON. Values that are choice names (`zai_endpoint: 'common'`) and JSON arrays carry no address.
+- Before each demonstration (and each owner step) it reads the host's saved image settings and stops unless `comfy_url` is the fixture and the source is standard ComfyUI.
+- The proof sets `comfy_url` in the page to an unused loopback port, never 8188, with a sentinel server listening there. It sends a `ping`, a `generate` and an unparseable `generate`: all three were aborted, the sentinel received 0 connections, and the fixture's log was unchanged.
+
+- Every request to the host passes through the guard, and every rule matches one normalized path: lower case, one percent-decode, duplicate slashes collapsed, a trailing slash stripped. A path that fails to decode, keeps a `%` after one decode, or has a `.` or `..` segment is refused. The pinned host's Express 4.22.1 sets neither `case sensitive routing` nor `strict routing`. Measured against a router mounted as the host mounts them, `/api/horde/status`, `/api/HORDE/status`, `/api/horde/status/` and `/api/horde//status` all reach the same handler, while `/api/%68orde/status`, `/api/horde%2Fstatus`, `/api//horde/status` and dot segments do not. The guard refuses or normalizes all of them.
+- The text route is held to what the demonstrations use, the harness's seeded source. `/api/backends/chat-completions/*` passes only with `chat_completion_source: 'custom'` and `custom_url` at the text fixture, because the host chooses the provider from that source. Routes where the host picks an external endpoint itself are refused whatever the body says: other text backends and providers, translation, search, speech, vectors, remote tokenizers, asset downloads, content imports, and extension install, update and version. The proof's tamper check adds three provider switches (an `openai` source, no source, `custom` at the sentinel port), all aborted, with the text fixture's log unchanged.
+
+**Limit:** the guard sees only requests from the browser contexts the script opens. A request from another client of the disposable host, or host-side work not started by such a page, is not covered. The disposable host listens on loopback only, on an ephemeral port, and is stopped at the end.
+
+### Commands and results
+
+Node v26.8.1, Playwright 1.62.1, Chromium 151.0.7922.34, the disposable SillyTavern 1.19.0 host pinned at `7e8663c` (cloned per run into an owned root under TMPDIR), the fake ComfyUI on an ephemeral loopback port, the synthetic text endpoint on 8128. Ports 8000 and 8188 were never used. No real backend.
+
+```sh
+python3 tests/probes/dyl60/run.py --list-tests                      # {node: 18, storage: 6, browser: 1}, unchanged
+timeout --kill-after=5 600 node --test --test-isolation=none tests/probes/m3-gate-c/gate-c.test.mjs
+python3 tests/probes/dyl60/check-discovery.py
+python3 tests/probes/dyl60/validate.py docs/evidence/m3-3-c/campaign
+git diff --quiet 5518a51 HEAD -- src index.js style.css manifest.json plugins
+TMPDIR=<scratch> SN_PLAYWRIGHT_MODULE=<playwright>/index.mjs timeout --kill-after=10 1200 node tests/probes/m3-gate-c/demo.mjs --proof-loopback <pinned host> > <log>
+```
+
+| Check | Result |
+| --- | --- |
+| `gate-c.test.mjs` | 19/19 on the final head (18/18 after round 4, 16/16 after round 3, 15/15 after round 2, 13/13 after round 1, 10/10 before the terra review) |
+| `check-discovery.py` | PASS, 18/6/1 (unchanged) |
+| `validate.py docs/evidence/m3-3-c/campaign` on this head | PASS: 152 frozen inputs; Node 521, storage 283, browser 157, eight native campaigns; 119 artifact hashes. Reused evidence of `5518a51`, not a fresh run |
+| Runtime diff from `5518a51` | Empty |
+| `demo.mjs --proof-loopback` on `69dc4cb`, the final code head | **PASS** in 4 min 39 s (2026-11-12 06:47:22–06:52:01 UTC). Earlier passes on `fb3e682`, `d0cfca1`, `9eb0acd`, `3bcee56` and `8adcfed`, before the terra review's later rounds, are superseded and not retained. Guard: a tampered `ping`, `generate` and unparseable `generate`, and three text-provider switches (an `openai` source, no source, `custom` at the sentinel), all aborted; sentinel 0 connections; both fixture logs unchanged. Every demonstration matched its expected changes: new background 1 `/prompt`, `imported`, +1 file; cache hit 0, 0, 0; rejected candidate 1, `discarded` with its host copy deleted, net 0; policy refusal 1, `failed` (“The host returned no image.”), 0; timeout 1, `stale`, +1 (the late copy kept by the host, nothing applied); cancelled or stale 3, `stale`, `stale` (“Result discarded: the scene layout changed”), `abandoned`, +2; usage limit 5, four `discarded` and one `candidate`, +5, “Submissions used 5 of 5” after the reload. Gates: 12 Submit clicks = 12 `/prompt` = 12 ledger rows; nothing unresolved; canonical files, earlier chat messages and saved image settings unchanged; no chat text in the ledger; no guard abort during the demonstrations. Capture pipeline: recovery `backup` and `inspect` (review masked), then `capture.mjs --proof-loopback`: 9 files = 9 expected, every PNG signature valid, backend graph absent (the fixture PNG carries no metadata), no file without a row or with several, no missing or undeleted file, 1 deletion, 6 rows hash-checked against their files and none differing, no text in the output |
+
+Evidence: [`docs/evidence/m3-3-d/proof/`](evidence/m3-3-d/proof/) (`observations.json`, `capture.json`, `ledger-inspect.json`, `console.log`, `SHA256SUMS`). Owned roots `sn-m3-gate-c-7oxRoX`, `sn-m3-gate-c-6PL84v`, `sn-m3-gate-c-rsQkGj`, `sn-m3-gate-c-71xpeQ`, `sn-m3-gate-c-5LBGqh`, `sn-m3-gate-c-heaWqT` and `sn-m3-gate-c-tEg6S1` were read, their bounded outputs kept here, and then deleted. No owned process remained and port 8128 was free afterwards.
+
+**One failed run, retained.** The first proof, on `50e9b57`, passed the guard check, all seven demonstrations and every gate, but ended FAIL. The guard had aborted 16 legitimate requests during the demonstrations: 14 tokenizer counts, whose JSON body is an array, and 2 workflow lists after a reload, whose body carries the fixture's own `url`. A test defect; no product code was involved. The bounded fix (an array carries no backend keys; a local workflow route passes when its `url` is the fixture's), two more guard assertions and one recovery run followed on `fb3e682` (PASS). The terra review's fixes then changed `capture.mjs`, so the proof ran once more on `d0cfca1` (PASS), once more on `9eb0acd` after the second round (PASS), once more on `3bcee56` after the third (PASS), once more on `8adcfed` after the fourth (PASS), and once more on `69dc4cb` after the fifth (PASS); that last run is the evidence above. The failed run is [retained](evidence/m3-3-d/failed-50e9b57/).
+
+### Findings
+
+- **The shared harness leaks on a failed setup** (round 4, finding 2). `createHarness()` in `tests/probes/m2-director/harness.mjs` starts the host and the text fixture before launching Chromium and returns nothing if a later step throws. The director and image-route campaigns call it the same way and have the same gap. It is a pre-existing defect, left for a later change, because the file is a frozen input of PR C's campaign (`docs/evidence/m3-3-c/campaign/inputs.json`) and changing it would void the reuse by SHA. `demo.mjs` works around it (a `ponytail:` comment names the upgrade path: fix `createHarness` with the next full campaign).
+
+### Implementation choices for owner review
+
+Proposals, not owner rulings; each is reversible.
+
+1. **The new Node test file is not registered in `tests/probes/dyl60/run.py`**, so discovery stays 18/6/1 and every frozen input of the PR C campaign stays byte-identical (`validate.py` on `docs/evidence/m3-3-c/campaign` passes on this head). The M3.3 PR A image-folder probe and the M3.2 seam endpoint test are also unregistered. **Ceiling:** a full campaign does not run these tests. **Upgrade path:** register them in `run.py` (19/6/1) when the Gate C frozen candidate gets its own full campaign, which that gate needs anyway. The page helpers `demo.mjs` restates from `m3-image-route/host.mjs` move into a shared module then (`ponytail:` comments in both new files).
+2. **Owner mode opens its own headed Chromium on the disposable host**, not the owner's usual browser. Cookies on 127.0.0.1 are shared across ports, so the owner's port-8000 session must not mix with it.
+3. **Before the Gate C session, the owner decides which host it runs on.** On the owner's 1.18.0 install that is a deviation from the pin, as at Gate B (I8). It needs the candidate's schema v3 storage plugin there, which migrates the live database (additive), so a DYL-58 backup comes first. The template has fields for the host, the deviation and the backup. `capture.mjs` runs on the owner's install only on the owner's word, recorded first; the README says so. **This is the owner's decision before the session, not before this PR.**
+4. **A real timeout, cache hit and usage limit are optional** in the owner's session. Each depends on the owner's own settings or effort: slowing ComfyUI by their own means, a fixed seed, five local generations. Otherwise each is NOT_RUN on the real backend, and the synthetic block stands for it, labelled so.
+5. **The record keeps hashes, counts and per-field match flags.** The owner's prompt and review text go in only if the owner says so. The capture output and the ledger backup stay outside the repository.
+6. **ComfyUI's own queue count is the owner's reading.** The agent never contacts 8188.
+7. **Canonical files on the real install rest on the owner's report.** The agent does not hash the owner's chats or cards.
+8. **A ROADMAP entry is added**, as M2.4 PR D did. M3.3 PRs A–C did not add one.
+9. **PR 90 (the M3.2 real-backend run) is left untouched.** The real new-background demonstration overlaps it; the owner decides whether the run stays separate, is superseded by Gate C, or comes first.
+10. **A file matches a review only if its graph is wired as the six-node workflow and every field the review states and that workflow carries matches** (positive, negative, steps, CFG, sampler, scheduler, denoise, size, model, and the seed when fixed). The only exceptions are a random seed (not compared), VAE and clip skip (not in that workflow, reported "not in graph"), and a field the review renders as `null`. Every node must be on the allowlist, and every text input must be the positive or negative text. A graph missing a node the workflow carries is therefore unmatched.
+11. **`--only` refuses a selection that leaves out a prerequisite.** `cache-hit` needs `new-background` in the same run. The other demonstrations stand alone in owner mode; each begins by telling the owner to turn the session on if it is off. The proof always runs all seven.
+12. **Capture inputs follow one rule.** A `--review` or `--ledger` file is refused if its real path is named `settings.json` or `secrets.json`, or if any directory above it holds either file (a SillyTavern user data root such as `data/<user>/`). Reviews are capped at 1 MiB and the ledger JSON at 16 MiB.
+
+### Senior review
+
+A Codex terra senior review of `5fe4eab` returned CHANGES REQUIRED with four findings. The coordinator confirmed each by reading the code, and all four are fixed with regressions in `gate-c.test.mjs`:
+
+1. **Should-fix: `capture.mjs`'s `--out` check was lexical.** A symlinked parent into the repository or the images folder passed it. Now the destination is rebuilt from the nearest existing parent's real path and checked against the real repository and images paths; `wx` is kept. Test: symlinked parents into both, including a missing directory below the link.
+2. **Should-fix: `matchedReview` accepted fields missing from the graph.** A graph with matching texts but no sampler counted as matched. Now every stated, workflow-carried field must match (choice 10). Tests: a missing sampler node, a missing model node and a missing latent node are each unmatched.
+3. **Should-fix: `--review` and `--ledger` could read any path,** including `settings.json` or `secrets.json`, directly or through a symlink. Now choice 12's rule applies, with size caps. Tests: direct, symlinked, data-root and oversize refusals.
+4. **Nit: `--only` could start a dependent demonstration without its prerequisite.** Now refused (choice 11).
+
+The runtime is still untouched. The proof was rerun once on `d0cfca1` (PASS).
+
+**Terra review, round 2** (of `45a0065`) confirmed those four fixes and raised three more, each confirmed reachable and fixed with regressions:
+
+1. **Should-fix: proof ownership was checked on the lexical images path.** An `sn-*` root could hold a symlinked `user/images` leading to the owner's folder. Now the images path is resolved with `realpath` and must lie inside the resolved owned root. In either mode, the real path must itself be a `user/images` folder, and the walk skips symlinked files and folders and opens each file with `O_NOFOLLOW` after checking its real path. Tests: a symlinked `images`, a symlinked `user`, an `images` link to another folder, and a symlinked file and folder inside.
+2. **Should-fix: matching did not check the wiring.** Swapped conditioning still matched. Now `compareGraph` follows the sampler's links and requires the six-node wiring: model from the checkpoint, latent from the empty latent, positive and negative from two distinct text encodes reading the checkpoint's CLIP, decode from the sampler and the checkpoint's VAE, save from the decode. Values are read through those links. Tests: swapped conditioning, one encode on both inputs, six single rewired links, and a third text encode.
+3. **Nit: a standalone `--only` demonstration started with the session off.** Every demonstration now opens with a line telling the owner to turn the session on (choice 11).
+
+**Sweep of `capture.mjs` for the same two classes**, fixed and named here. A ledger `hostPath` with a `..` or empty segment could steer the existence check outside the images folder; now such a row counts as missing, and existence is checked without following links below the real images folder. Pairing a ledger row with a file was by name only; now a row that recorded the result's SHA-256 must hash-match its file (`rowsWhoseHashDiffers`), and the proof requires at least one such check with none differing. Tests: a traversal path and a linked file in the ledger; same name, other bytes. The proof was then rerun once on `9eb0acd` (PASS).
+
+**Terra review, round 3** (of `eff98da`) confirmed the round-2 fixes and raised two more, both confirmed and fixed:
+
+1. **Should-fix: the ledger existence check ran `lstat` on the final component only.** So `/user/images/link/a.png`, with `link` a symlinked folder, followed the link outside. Now one helper, `underImages`, checks every path under the images folder, for the walk, the read and the ledger check alike. It examines each component with `lstat`, refuses any symlink, and confirms the resolved path lies inside the real images folder. Tests: a symlinked first component and a symlinked deeper component, in both a ledger path and the walk; both fail on `eff98da`'s ledger check.
+2. **Nit: a standalone `--only cancelled-or-stale` asked for a different background when Forest was the only one.** Setup now also seeds a second background, Harbor, as the proof path's own second scene does, and the owner step names which to pick.
+
+The proof was then rerun once on `3bcee56` (PASS).
+
+**Terra review, round 4** (of `bd4fe0b`, whole PR) confirmed the round-3 fixes and raised three more, each confirmed and fixed:
+
+1. **Should-fix: a chat-completions request with a non-custom provider and no foreign URL passed the guard,** and the host would then have chosen that provider's endpoint. Now the text route passes only the seeded `custom` source at the text fixture, and host-chosen external routes are refused (the guard section above). Tests: a non-custom source, a missing source, a tampered URL, custom without a URL, and the refused routes. The proof's tamper check now includes three provider switches.
+2. **Should-fix: if `createHarness()` threw after starting the host and the text fixture, they leaked.** `demo.mjs` now stops its own descendants: a parent-PID walk over `/proc` rooted at `process.pid`, never by name; TERM, up to 5 s, KILL survivors, wait for them to go. Then it rethrows and keeps the owned root. `tests/probes/m2-director/harness.mjs` is not changed (see Findings). Test: a spawned sleeping child and grandchild are found, stopped and reaped.
+3. **Should-fix: the template asked for host server log lines with no limit on their content.** Raw logs, capture output, backups, prompt and review text, and file and folder names now stay outside the repository. The record keeps counts, hashes, error codes, versions and observations the owner marks as non-sensitive. Every other field was checked: configuration (names and versions only), owner feedback (marked non-sensitive, never chat excerpts), evidence locations, the backup, the capture command, and the host files (hashes, not names).
+
+The proof was then rerun once on `8adcfed` (PASS).
+
+**Terra review, round 5** (of `b3e3f9f`) confirmed the round-4 fixes and raised one more, confirmed against the pinned host's routing. **Should-fix: the route rules were case-sensitive, but Express routes case-insensitively,** so `POST /api/HORDE/status` passed the guard and reached the AI Horde handler. The whole class is fixed once: the guard now routes every host request, normalizes the path a single time (above), and matches the `/api/sd/` branch, the store routes, the text route and the denylist on that form, segment by segment. Tests: mixed case, an encoded letter and an encoded slash, a double slash in either place, a trailing slash and dot segments, on a denied route and on the `/api/sd/comfy` branch (with the owner's port refused and the fixture passed in every variant).
+
+**Terra review, round 6** (of `9e7614f`): **MERGE WITH NITS.** It traced the round-5 normalization and every earlier fix, and found no further concrete, reachable defect. Its one nit, a stale test count in this record (18 for 19), is corrected. The reviewer ran the 19 Node tests and discovery, and checked the proof checksums. It did not run the host proof.
+
+The proof was then rerun once on the final code head (below).
+
+### NOT_RUN and NOT_TESTED
+
+| Surface | Status |
+| --- | --- |
+| Gate C: the frozen candidate, the owner's session, the verdict | **NOT_RUN**, each on its own word |
+| Every real half above, the read-only capture on the owner's install, the owner's 1.18.0 host with a real ComfyUI | **NOT_RUN** |
+| A real provider's policy refusal (J7) | **NOT_TESTED** |
+| Whether ComfyUI v0.43.2 embeds `prompt` metadata in saved PNGs | **NOT_VERIFIED** until the capture runs |
+| `demo.mjs --owner` (headed) | **NOT_RUN**; it shares setup, the guard and the observations with the proof |
+| T79's auth, rate and error fixtures; two real tabs reserving at the same instant; physical devices and screen readers | **NOT_RUN** / **NOT_TESTED**, unchanged from PR C |
+
+### Next bounded step
+
+Owner review of this draft PR and the choices above, then the owner's merge decision. After that, each on its own authorization and none implying the next: the frozen Gate C candidate (with its own full campaign, registering these tests); the owner's decision on the session's host and the backup; the owner's Gate C session with the synthetic demonstrations and the real backend; the read-only capture; the verdict. This document starts none of them.

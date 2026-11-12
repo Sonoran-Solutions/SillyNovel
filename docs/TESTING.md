@@ -1,5 +1,9 @@
 # Verification and acceptance
 
+## M3.3 PR D candidate — Gate C record template and demonstration scripts — 2026-11-11
+
+No runtime change: `git diff --quiet 5518a51 HEAD -- src index.js style.css manifest.json plugins` is empty and no existing test file changes. PR C's campaign therefore stands for T74–T83 by SHA (tested revision `5518a51`), and `validate.py docs/evidence/m3-3-c/campaign` passes on this head. New and unregistered (discovery stays 18/6/1): `tests/probes/m3-gate-c/gate-c.test.mjs`, 19/19. One loopback proof of `demo.mjs` on the disposable pinned 1.19.0 host, on `69dc4cb` (after all five rounds of the terra review's fixes): PASS. It covers the guard's tamper check, all seven demonstrations matching their expected changes, 12 Submit clicks = 12 `/prompt` = 12 ledger rows, canonical files unchanged, and the capture pipeline on its own synthetic data (the failed first run on `50e9b57` is retained). It is SYNTHETIC; it adds the on-page 120 s timeout with a late image, a reply during a held job, a newer scene during a held job, and a usage limit surviving a reload. The [Gate C record template](GATE_C_RECORD_TEMPLATE.md) is linked from section 6. Row text changes only at merge; T80 stays NOT_RUN in the matrix. Real halves NOT_RUN; a real-provider refusal NOT_TESTED (J7). [Record](M3_3_COMPLETION_IMPLEMENTATION.md#pr-d--gate-c-readiness). Gate C NOT_RUN.
+
 ## M3.3 PR C candidate — T78, T81, T82, T83 UI halves and the T79 refusal fixture — 2026-11-11
 
 Full campaign on frozen `5518a51` on a disposable pinned SillyTavern 1.19.0 host, [`docs/evidence/m3-3-c/campaign/`](evidence/m3-3-c/campaign/): Node 521/521, storage 283/283 (2 new, the holder-only `imported` rule), browser 157/157 (31 new), native checkpoints 25/16/22/17/21/18/60/14, `validate.py` PASS over 152 frozen inputs; discovery 18/6/1. The image-route campaign adds checkpoints J (cache hit with the fixture's `/prompt` count unchanged, T78), K (the refusal step shown as failed with the unit spent and no retry, T79's refusal fixture only), L (Delete the host's copy removes exactly that file, T83), M (takeover from a second page, then reconcile of the late file through the import gate, T81, T82), N (a reload: the host interrupts the job and reconcile finds no file, T82) and O (ledger rows match). The browser suite covers the lease, reserve refusals, outages and lost replies, conflicts between pages, reconcile, cache, deletion, inspect and cleanup, an import after a takeover between heartbeats, and Discard of rows a reload left. T79's auth, rate and error fixtures stay NOT_RUN. Row text changes only at merge. [Record](M3_3_COMPLETION_IMPLEMENTATION.md#pr-c--the-adapter-and-the-generate-on-this-host-ui-on-the-image-ledger). Gate C NOT_RUN.
@@ -345,7 +349,7 @@ Before introducing numerical timing budgets, record the actual host, browser, ha
 
 ## 6. Human gate record
 
-Copy this record into a dated evidence file for each real candidate. Gate B uses the [Gate B record template](GATE_B_RECORD_TEMPLATE.md), which adds the fields of M2.4 plan section 6.4:
+Copy this record into a dated evidence file for each real candidate. Gate B uses the [Gate B record template](GATE_B_RECORD_TEMPLATE.md), which adds the fields of M2.4 plan section 6.4. Gate C uses the [Gate C record template](GATE_C_RECORD_TEMPLATE.md), which adds the seven demonstrations, the hard gates, the host and backup the owner chooses, and the read-only capture, with synthetic and real evidence apart:
 
 ```text
 Gate: A / B / C
