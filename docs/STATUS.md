@@ -1,5 +1,9 @@
 # Project status
 
+## M3.3 PR D merged — 2026-11-12
+
+[#96](https://github.com/Sonoran-Solutions/SillyNovel/pull/96) is on main (`cfffa48`; frozen code `69dc4cb`) on the owner's word (“Merge 96”): the [Gate C record template](GATE_C_RECORD_TEMPLATE.md), the seven-demonstration script and the read-only capture, with their Node tests and the synthetic loopback proof. Runtime unchanged; PR C's campaign on `5518a51` stands by SHA. All four M3.3 PRs are merged. T77 gains the on-page 120 s timeout on the host, SYNTHETIC. Not done and not authorized: the frozen Gate C candidate, the owner's Gate C session and verdict, the PR 90 real-backend run, and owner review of PR C's choice 12 and PR D's choices. Every real half NOT_RUN; a real-provider refusal NOT_TESTED (J7). Gate C NOT_RUN.
+
 ## M3.3 PR D candidate (draft, unmerged) — 2026-11-11
 
 PR C is merged (`3cd3056`; frozen runtime `5518a51`; notes `c6f421d`). On the owner's [go-ahead](DECISIONS.md#owner-go-ahead--m33-pr-d-gate-c-readiness--2026-11-11) (“Go ahead and orchestrate D”), PR D adds Gate C readiness under [DYL-215](https://linear.app/devils17/issue/DYL-215/sillynovel-m33-complete-the-first-image-route-for-gate-c-ledger-lease), tests and docs only:
