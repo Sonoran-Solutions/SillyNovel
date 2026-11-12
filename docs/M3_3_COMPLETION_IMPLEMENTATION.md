@@ -231,15 +231,15 @@ python3 tests/probes/dyl60/check-discovery.py
 
 Package: [`docs/evidence/m3-3-c/campaign/`](evidence/m3-3-c/campaign/) with `run.json` beside it. The campaign took 1652 s; the supervisor reaped nothing at exit. Full campaigns also passed on `e06e89f`, `df549d9`, `89327f0` and `bc49d09` during the review rounds; only the frozen candidate's run is committed.
 
-### Worker evidence (the terra-review commits; runtime `7de5d7d`, record on the next commit)
+### Worker evidence (the terra-review commits; runtime `61ca765`, after the coordinator's ordering correction; record on the next commit)
 
 Run by the fix worker on the disposable SillyTavern 1.19.0 host pinned at `7e8663c`, Node v26.8.1, bounded by `timeout`; not the coordinator's campaign.
 
 | Check | Result |
 | --- | --- |
 | Node (18 files listed by `run.py --list-tests`) | 521/521 |
-| Storage (`npm test`) | 283/283 (281 plus the two terra-review plugin tests) |
-| Browser actual-entry | 155/155 (150 on `2ff328d` plus 5 terra-review tests). The four required regressions, the lost-acknowledgement test and both plugin tests fail on `ab6f163`'s `src/` and `image-ledger.mjs` |
+| Storage (`npm test`) | 283/283 on `7de5d7d` (281 plus the two terra-review plugin tests); not rerun on `61ca765`, which changes no plugin file |
+| Browser actual-entry | 155/155 (150 on `2ff328d` plus 5 terra-review tests; the lost-acknowledgement test asserts the retry's refused write and reread). The four required regressions, the lost-acknowledgement test and both plugin tests fail on `ab6f163`'s `src/` and `image-ledger.mjs` |
 | Native image-route campaign | run once on the commit holding this record, after it was written; the result is in the handoff |
 | Discovery | PASS, 18/6/1 |
 
