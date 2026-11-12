@@ -788,8 +788,8 @@ export function mountVisualStage({ document, stage, actions }) {
         if(!authority()){clearPreview(gone);return;}
         const reason=generated.check();if(reason){clearPreview('Result discarded: '+(STALE_REASONS[reason]??reason)+'; the host kept a copy at '+generated.path);return;}
         if(!layoutReady||projectBusy||model.status().importing)return;
-        // Terra review finding 1: the ledger's acknowledgement of `imported` is the authorization to apply. It is written once the PNG is uploaded and
-        // installed, just before the synchronous apply, and the plugin accepts it only from the current open session's holder, so a takeover between
+        // Terra review finding 1: the ledger's acknowledgement of `imported` is the authorization to apply. It is written once the PNG is uploaded and read
+        // back, before it enters the catalog and the synchronous apply (a refusal installs nothing), and the plugin accepts it only from the current open session's holder, so a takeover between
         // heartbeats applies nothing. While it is written no discard is queued for this candidate (`done`); a refusal gives that back.
         let refused=null;
         const authorize=async assetId=>{generated.done=true;refused=await authorizeImport(generated,assetId);if(refused)generated.done=false;return !refused;};

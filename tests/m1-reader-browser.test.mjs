@@ -2597,7 +2597,7 @@ const importRefused=async(page,x)=>{
  assert.equal(states(x).join(),'discarded','never imported');assert.equal(x.ledger.jobs()[0].asset,null);
  assert.doesNotMatch(await page.locator('.sillynovel-selected-art').innerText(),/Generated harbor/,'nothing applied');
  assert.equal(await page.locator('.sillynovel-image-workflow__preview').isHidden(),true);
- assert.equal(await page.getByLabel('Background',{exact:true}).locator('option',{hasText:'Generated harbor'}).count(),0,'the install is undone');
+ assert.equal(await page.getByLabel('Background',{exact:true}).locator('option',{hasText:'Generated harbor'}).count(),0,'nothing is installed');
 };
 test('M3.3 terra review 1: a takeover before this page\'s next heartbeat; its Import applies nothing, the row is never imported by it, the lease-lost line shows',async t=>{
  const x=await imageRoute(t,{clock:true}),{page}=x;await x.ready();
@@ -2625,8 +2625,10 @@ test('M3.3 terra review 1: an import whose acknowledgement is lost applies nothi
  assert.equal(states(x).join(),'imported','the plugin committed it; the page never heard');
  assert.doesNotMatch(await page.locator('.sillynovel-selected-art').innerText(),/Generated harbor/,'nothing applied without the acknowledgement');
  assert.equal(await page.locator('.sillynovel-image-workflow__preview').isVisible(),true,'the candidate is kept');
- assert.equal(await page.getByLabel('Background',{exact:true}).locator('option',{hasText:'Generated harbor'}).count(),0,'the install is undone');
+ assert.equal(await page.getByLabel('Background',{exact:true}).locator('option',{hasText:'Generated harbor'}).count(),0,'nothing is installed');
+ const mark=x.ledger.calls.length,id=x.ledger.jobs()[0].id;
  await importButton.click();await waitStatus(page,/^Imported and applied as the background/);
+ assert.deepEqual(x.ledger.calls.slice(mark).filter(c=>c==='POST jobs/'+id||c==='GET jobs'),['POST jobs/'+id,'GET jobs'],'the retry wrote imported again, was refused and reread the row as written');
  assert.match(await page.locator('.sillynovel-selected-art').innerText(),/Generated harbor/);
  assert.deepEqual(x.ledger.jobs().map(j=>[j.state,j.asset]),[['imported',x.uploaded]]);
 });

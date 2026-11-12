@@ -38,13 +38,16 @@ export async function createProjectScene(project,client,actions,changed,isCurren
         if(!outcome.result.accepted)throw Error(outcome.result.code);
         scene=outcome.scene;
     }
-    async function install(id,kind,key,displayLabel='Imported PNG') {
+    // `gate`, when given, is awaited after the asset read and before anything enters the catalog; false installs nothing (null).
+    async function install(id,kind,key,displayLabel='Imported PNG',gate=null) {
         // Reducer IDs are actor-specific even when immutable bytes are shared.
         const ref=kind==='background'?id:key+':'+id;
-        if(assets.some(a=>a.id===ref)){media.get(ref).label=displayLabel;return ref;}
+        if(assets.some(a=>a.id===ref)){if(gate&&!await gate())return null;media.get(ref).label=displayLabel;return ref;}
         let url=null,revision='missing';
         try {const value=await client.asset(project.projectId,id);if(!current())throw Error('STALE_PROJECT');url=URL.createObjectURL(value.blob);revision=value.hash;}
         catch {notice='Some project art is unavailable · neutral fallback.';}
+        if(!current()){if(url)URL.revokeObjectURL(url);throw Error('STALE_PROJECT');}
+        if(gate&&!await gate()){if(url)URL.revokeObjectURL(url);return null;}
         if(!current()){if(url)URL.revokeObjectURL(url);throw Error('STALE_PROJECT');}
         assets.push({id:ref,kind,revision,available:Boolean(url),...(key?{characterKey:key}:{})});
         media.set(ref,{url,label:displayLabel,assetId:id});catalogRevision++;return ref;
@@ -170,8 +173,8 @@ export async function createProjectScene(project,client,actions,changed,isCurren
         async dispatch(command){if(['setExpression','clearExpression'].includes(command.type)){const replaced=expressions.get().view.cast.find(a=>a.key===command.characterKey)?.expression?.origin==='automatic',done=await expressions.dispatch(command);if(replaced)director?.noteCorrection('expression');return done;}if(importing||cleanupBusy)throw Error('Wait for the PNG import or cleanup to finish.');invalidateCleanup();if(!current())return false;apply(command);const cleared=clearOverlay();await expressions.sync();edit++;notice='Applied · unsaved project changes.'+cleared;notify();return true;},
         async register(_preset,name){if(importing||cleanupBusy)throw Error('Wait for the PNG import or cleanup to finish.');invalidateCleanup();if(!current())return;if(!label(name)||actors.length>=20)throw Error('Use a name of 1–80 characters; maximum 20 actors.');const key=crypto.randomUUID();actors.push({key,label:name,description:'Project actor',defaultURL:null});refresh();apply({type:'addCharacter',characterKey:key});clearOverlay();edit++;notify();return key;},
         // `still` lets a caller withdraw its permission while the upload is in flight (M3.3 review finding 1); nothing is applied once it is false.
-        // After the install it is also awaited once as `still(assetId)`, where a caller may write its own authorization (M3.3 terra review);
-        // a final synchronous `still()` then decides the apply. A refusal undoes the install.
+        // After the asset read and before it enters the catalog, it is also awaited once as `still(assetId)`, where a caller may write its own
+        // authorization (M3.3 terra review); a withdrawal or refusal there installs nothing and moves no revision. A final synchronous `still()` decides the apply.
         async importFile(file,kind,key,displayLabel,still=()=>true){
             if(!current())return;
             displayLabel=displayLabel?.trim() || file.name?.replace(/\.png$/i,'').slice(0,80) || 'Imported PNG';
@@ -190,18 +193,13 @@ export async function createProjectScene(project,client,actions,changed,isCurren
                 const prior=library.findIndex(a=>a.assetId===entry.assetId && a.kind===entry.kind && a.actorId===entry.actorId);
                 if(prior<0 && library.length>=100)throw Error('Maximum 100 library entries.');
                 const shared=media.get(kind==='background'?result.assetId:key+':'+result.assetId),sharedLabel=shared?.label;
-                const before=catalogRevision,ref=await install(result.assetId,kind,kind==='background'?undefined:key,displayLabel);
-                if(!current())return;
-                const allowed=still()&&await still(result.assetId);
-                if(!current())return;
-                // Withdrawn during the asset read (M3.3 second review) or refused its authorization: undo the install so the reducer's catalog matches what is installed.
-                if(!allowed||!still()){
+                const ref=await install(result.assetId,kind,kind==='background'?undefined:key,displayLabel,async()=>still()&&await still(result.assetId)&&current()&&still());
+                if(!current()||ref===null)return;
+                // Withdrawn during the asset read (M3.3 second review): undo the install so the reducer's catalog matches what is installed.
+                if(!still()){
                     if(shared){shared.label=sharedLabel;return;}
                     const item=media.get(ref);if(item?.url)URL.revokeObjectURL(item.url);media.delete(ref);assets.splice(assets.findIndex(a=>a.id===ref),1);
-                    // When only this install moved the catalog, the scene (not refreshed since) is exactly as before once its revision is restored,
-                    // so a candidate kept for a retry stays current (M3.3 terra review); otherwise advance and reconcile as before.
-                    if(catalogRevision===before+1)catalogRevision=before;else{catalogRevision++;refresh();}
-                    return;
+                    catalogRevision++;refresh();return;
                 }
                 if(prior<0)library.push(entry);else library[prior]=entry;
                 refresh();apply({type:kind==='background'?'setBackground':'setOutfit',assetId:ref,...(kind==='background'?{}:{characterKey:key})});notice='Imported · unsaved project arrangement.'+clearOverlay();edit++;
