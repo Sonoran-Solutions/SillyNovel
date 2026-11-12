@@ -8,7 +8,7 @@ PR C is merged (`3cd3056`; frozen runtime `5518a51`; notes `c6f421d`). On the ow
 - `capture.mjs`, a read-only capture of the owner's real session that refuses without the owner's flag and checks the graph ComfyUI actually ran against the review;
 - their Node tests.
 
-The runtime and every existing test are byte-identical to `5518a51`, so PR C's campaign is reused by SHA, not rerun. A Codex terra senior review, in three rounds, found nine issues in the capture's path, input and matching checks and in the owner steps, all fixed. The loopback proof passed on `3bcee56`, the final code head; it is synthetic. Every real half is NOT_RUN, and a real-provider refusal is NOT_TESTED (J7). Choice 12 stays a proposal. See the [record](M3_3_COMPLETION_IMPLEMENTATION.md#pr-d--gate-c-readiness). Gate C NOT_RUN.
+The runtime and every existing test are byte-identical to `5518a51`, so PR C's campaign is reused by SHA, not rerun. A Codex terra senior review, in four rounds, found twelve issues in the guard, the capture's path, input and matching checks, setup cleanup, the template's log fields and the owner steps, all fixed. The loopback proof passed on `8adcfed`, the final code head; it is synthetic. Every real half is NOT_RUN, and a real-provider refusal is NOT_TESTED (J7). Choice 12 stays a proposal. See the [record](M3_3_COMPLETION_IMPLEMENTATION.md#pr-d--gate-c-readiness). Gate C NOT_RUN.
 
 ## M3.3 PR C candidate (draft, unmerged) — 2026-11-11
 
