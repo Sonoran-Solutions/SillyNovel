@@ -128,6 +128,9 @@ export function imageLedger(db,transaction,load,asset) {
                     demand(owning.ended_at===null ? owning.tab===body.tab : open(owner,project)?.tab===body.tab,'LEASE_LOST',409);
                 }
                 else if(j.state==='unknown')holder(open(owner,project),body.tab);
+                // M3.3 PR C terra review (proposed for owner review, not an owner ruling): importing applies the result, so only the current open
+                // session's holder records `imported`; `discarded` stays open to any of the owner's tabs (a lost lease still withdraws its candidate).
+                else if(body.state==='imported')holder(open(owner,project),body.tab);
                 if(Object.hasOwn(body,'hostPath')) {
                     demand(['candidate','reconciled'].includes(body.state) || j.host_path===null,'INVALID_TRANSITION',409);
                     demand(hostPathValid(body.hostPath),'INVALID_PATH');

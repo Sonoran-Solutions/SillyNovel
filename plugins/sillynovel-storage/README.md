@@ -131,7 +131,13 @@ cancelled and timeout-unknown transitions require the job session's recorded tab
 while that session is open; once it has ended, only the current open session's
 holder may (ending a session withdraws its tab's permission). The current
 holder resolves jobs left by an ended session; unknown resolution requires that
-current holder. Candidate/reconciled approval remains owner-scoped.
+current holder. Candidate/reconciled `discarded` remains owner-scoped (any of the
+owner's tabs). Candidate/reconciled `imported` requires the current open session's
+holder, else `409 LEASE_LOST`: the client applies an import only once the ledger
+acknowledges it, so a page whose lease was taken over between heartbeats cannot
+apply. This narrows the PR B contract (which let any of the owner's tabs record
+`imported`); it is an implementation choice from the M3.3 PR C terra review,
+proposed for owner review, not an owner ruling.
 Ending does not remove or resolve jobs. Candidate/reconciled rows need explicit
 import/discard before cleanup; failed/stale/abandoned/imported/discarded are terminal.
 
