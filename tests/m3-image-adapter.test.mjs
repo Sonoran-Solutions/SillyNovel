@@ -334,3 +334,90 @@ test('fetchResult preserves pngProblem dimension and malformed-PNG codes', async
     f.state.fetch = () => response(PNG.slice(0, 34));
     assert.deepEqual(await f.image.fetchResult(PATH), { ok: false, code: 'MALFORMED_PNG', path: PATH });
 });
+
+// M3.3 PR C: the host image-folder listing (J6) and the host's delete route (J5), with a fake fetch.
+const SINCE = Date.UTC(2026, 10, 9, 12, 0, 0);
+function folder(f, { names, files = {}, list = null, del = null }) {
+    f.state.fetch = (url, options) => {
+        if (url.pathname === '/api/images/list') return list ? list(url, options) : response(JSON.stringify(names), { url: url.href });
+        if (url.pathname === '/api/images/delete') return del ? del(url, options) : response('OK', { url: url.href });
+        const file = files[url.pathname.slice('/user/images/'.length)];
+        if (!file) return response('', { status: 404, url: url.href });
+        const result = new Response(PNG, { status: file.status ?? 200, headers: { 'Last-Modified': new Date(file.mtimeMs).toUTCString(), 'Content-Length': String(file.size ?? PNG.length) } });
+        Object.defineProperty(result, 'url', { value: file.redirected ?? url.href });
+        return result;
+    };
+}
+
+test('listHostImages lists the root folder by date with the host headers, dates files by Last-Modified newest first, and stops at the first older one', async () => {
+    const f = fixture();
+    folder(f, { names: ['old.png', 'edge.png', 'new.png', 'newest.png'], files: {
+        'old.png': { mtimeMs: SINCE - 5000 }, 'edge.png': { mtimeMs: SINCE }, 'new.png': { mtimeMs: SINCE + 3000, size: 7 }, 'newest.png': { mtimeMs: SINCE + 9000 } } });
+    const result = await f.image.listHostImages({ since: SINCE });
+    assert.deepEqual(result, { ok: true, files: [
+        { path: '/user/images/newest.png', mtimeMs: SINCE + 9000, size: PNG.length },
+        { path: '/user/images/new.png', mtimeMs: SINCE + 3000, size: 7 },
+        { path: '/user/images/edge.png', mtimeMs: SINCE, size: PNG.length }] });
+    const [[url, options], ...gets] = f.fetches;
+    assert.equal(url.href, ORIGIN + '/api/images/list');
+    assert.equal(options.method, 'POST'); assert.equal(options.redirect, 'error');
+    assert.deepEqual(JSON.parse(options.body), { folder: '.', sortField: 'date' });
+    assert.equal(options.headers.get('X-CSRF-Token'), 'synthetic-token'); assert.equal(options.headers.get('Content-Type'), 'application/json');
+    assert.deepEqual(gets.map(([u]) => u.pathname), ['/user/images/newest.png', '/user/images/new.png', '/user/images/edge.png', '/user/images/old.png'], 'the walk stops at old.png');
+    assert.ok(gets.every(([, o]) => o.redirect === 'error' && o.headers['X-CSRF-Token'] === 'synthetic-token' && o.method === undefined), 'same-origin GETs with the host headers');
+});
+
+test('listHostImages skips names the result-path rule refuses without requesting them, and files that redirect, fail or carry no date', async () => {
+    const f = fixture();
+    folder(f, { names: ['a.png', 'b.png', 'c.png', 'd.png', 'with space.png', 'photo.jpg', '..', 'sub/../x.png', 'enc%2e.png', 42], files: {
+        'a.png': { mtimeMs: SINCE + 1000 }, 'b.png': { mtimeMs: SINCE + 2000, redirected: ORIGIN + '/elsewhere.png' }, 'c.png': { mtimeMs: SINCE + 3000, status: 500 }, 'd.png': { mtimeMs: NaN } } });
+    const result = await f.image.listHostImages({ since: SINCE });
+    assert.deepEqual(result, { ok: true, files: [{ path: '/user/images/a.png', mtimeMs: SINCE + 1000, size: PNG.length }] });
+    assert.deepEqual(f.fetches.slice(1).map(([u]) => u.pathname), ['/user/images/d.png', '/user/images/c.png', '/user/images/b.png', '/user/images/a.png']);
+});
+
+for (const [name, setup, code] of [
+    ['a refused listing', f => folder(f, { names: [], list: () => response('{}', { status: 400 }) }), 'LIST_REFUSED'],
+    ['a non-array listing', f => folder(f, { names: { files: [] } }), 'LIST_INVALID'],
+    ['a listing that is not JSON', f => folder(f, { names: [], list: () => response('not json') }), 'LIST_FAILED'],
+    ['a throwing fetch', f => { f.state.fetch = () => { throw Error('offline'); }; }, 'LIST_FAILED'],
+    ['missing host headers', f => { folder(f, { names: [] }); delete f.context.getRequestHeaders; }, 'LIST_FAILED'],
+]) test('listHostImages never throws: ' + name + ' is ' + code, async () => {
+    const f = fixture(); setup(f);
+    assert.deepEqual(await f.image.listHostImages({ since: SINCE }), { ok: false, code });
+});
+
+test('listHostImages refuses a missing since without a request, and bounds the dated walk at 50 files', async () => {
+    const f = fixture();
+    folder(f, { names: [], files: {} });
+    for (const since of [undefined, NaN, '1']) assert.deepEqual(await f.image.listHostImages({ since }), { ok: false, code: 'LIST_INVALID' });
+    assert.deepEqual(await f.image.listHostImages(), { ok: false, code: 'LIST_INVALID' });
+    assert.equal(f.fetches.length, 0);
+    const names = Array.from({ length: 60 }, (_, i) => 'f' + i + '.png');
+    folder(f, { names, files: Object.fromEntries(names.map((n, i) => [n, { mtimeMs: SINCE + i * 1000 }])) });
+    const result = await f.image.listHostImages({ since: SINCE });
+    assert.equal(result.files.length, 50); assert.equal(result.files[0].path, '/user/images/f59.png'); assert.equal(f.fetches.length, 51);
+});
+
+test('deleteHostCopy sends exactly the given path with the host headers and reports the host status', async () => {
+    const f = fixture(), sent = [];
+    folder(f, { names: [], del: (url, options) => { sent.push(JSON.parse(options.body)); return response('OK', { status: sent.length === 1 ? 200 : 500 }); } });
+    assert.deepEqual(await f.image.deleteHostCopy('/user/images/generated.png'), { ok: true, code: null });
+    assert.deepEqual(await f.image.deleteHostCopy('user/images/generated.png'), { ok: false, code: 'HOST_DELETE_500' });
+    assert.deepEqual(sent, [{ path: '/user/images/generated.png' }, { path: 'user/images/generated.png' }]);
+    const [url, options] = f.fetches[0];
+    assert.equal(url.href, ORIGIN + '/api/images/delete'); assert.equal(options.method, 'POST'); assert.equal(options.redirect, 'error');
+    assert.equal(options.headers.get('X-CSRF-Token'), 'synthetic-token'); assert.equal(options.headers.get('Content-Type'), 'application/json');
+});
+
+test('deleteHostCopy refuses the folder, traversal, encoded, foreign and non-PNG paths before any request, and never throws', async () => {
+    const f = fixture();
+    folder(f, { names: [] });
+    for (const [path, code] of [['/user/images/', 'RESULT_NOT_PNG'], ['user/images', 'RESULT_OUTSIDE_IMAGES'], ['/user/images/../settings.json', 'RESULT_OUTSIDE_IMAGES'],
+        ['/user/images/..%2Fsettings.png', 'RESULT_ENCODED'], ['http://evil.test/user/images/a.png', 'RESULT_ABSOLUTE'], ['//evil.test/user/images/a.png', 'RESULT_ABSOLUTE'],
+        ['/user/images/photo.jpg', 'RESULT_NOT_PNG'], [undefined, 'RESULT_NOT_STRING']])
+        assert.deepEqual(await f.image.deleteHostCopy(path), { ok: false, code }, String(path));
+    assert.equal(f.fetches.length, 0);
+    f.state.fetch = () => { throw Error('offline'); };
+    assert.deepEqual(await f.image.deleteHostCopy('/user/images/generated.png'), { ok: false, code: 'HOST_DELETE_FAILED' });
+});

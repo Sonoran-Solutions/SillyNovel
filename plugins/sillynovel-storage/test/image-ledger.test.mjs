@@ -221,6 +221,18 @@ for(const state of ['pending','cancelled','timeout-unknown'])test('takeover revo
  const f=fixture(t),j=reach(f,state);f.begin('peer',{takeover:true});const next=state==='pending'?'failed':'abandoned';
  refuses(()=>f.move(j,next),'LEASE_LOST');assert.equal(f.move(j,next,{},'peer').state,next);
 });
+// M3.3 PR C terra review (proposed for owner review): `imported` needs the current open session's holder; `discarded` stays owner-scoped.
+for(const state of ['candidate','reconciled'])test(state+' → imported requires the current holder; discarded stays open to any owner tab',t=>{
+ const f=fixture(t),j=reach(f,state),assetId=f.store.importAsset(owner,f.project,png).assetId,row=()=>f.db.prepare('SELECT * FROM image_jobs WHERE id=?').get(j.id);
+ f.begin('peer',{takeover:true});const before=row();
+ refuses(()=>f.move(j,'imported',{assetId},'tab'),'LEASE_LOST');refuses(()=>f.move(j,'imported',{assetId},'bystander'),'LEASE_LOST');
+ assert.deepEqual(row(),before,'a refused import changes nothing');
+ assert.equal(f.move(j,'imported',{assetId},'peer').state,'imported');
+ const end=tab=>f.store.endImageSession(owner,f.project,{sessionId:f.store.imageSession(owner,f.project).session.id,tab});
+ end('peer');const k=reach(f,state);end('tab');
+ refuses(()=>f.move(k,'imported',{assetId},'tab'),'LEASE_LOST');
+ assert.equal(f.move(k,'discarded',{},'bystander').state,'discarded','discard needs no lease');
+});
 for(const state of ['discarded','abandoned'])test('host deletion records '+state+' and never deletes a host file',t=>{
  const f=fixture(t),j=reach(f,state==='discarded'?'candidate':'cancelled');
  f.move(j,state,{hostPath:'/user/images/test.png'});assert.ok(f.store.imageHostDeleted(owner,f.project,j.id,{}).hostDeletedAt);

@@ -1,0 +1,182 @@
+[
+  {
+    "name": "node",
+    "candidate": "5518a512114183f70264deb68e65387721f79515",
+    "command": "node --test --test-isolation=none /home/dq/.local/state/orchestrator/runs/20261109T161024Z-09cd08/wt/c-camp/tests/m0.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T161024Z-09cd08/wt/c-camp/tests/m1-reader-source.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T161024Z-09cd08/wt/c-camp/tests/m1-source-prefix.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T161024Z-09cd08/wt/c-camp/tests/m1-scene-reducer.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T161024Z-09cd08/wt/c-camp/tests/m1-project-scene.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T161024Z-09cd08/wt/c-camp/tests/m1-project-expressions.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T161024Z-09cd08/wt/c-camp/tests/m2-director-proposal.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T161024Z-09cd08/wt/c-camp/tests/m2-director-request.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T161024Z-09cd08/wt/c-camp/tests/m2-director-controller.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T161024Z-09cd08/wt/c-camp/tests/m2-director-overlay.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T161024Z-09cd08/wt/c-camp/tests/m2-director-log.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T161024Z-09cd08/wt/c-camp/tests/m2-gate-b-score.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T161024Z-09cd08/wt/c-camp/tests/m3-image-workflow.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T161024Z-09cd08/wt/c-camp/tests/m3-image-request.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T161024Z-09cd08/wt/c-camp/tests/m3-image-adapter.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T161024Z-09cd08/wt/c-camp/tests/m3-image-ledger-client.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T161024Z-09cd08/wt/c-camp/tests/probes/dyl19/owned-chat-probe.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T161024Z-09cd08/wt/c-camp/tests/probes/dyl19/source-anchor.test.mjs",
+    "environment": {},
+    "startedUTC": "2026-11-12T04:57:57.771936+00:00",
+    "endedUTC": "2026-11-12T04:58:04.809502+00:00",
+    "elapsedSeconds": 7.038,
+    "exitCode": 0,
+    "log": "node.txt",
+    "checkpointCount": 0,
+    "tests": 521,
+    "pass": 521,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  {
+    "name": "storage",
+    "candidate": "5518a512114183f70264deb68e65387721f79515",
+    "command": "node --test --test-isolation=none /home/dq/.local/state/orchestrator/runs/20261109T161024Z-09cd08/wt/c-camp/plugins/sillynovel-storage/test/bundle.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T161024Z-09cd08/wt/c-camp/plugins/sillynovel-storage/test/cleanup.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T161024Z-09cd08/wt/c-camp/plugins/sillynovel-storage/test/image-ledger.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T161024Z-09cd08/wt/c-camp/plugins/sillynovel-storage/test/library.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T161024Z-09cd08/wt/c-camp/plugins/sillynovel-storage/test/recovery.test.mjs /home/dq/.local/state/orchestrator/runs/20261109T161024Z-09cd08/wt/c-camp/plugins/sillynovel-storage/test/store.test.mjs",
+    "environment": {},
+    "startedUTC": "2026-11-12T04:58:04.820050+00:00",
+    "endedUTC": "2026-11-12T05:01:13.553723+00:00",
+    "elapsedSeconds": 188.734,
+    "exitCode": 0,
+    "log": "storage.txt",
+    "checkpointCount": 0,
+    "tests": 283,
+    "pass": 283,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  {
+    "name": "browser",
+    "candidate": "5518a512114183f70264deb68e65387721f79515",
+    "command": "node --test --test-isolation=none /home/dq/.local/state/orchestrator/runs/20261109T161024Z-09cd08/wt/c-camp/tests/m1-reader-browser.test.mjs",
+    "environment": {},
+    "startedUTC": "2026-11-12T05:01:13.563809+00:00",
+    "endedUTC": "2026-11-12T05:04:31.629154+00:00",
+    "elapsedSeconds": 198.065,
+    "exitCode": 0,
+    "log": "browser.txt",
+    "checkpointCount": 0,
+    "tests": 157,
+    "pass": 157,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  {
+    "name": "stage-library-migration",
+    "candidate": "5518a512114183f70264deb68e65387721f79515",
+    "command": "node tests/probes/project-portability/host.mjs /home/dq/.local/state/orchestrator/runs/20261109T161024Z-09cd08/host/SillyTavern",
+    "environment": {
+      "SN_STAGE_UX_RUN": "1",
+      "SN_LIBRARY_RUN": "1",
+      "SN_MIGRATION_RUN": "1"
+    },
+    "startedUTC": "2026-11-12T05:04:31.639905+00:00",
+    "endedUTC": "2026-11-12T05:06:20.049924+00:00",
+    "elapsedSeconds": 108.41,
+    "exitCode": 0,
+    "log": "stage-library-migration.txt",
+    "checkpointCount": 25,
+    "ownedRoot": "/home/dq/.hermes/cache/scratch/sn-portability-host-Lk0hYL",
+    "result": "PASS"
+  },
+  {
+    "name": "expressions",
+    "candidate": "5518a512114183f70264deb68e65387721f79515",
+    "command": "node tests/probes/project-portability/host.mjs /home/dq/.local/state/orchestrator/runs/20261109T161024Z-09cd08/host/SillyTavern",
+    "environment": {
+      "SN_EXPRESSIONS_RUN": "1"
+    },
+    "startedUTC": "2026-11-12T05:06:20.061760+00:00",
+    "endedUTC": "2026-11-12T05:07:22.834895+00:00",
+    "elapsedSeconds": 62.773,
+    "exitCode": 0,
+    "log": "expressions.txt",
+    "checkpointCount": 16,
+    "ownedRoot": "/home/dq/.hermes/cache/scratch/sn-portability-host-BfLDOZ",
+    "result": "PASS"
+  },
+  {
+    "name": "groups",
+    "candidate": "5518a512114183f70264deb68e65387721f79515",
+    "command": "node tests/probes/project-portability/host.mjs /home/dq/.local/state/orchestrator/runs/20261109T161024Z-09cd08/host/SillyTavern",
+    "environment": {
+      "SN_GROUP_RUN": "1"
+    },
+    "startedUTC": "2026-11-12T05:07:22.845373+00:00",
+    "endedUTC": "2026-11-12T05:08:54.873644+00:00",
+    "elapsedSeconds": 92.028,
+    "exitCode": 0,
+    "log": "groups.txt",
+    "checkpointCount": 22,
+    "ownedRoot": "/home/dq/.hermes/cache/scratch/sn-portability-host-I66y9f",
+    "result": "PASS"
+  },
+  {
+    "name": "recovery",
+    "candidate": "5518a512114183f70264deb68e65387721f79515",
+    "command": "node tests/probes/project-portability/host.mjs /home/dq/.local/state/orchestrator/runs/20261109T161024Z-09cd08/host/SillyTavern",
+    "environment": {
+      "SN_RECOVERY_RUN": "1"
+    },
+    "startedUTC": "2026-11-12T05:08:54.886392+00:00",
+    "endedUTC": "2026-11-12T05:09:53.705141+00:00",
+    "elapsedSeconds": 58.819,
+    "exitCode": 0,
+    "log": "recovery.txt",
+    "checkpointCount": 17,
+    "ownedRoot": "/home/dq/.hermes/cache/scratch/sn-portability-host-GbTqPj",
+    "result": "PASS"
+  },
+  {
+    "name": "cleanup",
+    "candidate": "5518a512114183f70264deb68e65387721f79515",
+    "command": "node tests/probes/project-portability/host.mjs /home/dq/.local/state/orchestrator/runs/20261109T161024Z-09cd08/host/SillyTavern",
+    "environment": {
+      "SN_CLEANUP_RUN": "1"
+    },
+    "startedUTC": "2026-11-12T05:09:53.713270+00:00",
+    "endedUTC": "2026-11-12T05:11:22.757877+00:00",
+    "elapsedSeconds": 89.045,
+    "exitCode": 0,
+    "log": "cleanup.txt",
+    "checkpointCount": 21,
+    "ownedRoot": "/home/dq/.hermes/cache/scratch/sn-portability-host-hJXqSU",
+    "result": "PASS"
+  },
+  {
+    "name": "native-integrity-branches",
+    "candidate": "5518a512114183f70264deb68e65387721f79515",
+    "command": "node tests/probes/project-portability/host.mjs /home/dq/.local/state/orchestrator/runs/20261109T161024Z-09cd08/host/SillyTavern",
+    "environment": {
+      "SN_CANDIDATE_RUN": "1"
+    },
+    "startedUTC": "2026-11-12T05:11:22.767723+00:00",
+    "endedUTC": "2026-11-12T05:12:48.709306+00:00",
+    "elapsedSeconds": 85.942,
+    "exitCode": 0,
+    "log": "native-integrity-branches.txt",
+    "checkpointCount": 18,
+    "ownedRoot": "/home/dq/.hermes/cache/scratch/sn-portability-host-zS2hk0",
+    "result": "PASS"
+  },
+  {
+    "name": "director",
+    "candidate": "5518a512114183f70264deb68e65387721f79515",
+    "command": "node tests/probes/m2-director/host.mjs /home/dq/.local/state/orchestrator/runs/20261109T161024Z-09cd08/host/SillyTavern",
+    "environment": {},
+    "startedUTC": "2026-11-12T05:12:48.720205+00:00",
+    "endedUTC": "2026-11-12T05:24:59.071011+00:00",
+    "elapsedSeconds": 730.351,
+    "exitCode": 0,
+    "log": "director.txt",
+    "checkpointCount": 60,
+    "ownedRoot": "/home/dq/.hermes/cache/scratch/sn-m2-director-7KQJct",
+    "result": "PASS"
+  },
+  {
+    "name": "image-route",
+    "candidate": "5518a512114183f70264deb68e65387721f79515",
+    "command": "node tests/probes/m3-image-route/host.mjs /home/dq/.local/state/orchestrator/runs/20261109T161024Z-09cd08/host/SillyTavern",
+    "environment": {},
+    "startedUTC": "2026-11-12T05:24:59.079328+00:00",
+    "endedUTC": "2026-11-12T05:29:39.065592+00:00",
+    "elapsedSeconds": 279.986,
+    "exitCode": 0,
+    "log": "image-route.txt",
+    "checkpointCount": 14,
+    "ownedRoot": "/home/dq/.hermes/cache/scratch/sn-m3-image-route-YsgBIv",
+    "result": "PASS"
+  }
+]
