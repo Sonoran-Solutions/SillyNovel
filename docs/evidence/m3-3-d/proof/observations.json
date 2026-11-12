@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "label": "SYNTHETIC",
   "mode": "proof",
-  "candidate": "9eb0acd5024ff326e4ef12f925fa245e81e32419",
+  "candidate": "3bcee5684266a250d31edfc67cab12b7bebb96c4",
   "node": "v26.8.1",
   "demos": [
     {
@@ -20,13 +20,13 @@
       "observed": {
         "prompts": 1,
         "filesAdded": [
-          "2026-11-11@23h22m58s230ms.png"
+          "2026-11-11@23h30m32s122ms.png"
         ],
         "filesRemoved": [],
         "rows": [
           {
             "state": "imported",
-            "hostPath": "/user/images/2026-11-11@23h22m58s230ms.png",
+            "hostPath": "/user/images/2026-11-11@23h30m32s122ms.png",
             "hostDeleted": false
           }
         ],
@@ -35,7 +35,7 @@
       "replies": 1,
       "details": {
         "replies": 1,
-        "importedAssetId": "7a96f8e3-e29a-4281-8fbc-a3219efc37f5"
+        "importedAssetId": "e3b569dc-1583-4bec-beba-45946b745f05"
       },
       "matchesExpected": true,
       "result": "PASS"
@@ -84,7 +84,7 @@
         "rows": [
           {
             "state": "discarded",
-            "hostPath": "/user/images/2026-11-11@23h23m00s996ms.png",
+            "hostPath": "/user/images/2026-11-11@23h30m34s834ms.png",
             "hostDeleted": true
           }
         ],
@@ -143,13 +143,13 @@
       "observed": {
         "prompts": 1,
         "filesAdded": [
-          "2026-11-11@23h25m05s665ms.png"
+          "2026-11-11@23h32m39s652ms.png"
         ],
         "filesRemoved": [],
         "rows": [
           {
             "state": "stale",
-            "hostPath": "/user/images/2026-11-11@23h25m05s665ms.png",
+            "hostPath": "/user/images/2026-11-11@23h32m39s652ms.png",
             "hostDeleted": false
           }
         ],
@@ -179,19 +179,19 @@
       "observed": {
         "prompts": 3,
         "filesAdded": [
-          "2026-11-11@23h25m07s869ms.png",
-          "2026-11-11@23h25m08s255ms.png"
+          "2026-11-11@23h32m41s867ms.png",
+          "2026-11-11@23h32m42s242ms.png"
         ],
         "filesRemoved": [],
         "rows": [
           {
             "state": "stale",
-            "hostPath": "/user/images/2026-11-11@23h25m07s869ms.png",
+            "hostPath": "/user/images/2026-11-11@23h32m41s867ms.png",
             "hostDeleted": false
           },
           {
             "state": "stale",
-            "hostPath": "/user/images/2026-11-11@23h25m08s255ms.png",
+            "hostPath": "/user/images/2026-11-11@23h32m42s242ms.png",
             "hostDeleted": false
           },
           {
@@ -205,7 +205,7 @@
       "replies": 1,
       "details": {
         "replies": 1,
-        "staleStatus": "Result discarded: the scene layout changed; the host kept a copy at /user/images/2026-11-11@23h25m08s255ms.png"
+        "staleStatus": "Result discarded: the scene layout changed; the host kept a copy at /user/images/2026-11-11@23h32m42s242ms.png"
       },
       "matchesExpected": true,
       "result": "PASS"
@@ -229,37 +229,37 @@
       "observed": {
         "prompts": 5,
         "filesAdded": [
-          "2026-11-11@23h27m10s215ms.png",
-          "2026-11-11@23h27m10s501ms.png",
-          "2026-11-11@23h27m10s672ms.png",
-          "2026-11-11@23h27m10s967ms.png",
-          "2026-11-11@23h27m11s137ms.png"
+          "2026-11-11@23h34m44s181ms.png",
+          "2026-11-11@23h34m44s464ms.png",
+          "2026-11-11@23h34m44s607ms.png",
+          "2026-11-11@23h34m44s844ms.png",
+          "2026-11-11@23h34m45s096ms.png"
         ],
         "filesRemoved": [],
         "rows": [
           {
             "state": "discarded",
-            "hostPath": "/user/images/2026-11-11@23h27m10s215ms.png",
+            "hostPath": "/user/images/2026-11-11@23h34m44s181ms.png",
             "hostDeleted": false
           },
           {
             "state": "discarded",
-            "hostPath": "/user/images/2026-11-11@23h27m10s501ms.png",
+            "hostPath": "/user/images/2026-11-11@23h34m44s464ms.png",
             "hostDeleted": false
           },
           {
             "state": "discarded",
-            "hostPath": "/user/images/2026-11-11@23h27m10s672ms.png",
+            "hostPath": "/user/images/2026-11-11@23h34m44s607ms.png",
             "hostDeleted": false
           },
           {
             "state": "discarded",
-            "hostPath": "/user/images/2026-11-11@23h27m10s967ms.png",
+            "hostPath": "/user/images/2026-11-11@23h34m44s844ms.png",
             "hostDeleted": false
           },
           {
             "state": "candidate",
-            "hostPath": "/user/images/2026-11-11@23h27m11s137ms.png",
+            "hostPath": "/user/images/2026-11-11@23h34m45s096ms.png",
             "hostDeleted": false
           }
         ],
@@ -276,28 +276,28 @@
   "guard": {
     "aborted": [
       {
-        "at": "2026-11-12T06:22:51.396Z",
+        "at": "2026-11-12T06:30:25.257Z",
         "phase": "setup",
         "method": "POST",
         "path": "/api/sd/comfy/workflows",
         "reason": "backend address on a local route is not the fixture"
       },
       {
-        "at": "2026-11-12T06:22:56.718Z",
+        "at": "2026-11-12T06:30:30.496Z",
         "phase": "tamper",
         "method": "POST",
         "path": "/api/sd/comfy/ping",
         "reason": "ComfyUI URL is not the fixture"
       },
       {
-        "at": "2026-11-12T06:22:56.723Z",
+        "at": "2026-11-12T06:30:30.498Z",
         "phase": "tamper",
         "method": "POST",
         "path": "/api/sd/comfy/generate",
         "reason": "ComfyUI URL is not the fixture"
       },
       {
-        "at": "2026-11-12T06:22:56.730Z",
+        "at": "2026-11-12T06:30:30.500Z",
         "phase": "tamper",
         "method": "POST",
         "path": "/api/sd/comfy/generate",
@@ -328,8 +328,8 @@
     "Synthetic fixture only: no real ComfyUI, no real provider; a policy refusal here is the fixture's synthetic refusal (J7)."
   ],
   "browser": "151.0.7922.34",
-  "fixtureOrigin": "http://127.0.0.1:35749",
-  "since": "2026-11-12T06:22:55.542Z",
+  "fixtureOrigin": "http://127.0.0.1:37163",
+  "since": "2026-11-12T06:30:29.351Z",
   "gates": {
     "submitClicks": 12,
     "fixturePrompts": 12,
@@ -343,7 +343,7 @@
     "ledgerHoldsNoChatText": true
   },
   "result": "PASS",
-  "fixtureConsoleTail": "comfy endpoint listening on 35749\n",
+  "fixtureConsoleTail": "comfy endpoint listening on 37163\n",
   "capture": {
     "files": 9,
     "expectedFiles": 9,
