@@ -1,0 +1,372 @@
+{
+  "schemaVersion": 1,
+  "label": "SYNTHETIC",
+  "mode": "proof",
+  "candidate": "fb3e6822f2733e1f3fe723f51458875c18fa658c",
+  "node": "v26.8.1",
+  "demos": [
+    {
+      "id": "new-background",
+      "title": "New background",
+      "label": "SYNTHETIC",
+      "expected": {
+        "prompts": 1,
+        "rows": [
+          "imported"
+        ],
+        "filesNet": 1,
+        "replies": 1
+      },
+      "observed": {
+        "prompts": 1,
+        "filesAdded": [
+          "2026-11-11@23h03m59s303ms.png"
+        ],
+        "filesRemoved": [],
+        "rows": [
+          {
+            "state": "imported",
+            "hostPath": "/user/images/2026-11-11@23h03m59s303ms.png",
+            "hostDeleted": false
+          }
+        ],
+        "textRequests": 1
+      },
+      "replies": 1,
+      "details": {
+        "replies": 1,
+        "importedAssetId": "98ebc5ab-e592-483c-97af-4b9dc9c6b126"
+      },
+      "matchesExpected": true,
+      "result": "PASS"
+    },
+    {
+      "id": "cache-hit",
+      "title": "Cache hit",
+      "label": "SYNTHETIC",
+      "expected": {
+        "prompts": 0,
+        "rows": [],
+        "filesNet": 0,
+        "replies": 0
+      },
+      "observed": {
+        "prompts": 0,
+        "filesAdded": [],
+        "filesRemoved": [],
+        "rows": [],
+        "textRequests": 0
+      },
+      "replies": null,
+      "details": {
+        "used": "Submissions used 1 of 5"
+      },
+      "matchesExpected": true,
+      "result": "PASS"
+    },
+    {
+      "id": "rejected-candidate",
+      "title": "Rejected candidate",
+      "label": "SYNTHETIC",
+      "expected": {
+        "prompts": 1,
+        "rows": [
+          "discarded"
+        ],
+        "filesNet": 0,
+        "replies": 0,
+        "hostDeleted": 1
+      },
+      "observed": {
+        "prompts": 1,
+        "filesAdded": [],
+        "filesRemoved": [],
+        "rows": [
+          {
+            "state": "discarded",
+            "hostPath": "/user/images/2026-11-11@23h04m02s163ms.png",
+            "hostDeleted": true
+          }
+        ],
+        "textRequests": 0
+      },
+      "replies": null,
+      "details": {},
+      "matchesExpected": true,
+      "result": "PASS"
+    },
+    {
+      "id": "policy-refusal",
+      "title": "Policy refusal (synthetic, J7)",
+      "label": "SYNTHETIC",
+      "expected": {
+        "prompts": 1,
+        "rows": [
+          "failed"
+        ],
+        "filesNet": 0,
+        "replies": 1
+      },
+      "observed": {
+        "prompts": 1,
+        "filesAdded": [],
+        "filesRemoved": [],
+        "rows": [
+          {
+            "state": "failed",
+            "hostPath": null,
+            "hostDeleted": false
+          }
+        ],
+        "textRequests": 1
+      },
+      "replies": 1,
+      "details": {
+        "status": "The host returned no image.",
+        "replies": 1
+      },
+      "matchesExpected": true,
+      "result": "PASS"
+    },
+    {
+      "id": "timeout",
+      "title": "Timeout and a late image",
+      "label": "SYNTHETIC",
+      "expected": {
+        "prompts": 1,
+        "rows": [
+          "stale"
+        ],
+        "filesNet": 1,
+        "replies": 1
+      },
+      "observed": {
+        "prompts": 1,
+        "filesAdded": [
+          "2026-11-11@23h06m07s019ms.png"
+        ],
+        "filesRemoved": [],
+        "rows": [
+          {
+            "state": "stale",
+            "hostPath": "/user/images/2026-11-11@23h06m07s019ms.png",
+            "hostDeleted": false
+          }
+        ],
+        "textRequests": 1
+      },
+      "replies": 1,
+      "details": {
+        "replies": 1
+      },
+      "matchesExpected": true,
+      "result": "PASS"
+    },
+    {
+      "id": "cancelled-or-stale",
+      "title": "Cancelled or stale job",
+      "label": "SYNTHETIC",
+      "expected": {
+        "prompts": 3,
+        "rows": [
+          "stale",
+          "stale",
+          "abandoned"
+        ],
+        "filesNet": 2,
+        "replies": 1
+      },
+      "observed": {
+        "prompts": 3,
+        "filesAdded": [
+          "2026-11-11@23h06m09s226ms.png",
+          "2026-11-11@23h06m09s600ms.png"
+        ],
+        "filesRemoved": [],
+        "rows": [
+          {
+            "state": "stale",
+            "hostPath": "/user/images/2026-11-11@23h06m09s226ms.png",
+            "hostDeleted": false
+          },
+          {
+            "state": "stale",
+            "hostPath": "/user/images/2026-11-11@23h06m09s600ms.png",
+            "hostDeleted": false
+          },
+          {
+            "state": "abandoned",
+            "hostPath": null,
+            "hostDeleted": false
+          }
+        ],
+        "textRequests": 1
+      },
+      "replies": 1,
+      "details": {
+        "replies": 1,
+        "staleStatus": "Result discarded: the scene layout changed; the host kept a copy at /user/images/2026-11-11@23h06m09s600ms.png"
+      },
+      "matchesExpected": true,
+      "result": "PASS"
+    },
+    {
+      "id": "usage-limit",
+      "title": "Configured usage limit",
+      "label": "SYNTHETIC",
+      "expected": {
+        "prompts": 5,
+        "rows": [
+          "candidate|discarded",
+          "candidate|discarded",
+          "candidate|discarded",
+          "candidate|discarded",
+          "candidate|discarded"
+        ],
+        "filesNet": 5,
+        "replies": 0
+      },
+      "observed": {
+        "prompts": 5,
+        "filesAdded": [
+          "2026-11-11@23h08m11s675ms.png",
+          "2026-11-11@23h08m11s954ms.png",
+          "2026-11-11@23h08m12s181ms.png",
+          "2026-11-11@23h08m12s504ms.png",
+          "2026-11-11@23h08m12s687ms.png"
+        ],
+        "filesRemoved": [],
+        "rows": [
+          {
+            "state": "discarded",
+            "hostPath": "/user/images/2026-11-11@23h08m11s675ms.png",
+            "hostDeleted": false
+          },
+          {
+            "state": "discarded",
+            "hostPath": "/user/images/2026-11-11@23h08m11s954ms.png",
+            "hostDeleted": false
+          },
+          {
+            "state": "discarded",
+            "hostPath": "/user/images/2026-11-11@23h08m12s181ms.png",
+            "hostDeleted": false
+          },
+          {
+            "state": "discarded",
+            "hostPath": "/user/images/2026-11-11@23h08m12s504ms.png",
+            "hostDeleted": false
+          },
+          {
+            "state": "candidate",
+            "hostPath": "/user/images/2026-11-11@23h08m12s687ms.png",
+            "hostDeleted": false
+          }
+        ],
+        "textRequests": 0
+      },
+      "replies": null,
+      "details": {
+        "afterReload": "Submissions used 5 of 5"
+      },
+      "matchesExpected": true,
+      "result": "PASS"
+    }
+  ],
+  "guard": {
+    "aborted": [
+      {
+        "at": "2026-11-12T06:03:52.437Z",
+        "phase": "setup",
+        "method": "POST",
+        "path": "/api/sd/comfy/workflows",
+        "reason": "backend address on a local route is not the fixture"
+      },
+      {
+        "at": "2026-11-12T06:03:57.770Z",
+        "phase": "tamper",
+        "method": "POST",
+        "path": "/api/sd/comfy/ping",
+        "reason": "ComfyUI URL is not the fixture"
+      },
+      {
+        "at": "2026-11-12T06:03:57.772Z",
+        "phase": "tamper",
+        "method": "POST",
+        "path": "/api/sd/comfy/generate",
+        "reason": "ComfyUI URL is not the fixture"
+      },
+      {
+        "at": "2026-11-12T06:03:57.774Z",
+        "phase": "tamper",
+        "method": "POST",
+        "path": "/api/sd/comfy/generate",
+        "reason": "unparseable body"
+      }
+    ],
+    "tamper": {
+      "target": "an unused loopback port (never 8000 or 8188), set as comfy_url in the page only",
+      "requests": [
+        {
+          "route": "ping",
+          "aborted": "TypeError"
+        },
+        {
+          "route": "generate",
+          "aborted": "TypeError"
+        },
+        {
+          "route": "generate",
+          "aborted": "TypeError"
+        }
+      ],
+      "sentinelConnections": 0
+    },
+    "unexpectedAborts": []
+  },
+  "notes": [
+    "Synthetic fixture only: no real ComfyUI, no real provider; a policy refusal here is the fixture's synthetic refusal (J7)."
+  ],
+  "browser": "151.0.7922.34",
+  "fixtureOrigin": "http://127.0.0.1:39223",
+  "since": "2026-11-12T06:03:56.565Z",
+  "gates": {
+    "submitClicks": 12,
+    "fixturePrompts": 12,
+    "ledgerRows": 12,
+    "noDuplicateJobs": true,
+    "noAutomaticGeneration": true,
+    "unresolved": 0,
+    "canonicalFilesChanged": [],
+    "earlierChatMessagesUnchanged": true,
+    "imageSettingsUnchanged": true,
+    "ledgerHoldsNoChatText": true
+  },
+  "result": "PASS",
+  "fixtureConsoleTail": "comfy endpoint listening on 39223\n",
+  "capture": {
+    "files": 9,
+    "expectedFiles": 9,
+    "signatures": true,
+    "backendGraph": [
+      "absent"
+    ],
+    "ledger": {
+      "ledgerRows": 12,
+      "statesByCount": {
+        "imported": 1,
+        "discarded": 5,
+        "failed": 1,
+        "stale": 3,
+        "abandoned": 1,
+        "candidate": 1
+      },
+      "filesWithoutRow": 0,
+      "filesWithSeveralRows": 0,
+      "rowsWhoseFileIsMissing": 0,
+      "rowsDeletedButPresent": 0,
+      "rowsDeleted": 1
+    },
+    "textFree": true
+  }
+}

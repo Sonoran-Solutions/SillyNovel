@@ -1,5 +1,9 @@
 # Staged implementation roadmap
 
+## M3.3 PR D go-ahead and candidate — 2026-11-11
+
+PR C is merged (`3cd3056`). The owner's [go-ahead](DECISIONS.md#owner-go-ahead--m33-pr-d-gate-c-readiness--2026-11-11) starts PR D, the last M3.3 slice: the [Gate C record template](GATE_C_RECORD_TEMPLATE.md), synthetic scripts for the seven demonstrations, and a read-only capture for the owner's real session. The candidate is a [draft PR](M3_3_COMPLETION_IMPLEMENTATION.md#pr-d--gate-c-readiness), tests and docs only. The frozen Gate C candidate, the owner's session and the verdict each need their own authorization. Gate C NOT_RUN.
+
 ## M3.3 authorized — 2026-11-08
 
 [J1–J9 ruled](DECISIONS.md#owner-rulings-j1j9--m33-completion--2026-11-08); [DYL-215](https://linear.app/devils17/issue/DYL-215/sillynovel-m33-complete-the-first-image-route-for-gate-c-ledger-lease) implements plan section 7's PRs A–D in order, each reviewed by the owner before the next. Gate C's seven demonstrations map to those PRs; the owner's Gate C session and verdict stay their own steps. Gate C NOT_RUN.
