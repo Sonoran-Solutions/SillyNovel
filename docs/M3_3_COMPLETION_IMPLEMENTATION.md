@@ -316,6 +316,8 @@ The host contacts ComfyUI from its server, so every page request goes to the hos
 - Before each demonstration (and each owner step) it reads the host's saved image settings and stops unless `comfy_url` is the fixture and the source is standard ComfyUI.
 - The proof sets `comfy_url` in the page to an unused loopback port, never 8188, with a sentinel server listening there. It sends a `ping`, a `generate` and an unparseable `generate`: all three were aborted, the sentinel received 0 connections, and the fixture's log was unchanged.
 
+- The text route is held to what the demonstrations use, the harness's seeded source. `/api/backends/chat-completions/*` passes only with `chat_completion_source: 'custom'` and `custom_url` at the text fixture, because the host chooses the provider from that source. Routes where the host picks an external endpoint itself are refused whatever the body says: other text backends and providers, translation, search, speech, vectors, remote tokenizers, asset downloads, content imports, and extension install, update and version. The proof's tamper check adds three provider switches (an `openai` source, no source, `custom` at the sentinel port), all aborted, with the text fixture's log unchanged.
+
 **Limit:** the guard sees only requests from the browser contexts the script opens. A request from another client of the disposable host, or host-side work not started by such a page, is not covered. The disposable host listens on loopback only, on an ephemeral port, and is stopped at the end.
 
 ### Commands and results
@@ -342,6 +344,10 @@ TMPDIR=<scratch> SN_PLAYWRIGHT_MODULE=<playwright>/index.mjs timeout --kill-afte
 Evidence: [`docs/evidence/m3-3-d/proof/`](evidence/m3-3-d/proof/) (`observations.json`, `capture.json`, `ledger-inspect.json`, `console.log`, `SHA256SUMS`). Owned roots `sn-m3-gate-c-7oxRoX`, `sn-m3-gate-c-6PL84v`, `sn-m3-gate-c-rsQkGj`, `sn-m3-gate-c-71xpeQ` and `sn-m3-gate-c-5LBGqh` were read, their bounded outputs kept here, and then deleted. No owned process remained and port 8128 was free afterwards.
 
 **One failed run, retained.** The first proof, on `50e9b57`, passed the guard check, all seven demonstrations and every gate, but ended FAIL. The guard had aborted 16 legitimate requests during the demonstrations: 14 tokenizer counts, whose JSON body is an array, and 2 workflow lists after a reload, whose body carries the fixture's own `url`. A test defect; no product code was involved. The bounded fix (an array carries no backend keys; a local workflow route passes when its `url` is the fixture's), two more guard assertions and one recovery run followed on `fb3e682` (PASS). The terra review's fixes then changed `capture.mjs`, so the proof ran once more on `d0cfca1` (PASS), once more on `9eb0acd` after the second round (PASS), and once more on `3bcee56` after the third (PASS); that last run is the evidence above. The failed run is [retained](evidence/m3-3-d/failed-50e9b57/).
+
+### Findings
+
+- **The shared harness leaks on a failed setup** (round 4, finding 2). `createHarness()` in `tests/probes/m2-director/harness.mjs` starts the host and the text fixture before launching Chromium and returns nothing if a later step throws. The director and image-route campaigns call it the same way and have the same gap. It is a pre-existing defect, left for a later change, because the file is a frozen input of PR C's campaign (`docs/evidence/m3-3-c/campaign/inputs.json`) and changing it would void the reuse by SHA. `demo.mjs` works around it (a `ponytail:` comment names the upgrade path: fix `createHarness` with the next full campaign).
 
 ### Implementation choices for owner review
 
@@ -383,6 +389,14 @@ The runtime is still untouched. The proof was rerun once on `d0cfca1` (PASS).
 
 1. **Should-fix: the ledger existence check ran `lstat` on the final component only.** So `/user/images/link/a.png`, with `link` a symlinked folder, followed the link outside. Now one helper, `underImages`, checks every path under the images folder, for the walk, the read and the ledger check alike. It examines each component with `lstat`, refuses any symlink, and confirms the resolved path lies inside the real images folder. Tests: a symlinked first component and a symlinked deeper component, in both a ledger path and the walk; both fail on `eff98da`'s ledger check.
 2. **Nit: a standalone `--only cancelled-or-stale` asked for a different background when Forest was the only one.** Setup now also seeds a second background, Harbor, as the proof path's own second scene does, and the owner step names which to pick.
+
+The proof was then rerun once on `3bcee56` (PASS).
+
+**Terra review, round 4** (of `bd4fe0b`, whole PR) confirmed the round-3 fixes and raised three more, each confirmed and fixed:
+
+1. **Should-fix: a chat-completions request with a non-custom provider and no foreign URL passed the guard,** and the host would then have chosen that provider's endpoint. Now the text route passes only the seeded `custom` source at the text fixture, and host-chosen external routes are refused (the guard section above). Tests: a non-custom source, a missing source, a tampered URL, custom without a URL, and the refused routes. The proof's tamper check now includes three provider switches.
+2. **Should-fix: if `createHarness()` threw after starting the host and the text fixture, they leaked.** `demo.mjs` now stops its own descendants: a parent-PID walk over `/proc` rooted at `process.pid`, never by name; TERM, up to 5 s, KILL survivors, wait for them to go. Then it rethrows and keeps the owned root. `tests/probes/m2-director/harness.mjs` is not changed (see Findings). Test: a spawned sleeping child and grandchild are found, stopped and reaped.
+3. **Should-fix: the template asked for host server log lines with no limit on their content.** Raw logs, capture output, backups, prompt and review text, and file and folder names now stay outside the repository. The record keeps counts, hashes, error codes, versions and observations the owner marks as non-sensitive. Every other field was checked: configuration (names and versions only), owner feedback (marked non-sensitive, never chat excerpts), evidence locations, the backup, the capture command, and the host files (hashes, not names).
 
 The proof was then rerun once on the final code head (below).
 

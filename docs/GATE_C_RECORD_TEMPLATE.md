@@ -4,22 +4,27 @@
 
 **Synthetic and real evidence stay apart.** *Synthetic* means the committed fake ComfyUI on the disposable pinned host (`tests/probes/m3-gate-c/demo.mjs`, or the frozen campaign). *Real* means the owner's own install and the owner's own ComfyUI. A demonstration not shown on the real backend is NOT_RUN there, and a real-provider policy refusal is NOT_TESTED (J7). A synthetic result never fills a real line.
 
-**No private chat text enters the repository** ([AGENTS.md](../AGENTS.md)). The session lines hold counts, hashes and the owner's words only. The owner's prompt and review text go in only if the owner says so. No connection settings, keys, headers or `settings.json` contents anywhere. The capture output and any ledger backup stay outside the repository.
+**No private chat text enters the repository** ([AGENTS.md](../AGENTS.md)). The record keeps only counts, hashes, error codes, versions, and observations the owner explicitly marks as non-sensitive. These stay outside the repository and are referred to only by SHA-256 and a location outside it:
+- raw logs (the host server log, the browser console, ComfyUI's log);
+- the capture output and any ledger backup;
+- the owner's prompt and review text, and file and folder names (a host image folder is named after the character).
+
+No chat excerpts, character or persona names from the owner's install, connection settings, URLs other than loopback, keys, headers or `settings.json` contents anywhere. The owner's prompt and review text go in only if the owner says so for that text.
 
 ```text
 Gate: C
 Candidate full SHA:
 SillyTavern release and full SHA:
 Browser and device:
-Relevant extensions/configuration:
+Relevant extensions/configuration (names and versions only; no URLs, keys or connection settings):
 Assets/providers used:
 Scenarios exercised:
 Automated checks actually run:
-Owner feedback (verbatim or clearly attributed):
+Owner feedback (verbatim or clearly attributed; only words the owner marks as non-sensitive, never chat excerpts):
 Owner verdict: NOT_RUN / PASS / REVISE / STOP
 Remaining blockers:
 Known limitations:
-Evidence locations:
+Evidence locations (in the repository, or outside it by SHA-256 only):
 
 --- Authorizations (DECISIONS entries) ---
 Frozen Gate C candidate:
@@ -30,7 +35,7 @@ Read-only capture on the owner's install (capture.mjs), owner's word recorded fi
 Host used (owner's install, version and SHA; or another, named by the owner):
 Deviation from the pinned 1.19.0 7e8663c, if any, and why:
 Storage plugin on that host is the candidate's (schema v3) yes / no:
-Database backup taken before the plugin first ran there (DYL-58 tool, location outside the repository, SHA-256):
+Database backup taken before the plugin first ran there (DYL-58 tool; SHA-256 only, kept outside the repository):
 ComfyUI version and URL as the review shows them:
 Workflow name and SHA-256 as the review shows them:
 Seed policy (fixed / random), as the owner set it in the host:
@@ -71,16 +76,16 @@ Canonical text, cards, lorebooks, personas unchanged (owner's report):
 Anything generated that the owner did not submit (owner; must be none):
 
 --- Real data actually sent (capture.mjs, read-only, outside the repository) ---
-Capture command (paths may be abbreviated), output file SHA-256:
+Capture command (paths abbreviated, no user or character names), output file SHA-256 (the file stays outside the repository):
 Review texts the owner copied: count and SHA-256 of each (text only if the owner says so):
-New host files: count; each name, size, SHA-256, PNG signature:
+New host files: count; each SHA-256, size and PNG signature (names stay in the capture output, outside the repository):
 Backend graph per file: present / absent / unreadable; matched review SHA-256:
 Fields compared (positive, negative, seed if fixed, steps, CFG, sampler, scheduler, denoise, size, model): match / mismatch per field:
 Not in the graph (VAE, clip skip under the six-node workflow):
 Unexplained text inputs (must be 0); node types all on the allowlist (must be yes):
 Ledger (recovery backup then inspect): rows by state; files without a row (must be 0); files with several rows (must be 0); rows whose file is missing (must be 0):
 ComfyUI's own queue history during the window (owner reads it in ComfyUI; the agent never contacts it): entries, and whether they equal the ledger rows that reached the host:
-Host server log lines for the requests, if the owner provides them:
+Host server log (raw lines stay outside the repository): count of image requests, error codes seen, SHA-256 of the excerpt file kept outside:
 ```
 
 A PASS is recordable only with the synthetic hard gates met on the frozen SHA, every real line either shown or explicitly NOT_RUN or NOT_TESTED, no late image applied, no duplicate or unrequested job, and no lost canonical text or saved-project change in the session. No threshold or percentage exists. Only the owner supplies the verdict and the owner's lines. An agent may fill in commands, hashes and counts it actually observed.

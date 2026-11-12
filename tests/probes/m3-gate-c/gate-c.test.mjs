@@ -5,7 +5,8 @@ import { mkdtempSync, mkdirSync, readFileSync, rmSync, symlinkSync, utimesSync, 
 import { join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import { crc32, deflateSync } from 'node:zlib';
-import { DEMOS, guardDecision, ownerPreamble, parseDemoArgs } from './demo.mjs';
+import { DEMOS, descendantPids, guardDecision, HOST_CHOSEN, ownerPreamble, parseDemoArgs, stopDescendants } from './demo.mjs';
+import { spawn } from 'node:child_process';
 import { capture, compareGraph, crossCheck, matched, parseCaptureArgs, parseReview, pngText, underImages } from './capture.mjs';
 import { reviewText } from '../../../src/image-request.mjs';
 
@@ -68,7 +69,7 @@ test('guard: ComfyUI routes pass only with the fixture origin in the parsed body
 
 test('guard: other host routes carrying a backend address pass only with a fixture origin', () => {
     const decide = (pathname, body, contentType = 'application/json') => guardDecision({ pathname, body, contentType }, { fixtureOrigin: FIXTURE }).allow;
-    assert.equal(decide('/api/backends/chat-completions/generate', JSON.stringify({ custom_url: 'http://127.0.0.1:8128/v1', reverse_proxy: '' })), true);
+    assert.equal(decide('/api/backends/chat-completions/generate', JSON.stringify({ chat_completion_source: 'custom', custom_url: 'http://127.0.0.1:8128/v1', reverse_proxy: '' })), true);
     assert.equal(decide('/api/backends/chat-completions/generate', JSON.stringify({ custom_url: 'http://127.0.0.1:8000/v1' })), false);
     assert.equal(decide('/api/backends/text-completions/status', JSON.stringify({ api_server: 'http://127.0.0.1:5000' })), false);
     assert.equal(decide('/api/assets/download', JSON.stringify({ url: 'https://example.com/x.png' })), false);
@@ -76,11 +77,45 @@ test('guard: other host routes carrying a backend address pass only with a fixtu
     assert.equal(decide('/api/backends/chat-completions/generate', JSON.stringify({ urls: [FIXTURE, 'http://127.0.0.1:8188'] })), false);
     assert.equal(decide('/api/backends/chat-completions/generate', '{broken'), false, 'unparseable JSON');
     assert.equal(decide('/api/tokenizers/openai/count', JSON.stringify([{ role: 'user', content: 'see http://127.0.0.1:8188' }])), true, 'a JSON array carries no backend keys');
-    assert.equal(decide('/api/backends/chat-completions/generate', JSON.stringify({ zai_endpoint: 'common', siliconflow_endpoint: 'global', custom_url: 'http://127.0.0.1:8128/v1' })), true, 'choice names are not addresses');
+    assert.equal(decide('/api/backends/chat-completions/generate', JSON.stringify({ chat_completion_source: 'custom', zai_endpoint: 'common', siliconflow_endpoint: 'global', custom_url: 'http://127.0.0.1:8128/v1' })), true, 'choice names are not addresses');
     assert.equal(decide('/api/characters/create', JSON.stringify({ avatar_url: 'a.png', ch_name: 'x' })), true, 'a file name is not a backend');
     assert.equal(decide('/api/settings/save', JSON.stringify({ api_server: 'http://127.0.0.1:5000' })), true, 'storing settings contacts nothing');
     assert.equal(decide('/api/plugins/sillynovel-storage/projects/x/assets', 'PNG', 'image/png'), true);
     assert.equal(decide('/scripts/x.js', null), true);
+});
+
+test('guard: the text route passes only the seeded custom source at the text fixture; host-chosen endpoints are refused (terra review round 4)', () => {
+    const decide = (pathname, body, contentType = 'application/json') => guardDecision({ pathname, body, contentType }, { fixtureOrigin: FIXTURE });
+    const messages = [{ role: 'user', content: 'x' }];
+    for (const route of ['generate', 'status']) {
+        assert.equal(decide('/api/backends/chat-completions/' + route, JSON.stringify({ chat_completion_source: 'custom', custom_url: 'http://127.0.0.1:8128/v1', messages })).allow, true, route);
+        assert.equal(decide('/api/backends/chat-completions/' + route, JSON.stringify({ chat_completion_source: 'openai', messages })).allow, false, route + ': a non-custom source, no URL in the body');
+        assert.equal(decide('/api/backends/chat-completions/' + route, JSON.stringify({ messages })).allow, false, route + ': a missing source');
+        assert.equal(decide('/api/backends/chat-completions/' + route, JSON.stringify({ chat_completion_source: 'custom', custom_url: 'http://127.0.0.1:43999/v1', messages })).allow, false, route + ': a tampered URL');
+        assert.equal(decide('/api/backends/chat-completions/' + route, JSON.stringify({ chat_completion_source: 'custom', messages })).allow, false, route + ': custom with no URL');
+        assert.equal(decide('/api/backends/chat-completions/' + route, '[]').allow, false, route + ': not an object');
+    }
+    for (const route of ['/api/backends/text-completions/generate', '/api/backends/kobold/generate', '/api/openai/generate-image', '/api/novelai/generate', '/api/horde/generate-text',
+        '/api/tokenizers/remote/kobold/count', '/api/assets/download', '/api/extensions/install', '/api/extensions/version', '/api/translate/google', '/api/search/serpapi'])
+        assert.deepEqual(decide(route, JSON.stringify({})), { allow: false, reason: 'a host-chosen external endpoint' }, route);
+    assert.ok(HOST_CHOSEN.every(p => p.startsWith('/api/')));
+    assert.equal(decide('/api/tokenizers/openai/count', JSON.stringify(messages)).allow, true, 'the local tokenizer');
+    assert.equal(decide('/api/extensions/discover', null).allow, true, 'a local listing');
+});
+
+test('stopDescendants walks /proc by parent PID from this process, stops a sleeping child and grandchild, and reaps them (round 4)', async () => {
+    const child = spawn(process.execPath, ['-e', "require('node:child_process').spawn(process.execPath, ['-e', 'setTimeout(() => {}, 60000)'], { stdio: 'ignore' }); setTimeout(() => {}, 60000)"], { stdio: 'ignore' });
+    const exited = new Promise(done => child.once('exit', (code, signal) => done(signal)));
+    let found = [];
+    for (const end = Date.now() + 5000; Date.now() < end && found.length < 2; await new Promise(r => setTimeout(r, 50))) found = descendantPids(process.pid);
+    assert.ok(found.includes(child.pid), 'the child is a descendant');
+    const grandchild = found.find(pid => pid !== child.pid);
+    assert.ok(grandchild, 'the grandchild is found through the child');
+    assert.deepEqual(descendantPids(child.pid), [grandchild], 'a walk rooted at the child finds only its own');
+    const result = await stopDescendants(process.pid, 2000);
+    assert.deepEqual(result.survivors, []);
+    assert.equal(await exited, 'SIGTERM', 'the child ended on TERM and Node reaped it');
+    assert.equal(descendantPids(process.pid).length, 0, 'nothing of ours remains');
 });
 
 test('pngText reads tEXt, zTXt and iTXt chunks and refuses non-PNG bytes', () => {

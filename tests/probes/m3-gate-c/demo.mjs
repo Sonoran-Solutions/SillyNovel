@@ -7,6 +7,7 @@
 import assert from 'node:assert/strict';
 import { isDeepStrictEqual } from 'node:util';
 import { chmod, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
+import { readdirSync, readFileSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { join, resolve } from 'node:path';
 import { createHash } from 'node:crypto';
@@ -48,6 +49,29 @@ export const ownerPreamble = demo => demo.fresh
     ? 'Start a fresh session: if Image session on this host is on, turn it off; then turn it on.'
     : 'If Image session on this host is off, turn it on (press Take over if another tab or page holds it).';
 
+/** This process's descendants, by a parent-PID walk over /proc rooted at `root` (never by name). */
+export function descendantPids(root = process.pid, proc = '/proc') {
+    const parents = new Map();
+    for (const name of readdirSync(proc)) {
+        if (!/^\d+$/.test(name)) continue;
+        try { const stat = readFileSync(proc + '/' + name + '/stat', 'utf8'); parents.set(Number(name), Number(stat.slice(stat.lastIndexOf(')') + 2).split(' ')[1])); } catch { /* gone */ }
+    }
+    const found = [], queue = [root];
+    while (queue.length) { const pid = queue.shift(); for (const [child, parent] of parents) if (parent === pid && !found.includes(child)) { found.push(child); queue.push(child); } }
+    return found;
+}
+const alive = pid => { try { return !/^\d+ \(.*\) Z/.test(readFileSync('/proc/' + pid + '/stat', 'utf8')); } catch { return false; } };
+/** TERM every descendant, wait up to graceMs, KILL survivors, then wait for them to go (Node reaps its own children). */
+export async function stopDescendants(root = process.pid, graceMs = 5000) {
+    const pids = descendantPids(root), signal = (pid, name) => { try { process.kill(pid, name); } catch { /* gone */ } };
+    for (const pid of pids) signal(pid, 'SIGTERM');
+    for (const end = Date.now() + graceMs; pids.some(alive) && Date.now() < end;) await delay(100);
+    const killed = pids.filter(alive);
+    for (const pid of killed) signal(pid, 'SIGKILL');
+    for (const end = Date.now() + 5000; pids.some(alive) && Date.now() < end;) await delay(100);
+    return { stopped: pids, killed, survivors: pids.filter(alive) };
+}
+
 export function parseDemoArgs(argv) {
     const flags = [], rest = [];
     let only = null;
@@ -77,6 +101,15 @@ export function parseDemoArgs(argv) {
 const COMFY_BACKEND = new Set(['ping', 'samplers', 'models', 'schedulers', 'vaes', 'generate']), COMFY_LOCAL = new Set(['workflows', 'workflow']);
 const URL_KEY = /^(url|urls|api_server|server_url|custom_url|reverse_proxy|server|endpoint|.+_endpoint)$/;
 const STORE_ONLY = ['/api/settings/save', '/api/plugins/'];
+// The text route the demonstrations use is the harness's seeded source: chat completions, source `custom`, at the text fixture.
+const TEXT_ROUTE = '/api/backends/chat-completions/';
+// Host routes that pick an external endpoint themselves (a provider, a download, a git remote, a remote tokenizer) at the pin.
+// None is needed by a demonstration, so all are refused, whatever their body says.
+export const HOST_CHOSEN = Object.freeze(['/api/backends/text-completions/', '/api/backends/kobold/', '/api/openai/', '/api/google/', '/api/anthropic/', '/api/novelai/', '/api/horde/',
+    '/api/translate/', '/api/extra/', '/api/search/', '/api/openrouter/', '/api/nanogpt/', '/api/speech/', '/api/azure/', '/api/volcengine/', '/api/minimax/', '/api/vector/',
+    '/api/tokenizers/remote/', '/api/assets/download', '/api/content/importURL', '/api/content/importUUID',
+    '/api/extensions/install', '/api/extensions/update', '/api/extensions/branches', '/api/extensions/switch', '/api/extensions/version']);
+export const HOST_CHOSEN_REASON = 'a host-chosen external endpoint';
 const originOf = value => { try { const u = new URL(value); return /^https?:$/.test(u.protocol) ? u.origin : null; } catch { return null; } };
 export function guardDecision({ pathname, body, contentType = '' }, { fixtureOrigin, textOrigin = TEXT_ORIGIN }) {
     if (!pathname.startsWith('/api/')) return { allow: true };
@@ -93,6 +126,13 @@ export function guardDecision({ pathname, body, contentType = '' }, { fixtureOri
         return typeof parsed.url === 'string' && originOf(parsed.url) === fixtureOrigin ? { allow: true } : { allow: false, reason: 'ComfyUI URL is not the fixture' };
     }
     if (STORE_ONLY.some(p => pathname.startsWith(p))) return { allow: true };
+    if (HOST_CHOSEN.some(p => pathname.startsWith(p))) return { allow: false, reason: HOST_CHOSEN_REASON };
+    if (pathname.startsWith(TEXT_ROUTE)) {
+        // The host chooses the provider from chat_completion_source, so the source must be the seeded `custom` at the text fixture.
+        if (json === undefined || Array.isArray(json)) return { allow: false, reason: 'unparseable body' };
+        if (parsed.chat_completion_source !== 'custom') return { allow: false, reason: 'text source other than the seeded custom source' };
+        if (originOf(parsed.custom_url) !== textOrigin) return { allow: false, reason: 'custom_url is not the text fixture' };
+    }
     if (!/json/i.test(contentType)) return { allow: true };
     if (json === undefined) return { allow: false, reason: 'unparseable body' };
     // Some keys hold a choice name (zai_endpoint: 'common'); only a value that is an http(s) address is a backend address.
@@ -343,7 +383,10 @@ async function main() {
         const probe = createServer();
         await new Promise((ok, fail) => probe.once('error', fail).listen(8128, '127.0.0.1', ok)).catch(() => { throw Error('Refused: port 8128 is in use.'); });
         await new Promise(ok => probe.close(ok));
-        h = await createHarness(options.host, 'm3-gate-c');
+        // ponytail: createHarness (frozen with PR C's campaign) leaks its host and text fixture if it throws after starting them.
+        // Here: stop this process's own descendants, keep the owned root, rethrow. Upgrade path: fix createHarness with the next campaign.
+        try { h = await createHarness(options.host, 'm3-gate-c'); }
+        catch (error) { record.initCleanup = await stopDescendants(process.pid); console.error('Harness setup failed; stopped own descendants ' + JSON.stringify(record.initCleanup)); throw error; }
         page = h.page;
         imagesRoot = join(h.data, 'default-user/user/images');
         record.browser = page.context().browser().version();
@@ -403,7 +446,7 @@ async function main() {
             await new Promise(ok => sentinel.listen(0, '127.0.0.1', ok));
             const tampered = 'http://127.0.0.1:' + sentinel.address().port;
             assert.ok(!OWNER_PORTS.includes(sentinel.address().port) && tampered !== fixtureOrigin);
-            const before = (await comfy('/log')).length;
+            const before = (await comfy('/log')).length, textBefore = (await h.requests()).length;
             const results = await page.evaluate(async url => {
                 const sd = SillyTavern.getContext().extensionSettings.sd, kept = sd.comfy_url, headers = SillyTavern.getContext().getRequestHeaders(), out = [];
                 sd.comfy_url = url;
@@ -411,6 +454,11 @@ async function main() {
                     try { const r = await fetch('/api/sd/comfy/' + route, { method: 'POST', headers, body }); out.push({ route, status: r.status }); } catch (e) { out.push({ route, aborted: e.name }); }
                 }
                 sd.comfy_url = kept;
+                // A provider switch: the host would choose the endpoint itself, so these never leave the page.
+                const messages = [{ role: 'user', content: 'synthetic' }];
+                for (const [label, body] of [['openai source', { chat_completion_source: 'openai', messages }], ['no source', { messages }], ['custom at the tampered port', { chat_completion_source: 'custom', custom_url: url + '/v1', messages }]]) {
+                    try { const r = await fetch('/api/backends/chat-completions/generate', { method: 'POST', headers, body: JSON.stringify(body) }); out.push({ route: label, status: r.status }); } catch (e) { out.push({ route: label, aborted: e.name }); }
+                }
                 return out;
             }, tampered);
             await delay(500);
@@ -418,10 +466,11 @@ async function main() {
             assert.ok(results.every(r => r.aborted), 'every tampered request was aborted: ' + JSON.stringify(results));
             assert.equal(sentinel.hits, 0, 'the tampered port saw no connection');
             assert.equal((await comfy('/log')).length, before, 'the fixture saw no request');
-            assert.equal(record.guard.aborted.filter(a => a.phase === 'tamper').length, 3, 'three aborts recorded');
+            assert.equal((await h.requests()).length, textBefore, 'the text fixture saw no request');
+            assert.equal(record.guard.aborted.filter(a => a.phase === 'tamper' && /^\/api\/(sd\/comfy\/(ping|generate)|backends\/chat-completions\/generate)$/.test(a.path)).length, 6, 'six aborts recorded');
             await new Promise(ok => sentinel.close(ok));
             await checkSaved();
-            console.log('PASS guard: a tampered ComfyUI URL and an unparseable body were aborted; the unused port and the fixture saw nothing');
+            console.log('PASS guard: a tampered ComfyUI URL, an unparseable body and three text-provider switches were aborted; the unused port and both fixtures saw nothing');
         } else {
             await page.close();
             const { chromium } = await import(process.env.SN_PLAYWRIGHT_MODULE || 'playwright');
@@ -483,7 +532,9 @@ async function main() {
         record.gates.earlierChatMessagesUnchanged = isDeepStrictEqual(chatEnd.slice(0, chatBaseline.length), chatBaseline);
         record.gates.imageSettingsUnchanged = isDeepStrictEqual(await savedSd(), sdBaseline);
         record.gates.ledgerHoldsNoChatText = rows.every(r => !Object.values(DECOYS).some(d => JSON.stringify(r).includes(d)) && !chatEnd.some(([, , mes]) => mes.length > 12 && r.review.includes(mes)));
-        record.guard.unexpectedAborts = record.guard.aborted.filter(a => a.phase === 'demos');
+        // Refusing a host-chosen external endpoint is the guard working; anything else aborted during the demonstrations is a defect.
+        record.guard.refusedExternal = record.guard.aborted.filter(a => a.phase === 'demos' && a.reason === HOST_CHOSEN_REASON).map(a => a.path);
+        record.guard.unexpectedAborts = record.guard.aborted.filter(a => a.phase === 'demos' && a.reason !== HOST_CHOSEN_REASON);
         record.result = proof
             ? (record.demos.every(d => d.result === 'PASS') && record.gates.noDuplicateJobs && record.gates.noAutomaticGeneration && record.gates.unresolved === 0 && !record.gates.canonicalFilesChanged.length
                 && record.gates.earlierChatMessagesUnchanged && record.gates.imageSettingsUnchanged && record.gates.ledgerHoldsNoChatText && !record.guard.unexpectedAborts.length ? 'PASS' : 'FAIL')
