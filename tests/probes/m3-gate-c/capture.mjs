@@ -163,9 +163,27 @@ const EXEMPT = { seed: ['random-not-compared', 'not-in-review'], vae: ['not-in-g
 export const matched = c => c.nodeTypesAllowed && c.wiring === 'six-node' && c.unexplainedTextInputs === 0
     && Object.entries(c.fields).every(([field, flag]) => flag === 'match' || (EXEMPT[field] ?? ['not-in-review']).includes(flag));
 
-// Opened without following a final symlink, and only when its real path is inside the real images folder.
+/**
+ * The one check for every path under the images folder, used by the walk, the read and the ledger check: each component
+ * below the real images folder is examined with lstat and must exist and not be a symlink, and the resolved path must lie
+ * inside the real images folder. Returns the path, or null.
+ */
+export function underImages(realImages, name, { file = true } = {}) {
+    const parts = String(name).split(/[\\/]/);
+    if (!parts.length || parts.some(part => !part || part === '.' || part === '..')) return null;
+    let path = realImages;
+    for (const [index, part] of parts.entries()) {
+        path = join(path, part);
+        const stat = lstatSync(path, { throwIfNoEntry: false });
+        if (!stat || stat.isSymbolicLink()) return null;
+        if (index < parts.length - 1 ? !stat.isDirectory() : file ? !stat.isFile() : !stat.isDirectory()) return null;
+    }
+    return inside(realpathSync(path), realImages) ? path : null;
+}
+
+// Opened without following a final symlink, and only through underImages.
 function readBounded(path, realImages) {
-    if (!inside(realpathSync(path), realImages)) throw Error('Refused: ' + path + ' leads outside the images folder.');
+    if (underImages(realImages, relative(realImages, path)) !== path) throw Error('Refused: ' + path + ' leads outside the images folder.');
     const fd = openSync(path, constants.O_RDONLY | constants.O_NOFOLLOW);
     try {
         const stat = fstatSync(fd);
@@ -175,13 +193,13 @@ function readBounded(path, realImages) {
 }
 function listPngs(root, since) {
     const found = [];
-    // Symlinked files and folders are skipped, so the walk never leaves the real images folder.
+    // Every entry passes underImages, so symlinked files and folders are skipped and the walk never leaves the real images folder.
     const walk = dir => {
         for (const entry of readdirSync(dir, { withFileTypes: true })) {
-            const path = join(dir, entry.name);
-            if (entry.isSymbolicLink() || lstatSync(path).isSymbolicLink()) continue;
-            if (entry.isDirectory()) walk(path);
-            else if (entry.isFile() && /\.png$/i.test(entry.name) && lstatSync(path).mtimeMs >= since) found.push(path);
+            const name = relative(root, join(dir, entry.name));
+            const folder = underImages(root, name, { file: false }), path = folder ?? underImages(root, name);
+            if (folder) walk(folder);
+            else if (path && /\.png$/i.test(entry.name) && lstatSync(path).mtimeMs >= since) found.push(path);
             if (found.length > MAX_FILES) throw Error('Refused: more than ' + MAX_FILES + ' new images; narrow --since.');
         }
     };
@@ -233,7 +251,7 @@ export function capture(options) {
     const inspect = options.ledger ? JSON.parse(readFileSync(readableInput(options.ledger, MAX_LEDGER), 'utf8')) : null;
     return { schemaVersion: 1, mode: options.mode, since: new Date(options.since).toISOString(), reviews: reviews.map(r => r.sha256), files,
         // Existence is checked without following links, and only below the real images folder.
-        ledger: inspect ? crossCheck(files.map(f => ({ name: f.name, sha256: f.sha256 })), inspect, name => { if (name === null) return false; const path = join(realImages, ...name.split('/')); return inside(path, realImages) && lstatSync(path, { throwIfNoEntry: false })?.isFile() === true; }) : 'not-given' };
+        ledger: inspect ? crossCheck(files.map(f => ({ name: f.name, sha256: f.sha256 })), inspect, name => name !== null && underImages(realImages, name) !== null) : 'not-given' };
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

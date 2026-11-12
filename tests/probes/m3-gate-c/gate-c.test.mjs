@@ -6,7 +6,7 @@ import { join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import { crc32, deflateSync } from 'node:zlib';
 import { DEMOS, guardDecision, ownerPreamble, parseDemoArgs } from './demo.mjs';
-import { capture, compareGraph, crossCheck, matched, parseCaptureArgs, parseReview, pngText } from './capture.mjs';
+import { capture, compareGraph, crossCheck, matched, parseCaptureArgs, parseReview, pngText, underImages } from './capture.mjs';
 import { reviewText } from '../../../src/image-request.mjs';
 
 const FIXTURE = 'http://127.0.0.1:43123';
@@ -232,6 +232,27 @@ test('capture never follows a symlinked file or folder out of the images folder,
         const result = capture(parseCaptureArgs(['--proof-loopback', '--images', images, '--since', '2026-01-01T00:00:00Z', '--ledger', join(tmp, 'inspect.json'), '--out', join(tmp, 'o.json')]));
         assert.deepEqual(result.files.map(f => f.name), ['Gate C/real.png'], 'linked file and linked folder skipped');
         assert.equal(result.ledger.rowsWhoseFileIsMissing, 2, 'a traversal path and a link are not files below the folder');
+    } finally { rmSync(tmp, { recursive: true, force: true }); rmSync(outside, { recursive: true, force: true }); }
+});
+
+test('one helper for every path under the images folder: a symlinked directory anywhere in a ledger path or the walk is refused (terra review round 3)', () => {
+    const tmp = mkdtempSync(join(tmpdir(), 'sn-gate-c-test-')), images = join(tmp, 'data/default-user/user/images'), outside = mkdtempSync(join(tmpdir(), 'gate-c-outside-'));
+    try {
+        mkdirSync(join(images, 'Gate C/inner'), { recursive: true });
+        writeFileSync(join(images, 'Gate C/inner/real.png'), png());
+        mkdirSync(join(outside, 'dir')); writeFileSync(join(outside, 'dir/a.png'), png());
+        symlinkSync(join(outside, 'dir'), join(images, 'link'));
+        symlinkSync(join(outside, 'dir'), join(images, 'Gate C/deeper-link'));
+        assert.equal(underImages(images, 'Gate C/inner/real.png'), join(images, 'Gate C/inner/real.png'));
+        assert.equal(underImages(images, 'link/a.png'), null, 'a symlinked first component');
+        assert.equal(underImages(images, 'Gate C/deeper-link/a.png'), null, 'a symlinked component that is not the first');
+        assert.equal(underImages(images, 'Gate C/inner'), null, 'a folder is not a file');
+        assert.equal(underImages(images, 'Gate C/missing.png'), null);
+        writeFileSync(join(tmp, 'inspect.json'), JSON.stringify({ ledger: [{ rows: [{ state: 'imported', hostPath: '/user/images/Gate%20C/inner/real.png' }, { state: 'discarded', hostPath: '/user/images/link/a.png' }, { state: 'discarded', hostPath: '/user/images/Gate%20C/deeper-link/a.png', hostDeletedAt: 1 }] }] }));
+        const result = capture(parseCaptureArgs(['--proof-loopback', '--images', images, '--since', '2026-01-01T00:00:00Z', '--ledger', join(tmp, 'inspect.json'), '--out', join(tmp, 'o.json')]));
+        assert.deepEqual(result.files.map(f => f.name), ['Gate C/inner/real.png'], 'the walk skips both linked folders');
+        assert.equal(result.ledger.rowsWhoseFileIsMissing, 1, 'the outside file behind the first link is not present');
+        assert.equal(result.ledger.rowsDeletedButPresent, 0, 'the outside file behind the deeper link is not present either');
     } finally { rmSync(tmp, { recursive: true, force: true }); rmSync(outside, { recursive: true, force: true }); }
 });
 

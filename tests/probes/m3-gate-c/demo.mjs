@@ -36,7 +36,7 @@ export const DEMOS = Object.freeze([
             { say: 'The late image must be discarded and nothing applied. Press Enter.' }] },
     { id: 'cancelled-or-stale', title: 'Cancelled or stale job', fixture: [{ hold: true }, { hold: true }, { hold: true }], fresh: true, expect: { prompts: 3, rows: ['stale', 'stale', 'abandoned'], filesNet: 2, replies: 1 },
         owner: [{ say: 'Press Submit, send one chat message, then press Cancel. Press Enter here to let the fixture finish.', then: 'release' },
-            { say: 'Press Submit, then apply a different background (Background, Apply background) while it runs. Press Enter here to deliver the result.', then: 'release' },
+            { say: 'Press Submit, then, while it runs, apply a different background: in Background pick Harbor if Forest is on stage, otherwise Forest, and press Apply background. Press Enter here to deliver the result.', then: 'release' },
             { say: 'Press Submit, then reload the page while it runs. Reopen the chat, SillyNovel and the project, turn the session on and press Take over. Submit stays disabled while the request is unresolved. Press Enter.', then: 'release' },
             { say: 'Wait for the request\'s deadline (two minutes after Submit), then press Abandon on the unresolved request. Press Enter.' }] },
     { id: 'usage-limit', title: 'Configured usage limit', fixture: [], fresh: true, expect: { prompts: 5, rows: ['candidate|discarded', 'candidate|discarded', 'candidate|discarded', 'candidate|discarded', 'candidate|discarded'], filesNet: 5, replies: 0 },
@@ -368,7 +368,9 @@ async function main() {
             message(ACTOR, 'The harbor office is quiet.'), message(DECOYS.personaName, 'Meet me by the lantern.', true)] });
         const created = await h.plugin('/projects', 'POST', { name: 'Gate C' }, 201);
         forest = (await h.plugin('/projects/' + created.projectId + '/assets', 'POST', await readFile(join(repo, 'tests/fixtures/m12-stage/forest.png')), 201, 'image/png')).assetId;
-        project = await h.plugin('/projects/' + created.projectId, 'PUT', { schemaVersion: 2, expectedRevision: 0, name: 'Gate C', scene: { backgroundAssetId: forest, backgroundLocked: false, actors: [] }, catalog: [{ assetId: forest, kind: 'background', actorId: null, label: 'Forest' }] });
+        // A second background, so a standalone cancelled-or-stale run (--only) always has a different scene to apply.
+        const harbor = (await h.plugin('/projects/' + created.projectId + '/assets', 'POST', await readFile(join(repo, 'tests/fixtures/m12-stage/sage.png')), 201, 'image/png')).assetId;
+        project = await h.plugin('/projects/' + created.projectId, 'PUT', { schemaVersion: 2, expectedRevision: 0, name: 'Gate C', scene: { backgroundAssetId: forest, backgroundLocked: false, actors: [] }, catalog: [{ assetId: forest, kind: 'background', actorId: null, label: 'Forest' }, { assetId: harbor, kind: 'background', actorId: null, label: 'Harbor' }] });
         await page.evaluate(async origin => {
             const sd = SillyTavern.getContext().extensionSettings.sd;
             sd.comfy_url = origin;

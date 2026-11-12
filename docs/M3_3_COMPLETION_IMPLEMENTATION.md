@@ -377,7 +377,14 @@ The runtime is still untouched. The proof was rerun once on `d0cfca1` (PASS).
 2. **Should-fix: matching did not check the wiring.** Swapped conditioning still matched. Now `compareGraph` follows the sampler's links and requires the six-node wiring: model from the checkpoint, latent from the empty latent, positive and negative from two distinct text encodes reading the checkpoint's CLIP, decode from the sampler and the checkpoint's VAE, save from the decode. Values are read through those links. Tests: swapped conditioning, one encode on both inputs, six single rewired links, and a third text encode.
 3. **Nit: a standalone `--only` demonstration started with the session off.** Every demonstration now opens with a line telling the owner to turn the session on (choice 11).
 
-**Sweep of `capture.mjs` for the same two classes**, fixed and named here. A ledger `hostPath` with a `..` or empty segment could steer the existence check outside the images folder; now such a row counts as missing, and existence is checked without following links below the real images folder. Pairing a ledger row with a file was by name only; now a row that recorded the result's SHA-256 must hash-match its file (`rowsWhoseHashDiffers`), and the proof requires at least one such check with none differing. Tests: a traversal path and a linked file in the ledger; same name, other bytes. The proof was then rerun once on the final code head, `9eb0acd` (PASS, below).
+**Sweep of `capture.mjs` for the same two classes**, fixed and named here. A ledger `hostPath` with a `..` or empty segment could steer the existence check outside the images folder; now such a row counts as missing, and existence is checked without following links below the real images folder. Pairing a ledger row with a file was by name only; now a row that recorded the result's SHA-256 must hash-match its file (`rowsWhoseHashDiffers`), and the proof requires at least one such check with none differing. Tests: a traversal path and a linked file in the ledger; same name, other bytes. The proof was then rerun once on `9eb0acd` (PASS).
+
+**Terra review, round 3** (of `eff98da`) confirmed the round-2 fixes and raised two more, both confirmed and fixed:
+
+1. **Should-fix: the ledger existence check ran `lstat` on the final component only.** So `/user/images/link/a.png`, with `link` a symlinked folder, followed the link outside. Now one helper, `underImages`, checks every path under the images folder, for the walk, the read and the ledger check alike. It examines each component with `lstat`, refuses any symlink, and confirms the resolved path lies inside the real images folder. Tests: a symlinked first component and a symlinked deeper component, in both a ledger path and the walk; both fail on `eff98da`'s ledger check.
+2. **Nit: a standalone `--only cancelled-or-stale` asked for a different background when Forest was the only one.** Setup now also seeds a second background, Harbor, as the proof path's own second scene does, and the owner step names which to pick.
+
+The proof was then rerun once on the final code head (below).
 
 ### NOT_RUN and NOT_TESTED
 
